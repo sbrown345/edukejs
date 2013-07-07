@@ -108,3 +108,5 @@
 /src/eduke32/source/obj_win/startwin.game.obj
 /src/eduke32/source/obj_win/winbits.obj
 /src/eduke32/vc100.pdb
+*.GRP
+grpfiles.cache
