@@ -840,7 +840,7 @@ var  osdtextpal=0;
     textshade, textpal
 )
     {
-    assert.int32(arguments);
+    assert.argumentsAre.int32(arguments);
     osdpromptshade = promptshade;
     osdpromptpal   = promptpal;
     osdeditshade   = editshade;

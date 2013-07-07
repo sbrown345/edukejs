@@ -1,34 +1,39 @@
 ﻿'use strict';
-(function(global) {
+(function (global) {
     global.assert = {
         test: {
-            isInt32: function(v) {
-                return (v | 0) === v;
+            isInt32: function (v) {
+                return typeof v === "number" && (v | 0) === v;
             }
         },
 
-        int32: function (arg) {
-            console.log(arg)
-            assert(assert.test.isInt32, arg);
+        int32: function (value) {
+            assertValue(assert.test.isInt32, value);
+        },
+
+        argumentsAre: {
+            int32: function (array) {
+                return assertArray(assert.test.isInt32, array);
+            },
+
         }
     };
 
-    function assert(testFn, valueOrArray) {
-        console.assert(!testValueOrArray(testFn, valueOrArray))
-    }
-
-    function testValueOrArray(testFn, valueOrArray) {
-        debugger 
-        if (valueOrArray.length) {
-            for (var i = 0; i < valueOrArray.length; i++) {
-                if (!testFn(valueOrArray[i])) {
-                    return false;
-                }
+    function checkArray(testFn, value) {
+        for (var i = 0; i < value.length; i++) {
+            if (!testFn(value[i])) {
+                return false;
             }
-
-            return true;
         }
 
-        return testFn(valueOrArray);
+        return true;
+    }
+
+    function assertArray(testFn, value) {
+        console.assert(checkArray(testFn, value), ["array failed", testFn.toString(), value]);
+    }
+
+    function assertValue(testFn, value) {
+        console.assert(testFn(value), "value failed");
     }
 })(window);

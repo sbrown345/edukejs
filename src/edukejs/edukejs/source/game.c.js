@@ -11070,7 +11070,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //    getcwd(g_rootDir,BMAX_PATH);
 //    strcat(g_rootDir,"/");
 //#endif
-//    OSD_SetParameters(0,0, 0,12, 2,12);
+    OSD_SetParameters(0,0, 0,12, 2,12);
 //#ifdef __APPLE__
 //    G_CheckUseCWD(argc, argv);
 
