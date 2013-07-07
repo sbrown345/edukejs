@@ -60,6 +60,9 @@
     <Content Include="eduke.js" />
     <Content Include="index.htm" />
     <Content Include="source\game.c.js" />
+    <Content Include="source\osd.c.js" />
+    <Content Include="tests\assert.tests.js" />
+    <Content Include="utils\assert.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -106,7 +109,11 @@
     </VisualStudio>
   </ProjectExtensions>
   <PropertyGroup>
-    <PreBuildEvent>java -jar $(ProjectDir)closure-compiler\compiler.jar --js $(ProjectDir)source\game.c.js --js_output_file $(ProjectDir)eduke.js</PreBuildEvent>
+    <PreBuildEvent>java -jar $(ProjectDir)closure-compiler\compiler.jar ^
+ --js $(ProjectDir)utils\assert.js^
+ --js $(ProjectDir)source\osd.c.js^
+ --js $(ProjectDir)source\game.c.js^
+ --js_output_file $(ProjectDir)eduke.js</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

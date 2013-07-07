@@ -1,3 +1,5 @@
+'use strict';
+
 //-------------------------------------------------------------------------
 /*
 Copyright (C) 2010 EDuke32 developers and contributors
@@ -11018,7 +11020,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 /*int32_t*/ function app_main(/*int32_t*/ argc, /*const char ***/argv)
 {
-//    int32_t i = 0, j;
+    var i = 0, j;
 //    char cwd[BMAX_PATH];
 ////    extern char datetimestring[];
 //#ifdef NEDMALLOC
