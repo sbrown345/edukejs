@@ -1,0 +1,1 @@
+java -jar closure-compiler/compiler.jar --js source/game.c.js --js_output_file eduke.js

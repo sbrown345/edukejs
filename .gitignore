@@ -114,3 +114,5 @@ grpfiles.cache
 *.suo
 bin
 obj
+
+/src/edukejs/edukejs/eduke.js
