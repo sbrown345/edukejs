@@ -112,3 +112,5 @@
 grpfiles.cache
 
 *.suo
+bin
+obj
