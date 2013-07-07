@@ -57,6 +57,7 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="eduke.js" />
     <Content Include="index.htm" />
     <Content Include="source\game.c.js" />
     <Content Include="Web.config" />
