@@ -413,84 +413,140 @@
 //    return OSDCMD_OK;
 //}
 
-//static void _internal_drawosdchar(int32_t x, int32_t y, char ch, int32_t shade, int32_t pal)
-//{
-//    char st[2] = { 0,0 };
+/**
+ * @param {number} x
+ * @param {number} y
+ * @param {number} ch // was char
+ * @param {number} shade
+ * @param {number} pal
+ * @return {undefined}
+ */
+function _internal_drawosdchar(x, y, ch, shade, pal)
+{
+    assert.argumentsAre.int32(arguments);
+    todo();
+    //char st[2] = { 0,0 };
 
-//    UNREFERENCED_PARAMETER(shade);
-//    UNREFERENCED_PARAMETER(pal);
+    //UNREFERENCED_PARAMETER(shade);
+    //UNREFERENCED_PARAMETER(pal);
 
-//    st[0] = ch;
+    //st[0] = ch;
 
-//    printext256(4+(x<<3),4+(y<<3), white, -1, st, 0);
-//}
+    //printext256(4+(x<<3),4+(y<<3), white, -1, st, 0);
+}
 
-//static void _internal_drawosdstr(int32_t x, int32_t y, const char *ch, int32_t len, int32_t shade, int32_t pal)
-//{
-//    char st[1024];
+/**
+ * @param {number} x
+ * @param {number} y
+ * @param {string} ch
+ * @param {number} shade
+ * @param {number} pal
+ * @return {undefined}
+ */
+function _internal_drawosdstr(x, y, ch, len, shade, pal)
+{
+    assert.argumentsAre.int32([x,y,len, shade, pal]);
+    assert.string(ch);
+    todo();
+    //char st[1024];
 
-//    UNREFERENCED_PARAMETER(shade);
-//    UNREFERENCED_PARAMETER(pal);
+    //UNREFERENCED_PARAMETER(shade);
+    //UNREFERENCED_PARAMETER(pal);
 
-//    if (len>1023) len=1023;
-//    Bmemcpy(st,ch,len);
-//    st[len]=0;
+    //if (len>1023) len=1023;
+    //Bmemcpy(st,ch,len);
+    //st[len]=0;
 
-//    printext256(4+(x<<3),4+(y<<3), white, -1, st, 0);
-//}
+    //printext256(4+(x<<3),4+(y<<3), white, -1, st, 0);
+}
 
-//static void _internal_drawosdcursor(int32_t x, int32_t y, int32_t type, int32_t lastkeypress)
-//{
-//    char st[2] = { '_',0 };
+/**
+ * @param {number} x
+ * @param {number} y
+ * @param {number} type
+ * @param {number} lastkeypress
+ * @return {undefined}
+ */
+function _internal_drawosdcursor(x, y, type, lastkeypress)
+{
+    assert.argumentsAre.int32(arguments);
+    todo();
+    //char st[2] = { '_',0 };
 
-//    UNREFERENCED_PARAMETER(lastkeypress);
+    //UNREFERENCED_PARAMETER(lastkeypress);
 
-//    if (type) st[0] = '#';
+    //if (type) st[0] = '#';
 
-//    if (white > -1)
-//    {
-//        printext256(4+(x<<3),4+(y<<3)+2, white, -1, st, 0);
-//        return;
-//    }
+    //if (white > -1)
+    //{
+    //    printext256(4+(x<<3),4+(y<<3)+2, white, -1, st, 0);
+    //    return;
+    //}
 
-//    {
-//        int32_t i, j, k;
-//        // find the palette index closest to white
-//        k=0;
-//        for (i=0; i<256; i++)
-//        {
-//            j = ((int32_t)curpalette[i].r)+((int32_t)curpalette[i].g)+((int32_t)curpalette[i].b);
-//            if (j > k) { k = j; white = i; }
-//        }
-//    }
+    //{
+    //    int32_t i, j, k;
+    //    // find the palette index closest to white
+    //    k=0;
+    //    for (i=0; i<256; i++)
+    //    {
+    //        j = ((int32_t)curpalette[i].r)+((int32_t)curpalette[i].g)+((int32_t)curpalette[i].b);
+    //        if (j > k) { k = j; white = i; }
+    //    }
+    //}
 
-//}
+}
 
-//static int32_t _internal_getcolumnwidth(int32_t w)
-//{
-//    return w/8 - 1;
-//}
+/**
+ * @param {number} w
+ * @return {number}
+ */
+function _internal_getcolumnwidth(w)
+{
+    assert.argumentsAre.int32(arguments);
+    return int32(int32(w/8) - 1);
+}
 
-//static int32_t _internal_getrowheight(int32_t w)
-//{
-//    return w/8;
-//}
+/**
+ * @param {number} w
+ * @return {number}
+ */
+function _internal_getrowheight(w)
+{
+    assert.argumentsAre.int32(arguments);
+    return int32(w/8);
+}
 
-//static void _internal_clearbackground(int32_t cols, int32_t rows)
-//{
-//    UNREFERENCED_PARAMETER(cols);
-//    UNREFERENCED_PARAMETER(rows);
-//}
+/**
+ * @param {number} numcols
+ * @param {numrows} numrows
+ * @return {undefined}
+ */
+function _internal_clearbackground(cols, rows)
+{    
+    assert.argumentsAre.int32(arguments);
+	todo();
+    //UNREFERENCED_PARAMETER(cols);
+    //UNREFERENCED_PARAMETER(rows);
+}
 
-//static int32_t _internal_gettime(void)
-//{
-//    return 0;
-//}
+/**
+ * @return {number}
+ */
+function _internal_gettime()
+{
+    return toInt32(0);
+}
 
-//static void _internal_onshowosd(int32_t a)
-//{
-//    UNREFERENCED_PARAMETER(a);
-//}
+/**
+ * @param {number} shown
+ * @return {undefined}
+ */
+function _internal_onshowosd(a)
+{
+    assert.argumentsAre.int32(arguments);
+    todo();
+    UNREFERENCED_PARAMETER(a);
+}
 
 //////////////////////////////
 

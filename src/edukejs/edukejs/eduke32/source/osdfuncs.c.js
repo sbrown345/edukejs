@@ -156,12 +156,18 @@ function GAME_getrowheight(w)
     return int32(w>>3);
 }
 
-//void GAME_onshowosd(int32_t shown)
-//{
+/**
+ * @param {number} shown
+ * @return {undefined}
+ */
+function GAME_onshowosd(shown)
+{
+    assert.argumentsAre.int32(arguments);
+    todo();
 //    G_UpdateScreenArea();
 
 //    UNREFERENCED_PARAMETER(shown);
 //    // XXX: it's weird to fake a keypress like this.
 ////    if (numplayers == 1 && ((shown && !ud.pause_on) || (!shown && ud.pause_on)))
 ////        KB_KeyDown[sc_Pause] = 1;
-//}
+}
