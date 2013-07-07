@@ -110,3 +110,5 @@
 /src/eduke32/vc100.pdb
 *.GRP
 grpfiles.cache
+
+*.suo
