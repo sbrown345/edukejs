@@ -90,12 +90,12 @@
 //static int32_t osdtextmode=1;
 //#endif
 // presentation parameters
-var  osdpromptshade=0;
-var  osdpromptpal=0;
-var  osdeditshade=0;
-var  osdeditpal=0;
-var  osdtextshade=0;
-var  osdtextpal=0;
+/*@type {number}*/var osdpromptshade = 0;
+/*@type {number}*/var osdpromptpal = 0;
+/*@type {number}*/var osdeditshade = 0;
+/*@type {number}*/var osdeditpal = 0;
+/*@type {number}*/var osdtextshade = 0;
+/*@type {number}*/var osdtextpal = 0;
 ///* static int32_t  osdcursorshade=0;
 //static int32_t  osdcursorpal=0; */
 
@@ -106,14 +106,14 @@ var  osdtextpal=0;
 //static hashtable_t h_osd      = { MAXSYMBOLS<<1, NULL };
 
 //// application callbacks
-//static void (*drawosdchar)(int32_t, int32_t, char, int32_t, int32_t) = _internal_drawosdchar;
-//static void (*drawosdstr)(int32_t, int32_t, const char *, int32_t, int32_t, int32_t) = _internal_drawosdstr;
-//static void (*drawosdcursor)(int32_t, int32_t, int32_t, int32_t) = _internal_drawosdcursor;
-//static int32_t (*getcolumnwidth)(int32_t) = _internal_getcolumnwidth;
-//static int32_t (*getrowheight)(int32_t) = _internal_getrowheight;
-//static void (*clearbackground)(int32_t,int32_t) = _internal_clearbackground;
-//static int32_t (*gettime)(void) = _internal_gettime;
-//static void (*onshowosd)(int32_t) = _internal_onshowosd;
+/*@type function(number,number,string,number,number)}*/var drawosdchar = _internal_drawosdchar;
+/*@type {function(number,number,string,number,number,number)}*/var drawosdstr = _internal_drawosdstr;
+/*@type {function(number,number,number,number)}*/var drawosdcursor = _internal_drawosdcursor;
+/*@type {function(number)}*/var getcolumnwidth = _internal_getcolumnwidth;
+/*@type {function(number)}*/var getrowheight = _internal_getrowheight;
+/*@type {function(number,number)}*/var clearbackground = _internal_clearbackground;
+/*@type {function(undefined)}*/var gettime = _internal_gettime;
+/*@type {function(number)}*/var onshowosd = _internal_onshowosd;
 
 //static void (*_drawosdchar)(int32_t, int32_t, char, int32_t, int32_t) = _internal_drawosdchar;
 //static void (*_drawosdstr)(int32_t, int32_t, const char *, int32_t, int32_t, int32_t) = _internal_drawosdstr;
@@ -781,10 +781,12 @@ var  osdtextpal=0;
 //}
 
 
-////
-//// OSD_SetLogFile() -- Sets the text file where printed text should be echoed
-////
-//void OSD_SetLogFile(const char *fn)
+///**
+// * OSD_SetLogFile() -- Sets the text file where printed text should be echoed
+// * @param {string} fn Log file filename
+// * @return {undefined}
+// */
+//function OSD_SetLogFile(fn)
 //{
 //    if (osdlog)
 //    {
@@ -796,45 +798,60 @@ var  osdtextpal=0;
 //    if (osdlog) setvbuf(osdlog, (char *)NULL, _IONBF, 0);
 //}
 
+/**
+ * OSD_SetFunctions() -- Sets some callbacks which the OSD uses to understand its world
+ * @param {function(number,number,string,number,number)} drawchar
+ * @param {function(number,number,string,number,number,number)} drawstr
+ * @param {function(number,number,number,number)} drawcursor
+ * @param {function(number)} colwidth
+ * @param {function(number)} rowheight
+ * @param {function(number,number)} clearbg
+ * @param {function(undefined)} gtime
+ * @param {function(number)} showosd
+ * @return {undefined}
+ */
+function OSD_SetFunctions(
+    drawchar,
+    drawstr,
+    drawcursor,
+    colwidth,
+    rowheight,
+    clearbg,
+    gtime,
+    showosd
+)
+{
+    drawosdchar = drawchar;
+    drawosdstr = drawstr;
+    drawosdcursor = drawcursor;
+    getcolumnwidth = colwidth;
+    getrowheight = rowheight;
+    clearbackground = clearbg;
+    gettime = gtime;
+    onshowosd = showosd;
 
-////
-//// OSD_SetFunctions() -- Sets some callbacks which the OSD uses to understand its world
-////
-//void OSD_SetFunctions(
-//    void (*drawchar)(int32_t,int32_t,char,int32_t,int32_t),
-//    void (*drawstr)(int32_t,int32_t,const char *,int32_t,int32_t,int32_t),
-//    void (*drawcursor)(int32_t,int32_t,int32_t,int32_t),
-//    int32_t (*colwidth)(int32_t),
-//    int32_t (*rowheight)(int32_t),
-//    void (*clearbg)(int32_t,int32_t),
-//    int32_t (*gtime)(void),
-//    void (*showosd)(int32_t)
-//)
-//{
-//    drawosdchar = drawchar;
-//    drawosdstr = drawstr;
-//    drawosdcursor = drawcursor;
-//    getcolumnwidth = colwidth;
-//    getrowheight = rowheight;
-//    clearbackground = clearbg;
-//    gettime = gtime;
-//    onshowosd = showosd;
-
-//    if (!drawosdchar) drawosdchar = _internal_drawosdchar;
-//    if (!drawosdstr) drawosdstr = _internal_drawosdstr;
-//    if (!drawosdcursor) drawosdcursor = _internal_drawosdcursor;
-//    if (!getcolumnwidth) getcolumnwidth = _internal_getcolumnwidth;
-//    if (!getrowheight) getrowheight = _internal_getrowheight;
-//    if (!clearbackground) clearbackground = _internal_clearbackground;
-//    if (!gettime) gettime = _internal_gettime;
-//    if (!onshowosd) onshowosd = _internal_onshowosd;
-//}
+    if (!drawosdchar) drawosdchar = _internal_drawosdchar;
+    if (!drawosdstr) drawosdstr = _internal_drawosdstr;
+    if (!drawosdcursor) drawosdcursor = _internal_drawosdcursor;
+    if (!getcolumnwidth) getcolumnwidth = _internal_getcolumnwidth;
+    if (!getrowheight) getrowheight = _internal_getrowheight;
+    if (!clearbackground) clearbackground = _internal_clearbackground;
+    if (!gettime) gettime = _internal_gettime;
+    if (!onshowosd) onshowosd = _internal_onshowosd;
+}
 
 
-//
-// OSD_SetParameters() -- Sets the parameters for presenting the text
-//
-/*void*/ function OSD_SetParameters(
+/**
+ * OSD_SetParameters() -- Sets the parameters for presenting the text
+ * @param {number} promptshade
+ * @param {number} promptpal
+ * @param {number} editshade
+ * @param {number} editpal
+ * @param {number} textshade
+ * @param {number} textpal
+ * @return {undefined}
+ */
+function OSD_SetParameters(
     promptshade, promptpal,
     editshade, editpal,
     textshade, textpal
@@ -848,7 +865,6 @@ var  osdtextpal=0;
     osdtextshade   = textshade;
     osdtextpal     = textpal;
 }
-
 
 ////
 //// OSD_CaptureKey() -- Sets the scancode for the key which activates the onscreen display

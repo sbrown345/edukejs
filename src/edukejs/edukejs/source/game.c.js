@@ -11086,18 +11086,18 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //    }
 //    else
 //#endif
-//    OSD_SetLogFile("eduke32.log");
+    //OSD_SetLogFile("eduke32.log");
 
-//    OSD_SetFunctions(
-//        GAME_drawosdchar,
-//        GAME_drawosdstr,
-//        GAME_drawosdcursor,
-//        GAME_getcolumnwidth,
-//        GAME_getrowheight,
-//        COMMON_clearbackground,
-//        GetTime,
-//        GAME_onshowosd
-//    );
+    OSD_SetFunctions(
+        GAME_drawosdchar,
+        GAME_drawosdstr,
+        GAME_drawosdcursor,
+        GAME_getcolumnwidth,
+        GAME_getrowheight,
+        COMMON_clearbackground,
+        GetTime,
+        GAME_onshowosd
+    );
 //    Bstrcpy(tempbuf, APPNAME);
 //    wm_setapptitle(tempbuf);
 ////initprintf("sizeof(mapstate_t)=%d\n", (int32_t)sizeof(mapstate_t));
@@ -13021,7 +13021,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //    CONTROL_DefineFlag(gamefunc_Previous_Weapon,FALSE);
 //}
 
-//int32_t GetTime(void)
-//{
-//    return totalclock;
-//}
+/**
+ * @return {number}
+ */
+function GetTime()
+{
+    return totalclock;
+}

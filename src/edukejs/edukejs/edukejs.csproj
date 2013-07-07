@@ -58,13 +58,17 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="index.htm" />
+    <Content Include="source\common.c.js" />
     <Content Include="source\game.c.js" />
     <Content Include="source\osd.c.js" />
+    <Content Include="source\osdfuncs.c.js" />
     <Content Include="tests\assert.tests.js" />
     <Content Include="tests\index.htm" />
     <Content Include="tests\libs\qunit.js" />
     <Content Include="tests\style\qunit.css" />
     <Content Include="utils\assert.js" />
+    <Content Include="utils\types.js" />
+    <Content Include="utils\todo.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -113,6 +117,8 @@
   </ProjectExtensions>
   <PropertyGroup>
     <PreBuildEvent>java -jar $(ProjectDir)closure-compiler\compiler.jar ^
+ --js $(ProjectDir)utils\types.js^
+ --js $(ProjectDir)utils\todo.js^
  --js $(ProjectDir)utils\assert.js^
  --js $(ProjectDir)source\osd.c.js^
  --js $(ProjectDir)source\game.c.js^

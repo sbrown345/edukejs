@@ -14,8 +14,7 @@
         argumentsAre: {
             int32: function (array) {
                 return assertArray(assert.test.isInt32, array);
-            },
-
+            }
         }
     };
 
