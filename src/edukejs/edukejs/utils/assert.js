@@ -1,27 +1,31 @@
 ﻿'use strict';
-(function (global) {
+(function(global) {
     global.assert = {
-        int32: function(arg) {
-            assert(isInt32, arg);
+        test: {
+            isInt32: function(v) {
+                return (v | 0) === v;
+            }
+        },
+
+        int32: function (arg) {
+            console.log(arg)
+            assert(assert.test.isInt32, arg);
         }
     };
-    
+
     function assert(testFn, valueOrArray) {
         console.assert(!testValueOrArray(testFn, valueOrArray))
     }
 
-    function isInt32(v) {
-        return (v | 0) === v;
-    }
-    
     function testValueOrArray(testFn, valueOrArray) {
+        debugger 
         if (valueOrArray.length) {
             for (var i = 0; i < valueOrArray.length; i++) {
                 if (!testFn(valueOrArray[i])) {
                     return false;
                 }
             }
-            
+
             return true;
         }
 

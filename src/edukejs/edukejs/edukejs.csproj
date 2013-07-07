@@ -62,6 +62,9 @@
     <Content Include="source\game.c.js" />
     <Content Include="source\osd.c.js" />
     <Content Include="tests\assert.tests.js" />
+    <Content Include="tests\index.htm" />
+    <Content Include="tests\libs\qunit.js" />
+    <Content Include="tests\style\qunit.css" />
     <Content Include="utils\assert.js" />
     <Content Include="Web.config" />
   </ItemGroup>
@@ -79,6 +82,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="headers\" />
+    <Folder Include="style\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
