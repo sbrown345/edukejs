@@ -11098,7 +11098,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
         GetTime,
         GAME_onshowosd
     );
-throw "todo"//    Bstrcpy(tempbuf, APPNAME);
+    Bstrcpy(tempbuf, APPNAME);
 //    wm_setapptitle(tempbuf);
 ////initprintf("sizeof(mapstate_t)=%d\n", (int32_t)sizeof(mapstate_t));
 
