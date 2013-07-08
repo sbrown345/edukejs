@@ -57,6 +57,8 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="build\headers\build.h.js" />
+    <Content Include="build\source\build.c.js" />
     <Content Include="index.htm" />
     <Content Include="eduke32\source\common.c.js" />
     <Content Include="eduke32\source\game.c.js" />
@@ -84,8 +86,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="build\headers\" />
-    <Folder Include="build\source\" />
     <Folder Include="eduke32\headers\" />
     <Folder Include="style\" />
   </ItemGroup>
@@ -122,6 +122,7 @@
  --js $(ProjectDir)utils\types.js^
  --js $(ProjectDir)utils\todo.js^
  --js $(ProjectDir)utils\assert.js^
+ --js $(ProjectDir)build\source\build.c.js^
  --js $(ProjectDir)eduke32\source\common.c.js^
  --js $(ProjectDir)eduke32\source\osd.c.js^
  --js $(ProjectDir)eduke32\source\osdfuncs.c.js^

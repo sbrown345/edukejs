@@ -1,5 +1,5 @@
-﻿'use strict';
-(function (global) {
+﻿(function (global) {
+    'use strict';
     global.assert = {
         test: {
             isInt32: function (v) {
