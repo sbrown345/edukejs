@@ -1,4 +1,24 @@
+/// <reference path="../../utils/assert.ts" />
+/// <reference path="../../utils/c.ts" />
+/// <reference path="../../utils/todo.ts" />
+/// <reference path="../../utils/types.ts" />
+
+/// <reference path="../../build/headers/build.h.ts" />
+/// <reference path="../../build/headers/compat.h.ts" />
+/// <reference path="../../build/headers/duke3d.h.ts" />
+
+/// <reference path="../../build/source/build.c.ts" />
+
+/// <reference path="../../eduke32/headers/global.h.ts" />
+
+/// <reference path="../../eduke32/source/baselayer.c.ts" />
+/// <reference path="../../eduke32/source/common.c.ts" />
+/// <reference path="../../eduke32/source/game.c.ts" />
+/// <reference path="../../eduke32/source/osdfuncs.c.ts" />
+/// <reference path="../../eduke32/source/winlayer.c.ts" />
+
 'use strict';
+
 
 //// On-screen Display (ie. console)
 //// for the Build Engine
@@ -421,7 +441,7 @@
  * @param {number} pal
  * @return {undefined}
  */
-function _internal_drawosdchar(x, y, ch, shade, pal)
+function _internal_drawosdchar(x : number, y : number, ch : number, shade : number, pal : number)
 {
     assert.argumentsAre.int32(arguments);
     todo();
@@ -443,10 +463,9 @@ function _internal_drawosdchar(x, y, ch, shade, pal)
  * @param {number} pal
  * @return {undefined}
  */
-function _internal_drawosdstr(x, y, ch, len, shade, pal)
+function _internal_drawosdstr(x : number, y : number, ch : string, len : number, shade : number, pal : number)
 {
-    assert.argumentsAre.int32([x,y,len, shade, pal]);
-    assert.string(ch);
+    assert.argumentsAre.int32([x,y,len, shade, pal]).isString(ch);
     todo();
     //char st[1024];
 
@@ -467,7 +486,7 @@ function _internal_drawosdstr(x, y, ch, len, shade, pal)
  * @param {number} lastkeypress
  * @return {undefined}
  */
-function _internal_drawosdcursor(x, y, type, lastkeypress)
+function _internal_drawosdcursor(x : number, y : number, type : number, lastkeypress : number)
 {
     assert.argumentsAre.int32(arguments);
     todo();
@@ -500,7 +519,7 @@ function _internal_drawosdcursor(x, y, type, lastkeypress)
  * @param {number} w
  * @return {number}
  */
-function _internal_getcolumnwidth(w)
+function _internal_getcolumnwidth(w : number) : number
 {
     assert.argumentsAre.int32(arguments);
     return int32(int32(w/8) - 1);
@@ -510,7 +529,7 @@ function _internal_getcolumnwidth(w)
  * @param {number} w
  * @return {number}
  */
-function _internal_getrowheight(w)
+function _internal_getrowheight(w : number) : number
 {
     assert.argumentsAre.int32(arguments);
     return int32(w/8);
@@ -521,7 +540,7 @@ function _internal_getrowheight(w)
  * @param {numrows} numrows
  * @return {undefined}
  */
-function _internal_clearbackground(cols, rows)
+function _internal_clearbackground(cols : number, rows : number)
 {    
     assert.argumentsAre.int32(arguments);
 	todo();
@@ -532,9 +551,9 @@ function _internal_clearbackground(cols, rows)
 /**
  * @return {number}
  */
-function _internal_gettime()
+function _internal_gettime() : number
 {
-    return toInt32(0);
+    return int32(0);
 }
 
 /**
@@ -545,7 +564,7 @@ function _internal_onshowosd(a)
 {
     assert.argumentsAre.int32(arguments);
     todo();
-    UNREFERENCED_PARAMETER(a);
+    //UNREFERENCED_PARAMETER(a);
 }
 
 //////////////////////////////

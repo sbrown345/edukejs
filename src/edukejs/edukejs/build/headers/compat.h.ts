@@ -1,3 +1,11 @@
+/// <reference path="../../utils/assert.ts" />
+/// <reference path="../../utils/c.ts" />
+/// <reference path="../../utils/todo.ts" />
+/// <reference path="../../utils/types.ts" />
+
+/// <reference path="build.h.ts" />
+/// <reference path="duke3d.h.ts" />
+
 // Compatibility declarations for things which might not be present in
 // certain build environments. It also levels the playing field caused
 // by different platforms.

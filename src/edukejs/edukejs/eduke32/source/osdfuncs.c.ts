@@ -1,4 +1,24 @@
+/// <reference path="../../utils/assert.ts" />
+/// <reference path="../../utils/c.ts" />
+/// <reference path="../../utils/todo.ts" />
+/// <reference path="../../utils/types.ts" />
+
+/// <reference path="../../build/headers/build.h.ts" />
+/// <reference path="../../build/headers/compat.h.ts" />
+/// <reference path="../../build/headers/duke3d.h.ts" />
+
+/// <reference path="../../build/source/build.c.ts" />
+
+/// <reference path="../../eduke32/headers/global.h.ts" />
+
+/// <reference path="../../eduke32/source/baselayer.c.ts" />
+/// <reference path="../../eduke32/source/common.c.ts" />
+/// <reference path="../../eduke32/source/game.c.ts" />
+/// <reference path="../../eduke32/source/osd.c.ts" />
+/// <reference path="../../eduke32/source/winlayer.c.ts" />
+
 'use strict';
+
 
 //-------------------------------------------------------------------------
 /*
@@ -51,7 +71,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  * @param {number} pal
  * @return {undefined}
  */
-function GAME_drawosdchar(x, y, ch, shade, pal)
+function GAME_drawosdchar(x : number, y : number, ch : number, shade : number, pal : number)
 {
     assert.argumentsAre.int32(arguments);
     todo();
@@ -78,10 +98,10 @@ function GAME_drawosdchar(x, y, ch, shade, pal)
  * @param {number} pal
  * @return {undefined}
  */
-function GAME_drawosdstr(x, y, ch, len, shade, pal)
+function GAME_drawosdstr(x : number, y : number, ch : string, len : number, shade : number, pal : number)
 {
     assert.argumentsAre.int32([x,y,len, shade, pal]);
-    assert.string(ch);
+    assert.isString(ch);
     todo();
 //    int16_t ac;
 //    const char *const ptr = OSD_GetTextPtr();
@@ -123,7 +143,7 @@ function GAME_drawosdstr(x, y, ch, len, shade, pal)
  * @param {number} lastkeypress
  * @return {undefined}
  */
-function GAME_drawosdcursor(x, y, type, lastkeypress)
+function GAME_drawosdcursor(x : number, y : number, type : number, lastkeypress : number) 
 {
     assert.argumentsAre.int32(arguments);
     todo();
@@ -140,7 +160,7 @@ function GAME_drawosdcursor(x, y, type, lastkeypress)
  * @param {number} w
  * @return {number}
  */
-function GAME_getcolumnwidth(w)
+function GAME_getcolumnwidth(w : number)
 {
     assert.argumentsAre.int32(arguments);
     return int32(w/9);
@@ -150,7 +170,7 @@ function GAME_getcolumnwidth(w)
  * @param {number} w
  * @return {number}
  */
-function GAME_getrowheight(w)
+function GAME_getrowheight(w : number)
 {
     assert.argumentsAre.int32(arguments);
     return int32(w>>3);
@@ -160,7 +180,7 @@ function GAME_getrowheight(w)
  * @param {number} shown
  * @return {undefined}
  */
-function GAME_onshowosd(shown)
+function GAME_onshowosd(shown : number)
 {
     assert.argumentsAre.int32(arguments);
     todo();

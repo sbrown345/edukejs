@@ -62,7 +62,7 @@
 
 //int32_t grponlymode = 0;
 //int32_t graphicsmode = 0;
-/*@type {number}*/ var totalclocklock;
+/*@type {number}*/ var totalclocklock : number;
 
 //int32_t synctics = 0, lockclock = 0;
 

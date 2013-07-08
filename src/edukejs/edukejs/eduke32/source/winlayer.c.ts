@@ -1,3 +1,25 @@
+/// <reference path="../../utils/assert.ts" />
+/// <reference path="../../utils/c.ts" />
+/// <reference path="../../utils/todo.ts" />
+/// <reference path="../../utils/types.ts" />
+
+/// <reference path="../../build/headers/build.h.ts" />
+/// <reference path="../../build/headers/compat.h.ts" />
+/// <reference path="../../build/headers/duke3d.h.ts" />
+
+/// <reference path="../../build/source/build.c.ts" />
+
+/// <reference path="../../eduke32/headers/global.h.ts" />
+
+/// <reference path="../../eduke32/source/baselayer.c.ts" />
+/// <reference path="../../eduke32/source/common.c.ts" />
+/// <reference path="../../eduke32/source/game.c.ts" />
+/// <reference path="../../eduke32/source/osd.c.ts" />
+/// <reference path="../../eduke32/source/osdfuncs.c.ts" />
+
+'use strict';
+
+
 // Windows DIB/DirectDraw interface layer for the Build Engine
 // Originally by Jonathon Fowler (jf@jonof.id.au)
 
