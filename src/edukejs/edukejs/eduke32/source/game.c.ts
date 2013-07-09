@@ -10,9 +10,12 @@
 /// <reference path="../../build/source/build.c.ts" />
 
 /// <reference path="../../eduke32/headers/global.h.ts" />
+/// <reference path="../../eduke32/headers/game.h.ts" />
+/// <reference path="../../eduke32/headers/player.h.ts" />
 
 /// <reference path="../../eduke32/source/baselayer.c.ts" />
 /// <reference path="../../eduke32/source/common.c.ts" />
+/// <reference path="../../eduke32/source/global.c.ts" />
 /// <reference path="../../eduke32/source/osd.c.ts" />
 /// <reference path="../../eduke32/source/osdfuncs.c.ts" />
 /// <reference path="../../eduke32/source/winlayer.c.ts" />
@@ -2889,8 +2892,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 //extern int32_t g_doQuickSave;
 
-//void G_GameExit(const char *msg)
-//{
+function G_GameExit(/*const char **/msg : string) : void
+{
 //#ifdef LUNATIC
 //    El_PrintTimes();
 //#endif
@@ -2933,9 +2936,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //    uninitgroupfile();
 
 //    Bfflush(NULL);
-
-//    exit(0);
-//}
+    todoThrow();
+    exit(0);
+}
 
 
 //static inline void G_MoveClouds(void)
@@ -10974,20 +10977,20 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //DukePlayer_t *g_player_ps[MAXPLAYERS];
 //#endif
 
-//void G_MaybeAllocPlayer(int32_t pnum)
-//{
-//    if (g_player[pnum].ps == NULL)
-//        g_player[pnum].ps = (DukePlayer_t *)Bcalloc(1, sizeof(DukePlayer_t));
-//    if (g_player[pnum].sync == NULL)
-//        g_player[pnum].sync = (input_t *)Bcalloc(1, sizeof(input_t));
+function G_MaybeAllocPlayer(/*int32_t */pnum : number)
+{
+    if (g_player[pnum].ps == NULL)
+        g_player[pnum].ps = new DukePlayer_t();
+    if (g_player[pnum].sync == NULL)
+        g_player[pnum].sync = new input_t();
 
-//    if (g_player[pnum].ps == NULL || g_player[pnum].sync == NULL)
-//        G_GameExit("OUT OF MEMORY");
+    if (g_player[pnum].ps == NULL || g_player[pnum].sync == NULL)
+        G_GameExit("OUT OF MEMORY");
 //#ifdef LUNATIC
 //    g_player_ps[pnum] = g_player[pnum].ps;
 //    g_player[pnum].ps->wa.idx = pnum;
 //#endif
-//}
+}
 
 //static void G_LoadAddon(void)
 //{
@@ -11133,11 +11136,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 //    G_AddSearchPaths();
 
-//    g_numSkills = 4;
-//    ud.multimode = 1;
+    g_numSkills = 4;
+    ud.multimode = 1;
 
-//    // this needs to happen before G_CheckCommandLine because G_GameExit accesses g_player[0]
-//    G_MaybeAllocPlayer(0);
+    // this needs to happen before G_CheckCommandLine because G_GameExit accesses g_player[0]
+    G_MaybeAllocPlayer(0);
 
 //    G_CheckCommandLine(argc,argv);
 

@@ -71,16 +71,16 @@ var MAXSECTORS = MAXSECTORSV8;
 
 //#define MAXWALLSB ((MAXWALLS>>2)+(MAXWALLS>>3))
 
-//#define MAXTILES 30720
-//#define MAXVOXELS 4096
-//#define MAXSTATUS 1024
-//#define MAXPLAYERS 16
-//#define MAXBASEPALS 8
-//#define MAXPALOOKUPS 256
-//#define MAXPSKYMULTIS 8
-//#define MAXPSKYTILES 256
-//#define MAXSPRITESONSCREEN 4096
-//#define MAXUNIQHUDID 256 //Extra slots so HUD models can store animation state without messing game sprites
+var MAXTILES = 30720;
+var MAXVOXELS = 4096;
+var MAXSTATUS = 1024;
+var MAXPLAYERS = 16;
+var MAXBASEPALS = 8;
+var MAXPALOOKUPS = 256;
+var MAXPSKYMULTIS = 8;
+var MAXPSKYTILES = 256;
+var MAXSPRITESONSCREEN = 4096;
+var MAXUNIQHUDID = 256; //Extra slots so HUD models can store animation state without messing game sprites
 
 //#define RESERVEDPALS 4 // don't forget to increment this when adding reserved pals
 //#define DETAILPAL   (MAXPALOOKUPS - 1)

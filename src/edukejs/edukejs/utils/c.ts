@@ -4,6 +4,10 @@
 
 var NULL = 0;
 
+function exit(code: number) {
+    todoThrow();
+}
+
 function strcpy(destination: Uint8Array, source: string) {
     assert.isType(Uint8Array, destination).isString(source);
 

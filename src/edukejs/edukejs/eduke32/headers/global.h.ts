@@ -1,24 +1,24 @@
-////-------------------------------------------------------------------------
-///*
-//Copyright (C) 2010 EDuke32 developers and contributors
+//-------------------------------------------------------------------------
+/*
+Copyright (C) 2010 EDuke32 developers and contributors
 
-//This file is part of EDuke32.
+This file is part of EDuke32.
 
-//EDuke32 is free software; you can redistribute it and/or
-//modify it under the terms of the GNU General Public License version 2
-//as published by the Free Software Foundation.
+EDuke32 is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License version 2
+as published by the Free Software Foundation.
 
-//This program is distributed in the hope that it will be useful,
-//but WITHOUT ANY WARRANTY; without even the implied warranty of
-//MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
-//See the GNU General Public License for more details.
+See the GNU General Public License for more details.
 
-//You should have received a copy of the GNU General Public License
-//along with this program; if not, write to the Free Software
-//Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-//*/
-////-------------------------------------------------------------------------
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+*/
+//-------------------------------------------------------------------------
 
 //#ifndef __global_h__
 //#define __global_h__
@@ -62,7 +62,7 @@
 //G_EXTERN char g_RTSPlaying;
 //G_EXTERN int32_t g_musicIndex;
 //G_EXTERN char g_loadFromGroupOnly;
-//G_EXTERN char g_numSkills;
+var g_numSkills : number; // char
 //G_EXTERN char myjumpingtoggle,myonground,myhardlanding,myreturntocenter;
 //G_EXTERN char pus,pub;
 //G_EXTERN char ready2send;
