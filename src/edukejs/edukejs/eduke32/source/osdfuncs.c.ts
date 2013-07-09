@@ -71,10 +71,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  * @param {number} pal
  * @return {undefined}
  */
-function GAME_drawosdchar(x : number, y : number, ch : number, shade : number, pal : number)
+function GAME_drawosdchar(/*int32_t*/ x: number, /*int32_t*/ y: number, /*char*/ ch: number, /*int32_t*/ shade: number,/*int32_t*/ pal : number)
 {
-    assert.argumentsAre.int32(arguments);
-    todo();
+    assert.originalArgs(arguments, "int32_t x, int32_t y, char ch, int32_t shade, int32_t pal");
+    assert.originalArgsFromFunction(arguments, GAME_drawosdchar);
+    todoThrow();
 //    int16_t ac;
 //#ifndef USE_OPENGL
 //    int32_t usehightile = 0;
@@ -98,11 +99,11 @@ function GAME_drawosdchar(x : number, y : number, ch : number, shade : number, p
  * @param {number} pal
  * @return {undefined}
  */
-function GAME_drawosdstr(x : number, y : number, ch : string, len : number, shade : number, pal : number)
+function GAME_drawosdstr(/*int32_t*/x: number, /*int32_t*/y: number, /*char*/ch: number, /*int32_t*/len: number, /*int32_t*/shade: number, /*int32_t*/pal : number)
 {
     assert.argumentsAre.int32([x,y,len, shade, pal]);
-    assert.isString(ch);
-    todo();
+    assert.char(ch);
+    todoThrow();
 //    int16_t ac;
 //    const char *const ptr = OSD_GetTextPtr();
 //    const char *const fmt = OSD_GetFmtPtr();
@@ -143,10 +144,10 @@ function GAME_drawosdstr(x : number, y : number, ch : string, len : number, shad
  * @param {number} lastkeypress
  * @return {undefined}
  */
-function GAME_drawosdcursor(x : number, y : number, type : number, lastkeypress : number) 
+function GAME_drawosdcursor(/*int32_t*/x: number, /*int32_t*/y: number, /*int32_t*/type: number, /*int32_t*/lastkeypress : number) 
 {
     assert.argumentsAre.int32(arguments);
-    todo();
+    todoThrow();
     //int16_t ac;
 
     //if (type) ac = SMALLFNTCURSOR;
@@ -160,7 +161,7 @@ function GAME_drawosdcursor(x : number, y : number, type : number, lastkeypress 
  * @param {number} w
  * @return {number}
  */
-function GAME_getcolumnwidth(w : number)
+function GAME_getcolumnwidth(/*int32_t*/w : number)
 {
     assert.argumentsAre.int32(arguments);
     return int32(w/9);
@@ -170,7 +171,7 @@ function GAME_getcolumnwidth(w : number)
  * @param {number} w
  * @return {number}
  */
-function GAME_getrowheight(w : number)
+function GAME_getrowheight(/*int32_t*/w : number)
 {
     assert.argumentsAre.int32(arguments);
     return int32(w>>3);
@@ -180,10 +181,10 @@ function GAME_getrowheight(w : number)
  * @param {number} shown
  * @return {undefined}
  */
-function GAME_onshowosd(shown : number)
+function GAME_onshowosd(/*int32_t*/shown : number)
 {
     assert.argumentsAre.int32(arguments);
-    todo();
+    todoThrow();
 //    G_UpdateScreenArea();
 
 //    UNREFERENCED_PARAMETER(shown);

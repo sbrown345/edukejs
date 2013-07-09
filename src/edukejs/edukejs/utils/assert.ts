@@ -1,58 +1,131 @@
 ﻿'use strict';
-var assert = {
-    test: {
-        isString: function (v) {
-            return typeof v === "string";
-        },
-        isInt32: function (v) {
-            return typeof v === "number" && (v | 0) === v;
-        },
-        isType: function (type, v) {
-            return v instanceof type;
-        }
-    },
+var assert;
+(function () {
+    assert = {
+        failedCount: 0,
 
-    int32: function (v) {
-        assertValue(assert.test.isInt32, v);
-        return assert;
-    },
-
-    isType: function (type, v) {
-        assertType(assert.test.isType, type, v);
-        return assert;
-    },
-
-    isString: function (v) {
-        assert.test.isString(v);
-        return assert;
-    },
-
-    argumentsAre: {
-        int32: function (array) {
-            assertArray(assert.test.isInt32, array);
+        int32: function (v: number) {
+            assertValue(assert.test.isInt32, v);
             return assert;
+        },
+
+        "char": function (v: number) {
+            assertValue(assert.test.isUint8, v);
+            return assert;
+        },
+
+        uint8: function (v: number) {
+            assertValue(assert.test.isUint8, v);
+            return assert;
+        },
+
+        isType: function (type, v) {
+            assertType(assert.test.isType, type, v);
+            return assert;
+        },
+
+        isString: function (v: string) {
+            assert.test.isString(v);
+            return assert;
+        },
+
+        // check js arguments object against original c arguments (as a string)
+        originalArgs: function (argsObj: Object, originalArgsStr: string) {
+            assertStringArgsWithArgsObject(originalArgsStr, argsObj);
+            return assert;
+        },
+
+        // check js arguments object against original c arguments with the type commented out (in the function method e.g. test(/*int32_t*/ a) {} )
+        originalArgsFromFunction: function (argsObj: Object, fn: Object) {
+            var fnWithArgsRegex = /^function\s*[^\(]*\(\s*([^\)]*)\)/m; // ht AngularJS
+            var commentStartRegEx = /\/\*/g;
+            var commentEndRegEx = /\*\//g;
+            var fnWithArgsText = fn.toString();
+            fnWithArgsText = fnWithArgsText.match(fnWithArgsRegex)[1];
+            fnWithArgsText = fnWithArgsText.replace(commentStartRegEx, "");
+            fnWithArgsText = fnWithArgsText.replace(commentEndRegEx, "");
+
+            assertStringArgsWithArgsObject(fnWithArgsText, argsObj);
+
+            return assert;
+        },
+
+        argumentsAre: {
+            int32: function (array) {
+                assertArray(assert.test.isInt32, array);
+                return assert;
+            }
+        },
+
+        test: {
+            isString: function (v): boolean {
+                return typeof v === "string";
+            },
+            isUint8: function (v): boolean {
+                return assert.test.isTypedArrayValue(Uint8Array, v);
+            },
+            isInt32: function (v): boolean {
+                return assert.test.isTypedArrayValue(Int32Array, v);
+            },
+            isType: function (type, v): boolean {
+                return v instanceof type;
+            },
+            isTypedArrayValue: function (typedArrayType, v: number): boolean {
+                var array = new typedArrayType(1); // todo: cache of types
+                array[0] = v;
+                return array[0] === v;
+            }
+        }
+    };
+
+    function checkArray(testFn, value) {
+        for (var i = 0; i < value.length; i++) {
+            if (!testFn(value[i])) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    var argDictionary = {
+        "int32_t": assert.int32,
+        "uint8_t": assert.uint8,
+        "char": assert.uint8,
+    };
+
+    function assertStringArgsWithArgsObject(fnWithArgsText: string, argsObj: Object) {
+        fnWithArgsText.split(",").forEach(function (v, i) {
+            var argPair = v.trim().match(/[^\s]+/g);
+            var type = argPair[0];
+            var testType = argDictionary[type];
+            var argValue = argsObj[i];
+
+            if (testType) {
+                testType(argValue);
+            }
+            else {
+                throw "unknown type " + v;
+            }
+        });
+    }
+
+    function assertArray(testFn, value) {
+        trackAssert(checkArray(testFn, value), ["array failed", testFn.toString(), value]);
+    }
+
+    function assertValue(testFn, value) {
+        trackAssert(testFn(value), "value failed");
+    }
+
+    function assertType(testFn, type, value) {
+        trackAssert(testFn(type, value), "value is not of type " + type);
+    }
+
+    function trackAssert(result, message) {
+        console.assert(result, message);
+        if (!result) {
+            assert.failedCount++;
         }
     }
-};
-
-function checkArray(testFn, value) {
-    for (var i = 0; i < value.length; i++) {
-        if (!testFn(value[i])) {
-            return false;
-        }
-    }
-
-    return true;
-}
-
-function assertArray(testFn, value) {
-    console.assert(checkArray(testFn, value), ["array failed", testFn.toString(), value]);
-}
-
-function assertValue(testFn, value) {
-    console.assert(testFn(value), "value failed");
-}
-
-function assertType(testFn, type, value) {
-    console.assert(testFn(type, value), "value is not of type " + type);
-}
+})();

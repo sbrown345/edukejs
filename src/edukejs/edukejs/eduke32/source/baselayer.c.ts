@@ -393,7 +393,8 @@
  */
 function baselayer_init()
 {
-    var i : number; throw "todo";
+    var i: number;
+    todo("init cvars etc in baselayer_init");
 //#ifdef _WIN32
 //// on Windows, don't save the "r_screenaspect" cvar because the physical screen size is
 //// determined at startup
