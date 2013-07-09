@@ -4,8 +4,10 @@
 
 var NULL = 0;
 
-function strcpy(destination, source) {
+function strcpy(destination: Uint8Array, source: string) {
     assert.isType(Uint8Array, destination).isString(source);
 
-    throw "todo"
+    for (var i = 0; i < source.length; i++) {
+        destination[i] = source.charCodeAt(i);
+    }
 }
