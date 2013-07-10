@@ -8,6 +8,7 @@
 /// <reference path="../../build/headers/duke3d.h.ts" />
 
 /// <reference path="../../build/source/build.c.ts" />
+/// <reference path="../../build/source/polymost.c.ts" />
 
 /// <reference path="../../eduke32/headers/global.h.ts" />
 /// <reference path="../../eduke32/headers/game.h.ts" />
@@ -9525,8 +9526,9 @@ function G_GameExit(/*const char **/msg : string) : void
 //}
 //#endif
 
-//static void G_CheckCommandLine(int32_t argc, const char **argv)
-//{
+function G_CheckCommandLine(/*int32_t */argc: number, /*string*/argv: string) : void
+{
+    assert.originalArgsFromFunction(arguments, G_CheckCommandLine);
 //    int16_t i = 1, j;
 //    const char *c, *k;
 
@@ -9535,25 +9537,26 @@ function G_GameExit(/*const char **/msg : string) : void
 //    g_elModules = Bcalloc(argc+1, sizeof(char *));
 //    Bassert(g_elModules);
 //#endif
-//    ud.fta_on = 1;
-//    ud.god = 0;
-//    ud.m_respawn_items = 0;
-//    ud.m_respawn_monsters = 0;
-//    ud.m_respawn_inventory = 0;
-//    ud.warp_on = 0;
-//    ud.cashman = 0;
-//    ud.m_player_skill = ud.player_skill = 2;
-//    g_player[0].wchoice[0] = 3;
-//    g_player[0].wchoice[1] = 4;
-//    g_player[0].wchoice[2] = 5;
-//    g_player[0].wchoice[3] = 7;
-//    g_player[0].wchoice[4] = 8;
-//    g_player[0].wchoice[5] = 6;
-//    g_player[0].wchoice[6] = 0;
-//    g_player[0].wchoice[7] = 2;
-//    g_player[0].wchoice[8] = 9;
-//    g_player[0].wchoice[9] = 1;
+    ud.fta_on = 1;
+    ud.god = 0;
+    ud.m_respawn_items = 0;
+    ud.m_respawn_monsters = 0;
+    ud.m_respawn_inventory = 0;
+    ud.warp_on = 0;
+    ud.cashman = 0;
+    ud.m_player_skill = ud.player_skill = 2;
+    g_player[0].wchoice[0] = 3;
+    g_player[0].wchoice[1] = 4;
+    g_player[0].wchoice[2] = 5;
+    g_player[0].wchoice[3] = 7;
+    g_player[0].wchoice[4] = 8;
+    g_player[0].wchoice[5] = 6;
+    g_player[0].wchoice[6] = 0;
+    g_player[0].wchoice[7] = 2;
+    g_player[0].wchoice[8] = 9;
+    g_player[0].wchoice[9] = 1;
 
+    todo("G_CheckCommandLine");
 //#ifdef HAVE_CLIPSHAPE_FEATURE
 //    // pre-form the default 10 clipmaps
 //    for (j = '0'; j<='9'; ++j)
@@ -10203,7 +10206,7 @@ function G_GameExit(/*const char **/msg : string) : void
 //        }
 //        while (i < argc);
 //    }
-//}
+}
 
 //static void G_DisplayLogo(void)
 //{
@@ -11142,7 +11145,7 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
     // this needs to happen before G_CheckCommandLine because G_GameExit accesses g_player[0]
     G_MaybeAllocPlayer(0);
 
-//    G_CheckCommandLine(argc,argv);
+    G_CheckCommandLine(argc,argv);
 
 //#if defined(RENDERTYPEWIN) && defined(USE_OPENGL)
 //    if (forcegl) initprintf("GL driver blacklist disabled.\n");
@@ -11214,6 +11217,7 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
 
 //    // used with binds for fast function lookup
 //    hash_init(&h_gamefuncs);
+    todo("hash_init h_gamefuncs");
 //    for (i=NUMGAMEFUNCTIONS-1; i>=0; i--)
 //    {
 //        char *str = Bstrtolower(Bstrdup(gamefunctions[i]));
@@ -11223,7 +11227,7 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
 //    }
 
 //#ifdef USE_OPENGL
-//    glusetexcache = -1;
+    glusetexcache = -1;
 //#endif
 
 //    i = CONFIG_ReadSetup();

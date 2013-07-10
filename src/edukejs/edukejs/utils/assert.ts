@@ -95,12 +95,14 @@ var assert;
         "int32_t": assert.int32,
         "uint8_t": assert.uint8,
         "char": assert.uint8,
+        "string": assert.isString,
     };
 
     function assertStringArgsWithArgsObject(fnWithArgsText: string, argsObj: Object) {
         fnWithArgsText.split(",").forEach(function (v, i) {
-            var argPair = v.trim().match(/[^\s]+/g);
-            var type = argPair[0];
+            var argMatch = v.trim().match(/[^\s]+/g);
+            var name = argMatch.pop();
+            var type = argMatch.join(" ");
             var testType = argDictionary[type];
             var argValue = argsObj[i];
 
@@ -116,9 +118,9 @@ var assert;
     function logFnInput(fnName: string, fnWithArgsText: string, argsObj: Object): void {
         var hash = {};
         fnWithArgsText.split(",").forEach(function (v, i) {
-            var argPair = v.trim().match(/[^\s]+/g);
-            var type = argPair[0];
-            var name = argPair[1];
+            var argMatch = v.trim().match(/[^\s]+/g);
+            var name = argMatch.pop();
+            var type = argMatch.join(" ");
             var argValue = argsObj[i];
 
             hash[type + " " + name] = argValue;

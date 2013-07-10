@@ -248,17 +248,17 @@ function DukePlayer_t() {
 
 //// KEEPINSYNC lunatic/defs.ilua
 function playerdata_t() {
-    //this.ps = new DukePlayer_t();
-    //this.sync = new input_t();                                         //input_t
+    this.ps = new DukePlayer_t();
+    this.sync = new input_t();                                         //input_t
 
-    //this.netsynctime = 0;                                  //int32_t
-    //this.ping = 0, this.filler = 0;                                 //int16_t
-    //this.pcolor = 0, this.pteam = 0;                                //int32_t
-    //this.frags = new Uint8Array(MAXPLAYERS), this. wchoice = new Uint8Array(MAX_WEAPONS);  
+    this.netsynctime = 0;                                  //int32_t
+    this.ping = 0, this.filler = 0;                                 //int16_t
+    this.pcolor = 0, this.pteam = 0;                                //int32_t
+    this.frags = new Uint8Array(MAXPLAYERS), this. wchoice = new Uint8Array(MAX_WEAPONS);  
 
-    //this.vote = 0, this.gotvote = 0, this.pingcnt = 0, this.playerquitflag = 0, this.ready=0;     //char
-    //this.user_name = "";//[32];                                     //char
-    //this.revision = 0 ; //uint32_t
+    this.vote = 0, this.gotvote = 0, this.pingcnt = 0, this.playerquitflag = 0, this.ready=0;     //char
+    this.user_name = "";//[32];                                     //char
+    this.revision = 0 ; //uint32_t
 }
 //#pragma pack(pop)
 
