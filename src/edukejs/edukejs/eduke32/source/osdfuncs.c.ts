@@ -76,7 +76,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 function GAME_drawosdchar(/*int32_t*/ x: number, /*int32_t*/ y: number, /*char*/ ch: number, /*int32_t*/ shade: number,/*int32_t*/ pal : number)
 {
-    assert.originalArgs(arguments, "int32_t x, int32_t y, char ch, int32_t shade, int32_t pal");
+    assert.originalArgs("GAME_drawosdchar", arguments, "int32_t x, int32_t y, char ch, int32_t shade, int32_t pal");
     assert.originalArgsFromFunction(arguments, GAME_drawosdchar);
     todoThrow();
 //    int16_t ac;

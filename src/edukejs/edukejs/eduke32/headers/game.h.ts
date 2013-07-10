@@ -1,3 +1,6 @@
+/// <reference path="../../eduke32/headers/global.h.ts" />
+/// <reference path="../../eduke32/headers/player.h.ts" />
+
 //-------------------------------------------------------------------------
 /*
 Copyright (C) 2010 EDuke32 developers and contributors
@@ -128,10 +131,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //# define CAMERADIST g_cameraDistance
 //# define CAMERACLOCK g_cameraClock
 //#endif
-
-
-class udtest { const_vis: number; fps: number };
-var t21: udtest = new udtest();
 
 function user_defs() {
     //#if !defined LUNATIC

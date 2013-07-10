@@ -30,21 +30,24 @@ var assert;
         },
 
         // check js arguments object against original c arguments (as a string)
-        originalArgs: function (argsObj: Object, originalArgsStr: string) {
+        originalArgs: function (fnName: string, argsObj: Object, originalArgsStr: string) {
             assertStringArgsWithArgsObject(originalArgsStr, argsObj);
             return assert;
         },
 
         // check js arguments object against original c arguments with the type commented out (in the function method e.g. test(/*int32_t*/ a) {} )
         originalArgsFromFunction: function (argsObj: Object, fn: Object) {
-            var fnWithArgsRegex = /^function\s*[^\(]*\(\s*([^\)]*)\)/m; // ht AngularJS
+            var fnWithArgsRegex = /^function\s*([^\(]*)\(\s*([^\)]*)\)/m; // ht AngularJS
             var commentStartRegEx = /\/\*/g;
             var commentEndRegEx = /\*\//g;
             var fnWithArgsText = fn.toString();
-            fnWithArgsText = fnWithArgsText.match(fnWithArgsRegex)[1];
+            var match = fnWithArgsText.match(fnWithArgsRegex);
+            var fnName = match[1].trim();
+            fnWithArgsText = match[2];
             fnWithArgsText = fnWithArgsText.replace(commentStartRegEx, "");
             fnWithArgsText = fnWithArgsText.replace(commentEndRegEx, "");
 
+            logFnInput(fnName, fnWithArgsText, argsObj);
             assertStringArgsWithArgsObject(fnWithArgsText, argsObj);
 
             return assert;
@@ -108,6 +111,20 @@ var assert;
                 throw "unknown type " + v;
             }
         });
+    }
+
+    function logFnInput(fnName: string, fnWithArgsText: string, argsObj: Object): void {
+        var hash = {};
+        fnWithArgsText.split(",").forEach(function (v, i) {
+            var argPair = v.trim().match(/[^\s]+/g);
+            var type = argPair[0];
+            var name = argPair[1];
+            var argValue = argsObj[i];
+
+            hash[type + " " + name] = argValue;
+        });
+
+        console.log(fnName, hash);
     }
 
     function assertArray(testFn, value) {

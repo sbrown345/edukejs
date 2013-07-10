@@ -49,12 +49,12 @@ test("isType", function () {
 });
 
 test("originalArgs", function () {
-    assert.originalArgs([1, 2], "int32_t x, int32_t y"),
+    assert.originalArgs("fnName", [1, 2], "int32_t x, int32_t y"),
     strictEqual(assert.failedCount, 0, "is array of ints");
 
-    assert.originalArgs([1, -222222222222222], "int32_t x, int32_t y");
+    assert.originalArgs("fnName", [1, -222222222222222], "int32_t x, int32_t y");
     strictEqual(assert.failedCount, 1, "is not array of ints");
 
-    assert.originalArgs([3, 255], "char x, char y");
+    assert.originalArgs("fnName", [3, 255], "char x, char y");
     strictEqual(assert.failedCount, 1, "is array of chars");
 });

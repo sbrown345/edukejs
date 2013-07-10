@@ -1,3 +1,6 @@
+/// <reference path="../../eduke32/headers/game.h.ts" />
+/// <reference path="../../eduke32/headers/global.h.ts" />
+
 //-------------------------------------------------------------------------
 /*
 Copyright (C) 2010 EDuke32 developers and contributors
@@ -72,19 +75,19 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //};
 
 //enum dukeweapon_t {
-//    KNEE_WEAPON,  // 0
-//    PISTOL_WEAPON,
-//    SHOTGUN_WEAPON,
-//    CHAINGUN_WEAPON,
-//    RPG_WEAPON,
-//    HANDBOMB_WEAPON,  // 5
-//    SHRINKER_WEAPON,
-//    DEVISTATOR_WEAPON,
-//    TRIPBOMB_WEAPON,
-//    FREEZE_WEAPON,
-//    HANDREMOTE_WEAPON,  // 10
-//    GROW_WEAPON,
-//    MAX_WEAPONS
+var KNEE_WEAPON = 0,  // 0
+    PISTOL_WEAPON = 1,
+    SHOTGUN_WEAPON = 2,
+    CHAINGUN_WEAPON = 3,
+    RPG_WEAPON = 4,
+    HANDBOMB_WEAPON = 5,  // 5
+    SHRINKER_WEAPON = 6,
+    DEVISTATOR_WEAPON = 7,
+    TRIPBOMB_WEAPON = 8,
+    FREEZE_WEAPON = 9,
+    HANDREMOTE_WEAPON = 10,  // 10
+    GROW_WEAPON = 11,
+    MAX_WEAPONS = 12;
 //};
 
 //enum weaponflags_t {
@@ -152,12 +155,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //    char inven_icon, jetpack_on, heat_on;
 //} DukeStatus_t;
 
-//typedef struct {
-//    uint32_t bits; // 4b
-//    int16_t fvel, svel; // 4b
-//    int8_t avel, horz; // 2b
-//    int8_t extbits, filler; // 2b
-//} input_t;
+function input_t() {
+    this.bits = 0; // 4b uint32_t
+    this.fvel = 0, this.svel = 0; // 4b int16_t
+    this.avel = 0, this.horz = 0; // 2b int8_t
+    this.extbits = 0, this.filler = 0; // 2b int8_t
+} //input_t;
 
 //#pragma pack(push,1)
 //// XXX: r1625 changed a lot types here, among others
@@ -167,7 +170,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //// Need to carefully think about implications!
 //// TODO: rearrange this if the opportunity arises!
 //// KEEPINSYNC lunatic/defs.ilua
-//typedef struct {
+function DukePlayer_t() {
 //    vec3_t pos, opos, vel, npos;
 //    int32_t bobposx, bobposy;
 //    int32_t truefz, truecz, player_par;
@@ -241,22 +244,22 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //    struct { int32_t idx; } wa;
 //#endif
 //    int8_t padding_;
-//} DukePlayer_t;
+} //DukePlayer_t;
 
 //// KEEPINSYNC lunatic/defs.ilua
 function playerdata_t() {
-    //DukePlayer_t * ps;                                      //DukePlayer_t
-    //input_t * sync;                                         //input_t
+    //this.ps = new DukePlayer_t();
+    //this.sync = new input_t();                                         //input_t
 
-    this.netsynctime = 0;                                  //int32_t
-    this.ping = 0, this.filler = 0;                                 //int16_t
-    this.pcolor = 0, this.pteam = 0;                                //int32_t
-    this.frags = new Uint8Array(MAXPLAYERS), this. wchoice = new Uint8Array(MAX_WEAPONS);  
+    //this.netsynctime = 0;                                  //int32_t
+    //this.ping = 0, this.filler = 0;                                 //int16_t
+    //this.pcolor = 0, this.pteam = 0;                                //int32_t
+    //this.frags = new Uint8Array(MAXPLAYERS), this. wchoice = new Uint8Array(MAX_WEAPONS);  
 
-    this.vote = 0, this.gotvote = 0, this.pingcnt = 0, this.playerquitflag = 0, this.ready=0;     //char
-    this.user_name = "";//[32];                                     //char
-    this. revision=0; //uint32_t
-};
+    //this.vote = 0, this.gotvote = 0, this.pingcnt = 0, this.playerquitflag = 0, this.ready=0;     //char
+    //this.user_name = "";//[32];                                     //char
+    //this.revision = 0 ; //uint32_t
+}
 //#pragma pack(pop)
 
 //// KEEPINSYNC lunatic/con_lang.lua
@@ -323,7 +326,7 @@ function playerdata_t() {
 
 //extern input_t          inputfifo[MOVEFIFOSIZ][MAXPLAYERS];
 //extern playerspawn_t    g_playerSpawnPoints[MAXPLAYERS];
-var g_player : Array <playerdata_t>;//[MAXPLAYERS];
+var g_player = structArray(playerdata_t, MAXPLAYERS);
 ////extern char             dashow2dsector[(MAXSECTORS+7)>>3];
 ////extern int16_t          searchsect[MAXSECTORS],searchparent[MAXSECTORS];
 //extern int16_t          WeaponPickupSprites[MAX_WEAPONS];

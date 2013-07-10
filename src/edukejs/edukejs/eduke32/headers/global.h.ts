@@ -1,3 +1,5 @@
+/// <reference path="../../eduke32/headers/game.h.ts" />
+/// <reference path="../../eduke32/headers/player.h.ts" />
 //-------------------------------------------------------------------------
 /*
 Copyright (C) 2010 EDuke32 developers and contributors
