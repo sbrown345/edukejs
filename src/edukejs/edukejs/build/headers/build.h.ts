@@ -26,8 +26,8 @@
 //#define PI 3.14159265358979323846
 
 var MAXSECTORSV8 = 4096;
-//#define MAXWALLSV8 16384
-//#define MAXSPRITESV8 16384
+var MAXWALLSV8 = 16384;
+var MAXSPRITESV8 = 16384;
 
 //#define MAXSECTORSV7 1024
 //#define MAXWALLSV7 8192
@@ -35,11 +35,11 @@ var MAXSECTORSV8 = 4096;
 
 //#ifndef GEKKO
 var MAXSECTORS = MAXSECTORSV8;
-//# define MAXWALLS MAXWALLSV8
-//# define MAXSPRITES MAXSPRITESV8
+var MAXWALLS = MAXWALLSV8;
+var MAXSPRITES = MAXSPRITESV8;
 
-//# define MAXXDIM 7680
-//# define MAXYDIM 3200
+var MAXXDIM = 7680;
+var MAXYDIM = 3200;
 
 //#ifdef LUNATIC
 //# define NEW_MAP_FORMAT
@@ -55,8 +55,8 @@ var MAXSECTORS = MAXSECTORSV8;
 //#endif
 
 //// additional space beyond wall, in walltypes:
-//# define M32_FIXME_WALLS 512
-//# define M32_FIXME_SECTORS 2
+var M32_FIXME_WALLS = 512;
+var M32_FIXME_SECTORS = 2;
 //#else
 //# define MAXSECTORS MAXSECTORSV7
 //# define MAXWALLS MAXWALLSV7
@@ -291,22 +291,22 @@ var MAXUNIQHUDID = 256; //Extra slots so HUD models can store animation state wi
 
 ////////////////////// Version 7 map format ////////////////////
 
-//    //40 bytes
-//typedef struct
-//{
-//    Tracker(Sector, int16_t) wallptr, wallnum;
-//    Tracker(Sector, int32_t) ceilingz, floorz;
-//    Tracker(Sector, uint16_t) ceilingstat, floorstat;
-//    Tracker(Sector, int16_t) ceilingpicnum, ceilingheinum;
-//    Tracker(Sector, int8_t) ceilingshade;
-//    Tracker(Sector, uint8_t) ceilingpal, /*CM_FLOORZ:*/ ceilingxpanning, ceilingypanning;
-//    Tracker(Sector, int16_t) floorpicnum, floorheinum;
-//    Tracker(Sector, int8_t) floorshade;
-//    Tracker(Sector, uint8_t) floorpal, floorxpanning, floorypanning;
-//    Tracker(Sector, uint8_t) /*CM_CEILINGZ:*/ visibility, filler;
-//    Tracker(Sector, uint16_t) lotag, hitag;
-//    Tracker(Sector, int16_t) extra;
-//} sectortypev7;
+//40 bytes
+function sectortypev7()
+{
+    this.wallptr = 0, this.wallnum = 0;                                      //Tracker(Sector, int16_t) 
+    this.ceilingz = 0, this.floorz = 0;                                               //Tracker(Sector, int32_t) 
+    this.ceilingstat = 0, this.floorstat = 0;                                        //Tracker(Sector, uint16_t)
+    this.ceilingpicnum = 0, this.ceilingheinum = 0;                                   //Tracker(Sector, int16_t) 
+    this.ceilingshade = 0;                                                          //Tracker(Sector, int8_t)  
+    this.ceilingpal = 0, /*CM_FLOORZ:*/ this.ceilingxpanning = 0, this.ceilingypanning = 0;    //Tracker(Sector, uint8_t) 
+    this.floorpicnum = 0, this.floorheinum = 0;                                       //Tracker(Sector, int16_t) 
+    this.floorshade = 0;                                                            //Tracker(Sector, int8_t)  
+    this.floorpal = 0, this.floorxpanning = 0, this.floorypanning = 0;                         //Tracker(Sector, uint8_t) 
+    /*CM_CEILINGZ:*/ this.visibility = 0, this.filler = 0;                           //Tracker(Sector, uint8_t) 
+    this.lotag = 0, this.hitag = 0;                                                  //Tracker(Sector, uint16_t)
+    this.extra = 0;                                                                 //Tracker(Sector, int16_t) 
+}// sectortypev7;
 
 ////cstat:
 ////   bit 0: 1 = Blocking wall (use with clipmove, getzrange)         "B"
@@ -322,18 +322,18 @@ var MAXUNIQHUDID = 256; //Extra slots so HUD models can store animation state wi
 ////   bits 10 and 11: reserved (in use by YAX)
 ////   bits 12-15: reserved  (14: temp use by editor)
 
-//    //32 bytes
-//typedef struct
-//{
-//    Tracker(Wall, int32_t) x, y;
-//    Tracker(Wall, int16_t) point2, nextwall, nextsector;
-//    Tracker(Wall, uint16_t) cstat;
-//    Tracker(Wall, int16_t) picnum, overpicnum;
-//    Tracker(Wall, int8_t) shade;
-//    Tracker(Wall, uint8_t) pal, xrepeat, yrepeat, xpanning, ypanning;
-//    Tracker(Wall, uint16_t) lotag, hitag;
-//    Tracker(Wall, int16_t) extra;
-//} walltypev7;
+//32 bytes
+function walltypev7() 
+{
+    this.x = 0, this.y = 0;                                        //Tracker(Wall, int32_t)  
+    this.point2 = 0, this.nextwall = 0, this.nextsector = 0;                //Tracker(Wall, int16_t)  
+    this.cstat = 0;                                       //Tracker(Wall, uint16_t) 
+    this.picnum = 0, this.overpicnum = 0;                          //Tracker(Wall, int16_t)  
+    this.shade = 0;                                       //Tracker(Wall, int8_t)   
+    this.pal = 0, this.xrepeat = 0, this.yrepeat = 0, this.xpanning = 0, this.ypanning = 0;   //Tracker(Wall, uint8_t)  
+    this.lotag = 0, this.hitag = 0;                                //Tracker(Wall, uint16_t) 
+    this.extra = 0;                                       //Tracker(Wall, int16_t)  
+} //walltypev7;
 
 
 //enum {
@@ -364,21 +364,21 @@ var MAXUNIQHUDID = 256; //Extra slots so HUD models can store animation state wi
 ////   bit 14: 1 = invisible but casts shadow
 ////   bit 15: 1 = Invisible sprite, 0 = not invisible
 
-//    //44 bytes
-//typedef struct
-//{
-//    Tracker(Sprite, int32_t) x, y, z;
-//    Tracker(Sprite, uint16_t) cstat;
-//    Tracker(Sprite, int16_t) picnum;
-//    Tracker(Sprite, int8_t) shade;
-//    Tracker(Sprite, uint8_t) pal, clipdist, filler;
-//    Tracker(Sprite, uint8_t) xrepeat, yrepeat;
-//    Tracker(Sprite, int8_t) xoffset, yoffset;
-//    Tracker(Sprite, int16_t) sectnum, statnum;
-//    Tracker(Sprite, int16_t) ang, owner, xvel, yvel, zvel;
-//    Tracker(Sprite, uint16_t) lotag, hitag;
-//    Tracker(Sprite, int16_t) extra;
-//} spritetype;
+//44 bytes
+function spritetype()
+{
+    this.x = 0, this.y = 0, this.z = 0;         //Tracker(Sprite, int32_t)  
+    this.cstat = 0;                             //Tracker(Sprite, uint16_t) 
+    this.picnum = 0;                            //Tracker(Sprite, int16_t)  
+    this.shade = 0;                             //Tracker(Sprite, int8_t)   
+    this.pal = 0, this.clipdist = 0, this.filler = 0;   //Tracker(Sprite, uint8_t)  
+    this.xrepeat = 0, this.yrepeat = 0;                  //Tracker(Sprite, uint8_t)  
+    this.xoffset = 0, this.yoffset = 0;                  //Tracker(Sprite, int8_t)   
+    this.sectnum = 0, this.statnum = 0;                  //Tracker(Sprite, int16_t)  
+    this.ang = 0, this.owner = 0, this.xvel = 0, this.yvel = 0, this.zvel = 0;      //Tracker(Sprite, int16_t)  
+    this.lotag = 0, this.hitag = 0;                      //Tracker(Sprite, uint16_t) 
+    this.extra = 0;                             //Tracker(Sprite, int16_t)  
+} //spritetype;
 
 ////////////////////// END Version 7 map format ////////////////
 
@@ -572,19 +572,19 @@ var MAXUNIQHUDID = 256; //Extra slots so HUD models can store animation state wi
 //typedef walltypevx walltype;
 ////////////////////// END Lunatic new-generation map format ////////////////
 //#else
-//typedef sectortypev7 sectortype;
-//typedef walltypev7 walltype;
+var sectortype = sectortypev7;
+var walltype = walltypev7;
 //#endif
 
-//typedef struct {
-//    uint32_t mdanimtims;
-//    int16_t mdanimcur;
-//    int16_t angoff, pitch, roll;
-//    int32_t xoff, yoff, zoff;
-//    uint8_t flags;
-//    uint8_t xpanning, ypanning;
-//    uint8_t filler;
-//    float alpha;
+function spriteext_t (){
+    this.mdanimtims = 0;                       //    uint32_t
+    this.mdanimcur = 0;                         //    int16_t 
+    this.angoff = 0, this.pitch = 0, this.roll = 0;               //    int16_t 
+    this.xoff = 0, this.yoff = 0, this.zoff = 0;                  //    int32_t 
+    this.flags = 0;                             //    uint8_t 
+    this.xpanning = 0, this.ypanning = 0;                //    uint8_t 
+    this.filler = 0;                            //    uint8_t 
+    this.alpha = 0.0;//    float 
 //    // NOTE: keep 'tspr' on an 8-byte boundary:
 //    spritetype *tspr;
 //#if !defined UINTPTR_MAX
@@ -594,14 +594,14 @@ var MAXUNIQHUDID = 256; //Extra slots so HUD models can store animation state wi
 //    /* On a 32-bit build, pad the struct so it has the same size everywhere. */
 //    intptr_t dummy_;
 //#endif
-//} spriteext_t;
+} //spriteext_t;
 
-//typedef struct {
-//    float smoothduration;
-//    int16_t mdcurframe, mdoldframe;
-//    int16_t mdsmooth;
-//    uint8_t filler[2];
-//} spritesmooth_t;
+function spritesmooth_t() {
+    this.smoothduration = 0.0;                     //float 
+    this.mdcurframe = 0, this.mdoldframe = 0;            //int16_t 
+    this.mdsmooth = 0;                          //int16_t 
+    this.filler = new Uint8Array(2);                         //uint8_t [2]
+} //spritesmooth_t;
 
 //#define SPREXT_NOTMD 1
 //#define SPREXT_NOMDANIM 2
@@ -620,13 +620,13 @@ var MAXUNIQHUDID = 256; //Extra slots so HUD models can store animation state wi
 //EXTERN spriteext_t *spriteext;
 //EXTERN spritesmooth_t *spritesmooth;
 
-//EXTERN sectortype *sector;
-//EXTERN walltype *wall;
-//EXTERN spritetype *sprite;
-//EXTERN spritetype *tsprite;
+var sector;//EXTERN sectortype *sector;
+var wall;//EXTERN walltype *wall;
+var sprite;//EXTERN spritetype *sprite;
+var tsprite;//EXTERN spritetype *tsprite;
 //#else
-//EXTERN spriteext_t spriteext[MAXSPRITES+MAXUNIQHUDID];
-//EXTERN spritesmooth_t spritesmooth[MAXSPRITES+MAXUNIQHUDID];
+var spriteext;//EXTERN spriteext_t spriteext[MAXSPRITES+MAXUNIQHUDID];
+var spritesmooth;//EXTERN spritesmooth_t spritesmooth[MAXSPRITES+MAXUNIQHUDID];
 
 //EXTERN sectortype sector[MAXSECTORS + M32_FIXME_SECTORS];
 //EXTERN walltype wall[MAXWALLS + M32_FIXME_WALLS];
@@ -708,7 +708,7 @@ var MAXUNIQHUDID = 256; //Extra slots so HUD models can store animation state wi
 //#endif
 
 //#define MAXVALIDMODES 256
-//EXTERN int32_t validmodecnt;
+var validmodecnt : number; //EXTERN int32_t 
 //struct validmode_t {
 //    int32_t xdim,ydim;
 //    char bpp;
@@ -731,8 +731,8 @@ var MAXUNIQHUDID = 256; //Extra slots so HUD models can store animation state wi
 //EXTERN int16_t headsectbunch[2][YAX_MAXBUNCHES], nextsectbunch[2][MAXSECTORS];
 //#endif
 
-//EXTERN int32_t Numsprites;
-//EXTERN int16_t numsectors, numwalls;
+var Numsprites; //EXTERN int32_t
+var numsectors, numwalls; //EXTERN int16_t 
 //EXTERN char display_mirror;
 /*@type {number}*/ var totalclock;
 //EXTERN int32_t numframes, randomseed;

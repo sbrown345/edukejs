@@ -8,6 +8,8 @@
 /// <reference path="../../build/headers/duke3d.h.ts" />
 
 /// <reference path="../../build/source/build.c.ts" />
+/// <reference path="../../build/source/crc32.c.ts" />
+/// <reference path="../../build/source/engine.c.ts" />
 /// <reference path="../../build/source/polymost.c.ts" />
 
 /// <reference path="../../eduke32/headers/global.h.ts" />
@@ -16,6 +18,7 @@
 
 /// <reference path="../../eduke32/source/baselayer.c.ts" />
 /// <reference path="../../eduke32/source/common.c.ts" />
+/// <reference path="../../eduke32/source/config.c.ts" />
 /// <reference path="../../eduke32/source/game.c.ts" />
 /// <reference path="../../eduke32/source/global.c.ts" />
 /// <reference path="../../eduke32/source/osd.c.ts" />

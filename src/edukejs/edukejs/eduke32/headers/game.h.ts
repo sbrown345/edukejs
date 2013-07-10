@@ -217,11 +217,11 @@ function user_defs() {
         //NoAutoLoad=0;             //int32_t
     
         //scripthandle=0;           //int32_t
-        //setupread=0;              //int32_t
+        setupread : 0,              //int32_t
     
         //CheckForUpdates=0;        //int32_t
         //LastUpdateCheck=0;        //int32_t
-        //useprecache=0;            //int32_t
+        useprecache : 0            //int32_t
     };
 
     //char overhead_on,last_overhead,showweapons;

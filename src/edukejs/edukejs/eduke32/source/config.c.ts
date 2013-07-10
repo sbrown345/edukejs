@@ -8,6 +8,8 @@
 /// <reference path="../../build/headers/duke3d.h.ts" />
 
 /// <reference path="../../build/source/build.c.ts" />
+/// <reference path="../../build/source/crc32.c.ts" />
+/// <reference path="../../build/source/engine.c.ts" />
 /// <reference path="../../build/source/polymost.c.ts" />
 
 /// <reference path="../../eduke32/headers/global.h.ts" />
@@ -576,6 +578,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 function /*int32_t */ CONFIG_ReadSetup() : number
 {
+    todo("CONFIG_ReadSetup");
 //    int32_t dummy, i = 0;
 //    char commmacro[] = "CommbatMacro# ";
 //    char tempbuf[1024];
@@ -647,12 +650,16 @@ function /*int32_t */ CONFIG_ReadSetup() : number
 //        }
 //// #endif
 
-//        if (g_grpNamePtr == NULL && g_usingAddon == 0)
-//        {
-//            SCRIPT_GetStringPtr(ud.config.scripthandle, "Setup","SelectedGRP",&g_grpNamePtr);
-//            if (g_grpNamePtr && !Bstrlen(g_grpNamePtr))
-//                g_grpNamePtr = dup_filename(G_DefaultGrpFile());
-//        }
+        if (!g_grpNamePtr && g_usingAddon == 0)
+        {
+            todo("config SCRIPT_GetStringPtr, setting g_grpNamePtr manually!");
+            g_grpNamePtr = "DUKE3D.GRP"; // TODO TEMP CODE
+
+            // REAL CODE:
+            //SCRIPT_GetStringPtr(ud.config.scripthandle, "Setup","SelectedGRP",&g_grpNamePtr);
+            //if (g_grpNamePtr && !Bstrlen(g_grpNamePtr))
+            //    g_grpNamePtr = dup_filename(G_DefaultGrpFile());
+        }
 
 //        if (!NAM)
 //        {

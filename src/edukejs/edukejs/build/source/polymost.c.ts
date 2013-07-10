@@ -1,3 +1,14 @@
+/// <reference path="../../utils/assert.ts" />
+/// <reference path="../../utils/c.ts" />
+/// <reference path="../../utils/todo.ts" />
+/// <reference path="../../utils/types.ts" />
+
+/// <reference path="../../build/headers/build.h.ts" />
+/// <reference path="../../build/headers/compat.h.ts" />
+/// <reference path="../../build/headers/duke3d.h.ts" />
+
+/// <reference path="../../build/source/crc32.c.ts" />
+
 /**************************************************************************************************
 "POLYMOST" code written by Ken Silverman
 Ken Silverman's official web site: http://www.advsys.net/ken
@@ -139,9 +150,9 @@ Low priority:
 //    {"GL_LINEAR_MIPMAP_LINEAR",GL_LINEAR_MIPMAP_LINEAR,GL_LINEAR}
 //};
 //
-//int32_t glanisotropy = 1;            // 0 = maximum supported by card
-//int32_t glusetexcompr = 1;
-//int32_t gltexfiltermode = 2; // GL_NEAREST_MIPMAP_NEAREST
+var glanisotropy = 1;            // 0 = maximum supported by card //int32_t 
+var glusetexcompr = 1;//int32_t 
+var gltexfiltermode = 2; // GL_NEAREST_MIPMAP_NEAREST//int32_t 
 var glusetexcache = 2, glusememcache = 1; ////int32_t 
 //int32_t glmultisample = 0, glnvmultisamplehint = 0;
 //int32_t gltexmaxsize = 0;      // 0 means autodetection on first run

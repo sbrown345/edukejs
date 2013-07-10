@@ -61,6 +61,8 @@
     <Content Include="build\headers\compat.h.ts" />
     <Content Include="build\headers\duke3d.h.ts" />
     <Content Include="build\source\build.c.ts" />
+    <Content Include="build\source\crc32.c.ts" />
+    <Content Include="build\source\engine.c.ts" />
     <Content Include="build\source\polymost.c.ts" />
     <Content Include="eduke32\headers\game.h.ts" />
     <Content Include="eduke32\headers\global.h.ts" />

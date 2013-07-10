@@ -326,7 +326,7 @@ function playerdata_t() {
 
 //extern input_t          inputfifo[MOVEFIFOSIZ][MAXPLAYERS];
 //extern playerspawn_t    g_playerSpawnPoints[MAXPLAYERS];
-var g_player = structArray(playerdata_t, MAXPLAYERS);
+var g_player = newStructArray(playerdata_t, MAXPLAYERS);
 ////extern char             dashow2dsector[(MAXSECTORS+7)>>3];
 ////extern int16_t          searchsect[MAXSECTORS],searchparent[MAXSECTORS];
 //extern int16_t          WeaponPickupSprites[MAX_WEAPONS];

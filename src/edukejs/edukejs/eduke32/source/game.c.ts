@@ -8,6 +8,8 @@
 /// <reference path="../../build/headers/duke3d.h.ts" />
 
 /// <reference path="../../build/source/build.c.ts" />
+/// <reference path="../../build/source/crc32.c.ts" />
+/// <reference path="../../build/source/engine.c.ts" />
 /// <reference path="../../build/source/polymost.c.ts" />
 
 /// <reference path="../../eduke32/headers/global.h.ts" />
@@ -16,6 +18,7 @@
 
 /// <reference path="../../eduke32/source/baselayer.c.ts" />
 /// <reference path="../../eduke32/source/common.c.ts" />
+/// <reference path="../../eduke32/source/config.c.ts" />
 /// <reference path="../../eduke32/source/global.c.ts" />
 /// <reference path="../../eduke32/source/osd.c.ts" />
 /// <reference path="../../eduke32/source/osdfuncs.c.ts" />
@@ -167,7 +170,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //char **g_defModules = NULL;
 //int32_t g_defModulesNum = 0;
 //int32_t g_dependencyCRC = 0;
-//int32_t g_usingAddon = 0;
+var g_usingAddon = 0; //int32_t 
 
 //#ifdef HAVE_CLIPSHAPE_FEATURE
 //char **g_clipMapFiles = NULL;
@@ -11230,19 +11233,20 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
     glusetexcache = -1;
 //#endif
 
-//    i = CONFIG_ReadSetup();
+    i = CONFIG_ReadSetup();
 
-//    // CODEDUP astub.c
-//    if (g_grpNamePtr == NULL)
-//    {
-//        const char *cp = getenv("DUKE3DGRP");
-//        if (cp)
-//        {
-//            clearGrpNamePtr();
-//            g_grpNamePtr = dup_filename(cp);
-//            initprintf("Using \"%s\" as main GRP file\n", g_grpNamePtr);
-//        }
-//    }
+    // CODEDUP astub.c
+    if (!g_grpNamePtr)
+    {
+        todoThrow();
+        //const char *cp = getenv("DUKE3DGRP");
+        //if (cp)
+        //{
+        //    clearGrpNamePtr();
+        //    g_grpNamePtr = dup_filename(cp);
+        //    initprintf("Using \"%s\" as main GRP file\n", g_grpNamePtr);
+        //}
+    }
 
 //#ifdef _WIN32
 
@@ -11286,20 +11290,21 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
 //#endif
 
 //#ifdef USE_OPENGL
-//    if (glusetexcache == -1)
-//    {
-//        ud.config.useprecache = glusetexcompr = 1;
-//        glusetexcache = 2;
-//    }
+    if (glusetexcache == -1)
+    {
+        ud.config.useprecache = glusetexcompr = 1;
+        glusetexcache = 2;
+    }
 //#endif
 
-//    if (preinitengine())
-//    {
+    if (preinitengine())
+    {
+        todo("error stuff");
 //        wm_msgbox("Build Engine Initialization Error",
 //                  "There was a problem initializing the Build engine: %s", engineerrstr);
 //        ERRprintf("app_main: There was a problem initializing the Build engine: %s\n", engineerrstr);
 //        exit(2);
-//    }
+    }
 
 //    if (Bstrcmp(setupfilename, SETUPFILENAME))
 //        initprintf("Using config file \"%s\".\n",setupfilename);

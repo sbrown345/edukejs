@@ -4,7 +4,7 @@ var int32 = function (v: number): number {
     return v | 0;
 };
 
-function structArray($class, count) {
+function newStructArray($class, count) {
     var array = new Array(count);
     for (var i = 0; i < count; i++) {
         array[i] = new $class();

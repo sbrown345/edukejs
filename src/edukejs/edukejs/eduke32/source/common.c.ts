@@ -8,6 +8,8 @@
 /// <reference path="../../build/headers/duke3d.h.ts" />
 
 /// <reference path="../../build/source/build.c.ts" />
+/// <reference path="../../build/source/crc32.c.ts" />
+/// <reference path="../../build/source/engine.c.ts" />
 /// <reference path="../../build/source/polymost.c.ts" />
 
 /// <reference path="../../eduke32/headers/global.h.ts" />
@@ -15,6 +17,7 @@
 /// <reference path="../../eduke32/headers/player.h.ts" />
 
 /// <reference path="../../eduke32/source/baselayer.c.ts" />
+/// <reference path="../../eduke32/source/config.c.ts" />
 /// <reference path="../../eduke32/source/game.c.ts" />
 /// <reference path="../../eduke32/source/global.c.ts" />
 /// <reference path="../../eduke32/source/osd.c.ts" />
@@ -56,8 +59,8 @@
 //const char *defaultconfilename = "GAME.CON";
 //const char *defaultgameconfilename[GAMECOUNT] = { "EDUKE.CON", "NAM.CON", "NAPALM.CON", "WW2GI.CON" };
 //
-//// g_grpNamePtr can ONLY point to a malloc'd block (length BMAX_PATH)
-//char *g_grpNamePtr = NULL;
+// g_grpNamePtr can ONLY point to a malloc'd block (length BMAX_PATH)
+var g_grpNamePtr : string = ""; //char *
 //// g_defNamePtr can ONLY point to a malloc'd block (length BMAX_PATH)
 //char *g_defNamePtr = NULL;
 //// g_scriptNamePtr can ONLY point to a malloc'd block (length BMAX_PATH)
