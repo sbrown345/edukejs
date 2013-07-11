@@ -11741,7 +11741,7 @@ if (dommxoverlay) todo("mmxoverlay();");
 //                                goto add_nextsector;
 //                        }
 //                    }
-                
+
 //#endif
 //                return 0;
 //            }
@@ -17014,45 +17014,46 @@ if (dommxoverlay) todo("mmxoverlay();");
 //#endif
 //}
 
-//void hash_init(hashtable_t *t)
-//{
-//    hash_free(t);
-//    t->items=(hashitem_t **)Bcalloc(1, t->size * sizeof(hashitem_t));
-//}
+function hash_init(/*hashtable_t **/t: Ref) : void
+{
+    hash_free(t);
+    //t.items = newStructArray(hashitem_t, t.size);//(hashitem_t **)Bcalloc(1, t->size * sizeof(hashitem_t));
+}
 
-//void hash_free(hashtable_t *t)
-//{
-//    hashitem_t *cur, *tmp;
-//    int32_t i;
-//    int32_t num;
+function hash_free(/*hashtable_t **/t: Ref) : void
+{
+    for (var key in t.$) {
+        t.$[key] = null;
+    }
+//   var  cur, tmp; //hashitem_t *
+//   var  i; //int32_t
+//   var  num; //int32_t
 
-//    if (t->items == NULL)
+//    if (!t[0].items)
 //        return;
-////    initprintf("*free, num:%d\n",t->size);
-//    i= t->size-1;
+////    initprintf("*free, num:%d\n",t.size);
+//    i= t.size-1;
 //    do
 //    {
-//        cur = t->items[i];
+//        cur = t.items[i];
 //        num = 0;
 //        while (cur)
 //        {
 //            tmp = cur;
-//            cur = cur->next;
-////          initprintf("Free %4d \"%s\"\n",tmp->key,(tmp->string)?tmp->string:".");
-//            if (tmp->string)
+//            cur = cur.next;
+////          initprintf("Free %4d \"%s\"\n",tmp.key,(tmp.string)?tmp.string:".");
+//            if (tmp.string)
 //            {
-//                Bfree(tmp->string);
-//                tmp->string = NULL;
+//                tmp.string = null;
 //            }
-//            Bfree(tmp);
+//            tmp = null;
 //            num++;
 //        }
 ////        initprintf("#%4d: %3d\t",i,num);
 //    }
 //    while (--i > -1);
-//    Bfree(t->items);
-//    t->items = 0;
-//}
+//    t.items = null;
+}
 
 //// djb3 algorithm
 //static inline uint32_t hash_getcode(const char *s)
@@ -17066,47 +17067,50 @@ if (dommxoverlay) todo("mmxoverlay();");
 //    return h;
 //}
 
-//void hash_add(hashtable_t *t, const char *s, int32_t key, int32_t replace)
-//{
-//    hashitem_t *cur, *prev=NULL;
-//    int32_t code;
+// hashtable_t *t, const char *s, int32_t key, int32_t replace
+function hash_add(t: Object, s: string, key: number, replace: number)
+{
+    t[key] = s;
 
-//    if (t->items == NULL)
-//    {
-//        initprintf("hash_add(): table not initialized!\n");
-//        return;
-//    }
+    //var cur, prev;
+    //var code;
 
-//    code = hash_getcode(s) % t->size;
-//    cur = t->items[code];
+    //if (t.items == NULL)
+    //{
+    //    initprintf("hash_add(): table not initialized!\n");
+    //    return;
+    //}
 
-//    if (!cur)
-//    {
-//        cur = (hashitem_t *)Bcalloc(1,sizeof(hashitem_t));
-//        cur->string = Bstrdup(s);
-//        cur->key = key;
-//        cur->next = NULL;
-//        t->items[code] = cur;
-//        return;
-//    }
+    //code = hash_getcode(s) % t.size;
+    //cur = t.items[code];
 
-//    do
-//    {
-//        if (Bstrcmp(s,cur->string) == 0)
-//        {
-//            if (replace) cur->key = key;
-//            return;
-//        }
-//        prev = cur;
-//    }
-//    while ((cur = cur->next));
+    //if (!cur)
+    //{
+    //    cur = (hashitem_t *)Bcalloc(1,sizeof(hashitem_t));
+    //    cur.string = Bstrdup(s);
+    //    cur.key = key;
+    //    cur.next = NULL;
+    //    t.items[code] = cur;
+    //    return;
+    //}
 
-//    cur = (hashitem_t *)Bcalloc(1,sizeof(hashitem_t));
-//    cur->string = Bstrdup(s);
-//    cur->key = key;
-//    cur->next = NULL;
-//    prev->next = cur;
-//}
+    //do
+    //{
+    //    if (Bstrcmp(s,cur.string) == 0)
+    //    {
+    //        if (replace) cur.key = key;
+    //        return;
+    //    }
+    //    prev = cur;
+    //}
+    //while ((cur = cur.next));
+
+    //cur = (hashitem_t *)Bcalloc(1,sizeof(hashitem_t));
+    //cur.string = Bstrdup(s);
+    //cur.key = key;
+    //cur.next = NULL;
+    //prev.next = cur;
+}
 
 //// delete at most once
 //void hash_delete(hashtable_t *t, const char *s)

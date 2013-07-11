@@ -1334,18 +1334,18 @@ var numsectors, numwalls; //EXTERN int16_t
 
 //// Hash functions
 
-//typedef struct _hashitem // size is 12/24 bits.
-//{
-//    char *string;
-//    int32_t key;
-//    struct _hashitem *next;
-//} hashitem_t;
+function hashitem_t ()// size is 12/24 bits.
+{
+    this.string = "";  //char *;
+    this.key = 0;//int32_t ;
+    this.next = null;//_hashitem;
+} //hashitem_t;
 
-//typedef struct
-//{
-//    int32_t size;
-//    hashitem_t **items;
-//} hashtable_t;
+function hashtable_t()
+{
+    this.size = 0;//int32_t
+    this.items = null;//hashitem_t **
+} //hashtable_t;
 
 //void hash_init(hashtable_t *t);
 //void hash_free(hashtable_t *t);

@@ -22,6 +22,14 @@ function multiDimArray(arrayClass, num, arrLength) {
     return multiDimArray;
 }
 
-function Ref(val) {
-    this.$ = val;
+//function Ref(val) {
+//    this.$ = val;
+//}
+
+class Ref {
+    $: Object;
+
+    constructor(val: Object) {
+        this.$ = val;
+    }
 }

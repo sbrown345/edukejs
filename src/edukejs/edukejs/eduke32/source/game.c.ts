@@ -8,10 +8,13 @@
 /// <reference path="../../build/headers/duke3d.h.ts" />
 
 /// <reference path="../../build/source/build.c.ts" />
+/// <reference path="../../build/source/compat.c.ts" />
 /// <reference path="../../build/source/crc32.c.ts" />
 /// <reference path="../../build/source/engine.c.ts" />
 /// <reference path="../../build/source/polymost.c.ts" />
 
+/// <reference path="../../eduke32/headers/_functio.h.ts" />
+/// <reference path="../../eduke32/headers/function.h.ts" />
 /// <reference path="../../eduke32/headers/global.h.ts" />
 /// <reference path="../../eduke32/headers/game.h.ts" />
 /// <reference path="../../eduke32/headers/player.h.ts" />
@@ -11218,16 +11221,15 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
 //        }
 //    }
 
-//    // used with binds for fast function lookup
-//    hash_init(&h_gamefuncs);
-    todo("hash_init h_gamefuncs");
-//    for (i=NUMGAMEFUNCTIONS-1; i>=0; i--)
-//    {
-//        char *str = Bstrtolower(Bstrdup(gamefunctions[i]));
-//        hash_add(&h_gamefuncs,gamefunctions[i],i,0);
-//        hash_add(&h_gamefuncs,str,i,0);
-//        Bfree(str);
-//    }
+    // used with binds for fast function lookup
+    debugger
+    hash_init(new Ref(h_gamefuncs));
+    for (i=NUMGAMEFUNCTIONS-1; i>=0; i--)
+    {
+        var str = Bstrtolower(Bstrdup(gamefunctions[i]));
+        hash_add(h_gamefuncs,gamefunctions[i],i,0);
+        hash_add(h_gamefuncs,str,i,0);        
+    }
 
 //#ifdef USE_OPENGL
     glusetexcache = -1;

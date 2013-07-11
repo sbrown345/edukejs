@@ -1,3 +1,4 @@
+/// <reference path="../../eduke32/headers/function.h.ts" />
 /// <reference path="../../eduke32/headers/game.h.ts" />
 /// <reference path="../../eduke32/headers/player.h.ts" />
 //-------------------------------------------------------------------------
