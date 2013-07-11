@@ -46,13 +46,13 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //G_EXTERN int32_t oldipos[MAXINTERPOLATIONS];
 //G_EXTERN int32_t *curipos[MAXINTERPOLATIONS];
 //G_EXTERN int32_t bakipos[MAXINTERPOLATIONS];
-//G_EXTERN int32_t connectpoint2[MAXPLAYERS];
+var connectpoint2 = new Int32Array(MAXPLAYERS);
 
 //#include "duke3d.h"
 //#include "sector.h"
 //#include "quotes.h"
 
-//G_EXTERN int32_t myconnectindex, numplayers;
+var myconnectindex: number, numplayers: number;
 
 //G_EXTERN DukeStatus_t sbar;
 //G_EXTERN actor_t actor[MAXSPRITES];
@@ -108,7 +108,7 @@ var tempbuf = new Uint8Array(MAXSECTORS<<1),packbuf = new Uint8Array(PACKBUF_SIZ
 //G_EXTERN int32_t g_tripbombLaserMode;
 //G_EXTERN int32_t msx[2048],msy[2048];
 //G_EXTERN int32_t neartaghitdist,lockclock,g_startArmorAmount;
-//G_EXTERN int32_t playerswhenstarted;
+var playerswhenstarted : number; ////G_EXTERN int32_t
 //G_EXTERN int32_t screenpeek;
 //G_EXTERN int32_t startofdynamicinterpolations;
 //G_EXTERN int32_t vel,svel,angvel,horiz,ototalclock;

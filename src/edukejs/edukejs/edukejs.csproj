@@ -58,8 +58,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="build\headers\build.h.ts" />
+    <Content Include="build\headers\cache1d.h.ts" />
     <Content Include="build\headers\compat.h.ts" />
     <Content Include="build\headers\duke3d.h.ts" />
+    <Content Include="build\source\baselayer.c.ts" />
     <Content Include="build\source\build.c.ts" />
     <Content Include="build\source\compat.c.ts" />
     <Content Include="build\source\crc32.c.ts" />
@@ -73,12 +75,16 @@
     <Content Include="eduke32\source\baselayer.c.ts" />
     <Content Include="eduke32\source\config.c.ts" />
     <Content Include="eduke32\source\global.c.ts" />
+    <Content Include="eduke32\source\net.c.ts" />
     <Content Include="eduke32\source\winlayer.c.ts" />
     <Content Include="index.htm" />
     <Content Include="eduke32\source\common.c.ts" />
     <Content Include="eduke32\source\game.c.ts" />
     <Content Include="eduke32\source\osd.c.ts" />
     <Content Include="eduke32\source\osdfuncs.c.ts" />
+    <Content Include="libs\sprintf.ts" />
+    <Content Include="libs\sprintf.d.ts" />
+    <Content Include="libs\sprintf.js" />
     <Content Include="tests\assert.tests.js" />
     <Content Include="tests\index.htm" />
     <Content Include="tests\libs\qunit.js" />

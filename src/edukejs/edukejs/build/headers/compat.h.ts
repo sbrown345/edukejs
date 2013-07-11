@@ -1,3 +1,5 @@
+/// <reference path="../../libs/sprintf.ts" />
+
 /// <reference path="../../utils/assert.ts" />
 /// <reference path="../../utils/c.ts" />
 /// <reference path="../../utils/todo.ts" />
@@ -620,7 +622,7 @@ var Bstrcpy = strcpy
 //# define Bscanf scanf
 //# define Bprintf printf
 //# define Bsscanf sscanf
-//# define Bsprintf sprintf
+var Bsprintf = sprintf;
 //# ifdef _MSC_VER
 //#  define Bsnprintf _snprintf
 //#  define Bvsnprintf _vsnprintf

@@ -1,37 +1,3 @@
-/// <reference path="../../utils/assert.ts" />
-/// <reference path="../../utils/c.ts" />
-/// <reference path="../../utils/todo.ts" />
-/// <reference path="../../utils/types.ts" />
-
-/// <reference path="../../build/headers/build.h.ts" />
-/// <reference path="../../build/headers/cache1d.h.ts" />
-/// <reference path="../../build/headers/compat.h.ts" />
-/// <reference path="../../build/headers/duke3d.h.ts" />
-
-/// <reference path="../../build/source/baselayer.c.ts" />
-/// <reference path="../../build/source/build.c.ts" />
-/// <reference path="../../build/source/compat.c.ts" />
-/// <reference path="../../build/source/crc32.c.ts" />
-/// <reference path="../../build/source/engine.c.ts" />
-/// <reference path="../../build/source/polymost.c.ts" />
-
-/// <reference path="../../eduke32/headers/_functio.h.ts" />
-/// <reference path="../../eduke32/headers/function.h.ts" />
-/// <reference path="../../eduke32/headers/global.h.ts" />
-/// <reference path="../../eduke32/headers/game.h.ts" />
-/// <reference path="../../eduke32/headers/player.h.ts" />
-
-/// <reference path="../../eduke32/source/common.c.ts" />
-/// <reference path="../../eduke32/source/config.c.ts" />
-/// <reference path="../../eduke32/source/game.c.ts" />
-/// <reference path="../../eduke32/source/global.c.ts" />
-/// <reference path="../../eduke32/source/net.c.ts" />
-/// <reference path="../../eduke32/source/osd.c.ts" />
-/// <reference path="../../eduke32/source/osdfuncs.c.ts" />
-/// <reference path="../../eduke32/source/winlayer.c.ts" />
-
-'use strict';
-
 //#include "compat.h"
 //#include "osd.h"
 //#include "build.h"
@@ -238,7 +204,7 @@
 //};
 //#endif
 
-//int32_t flushlogwindow = 1;
+var flushlogwindow = 1; //int32_t 
 
 //static void onvideomodechange(int32_t newmode) { UNREFERENCED_PARAMETER(newmode); }
 //void (*baselayer_onvideomodechange)(int32_t) = onvideomodechange;
@@ -401,13 +367,9 @@
 //    return r;
 //}
 
-/**
- * @return {number}
- */
-function baselayer_init()
-{
-    var i: number;
-    todo("init cvars etc in baselayer_init");
+//int32_t baselayer_init(void)
+//{
+//    uint32_t i;
 //#ifdef _WIN32
 //// on Windows, don't save the "r_screenaspect" cvar because the physical screen size is
 //// determined at startup
@@ -462,8 +424,8 @@ function baselayer_init()
 //    polymost_initosdfuncs();
 //#endif
 
-    return 0;
-}
+//    return 0;
+//}
 
 
 //#if defined _WIN32

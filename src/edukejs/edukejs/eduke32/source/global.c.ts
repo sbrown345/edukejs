@@ -4,9 +4,11 @@
 /// <reference path="../../utils/types.ts" />
 
 /// <reference path="../../build/headers/build.h.ts" />
+/// <reference path="../../build/headers/cache1d.h.ts" />
 /// <reference path="../../build/headers/compat.h.ts" />
 /// <reference path="../../build/headers/duke3d.h.ts" />
 
+/// <reference path="../../build/source/baselayer.c.ts" />
 /// <reference path="../../build/source/build.c.ts" />
 /// <reference path="../../build/source/compat.c.ts" />
 /// <reference path="../../build/source/crc32.c.ts" />
@@ -23,6 +25,7 @@
 /// <reference path="../../eduke32/source/common.c.ts" />
 /// <reference path="../../eduke32/source/config.c.ts" />
 /// <reference path="../../eduke32/source/game.c.ts" />
+/// <reference path="../../eduke32/source/net.c.ts" />
 /// <reference path="../../eduke32/source/osd.c.ts" />
 /// <reference path="../../eduke32/source/osdfuncs.c.ts" />
 /// <reference path="../../eduke32/source/winlayer.c.ts" />

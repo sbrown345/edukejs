@@ -3,6 +3,8 @@
 'use strict';
 
 var NULL = 0;
+var TRUE = 1;
+var FALSE = 0;
 
 function exit(code: number) {
     todoThrow();

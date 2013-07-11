@@ -4,9 +4,11 @@
 /// <reference path="../../utils/types.ts" />
 
 /// <reference path="../../build/headers/build.h.ts" />
+/// <reference path="../../build/headers/cache1d.h.ts" />
 /// <reference path="../../build/headers/compat.h.ts" />
 /// <reference path="../../build/headers/duke3d.h.ts" />
 
+/// <reference path="../../build/source/baselayer.c.ts" />
 /// <reference path="../../build/source/build.c.ts" />
 /// <reference path="../../build/source/compat.c.ts" />
 /// <reference path="../../build/source/crc32.c.ts" />
@@ -23,6 +25,7 @@
 /// <reference path="../../eduke32/source/common.c.ts" />
 /// <reference path="../../eduke32/source/config.c.ts" />
 /// <reference path="../../eduke32/source/global.c.ts" />
+/// <reference path="../../eduke32/source/net.c.ts" />
 /// <reference path="../../eduke32/source/osd.c.ts" />
 /// <reference path="../../eduke32/source/osdfuncs.c.ts" />
 /// <reference path="../../eduke32/source/winlayer.c.ts" />
@@ -139,7 +142,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //static const char *CommandMap = NULL;
 //static const char *CommandName = NULL;
 //int32_t g_forceWeaponChoice = 0;
-//int32_t g_fakeMultiMode = 0;
+var g_fakeMultiMode : number = 0;
 
 //char boardfilename[BMAX_PATH] = {0}, currentboardfilename[BMAX_PATH] = {0};
 
@@ -164,7 +167,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 //// g_gameNamePtr can point to one of: grpfiles[].name (string literal), string
 //// literal, malloc'd block (XXX: possible leak)
-//const char *g_gameNamePtr = NULL;
+var g_gameNamePtr = ""; ////const char *
 //// g_rtsNamePtr can point to an argv[] element
 //const char *g_rtsNamePtr = NULL;
 
@@ -9497,24 +9500,25 @@ function G_GameExit(/*const char **/msg : string) : void
 //    return 0;
 //}
 
-//static int32_t loaddefinitions_game(const char *fn, int32_t preload)
-//{
-//    scriptfile *script;
-//    int32_t i;
+function loaddefinitions_game(/*const char **/fn, /*int32_t*/ preload) : number
+{
+    todo("loaddefinitions_game, maybe not important early on");
+    //var script; //scriptfile 
+    //var i; //int32_t
 
-//    script = scriptfile_fromfile(fn);
-//    if (!script) return -1;
+    //script = scriptfile_fromfile(fn);
+    //if (!script) return -1;
 
-//    parsedefinitions_game(script, preload);
+    //parsedefinitions_game(script, preload);
 
-//    for (i=0; i < g_defModulesNum; ++i)
-//        parsedefinitions_game_include(g_defModules[i], NULL, "null", preload);
+    //for (i=0; i < g_defModulesNum; ++i)
+    //    parsedefinitions_game_include(g_defModules[i], NULL, "null", preload);
 
-//    scriptfile_close(script);
-//    scriptfile_clearsymbols();
+    //scriptfile_close(script);
+    //scriptfile_clearsymbols();
 
-//    return 0;
-//}
+    return 0;
+}
 
 //#ifdef LUNATIC
 //const char **g_argv;
@@ -10477,67 +10481,67 @@ function G_CheckCommandLine(/*int32_t */argc: number, /*string*/argv: string) : 
 //    Bfflush(NULL);
 //}
 
-///*
-//===================
-//=
-//= G_Startup
-//=
-//===================
-//*/
+/*
+===================
+=
+= G_Startup
+=
+===================
+*/
 
-//static void G_CompileScripts(void)
-//{
+function G_CompileScripts(): void
+{
 //#if !defined LUNATIC
-//    int32_t psm = pathsearchmode;
+    var psm = pathsearchmode;
 
-//    label     = (char *)&sprite[0];     // V8: 16384*44/64 = 11264  V7: 4096*44/64 = 2816
-//    labelcode = (int32_t *)&sector[0]; // V8: 4096*40/4 = 40960    V7: 1024*40/4 = 10240
-//    labeltype = (int32_t *)&wall[0];   // V8: 16384*32/4 = 131072  V7: 8192*32/4 = 65536
+    label     = (char *)&sprite[0];     // V8: 16384*44/64 = 11264  V7: 4096*44/64 = 2816
+    labelcode = (int32_t *)&sector[0]; // V8: 4096*40/4 = 40960    V7: 1024*40/4 = 10240
+    labeltype = (int32_t *)&wall[0];   // V8: 16384*32/4 = 131072  V7: 8192*32/4 = 65536
 //#endif
 
-//    if (g_scriptNamePtr != NULL)
-//        Bcorrectfilename(g_scriptNamePtr,0);
+    if (g_scriptNamePtr != NULL)
+        Bcorrectfilename(g_scriptNamePtr,0);
 
 //#if defined LUNATIC
 //    Gv_Init();
 //    C_InitProjectiles();
 //#else
-//    // if we compile for a V7 engine wall[] should be used for label names since it's bigger
-//    pathsearchmode = 1;
+    // if we compile for a V7 engine wall[] should be used for label names since it's bigger
+    pathsearchmode = 1;
 
-//    C_Compile(G_ConFile());
+    C_Compile(G_ConFile());
 
-//    if (g_loadFromGroupOnly) // g_loadFromGroupOnly is true only when compiling fails and internal defaults are utilized
-//        C_Compile(G_ConFile());
+    if (g_loadFromGroupOnly) // g_loadFromGroupOnly is true only when compiling fails and internal defaults are utilized
+        C_Compile(G_ConFile());
 
-//    if ((uint32_t)g_numLabels > MAXSPRITES*sizeof(spritetype)/64)   // see the arithmetic above for why
-//        G_GameExit("Error: too many labels defined!");
+    if ((uint32_t)g_numLabels > MAXSPRITES*sizeof(spritetype)/64)   // see the arithmetic above for why
+        G_GameExit("Error: too many labels defined!");
 
-//    {
-//        char *newlabel;
-//        int32_t *newlabelcode;
+    {
+        char *newlabel;
+        int32_t *newlabelcode;
 
-//        newlabel     = (char *)Bmalloc(g_numLabels<<6);
-//        newlabelcode = (int32_t *)Bmalloc(g_numLabels*sizeof(int32_t));
+        newlabel     = (char *)Bmalloc(g_numLabels<<6);
+        newlabelcode = (int32_t *)Bmalloc(g_numLabels*sizeof(int32_t));
 
-//        if (!newlabel || !newlabelcode)
-//            G_GameExit("Error: out of memory retaining labels\n");
+        if (!newlabel || !newlabelcode)
+            G_GameExit("Error: out of memory retaining labels\n");
 
-//        Bmemcpy(newlabel, label, g_numLabels*64);
-//        Bmemcpy(newlabelcode, labelcode, g_numLabels*sizeof(int32_t));
+        Bmemcpy(newlabel, label, g_numLabels*64);
+        Bmemcpy(newlabelcode, labelcode, g_numLabels*sizeof(int32_t));
 
-//        label = newlabel;
-//        labelcode = newlabelcode;
-//    }
+        label = newlabel;
+        labelcode = newlabelcode;
+    }
 
-//    Bmemset(sprite, 0, MAXSPRITES*sizeof(spritetype));
-//    Bmemset(sector, 0, MAXSECTORS*sizeof(sectortype));
-//    Bmemset(wall, 0, MAXWALLS*sizeof(walltype));
+    Bmemset(sprite, 0, MAXSPRITES*sizeof(spritetype));
+    Bmemset(sector, 0, MAXSECTORS*sizeof(sectortype));
+    Bmemset(wall, 0, MAXWALLS*sizeof(walltype));
 
-//    VM_OnEvent(EVENT_INIT, -1, -1, -1, 0);
-//    pathsearchmode = psm;
+    VM_OnEvent(EVENT_INIT, -1, -1, -1, 0);
+    pathsearchmode = psm;
 //#endif
-//}
+}
 
 //static inline void G_CheckGametype(void)
 //{
@@ -10691,16 +10695,16 @@ function G_CheckCommandLine(/*int32_t */argc: number, /*string*/argv: string) : 
 //    A_InitEnemyFlags();
 //}
 
-//static void G_Startup(void)
-//{
-//    int32_t i;
+function G_Startup() : void
+{
+    var i : number;
 
-//    inittimer(TICRATE);
+    todo("inittimer(TICRATE);")
 
-//    initcrc32table();
+    initcrc32table();
 
-//    G_CompileScripts();
-
+    G_CompileScripts();
+    throw "todo"
 //    if (initengine())
 //    {
 //        wm_msgbox("Build Engine Initialization Error",
@@ -10861,7 +10865,7 @@ function G_CheckCommandLine(/*int32_t */argc: number, /*string*/argv: string) : 
 //    screenpeek = myconnectindex;
 
 //    Bfflush(NULL);
-//}
+}
 
 //void G_UpdatePlayerFromMenu(void)
 //{
@@ -11222,7 +11226,6 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
 //    }
 
     // used with binds for fast function lookup
-    debugger
     hash_init(new Ref(h_gamefuncs));
     for (i=NUMGAMEFUNCTIONS-1; i>=0; i--)
     {
@@ -11310,7 +11313,7 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
 
 //    if (Bstrcmp(setupfilename, SETUPFILENAME))
 //        initprintf("Using config file \"%s\".\n",setupfilename);
-
+    todo("grp stuff ScanGroups etc");
 //    ScanGroups();
 //    {
 //        // try and identify the 'defaultgamegrp' in the set of GRPs.
@@ -11437,9 +11440,9 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
 //        }
 //    }
 
-//    flushlogwindow = 0;
-//    loaddefinitions_game(G_DefFile(), TRUE);
-////    flushlogwindow = 1;
+    flushlogwindow = 0;
+    loaddefinitions_game(G_DefFile(), TRUE);
+//    flushlogwindow = 1;
 
 //    {
 //        struct strllist *s;
@@ -11467,7 +11470,7 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
 //    }
 
 //    G_CleanupSearchPaths();
-
+    todo("SHAREWARE check");
 //    if (SHAREWARE)
 //        g_Shareware = 1;
 //    else
@@ -11483,7 +11486,7 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
 
 //    // gotta set the proper title after we compile the CONs if this is the full version
 
-//    Bsprintf(tempbuf, "%s - " APPNAME, g_gameNamePtr);
+    Bsprintf(tempbuf, "%s - " + APPNAME, g_gameNamePtr);
 //    wm_setapptitle(tempbuf);
 
 //    if (g_scriptDebug)
@@ -11500,32 +11503,33 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
 //        else initprintf("Multiplayer server initialized\n");
 //    }
 //#endif
-//    numplayers = 1;
-//    playerswhenstarted = ud.multimode;  // Lunatic needs this (player[] bound)
+    numplayers = 1;
+    playerswhenstarted = ud.multimode;  // Lunatic needs this (player[] bound)
 
-//    if (!g_fakeMultiMode)
-//    {
-//        connectpoint2[0] = -1;
-//    }
-//    else
-//    {
-//        for (i=0; i<ud.multimode-1; i++)
-//            connectpoint2[i] = i+1;
-//        connectpoint2[ud.multimode-1] = -1;
+    if (!g_fakeMultiMode)
+    {
+        connectpoint2[0] = -1;
+    }
+    else
+    {
+        todo("net stuff");
+        //for (i=0; i<ud.multimode-1; i++)
+        //    connectpoint2[i] = i+1;
+        //connectpoint2[ud.multimode-1] = -1;
 
-//        for (i=1; i<ud.multimode; i++)
-//            g_player[i].playerquitflag = 1;
-//    }
+        //for (i=1; i<ud.multimode; i++)
+        //    g_player[i].playerquitflag = 1;
+    }
 
-//    Net_GetPackets();
+    Net_GetPackets();
 
-//    // NOTE: Allocating the DukePlayer_t structs has to be before compiling scripts,
-//    // because in Lunatic, the {pipe,trip}bomb* members are initialized.
-//    for (i=0; i<MAXPLAYERS; i++)
-//        G_MaybeAllocPlayer(i);
+    // NOTE: Allocating the DukePlayer_t structs has to be before compiling scripts,
+    // because in Lunatic, the {pipe,trip}bomb* members are initialized.
+    for (i=0; i<MAXPLAYERS; i++)
+        G_MaybeAllocPlayer(i);
 
-//    G_Startup(); // a bunch of stuff including compiling cons
-
+    G_Startup(); // a bunch of stuff including compiling cons
+    throw "todo";
 //    g_player[0].playerquitflag = 1;
 
 //    g_player[myconnectindex].ps->palette = BASEPAL;

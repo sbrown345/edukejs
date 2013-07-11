@@ -76,7 +76,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 //////////// TIMING CONSTANTS //////////
 //// The number of 'totalclock' increments per second:
-//#define TICRATE             120
+var TICRATE = 120;
 //// The number of game state updates per second:
 //#define REALGAMETICSPERSEC  30
 //// The number of 'totalclock' increments per game state update:
