@@ -1,7 +1,6 @@
 ﻿/// <reference path="libs/qunit.js" />
 ///// <reference path="../utils/assert.js" />
 /// <reference path="../eduke.js" />
-'use strict';
 
 test("isUint8", function () {
     strictEqual(assert.test.isUint8(1), true, "1 is an uint8");

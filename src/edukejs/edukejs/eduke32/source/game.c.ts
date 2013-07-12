@@ -16,21 +16,26 @@
 /// <reference path="../../build/source/polymost.c.ts" />
 
 /// <reference path="../../eduke32/headers/_functio.h.ts" />
+/// <reference path="../../eduke32/headers/actors.h.ts" />
 /// <reference path="../../eduke32/headers/function.h.ts" />
 /// <reference path="../../eduke32/headers/global.h.ts" />
 /// <reference path="../../eduke32/headers/game.h.ts" />
+/// <reference path="../../eduke32/headers/gamedef.h.ts" />
 /// <reference path="../../eduke32/headers/player.h.ts" />
 
 /// <reference path="../../eduke32/source/baselayer.c.ts" />
 /// <reference path="../../eduke32/source/common.c.ts" />
 /// <reference path="../../eduke32/source/config.c.ts" />
+/// <reference path="../../eduke32/source/gamedef.c.ts" />
 /// <reference path="../../eduke32/source/global.c.ts" />
+/// <reference path="../../eduke32/source/grpscan.c.ts" />
+/// <reference path="../../eduke32/source/namesdyn.c.ts" />
 /// <reference path="../../eduke32/source/net.c.ts" />
 /// <reference path="../../eduke32/source/osd.c.ts" />
 /// <reference path="../../eduke32/source/osdfuncs.c.ts" />
+/// <reference path="../../eduke32/source/soundsdyn.c.ts" />
 /// <reference path="../../eduke32/source/winlayer.c.ts" />
 
-'use strict';
 
 
 //-------------------------------------------------------------------------
@@ -10489,17 +10494,17 @@ function G_CheckCommandLine(/*int32_t */argc: number, /*string*/argv: string) : 
 ===================
 */
 
-function G_CompileScripts(): void
+function G_CompileScripts() : void
 {
 //#if !defined LUNATIC
     var psm = pathsearchmode;
 
-    label     = (char *)&sprite[0];     // V8: 16384*44/64 = 11264  V7: 4096*44/64 = 2816
-    labelcode = (int32_t *)&sector[0]; // V8: 4096*40/4 = 40960    V7: 1024*40/4 = 10240
-    labeltype = (int32_t *)&wall[0];   // V8: 16384*32/4 = 131072  V7: 8192*32/4 = 65536
+    label = sprite[0];// (char *)&sprite[0];     // V8: 16384*44/64 = 11264  V7: 4096*44/64 = 2816
+    labelcode = sector[0];//(int32_t *)&sector[0]; // V8: 4096*40/4 = 40960    V7: 1024*40/4 = 10240
+    labeltype = wall[0];//(int32_t *)&wall[0];   // V8: 16384*32/4 = 131072  V7: 8192*32/4 = 65536
 //#endif
 
-    if (g_scriptNamePtr != NULL)
+    if (g_scriptNamePtr)
         Bcorrectfilename(g_scriptNamePtr,0);
 
 //#if defined LUNATIC
@@ -10510,36 +10515,36 @@ function G_CompileScripts(): void
     pathsearchmode = 1;
 
     C_Compile(G_ConFile());
+    todoThrow();
+    //if (g_loadFromGroupOnly) // g_loadFromGroupOnly is true only when compiling fails and internal defaults are utilized
+    //    C_Compile(G_ConFile());
 
-    if (g_loadFromGroupOnly) // g_loadFromGroupOnly is true only when compiling fails and internal defaults are utilized
-        C_Compile(G_ConFile());
+    //if (uint32(g_numLabels) > MAXSPRITES*sizeof(spritetype)/64)   // see the arithmetic above for why
+    //    G_GameExit("Error: too many labels defined!");
 
-    if ((uint32_t)g_numLabels > MAXSPRITES*sizeof(spritetype)/64)   // see the arithmetic above for why
-        G_GameExit("Error: too many labels defined!");
+    //{
+    //    char *newlabel;
+    //    int32_t *newlabelcode;
 
-    {
-        char *newlabel;
-        int32_t *newlabelcode;
+    //    newlabel     = (char *)Bmalloc(g_numLabels<<6);
+    //    newlabelcode = (int32_t *)Bmalloc(g_numLabels*sizeof(int32_t));
 
-        newlabel     = (char *)Bmalloc(g_numLabels<<6);
-        newlabelcode = (int32_t *)Bmalloc(g_numLabels*sizeof(int32_t));
+    //    if (!newlabel || !newlabelcode)
+    //        G_GameExit("Error: out of memory retaining labels\n");
 
-        if (!newlabel || !newlabelcode)
-            G_GameExit("Error: out of memory retaining labels\n");
+    //    Bmemcpy(newlabel, label, g_numLabels*64);
+    //    Bmemcpy(newlabelcode, labelcode, g_numLabels*sizeof(int32_t));
 
-        Bmemcpy(newlabel, label, g_numLabels*64);
-        Bmemcpy(newlabelcode, labelcode, g_numLabels*sizeof(int32_t));
+    //    label = newlabel;
+    //    labelcode = newlabelcode;
+    //}
 
-        label = newlabel;
-        labelcode = newlabelcode;
-    }
+    //Bmemset(sprite, 0, MAXSPRITES*sizeof(spritetype));
+    //Bmemset(sector, 0, MAXSECTORS*sizeof(sectortype));
+    //Bmemset(wall, 0, MAXWALLS*sizeof(walltype));
 
-    Bmemset(sprite, 0, MAXSPRITES*sizeof(spritetype));
-    Bmemset(sector, 0, MAXSECTORS*sizeof(sectortype));
-    Bmemset(wall, 0, MAXWALLS*sizeof(walltype));
-
-    VM_OnEvent(EVENT_INIT, -1, -1, -1, 0);
-    pathsearchmode = psm;
+    //VM_OnEvent(EVENT_INIT, -1, -1, -1, 0);
+    //pathsearchmode = psm;
 //#endif
 }
 
@@ -11226,7 +11231,7 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
 //    }
 
     // used with binds for fast function lookup
-    hash_init(new Ref(h_gamefuncs));
+    hash_init(h_gamefuncs);
     for (i=NUMGAMEFUNCTIONS-1; i>=0; i--)
     {
         var str = Bstrtolower(Bstrdup(gamefunctions[i]));
@@ -11314,7 +11319,7 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
 //    if (Bstrcmp(setupfilename, SETUPFILENAME))
 //        initprintf("Using config file \"%s\".\n",setupfilename);
     todo("grp stuff ScanGroups etc");
-//    ScanGroups();
+    ScanGroups();
 //    {
 //        // try and identify the 'defaultgamegrp' in the set of GRPs.
 //        // if it is found, set up the environment accordingly for the game it represents.
@@ -11484,8 +11489,8 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
 //        }
 //    }
 
-//    // gotta set the proper title after we compile the CONs if this is the full version
-
+    // gotta set the proper title after we compile the CONs if this is the full version
+    assert.areEqual("Duke Nukem 3D Shareware 1.3D",/* "Duke Nukem 3D: Atomic Edition",*/ g_gameNamePtr);
     Bsprintf(tempbuf, "%s - " + APPNAME, g_gameNamePtr);
 //    wm_setapptitle(tempbuf);
 

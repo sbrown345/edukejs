@@ -17014,16 +17014,16 @@ if (dommxoverlay) todo("mmxoverlay();");
 //#endif
 //}
 
-function hash_init(/*hashtable_t **/t: Ref) : void
+function hash_init(/*hashtable_t **/t) : void
 {
     hash_free(t);
     //t.items = newStructArray(hashitem_t, t.size);//(hashitem_t **)Bcalloc(1, t->size * sizeof(hashitem_t));
 }
 
-function hash_free(/*hashtable_t **/t: Ref) : void
+function hash_free(/*hashtable_t **/t) : void
 {
-    for (var key in t.$) {
-        t.$[key] = null;
+    for (var key in t) {
+        t[key] = null;
     }
 //   var  cur, tmp; //hashitem_t *
 //   var  i; //int32_t

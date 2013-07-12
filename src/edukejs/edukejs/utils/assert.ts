@@ -1,6 +1,7 @@
-﻿'use strict';
-var assert;
+﻿var assert;
 (function () {
+    'use strict';
+
     assert = {
         failedCount: 0,
 
@@ -25,7 +26,12 @@ var assert;
         },
 
         isString: function (v: string) {
-            assert.test.isString(v);
+            trackAssert(assert.test.isString(v), v + "is not a string");
+            return assert;
+        },
+
+        areEqual: function (a: any, b: any) {
+            trackAssert(assert.test.areEqual(a, b), "a and b are not equal. a: " + a + ", b: " + b);
             return assert;
         },
 
@@ -77,6 +83,9 @@ var assert;
                 var array = new typedArrayType(1); // todo: cache of types
                 array[0] = v;
                 return array[0] === v;
+            },
+            areEqual: function (a: any, b: any): boolean {
+                return a == b;
             }
         }
     };

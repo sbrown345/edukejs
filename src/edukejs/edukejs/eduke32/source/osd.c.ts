@@ -16,21 +16,26 @@
 /// <reference path="../../build/source/polymost.c.ts" />
 
 /// <reference path="../../eduke32/headers/_functio.h.ts" />
+/// <reference path="../../eduke32/headers/actors.h.ts" />
 /// <reference path="../../eduke32/headers/function.h.ts" />
 /// <reference path="../../eduke32/headers/global.h.ts" />
 /// <reference path="../../eduke32/headers/game.h.ts" />
+/// <reference path="../../eduke32/headers/gamedef.h.ts" />
 /// <reference path="../../eduke32/headers/player.h.ts" />
 
 /// <reference path="../../eduke32/source/baselayer.c.ts" />
 /// <reference path="../../eduke32/source/common.c.ts" />
 /// <reference path="../../eduke32/source/config.c.ts" />
 /// <reference path="../../eduke32/source/game.c.ts" />
+/// <reference path="../../eduke32/source/gamedef.c.ts" />
 /// <reference path="../../eduke32/source/global.c.ts" />
+/// <reference path="../../eduke32/source/grpscan.c.ts" />
+/// <reference path="../../eduke32/source/namesdyn.c.ts" />
 /// <reference path="../../eduke32/source/net.c.ts" />
 /// <reference path="../../eduke32/source/osdfuncs.c.ts" />
+/// <reference path="../../eduke32/source/soundsdyn.c.ts" />
 /// <reference path="../../eduke32/source/winlayer.c.ts" />
 
-'use strict';
 
 
 //// On-screen Display (ie. console)

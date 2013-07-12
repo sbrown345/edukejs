@@ -1,7 +1,10 @@
-﻿'use strict';
-
+﻿
 var int32 = function (v: number): number {
     return v | 0;
+};
+
+var uint32 = function (v: number): number {
+    return v >>> 0;
 };
 
 function newStructArray($class, count) {
@@ -12,6 +15,12 @@ function newStructArray($class, count) {
 
     array[-1] = new $class(); // various places check for a -1 which doesn't crash C. (this probably breaks v8 perf opt)
     return array;
+}
+
+function clearStructArray($class, array : Array) : void {
+    for (var i = 0; i < array.length; i++) {
+        array[i] = new $class();
+    }
 }
 
 function multiDimArray(arrayClass, num, arrLength) {

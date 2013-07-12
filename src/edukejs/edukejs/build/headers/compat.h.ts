@@ -617,12 +617,20 @@ var Bstrcpy = strcpy
 //# define Bmemcpy memcpy
 //# define Bmemmove memmove
 //# define Bmemchr memchr
-//# define Bmemset memset
+var Bmemset = memset;
 //# define Bmemcmp memcmp
 //# define Bscanf scanf
 //# define Bprintf printf
 //# define Bsscanf sscanf
-var Bsprintf = sprintf;
+var Bsprintf = function (buf: Uint8Array, format: string, ...args: any[]) {
+    var output = sprintf(format, args);
+    var i: number;
+    debugger
+    for (i = 0; i < format.length; i++) {
+        buf[i] = output.charCodeAt(i);
+    }
+    buf[i + 1] = 0;
+};
 //# ifdef _MSC_VER
 //#  define Bsnprintf _snprintf
 //#  define Bvsnprintf _vsnprintf

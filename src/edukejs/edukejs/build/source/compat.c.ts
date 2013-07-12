@@ -428,8 +428,9 @@ function Bstrdup(s : string) : string
 //#endif
 //}
 
-//int32_t Bcorrectfilename(char *filename, int32_t removefn)
-//{
+function Bcorrectfilename(/*char **/ filename: string,  /*int32_t*/ removefn: number): number
+{
+    todoThrow();
 //    char *fn;
 //    char *tokarr[64], *first, *next = NULL, *token;
 //    int32_t i, ntok = 0, leadslash = 0, trailslash = 0;
@@ -474,8 +475,8 @@ function Bstrdup(s : string) : string
 //    *(first++) = 0;
 
 //    Bfree(fn);
-//    return 0;
-//}
+    return 0;
+}
 
 //int32_t Bcanonicalisefilename(char *filename, int32_t removefn)
 //{

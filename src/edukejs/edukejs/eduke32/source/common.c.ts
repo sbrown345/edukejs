@@ -16,21 +16,26 @@
 /// <reference path="../../build/source/polymost.c.ts" />
 
 /// <reference path="../../eduke32/headers/_functio.h.ts" />
+/// <reference path="../../eduke32/headers/actors.h.ts" />
 /// <reference path="../../eduke32/headers/function.h.ts" />
 /// <reference path="../../eduke32/headers/global.h.ts" />
 /// <reference path="../../eduke32/headers/game.h.ts" />
+/// <reference path="../../eduke32/headers/gamedef.h.ts" />
 /// <reference path="../../eduke32/headers/player.h.ts" />
 
 /// <reference path="../../eduke32/source/baselayer.c.ts" />
 /// <reference path="../../eduke32/source/config.c.ts" />
 /// <reference path="../../eduke32/source/game.c.ts" />
+/// <reference path="../../eduke32/source/gamedef.c.ts" />
 /// <reference path="../../eduke32/source/global.c.ts" />
+/// <reference path="../../eduke32/source/grpscan.c.ts" />
+/// <reference path="../../eduke32/source/namesdyn.c.ts" />
 /// <reference path="../../eduke32/source/net.c.ts" />
 /// <reference path="../../eduke32/source/osd.c.ts" />
 /// <reference path="../../eduke32/source/osdfuncs.c.ts" />
+/// <reference path="../../eduke32/source/soundsdyn.c.ts" />
 /// <reference path="../../eduke32/source/winlayer.c.ts" />
 
-'use strict';
 
 //
 // Common non-engine code/data for EDuke32 and Mapster32
@@ -62,7 +67,7 @@
 //
 //const char *defaultgamegrp[GAMECOUNT] = { "DUKE3D.GRP", "NAM.GRP", "NAPALM.GRP", "WW2GI.GRP" };
 //const char *defaultdeffilename[GAMECOUNT] = { "duke3d.def", "nam.def", "napalm.def", "ww2gi.def" };
-//const char *defaultconfilename = "GAME.CON";
+var defaultconfilename = "GAME.CON";
 //const char *defaultgameconfilename[GAMECOUNT] = { "EDUKE.CON", "NAM.CON", "NAPALM.CON", "WW2GI.CON" };
 //
 // g_grpNamePtr can ONLY point to a malloc'd block (length BMAX_PATH)
@@ -70,7 +75,7 @@ var g_grpNamePtr : string = ""; //char *
 //// g_defNamePtr can ONLY point to a malloc'd block (length BMAX_PATH)
 //char *g_defNamePtr = NULL;
 //// g_scriptNamePtr can ONLY point to a malloc'd block (length BMAX_PATH)
-//char *g_scriptNamePtr = NULL;
+var g_scriptNamePtr: string; ////char *
 //
 //void clearGrpNamePtr(void)
 //{
@@ -130,35 +135,35 @@ var g_grpNamePtr : string = ""; //char *
 //
 //    return defaultdeffilename[0];
 //}
-//const char *G_DefaultConFile(void)
-//{
-//    if (DUKE && testkopen(defaultgameconfilename[GAME_DUKE],0))
-//        return defaultgameconfilename[GAME_DUKE];
-//    else if (WW2GI && testkopen(defaultgameconfilename[GAME_WW2GI],0))
-//        return defaultgameconfilename[GAME_WW2GI];
-//    else if (NAPALM)
-//    {
-//        if (!testkopen(defaultgameconfilename[GAME_NAPALM],0))
-//        {
-//            if (testkopen(defaultgameconfilename[GAME_NAM],0))
-//                return defaultgameconfilename[GAME_NAM]; // NAM/NAPALM Sharing
-//        }
-//        else
-//            return defaultgameconfilename[GAME_NAPALM];
-//    }
-//    else if (NAM)
-//    {
-//        if (!testkopen(defaultgameconfilename[GAME_NAM],0))
-//        {
-//            if (testkopen(defaultgameconfilename[GAME_NAPALM],0))
-//                return defaultgameconfilename[GAME_NAPALM]; // NAM/NAPALM Sharing
-//        }
-//        else
-//            return defaultgameconfilename[GAME_NAM];
-//    }
-//
-//    return defaultconfilename;
-//}
+function G_DefaultConFile() : string
+{
+    //if (DUKE && testkopen(defaultgameconfilename[GAME_DUKE],0))
+    //    return defaultgameconfilename[GAME_DUKE];
+    //else if (WW2GI && testkopen(defaultgameconfilename[GAME_WW2GI],0))
+    //    return defaultgameconfilename[GAME_WW2GI];
+    //else if (NAPALM)
+    //{
+    //    if (!testkopen(defaultgameconfilename[GAME_NAPALM],0))
+    //    {
+    //        if (testkopen(defaultgameconfilename[GAME_NAM],0))
+    //            return defaultgameconfilename[GAME_NAM]; // NAM/NAPALM Sharing
+    //    }
+    //    else
+    //        return defaultgameconfilename[GAME_NAPALM];
+    //}
+    //else if (NAM)
+    //{
+    //    if (!testkopen(defaultgameconfilename[GAME_NAM],0))
+    //    {
+    //        if (testkopen(defaultgameconfilename[GAME_NAPALM],0))
+    //            return defaultgameconfilename[GAME_NAPALM]; // NAM/NAPALM Sharing
+    //    }
+    //    else
+    //        return defaultgameconfilename[GAME_NAM];
+    //}
+
+    return defaultconfilename;
+}
 //
 //const char *G_GrpFile(void)
 //{
@@ -178,14 +183,14 @@ function G_DefFile() : string
     //    return g_defNamePtr;
 }
 //
-//const char *G_ConFile(void)
-//{
-//    if (g_scriptNamePtr == NULL)
-//        return G_DefaultConFile();
-//    else
-//        return g_scriptNamePtr;
-//}
-//
+function G_ConFile() : string
+{
+    if (!g_scriptNamePtr)
+        return G_DefaultConFile();
+    else
+        return g_scriptNamePtr;
+}
+
 ////////////
 //
 //void G_MultiPskyInit(void)

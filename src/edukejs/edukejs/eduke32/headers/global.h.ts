@@ -1,6 +1,11 @@
+/// <reference path="../../utils/assert.ts" />
+/// <reference path="../../utils/c.ts" />
+/// <reference path="../../utils/todo.ts" />
+/// <reference path="../../utils/types.ts" />
+
 /// <reference path="../../eduke32/headers/function.h.ts" />
-/// <reference path="../../eduke32/headers/game.h.ts" />
 /// <reference path="../../eduke32/headers/player.h.ts" />
+
 //-------------------------------------------------------------------------
 /*
 Copyright (C) 2010 EDuke32 developers and contributors
@@ -60,7 +65,7 @@ var myconnectindex: number, numplayers: number;
 //G_EXTERN tiledata_t g_tile[MAXTILES];
 //G_EXTERN animwalltype animwall[MAXANIMWALLS];
 //G_EXTERN char *ScriptQuotes[MAXQUOTES],*ScriptQuoteRedefinitions[MAXQUOTES];
-//G_EXTERN char *label;
+var label : string;//G_EXTERN char *label;
 //G_EXTERN char EnvMusicFilename[MAXVOLUMES+1][BMAX_PATH];
 //G_EXTERN char g_RTSPlaying;
 //G_EXTERN int32_t g_musicIndex;
@@ -114,7 +119,7 @@ var playerswhenstarted : number; ////G_EXTERN int32_t
 //G_EXTERN int32_t vel,svel,angvel,horiz,ototalclock;
 //G_EXTERN intptr_t *g_parsingActorPtr;
 //G_EXTERN intptr_t *g_scriptPtr,*insptr;
-//G_EXTERN int32_t *labelcode,*labeltype;
+var labelcode: number, labeltype: number;//G_EXTERN int32_t *labelcode,*labeltype;
 //G_EXTERN intptr_t *script;
 //G_EXTERN map_t MapInfo[(MAXVOLUMES+1)*MAXLEVELS];  // +1 volume for "intro", "briefing" music
 //#pragma pack(push,1)
