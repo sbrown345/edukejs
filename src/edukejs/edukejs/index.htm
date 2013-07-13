@@ -12,7 +12,7 @@
 
     <script>
         var xhr = new XMLHttpRequest();
-        xhr.open('GET', 'DUKE3D>GRP', true);
+        xhr.open('GET', 'DUKE3D.GRP', true);
         xhr.responseType = 'arraybuffer';
 
         xhr.onload = function (e) {
@@ -21,11 +21,13 @@
 
         xhr.send();
 
-
         function loadGame(grpData) {
+            if(grpData.length != 11035779) {
+                throw "Incorrect file size for demo grp";
+            }
+            
             fileHandles[4] = grpData;
             WinMain(null, null, "-nosetup -map E1L1.MAP", 10);
-            //app_main(4, "-nosetup -map E1L1.MAP");
         }
     </script>
 </body>
