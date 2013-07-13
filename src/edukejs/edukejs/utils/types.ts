@@ -52,6 +52,14 @@ class Ref {
     }
 }
 
+class R<T> {
+    $: T;
+
+    constructor(val: T) {
+        this.$ = val;
+    }
+}
+
 interface String {
   toUint8Array: () => Uint8Array; // <-- Whatever signature you want.
 }

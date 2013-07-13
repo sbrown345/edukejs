@@ -372,7 +372,7 @@
 //#if B_LITTLE_ENDIAN == 1
 //# define B_LITTLE64(x) (x)
 //# define B_BIG64(x)    B_SWAP64(x)
-//# define B_LITTLE32(x) (x)
+var B_LITTLE32 = function (x) {return x;};
 //# define B_BIG32(x)    B_SWAP32(x)
 //# define B_LITTLE16(x) (x)
 //# define B_BIG16(x)    B_SWAP16(x)

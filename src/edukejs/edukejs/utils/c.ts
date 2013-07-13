@@ -51,11 +51,10 @@ function _open(path: string, oflags: number, mode: number): number {
 }
 
 function memcmp(buf1 : Uint8Array, buf2 : Uint8Array, count : number) : number {
-    debugger;
     for (var i = 0; i < count; i++) {
         if(buf1[i] === buf2[i]) {
             continue;
-        }
+        }   
 
         if(buf1[i] > buf2[i]) {
             return 1;
@@ -90,6 +89,18 @@ function read(fileHandle: number, dstBuf: Ptr, maxCharCount: number) : number {
     source.idx += count;
     return count;
 }
+
+//// read from buffer until a 0, or the end of the source
+//function readString(fileHandle: number, dstStr: R<string>, maxCharCount: number) : number {
+//    var source = fileHandles[fileHandle]; 
+//    var count = 0;
+//    for (var i = 0; i < maxCharCount && source.idx + i < source.array.length && source.array[source.idx + i] !== 0; i++) {
+//        dstStr.$ += String.fromCharCode(source.array[source.idx + i]);
+//        count++;
+//    }
+//    source.idx += count;
+//    return dstStr.$.length;
+//}
 
 function sizeof(obj: any) : number {
     if (obj.size !== undefined) {

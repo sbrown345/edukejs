@@ -598,8 +598,8 @@ var numgroupfiles = 0; //int32
 var gnumfiles = new Uint32Array(MAXGROUPFILES);
 var groupfil = new Int32Array([-1,-1,-1,-1,-1,-1,-1,-1]); assert.areEqual(MAXGROUPFILES, groupfil.length);
 var groupfilpos = new Int32Array(MAXGROUPFILES);
-//static char *gfilelist[MAXGROUPFILES];
-//static int32_t *gfileoffs[MAXGROUPFILES];
+var gfilelist = new Array<Uint8Array>(MAXGROUPFILES);
+var gfileoffs = new Array<Int32Array>(MAXGROUPFILES);
 
 //static char filegrp[MAXOPENFILES];
 //static int32_t filepos[MAXOPENFILES];
@@ -622,7 +622,6 @@ var groupfilpos = new Int32Array(MAXGROUPFILES);
 
 function initgroupfile(filename : string) : number
 {
-    debugger;
 //    char buf[16];
     var i : number, j : number, k : number;
 //#ifdef WITHKPLIB
@@ -660,39 +659,35 @@ function initgroupfile(filename : string) : number
     if (groupfil[numgroupfiles] != -1)
 //#endif
     {
-         groupfilpos[numgroupfiles] = 0;
-         Bread(groupfil[numgroupfiles],new Ptr(buf),16);
-         if (Bmemcmp(buf, "KenSilverman".toUint8Array(), 12))
-         {
-             todoThrow();
-             //Bclose(groupfil[numgroupfiles]);
-             //groupfil[numgroupfiles] = -1;
-             //return(-1);
-         } throw "todo";
-        //gnumfiles[numgroupfiles] = B_LITTLE32(*((int32_t *)&buf[12]));
+        groupfilpos[numgroupfiles] = 0;
+        Bread(groupfil[numgroupfiles],new Ptr(buf),16);
+        if (Bmemcmp(buf, "KenSilverman".toUint8Array(), 12))
+        {
+            todoThrow();
+            //Bclose(groupfil[numgroupfiles]);
+            //groupfil[numgroupfiles] = -1;
+            //return(-1);
+        }
+        gnumfiles[numgroupfiles] = B_LITTLE32(new Int32Array(buf.buffer)[12/Int32Array.BYTES_PER_ELEMENT]);//  **((int32_t *)&buf[12])
+        assert.areEqual(456, gnumfiles[numgroupfiles]);
 
-//        if ((gfilelist[numgroupfiles] = (char *)Bmalloc(gnumfiles[numgroupfiles]<<4)) == 0)
-//        {
-//            Bprintf("Not enough memory for file grouping system\n");
-//            exit(1);
-//        }
-//        if ((gfileoffs[numgroupfiles] = (int32_t *)Bmalloc((gnumfiles[numgroupfiles]+1)<<2)) == 0)
-//        {
-//            Bprintf("Not enough memory for file grouping system\n");
-//            exit(1);
-//        }
+        gfilelist[numgroupfiles] = new Uint8Array(gnumfiles[numgroupfiles]<<4);
+        gfileoffs[numgroupfiles] = new Int32Array(gnumfiles[numgroupfiles]+1);
 
-//        Bread(groupfil[numgroupfiles],gfilelist[numgroupfiles],gnumfiles[numgroupfiles]<<4);
-
-//        j = 0;
-//        for (i=0; i<gnumfiles[numgroupfiles]; i++)
-//        {
-//            k = B_LITTLE32(*((int32_t *)&gfilelist[numgroupfiles][(i<<4)+12]));
-//            gfilelist[numgroupfiles][(i<<4)+12] = 0;
-//            gfileoffs[numgroupfiles][i] = j;
-//            j += k;
-//        }
-//        gfileoffs[numgroupfiles][gnumfiles[numgroupfiles]] = j;
+        debugger
+        Bread(groupfil[numgroupfiles],new Ptr(gfilelist[numgroupfiles]),gnumfiles[numgroupfiles]<<4);
+        j = 0;
+        for (i=0; i<gnumfiles[numgroupfiles]; i++)
+        {
+            k = B_LITTLE32(new Int32Array(gfilelist[numgroupfiles].buffer)[((i<<4)+12)/Int32Array.BYTES_PER_ELEMENT]);
+            gfilelist[numgroupfiles][(i<<4)+12] = 0;
+            gfileoffs[numgroupfiles][i] = j;
+            j += k;
+        }
+        if(!shareware) {
+            assert.areEqual(44349236, j);
+        }
+        gfileoffs[numgroupfiles][gnumfiles[numgroupfiles]] = j;
     }
     numgroupfiles++;
     return(groupfil[numgroupfiles-1]);
