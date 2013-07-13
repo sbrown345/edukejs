@@ -21,17 +21,19 @@ function crc32init(/*uint32_t **/crcvar : Ref) : void
     crcvar.$ = 0xffffffff >>> 0;
 }
 
-function crc32block(/*uint32_t **/crcvar : Ref, /*uint8_t **/blk : Uint8Array, /*uint32_t*/ len : number) : void
+function crc32block(/*uint32_t **/crcvar : Ref, /*uint8_t **/blk : Ptr, /*uint32_t*/ len : number) : void
 {
-    var crc : number = crcvar.$;
-    var blkIdx = 0;
-    while (len--) crc = crc32table[((crc ^ (blk[++blkIdx])) & 0xff) >>> 0] ^ (crc >>> 8);
+    var crc : number = uint32(crcvar.$);
+    while (len--) {
+        crc = uint32(crc32table[((crc ^ (blk.array[blk.idx++])) & 0xff) >>> 0] ^ (crc >>> 8));
+    }
     crcvar.$ = crc;
+    console.log("crc", crc);
 }
 
 /*static inline uint32_t*/function crc32finish(/*uint32_t **/crcvar : Ref) : number
 {
-    crcvar.$ =  (crcvar.$ ^ 0xffffffff) >>> 0;
+    crcvar.$ = (crcvar.$ ^ 0xffffffff) >>> 0;
     return crcvar.$;
 }
 

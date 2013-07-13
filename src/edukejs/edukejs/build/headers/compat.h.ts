@@ -536,7 +536,7 @@ var BS_IREAD = 0x0100;//S_IREAD;
 //#  define Bfree free
 //#  define Bstrdup strdup
 //#  define Bmemalign memalign
-var Bopen = _open;
+var Bopen = $open;
 //# define Bclose close
 //# define Bwrite write
 //# define Bread read

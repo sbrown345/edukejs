@@ -31,9 +31,18 @@ function multiDimArray(arrayClass, num, arrLength) {
     return multiDimArray;
 }
 
-//function Ref(val) {
-//    this.$ = val;
-//}
+class Ptr {
+    //buf: ArrayBuffer;
+    array: Uint8Array;
+    idx: number;
+
+    constructor(array: Uint8Array, index: number = 0) {
+        //this.buf = array.buffer;
+        this.array = array;
+        this.idx = index;
+    }
+}
+
 
 class Ref {
     $: any;

@@ -425,6 +425,9 @@
 
 function findfrompath(fn : string, where : Ref) : number
 {
+    where.$ = "DUKE3D.GRP";
+    return 0; // SB: hardcoded
+
     todo("findfrompath");
 //    searchpath_t *sp;
 //    char *pfn, *ffn;

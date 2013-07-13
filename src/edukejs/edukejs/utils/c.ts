@@ -8,9 +8,16 @@ function exit(code: number) {
     todoThrow();
 }
 
-var fileHandles = [null, null, null, null, null];
+var fileHandles : Ptr[] = [null, null, null, null, null];
 
-function _open(path: string, oflags: number, mode: number): number {
+function $close(handle : number) {
+    // reset fake file handler pointer
+    if(fileHandles[handle]) {
+        fileHandles[handle].idx = 0;
+    }
+}
+
+function $open(path: string, oflags: number, mode: number): number {
     //var xhr = new XMLHttpRequest();
     //if (xhr.overrideMimeType) {
     //    xhr.overrideMimeType('text/plain; charset=x-user-defined');
@@ -51,14 +58,18 @@ function memset(array: any, startIndex: number, value: number, num: number) : vo
     }
 }
 
-function read(fileHandle: number, dstBuf: Uint8Array, maxCharCount: number) : number {
-    var source = fileHandles[fileHandle];
-    var i : number = 0;
-    for (; i < maxCharCount; i++) {
-        dstBuf[i] = source[i];
+function read(fileHandle: number, dstBuf: Ptr, maxCharCount: number) : number {
+    var source = fileHandles[fileHandle]; 
+    var count = 0;
+    for (var i = 0; i < maxCharCount && source.idx + i < source.array.length; i++) {
+        if(dstBuf.idx + i > dstBuf.array.length) {
+            throw "index does not exist";
+        }
+        dstBuf.array[dstBuf.idx + i] = source.array[source.idx + i];
+        count++;
     }
-
-    return i;
+    source.idx += count;
+    return count;
 }
 
 function sizeof(obj: any) : number {

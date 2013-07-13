@@ -26,7 +26,7 @@
                 throw "Incorrect file size for demo grp";
             }
             
-            fileHandles[4] = grpData;
+            fileHandles[4] = new Ptr(grpData);
             WinMain(null, null, "-nosetup -map E1L1.MAP", 10);
         }
     </script>

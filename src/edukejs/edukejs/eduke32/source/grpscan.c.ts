@@ -379,7 +379,7 @@ function ScanGroups() : number
 //    char *fn;
 //    struct Bstat st;
     var BUFFER_SIZE = (1024 * 1024 * 8);
-//    uint8_t *buf = (uint8_t *)Bmalloc(BUFFER_SIZE);
+    var buf = new Ptr(new Uint8Array(BUFFER_SIZE)); //(uint8_t *)Bmalloc(BUFFER_SIZE);
 
 //    if (!buf)
 //    {
@@ -433,24 +433,24 @@ function ScanGroups() : number
 //        {
             var b : number, fh : number;
             var crcval : number = 0;
-            debugger
+            
             fh = openfrompath(/*sidx.name - SB: hardcode instead*/ "DUKE3D.GRP", BO_RDONLY|BO_BINARY, BS_IREAD);
 //            if (fh < 0) continue;
 //            if (Bfstat(fh, &st)) continue;
 
-            //initprintf(" Checksumming %s...", sidx.name);
+            initprintf(" Checksumming %s...", "hardcoded file, DUKE3D.GRP"/*sidx.name*/);
             var crcvalRef = new Ref(crcval);
             crc32init(/*(uint32_t *)&*/ crcvalRef);
-            
+            crcvalRef.$ = int32(crcvalRef.$);
             do
             {
                 b = read(fh, buf, BUFFER_SIZE);
-                if (b > 0) crc32block(crcvalRef, buf, b);
+                if (b > 0) crc32block(crcvalRef, new Ptr(buf.array), b);
             }
             while (b == BUFFER_SIZE);
             crc32finish(crcvalRef);
             crcval = crcvalRef.$;
-//            close(fh);
+            $close(fh);
 //            initprintf(" Done\n");
 
 //            grp = (struct grpfile *)Bcalloc(1, sizeof(struct grpfile));

@@ -30,8 +30,8 @@
             return assert;
         },
 
-        areEqual: function (a: any, b: any) {
-            trackAssert(assert.test.areEqual(a, b), "a and b are not equal. a: " + a + ", b: " + b);
+        areEqual: function (expected: any, actual: any) {
+            trackAssert(assert.test.areEqual(expected, actual), "a and b are not equal. a: " + expected + ", b: " + actual);
             return assert;
         },
 
@@ -84,8 +84,8 @@
                 array[0] = v;
                 return array[0] === v;
             },
-            areEqual: function (a: any, b: any): boolean {
-                return a == b;
+            areEqual: function (expected: any, actual: any): boolean {
+                return expected == actual;
             }
         }
     };
