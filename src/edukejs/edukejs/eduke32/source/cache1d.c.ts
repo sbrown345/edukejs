@@ -595,7 +595,7 @@ function openfrompath(fn: string , flags: number, mode: number) : number
 //}
 
 var numgroupfiles = 0; //int32
-//static int32_t gnumfiles[MAXGROUPFILES];
+var gnumfiles = new Uint32Array(MAXGROUPFILES);
 var groupfil = new Int32Array([-1,-1,-1,-1,-1,-1,-1,-1]); assert.areEqual(MAXGROUPFILES, groupfil.length);
 var groupfilpos = new Int32Array(MAXGROUPFILES);
 //static char *gfilelist[MAXGROUPFILES];
@@ -622,6 +622,7 @@ var groupfilpos = new Int32Array(MAXGROUPFILES);
 
 function initgroupfile(filename : string) : number
 {
+    debugger;
 //    char buf[16];
     var i : number, j : number, k : number;
 //#ifdef WITHKPLIB
@@ -655,19 +656,20 @@ function initgroupfile(filename : string) : number
 //    Blseek(i,0,BSEEK_SET);
 //    groupfil[numgroupfiles] = i;
 //#else
-//    groupfil[numgroupfiles] = openfrompath(filename,BO_BINARY|BO_RDONLY,BS_IREAD);
-//    if (groupfil[numgroupfiles] != -1)
+    groupfil[numgroupfiles] = openfrompath(filename,BO_BINARY|BO_RDONLY,BS_IREAD);
+    if (groupfil[numgroupfiles] != -1)
 //#endif
-//    {
-        groupfilpos[numgroupfiles] = 0;
-        Bread(groupfil[numgroupfiles],buf,16);
-        if (Bmemcmp(buf, "KenSilverman", 12))
-        {
-            Bclose(groupfil[numgroupfiles]);
-            groupfil[numgroupfiles] = -1;
-            return(-1);
-        }
-//        gnumfiles[numgroupfiles] = B_LITTLE32(*((int32_t *)&buf[12]));
+    {
+         groupfilpos[numgroupfiles] = 0;
+         Bread(groupfil[numgroupfiles],new Ptr(buf),16);
+         if (Bmemcmp(buf, "KenSilverman".toUint8Array(), 12))
+         {
+             todoThrow();
+             //Bclose(groupfil[numgroupfiles]);
+             //groupfil[numgroupfiles] = -1;
+             //return(-1);
+         } throw "todo";
+        //gnumfiles[numgroupfiles] = B_LITTLE32(*((int32_t *)&buf[12]));
 
 //        if ((gfilelist[numgroupfiles] = (char *)Bmalloc(gnumfiles[numgroupfiles]<<4)) == 0)
 //        {
@@ -691,8 +693,8 @@ function initgroupfile(filename : string) : number
 //            j += k;
 //        }
 //        gfileoffs[numgroupfiles][gnumfiles[numgroupfiles]] = j;
-//    }
-//    numgroupfiles++;
+    }
+    numgroupfiles++;
     return(groupfil[numgroupfiles-1]);
 }
 

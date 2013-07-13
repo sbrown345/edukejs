@@ -22,7 +22,8 @@ static inline void crc32init(uint32_t *crcvar)
 static inline void crc32block(uint32_t *crcvar, uint8_t *blk, uint32_t len)
 {
     uint32_t crc = *crcvar;
-    while (len--) crc = crc32table[(crc ^ *(blk++)) & 0xffl] ^(crc >> 8);
+    while (len--) 
+		crc = crc32table[(crc ^ *(blk++)) & 0xffl] ^(crc >> 8);
     *crcvar = crc;
 }
 

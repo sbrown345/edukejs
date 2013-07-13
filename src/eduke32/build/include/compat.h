@@ -75,7 +75,7 @@
 #  define FALSE 0
 #endif
 
-#define WITHKPLIB
+//#define WITHKPLIB
 
 // Define this to rewrite all 'B' versions to library functions. This
 // is for platforms which give us a standard sort of C library so we

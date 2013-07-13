@@ -11426,7 +11426,7 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
             initprintf("Warning: could not find main data file \"%s\"!\n",grpfile);
         else
             initprintf("Using \"%s\" as main game data file.\n", grpfile);
-
+    throw "todo"
 //        if (!g_noAutoLoad && !ud.config.NoAutoLoad)
 //        {
 //            G_LoadGroupsInDir("autoload");

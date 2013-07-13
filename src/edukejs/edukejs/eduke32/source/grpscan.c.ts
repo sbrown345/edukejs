@@ -448,7 +448,7 @@ function ScanGroups() : number
                 if (b > 0) crc32block(crcvalRef, new Ptr(buf.array), b);
             }
             while (b == BUFFER_SIZE);
-            debugger;
+            
             crc32finish(crcvalRef);
             crcval = int32(crcvalRef.$);
             assert.areEqual(hardcoded.grpCRC, crcval);

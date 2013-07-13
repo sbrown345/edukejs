@@ -51,3 +51,16 @@ class Ref {
         this.$ = val;
     }
 }
+
+interface String {
+  toUint8Array: () => Uint8Array; // <-- Whatever signature you want.
+}
+
+String.prototype.toUint8Array = function () : Uint8Array {
+    var array = new Uint8Array(this.length);
+    for (var i = 0; i < this.length; i++) {
+        array[i] = this.charCodeAt(i);
+    }
+
+    return array;
+}

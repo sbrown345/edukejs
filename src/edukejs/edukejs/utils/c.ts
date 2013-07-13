@@ -50,6 +50,25 @@ function _open(path: string, oflags: number, mode: number): number {
     return 4; // it happened to be 4 debugging the original
 }
 
+function memcmp(buf1 : Uint8Array, buf2 : Uint8Array, count : number) : number {
+    debugger;
+    for (var i = 0; i < count; i++) {
+        if(buf1[i] === buf2[i]) {
+            continue;
+        }
+
+        if(buf1[i] > buf2[i]) {
+            return 1;
+        }
+
+        if(buf1[i] < buf2[i]) {
+            return -1;
+        }
+    }
+
+    return 0;
+}
+
 function memset(array: any, startIndex: number, value: number, num: number) : void {
     assert.int32(startIndex).uint8(value).int32(num);
 

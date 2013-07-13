@@ -57,3 +57,9 @@ test("originalArgs", function () {
     assert.originalArgs("fnName", [3, 255], "char x, char y");
     strictEqual(assert.failedCount, 1, "is array of chars");
 });
+
+test("memcmp", function () {
+    strictEqual(memcmp(new Uint8Array([97, 98]), [97, 98], 2), 0, "array matches");
+    strictEqual(memcmp(new Uint8Array([100, 98]), [98, 99], 2), 1, "buf1 is greater");
+    strictEqual(memcmp(new Uint8Array([90, 98]), [98, 99], 2), -1, "buf1 is less than");
+});

@@ -348,7 +348,7 @@ int32_t ScanGroups(void)
     initprintf("Searching for game data...\n");
 
     LoadGameList();
-    LoadGroupsCache();
+    //LoadGroupsCache(); SB: disabled to match local
 
     srch = klistpath("/", "*.grp", CACHE1D_FIND_FILE);
 

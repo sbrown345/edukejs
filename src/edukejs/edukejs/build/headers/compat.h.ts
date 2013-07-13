@@ -537,9 +537,9 @@ var BS_IREAD = 0x0100;//S_IREAD;
 //#  define Bstrdup strdup
 //#  define Bmemalign memalign
 var Bopen = _open;
-//# define Bclose close
+var Bclose = _close
 //# define Bwrite write
-//# define Bread read
+var Bread = read;
 //# define Blseek lseek
 //# if defined(__GNUC__)
 //#  define Btell(h) lseek(h,0,SEEK_CUR)
@@ -619,7 +619,7 @@ var Bstrcpy = strcpy
 //# define Bmemmove memmove
 //# define Bmemchr memchr
 var Bmemset = memset;
-//# define Bmemcmp memcmp
+var Bmemcmp = memcmp;
 //# define Bscanf scanf
 //# define Bprintf printf
 //# define Bsscanf sscanf
