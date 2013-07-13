@@ -67,13 +67,13 @@
         },
 
         test: {
-            isString: function (v): boolean {
-                return typeof v === "string";
+            isString: function (v: string): boolean {
+                return v === null || typeof v === "string";
             },
-            isUint8: function (v): boolean {
+            isUint8: function (v: number): boolean {
                 return assert.test.isTypedArrayValue(Uint8Array, v);
             },
-            isInt32: function (v): boolean {
+            isInt32: function (v: number): boolean {
                 return assert.test.isTypedArrayValue(Int32Array, v);
             },
             isType: function (type, v): boolean {

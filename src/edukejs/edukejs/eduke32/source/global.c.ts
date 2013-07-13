@@ -17,15 +17,18 @@
 
 /// <reference path="../../eduke32/headers/_functio.h.ts" />
 /// <reference path="../../eduke32/headers/actors.h.ts" />
+/// <reference path="../../eduke32/headers/common_game.h.ts" />
 /// <reference path="../../eduke32/headers/function.h.ts" />
-/// <reference path="../../eduke32/headers/global.h.ts" />
 /// <reference path="../../eduke32/headers/game.h.ts" />
 /// <reference path="../../eduke32/headers/gamedef.h.ts" />
+/// <reference path="../../eduke32/headers/global.h.ts" />
+/// <reference path="../../eduke32/headers/grpscan.h.ts" />
 /// <reference path="../../eduke32/headers/namesdyn.h.ts" />
 /// <reference path="../../eduke32/headers/player.h.ts" />
 /// <reference path="../../eduke32/headers/soundsdyn.h.ts" />
 
 /// <reference path="../../eduke32/source/baselayer.c.ts" />
+/// <reference path="../../eduke32/source/cache1d.c.ts" />
 /// <reference path="../../eduke32/source/common.c.ts" />
 /// <reference path="../../eduke32/source/config.c.ts" />
 /// <reference path="../../eduke32/source/game.c.ts" />

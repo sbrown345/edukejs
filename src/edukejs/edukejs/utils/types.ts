@@ -36,9 +36,9 @@ function multiDimArray(arrayClass, num, arrLength) {
 //}
 
 class Ref {
-    $: Object;
+    $: any;
 
-    constructor(val: Object) {
+    constructor(val: any) {
         this.$ = val;
     }
 }

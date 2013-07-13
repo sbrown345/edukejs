@@ -1,3 +1,5 @@
+/// <reference path="../../build/headers/crc32.h.ts" />
+
 //#include "crc32.h"
 
 var crc32table = new Uint32Array(256);

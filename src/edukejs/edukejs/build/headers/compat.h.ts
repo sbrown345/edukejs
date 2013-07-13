@@ -402,23 +402,24 @@
 //#  define F_OK 0
 //# endif
 
-//# define BO_BINARY O_BINARY
-//# define BO_TEXT   O_TEXT
-//# define BO_RDONLY O_RDONLY
-//# define BO_WRONLY O_WRONLY
-//# define BO_RDWR   O_RDWR
-//# define BO_APPEND O_APPEND
-//# define BO_CREAT  O_CREAT
-//# define BO_TRUNC  O_TRUNC
-//# define BS_IRGRP  S_IRGRP
-//# define BS_IWGRP  S_IWGRP
-//# define BS_IEXEC  S_IEXEC
+// SB: values from fcntl.h
+var BO_BINARY = 0x8000;//O_BINARY;
+var BO_TEXT =   0x4000;//O_TEXT;
+var BO_RDONLY = 0x0000;//O_RDONLY;
+var BO_WRONLY = 0x0001;//O_WRONLY;
+var BO_RDWR =   0x0002;//O_RDWR;
+var BO_APPEND = 0x0008;//O_APPEND;
+var BO_CREAT =  0x0100;//O_CREAT;
+var BO_TRUNC =  0x0200;//O_TRUNC;
+var BS_IRGRP  = 0x0400;//S_IRGRP;
+//var BS_IWGRP  = S_IWGRP;
+//var BS_IEXEC  = S_IEXEC;
 //# ifdef __ANDROID__
 //#  define BS_IWRITE S_IWUSR
 //#  define BS_IREAD  S_IRUSR
 //# else
-//#  define BS_IWRITE S_IWRITE
-//#  define BS_IREAD  S_IREAD
+var BS_IWRITE = 0x0080;//S_IWRITE
+var BS_IREAD = 0x0100;//S_IREAD;
 //# endif
 //# define BS_IFIFO  S_IFIFO
 //# define BS_IFCHR  S_IFCHR
@@ -535,7 +536,7 @@
 //#  define Bfree free
 //#  define Bstrdup strdup
 //#  define Bmemalign memalign
-//# define Bopen open
+var Bopen = _open;
 //# define Bclose close
 //# define Bwrite write
 //# define Bread read
@@ -629,7 +630,7 @@ var Bsprintf = function (buf: Uint8Array, format: string, ...args: any[]) {
     for (i = 0; i < format.length; i++) {
         buf[i] = output.charCodeAt(i);
     }
-    buf[i + 1] = 0;
+    buf[i] = 0;
 };
 //# ifdef _MSC_VER
 //#  define Bsnprintf _snprintf

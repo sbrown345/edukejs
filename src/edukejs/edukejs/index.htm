@@ -11,8 +11,22 @@
     <script src="eduke.js"></script>
 
     <script>
-        WinMain(null, null, "-nosetup -map E1L1.MAP", 10);
-        //app_main(4, "-nosetup -map E1L1.MAP");
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', 'DUKE3D>GRP', true);
+        xhr.responseType = 'arraybuffer';
+
+        xhr.onload = function (e) {
+            loadGame(new Uint8Array(this.response));
+        };
+
+        xhr.send();
+
+
+        function loadGame(grpData) {
+            fileHandles[4] = grpData;
+            WinMain(null, null, "-nosetup -map E1L1.MAP", 10);
+            //app_main(4, "-nosetup -map E1L1.MAP");
+        }
     </script>
 </body>
 </html>

@@ -17,12 +17,15 @@
 
 /// <reference path="../../eduke32/headers/_functio.h.ts" />
 /// <reference path="../../eduke32/headers/actors.h.ts" />
+/// <reference path="../../eduke32/headers/common_game.h.ts" />
 /// <reference path="../../eduke32/headers/function.h.ts" />
 /// <reference path="../../eduke32/headers/global.h.ts" />
+/// <reference path="../../eduke32/headers/grpscan.h.ts" />
 /// <reference path="../../eduke32/headers/game.h.ts" />
 /// <reference path="../../eduke32/headers/gamedef.h.ts" />
 /// <reference path="../../eduke32/headers/player.h.ts" />
 
+/// <reference path="../../eduke32/source/cache1d.c.ts" />
 /// <reference path="../../eduke32/source/baselayer.c.ts" />
 /// <reference path="../../eduke32/source/config.c.ts" />
 /// <reference path="../../eduke32/source/game.c.ts" />
@@ -61,7 +64,7 @@
 //#include "common.h"
 //#include "common_game.h"
 //
-//int32_t g_gameType = GAMEFLAG_DUKE;
+var g_gameType = GAMEFLAG_DUKE;
 //
 //// grp/con/def handling
 //

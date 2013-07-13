@@ -6,6 +6,7 @@
 /// <reference path="../../build/headers/build.h.ts" />
 /// <reference path="../../build/headers/cache1d.h.ts" />
 /// <reference path="../../build/headers/compat.h.ts" />
+/// <reference path="../../build/headers/crc32.h.ts" />
 /// <reference path="../../build/headers/duke3d.h.ts" />
 
 /// <reference path="../../build/source/baselayer.c.ts" />
@@ -17,13 +18,16 @@
 
 /// <reference path="../../eduke32/headers/_functio.h.ts" />
 /// <reference path="../../eduke32/headers/actors.h.ts" />
+/// <reference path="../../eduke32/headers/common_game.h.ts" />
 /// <reference path="../../eduke32/headers/function.h.ts" />
-/// <reference path="../../eduke32/headers/global.h.ts" />
 /// <reference path="../../eduke32/headers/game.h.ts" />
 /// <reference path="../../eduke32/headers/gamedef.h.ts" />
+/// <reference path="../../eduke32/headers/global.h.ts" />
+/// <reference path="../../eduke32/headers/grpscan.h.ts" />
 /// <reference path="../../eduke32/headers/player.h.ts" />
 
 /// <reference path="../../eduke32/source/baselayer.c.ts" />
+/// <reference path="../../eduke32/source/cache1d.c.ts" />
 /// <reference path="../../eduke32/source/common.c.ts" />
 /// <reference path="../../eduke32/source/config.c.ts" />
 /// <reference path="../../eduke32/source/game.c.ts" />
@@ -71,27 +75,27 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 //// custom GRP support for the startup window, file format reflects the structure below
 //#define GAMELISTFILE "games.list"
-////    name                                     crc          size      flags                         dependency  scriptname     defname
-//struct grpfile internalgrpfiles[NUMGRPFILES] =
-//{
-//    { "Duke Nukem 3D",                         DUKE13_CRC,  26524524, GAMEFLAG_DUKE,                         0, NULL,          NULL,        NULL },
-//    { "Duke Nukem 3D (South Korean Censored)", DUKEKR_CRC,  26385383, GAMEFLAG_DUKE,                         0, NULL,          NULL,        NULL },
-//    { "Duke Nukem 3D: Atomic Edition",         DUKE15_CRC,  44356548, GAMEFLAG_DUKE,                         0, NULL,          NULL,        NULL },
-//    { "Duke Nukem 3D: Plutonium Pak",          DUKEPP_CRC,  44348015, GAMEFLAG_DUKE,                         0, NULL,          NULL,        NULL },
-//    { "Duke Nukem 3D Shareware 0.99",          DUKE099_CRC, 9690241,  GAMEFLAG_DUKE|GAMEFLAG_DUKEBETA,       0, NULL,          NULL,        NULL },
-//    { "Duke Nukem 3D Shareware 1.0",           DUKE10_CRC,  10429258, GAMEFLAG_DUKE|GAMEFLAG_SHAREWARE,      0, NULL,          NULL,        NULL },
-//    { "Duke Nukem 3D Shareware 1.1",           DUKE11_CRC,  10442980, GAMEFLAG_DUKE|GAMEFLAG_SHAREWARE,      0, NULL,          NULL,        NULL },
-//    { "Duke Nukem 3D Shareware 1.3D",          DUKESW_CRC,  11035779, GAMEFLAG_DUKE|GAMEFLAG_SHAREWARE,      0, NULL,          NULL,        NULL },
-//    { "Duke Nukem 3D Mac Demo",                DUKEMD_CRC,  10444391, GAMEFLAG_DUKE|GAMEFLAG_SHAREWARE,      0, NULL,          NULL,        NULL },
-//    { "Duke it out in D.C.",                   DUKEDC_CRC,  8410183 , GAMEFLAG_DUKE|GAMEFLAG_ADDON, DUKE15_CRC, NULL,          NULL,        NULL },
-//    { "Duke Caribbean: Life's a Beach",        DUKECB_CRC,  22213819, GAMEFLAG_DUKE|GAMEFLAG_ADDON, DUKE15_CRC, NULL,          NULL,        NULL },
-//    { "Duke: Nuclear Winter",                  DUKENW_CRC,  16169365, GAMEFLAG_DUKE|GAMEFLAG_ADDON, DUKE15_CRC, "nwinter.con", NULL,        NULL },
-//    { "NAM",                                   NAM_CRC,     43448927, GAMEFLAG_NAM,                          0, "nam.con",     "nam.def",   NULL },
-//    { "NAPALM",                                NAPALM_CRC,  44365728, GAMEFLAG_NAM|GAMEFLAG_NAPALM,          0, "napalm.con",  "nam.def",   NULL },
-//    { "WWII GI",                               WW2GI_CRC,   77939508, GAMEFLAG_WW2GI|GAMEFLAG_NAM,           0, "ww2gi.con",   "ww2gi.def", NULL },
-//};
-//struct grpfile *foundgrps = NULL;
-//struct grpfile *listgrps = NULL;
+////        name                                     crc          size      flags                           dependency  scriptname     defname
+var internalgrpfiles =
+[
+new grpfile("Duke Nukem 3D",                         DUKE13_CRC,  26524524, GAMEFLAG_DUKE,                         0, NULL,          NULL,        NULL ),
+new grpfile("Duke Nukem 3D (South Korean Censored)", DUKEKR_CRC,  26385383, GAMEFLAG_DUKE,                         0, NULL,          NULL,        NULL ),
+new grpfile("Duke Nukem 3D: Atomic Edition",         DUKE15_CRC,  44356548, GAMEFLAG_DUKE,                         0, NULL,          NULL,        NULL ),
+new grpfile("Duke Nukem 3D: Plutonium Pak",          DUKEPP_CRC,  44348015, GAMEFLAG_DUKE,                         0, NULL,          NULL,        NULL ),
+new grpfile("Duke Nukem 3D Shareware 0.99",          DUKE099_CRC, 9690241,  GAMEFLAG_DUKE|GAMEFLAG_DUKEBETA,       0, NULL,          NULL,        NULL ),
+new grpfile("Duke Nukem 3D Shareware 1.0",           DUKE10_CRC,  10429258, GAMEFLAG_DUKE|GAMEFLAG_SHAREWARE,      0, NULL,          NULL,        NULL ),
+new grpfile("Duke Nukem 3D Shareware 1.1",           DUKE11_CRC,  10442980, GAMEFLAG_DUKE|GAMEFLAG_SHAREWARE,      0, NULL,          NULL,        NULL ),
+new grpfile("Duke Nukem 3D Shareware 1.3D",          DUKESW_CRC,  11035779, GAMEFLAG_DUKE|GAMEFLAG_SHAREWARE,      0, NULL,          NULL,        NULL ),
+new grpfile("Duke Nukem 3D Mac Demo",                DUKEMD_CRC,  10444391, GAMEFLAG_DUKE|GAMEFLAG_SHAREWARE,      0, NULL,          NULL,        NULL ),
+new grpfile("Duke it out in D.C.",                   DUKEDC_CRC,  8410183 , GAMEFLAG_DUKE|GAMEFLAG_ADDON, DUKE15_CRC, NULL,          NULL,        NULL ),
+new grpfile("Duke Caribbean: Life's a Beach",        DUKECB_CRC,  22213819, GAMEFLAG_DUKE|GAMEFLAG_ADDON, DUKE15_CRC, NULL,          NULL,        NULL ),
+new grpfile("Duke: Nuclear Winter",                  DUKENW_CRC,  16169365, GAMEFLAG_DUKE|GAMEFLAG_ADDON, DUKE15_CRC, "nwinter.con", NULL,        NULL ),
+new grpfile("NAM",                                   NAM_CRC,     43448927, GAMEFLAG_NAM,                          0, "nam.con",     "nam.def",   NULL ),
+new grpfile("NAPALM",                                NAPALM_CRC,  44365728, GAMEFLAG_NAM|GAMEFLAG_NAPALM,          0, "napalm.con",  "nam.def",   NULL ),
+new grpfile("WWII GI",                               WW2GI_CRC,   77939508, GAMEFLAG_WW2GI|GAMEFLAG_NAM,           0, "ww2gi.con",   "ww2gi.def", NULL ),
+];
+var foundgrps = null;  //struct grpfile
+var listgrps = null;   //struct grpfile
 
 //static void LoadList(const char * filename)
 //{
@@ -208,40 +212,40 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //    scriptfile_clearsymbols();
 //}
 
-//static void LoadGameList(void)
-//{
-//    struct grpfile *fg;
-//    CACHE1D_FIND_REC *srch, *sidx;
+function LoadGameList(): void
+{
+    var fg; //grpfile
+    //CACHE1D_FIND_REC *srch, *sidx;
     
-//    int32_t i;
+    var i : number;
 
-//    for (i = 0; i<NUMGRPFILES; i++)
-//    {
-//        fg = (struct grpfile *)Bcalloc(1, sizeof(struct grpfile));
+    for (i = 0; i<NUMGRPFILES; i++)
+    {
+        fg = new grpfile(null, 0, 0, 0, 0, null, null, null);
 
-//        fg->name = Bstrdup(internalgrpfiles[i].name);
-//        fg->crcval = internalgrpfiles[i].crcval;
-//        fg->size = internalgrpfiles[i].size;
-//        fg->game = internalgrpfiles[i].game;
-//        fg->dependency = internalgrpfiles[i].dependency;
+        fg.name = Bstrdup(internalgrpfiles[i].name);
+        fg.crcval = internalgrpfiles[i].crcval;
+        fg.size = internalgrpfiles[i].size;
+        fg.game = internalgrpfiles[i].game;
+        fg.dependency = internalgrpfiles[i].dependency;
 
-//        if (internalgrpfiles[i].scriptname)
-//            fg->scriptname = dup_filename(internalgrpfiles[i].scriptname);
+        if (internalgrpfiles[i].scriptname)
+            fg.scriptname = internalgrpfiles[i].scriptname; //dup_filename(internalgrpfiles[i].scriptname);
 
-//        if (internalgrpfiles[i].defname)
-//            fg->defname = dup_filename(internalgrpfiles[i].defname);
+        if (internalgrpfiles[i].defname)
+            fg.defname = internalgrpfiles[i].defname;//dup_filename(internalgrpfiles[i].defname);
 
-//        fg->next = listgrps;
-//        listgrps = fg;
-//    }
+        fg.next = listgrps;
+        listgrps = fg;
+    }
+    todo("possible? klistpath etc");
+    //srch = klistpath("/", "*.grpinfo", CACHE1D_FIND_FILE);
 
-//    srch = klistpath("/", "*.grpinfo", CACHE1D_FIND_FILE);
+    //for (sidx = srch; sidx; sidx = sidx.next)
+    //    LoadList(srch.name);
 
-//    for (sidx = srch; sidx; sidx = sidx->next)
-//        LoadList(srch->name);
-
-//    klistfree(srch);
-//}
+    //klistfree(srch);
+}
 
 //static void FreeGameList(void)
 //{
@@ -374,7 +378,7 @@ function ScanGroups() : number
 //    struct grpfile *grp;
 //    char *fn;
 //    struct Bstat st;
-//#define BUFFER_SIZE (1024 * 1024 * 8)
+    var BUFFER_SIZE = (1024 * 1024 * 8);
 //    uint8_t *buf = (uint8_t *)Bmalloc(BUFFER_SIZE);
 
 //    if (!buf)
@@ -385,80 +389,83 @@ function ScanGroups() : number
 
     initprintf("Searching for game data...\n");
 
-//    LoadGameList();
-//    LoadGroupsCache();
+    LoadGameList();
+//LoadGroupsCache(); //SB: no need yet
 
 //    srch = klistpath("/", "*.grp", CACHE1D_FIND_FILE);
 
-//    for (sidx = srch; sidx; sidx = sidx->next)
+//    for (sidx = srch; sidx; sidx = sidx.next)
 //    {
-//        for (fg = grpcache; fg; fg = fg->next)
+//        for (fg = grpcache; fg; fg = fg.next)
 //        {
-//            if (!Bstrcmp(fg->name, sidx->name)) break;
+//            if (!Bstrcmp(fg.name, sidx.name)) break;
 //        }
 
 //        if (fg)
 //        {
-//            if (findfrompath(sidx->name, &fn)) continue; // failed to resolve the filename
+//            if (findfrompath(sidx.name, &fn)) continue; // failed to resolve the filename
 //            if (Bstat(fn, &st))
 //            {
 //                Bfree(fn);
 //                continue;
 //            } // failed to stat the file
 //            Bfree(fn);
-//            if (fg->size == st.st_size && fg->mtime == st.st_mtime)
+//            if (fg.size == st.st_size && fg.mtime == st.st_mtime)
 //            {
 //                grp = (struct grpfile *)Bcalloc(1, sizeof(struct grpfile));
-//                grp->name = Bstrdup(sidx->name);
-//                grp->crcval = fg->crcval;
-//                grp->size = fg->size;
-//                grp->next = foundgrps;
+//                grp.name = Bstrdup(sidx.name);
+//                grp.crcval = fg.crcval;
+//                grp.size = fg.size;
+//                grp.next = foundgrps;
 //                foundgrps = grp;
 
 //                fgg = (struct grpcache *)Bcalloc(1, sizeof(struct grpcache));
-//                strcpy(fgg->name, fg->name);
-//                fgg->size = fg->size;
-//                fgg->mtime = fg->mtime;
-//                fgg->crcval = fg->crcval;
-//                fgg->next = usedgrpcache;
+//                strcpy(fgg.name, fg.name);
+//                fgg.size = fg.size;
+//                fgg.mtime = fg.mtime;
+//                fgg.crcval = fg.crcval;
+//                fgg.next = usedgrpcache;
 //                usedgrpcache = fgg;
 //                continue;
 //            }
 //        }
 
 //        {
-//            int32_t b, fh;
-//            int32_t crcval;
-
-//            fh = openfrompath(sidx->name, BO_RDONLY|BO_BINARY, BS_IREAD);
+            var b : number, fh : number;
+            var crcval : number = 0;
+            debugger
+            fh = openfrompath(/*sidx.name - SB: hardcode instead*/ "DUKE3D.GRP", BO_RDONLY|BO_BINARY, BS_IREAD);
 //            if (fh < 0) continue;
 //            if (Bfstat(fh, &st)) continue;
 
-//            initprintf(" Checksumming %s...", sidx->name);
-//            crc32init((uint32_t *)&crcval);
-//            do
-//            {
-//                b = read(fh, buf, BUFFER_SIZE);
-//                if (b > 0) crc32block((uint32_t *)&crcval, (uint8_t *)buf, b);
-//            }
-//            while (b == BUFFER_SIZE);
-//            crc32finish((uint32_t *)&crcval);
+            //initprintf(" Checksumming %s...", sidx.name);
+            var crcvalRef = new Ref(crcval);
+            crc32init(/*(uint32_t *)&*/ crcvalRef);
+            
+            do
+            {
+                b = read(fh, buf, BUFFER_SIZE);
+                if (b > 0) crc32block(crcvalRef, buf, b);
+            }
+            while (b == BUFFER_SIZE);
+            crc32finish(crcvalRef);
+            crcval = crcvalRef.$;
 //            close(fh);
 //            initprintf(" Done\n");
 
 //            grp = (struct grpfile *)Bcalloc(1, sizeof(struct grpfile));
-//            grp->name = Bstrdup(sidx->name);
-//            grp->crcval = crcval;
-//            grp->size = st.st_size;
-//            grp->next = foundgrps;
+//            grp.name = Bstrdup(sidx.name);
+//            grp.crcval = crcval;
+//            grp.size = st.st_size;
+//            grp.next = foundgrps;
 //            foundgrps = grp;
 
 //            fgg = (struct grpcache *)Bcalloc(1, sizeof(struct grpcache));
-//            Bstrncpy(fgg->name, sidx->name, BMAX_PATH);
-//            fgg->size = st.st_size;
-//            fgg->mtime = st.st_mtime;
-//            fgg->crcval = crcval;
-//            fgg->next = usedgrpcache;
+//            Bstrncpy(fgg.name, sidx.name, BMAX_PATH);
+//            fgg.size = st.st_size;
+//            fgg.mtime = st.st_mtime;
+//            fgg.crcval = crcval;
+//            fgg.next = usedgrpcache;
 //            usedgrpcache = fgg;
 //        }
 //    }
@@ -466,39 +473,39 @@ function ScanGroups() : number
 //    klistfree(srch);
 //    FreeGroupsCache();
 
-//    for (grp = foundgrps; grp; /*grp=grp->next*/)
+//    for (grp = foundgrps; grp; /*grp=grp.next*/)
 //    {
 //        struct grpfile *igrp;
-//        for (igrp = listgrps; igrp; igrp=igrp->next)
-//            if (grp->crcval == igrp->crcval) break;
+//        for (igrp = listgrps; igrp; igrp=igrp.next)
+//            if (grp.crcval == igrp.crcval) break;
 
 //        if (igrp == NULL)
 //        {
-//            grp = grp->next;
+//            grp = grp.next;
 //            continue;
 //        }
 
-//        if (igrp->dependency)
+//        if (igrp.dependency)
 //        {
 //            struct grpfile *depgrp;
 
 //            //initprintf("found grp with dep\n");
-//            for (depgrp = foundgrps; depgrp; depgrp=depgrp->next)
-//                if (depgrp->crcval == igrp->dependency) break;
+//            for (depgrp = foundgrps; depgrp; depgrp=depgrp.next)
+//                if (depgrp.crcval == igrp.dependency) break;
 
-//            if (depgrp == NULL || depgrp->crcval != igrp->dependency) // couldn't find dependency
+//            if (depgrp == NULL || depgrp.crcval != igrp.dependency) // couldn't find dependency
 //            {
-//                //initprintf("removing %s\n", grp->name);
-//                RemoveGroup(igrp->crcval);
+//                //initprintf("removing %s\n", grp.name);
+//                RemoveGroup(igrp.crcval);
 //                grp = foundgrps;
 //                continue;
 //            }
 //        }
 
-//        if (igrp->game && !grp->game)
-//            grp->game = igrp->game;
+//        if (igrp.game && !grp.game)
+//            grp.game = igrp.game;
 
-//        grp=grp->next;
+//        grp=grp.next;
 //    }
 
 //    if (usedgrpcache)
@@ -510,8 +517,8 @@ function ScanGroups() : number
 //        {
 //            for (fg = usedgrpcache; fg; fg=fgg)
 //            {
-//                fgg = fg->next;
-//                fprintf(fp, "\"%s\" %d %d %d\n", fg->name, fg->size, fg->mtime, fg->crcval);
+//                fgg = fg.next;
+//                fprintf(fp, "\"%s\" %d %d %d\n", fg.name, fg.size, fg.mtime, fg.crcval);
 //                Bfree(fg);
 //                i++;
 //            }
