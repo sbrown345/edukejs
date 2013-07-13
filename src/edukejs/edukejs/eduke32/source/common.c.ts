@@ -167,15 +167,17 @@ function G_DefaultConFile() : string
 
     return defaultconfilename;
 }
-//
-//const char *G_GrpFile(void)
-//{
-//    if (g_grpNamePtr == NULL)
-//        return G_DefaultGrpFile();
-//    else
-//        return g_grpNamePtr;
-//}
-//
+
+function G_GrpFile() : string
+{
+    todo();
+    return "duke3d.grp";
+    //if (g_grpNamePtr == NULL)
+    //    return G_DefaultGrpFile();
+    //else
+    //    return g_grpNamePtr;
+}
+
 function G_DefFile() : string
 {
     todo();

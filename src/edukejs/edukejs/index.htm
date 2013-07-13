@@ -22,8 +22,8 @@
         xhr.send();
 
         function loadGame(grpData) {
-            if(grpData.length != 11035779) {
-                throw "Incorrect file size for demo grp";
+            if(grpData.length != hardcoded.grpSize) {
+                throw "Incorrect file size for " + (shareware ? "demo" : "full") + " grp";
             }
             
             fileHandles[4] = new Ptr(grpData);

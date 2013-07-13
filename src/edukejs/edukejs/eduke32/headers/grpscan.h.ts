@@ -52,7 +52,7 @@ enum addon_t {
     NUMADDONS
 };
 
-function grpfile(name: string, crcval: number, size: number, game: number, dependency: number, scriptname: string, defname: string, next: Object /*grpfile*/) {
+function grpfile(name: string = null, crcval: number = 0, size: number = 0, game: number = 0, dependency: number = 0, scriptname: string = null, defname: string = null, next: Object = null /*grpfile*/) {
     this.crcval = crcval;
     this.size = size;
     this.game = game;

@@ -375,7 +375,7 @@ function ScanGroups() : number
 {
 //    CACHE1D_FIND_REC *srch, *sidx;
 //    struct grpcache *fg, *fgg;
-//    struct grpfile *grp;
+    var grp;
 //    char *fn;
 //    struct Bstat st;
     var BUFFER_SIZE = (1024 * 1024 * 8);
@@ -448,17 +448,19 @@ function ScanGroups() : number
                 if (b > 0) crc32block(crcvalRef, new Ptr(buf.array), b);
             }
             while (b == BUFFER_SIZE);
+            debugger;
             crc32finish(crcvalRef);
-            crcval = crcvalRef.$;
-            $close(fh);
-//            initprintf(" Done\n");
+            crcval = int32(crcvalRef.$);
+            assert.areEqual(hardcoded.grpCRC, crcval);
+            _close(fh);
+            initprintf(" Done\n");
 
-//            grp = (struct grpfile *)Bcalloc(1, sizeof(struct grpfile));
-//            grp.name = Bstrdup(sidx.name);
-//            grp.crcval = crcval;
-//            grp.size = st.st_size;
-//            grp.next = foundgrps;
-//            foundgrps = grp;
+            grp = new grpfile();//(struct grpfile *)Bcalloc(1, sizeof(struct grpfile));
+            grp.name = "DUKE3D.GRP";//SB: Hardcoded Bstrdup(sidx.name);
+            grp.crcval = crcval;
+            grp.size = hardcoded.grpSize;// SB: hardcoded st.st_size;
+            grp.next = foundgrps;
+            foundgrps = grp;
 
 //            fgg = (struct grpcache *)Bcalloc(1, sizeof(struct grpcache));
 //            Bstrncpy(fgg.name, sidx.name, BMAX_PATH);

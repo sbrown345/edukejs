@@ -1,3 +1,5 @@
+/// <reference path="../../build/headers/cache1d.h.ts" />
+
 // "Build Engine & Tools" Copyright (c) 1993-1997 Ken Silverman
 // Ken Silverman's official web site: "http://www.advsys.net/ken"
 // See the included license file "BUILDLIC.TXT" for license info.
@@ -592,10 +594,10 @@ function openfrompath(fn: string , flags: number, mode: number) : number
 //    return h;
 //}
 
-//int32_t numgroupfiles = 0;
+var numgroupfiles = 0; //int32
 //static int32_t gnumfiles[MAXGROUPFILES];
-//static int32_t groupfil[MAXGROUPFILES] = {-1,-1,-1,-1,-1,-1,-1,-1};
-//static int32_t groupfilpos[MAXGROUPFILES];
+var groupfil = new Int32Array([-1,-1,-1,-1,-1,-1,-1,-1]); assert.areEqual(MAXGROUPFILES, groupfil.length);
+var groupfilpos = new Int32Array(MAXGROUPFILES);
 //static char *gfilelist[MAXGROUPFILES];
 //static int32_t *gfileoffs[MAXGROUPFILES];
 
@@ -618,10 +620,10 @@ function openfrompath(fn: string , flags: number, mode: number) : number
 //}
 //#endif
 
-//int32_t initgroupfile(const char *filename)
-//{
+function initgroupfile(filename : string) : number
+{
 //    char buf[16];
-//    int32_t i, j, k;
+    var i : number, j : number, k : number;
 //#ifdef WITHKPLIB
 //    char *zfn;
 //#endif
@@ -657,14 +659,14 @@ function openfrompath(fn: string , flags: number, mode: number) : number
 //    if (groupfil[numgroupfiles] != -1)
 //#endif
 //    {
-//        groupfilpos[numgroupfiles] = 0;
-//        Bread(groupfil[numgroupfiles],buf,16);
-//        if (Bmemcmp(buf, "KenSilverman", 12))
-//        {
-//            Bclose(groupfil[numgroupfiles]);
-//            groupfil[numgroupfiles] = -1;
-//            return(-1);
-//        }
+        groupfilpos[numgroupfiles] = 0;
+        Bread(groupfil[numgroupfiles],buf,16);
+        if (Bmemcmp(buf, "KenSilverman", 12))
+        {
+            Bclose(groupfil[numgroupfiles]);
+            groupfil[numgroupfiles] = -1;
+            return(-1);
+        }
 //        gnumfiles[numgroupfiles] = B_LITTLE32(*((int32_t *)&buf[12]));
 
 //        if ((gfilelist[numgroupfiles] = (char *)Bmalloc(gnumfiles[numgroupfiles]<<4)) == 0)
@@ -691,8 +693,8 @@ function openfrompath(fn: string , flags: number, mode: number) : number
 //        gfileoffs[numgroupfiles][gnumfiles[numgroupfiles]] = j;
 //    }
 //    numgroupfiles++;
-//    return(groupfil[numgroupfiles-1]);
-//}
+    return(groupfil[numgroupfiles-1]);
+}
 
 //void uninitsinglegroupfile(int32_t grphandle)
 //{

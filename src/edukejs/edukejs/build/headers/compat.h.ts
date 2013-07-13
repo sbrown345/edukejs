@@ -536,7 +536,7 @@ var BS_IREAD = 0x0100;//S_IREAD;
 //#  define Bfree free
 //#  define Bstrdup strdup
 //#  define Bmemalign memalign
-var Bopen = $open;
+var Bopen = _open;
 //# define Bclose close
 //# define Bwrite write
 //# define Bread read
@@ -626,7 +626,6 @@ var Bmemset = memset;
 var Bsprintf = function (buf: Uint8Array, format: string, ...args: any[]) {
     var output = sprintf(format, args);
     var i: number;
-    debugger
     for (i = 0; i < format.length; i++) {
         buf[i] = output.charCodeAt(i);
     }

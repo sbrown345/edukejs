@@ -10,14 +10,14 @@ function exit(code: number) {
 
 var fileHandles : Ptr[] = [null, null, null, null, null];
 
-function $close(handle : number) {
+function _close(handle : number) {
     // reset fake file handler pointer
     if(fileHandles[handle]) {
         fileHandles[handle].idx = 0;
     }
 }
 
-function $open(path: string, oflags: number, mode: number): number {
+function _open(path: string, oflags: number, mode: number): number {
     //var xhr = new XMLHttpRequest();
     //if (xhr.overrideMimeType) {
     //    xhr.overrideMimeType('text/plain; charset=x-user-defined');

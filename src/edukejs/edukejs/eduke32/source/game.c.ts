@@ -11324,6 +11324,9 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
     todo("grp stuff ScanGroups etc");
     ScanGroups();
 //    {
+        g_gameType = shareware ? 33 : 1; // SB: hardcoded
+        g_gameNamePtr = shareware ? "Duke Nukem 3D Shareware 1.3D" : "Duke Nukem 3D: Atomic Edition";  // SB: hardcoded
+
 //        // try and identify the 'defaultgamegrp' in the set of GRPs.
 //        // if it is found, set up the environment accordingly for the game it represents.
 //        // if it is not found, choose the first GRP from the list
@@ -11405,7 +11408,7 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
 //        G_LoadAddon();
 
 //    {
-//        const char *grpfile = G_GrpFile();
+        var grpfile = G_GrpFile();
 
 //        if (g_dependencyCRC)
 //        {
@@ -11419,10 +11422,10 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
 //            }
 //        }
 
-//        if ((i = initgroupfile(grpfile)) == -1)
-//            initprintf("Warning: could not find main data file \"%s\"!\n",grpfile);
-//        else
-//            initprintf("Using \"%s\" as main game data file.\n", grpfile);
+        if ((i = initgroupfile(grpfile)) == -1)
+            initprintf("Warning: could not find main data file \"%s\"!\n",grpfile);
+        else
+            initprintf("Using \"%s\" as main game data file.\n", grpfile);
 
 //        if (!g_noAutoLoad && !ud.config.NoAutoLoad)
 //        {

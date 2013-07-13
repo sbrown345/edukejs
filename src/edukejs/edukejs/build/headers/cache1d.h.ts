@@ -10,7 +10,7 @@
 //extern "C" {
 //#endif
 
-//#define MAXGROUPFILES 8     //Warning: Fix groupfil if this is changed
+var MAXGROUPFILES = 8;     //Warning: Fix groupfil if this is changed
 //#define MAXOPENFILES 64     //Warning: Fix filehan if this is changed
 
 //#ifdef WITHKPLIB
