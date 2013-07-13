@@ -11,7 +11,7 @@
 //#endif
 
 var MAXGROUPFILES = 8;     //Warning: Fix groupfil if this is changed
-//#define MAXOPENFILES 64     //Warning: Fix filehan if this is changed
+var MAXOPENFILES = 64;     //Warning: Fix filehan if this is changed
 
 //#ifdef WITHKPLIB
 //int32_t cache1d_file_fromzip(int32_t fil);

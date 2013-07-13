@@ -589,7 +589,7 @@ var Bstrcpy = strcpy
 //# endif
 //# if defined(_WIN32)
 //#  define Bstrlwr strlwr
-//#  define Bstrupr strupr
+var Bstrupr = strupr;
 //#  define Bmkdir(s,x) mkdir(s)
 //# else
 //#  define Bmkdir mkdir

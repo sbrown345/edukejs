@@ -33,8 +33,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 //#define MOVEFIFOSIZ                 2
 
-//#define NAM_GRENADE_LIFETIME        120
-//#define NAM_GRENADE_LIFETIME_VAR    30
+var NAM_GRENADE_LIFETIME       = 120;
+var NAM_GRENADE_LIFETIME_VAR   = 30;
 
 //#define HORIZ_MIN                   -99
 //#define HORIZ_MAX                   299
@@ -96,55 +96,55 @@ var KNEE_WEAPON = 0,  // 0
 //};
 
 //enum weaponflags_t {
-//    WEAPON_SPAWNTYPE1           = 0x00000000, // just spawn
-//    WEAPON_HOLSTER_CLEARS_CLIP  = 0x00000001, // 'holstering' clears the current clip
-//    WEAPON_GLOWS                = 0x00000002, // weapon 'glows' (shrinker and grower)
-//    WEAPON_AUTOMATIC            = 0x00000004, // automatic fire (continues while 'fire' is held down
-//    WEAPON_FIREEVERYOTHER       = 0x00000008, // during 'hold time' fire every frame
-//    WEAPON_FIREEVERYTHIRD       = 0x00000010, // during 'hold time' fire every third frame
-//    WEAPON_RANDOMRESTART        = 0x00000020, // restart for automatic is 'randomized' by RND 3
-//    WEAPON_AMMOPERSHOT          = 0x00000040, // uses ammo for each shot (for automatic)
-//    WEAPON_BOMB_TRIGGER         = 0x00000080, // weapon is the 'bomb' trigger
-//    WEAPON_NOVISIBLE            = 0x00000100, // weapon use does not cause user to become 'visible'
-//    WEAPON_THROWIT              = 0x00000200, // weapon 'throws' the 'shoots' item...
-//    WEAPON_CHECKATRELOAD        = 0x00000400, // check weapon availability at 'reload' time
-//    WEAPON_STANDSTILL           = 0x00000800, // player stops jumping before actual fire (like tripbomb in duke)
-//    WEAPON_SPAWNTYPE2           = 0x00001000, // spawn like shotgun shells
-//    WEAPON_SPAWNTYPE3           = 0x00002000, // spawn like chaingun shells
-//    WEAPON_SEMIAUTO             = 0x00004000, // cancel button press after each shot
-//    WEAPON_RELOAD_TIMING        = 0x00008000, // special casing for pistol reload sounds
-//    WEAPON_RESET                = 0x00010000  // cycle weapon back to frame 1 if fire is held, 0 if not
+var WEAPON_SPAWNTYPE1           = 0x00000000, // just spawn
+    WEAPON_HOLSTER_CLEARS_CLIP  = 0x00000001, // 'holstering' clears the current clip
+    WEAPON_GLOWS                = 0x00000002, // weapon 'glows' (shrinker and grower)
+    WEAPON_AUTOMATIC            = 0x00000004, // automatic fire (continues while 'fire' is held down
+    WEAPON_FIREEVERYOTHER       = 0x00000008, // during 'hold time' fire every frame
+    WEAPON_FIREEVERYTHIRD       = 0x00000010, // during 'hold time' fire every third frame
+    WEAPON_RANDOMRESTART        = 0x00000020, // restart for automatic is 'randomized' by RND 3
+    WEAPON_AMMOPERSHOT          = 0x00000040, // uses ammo for each shot (for automatic)
+    WEAPON_BOMB_TRIGGER         = 0x00000080, // weapon is the 'bomb' trigger
+    WEAPON_NOVISIBLE            = 0x00000100, // weapon use does not cause user to become 'visible'
+    WEAPON_THROWIT              = 0x00000200, // weapon 'throws' the 'shoots' item...
+    WEAPON_CHECKATRELOAD        = 0x00000400, // check weapon availability at 'reload' time
+    WEAPON_STANDSTILL           = 0x00000800, // player stops jumping before actual fire (like tripbomb in duke)
+    WEAPON_SPAWNTYPE2           = 0x00001000, // spawn like shotgun shells
+    WEAPON_SPAWNTYPE3           = 0x00002000, // spawn like chaingun shells
+    WEAPON_SEMIAUTO             = 0x00004000, // cancel button press after each shot
+    WEAPON_RELOAD_TIMING        = 0x00008000, // special casing for pistol reload sounds
+    WEAPON_RESET                = 0x00010000;  // cycle weapon back to frame 1 if fire is held, 0 if not
 //};
 
 //enum gamemode_t {
-//    MODE_MENU                   = 0x00000001,
-//    MODE_DEMO                   = 0x00000002,
-//    MODE_GAME                   = 0x00000004,
-//    MODE_EOL                    = 0x00000008,
-//    MODE_TYPE                   = 0x00000010,
-//    MODE_RESTART                = 0x00000020,
-//    MODE_SENDTOWHOM             = 0x00000040,
+var MODE_MENU                   = 0x00000001,
+    MODE_DEMO                   = 0x00000002,
+    MODE_GAME                   = 0x00000004,
+    MODE_EOL                    = 0x00000008,
+    MODE_TYPE                   = 0x00000010,
+    MODE_RESTART                = 0x00000020,
+    MODE_SENDTOWHOM             = 0x00000040;
 //};
 
 //// Player Actions.
 //enum playeraction_t {
-//    pstanding                   = 0x00000001,
-//    pwalking                    = 0x00000002,
-//    prunning                    = 0x00000004,
-//    pducking                    = 0x00000008,
-//    pfalling                    = 0x00000010,
-//    pjumping                    = 0x00000020,
-//    phigher                     = 0x00000040,
-//    pwalkingback                = 0x00000080,
-//    prunningback                = 0x00000100,
-//    pkicking                    = 0x00000200,
-//    pshrunk                     = 0x00000400,
-//    pjetpack                    = 0x00000800,
-//    ponsteroids                 = 0x00001000,
-//    ponground                   = 0x00002000,
-//    palive                      = 0x00004000,
-//    pdead                       = 0x00008000,
-//    pfacing                     = 0x00010000
+var pstanding                   = 0x00000001,
+    pwalking                    = 0x00000002,
+    prunning                    = 0x00000004,
+    pducking                    = 0x00000008,
+    pfalling                    = 0x00000010,
+    pjumping                    = 0x00000020,
+    phigher                     = 0x00000040,
+    pwalkingback                = 0x00000080,
+    prunningback                = 0x00000100,
+    pkicking                    = 0x00000200,
+    pshrunk                     = 0x00000400,
+    pjetpack                    = 0x00000800,
+    ponsteroids                 = 0x00001000,
+    ponground                   = 0x00002000,
+    palive                      = 0x00004000,
+    pdead                       = 0x00008000,
+    pfacing                     = 0x00010000;
 //};
 
 //typedef struct {
@@ -267,30 +267,31 @@ function playerdata_t() {
 }
 //#pragma pack(pop)
 
-//// KEEPINSYNC lunatic/con_lang.lua
-//typedef struct
-//{
-//    // NOTE: the member names must be identical to aplWeapon* suffixes.
-//    int32_t WorksLike;  // What the original works like
-//    int32_t Clip;  // number of items in magazine
-//    int32_t Reload;  // delay to reload (include fire)
-//    int32_t FireDelay;  // delay to fire
-//    int32_t TotalTime;  // The total time the weapon is cycling before next fire.
-//    int32_t HoldDelay;  // delay after release fire button to fire (0 for none)
-//    int32_t Flags;  // Flags for weapon
-//    int32_t Shoots;  // what the weapon shoots
-//    int32_t SpawnTime;  // the frame at which to spawn an item
-//    int32_t Spawn;  // the item to spawn
-//    int32_t ShotsPerBurst;  // number of shots per 'burst' (one ammo per 'burst')
-//    int32_t InitialSound;  // Sound made when weapon starts firing. zero for no sound
-//    int32_t FireSound;  // Sound made when firing (each time for automatic)
-//    int32_t Sound2Time;  // Alternate sound time
-//    int32_t Sound2Sound;  // Alternate sound sound ID
-//    int32_t ReloadSound1;  // Sound of magazine being removed
-//    int32_t ReloadSound2;  // Sound of magazine being inserted
-//    int32_t SelectSound;  // Sound of weapon being selected
-//    int32_t FlashColor;  // Muzzle flash color
-//} weapondata_t;
+// KEEPINSYNC lunatic/con_lang.lua
+function weapondata_t(wl : number = 0,cl : number = 0,rl : number = 0,fd : number = 0,tt : number = 0,hd : number = 0,f : number = 0,s : number = 0,st : number = 0,spawn : number = 0,
+    spb : number = 0,is : number = 0,fs : number = 0, s2t : number = 0, s2s : number = 0, rs1 : number = 0, rs2 : number = 0, sSound : number = 0, fc : number = 0)
+{
+    // NOTE: the member names must be identical to aplWeapon* suffixes.
+    this.WorksLike = wl;  // What the original works like
+    this.Clip = cl;  // number of items in magazine
+    this.Reload = rl;  // delay to reload (include fire)
+    this.FireDelay = fd;  // delay to fire
+    this.TotalTime = tt;  // The total time the weapon is cycling before next fire.
+    this.HoldDelay = hd;  // delay after release fire button to fire (0 for none)
+    this.Flags = f;  // Flags for weapon
+    this.Shoots = s;  // what the weapon shoots
+    this.SpawnTime = st;  // the frame at which to spawn an item
+    this.Spawn = spawn;  // the item to spawn
+    this.ShotsPerBurst = spb;  // number of shots per 'burst' (one ammo per 'burst')
+    this.InitialSound = is;  // Sound made when weapon starts firing. zero for no sound
+    this.FireSound = fs;  // Sound made when firing (each time for automatic)
+    this.Sound2Time = s2t;  // Alternate sound time
+    this.Sound2Sound = s2s;  // Alternate sound sound ID
+    this.ReloadSound1 = rs1;  // Sound of magazine being removed
+    this.ReloadSound2 = rs2;  // Sound of magazine being inserted
+    this.SelectSound = sSound;  // Sound of weapon being selected
+    this.FlashColor = fc;  // Muzzle flash color
+} //weapondata_t;
 
 //extern int8_t             g_numPlayerSprites;
 //extern int32_t          fricxv,fricyv;

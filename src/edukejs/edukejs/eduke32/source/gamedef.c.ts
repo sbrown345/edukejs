@@ -32,6 +32,7 @@
 /// <reference path="../../eduke32/source/common.c.ts" />
 /// <reference path="../../eduke32/source/config.c.ts" />
 /// <reference path="../../eduke32/source/game.c.ts" />
+/// <reference path="../../eduke32/source/gamevars.c.ts" />
 /// <reference path="../../eduke32/source/global.c.ts" />
 /// <reference path="../../eduke32/source/grpscan.c.ts" />
 /// <reference path="../../eduke32/source/namesdyn.c.ts" />
@@ -211,7 +212,7 @@ var apScriptGameEvent: Int32Array = new Int32Array(MAXGAMEEVENTS);
 //#if !defined LUNATIC
 //static intptr_t *g_parsingEventPtr=NULL;
 
-//gamevar_t aGameVars[MAXGAMEVARS];
+var aGameVars = newStructArray(gamevar_t, MAXGAMEVARS);
 //gamearray_t aGameArrays[MAXGAMEARRAYS];
 //int32_t g_gameVarCount=0;
 //int32_t g_gameArrayCount=0;
@@ -1229,6 +1230,7 @@ var apScriptGameEvent: Int32Array = new Int32Array(MAXGAMEEVENTS);
 
 function C_InitHashes(): void
 {
+    todo("C_InitHashes");
     var i : number;
 
     var h_gamevars = {};//hash_init(&h_gamevars);
@@ -6239,41 +6241,42 @@ function C_InitHashes(): void
 //}
 //#endif
 
-//void C_InitProjectiles(void)
-//{
-//    int32_t i;
+function C_InitProjectiles() : void
+{
+    todo("C_InitProjectiles"); 
+    //var i;
 
-//    typedef struct
-//    {
-//        int32_t workslike, cstat; // 8b
-//        int32_t hitradius, range, flashcolor; // 12b
-//        int16_t spawns, sound, isound, vel; // 8b
-//        int16_t decal, trail, tnum, drop; // 8b
-//        int16_t offset, bounces, bsound; // 6b
-//        int16_t toffset; // 2b
-//        int16_t extra, extra_rand; // 4b
-//        int8_t sxrepeat, syrepeat, txrepeat, tyrepeat; // 4b
-//        int8_t shade, xrepeat, yrepeat, pal; // 4b
-//        int8_t movecnt; // 1b
-//        uint8_t clipdist; // 1b
-//        int8_t filler[6]; // 6b
-//    } defaultprojectile_t;
+    //typedef struct
+    //{
+    //    int32_t workslike, cstat; // 8b
+    //    int32_t hitradius, range, flashcolor; // 12b
+    //    int16_t spawns, sound, isound, vel; // 8b
+    //    int16_t decal, trail, tnum, drop; // 8b
+    //    int16_t offset, bounces, bsound; // 6b
+    //    int16_t toffset; // 2b
+    //    int16_t extra, extra_rand; // 4b
+    //    int8_t sxrepeat, syrepeat, txrepeat, tyrepeat; // 4b
+    //    int8_t shade, xrepeat, yrepeat, pal; // 4b
+    //    int8_t movecnt; // 1b
+    //    uint8_t clipdist; // 1b
+    //    int8_t filler[6]; // 6b
+    //} defaultprojectile_t;
 
-//    defaultprojectile_t DefaultProjectile =
-//    {
-//        1, -1, 2048, 0, 0, (int16_t)SMALLSMOKE, -1, -1, 600, (int16_t)BULLETHOLE, -1, 0, 0, 448,
-//        (int16_t)g_numFreezeBounces, (int16_t)PIPEBOMB_BOUNCE, 1, 100, -1, -1, -1, -1, -1, -96, 18, 18,
-//        0, 1, 32, {0,0,0,0,0,0},
-//    };
+    //defaultprojectile_t DefaultProjectile =
+    //{
+    //    1, -1, 2048, 0, 0, (int16_t)SMALLSMOKE, -1, -1, 600, (int16_t)BULLETHOLE, -1, 0, 0, 448,
+    //    (int16_t)g_numFreezeBounces, (int16_t)PIPEBOMB_BOUNCE, 1, 100, -1, -1, -1, -1, -1, -96, 18, 18,
+    //    0, 1, 32, {0,0,0,0,0,0},
+    //};
 
-//    EDUKE32_STATIC_ASSERT(sizeof(projectile_t) == sizeof(DefaultProjectile));
+    //EDUKE32_STATIC_ASSERT(sizeof(projectile_t) == sizeof(DefaultProjectile));
 
-//    for (i=MAXTILES-1; i>=0; i--)
-//    {
-//        Bmemcpy(&ProjectileData[i], &DefaultProjectile, sizeof(projectile_t));
-//        Bmemcpy(&g_tile[i].defproj, &DefaultProjectile, sizeof(projectile_t));
-//    }
-//}
+    //for (i=MAXTILES-1; i>=0; i--)
+    //{
+    //    Bmemcpy(&ProjectileData[i], &DefaultProjectile, sizeof(projectile_t));
+    //    Bmemcpy(&g_tile[i].defproj, &DefaultProjectile, sizeof(projectile_t));
+    //}
+}
 
 //#if !defined LUNATIC
 //extern int32_t g_numObituaries;
@@ -6300,7 +6303,7 @@ function C_Compile(filenam: string) : void
 {
 //    char *mptr;
     var i : number;
-//    int32_t fs,fp;
+    var fs,fp;
 //    uint32_t startcompiletime;
     debugger
     Bmemset(apScriptGameEvent, 0, 0, sizeof(apScriptGameEvent));
@@ -6309,12 +6312,11 @@ function C_Compile(filenam: string) : void
         g_tile[i] = new tiledata_t();
 
     C_InitHashes();
-    throw "sdf"
-//    Gv_Init();
+    Gv_Init();
 
-//    C_InitProjectiles();
+    C_InitProjectiles();
 
-//    fp = kopen4loadfrommod((char *)filenam,g_loadFromGroupOnly);
+    fp = kopen4loadfrommod(filenam,g_loadFromGroupOnly);
 //    if (fp == -1) // JBF: was 0
 //    {
 //        extern int32_t numgroupfiles;

@@ -76,6 +76,8 @@ function memset(array: any, startIndex: number, value: number, num: number) : vo
     }
 }
 
+var printf = console.log.bind(console);
+
 function read(fileHandle: number, dstBuf: Ptr, maxCharCount: number) : number {
     var source = fileHandles[fileHandle]; 
     var count = 0;
@@ -116,4 +118,8 @@ function strcpy(destination: Uint8Array, source: string) : void {
     for (var i = 0; i < source.length; i++) {
         destination[i] = source.charCodeAt(i);
     }
+}
+
+function strupr(str: string) : string {
+    return str.toUpperCase();
 }

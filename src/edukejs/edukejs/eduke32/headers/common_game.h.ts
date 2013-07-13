@@ -17,12 +17,14 @@ var GAMEFLAG_DUKEBETA  = 0x00000060;// includes 0x20 since it's a shareware beta
 
 //extern int32_t g_gameType;
 
-//var DUKE               = (g_gameType & GAMEFLAG_DUKE);
-//var NAM                = (g_gameType & GAMEFLAG_NAM);
-//var NAPALM             = (g_gameType & GAMEFLAG_NAPALM);
-//var WW2GI              = (g_gameType & GAMEFLAG_WW2GI);
-//var SHAREWARE          = (g_gameType & GAMEFLAG_SHAREWARE);
-//var DUKEBETA           = ((g_gameType & GAMEFLAG_DUKEBETA) == GAMEFLAG_DUKEBETA);
+interface Window {
+    DUKE: number;
+    NAM: number;
+    NAPALM: number;
+    WW2GI: number;
+    SHAREWARE: number;
+    DUKEBETA: number;
+}
 Object.defineProperty(window, 'DUKE', { get: function () { return (g_gameType & GAMEFLAG_DUKE); } });
 Object.defineProperty(window, 'NAM', { get: function () { return (g_gameType & GAMEFLAG_NAM); } });
 Object.defineProperty(window, 'NAPALM', { get: function () { return (g_gameType & GAMEFLAG_NAPALM); } });

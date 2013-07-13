@@ -30,6 +30,7 @@
 /// <reference path="../../eduke32/source/common.c.ts" />
 /// <reference path="../../eduke32/source/config.c.ts" />
 /// <reference path="../../eduke32/source/gamedef.c.ts" />
+
 /// <reference path="../../eduke32/source/global.c.ts" />
 /// <reference path="../../eduke32/source/grpscan.c.ts" />
 /// <reference path="../../eduke32/source/namesdyn.c.ts" />
@@ -193,7 +194,7 @@ var g_usingAddon = 0; //int32_t
 
 //extern int32_t lastvisinc;
 
-//int32_t g_Shareware = 0;
+var g_Shareware = 0;
 
 //#define MAXUSERQUOTES 6
 //int32_t quotebot, quotebotgoal;
@@ -240,23 +241,23 @@ var g_usingAddon = 0; //int32_t
 
 //void M32RunScript(const char *s) { UNREFERENCED_PARAMETER(s); };  // needed for linking since it's referenced from build/src/osd.c
 
-//int32_t kopen4loadfrommod(const char *filename, char searchfirst)
-//{
-//    int32_t r=-1;
+function kopen4loadfrommod(filename : string, /*char*/ searchfirst : number) :  number
+{
+    var r=-1;
 
-//    if (g_modDir[0]!='/' || g_modDir[1]!=0)
-//    {
-//        static char fn[BMAX_PATH];
+    //if (g_modDir[0]!='/' || g_modDir[1]!=0)
+    //{
+    //    static char fn[BMAX_PATH];
 
-//        Bsnprintf(fn, sizeof(fn), "%s/%s",g_modDir,filename);
-//        r = kopen4load(fn,searchfirst);
-//    }
+    //    Bsnprintf(fn, sizeof(fn), "%s/%s",g_modDir,filename);
+    //    r = kopen4load(fn,searchfirst);
+    //}
 
-//    if (r < 0)
-//        r = kopen4load(filename,searchfirst);
+    if (r < 0)
+        r = kopen4load(filename,searchfirst);
 
-//    return r;
-//}
+    return r;
+}
 
 //const char *G_DefaultRtsFile(void)
 //{
@@ -10468,26 +10469,27 @@ function G_CheckCommandLine(/*int32_t */argc: number, /*string*/argv: string) : 
 //#endif
 //}
 
-///*
-//===================
-//=
-//= ShutDown
-//=
-//===================
-//*/
+/*
+===================
+=
+= ShutDown
+=
+===================
+*/
 
-//void G_Shutdown(void)
-//{
-//    CONFIG_WriteSetup(0);
-//    S_SoundShutdown();
-//    S_MusicShutdown();
-//    CONTROL_Shutdown();
-//    KB_Shutdown();
-//    uninitengine();
-//    G_Cleanup();
-//    FreeGroups();
-//    Bfflush(NULL);
-//}
+function G_Shutdown() : void
+{
+    todoThrow();
+    //CONFIG_WriteSetup(0);
+    //S_SoundShutdown();
+    //S_MusicShutdown();
+    //CONTROL_Shutdown();
+    //KB_Shutdown();
+    //uninitengine();
+    //G_Cleanup();
+    //FreeGroups();
+    //Bfflush(NULL);
+}
 
 /*
 ===================
@@ -11426,7 +11428,6 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
             initprintf("Warning: could not find main data file \"%s\"!\n",grpfile);
         else
             initprintf("Using \"%s\" as main game data file.\n", grpfile);
-    throw "todo"
 //        if (!g_noAutoLoad && !ud.config.NoAutoLoad)
 //        {
 //            G_LoadGroupsInDir("autoload");
@@ -11482,8 +11483,10 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
 
 //    G_CleanupSearchPaths();
     todo("SHAREWARE check");
+      g_Shareware = shareware ? 1 : 0; ///SB: hardcoded
+
 //    if (SHAREWARE)
-//        g_Shareware = 1;
+//      g_Shareware = 1;
 //    else
 //    {
 //        i = kopen4load("DUKESW.BIN",1); // JBF 20030810
@@ -11496,7 +11499,7 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
 //    }
 
     // gotta set the proper title after we compile the CONs if this is the full version
-    assert.areEqual("Duke Nukem 3D Shareware 1.3D",/* "Duke Nukem 3D: Atomic Edition",*/ g_gameNamePtr);
+    assert.areEqual(shareware ? "Duke Nukem 3D Shareware 1.3D" : "Duke Nukem 3D: Atomic Edition", g_gameNamePtr);
     Bsprintf(tempbuf, "%s - " + APPNAME, g_gameNamePtr);
 //    wm_setapptitle(tempbuf);
 

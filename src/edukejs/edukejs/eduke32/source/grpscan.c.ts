@@ -32,6 +32,7 @@
 /// <reference path="../../eduke32/source/config.c.ts" />
 /// <reference path="../../eduke32/source/game.c.ts" />
 /// <reference path="../../eduke32/source/gamedef.c.ts" />
+/// <reference path="../../eduke32/source/gamevars.c.ts" />
 /// <reference path="../../eduke32/source/global.c.ts" />
 /// <reference path="../../eduke32/source/namesdyn.c.ts" />
 /// <reference path="../../eduke32/source/net.c.ts" />
