@@ -1539,8 +1539,9 @@ var RESERVEDSLOT12 = RESERVEDSLOT12__STATIC;
 //#if !defined LUNATIC
 var h_names = new hashtable_t(512, null);
 
-//void G_ProcessDynamicTileMapping(const char *szLabel, int32_t lValue)
-//{
+function G_ProcessDynamicTileMapping(/*const char **/szLabel: string, /*int32_t*/ lValue: number) : void
+{
+    todoThrow();
 //    int32_t i;
 
 //    if ((unsigned)lValue >= MAXTILES || !szLabel)
@@ -1556,7 +1557,7 @@ var h_names = new hashtable_t(512, null);
 //#endif
 //        *di->dynvalptr = lValue;
 //    }
-//}
+}
 
 function inithashnames() : void
 {

@@ -594,7 +594,7 @@ var Bstrupr = strupr;
 //# else
 //#  define Bmkdir mkdir
 //# endif
-//# define Bstrcat strcat
+var Bstrcat = strcat;
 //# define Bstrncat strncat
 //# define Bstrlen strlen
 //# define Bstrchr strchr

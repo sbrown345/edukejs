@@ -127,6 +127,10 @@ function sizeof(obj: any) : number {
     return obj.buffer.byteLength;
 }
 
+function strcat(destination: string, source: string): string {
+    return destination + source;
+}
+
 function strcmp(str1: string, str2: string) : number {
     assert.isString(str1).isString(str2);
     if (str1 == str2) {
@@ -152,8 +156,16 @@ function strupr(str: string) : string {
     return str.toUpperCase();
 }
 
+function tolower(s: string): string {
+    return s.toLowerCase();
+}
+
 function isalnum(c: string) : boolean {
     return (c >= "0" && c <= "9")
         || (c >= "A" && c <= "Z")
         || (c >= "a" && c <= "z");
+}
+
+function isdigit(c: string) : number  {
+    return (c >= "0" && c <= "9") ?  1 : 0;
 }
