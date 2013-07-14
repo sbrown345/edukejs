@@ -35,10 +35,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //#include "common.h"  // tokenlist
 
 var MAXGAMEEVENTS = 128;
-//#define LABEL_HASPARM2  1
-//#define LABEL_ISSTRING  2
+var LABEL_HASPARM2 = 1;
+var LABEL_ISSTRING = 2;
 
-//#define MAXCHEATLEN             20
+var MAXCHEATLEN =   20;
 //#define NUMCHEATCODES           (int32_t)(sizeof(CheatStrings)/sizeof(CheatStrings[0]))
 
 //extern hashtable_t h_gamefuncs;
@@ -82,13 +82,20 @@ var MAXGAMEEVENTS = 128;
 //#if !defined LUNATIC
 var g_scriptPtr: number; //extern intptr_t *
 
-//typedef struct
-//{
-//    const char *name;
-//    int32_t lId;
-//    int32_t flags;
-//    int32_t maxParm2;
-//} memberlabel_t;
+class memberlabel_t 
+{
+    name : string;   //const char *
+    lId : number;        //int32_t 
+    flags : number;      //int32_t 
+    maxParm2 : number;   //int32_t 
+
+    constructor(name: string, lId: number, flags: number, maxParm2: number) {
+        this.name = name;
+        this.lId = lId;
+        this.flags = flags;
+        this.maxParm2 = maxParm2;
+    }
+};
 
 //extern const memberlabel_t SectorLabels[];
 //extern const memberlabel_t WallLabels[];
