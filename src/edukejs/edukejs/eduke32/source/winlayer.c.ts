@@ -1555,16 +1555,18 @@ var initprintf = console.log.bind(console);
 //}
 
 
-////
-//// getticks() -- returns the windows ticks count
-////
-//uint32_t getticks(void)
-//{
-//    int64_t i;
-//    if (win_timerfreq == 0) return 0;
-//    QueryPerformanceCounter((LARGE_INTEGER *)&i);
-//    return (uint32_t)(i*longlong(1000)/win_timerfreq);
-//}
+//
+// getticks() -- returns the windows ticks count
+//
+function getticks() : number //uint32_t
+{
+    todo("getticks, test number");
+    return +new Date;
+    //var i;
+    //if (win_timerfreq == 0) return 0;
+    //QueryPerformanceCounter((LARGE_INTEGER *)&i);
+    //return (uint32_t)(i*longlong(1000)/win_timerfreq);
+}
 
 //// high-resolution timers for profiling
 //uint64_t gethiticks(void)

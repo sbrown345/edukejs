@@ -9,8 +9,8 @@ function todo(reason?) {
     console.log("todo", reason);
 }
 
-function todoThrow() {
-    throw "todo";
+function todoThrow(message : string = "") {
+    throw "todo " + message;
 }
 
 // track all temp hardcoded stuff

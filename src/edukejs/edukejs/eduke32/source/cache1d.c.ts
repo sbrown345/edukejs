@@ -1014,16 +1014,18 @@ function kopen4load(filename: string, /*char*/ searchfirst: number) : number
 //    return(-1);
 //}
 
-//int32_t kfilelength(int32_t handle)
-//{
-//    int32_t i, groupnum;
+function kfilelength(handle : number) : number
+{
+    assert.isInt32(handle);
 
-//    groupnum = filegrp[handle];
-//    if (groupnum == 255)
-//    {
-//        // return(filelength(filehan[handle]))
-//        return Bfilelength(filehan[handle]);
-//    }
+    var i, groupnum;
+
+    groupnum = filegrp[handle];
+    if (groupnum == 255)
+    {
+        // return(filelength(filehan[handle]))
+        todoThrow("return Bfilelength(filehan[handle]);");
+    }
 //#ifdef WITHKPLIB
 //    else if (groupnum == 254)
 //    {
@@ -1037,9 +1039,9 @@ function kopen4load(filename: string, /*char*/ searchfirst: number) : number
 //        return kzfilelength();
 //    }
 //#endif
-//    i = filehan[handle];
-//    return(gfileoffs[groupnum][i+1]-gfileoffs[groupnum][i]);
-//}
+    i = filehan[handle];
+    return(gfileoffs[groupnum][i+1]-gfileoffs[groupnum][i]);
+}
 
 //int32_t ktell(int32_t handle)
 //{

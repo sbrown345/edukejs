@@ -6305,7 +6305,7 @@ function C_Compile(filenam: string) : void
 //    char *mptr;
     var i : number;
     var fs,fp;
-//    uint32_t startcompiletime;
+    var startcompiletime : number; //    uint32_t
     Bmemset(apScriptGameEvent, 0, 0, sizeof(apScriptGameEvent));
 
     for (i = MAXTILES - 1; i >= 0; i--)
@@ -6318,8 +6318,9 @@ function C_Compile(filenam: string) : void
 
     fp = kopen4loadfrommod(filenam,g_loadFromGroupOnly);
     debugger;
-//    if (fp == -1) // JBF: was 0
-//    {
+    if (fp == -1) // JBF: was 0
+    {
+        todoThrow();
 //        extern int32_t numgroupfiles;
 
 //        if (g_loadFromGroupOnly == 1 || numgroupfiles == 0)
@@ -6366,16 +6367,17 @@ function C_Compile(filenam: string) : void
 
 //        //g_loadFromGroupOnly = 1;
 //        return; //Not there
-//    }
+    }
 
-//    fs = kfilelength(fp);
+    fs = kfilelength(fp);
+    assert.areEqual(151190, fs);
 
-//    initprintf("Compiling: %s (%d bytes)\n",filenam,fs);
+    initprintf("Compiling: %s (%d bytes)\n",filenam,fs);
 
-//    flushlogwindow = 0;
+    flushlogwindow = 0;
 
-//    startcompiletime = getticks();
-
+    startcompiletime = getticks();
+    todoThrow();
 //    mptr = (char *)Bmalloc(fs+1);
 //    if (!mptr)
 //    {
