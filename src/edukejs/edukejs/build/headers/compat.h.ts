@@ -596,7 +596,7 @@ var Bstrupr = strupr;
 //# endif
 var Bstrcat = strcat;
 //# define Bstrncat strncat
-//# define Bstrlen strlen
+var Bstrlen = strlen;
 //# define Bstrchr strchr
 //# define Bstrrchr strrchr
 //// XXX: different across 32- and 64-bit archs (e.g.
@@ -613,7 +613,7 @@ var Bstrcat = strcat;
 //# define Bislower islower
 //# define Bisupper isupper
 //# define Bisdigit isdigit
-//# define Btoupper toupper
+var Btoupper = toupper;
 //# define Btolower tolower
 //# define Bmemcpy memcpy
 //# define Bmemmove memmove
@@ -626,7 +626,7 @@ var Bprintf  = printf;
 var Bsprintf = function (buf: Uint8Array, format: string, ...args: any[]) {
     var output = sprintf(format, args);
     var i: number;
-    for (i = 0; i < format.length; i++) {
+    for (i = 0; i < output.length; i++) {
         buf[i] = output.charCodeAt(i);
     }
     buf[i] = 0;

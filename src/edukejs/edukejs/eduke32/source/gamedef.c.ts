@@ -21,6 +21,7 @@
 /// <reference path="../../eduke32/headers/function.h.ts" />
 /// <reference path="../../eduke32/headers/game.h.ts" />
 /// <reference path="../../eduke32/headers/gamedef.h.ts" />
+/// <reference path="../../eduke32/headers/gameexec.h.ts" />
 /// <reference path="../../eduke32/headers/global.h.ts" />
 /// <reference path="../../eduke32/headers/grpscan.h.ts" />
 /// <reference path="../../eduke32/headers/namesdyn.h.ts" />
@@ -657,105 +658,106 @@ NUMKEYWORDS = keyw.length;
 //};
 //#endif
 
-//// KEEPINSYNC with enum GameEvent_t and lunatic/con_lang.lua
-//const char *EventNames[MAXEVENTS] =
-//{
-//    "EVENT_INIT",
-//    "EVENT_ENTERLEVEL",
-//    "EVENT_RESETWEAPONS",
-//    "EVENT_RESETINVENTORY",
-//    "EVENT_HOLSTER",
-//    "EVENT_LOOKLEFT",
-//    "EVENT_LOOKRIGHT",
-//    "EVENT_SOARUP",
-//    "EVENT_SOARDOWN",
-//    "EVENT_CROUCH",
-//    "EVENT_JUMP",
-//    "EVENT_RETURNTOCENTER",
-//    "EVENT_LOOKUP",
-//    "EVENT_LOOKDOWN",
-//    "EVENT_AIMUP",
-//    "EVENT_FIRE",
-//    "EVENT_CHANGEWEAPON",
-//    "EVENT_GETSHOTRANGE",
-//    "EVENT_GETAUTOAIMANGLE",
-//    "EVENT_GETLOADTILE",
-//    "EVENT_CHEATGETSTEROIDS",
-//    "EVENT_CHEATGETHEAT",
-//    "EVENT_CHEATGETBOOT",
-//    "EVENT_CHEATGETSHIELD",
-//    "EVENT_CHEATGETSCUBA",
-//    "EVENT_CHEATGETHOLODUKE",
-//    "EVENT_CHEATGETJETPACK",
-//    "EVENT_CHEATGETFIRSTAID",
-//    "EVENT_QUICKKICK",
-//    "EVENT_INVENTORY",
-//    "EVENT_USENIGHTVISION",
-//    "EVENT_USESTEROIDS",
-//    "EVENT_INVENTORYLEFT",
-//    "EVENT_INVENTORYRIGHT",
-//    "EVENT_HOLODUKEON",
-//    "EVENT_HOLODUKEOFF",
-//    "EVENT_USEMEDKIT",
-//    "EVENT_USEJETPACK",
-//    "EVENT_TURNAROUND",
-//    "EVENT_DISPLAYWEAPON",
-//    "EVENT_FIREWEAPON",
-//    "EVENT_SELECTWEAPON",
-//    "EVENT_MOVEFORWARD",
-//    "EVENT_MOVEBACKWARD",
-//    "EVENT_TURNLEFT",
-//    "EVENT_TURNRIGHT",
-//    "EVENT_STRAFELEFT",
-//    "EVENT_STRAFERIGHT",
-//    "EVENT_WEAPKEY1",
-//    "EVENT_WEAPKEY2",
-//    "EVENT_WEAPKEY3",
-//    "EVENT_WEAPKEY4",
-//    "EVENT_WEAPKEY5",
-//    "EVENT_WEAPKEY6",
-//    "EVENT_WEAPKEY7",
-//    "EVENT_WEAPKEY8",
-//    "EVENT_WEAPKEY9",
-//    "EVENT_WEAPKEY10",
-//    "EVENT_DRAWWEAPON",
-//    "EVENT_DISPLAYCROSSHAIR",
-//    "EVENT_DISPLAYREST",
-//    "EVENT_DISPLAYSBAR",
-//    "EVENT_RESETPLAYER",
-//    "EVENT_INCURDAMAGE",
-//    "EVENT_AIMDOWN",
-//    "EVENT_GAME",
-//    "EVENT_PREVIOUSWEAPON",
-//    "EVENT_NEXTWEAPON",
-//    "EVENT_SWIMUP",
-//    "EVENT_SWIMDOWN",
-//    "EVENT_GETMENUTILE",
-//    "EVENT_SPAWN",
-//    "EVENT_LOGO",
-//    "EVENT_EGS",
-//    "EVENT_DOFIRE",
-//    "EVENT_PRESSEDFIRE",
-//    "EVENT_USE",
-//    "EVENT_PROCESSINPUT",
-//    "EVENT_FAKEDOMOVETHINGS",
-//    "EVENT_DISPLAYROOMS",
-//    "EVENT_KILLIT",
-//    "EVENT_LOADACTOR",
-//    "EVENT_DISPLAYBONUSSCREEN",
-//    "EVENT_DISPLAYMENU",
-//    "EVENT_DISPLAYMENUREST",
-//    "EVENT_DISPLAYLOADINGSCREEN",
-//    "EVENT_ANIMATESPRITES",
-//    "EVENT_NEWGAME",
-//    "EVENT_SOUND",
-//    "EVENT_CHECKTOUCHDAMAGE",
-//    "EVENT_CHECKFLOORDAMAGE",
-//    "EVENT_LOADGAME",
-//    "EVENT_SAVEGAME",
-//    "EVENT_PREGAME",
-//    "EVENT_CHANGEMENU"
-//};
+// KEEPINSYNC with enum GameEvent_t and lunatic/con_lang.lua
+var EventNames/*[MAXEVENTS]*/ =
+[
+    "EVENT_INIT",
+    "EVENT_ENTERLEVEL",
+    "EVENT_RESETWEAPONS",
+    "EVENT_RESETINVENTORY",
+    "EVENT_HOLSTER",
+    "EVENT_LOOKLEFT",
+    "EVENT_LOOKRIGHT",
+    "EVENT_SOARUP",
+    "EVENT_SOARDOWN",
+    "EVENT_CROUCH",
+    "EVENT_JUMP",
+    "EVENT_RETURNTOCENTER",
+    "EVENT_LOOKUP",
+    "EVENT_LOOKDOWN",
+    "EVENT_AIMUP",
+    "EVENT_FIRE",
+    "EVENT_CHANGEWEAPON",
+    "EVENT_GETSHOTRANGE",
+    "EVENT_GETAUTOAIMANGLE",
+    "EVENT_GETLOADTILE",
+    "EVENT_CHEATGETSTEROIDS",
+    "EVENT_CHEATGETHEAT",
+    "EVENT_CHEATGETBOOT",
+    "EVENT_CHEATGETSHIELD",
+    "EVENT_CHEATGETSCUBA",
+    "EVENT_CHEATGETHOLODUKE",
+    "EVENT_CHEATGETJETPACK",
+    "EVENT_CHEATGETFIRSTAID",
+    "EVENT_QUICKKICK",
+    "EVENT_INVENTORY",
+    "EVENT_USENIGHTVISION",
+    "EVENT_USESTEROIDS",
+    "EVENT_INVENTORYLEFT",
+    "EVENT_INVENTORYRIGHT",
+    "EVENT_HOLODUKEON",
+    "EVENT_HOLODUKEOFF",
+    "EVENT_USEMEDKIT",
+    "EVENT_USEJETPACK",
+    "EVENT_TURNAROUND",
+    "EVENT_DISPLAYWEAPON",
+    "EVENT_FIREWEAPON",
+    "EVENT_SELECTWEAPON",
+    "EVENT_MOVEFORWARD",
+    "EVENT_MOVEBACKWARD",
+    "EVENT_TURNLEFT",
+    "EVENT_TURNRIGHT",
+    "EVENT_STRAFELEFT",
+    "EVENT_STRAFERIGHT",
+    "EVENT_WEAPKEY1",
+    "EVENT_WEAPKEY2",
+    "EVENT_WEAPKEY3",
+    "EVENT_WEAPKEY4",
+    "EVENT_WEAPKEY5",
+    "EVENT_WEAPKEY6",
+    "EVENT_WEAPKEY7",
+    "EVENT_WEAPKEY8",
+    "EVENT_WEAPKEY9",
+    "EVENT_WEAPKEY10",
+    "EVENT_DRAWWEAPON",
+    "EVENT_DISPLAYCROSSHAIR",
+    "EVENT_DISPLAYREST",
+    "EVENT_DISPLAYSBAR",
+    "EVENT_RESETPLAYER",
+    "EVENT_INCURDAMAGE",
+    "EVENT_AIMDOWN",
+    "EVENT_GAME",
+    "EVENT_PREVIOUSWEAPON",
+    "EVENT_NEXTWEAPON",
+    "EVENT_SWIMUP",
+    "EVENT_SWIMDOWN",
+    "EVENT_GETMENUTILE",
+    "EVENT_SPAWN",
+    "EVENT_LOGO",
+    "EVENT_EGS",
+    "EVENT_DOFIRE",
+    "EVENT_PRESSEDFIRE",
+    "EVENT_USE",
+    "EVENT_PROCESSINPUT",
+    "EVENT_FAKEDOMOVETHINGS",
+    "EVENT_DISPLAYROOMS",
+    "EVENT_KILLIT",
+    "EVENT_LOADACTOR",
+    "EVENT_DISPLAYBONUSSCREEN",
+    "EVENT_DISPLAYMENU",
+    "EVENT_DISPLAYMENUREST",
+    "EVENT_DISPLAYLOADINGSCREEN",
+    "EVENT_ANIMATESPRITES",
+    "EVENT_NEWGAME",
+    "EVENT_SOUND",
+    "EVENT_CHECKTOUCHDAMAGE",
+    "EVENT_CHECKFLOORDAMAGE",
+    "EVENT_LOADGAME",
+    "EVENT_SAVEGAME",
+    "EVENT_PREGAME",
+    "EVENT_CHANGEMENU"
+];
+assert.areEqual(MAXEVENTS, EventNames);
 
 //#if !defined LUNATIC
 var SectorLabels : memberlabel_t[]=
@@ -1508,11 +1510,11 @@ function C_GetNextLabelName() : void
     C_SkipComments();
 
     while (ispecial(textptr[textptrIdx]) == 0 && textptr[textptrIdx]!='['&& textptr[textptrIdx]!=']' && textptr[textptrIdx]!='\t' && textptr[textptrIdx]!='\n' && textptr[textptrIdx]!='\r')
-        label[(g_numLabels<<6)+(i++)] = textptr[textptrIdx++];
+        label[(g_numLabels<<6)+(i++)] = textptr.charCodeAt(textptrIdx++);
     label[(g_numLabels<<6)+i] = 0;
-
+    
     if (!(g_numCompilerErrors|g_numCompilerWarnings) && g_scriptDebug > 1)
-        initprintf("%s:%d: debug: got label `%s'.\n",g_szScriptFileName,g_lineNumber,label+(g_numLabels<<6));
+        initprintf("%s:%d: debug: got label `%s'.\n",g_szScriptFileName,g_lineNumber,label.subarray(g_numLabels<<6).toString());
 }
 
 //static int32_t C_GetKeyword(void)
@@ -1687,7 +1689,7 @@ function parse_hex_constant(/*const char *hexnum*/hexnum: string) : number
 
 //    C_GetNextLabelName();
 
-//    if (!g_skipKeywordCheck && hash_find(h_keywords,label+(g_numLabels<<6))>=0)
+//    if (!g_skipKeywordCheck && hash_find(h_keywords,label.subarray(g_numLabels<<6).toString())>=0)
 //    {
 //        g_numCompilerErrors++;
 //        C_ReportError(ERROR_ISAKEYWORD);
@@ -1701,10 +1703,10 @@ function parse_hex_constant(/*const char *hexnum*/hexnum: string) : number
 
 //        f |= (MAXGAMEVARS<<2);
 //        textptrIdx++;
-//        i=GetADefID(label+(g_numLabels<<6));
+//        i=GetADefID(label.subarray(g_numLabels<<6).toString());
 //        if (i < 0)
 //        {
-//            i=GetDefID(label+(g_numLabels<<6));
+//            i=GetDefID(label.subarray(g_numLabels<<6).toString());
 //            if (i < g_iSpriteVarID || i > g_iActorVarID)
 //                i = -1;
 
@@ -1761,18 +1763,18 @@ function parse_hex_constant(/*const char *hexnum*/hexnum: string) : number
 //            textptrIdx++;
 //            /// now pointing at 'xxx'
 //            C_GetNextLabelName();
-//            /*initprintf("found xxx label of \"%s\"\n",   label+(g_numLabels<<6));*/
+//            /*initprintf("found xxx label of \"%s\"\n",   label.subarray(g_numLabels<<6).toString());*/
 
 //            if (i == g_iSpriteVarID)
-//                lLabelID=C_GetLabelNameOffset(&actorH,Bstrtolower(label+(g_numLabels<<6)));
+//                lLabelID=C_GetLabelNameOffset(&actorH,Bstrtolower(label.subarray(g_numLabels<<6).toString()));
 //            else if (i == g_iSectorVarID)
-//                lLabelID=C_GetLabelNameOffset(&sectorH,Bstrtolower(label+(g_numLabels<<6)));
+//                lLabelID=C_GetLabelNameOffset(&sectorH,Bstrtolower(label.subarray(g_numLabels<<6).toString()));
 //            else if (i == g_iWallVarID)
-//                lLabelID=C_GetLabelNameOffset(&wallH,Bstrtolower(label+(g_numLabels<<6)));
+//                lLabelID=C_GetLabelNameOffset(&wallH,Bstrtolower(label.subarray(g_numLabels<<6).toString()));
 //            else if (i == g_iPlayerVarID)
-//                lLabelID=C_GetLabelNameOffset(&playerH,Bstrtolower(label+(g_numLabels<<6)));
+//                lLabelID=C_GetLabelNameOffset(&playerH,Bstrtolower(label.subarray(g_numLabels<<6).toString()));
 //            else if (i == g_iActorVarID)
-//                lLabelID=GetDefID(label+(g_numLabels<<6));
+//                lLabelID=GetDefID(label.subarray(g_numLabels<<6).toString());
 
 //            //printf("LabelID is %d\n",lLabelID);
 //            if (lLabelID == -1)
@@ -1820,13 +1822,13 @@ function parse_hex_constant(/*const char *hexnum*/hexnum: string) : number
 //        return;
 //    }
 ////    initprintf("not an array");
-//    i=GetDefID(label+(g_numLabels<<6));
+//    i=GetDefID(label.subarray(g_numLabels<<6).toString());
 //    if (i<0)   //gamevar not found
 //    {
 //        if (!type && !g_labelsOnly)
 //        {
 //            //try looking for a define instead
-//            Bstrcpy(tempbuf,label+(g_numLabels<<6));
+//            Bstrcpy(tempbuf,label.subarray(g_numLabels<<6).toString());
 //            i = hash_find(h_labels,tempbuf);
 //            if (i>=0)
 //            {
@@ -1865,7 +1867,7 @@ function parse_hex_constant(/*const char *hexnum*/hexnum: string) : number
 //    }
 
 //    if (!(g_numCompilerErrors || g_numCompilerWarnings) && g_scriptDebug > 1)
-//        initprintf("%s:%d: debug: accepted gamevar `%s'.\n",g_szScriptFileName,g_lineNumber,label+(g_numLabels<<6));
+//        initprintf("%s:%d: debug: accepted gamevar `%s'.\n",g_szScriptFileName,g_lineNumber,label.subarray(g_numLabels<<6).toString());
 
 //    bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
 //    script[g_scriptPtr]++=(i|f);
@@ -1905,24 +1907,24 @@ function C_GetNextValue(type: number): number
     }
     tempbuf[l] = 0;
 
-    if (!g_skipKeywordCheck && hash_find(h_keywords,tempbuf.toString() /*label+(g_numLabels<<6)*/)>=0)
+    if (!g_skipKeywordCheck && hash_find(h_keywords,tempbuf.toString() /*label.subarray(g_numLabels<<6).toString()*/)>=0)
     {
         g_numCompilerErrors++;
         C_ReportError(ERROR_ISAKEYWORD);
         textptrIdx+=l;
     }
-
+    debugger;
     i = hash_find(h_labels,tempbuf.toString());
     if (i>=0)
     {
-        var el:string,gl:string;//char *
+        var el:string, gl:string;//char *
 
         if (labeltype[i] & type)
         {
             if (!(g_numCompilerErrors || g_numCompilerWarnings) && g_scriptDebug > 1)
             {
                 gl = /*(char *)*/C_GetLabelType(labeltype[i]);
-                initprintf("%s:%d: debug: accepted %s label `%s'.\n",g_szScriptFileName,g_lineNumber,gl,label+(i<<6));
+                initprintf("%s:%d: debug: accepted %s label `%s'.\n",g_szScriptFileName,g_lineNumber,gl,label.subarray(i<<6).toString());
                 gl = null;//Bfree(gl);
             }
 
@@ -1967,10 +1969,10 @@ function C_GetNextValue(type: number): number
     {
         // FIXME: check for 0-9 A-F for hex
         if (textptr[textptrIdx+0] == '0' && textptr[textptrIdx+1] == 'x') break; // kill the warning for hex
-        if (!isdigit(textptr[i--]))
+        if (!isdigit(textptr[textptrIdx + i--]))
         {
             C_ReportError(-1);
-            initprintf("%s:%d: warning: invalid character `%c' in definition!\n",g_szScriptFileName,g_lineNumber,textptr[i+1]);
+            initprintf("%s:%d: warning: invalid character `%c' in definition!\n",g_szScriptFileName,g_lineNumber,textptr[textptrIdx + i+1]);
             g_numCompilerWarnings++;
             break;
         }
@@ -2573,29 +2575,29 @@ function C_ParseCommand(loop: number): number
 //                labeltype[g_numLabels] = LABEL_STATE;
 
 //                g_processingState = 1;
-//                Bsprintf(g_szCurrentBlockName,"%s",label+(g_numLabels<<6));
+//                Bsprintf(g_szCurrentBlockName,"%s",label.subarray(g_numLabels<<6).toString());
 
-//                if (hash_find(h_keywords,label+(g_numLabels<<6))>=0)
+//                if (hash_find(h_keywords,label.subarray(g_numLabels<<6).toString())>=0)
 //                {
 //                    g_numCompilerErrors++;
 //                    C_ReportError(ERROR_ISAKEYWORD);
 //                    continue;
 //                }
 
-//                if (hash_find(h_gamevars,label+(g_numLabels<<6))>=0)
+//                if (hash_find(h_gamevars,label.subarray(g_numLabels<<6).toString())>=0)
 //                {
 //                    g_numCompilerWarnings++;
 //                    C_ReportError(WARNING_NAMEMATCHESVAR);
 //                }
 
-//                hash_add(h_labels,label+(g_numLabels<<6),g_numLabels,0);
+//                hash_add(h_labels,label.subarray(g_numLabels<<6).toString(),g_numLabels,0);
 //                g_numLabels++;
 //                continue;
 //            }
 
 //            C_GetNextLabelName();
 
-//            if ((j = hash_find(h_labels,label+(g_numLabels<<6))) >= 0)
+//            if ((j = hash_find(h_labels,label.subarray(g_numLabels<<6).toString())) >= 0)
 //            {
 //                if (labeltype[j] & LABEL_STATE)
 //                {
@@ -2624,7 +2626,7 @@ function C_ParseCommand(loop: number): number
 //            else
 //            {
 //                C_ReportError(-1);
-//                initprintf("%s:%d: error: state `%s' not found.\n",g_szScriptFileName,g_lineNumber,label+(g_numLabels<<6));
+//                initprintf("%s:%d: error: state `%s' not found.\n",g_szScriptFileName,g_lineNumber,label.subarray(g_numLabels<<6).toString());
 //                g_numCompilerErrors++;
 //            }
 //            g_scriptPtr++;
@@ -2704,9 +2706,9 @@ function C_ParseCommand(loop: number): number
 //                textptrIdx++;
 //                /// now pointing at 'xxx'
 //                C_GetNextLabelName();
-//                //printf("found xxx label of \"%s\"\n",   label+(g_numLabels<<6));
+//                //printf("found xxx label of \"%s\"\n",   label.subarray(g_numLabels<<6).toString());
 
-//                lLabelID=C_GetLabelNameOffset(&projectileH,Bstrtolower(label+(g_numLabels<<6)));
+//                lLabelID=C_GetLabelNameOffset(&projectileH,Bstrtolower(label.subarray(g_numLabels<<6).toString()));
 //                //printf("LabelID is %d\n",lLabelID);
 //                if (lLabelID == -1)
 //                {
@@ -2758,7 +2760,7 @@ function C_ParseCommand(loop: number): number
 //            //printf("Got Label '%.20s'\n",textptr);
 //            // Check to see it's already defined
 
-//            if (hash_find(h_keywords,label+(g_numLabels<<6))>=0)
+//            if (hash_find(h_keywords,label.subarray(g_numLabels<<6).toString())>=0)
 //            {
 //                g_numCompilerErrors++;
 //                C_ReportError(ERROR_ISAKEYWORD);
@@ -2770,7 +2772,7 @@ function C_ParseCommand(loop: number): number
 //            //printf("Done Translating number.  '%.20s'\n",textptr);
 
 //            C_GetNextValue(LABEL_DEFINE); // get flags
-//            //Bsprintf(g_szBuf,"Adding GameVar=\"%s\", val=%l, flags=%lX",label+(g_numLabels<<6),
+//            //Bsprintf(g_szBuf,"Adding GameVar=\"%s\", val=%l, flags=%lX",label.subarray(g_numLabels<<6).toString(),
 //            //      *(g_scriptPtr-2), script[g_scriptPtr-1]);
 //            //AddLog(g_szBuf);
 //            if ((script[g_scriptPtr-1]&GAMEVAR_USER_MASK)==3)
@@ -2779,7 +2781,7 @@ function C_ParseCommand(loop: number): number
 //                script[g_scriptPtr-1]^=GAMEVAR_PERPLAYER;
 //                C_ReportError(WARNING_BADGAMEVAR);
 //            }
-//            Gv_NewVar(label+(g_numLabels<<6),*(g_scriptPtr-2),
+//            Gv_NewVar(label.subarray(g_numLabels<<6).toString(),*(g_scriptPtr-2),
 //                (script[g_scriptPtr-1])
 //                // can't define default or secret
 //                & (~(GAMEVAR_DEFAULT | GAMEVAR_SECRET))
@@ -2803,14 +2805,14 @@ function C_ParseCommand(loop: number): number
 //            //printf("Got Label '%.20s'\n",textptr);
 //            // Check to see it's already defined
 
-//            if (hash_find(h_keywords,label+(g_numLabels<<6))>=0)
+//            if (hash_find(h_keywords,label.subarray(g_numLabels<<6).toString())>=0)
 //            {
 //                g_numCompilerErrors++;
 //                C_ReportError(ERROR_ISAKEYWORD);
 //                continue;
 //            }
 
-//            i = hash_find(h_gamevars,label+(g_numLabels<<6));
+//            i = hash_find(h_gamevars,label.subarray(g_numLabels<<6).toString());
 //            if (i>=0)
 //            {
 //                g_numCompilerWarnings++;
@@ -2818,7 +2820,7 @@ function C_ParseCommand(loop: number): number
 //            }
 
 //            C_GetNextValue(LABEL_DEFINE);
-//            Gv_NewArray(label+(g_numLabels<<6),NULL,script[g_scriptPtr-1], GAMEARRAY_NORMAL);
+//            Gv_NewArray(label.subarray(g_numLabels<<6).toString(),NULL,script[g_scriptPtr-1], GAMEARRAY_NORMAL);
 
 //            g_scriptPtr -= 2; // no need to save in script...
 //            continue;
@@ -2826,20 +2828,19 @@ function C_ParseCommand(loop: number): number
 
         case CON_DEFINE:
             {
-                debugger;
                 //printf("Got definition. Getting Label. '%.20s'\n",textptr);
                 C_GetNextLabelName();
                 //printf("Got label. '%.20s'\n",textptr);
                 // Check to see it's already defined
 
-                if (hash_find(h_keywords,label+(g_numLabels<<6))>=0)
+                if (hash_find(h_keywords,label.subarray(g_numLabels<<6).toString())>=0)
                 {
                     g_numCompilerErrors++;
                     C_ReportError(ERROR_ISAKEYWORD);
                     continue;
                 }
 
-                i = hash_find(h_gamevars,label+(g_numLabels<<6));
+                i = hash_find(h_gamevars,label.subarray(g_numLabels<<6).toString());
                 if (i>=0)
                 {
                     g_numCompilerWarnings++;
@@ -2850,8 +2851,9 @@ function C_ParseCommand(loop: number): number
                 C_GetNextValue(LABEL_DEFINE);
                 //printf("Translated. '%.20s'\n",textptr);
 
+                debugger;
 
-                i = hash_find(h_labels,label+(g_numLabels<<6));G_ProcessDynamicTileMapping
+                i = hash_find(h_labels,label.subarray(g_numLabels<<6).toString());G_ProcessDynamicTileMapping
                 if (i>=0)
                 {
                     // if (i >= g_numDefaultLabels)
@@ -2860,18 +2862,18 @@ function C_ParseCommand(loop: number): number
                     {
                         g_numCompilerWarnings++;
                         initprintf("%s:%d: warning: ignored redefinition of `%s' to %d (old: %d).\n",g_szScriptFileName,
-                                   g_lineNumber,label+(g_numLabels<<6), (script[g_scriptPtr-1]), labelcode[i]);
+                                   g_lineNumber,label.subarray(g_numLabels<<6).toString(), (script[g_scriptPtr-1]), labelcode[i]);
                         //C_ReportError(WARNING_DUPLICATEDEFINITION);
                     }
                 }
                 else
                 {
-                    //              printf("Defining Definition \"%s\" to be '%d'\n",label+(g_numLabels<<6),script[g_scriptPtr-1]);
-                    hash_add(h_labels,label+(g_numLabels<<6),g_numLabels,0);
+                    //              printf("Defining Definition \"%s\" to be '%d'\n",label.subarray(g_numLabels<<6).toString(),script[g_scriptPtr-1]);
+                    hash_add(h_labels,label.subarray(g_numLabels<<6).toString(),g_numLabels,0);
                     labeltype[g_numLabels] = LABEL_DEFINE;
                     labelcode[g_numLabels++] = script[g_scriptPtr-1];
                     if (script[g_scriptPtr-1] >= 0 && script[g_scriptPtr-1] < MAXTILES && g_dynamicTileMapping)
-                        G_ProcessDynamicTileMapping(label+((g_numLabels-1)<<6),script[g_scriptPtr-1]);
+                        G_ProcessDynamicTileMapping(label.subarray((g_numLabels-1)<<6).toString(),script[g_scriptPtr-1]);
                 }
                 g_scriptPtr -= 2;
                 continue;
@@ -2923,27 +2925,27 @@ function C_ParseCommand(loop: number): number
 //                C_GetNextLabelName();
 //                // Check to see it's already defined
 
-//                if (hash_find(h_keywords,label+(g_numLabels<<6))>=0)
+//                if (hash_find(h_keywords,label.subarray(g_numLabels<<6).toString())>=0)
 //                {
 //                    g_numCompilerErrors++;
 //                    C_ReportError(ERROR_ISAKEYWORD);
 //                    continue;
 //                }
 
-//                if (hash_find(h_gamevars,label+(g_numLabels<<6))>=0)
+//                if (hash_find(h_gamevars,label.subarray(g_numLabels<<6).toString())>=0)
 //                {
 //                    g_numCompilerWarnings++;
 //                    C_ReportError(WARNING_NAMEMATCHESVAR);
 //                }
 
-//                if ((i = hash_find(h_labels,label+(g_numLabels<<6))) >= 0)
+//                if ((i = hash_find(h_labels,label.subarray(g_numLabels<<6).toString())) >= 0)
 //                {
 //                    g_numCompilerWarnings++;
-//                    initprintf("%s:%d: warning: duplicate move `%s' ignored.\n",g_szScriptFileName,g_lineNumber,label+(g_numLabels<<6));
+//                    initprintf("%s:%d: warning: duplicate move `%s' ignored.\n",g_szScriptFileName,g_lineNumber,label.subarray(g_numLabels<<6).toString());
 //                }
 //                else
 //                {
-//                    hash_add(h_labels,label+(g_numLabels<<6),g_numLabels,0);
+//                    hash_add(h_labels,label.subarray(g_numLabels<<6).toString(),g_numLabels,0);
 //                    labeltype[g_numLabels] = LABEL_MOVE;
 //                    labelcode[g_numLabels++] = g_scriptPtr-script;
 //                }
@@ -3061,30 +3063,30 @@ function C_ParseCommand(loop: number): number
 //                g_scriptPtr--;
 //                C_GetNextLabelName();
 
-//                if (hash_find(h_keywords,label+(g_numLabels<<6))>=0)
+//                if (hash_find(h_keywords,label.subarray(g_numLabels<<6).toString())>=0)
 //                {
 //                    g_numCompilerErrors++;
 //                    C_ReportError(ERROR_ISAKEYWORD);
 //                    continue;
 //                }
 
-//                i = hash_find(h_gamevars,label+(g_numLabels<<6));
+//                i = hash_find(h_gamevars,label.subarray(g_numLabels<<6).toString());
 //                if (i>=0)
 //                {
 //                    g_numCompilerWarnings++;
 //                    C_ReportError(WARNING_NAMEMATCHESVAR);
 //                }
 
-//                i = hash_find(h_labels,label+(g_numLabels<<6));
+//                i = hash_find(h_labels,label.subarray(g_numLabels<<6).toString());
 //                if (i>=0)
 //                {
 //                    g_numCompilerWarnings++;
-//                    initprintf("%s:%d: warning: duplicate ai `%s' ignored.\n",g_szScriptFileName,g_lineNumber,label+(g_numLabels<<6));
+//                    initprintf("%s:%d: warning: duplicate ai `%s' ignored.\n",g_szScriptFileName,g_lineNumber,label.subarray(g_numLabels<<6).toString());
 //                }
 //                else
 //                {
 //                    labeltype[g_numLabels] = LABEL_AI;
-//                    hash_add(h_labels,label+(g_numLabels<<6),g_numLabels,0);
+//                    hash_add(h_labels,label.subarray(g_numLabels<<6).toString(),g_numLabels,0);
 //                    labelcode[g_numLabels++] = g_scriptPtr-script;
 //                }
 
@@ -3141,31 +3143,31 @@ function C_ParseCommand(loop: number): number
 //                C_GetNextLabelName();
 //                // Check to see it's already defined
 
-//                if (hash_find(h_keywords,label+(g_numLabels<<6))>=0)
+//                if (hash_find(h_keywords,label.subarray(g_numLabels<<6).toString())>=0)
 //                {
 //                    g_numCompilerErrors++;
 //                    C_ReportError(ERROR_ISAKEYWORD);
 //                    continue;
 //                }
 
-//                i = hash_find(h_gamevars,label+(g_numLabels<<6));
+//                i = hash_find(h_gamevars,label.subarray(g_numLabels<<6).toString());
 //                if (i>=0)
 //                {
 //                    g_numCompilerWarnings++;
 //                    C_ReportError(WARNING_NAMEMATCHESVAR);
 //                }
 
-//                i = hash_find(h_labels,label+(g_numLabels<<6));
+//                i = hash_find(h_labels,label.subarray(g_numLabels<<6).toString());
 //                if (i>=0)
 //                {
 //                    g_numCompilerWarnings++;
-//                    initprintf("%s:%d: warning: duplicate action `%s' ignored.\n",g_szScriptFileName,g_lineNumber,label+(g_numLabels<<6));
+//                    initprintf("%s:%d: warning: duplicate action `%s' ignored.\n",g_szScriptFileName,g_lineNumber,label.subarray(g_numLabels<<6).toString());
 //                }
 //                else
 //                {
 //                    labeltype[g_numLabels] = LABEL_ACTION;
 //                    labelcode[g_numLabels] = g_scriptPtr-script;
-//                    hash_add(h_labels,label+(g_numLabels<<6),g_numLabels,0);
+//                    hash_add(h_labels,label.subarray(g_numLabels<<6).toString(),g_numLabels,0);
 //                    g_numLabels++;
 //                }
 
@@ -3530,9 +3532,9 @@ function C_ParseCommand(loop: number): number
 //                textptrIdx++;
 //                /// now pointing at 'xxx'
 //                C_GetNextLabelName();
-//                //printf("found xxx label of \"%s\"\n",   label+(g_numLabels<<6));
+//                //printf("found xxx label of \"%s\"\n",   label.subarray(g_numLabels<<6).toString());
 
-//                lLabelID=C_GetLabelNameID(SectorLabels,&sectorH,Bstrtolower(label+(g_numLabels<<6)));
+//                lLabelID=C_GetLabelNameID(SectorLabels,&sectorH,Bstrtolower(label.subarray(g_numLabels<<6).toString()));
 
 //                if (lLabelID == -1)
 //                {
@@ -3660,9 +3662,9 @@ function C_ParseCommand(loop: number): number
 //                textptrIdx++;
 //                /// now pointing at 'xxx'
 //                C_GetNextLabelName();
-//                //printf("found xxx label of \"%s\"\n",   label+(g_numLabels<<6));
+//                //printf("found xxx label of \"%s\"\n",   label.subarray(g_numLabels<<6).toString());
 
-//                lLabelID=C_GetLabelNameID(WallLabels,&wallH,Bstrtolower(label+(g_numLabels<<6)));
+//                lLabelID=C_GetLabelNameID(WallLabels,&wallH,Bstrtolower(label.subarray(g_numLabels<<6).toString()));
 
 //                if (lLabelID == -1)
 //                {
@@ -3722,9 +3724,9 @@ function C_ParseCommand(loop: number): number
 //                textptrIdx++;
 //                /// now pointing at 'xxx'
 //                C_GetNextLabelName();
-//                //printf("found xxx label of \"%s\"\n",   label+(g_numLabels<<6));
+//                //printf("found xxx label of \"%s\"\n",   label.subarray(g_numLabels<<6).toString());
 
-//                lLabelID=C_GetLabelNameOffset(&playerH,Bstrtolower(label+(g_numLabels<<6)));
+//                lLabelID=C_GetLabelNameOffset(&playerH,Bstrtolower(label.subarray(g_numLabels<<6).toString()));
 //                //printf("LabelID is %d\n",lLabelID);
 //                if (lLabelID == -1)
 //                {
@@ -3798,9 +3800,9 @@ function C_ParseCommand(loop: number): number
 //                textptrIdx++;
 //                /// now pointing at 'xxx'
 //                C_GetNextLabelName();
-//                //printf("found xxx label of \"%s\"\n",   label+(g_numLabels<<6));
+//                //printf("found xxx label of \"%s\"\n",   label.subarray(g_numLabels<<6).toString());
 
-//                lLabelID=C_GetLabelNameOffset(&inputH,Bstrtolower(label+(g_numLabels<<6)));
+//                lLabelID=C_GetLabelNameOffset(&inputH,Bstrtolower(label.subarray(g_numLabels<<6).toString()));
 //                //printf("LabelID is %d\n",lLabelID);
 //                if (lLabelID == -1)
 //                {
@@ -3849,9 +3851,9 @@ function C_ParseCommand(loop: number): number
 //                textptrIdx++;
 //                /// now pointing at 'xxx'
 //                C_GetNextLabelName();
-//                //printf("found xxx label of \"%s\"\n",   label+(g_numLabels<<6));
+//                //printf("found xxx label of \"%s\"\n",   label.subarray(g_numLabels<<6).toString());
 
-//                lLabelID=C_GetLabelNameID(UserdefsLabels,&userdefH,Bstrtolower(label+(g_numLabels<<6)));
+//                lLabelID=C_GetLabelNameID(UserdefsLabels,&userdefH,Bstrtolower(label.subarray(g_numLabels<<6).toString()));
 
 //                if (lLabelID == -1)
 //                {
@@ -3934,18 +3936,18 @@ function C_ParseCommand(loop: number): number
 
 //                // get the ID of the DEF
 //                C_GetNextLabelName();
-//                //printf("found label of \"%s\"\n",   label+(g_numLabels<<6));
+//                //printf("found label of \"%s\"\n",   label.subarray(g_numLabels<<6).toString());
 
 //                // Check to see if it's a keyword
-//                if (hash_find(h_keywords,label+(g_numLabels<<6))>=0)
+//                if (hash_find(h_keywords,label.subarray(g_numLabels<<6).toString())>=0)
 //                {
 //                    g_numCompilerErrors++;
 //                    C_ReportError(ERROR_ISAKEYWORD);
 //                    continue;
 //                }
 
-//                i=GetDefID(label+(g_numLabels<<6));
-//                //printf("Label \"%s\" ID is %d\n",label+(g_numLabels<<6), i);
+//                i=GetDefID(label.subarray(g_numLabels<<6).toString());
+//                //printf("Label \"%s\" ID is %d\n",label.subarray(g_numLabels<<6).toString(), i);
 //                if (i<0)
 //                {
 //                    // not a defined DEF
@@ -3968,7 +3970,7 @@ function C_ParseCommand(loop: number): number
 //                        {
 //                            g_numCompilerErrors++;
 //                            C_ReportError(-1);
-//                            initprintf("%s:%d: error: variable `%s' is not per-actor.\n",g_szScriptFileName,g_lineNumber,label+(g_numLabels<<6));
+//                            initprintf("%s:%d: error: variable `%s' is not per-actor.\n",g_szScriptFileName,g_lineNumber,label.subarray(g_numLabels<<6).toString());
 //                            continue;
 //                        }
 //                        break;
@@ -3979,7 +3981,7 @@ function C_ParseCommand(loop: number): number
 //                        {
 //                            g_numCompilerErrors++;
 //                            C_ReportError(-1);
-//                            initprintf("%s:%d: error: variable `%s' is not per-player.\n",g_szScriptFileName,g_lineNumber,label+(g_numLabels<<6));
+//                            initprintf("%s:%d: error: variable `%s' is not per-player.\n",g_szScriptFileName,g_lineNumber,label.subarray(g_numLabels<<6).toString());
 //                            continue;
 //                        }
 //                        break;
@@ -4043,9 +4045,9 @@ function C_ParseCommand(loop: number): number
 //                /// now pointing at 'xxx'
 
 //                C_GetNextLabelName();
-//                //printf("found xxx label of \"%s\"\n",   label+(g_numLabels<<6));
+//                //printf("found xxx label of \"%s\"\n",   label.subarray(g_numLabels<<6).toString());
 
-//                lLabelID=C_GetLabelNameOffset(&actorH,Bstrtolower(label+(g_numLabels<<6)));
+//                lLabelID=C_GetLabelNameOffset(&actorH,Bstrtolower(label.subarray(g_numLabels<<6).toString()));
 //                //printf("LabelID is %d\n",lLabelID);
 //                if (lLabelID == -1)
 //                {
@@ -4122,9 +4124,9 @@ function C_ParseCommand(loop: number): number
 //                textptrIdx++;
 //                /// now pointing at 'xxx'
 //                C_GetNextLabelName();
-//                //printf("found xxx label of \"%s\"\n",   label+(g_numLabels<<6));
+//                //printf("found xxx label of \"%s\"\n",   label.subarray(g_numLabels<<6).toString());
 
-//                lLabelID=C_GetLabelNameOffset(&tspriteH,Bstrtolower(label+(g_numLabels<<6)));
+//                lLabelID=C_GetLabelNameOffset(&tspriteH,Bstrtolower(label.subarray(g_numLabels<<6).toString()));
 //                //printf("LabelID is %d\n",lLabelID);
 //                if (lLabelID == -1)
 //                {
@@ -4320,7 +4322,7 @@ function C_ParseCommand(loop: number): number
 //        case CON_WRITEARRAYTOFILE:
 //        case CON_READARRAYFROMFILE:
 //            C_GetNextLabelName();
-//            i=GetADefID(label+(g_numLabels<<6));
+//            i=GetADefID(label.subarray(g_numLabels<<6).toString());
 //            if (i > (-1))
 //            {
 //                bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
@@ -4336,7 +4338,7 @@ function C_ParseCommand(loop: number): number
 //            continue;
 //        case CON_COPY:
 //            C_GetNextLabelName();
-//            i=GetADefID(label+(g_numLabels<<6));
+//            i=GetADefID(label.subarray(g_numLabels<<6).toString());
 //            if (i > (-1))
 //            {
 //                bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
@@ -4368,7 +4370,7 @@ function C_ParseCommand(loop: number): number
 //            textptrIdx++;
 //        case CON_SETARRAY:
 //            C_GetNextLabelName();
-//            i=GetADefID(label+(g_numLabels<<6));
+//            i=GetADefID(label.subarray(g_numLabels<<6).toString());
 //            if (i > (-1))
 //            {
 //                bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
@@ -4410,7 +4412,7 @@ function C_ParseCommand(loop: number): number
 //        case CON_GETARRAYSIZE:
 //        case CON_RESIZEARRAY:
 //            C_GetNextLabelName();
-//            i=GetADefID(label+(g_numLabels<<6));
+//            i=GetADefID(label.subarray(g_numLabels<<6).toString());
 //            if (i >= 0)
 //            {
 //                bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
@@ -4418,7 +4420,7 @@ function C_ParseCommand(loop: number): number
 //                if (tw==CON_RESIZEARRAY && (aGameArrays[i].dwFlags & GAMEARRAY_TYPE_MASK))
 //                {
 //                    C_ReportError(-1);
-//                    initprintf("can't resize system array `%s'.", label+(g_numLabels<<6));
+//                    initprintf("can't resize system array `%s'.", label.subarray(g_numLabels<<6).toString());
 //                    return 1;
 //                }
 //            }
@@ -6174,106 +6176,105 @@ function C_ParseCommand(loop: number): number
     return 0;
 }
 
-///* Anything added with C_AddDefinition() cannot be overwritten in the CONs */
-//static void C_AddDefinition(const char *lLabel,int32_t lValue,int32_t lType)
-//{
-//    Bstrcpy(label+(g_numLabels<<6),lLabel);
-//    labeltype[g_numLabels] = lType;
-//    hash_add(h_labels,label+(g_numLabels<<6),g_numLabels,0);
-//    labelcode[g_numLabels++] = lValue;
-//    g_numDefaultLabels++;
-//}
+/* Anything added with C_AddDefinition() cannot be overwritten in the CONs */
+function C_AddDefinition(/*const char **/lLabel:string,/*int32_t */lValue:number,/*int32_t */lType:number)
+{
+    Bstrcpy(label.subarray(g_numLabels<<6),lLabel);
+    labeltype[g_numLabels] = lType;
+    hash_add(h_labels,label.subarray(g_numLabels<<6).toString(),g_numLabels,0);
+    labelcode[g_numLabels++] = lValue;
+    g_numDefaultLabels++;
+}
 
 // KEEPINSYNC lunatic/con_lang.lua
 function C_AddDefaultDefinitions(): void 
 {
-    todo("C_AddDefaultDefinitions");
-//    int32_t i;
+    var i: number;
 
-//    for (i=0; i<MAXEVENTS; i++)
-//        C_AddDefinition(EventNames[i], i, LABEL_DEFINE);
+    for (i=0; i<MAXEVENTS; i++)
+        C_AddDefinition(EventNames[i], i, LABEL_DEFINE);
 
-//    for (i=0; i<NUMGAMEFUNCTIONS; i++)
-//    {
-//        int32_t j;
+    for (i=0; i<NUMGAMEFUNCTIONS; i++)
+    {
+        var j : number;
 
-//        if (!Bstrcmp(gamefunctions[i],"Show_Console")) continue;
+        if (!Bstrcmp(gamefunctions[i],"Show_Console")) continue;
 
-//        Bsprintf(tempbuf,"GAMEFUNC_%s", gamefunctions[i]);
+        Bsprintf(tempbuf,"GAMEFUNC_%s", gamefunctions[i]);
 
-//        for (j=Bstrlen(tempbuf); j>=0; j--)
-//            tempbuf[j] = Btoupper(tempbuf[j]);
+        for (j=Bstrlen(tempbuf); j>=0; j--)
+            tempbuf[j] = Btoupper(String.fromCharCode(tempbuf[j])).charCodeAt(0);
 
-//        C_AddDefinition(tempbuf, i, LABEL_DEFINE);
-//    }
+        C_AddDefinition(tempbuf.toString(), i, LABEL_DEFINE);
+    }
 
-//    C_AddDefinition("STAT_DEFAULT", STAT_DEFAULT, LABEL_DEFINE);
-//    C_AddDefinition("STAT_ACTOR", STAT_ACTOR, LABEL_DEFINE);
-//    C_AddDefinition("STAT_ZOMBIEACTOR", STAT_ZOMBIEACTOR, LABEL_DEFINE);
-//    C_AddDefinition("STAT_EFFECTOR", STAT_EFFECTOR, LABEL_DEFINE);
-//    C_AddDefinition("STAT_PROJECTILE", STAT_PROJECTILE, LABEL_DEFINE);
-//    C_AddDefinition("STAT_MISC", STAT_MISC, LABEL_DEFINE);
-//    C_AddDefinition("STAT_STANDABLE", STAT_STANDABLE, LABEL_DEFINE);
-//    C_AddDefinition("STAT_LOCATOR", STAT_LOCATOR, LABEL_DEFINE);
-//    C_AddDefinition("STAT_ACTIVATOR", STAT_ACTIVATOR, LABEL_DEFINE);
-//    C_AddDefinition("STAT_TRANSPORT", STAT_TRANSPORT, LABEL_DEFINE);
-//    C_AddDefinition("STAT_PLAYER", STAT_PLAYER, LABEL_DEFINE);
-//    C_AddDefinition("STAT_FX", STAT_FX, LABEL_DEFINE);
-//    C_AddDefinition("STAT_FALLER", STAT_FALLER, LABEL_DEFINE);
-//    C_AddDefinition("STAT_DUMMYPLAYER", STAT_DUMMYPLAYER, LABEL_DEFINE);
-//    C_AddDefinition("STAT_LIGHT", STAT_LIGHT, LABEL_DEFINE);
+    C_AddDefinition("STAT_DEFAULT", STAT_DEFAULT, LABEL_DEFINE);
+    C_AddDefinition("STAT_ACTOR", STAT_ACTOR, LABEL_DEFINE);
+    C_AddDefinition("STAT_ZOMBIEACTOR", STAT_ZOMBIEACTOR, LABEL_DEFINE);
+    C_AddDefinition("STAT_EFFECTOR", STAT_EFFECTOR, LABEL_DEFINE);
+    C_AddDefinition("STAT_PROJECTILE", STAT_PROJECTILE, LABEL_DEFINE);
+    C_AddDefinition("STAT_MISC", STAT_MISC, LABEL_DEFINE);
+    C_AddDefinition("STAT_STANDABLE", STAT_STANDABLE, LABEL_DEFINE);
+    C_AddDefinition("STAT_LOCATOR", STAT_LOCATOR, LABEL_DEFINE);
+    C_AddDefinition("STAT_ACTIVATOR", STAT_ACTIVATOR, LABEL_DEFINE);
+    C_AddDefinition("STAT_TRANSPORT", STAT_TRANSPORT, LABEL_DEFINE);
+    C_AddDefinition("STAT_PLAYER", STAT_PLAYER, LABEL_DEFINE);
+    C_AddDefinition("STAT_FX", STAT_FX, LABEL_DEFINE);
+    C_AddDefinition("STAT_FALLER", STAT_FALLER, LABEL_DEFINE);
+    C_AddDefinition("STAT_DUMMYPLAYER", STAT_DUMMYPLAYER, LABEL_DEFINE);
+    C_AddDefinition("STAT_LIGHT", STAT_LIGHT, LABEL_DEFINE);
 
-//    C_AddDefinition("SFLAG_SHADOW", SPRITE_SHADOW, LABEL_DEFINE);
-//    C_AddDefinition("SFLAG_NVG", SPRITE_NVG, LABEL_DEFINE);
-//    C_AddDefinition("SFLAG_NOSHADE", SPRITE_NOSHADE, LABEL_DEFINE);
-//    C_AddDefinition("SFLAG_BADGUY", SPRITE_BADGUY, LABEL_DEFINE);
-//    C_AddDefinition("SFLAG_NOPAL", SPRITE_NOPAL, LABEL_DEFINE);
-//    C_AddDefinition("SFLAG_NOEVENTS", SPRITE_NOEVENTCODE, LABEL_DEFINE);
-//    C_AddDefinition("SFLAG_NOLIGHT", SPRITE_NOLIGHT, LABEL_DEFINE);
-//    C_AddDefinition("SFLAG_USEACTIVATOR", SPRITE_USEACTIVATOR, LABEL_DEFINE);
-//    C_AddDefinition("SFLAG_NOCLIP", SPRITE_NOCLIP, LABEL_DEFINE);
-//    C_AddDefinition("SFLAG_SMOOTHMOVE", SPRITE_SMOOTHMOVE, LABEL_DEFINE);
-//    C_AddDefinition("SFLAG_NOTELEPORT", SPRITE_NOTELEPORT, LABEL_DEFINE);
+    C_AddDefinition("SFLAG_SHADOW", SPRITE_SHADOW, LABEL_DEFINE);
+    C_AddDefinition("SFLAG_NVG", SPRITE_NVG, LABEL_DEFINE);
+    C_AddDefinition("SFLAG_NOSHADE", SPRITE_NOSHADE, LABEL_DEFINE);
+    C_AddDefinition("SFLAG_BADGUY", SPRITE_BADGUY, LABEL_DEFINE);
+    C_AddDefinition("SFLAG_NOPAL", SPRITE_NOPAL, LABEL_DEFINE);
+    C_AddDefinition("SFLAG_NOEVENTS", SPRITE_NOEVENTCODE, LABEL_DEFINE);
+    C_AddDefinition("SFLAG_NOLIGHT", SPRITE_NOLIGHT, LABEL_DEFINE);
+    C_AddDefinition("SFLAG_USEACTIVATOR", SPRITE_USEACTIVATOR, LABEL_DEFINE);
+    C_AddDefinition("SFLAG_NOCLIP", SPRITE_NOCLIP, LABEL_DEFINE);
+    C_AddDefinition("SFLAG_SMOOTHMOVE", SPRITE_SMOOTHMOVE, LABEL_DEFINE);
+    C_AddDefinition("SFLAG_NOTELEPORT", SPRITE_NOTELEPORT, LABEL_DEFINE);
 
-//    C_AddDefinition("STR_MAPNAME",STR_MAPNAME,LABEL_DEFINE);
-//    C_AddDefinition("STR_MAPFILENAME",STR_MAPFILENAME,LABEL_DEFINE);
-//    C_AddDefinition("STR_PLAYERNAME",STR_PLAYERNAME,LABEL_DEFINE);
-//    C_AddDefinition("STR_VERSION",STR_VERSION,LABEL_DEFINE);
-//    C_AddDefinition("STR_GAMETYPE",STR_GAMETYPE,LABEL_DEFINE);
-//    C_AddDefinition("STR_VOLUMENAME",STR_VOLUMENAME,LABEL_DEFINE);
+    C_AddDefinition("STR_MAPNAME",STR_MAPNAME,LABEL_DEFINE);
+    C_AddDefinition("STR_MAPFILENAME",STR_MAPFILENAME,LABEL_DEFINE);
+    C_AddDefinition("STR_PLAYERNAME",STR_PLAYERNAME,LABEL_DEFINE);
+    C_AddDefinition("STR_VERSION",STR_VERSION,LABEL_DEFINE);
+    C_AddDefinition("STR_GAMETYPE",STR_GAMETYPE,LABEL_DEFINE);
+    C_AddDefinition("STR_VOLUMENAME",STR_VOLUMENAME,LABEL_DEFINE);
 
-//    C_AddDefinition("NO",0,LABEL_DEFINE|LABEL_ACTION|LABEL_AI|LABEL_MOVE);
+    C_AddDefinition("NO",0,LABEL_DEFINE|LABEL_ACTION|LABEL_AI|LABEL_MOVE);
 
-//    C_AddDefinition("PROJ_BOUNCES",PROJ_BOUNCES,LABEL_DEFINE);
-//    C_AddDefinition("PROJ_BSOUND",PROJ_BSOUND,LABEL_DEFINE);
-//    C_AddDefinition("PROJ_CLIPDIST",PROJ_CLIPDIST,LABEL_DEFINE);
-//    C_AddDefinition("PROJ_CSTAT",PROJ_CSTAT,LABEL_DEFINE);
-//    C_AddDefinition("PROJ_DECAL",PROJ_DECAL,LABEL_DEFINE);
-//    C_AddDefinition("PROJ_DROP",PROJ_DROP,LABEL_DEFINE);
-//    C_AddDefinition("PROJ_EXTRA",PROJ_EXTRA,LABEL_DEFINE);
-//    C_AddDefinition("PROJ_EXTRA_RAND",PROJ_EXTRA_RAND,LABEL_DEFINE);
-//    C_AddDefinition("PROJ_FLASH_COLOR",PROJ_FLASH_COLOR,LABEL_DEFINE);
-//    C_AddDefinition("PROJ_HITRADIUS",PROJ_HITRADIUS,LABEL_DEFINE);
-//    C_AddDefinition("PROJ_ISOUND",PROJ_ISOUND,LABEL_DEFINE);
-//    C_AddDefinition("PROJ_OFFSET",PROJ_OFFSET,LABEL_DEFINE);
-//    C_AddDefinition("PROJ_PAL",PROJ_PAL,LABEL_DEFINE);
-//    C_AddDefinition("PROJ_RANGE",PROJ_RANGE,LABEL_DEFINE);
-//    C_AddDefinition("PROJ_SHADE",PROJ_SHADE,LABEL_DEFINE);
-//    C_AddDefinition("PROJ_SOUND",PROJ_SOUND,LABEL_DEFINE);
-//    C_AddDefinition("PROJ_SPAWNS",PROJ_SPAWNS,LABEL_DEFINE);
-//    C_AddDefinition("PROJ_SXREPEAT",PROJ_SXREPEAT,LABEL_DEFINE);
-//    C_AddDefinition("PROJ_SYREPEAT",PROJ_SYREPEAT,LABEL_DEFINE);
-//    C_AddDefinition("PROJ_TNUM",PROJ_TNUM,LABEL_DEFINE);
-//    C_AddDefinition("PROJ_TOFFSET",PROJ_TOFFSET,LABEL_DEFINE);
-//    C_AddDefinition("PROJ_TRAIL",PROJ_TRAIL,LABEL_DEFINE);
-//    C_AddDefinition("PROJ_TXREPEAT",PROJ_TXREPEAT,LABEL_DEFINE);
-//    C_AddDefinition("PROJ_TYREPEAT",PROJ_TYREPEAT,LABEL_DEFINE);
-//    C_AddDefinition("PROJ_USERDATA",PROJ_USERDATA,LABEL_DEFINE);
-//    C_AddDefinition("PROJ_VEL_MULT",PROJ_MOVECNT,LABEL_DEFINE);
-//    C_AddDefinition("PROJ_VEL",PROJ_VEL,LABEL_DEFINE);
-//    C_AddDefinition("PROJ_WORKSLIKE",PROJ_WORKSLIKE,LABEL_DEFINE);
-//    C_AddDefinition("PROJ_XREPEAT",PROJ_XREPEAT,LABEL_DEFINE);
-//    C_AddDefinition("PROJ_YREPEAT",PROJ_YREPEAT,LABEL_DEFINE);
+    C_AddDefinition("PROJ_BOUNCES",PROJ_BOUNCES,LABEL_DEFINE);
+    C_AddDefinition("PROJ_BSOUND",PROJ_BSOUND,LABEL_DEFINE);
+    C_AddDefinition("PROJ_CLIPDIST",PROJ_CLIPDIST,LABEL_DEFINE);
+    C_AddDefinition("PROJ_CSTAT",PROJ_CSTAT,LABEL_DEFINE);
+    C_AddDefinition("PROJ_DECAL",PROJ_DECAL,LABEL_DEFINE);
+    C_AddDefinition("PROJ_DROP",PROJ_DROP,LABEL_DEFINE);
+    C_AddDefinition("PROJ_EXTRA",PROJ_EXTRA,LABEL_DEFINE);
+    C_AddDefinition("PROJ_EXTRA_RAND",PROJ_EXTRA_RAND,LABEL_DEFINE);
+    C_AddDefinition("PROJ_FLASH_COLOR",PROJ_FLASH_COLOR,LABEL_DEFINE);
+    C_AddDefinition("PROJ_HITRADIUS",PROJ_HITRADIUS,LABEL_DEFINE);
+    C_AddDefinition("PROJ_ISOUND",PROJ_ISOUND,LABEL_DEFINE);
+    C_AddDefinition("PROJ_OFFSET",PROJ_OFFSET,LABEL_DEFINE);
+    C_AddDefinition("PROJ_PAL",PROJ_PAL,LABEL_DEFINE);
+    C_AddDefinition("PROJ_RANGE",PROJ_RANGE,LABEL_DEFINE);
+    C_AddDefinition("PROJ_SHADE",PROJ_SHADE,LABEL_DEFINE);
+    C_AddDefinition("PROJ_SOUND",PROJ_SOUND,LABEL_DEFINE);
+    C_AddDefinition("PROJ_SPAWNS",PROJ_SPAWNS,LABEL_DEFINE);
+    C_AddDefinition("PROJ_SXREPEAT",PROJ_SXREPEAT,LABEL_DEFINE);
+    C_AddDefinition("PROJ_SYREPEAT",PROJ_SYREPEAT,LABEL_DEFINE);
+    C_AddDefinition("PROJ_TNUM",PROJ_TNUM,LABEL_DEFINE);
+    C_AddDefinition("PROJ_TOFFSET",PROJ_TOFFSET,LABEL_DEFINE);
+    C_AddDefinition("PROJ_TRAIL",PROJ_TRAIL,LABEL_DEFINE);
+    C_AddDefinition("PROJ_TXREPEAT",PROJ_TXREPEAT,LABEL_DEFINE);
+    C_AddDefinition("PROJ_TYREPEAT",PROJ_TYREPEAT,LABEL_DEFINE);
+    C_AddDefinition("PROJ_USERDATA",PROJ_USERDATA,LABEL_DEFINE);
+    C_AddDefinition("PROJ_VEL_MULT",PROJ_MOVECNT,LABEL_DEFINE);
+    C_AddDefinition("PROJ_VEL",PROJ_VEL,LABEL_DEFINE);
+    C_AddDefinition("PROJ_WORKSLIKE",PROJ_WORKSLIKE,LABEL_DEFINE);
+    C_AddDefinition("PROJ_XREPEAT",PROJ_XREPEAT,LABEL_DEFINE);
+    C_AddDefinition("PROJ_YREPEAT",PROJ_YREPEAT,LABEL_DEFINE);
 }
 //#endif
 
@@ -6558,7 +6559,7 @@ todoThrow();
 }
 
 function C_ReportError(iError : number) : void
-{
+{debugger;
     if (Bstrcmp(g_szCurrentBlockName,g_szLastBlockName))
     {
         if (g_parsingEventPtr || g_processingState || g_parsingActorPtr)
@@ -6584,19 +6585,19 @@ function C_ReportError(iError : number) : void
         initprintf("%s:%d: error: found `%s' within %s.\n",g_szScriptFileName,g_lineNumber,tempbuf,g_parsingEventPtr?"an event":g_parsingActorPtr?"an actor":"a state");
         break;
     case ERROR_ISAKEYWORD:
-        initprintf("%s:%d: error: symbol `%s' is a keyword.\n",g_szScriptFileName,g_lineNumber,label+(g_numLabels<<6));
+        initprintf("%s:%d: error: symbol `%s' is a keyword.\n",g_szScriptFileName,g_lineNumber,label.subarray(g_numLabels<<6).toString());
         break;
     case ERROR_NOENDSWITCH:
-        initprintf("%s:%d: error: did not find `endswitch' before `%s'.\n",g_szScriptFileName,g_lineNumber,label+(g_numLabels<<6));
+        initprintf("%s:%d: error: did not find `endswitch' before `%s'.\n",g_szScriptFileName,g_lineNumber,label.subarray(g_numLabels<<6).toString());
         break;
     case ERROR_NOTAGAMEDEF:
-        initprintf("%s:%d: error: symbol `%s' is not a game definition.\n",g_szScriptFileName,g_lineNumber,label+(g_numLabels<<6));
+        initprintf("%s:%d: error: symbol `%s' is not a game definition.\n",g_szScriptFileName,g_lineNumber,label.subarray(g_numLabels<<6).toString());
         break;
     case ERROR_NOTAGAMEVAR:
-        initprintf("%s:%d: error: symbol `%s' is not a game variable.\n",g_szScriptFileName,g_lineNumber,label+(g_numLabels<<6));
+        initprintf("%s:%d: error: symbol `%s' is not a game variable.\n",g_szScriptFileName,g_lineNumber,label.subarray(g_numLabels<<6).toString());
         break;
     case ERROR_NOTAGAMEARRAY:
-        initprintf("%s:%d: error: symbol `%s' is not a game array.\n",g_szScriptFileName,g_lineNumber,label+(g_numLabels<<6));
+        initprintf("%s:%d: error: symbol `%s' is not a game array.\n",g_szScriptFileName,g_lineNumber,label.subarray(g_numLabels<<6).toString());
         break;
     case ERROR_GAMEARRAYBNC:
         initprintf("%s:%d: error: square brackets for index of game array not closed, expected ] found %c\n",g_szScriptFileName,g_lineNumber,textptr[textptrIdx]);
@@ -6614,28 +6615,28 @@ function C_ReportError(iError : number) : void
         initprintf("%s:%d: error: parameter `%s' is undefined.\n",g_szScriptFileName,g_lineNumber,tempbuf);
         break;
     case ERROR_SYMBOLNOTRECOGNIZED:
-        initprintf("%s:%d: error: symbol `%s' is not recognized.\n",g_szScriptFileName,g_lineNumber,label+(g_numLabels<<6));
+        initprintf("%s:%d: error: symbol `%s' is not recognized.\n",g_szScriptFileName,g_lineNumber,label.subarray(g_numLabels<<6).toString());
         break;
     case ERROR_SYNTAXERROR:
         initprintf("%s:%d: error: syntax error.\n",g_szScriptFileName,g_lineNumber);
         break;
     case ERROR_VARREADONLY:
-        initprintf("%s:%d: error: variable `%s' is read-only.\n",g_szScriptFileName,g_lineNumber,label+(g_numLabels<<6));
+        initprintf("%s:%d: error: variable `%s' is read-only.\n",g_szScriptFileName,g_lineNumber,label.subarray(g_numLabels<<6).toString());
         break;
     case ERROR_ARRAYREADONLY:
-        initprintf("%s:%d: error: array `%s' is read-only.\n",g_szScriptFileName,g_lineNumber,label+(g_numLabels<<6));
+        initprintf("%s:%d: error: array `%s' is read-only.\n",g_szScriptFileName,g_lineNumber,label.subarray(g_numLabels<<6).toString());
         break;
     case ERROR_VARTYPEMISMATCH:
-        initprintf("%s:%d: error: variable `%s' is of the wrong type.\n",g_szScriptFileName,g_lineNumber,label+(g_numLabels<<6));
+        initprintf("%s:%d: error: variable `%s' is of the wrong type.\n",g_szScriptFileName,g_lineNumber,label.subarray(g_numLabels<<6).toString());
         break;
     case WARNING_BADGAMEVAR:
-        initprintf("%s:%d: warning: variable `%s' should be either per-player OR per-actor, not both.\n",g_szScriptFileName,g_lineNumber,label+(g_numLabels<<6));
+        initprintf("%s:%d: warning: variable `%s' should be either per-player OR per-actor, not both.\n",g_szScriptFileName,g_lineNumber,label.subarray(g_numLabels<<6).toString());
         break;
     case WARNING_DUPLICATECASE:
         initprintf("%s:%d: warning: duplicate case ignored.\n",g_szScriptFileName,g_lineNumber);
         break;
     case WARNING_DUPLICATEDEFINITION:
-        initprintf("%s:%d: warning: duplicate game definition `%s' ignored.\n",g_szScriptFileName,g_lineNumber,label+(g_numLabels<<6));
+        initprintf("%s:%d: warning: duplicate game definition `%s' ignored.\n",g_szScriptFileName,g_lineNumber,label.subarray(g_numLabels<<6).toString());
         break;
     case WARNING_EVENTSYNC:
         initprintf("%s:%d: warning: found `%s' within a local event.\n",g_szScriptFileName,g_lineNumber,tempbuf);
@@ -6644,7 +6645,7 @@ function C_ReportError(iError : number) : void
         initprintf("%s:%d: warning: expected a label, found a constant.\n",g_szScriptFileName,g_lineNumber);
         break;
     case WARNING_NAMEMATCHESVAR:
-        initprintf("%s:%d: warning: symbol `%s' already used for game variable.\n",g_szScriptFileName,g_lineNumber,label+(g_numLabels<<6));
+        initprintf("%s:%d: warning: symbol `%s' already used for game variable.\n",g_szScriptFileName,g_lineNumber,label.subarray(g_numLabels<<6).toString());
         break;
     }
 }

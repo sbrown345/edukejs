@@ -28,5 +28,5 @@ function path(location: string) : void {
 }
 
 interface Error {
-    stack: string
+    stack: string;
 }

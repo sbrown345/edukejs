@@ -82,10 +82,10 @@ function memcmp(buf1 : Uint8Array, buf2 : Uint8Array, count : number) : number {
     return 0;
 }
 
-function memset(array: any, startIndex: number, value: number, num: number) : void {
+function memset(buffer: ArrayBuffer, startIndex: number, value: number, num: number) : void {
     assert.int32(startIndex).uint8(value).int32(num);
 
-    var uint8Array = new Uint8Array(array.buffer);
+    var uint8Array = new Uint8Array(buffer);
     for (var i = startIndex; i < num; i++) {
         uint8Array[i] = value;
     }
@@ -152,12 +152,29 @@ function strcpy(destination: Uint8Array, source: string) : void {
     }
 }
 
+function strlen(charArray: Uint8Array) : number {
+    var len = 0;
+    for (; len < charArray.length && charArray[len]; len++) {}
+    return len;
+}
+
 function strupr(str: string) : string {
     return str.toUpperCase();
 }
 
+function strtoll(str: string) : string {
+    for (var i = 0; i < str.length; i++) {
+        throw "todo"
+        //http://www.cplusplus.com/reference/cstdlib/strtol/
+    }
+}
+
 function tolower(s: string): string {
     return s.toLowerCase();
+}
+
+function toupper(s: string): string {
+    return s.toUpperCase();
 }
 
 function isalnum(c: string) : boolean {

@@ -72,6 +72,12 @@ test("originalArgs", function () {
     strictEqual(assert.failedCount, 1, "is array of chars");
 });
 
+test("printf", function () {
+    var array = new Uint8Array(10);
+    printf(array, "test%s", "AAAA");
+    strictEqual(array.toString(), "testAAAA", "array matches");
+});
+
 test("memcmp", function () {
     strictEqual(memcmp(new Uint8Array([97, 98]), [97, 98], 2), 0, "array matches");
     strictEqual(memcmp(new Uint8Array([100, 98]), [98, 99], 2), 1, "buf1 is greater");
@@ -82,6 +88,11 @@ test("strcmp", function () {
     strictEqual(memcmp("AA", "AA", 2), 0, "strings match");
     strictEqual(memcmp("ZZ", "AA", 2), 1, "first string is greater than second");
     strictEqual(memcmp("AA", "ZZ", 2), -1, "first string is less than second");
+});
+
+test("strlen", function () {
+    strictEqual(strlen(new Uint8Array(9, 9, 9, 0, 0), 3, "strings length is 3"));
+    strictEqual(strlen(new Uint8Array(9, 9, 9, 9, 9), 5, "strings length is 5"));
 });
 
 test("uint8array string conversions", function () {

@@ -130,12 +130,12 @@ class memberlabel_t
 
 //// KEEPINSYNC lunatic/con_lang.lua
 //enum SystemString_t {
-//    STR_MAPNAME,
-//    STR_MAPFILENAME,
-//    STR_PLAYERNAME,
-//    STR_VERSION,
-//    STR_GAMETYPE,
-//    STR_VOLUMENAME
+var STR_MAPNAME=0,
+    STR_MAPFILENAME=1,
+    STR_PLAYERNAME=2,
+    STR_VERSION=3,
+    STR_GAMETYPE=4,
+    STR_VOLUMENAME=5;
 //};
 
 //enum ScriptError_t
