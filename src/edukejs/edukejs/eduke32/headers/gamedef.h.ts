@@ -960,7 +960,7 @@ var CON_DEFINELEVELNAME     = 0,
     CON_SCREENTEXT          = 370,
     CON_DYNAMICSOUNDREMAP   = 371,
     CON_SCREENSOUND         = 372,
-    CON_END;
+    CON_END = 373;
 //};
 //#endif
 

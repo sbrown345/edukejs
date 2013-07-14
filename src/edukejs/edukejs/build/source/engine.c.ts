@@ -17020,7 +17020,7 @@ function preinitengine() : number
 function hash_init(t:hashtable_t) : void
 {
     hash_free(t);
-    t.items = Array();
+    t.items = new Array(t.size);
 }
 
 function hash_free(t: hashtable_t) : void
