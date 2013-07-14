@@ -6316,8 +6316,8 @@ function C_Compile(filenam: string) : void
 
     C_InitProjectiles();
 
-    debugger;
     fp = kopen4loadfrommod(filenam,g_loadFromGroupOnly);
+    debugger;
 //    if (fp == -1) // JBF: was 0
 //    {
 //        extern int32_t numgroupfiles;

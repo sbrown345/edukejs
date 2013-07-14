@@ -8541,7 +8541,6 @@ var tsprite_s = newStructArray(spritetype, MAXSPRITESONSCREEN);
 //#endif
 function preinitengine() : number
 {
-    debugger;
     path("preinitengine");
     todo("initsystem etc");
 //    char *e;

@@ -902,7 +902,7 @@ function kopen4load(filename: string, /*char*/ searchfirst: number) : number
 //        return newhandle;
 //    }
 //#endif
-
+    debugger;
     for (k=numgroupfiles-1; k>=0; k--)
     {
         if (searchfirst == 1) k = 0;
@@ -910,21 +910,21 @@ function kopen4load(filename: string, /*char*/ searchfirst: number) : number
         {
             for (i=gnumfiles[k]-1; i>=0; i--)
             {
-                gfileptr = /*(char *)&*/gfilelist[k][i<<4];
+                gfileptr = new DataView(gfilelist[k].buffer, i<<4);///*(char *)&*/gfilelist[k][i<<4];
 
                 bad = 0;
                 for (j=0; j<13; j++)
                 {
                     if (!filename[j]) break;
-                    if (toupperlookup[filename[j]] != toupperlookup[gfileptr[j]])
+                    if (toupperlookup[filename.charCodeAt(j)] != toupperlookup[gfileptr.getUint8(j)])
                     {
                         bad = 1;
                         break;
                     }
                 }
                 if (bad) continue;
-                if (j<13 && gfileptr[j]) continue;   // JBF: because e1l1.map might exist before e1l1
-                if (j==13 && filename[j]) continue;   // JBF: long file name
+                if (j<13 && gfileptr.getUint8(j)) continue;   // JBF: because e1l1.map might exist before e1l1
+                if (j==13 && filename.charCodeAt(j)) continue;   // JBF: long file name
 
                 filegrp[newhandle] = k;
                 filehan[newhandle] = i;
