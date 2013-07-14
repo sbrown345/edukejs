@@ -74,10 +74,10 @@ String.prototype.toUint8Array = function () : Uint8Array {
 }
 
 interface Uint8Array {
-  asString: () => string;
+  toString: () => string;
 }
 
-Uint8Array.prototype.asString = function () : string {
+Uint8Array.prototype.toString = function () : string {
     var str = "";
     for (var i = 0; i < this.length; i++) {
         if(!this[i]) {

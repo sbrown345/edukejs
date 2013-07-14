@@ -1297,7 +1297,7 @@ function C_InitHashes(): void
 }
 
 //// "magic" number for { and }, overrides line number in compiled code for later detection
-//#define IFELSE_MAGIC 31337
+var IFELSE_MAGIC = 31337;
 //static int32_t g_ifElseAborted;
 
 function C_SetScriptSize(/*int32_t*/ newsize: number) : number
@@ -1559,15 +1559,14 @@ function C_GetNextKeyword(): number //Returns its code #
     }
     tempbuf[l] = 0;
 
-    debugger;
-    if ((i = hash_find(h_keywords,tempbuf.asString())) >= 0)
+    if ((i = hash_find(h_keywords,tempbuf.toString())) >= 0)
     {
         if (i == CON_LEFTBRACE || i == CON_RIGHTBRACE || i == CON_NULLOP)
             script[g_scriptPtr] = i + (IFELSE_MAGIC<<12);
         else script[g_scriptPtr] = i + (g_lineNumber<<12);
 
-        bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
-        textptr += l;
+        bitptr[(g_scriptPtr-scriptIdx)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-scriptIdx)&7));
+        textptrIdx += l;
         g_scriptPtr++;
 
         if (!(g_numCompilerErrors || g_numCompilerWarnings) && g_scriptDebug)
@@ -1575,16 +1574,16 @@ function C_GetNextKeyword(): number //Returns its code #
         return i;
     }
 
-    //textptr += l;
-    //g_numCompilerErrors++;
+    textptrIdx += l;
+    g_numCompilerErrors++;
 
-    //if ((tempbuf[0] == '{' || tempbuf[0] == '}') && tempbuf[1] != 0)
-    //{
-    //    C_ReportError(-1);
-    //    initprintf("%s:%d: error: expected whitespace between `%c' and `%s'.\n",g_szScriptFileName,g_lineNumber,tempbuf[0],tempbuf+1);
-    //}
-    //else C_ReportError(ERROR_EXPECTEDKEYWORD);
-    throw "todo";
+    if ((tempbuf[0] == '{'.charCodeAt(0) || tempbuf[0] == '}'.charCodeAt(0)) && tempbuf[1] != 0)
+    {
+        C_ReportError(-1);
+        initprintf("%s:%d: error: expected whitespace between `%c' and `%s'.\n",g_szScriptFileName,g_lineNumber,tempbuf[0],tempbuf.subarray(1).toString());
+    }
+    else C_ReportError(ERROR_EXPECTEDKEYWORD);
+    
     return -1;
 }
 
@@ -1645,16 +1644,16 @@ function C_GetNextKeyword(): number //Returns its code #
 //    {
 //        bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
 
-//        *g_scriptPtr++ = MAXGAMEVARS;
+//        script[g_scriptPtr]++ = MAXGAMEVARS;
 
 //        if (tolower(textptr[textptrIdx+1])=='x')  // hex constants
-//            *g_scriptPtr = parse_hex_constant(textptr+2);
+//            script[g_scriptPtr] = parse_hex_constant(textptr+2);
 //        else
-//            *g_scriptPtr = parse_decimal_number();
+//            script[g_scriptPtr] = parse_decimal_number();
 
 //        if (!(g_numCompilerErrors || g_numCompilerWarnings) && g_scriptDebug)
 //            initprintf("%s:%d: debug: accepted constant %ld in place of gamevar.\n",
-//                       g_szScriptFileName,g_lineNumber,(long)*g_scriptPtr);
+//                       g_szScriptFileName,g_lineNumber,(long)script[g_scriptPtr]);
 
 //        bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
 //        g_scriptPtr++;
@@ -1718,7 +1717,7 @@ function C_GetNextKeyword(): number //Returns its code #
 //        }
 
 //        bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
-//        *g_scriptPtr++=(i|f);
+//        script[g_scriptPtr]++=(i|f);
 //        C_GetNextVarType(0);
 //        C_SkipComments();
 
@@ -1785,7 +1784,7 @@ function C_GetNextKeyword(): number //Returns its code #
 
 //            if (i == g_iSpriteVarID)
 //            {
-//                *g_scriptPtr++=ActorLabels[lLabelID].lId;
+//                script[g_scriptPtr]++=ActorLabels[lLabelID].lId;
 
 //                //printf("member's flags are: %02Xh\n",ActorLabels[lLabelID].flags);
 //                if (ActorLabels[lLabelID].flags & LABEL_HASPARM2)
@@ -1797,12 +1796,12 @@ function C_GetNextKeyword(): number //Returns its code #
 //                }
 //            }
 //            else if (i == g_iSectorVarID)
-//                *g_scriptPtr++=SectorLabels[lLabelID].lId;
+//                script[g_scriptPtr]++=SectorLabels[lLabelID].lId;
 //            else if (i == g_iWallVarID)
-//                *g_scriptPtr++=SectorLabels[lLabelID].lId;
+//                script[g_scriptPtr]++=SectorLabels[lLabelID].lId;
 //            else if (i == g_iPlayerVarID)
 //            {
-//                *g_scriptPtr++=PlayerLabels[lLabelID].lId;
+//                script[g_scriptPtr]++=PlayerLabels[lLabelID].lId;
 
 //                //printf("member's flags are: %02Xh\n",ActorLabels[lLabelID].flags);
 //                if (PlayerLabels[lLabelID].flags & LABEL_HASPARM2)
@@ -1814,7 +1813,7 @@ function C_GetNextKeyword(): number //Returns its code #
 //                }
 //            }
 //            else if (i == g_iActorVarID)
-//                *g_scriptPtr++=lLabelID;
+//                script[g_scriptPtr]++=lLabelID;
 //        }
 //        return;
 //    }
@@ -1834,9 +1833,9 @@ function C_GetNextKeyword(): number //Returns its code #
 //                    if (!(g_numCompilerErrors || g_numCompilerWarnings) && g_scriptDebug)
 //                        initprintf("%s:%d: debug: accepted defined label `%s' instead of gamevar.\n",g_szScriptFileName,g_lineNumber,label+(i<<6));
 //                    bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
-//                    *g_scriptPtr++ = MAXGAMEVARS;
+//                    script[g_scriptPtr]++ = MAXGAMEVARS;
 //                    bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
-//                    *g_scriptPtr++ = labelcode[i];
+//                    script[g_scriptPtr]++ = labelcode[i];
 //                    return;
 //                }
 //            }
@@ -1867,7 +1866,7 @@ function C_GetNextKeyword(): number //Returns its code #
 //        initprintf("%s:%d: debug: accepted gamevar `%s'.\n",g_szScriptFileName,g_lineNumber,label+(g_numLabels<<6));
 
 //    bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
-//    *g_scriptPtr++=(i|f);
+//    script[g_scriptPtr]++=(i|f);
 //}
 
 //#define C_GetNextVar() C_GetNextVarType(0)
@@ -1886,7 +1885,7 @@ function C_GetNextKeyword(): number //Returns its code #
 ////   0 if literal value
 ////   LABEL_* (>0) if that type and matched
 ////
-//// *g_scriptPtr will contain the value OR 0 if wrong type or error
+//// script[g_scriptPtr] will contain the value OR 0 if wrong type or error
 //static int32_t C_GetNextValue(int32_t type)
 //{
 //    int32_t i, l;
@@ -1928,12 +1927,12 @@ function C_GetNextKeyword(): number //Returns its code #
 //            bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
 //            *(g_scriptPtr++) = labelcode[i];
 
-//            textptr += l;
+//            textptrIdx += l;
 //            return labeltype[i];
 //        }
 //        bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
 //        *(g_scriptPtr++) = 0;
-//        textptr += l;
+//        textptrIdx += l;
 //        el = (char *)C_GetLabelType(type);
 //        gl = (char *)C_GetLabelType(labeltype[i]);
 //        C_ReportError(-1);
@@ -1949,7 +1948,7 @@ function C_GetNextKeyword(): number //Returns its code #
 //        C_ReportError(ERROR_PARAMUNDEFINED);
 //        g_numCompilerErrors++;
 //        bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
-//        *g_scriptPtr = 0;
+//        script[g_scriptPtr] = 0;
 //        g_scriptPtr++;
 //        textptrIdx+=l;
 //        return -1; // error!
@@ -1979,17 +1978,17 @@ function C_GetNextKeyword(): number //Returns its code #
 //    bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
 
 //    if (tolower(textptr[textptrIdx+1])=='x')
-//        *g_scriptPtr = parse_hex_constant(textptr+2);
+//        script[g_scriptPtr] = parse_hex_constant(textptr+2);
 //    else
-//        *g_scriptPtr = parse_decimal_number();
+//        script[g_scriptPtr] = parse_decimal_number();
 
 //    if (!(g_numCompilerErrors || g_numCompilerWarnings) && g_scriptDebug > 1)
 //        initprintf("%s:%d: debug: accepted constant %ld.\n",
-//                   g_szScriptFileName,g_lineNumber,(long)*g_scriptPtr);
+//                   g_szScriptFileName,g_lineNumber,(long)script[g_scriptPtr]);
 
 //    g_scriptPtr++;
 
-//    textptr += l;
+//    textptrIdx += l;
 
 //    return 0;   // literal value
 //}
@@ -2089,66 +2088,69 @@ function C_GetNextKeyword(): number //Returns its code #
 //    return lCount;
 //}
 
-//static void C_Include(const char *confile)
-//{
-//    int32_t temp_ScriptLineNumber;
-//    int32_t temp_ifelse_check;
-//    int32_t j;
-//    char *origtptr, *mptr;
-//    char parentScriptFileName[255];
-//    int32_t fp;
+function C_Include(confile: string) :  void
+{
+    var temp_ScriptLineNumber: number;
+    var temp_ifelse_check: number;
+    var j: number;
+    var origtptr, origtptrIxd, mptr; //char *
+    var parentScriptFileName = "";//[255];
+    var fp: number;
 
-//    fp = kopen4loadfrommod(confile,g_loadFromGroupOnly);
-//    if (fp < 0)
-//    {
-//        g_numCompilerErrors++;
-//        initprintf("%s:%d: error: could not find file `%s'.\n",g_szScriptFileName,g_lineNumber,confile);
-//        return;
-//    }
+    fp = kopen4loadfrommod(confile,g_loadFromGroupOnly);
+    if (fp < 0)
+    {
+        g_numCompilerErrors++;
+        initprintf("%s:%d: error: could not find file `%s'.\n",g_szScriptFileName,g_lineNumber,confile);
+        return;
+    }
 
-//    j = kfilelength(fp);
+    j = kfilelength(fp);
 
-//    mptr = (char *)Bmalloc(j+1);
-//    if (!mptr)
-//    {
-//        kclose(fp);
-//        g_numCompilerErrors++;
-//        initprintf("%s:%d: error: could not allocate %d bytes to include `%s'.\n",
-//            g_szScriptFileName,g_lineNumber,j,confile);
-//        return;
-//    }
+    mptr = new Ptr(new Uint8Array(j+1));
+    if (!mptr)
+    {
+        kclose(fp);
+        g_numCompilerErrors++;
+        initprintf("%s:%d: error: could not allocate %d bytes to include `%s'.\n",
+            g_szScriptFileName,g_lineNumber,j,confile);
+        return;
+    }
 
-//    initprintf("Including: %s (%d bytes)\n",confile, j);
-//    kread(fp, mptr, j);
-//    kclose(fp);
-//    mptr[j] = 0;
+    initprintf("Including: %s (%d bytes)\n",confile, j);
+    kread(fp, mptr, j);
+    kclose(fp);
+    mptr.array[j] = 0;
+    debugger;
+    if (textptr[textptrIdx] == '"') // skip past the closing quote if it's there so we don't screw up the next line
+        textptrIdx++;
+    origtptr = textptr;
+    origtptrIxd = textptrIdx;
 
-//    if (textptr[textptrIdx] == '"') // skip past the closing quote if it's there so we don't screw up the next line
-//        textptrIdx++;
-//    origtptr = textptr;
+    parentScriptFileName = g_szScriptFileName;
+    g_szScriptFileName = confile;
+    temp_ScriptLineNumber = g_lineNumber;
+    g_lineNumber = 1;
+    temp_ifelse_check = g_checkingIfElse;
+    g_checkingIfElse = 0;
 
-//    Bstrcpy(parentScriptFileName, g_szScriptFileName);
-//    Bstrcpy(g_szScriptFileName, confile);
-//    temp_ScriptLineNumber = g_lineNumber;
-//    g_lineNumber = 1;
-//    temp_ifelse_check = g_checkingIfElse;
-//    g_checkingIfElse = 0;
+    textptr = mptr.array.toString();
+    textptrIdx = 0;
 
-//    textptr = mptr;
+    C_SkipComments();
 
-//    C_SkipComments();
+    C_ParseCommand(1);
 
-//    C_ParseCommand(1);
+    g_szScriptFileName = parentScriptFileName;
+    g_totalLines += g_lineNumber;
+    g_lineNumber = temp_ScriptLineNumber;
+    g_checkingIfElse = temp_ifelse_check;
 
-//    Bstrcpy(g_szScriptFileName, parentScriptFileName);
-//    g_totalLines += g_lineNumber;
-//    g_lineNumber = temp_ScriptLineNumber;
-//    g_checkingIfElse = temp_ifelse_check;
+    textptr = origtptr;
+    textptrIdx = origtptrIxd;
 
-//    textptr = origtptr;
-
-//    Bfree(mptr);
-//}
+    //Bfree(mptr);
+}
 //#endif  // !defined LUNATIC
 
 //#ifdef _WIN32
@@ -2528,7 +2530,7 @@ function C_GetNextKeyword(): number //Returns its code #
 //}
 
 //#if !defined LUNATIC
-function C_ParseCommand(loop): number
+function C_ParseCommand(loop: number): number
 {
     var i:number, j=0, k=0, tw:number, otw:number;
 ////    char *temptextptr;
@@ -2597,7 +2599,7 @@ function C_ParseCommand(loop): number
 //                {
 //                    if (!(g_numCompilerErrors || g_numCompilerWarnings) && g_scriptDebug > 1)
 //                        initprintf("%s:%d: debug: accepted state label `%s'.\n",g_szScriptFileName,g_lineNumber,label+(j<<6));
-//                    *g_scriptPtr = (intptr_t)(script+labelcode[j]);
+//                    script[g_scriptPtr] = (intptr_t)(script+labelcode[j]);
 
 //                    // 'state' type labels are always script addresses, as far as I can see
 //                    bitptr[(g_scriptPtr-script)>>3] |= (BITPTR_POINTER<<((g_scriptPtr-script)&7));
@@ -2712,7 +2714,7 @@ function C_ParseCommand(loop): number
 //                }
 
 //                bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
-//                *g_scriptPtr++=ProjectileLabels[lLabelID].lId;
+//                script[g_scriptPtr]++=ProjectileLabels[lLabelID].lId;
 
 //                //printf("member's flags are: %02Xh\n",PlayerLabels[lLabelID].flags);
 
@@ -2883,7 +2885,7 @@ function C_ParseCommand(loop): number
 //            while (j>-1)
 //            {
 //                bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
-//                *g_scriptPtr++ = 0;
+//                script[g_scriptPtr]++ = 0;
 //                j--;
 //            }
 //            continue;
@@ -2905,10 +2907,10 @@ function C_ParseCommand(loop): number
 //                {
 //                    C_GetNextValue(LABEL_DEFINE);
 //                    g_scriptPtr--;
-//                    j |= *g_scriptPtr;
+//                    j |= script[g_scriptPtr];
 //                }
 //                bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
-//                *g_scriptPtr = j;
+//                script[g_scriptPtr] = j;
 
 //                g_scriptPtr++;
 //            }
@@ -2952,7 +2954,7 @@ function C_ParseCommand(loop): number
 //                for (k=j; k>=0; k--)
 //                {
 //                    bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
-//                    *g_scriptPtr = 0;
+//                    script[g_scriptPtr] = 0;
 //                    g_scriptPtr++;
 //                }
 //            }
@@ -2968,7 +2970,7 @@ function C_ParseCommand(loop): number
 //                C_GetNextValue(LABEL_DEFINE); // Volume Number (0/4)
 //                g_scriptPtr--;
 
-//                k = *g_scriptPtr-1;
+//                k = script[g_scriptPtr]-1;
 
 //                if (k >= 0) // if it's background music
 //                {
@@ -2995,7 +2997,7 @@ function C_ParseCommand(loop): number
 
 //                        check_filename_case(tempbuf);
 
-//                        textptr += j;
+//                        textptrIdx += j;
 //                        if (i > MAXLEVELS-1) break;
 //                        i++;
 //                    }
@@ -3017,7 +3019,7 @@ function C_ParseCommand(loop): number
 
 //                        check_filename_case(EnvMusicFilename[i]);
 
-//                        textptr += j;
+//                        textptrIdx += j;
 //                        if (i > MAXVOLUMES-1) break;
 //                        i++;
 //                    }
@@ -3025,21 +3027,21 @@ function C_ParseCommand(loop): number
 //            }
 //            continue;
 
-//        case CON_INCLUDE:
-//            g_scriptPtr--;
+        case CON_INCLUDE:
+            g_scriptPtr--;
+            
+            C_SkipComments();
 
-//            C_SkipComments();
+            j = 0;
+            while (isaltok(textptr[textptrIdx]))
+            {
+                tempbuf[j] =  textptr.charCodeAt(textptrIdx++);
+                j++;
+            }
+            tempbuf[j] = '\0'.charCodeAt(0);
 
-//            j = 0;
-//            while (isaltok(textptr[textptrIdx]))
-//            {
-//                tempbuf[j] = *(textptrIdx++);
-//                j++;
-//            }
-//            tempbuf[j] = '\0';
-
-//            C_Include(tempbuf);
-//            continue;
+            C_Include(tempbuf.toString());
+            continue;
 
 //        case CON_INCLUDEDEFAULT:
 //            C_SkipComments();
@@ -3103,10 +3105,10 @@ function C_ParseCommand(loop): number
 //                        {
 //                            C_GetNextValue(LABEL_DEFINE);
 //                            g_scriptPtr--;
-//                            k |= *g_scriptPtr;
+//                            k |= script[g_scriptPtr];
 //                        }
 //                        bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
-//                        *g_scriptPtr = k;
+//                        script[g_scriptPtr] = k;
 //                        g_scriptPtr++;
 //                        j = 666;
 //                        break;
@@ -3119,7 +3121,7 @@ function C_ParseCommand(loop): number
 //                for (k=j; k<3; k++)
 //                {
 //                    bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
-//                    *g_scriptPtr = 0;
+//                    script[g_scriptPtr] = 0;
 //                    g_scriptPtr++;
 //                }
 //            }
@@ -3208,7 +3210,7 @@ function C_ParseCommand(loop): number
 
 //            if (tw == CON_USERACTOR)
 //            {
-//                j = *g_scriptPtr;
+//                j = script[g_scriptPtr];
 
 //                if (j > 6 || (j&3)==3)
 //                {
@@ -3224,7 +3226,7 @@ function C_ParseCommand(loop): number
 //            C_GetNextValue(LABEL_DEFINE);
 //            g_scriptPtr--;
 
-//            if ((unsigned)*g_scriptPtr >= MAXTILES)
+//            if ((unsigned)script[g_scriptPtr] >= MAXTILES)
 //            {
 //                C_ReportError(ERROR_EXCEEDSMAXTILES);
 //                g_numCompilerErrors++;
@@ -3233,23 +3235,23 @@ function C_ParseCommand(loop): number
 
 //            if (tw == CON_EVENTLOADACTOR)
 //            {
-//                g_tile[*g_scriptPtr].loadPtr = g_parsingActorPtr;
+//                g_tile[script[g_scriptPtr]].loadPtr = g_parsingActorPtr;
 //                g_checkingIfElse = 0;
 //                continue;
 //            }
 
-//            g_tile[*g_scriptPtr].execPtr = g_parsingActorPtr;
+//            g_tile[script[g_scriptPtr]].execPtr = g_parsingActorPtr;
 
 //            if (tw == CON_USERACTOR)
 //            {
 //                if (j & 1)
-//                    g_tile[*g_scriptPtr].flags |= SPRITE_BADGUY;
+//                    g_tile[script[g_scriptPtr]].flags |= SPRITE_BADGUY;
 
 //                if (j & 2)
-//                    g_tile[*g_scriptPtr].flags |= (SPRITE_BADGUY|SPRITE_BADGUYSTAYPUT);
+//                    g_tile[script[g_scriptPtr]].flags |= (SPRITE_BADGUY|SPRITE_BADGUYSTAYPUT);
 
 //                if (j & 4)
-//                    g_tile[*g_scriptPtr].flags |= SPRITE_ROTFIXED;
+//                    g_tile[script[g_scriptPtr]].flags |= SPRITE_ROTFIXED;
 //            }
 
 //            for (j=0; j<4; j++)
@@ -3263,10 +3265,10 @@ function C_ParseCommand(loop): number
 //                    {
 //                        C_GetNextValue(LABEL_DEFINE);
 //                        g_scriptPtr--;
-//                        j |= *g_scriptPtr;
+//                        j |= script[g_scriptPtr];
 //                    }
 //                    bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
-//                    *g_scriptPtr = j;
+//                    script[g_scriptPtr] = j;
 //                    g_scriptPtr++;
 //                    break;
 //                }
@@ -3334,7 +3336,7 @@ function C_ParseCommand(loop): number
 //            C_GetNextValue(LABEL_DEFINE);
 //            g_labelsOnly = 0;
 //            g_scriptPtr--;
-//            j= *g_scriptPtr;  // type of event
+//            j= script[g_scriptPtr];  // type of event
 //            g_currentEvent = j;
 //            //Bsprintf(g_szBuf,"Adding Event for %d at %lX",j, g_parsingEventPtr);
 //            //AddLog(g_szBuf);
@@ -3366,7 +3368,7 @@ function C_ParseCommand(loop): number
 //            while (C_GetKeyword() == -1 && j < 32)
 //                C_GetNextVar(), j++;
 
-//            *g_scriptPtr++ = CON_NULLOP + (g_lineNumber<<12);
+//            script[g_scriptPtr]++ = CON_NULLOP + (g_lineNumber<<12);
 //            continue;
 
 //        case CON_ESPAWN:
@@ -3536,7 +3538,7 @@ function C_ParseCommand(loop): number
 //                    continue;
 //                }
 //                bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
-//                *g_scriptPtr++=lLabelID;
+//                script[g_scriptPtr]++=lLabelID;
 
 //                // now at target VAR...
 
@@ -3666,7 +3668,7 @@ function C_ParseCommand(loop): number
 //                    continue;
 //                }
 //                bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
-//                *g_scriptPtr++=lLabelID;
+//                script[g_scriptPtr]++=lLabelID;
 
 //                // now at target VAR...
 
@@ -3729,7 +3731,7 @@ function C_ParseCommand(loop): number
 //                }
 
 //                bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
-//                *g_scriptPtr++=PlayerLabels[lLabelID].lId;
+//                script[g_scriptPtr]++=PlayerLabels[lLabelID].lId;
 
 //                //printf("member's flags are: %02Xh\n",PlayerLabels[lLabelID].flags);
 //                if (PlayerLabels[lLabelID].flags & LABEL_HASPARM2)
@@ -3805,7 +3807,7 @@ function C_ParseCommand(loop): number
 //                }
 
 //                bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
-//                *g_scriptPtr++=InputLabels[lLabelID].lId;
+//                script[g_scriptPtr]++=InputLabels[lLabelID].lId;
 
 //                // now at target VAR...
 
@@ -3855,7 +3857,7 @@ function C_ParseCommand(loop): number
 //                    continue;
 //                }
 //                bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
-//                *g_scriptPtr++=lLabelID;
+//                script[g_scriptPtr]++=lLabelID;
 
 //                // now at target VAR...
 
@@ -3982,7 +3984,7 @@ function C_ParseCommand(loop): number
 //                }
 
 //                bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
-//                *g_scriptPtr++=i; // the ID of the DEF (offset into array...)
+//                script[g_scriptPtr]++=i; // the ID of the DEF (offset into array...)
 
 //                switch (tw)
 //                {
@@ -4050,7 +4052,7 @@ function C_ParseCommand(loop): number
 //                }
 
 //                bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
-//                *g_scriptPtr++=ActorLabels[lLabelID].lId;
+//                script[g_scriptPtr]++=ActorLabels[lLabelID].lId;
 
 //                //printf("member's flags are: %02Xh\n",ActorLabels[lLabelID].flags);
 //                if (ActorLabels[lLabelID].flags & LABEL_HASPARM2)
@@ -4129,7 +4131,7 @@ function C_ParseCommand(loop): number
 //                }
 
 //                bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
-//                *g_scriptPtr++=TsprLabels[lLabelID].lId;
+//                script[g_scriptPtr]++=TsprLabels[lLabelID].lId;
 
 //                //printf("member's flags are: %02Xh\n",ActorLabels[lLabelID].flags);
 
@@ -4203,7 +4205,7 @@ function C_ParseCommand(loop): number
 //            //printf("We are enhanced, baby...\n");
 //            C_GetNextValue(LABEL_DEFINE);
 //            g_scriptPtr--;
-//            if (*g_scriptPtr > BYTEVERSION_JF)
+//            if (script[g_scriptPtr] > BYTEVERSION_JF)
 //            {
 //                g_numCompilerWarnings++;
 //                initprintf("%s:%d: warning: need build %d, found build %d\n",g_szScriptFileName,g_lineNumber,k,BYTEVERSION_JF);
@@ -4302,7 +4304,7 @@ function C_ParseCommand(loop): number
 //                        if (i == j)
 //                            continue;
 
-//                        *g_scriptPtr++ = CON_INV+(g_lineNumber<<12);
+//                        script[g_scriptPtr]++ = CON_INV+(g_lineNumber<<12);
 //                        textptr = tptr;
 //                        C_GetNextVarType(GAMEVAR_READONLY);
 //                        C_GetNextValue(LABEL_DEFINE);
@@ -4319,7 +4321,7 @@ function C_ParseCommand(loop): number
 //            if (i > (-1))
 //            {
 //                bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
-//                *g_scriptPtr++=i;
+//                script[g_scriptPtr]++=i;
 //            }
 //            else
 //            {
@@ -4335,7 +4337,7 @@ function C_ParseCommand(loop): number
 //            if (i > (-1))
 //            {
 //                bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
-//                *g_scriptPtr++=i;
+//                script[g_scriptPtr]++=i;
 //            }
 //            else
 //            {
@@ -4367,7 +4369,7 @@ function C_ParseCommand(loop): number
 //            if (i > (-1))
 //            {
 //                bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
-//                *g_scriptPtr++=i;
+//                script[g_scriptPtr]++=i;
 
 //                if (aGameArrays[i].dwFlags & GAMEARRAY_READONLY)
 //                {
@@ -4409,7 +4411,7 @@ function C_ParseCommand(loop): number
 //            if (i >= 0)
 //            {
 //                bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
-//                *g_scriptPtr++ = i;
+//                script[g_scriptPtr]++ = i;
 //                if (tw==CON_RESIZEARRAY && (aGameArrays[i].dwFlags & GAMEARRAY_TYPE_MASK))
 //                {
 //                    C_ReportError(-1);
@@ -4509,7 +4511,7 @@ function C_ParseCommand(loop): number
 //        case CON_ACTIVATE:
 //            *(g_scriptPtr-1) = CON_OPERATEACTIVATORS;
 //            C_GetNextValue(LABEL_DEFINE);
-//            *g_scriptPtr++ = 0;
+//            script[g_scriptPtr]++ = 0;
 //            continue;
 
 //        case CON_DRAGPOINT:
@@ -4561,7 +4563,7 @@ function C_ParseCommand(loop): number
 
 //                C_GetNextValue(LABEL_DEFINE);
 //                g_scriptPtr--;
-//                j = *g_scriptPtr;
+//                j = script[g_scriptPtr];
 
 //                C_GetNextValue(LABEL_DEFINE);
 //                g_scriptPtr--;
@@ -4573,7 +4575,7 @@ function C_ParseCommand(loop): number
 //                    continue;
 //                }
 
-//                g_tile[j].flags = *g_scriptPtr;
+//                g_tile[j].flags = script[g_scriptPtr];
 
 //                continue;
 //            }
@@ -4595,7 +4597,7 @@ function C_ParseCommand(loop): number
 
 //            C_GetNextValue(LABEL_DEFINE);
 //            g_scriptPtr--;
-//            j = *g_scriptPtr;
+//            j = script[g_scriptPtr];
 
 //            if ((unsigned)j >= MAXTILES)
 //            {
@@ -4607,21 +4609,21 @@ function C_ParseCommand(loop): number
 //            switch (tw)
 //            {
 //            case CON_SPRITESHADOW:
-//                g_tile[*g_scriptPtr].flags |= SPRITE_SHADOW;
+//                g_tile[script[g_scriptPtr]].flags |= SPRITE_SHADOW;
 //                break;
 //            case CON_SPRITENVG:
-//                g_tile[*g_scriptPtr].flags |= SPRITE_NVG;
+//                g_tile[script[g_scriptPtr]].flags |= SPRITE_NVG;
 //                break;
 //            case CON_SPRITENOSHADE:
-//                g_tile[*g_scriptPtr].flags |= SPRITE_NOSHADE;
+//                g_tile[script[g_scriptPtr]].flags |= SPRITE_NOSHADE;
 //                break;
 //            case CON_SPRITENOPAL:
-//                g_tile[*g_scriptPtr].flags |= SPRITE_NOPAL;
+//                g_tile[script[g_scriptPtr]].flags |= SPRITE_NOPAL;
 //                break;
 //            case CON_PRECACHE:
 //                C_GetNextValue(LABEL_DEFINE);
 //                g_scriptPtr--;
-//                i = *g_scriptPtr;
+//                i = script[g_scriptPtr];
 //                if ((unsigned)i >= MAXTILES)
 //                {
 //                    C_ReportError(ERROR_EXCEEDSMAXTILES);
@@ -4631,7 +4633,7 @@ function C_ParseCommand(loop): number
 
 //                C_GetNextValue(LABEL_DEFINE);
 //                g_scriptPtr--;
-//                if (*g_scriptPtr)
+//                if (script[g_scriptPtr])
 //                    g_tile[j].flags |= SPRITE_CACHE;                
 
 //                break;
@@ -4934,12 +4936,12 @@ function C_ParseCommand(loop): number
 //                tempscrptr= g_scriptPtr;
 //                tempoffset = (unsigned)(tempscrptr-script);
 //                bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
-//                *g_scriptPtr++=0; // leave spot for end location (for after processing)
+//                script[g_scriptPtr]++=0; // leave spot for end location (for after processing)
 //                bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
-//                *g_scriptPtr++=0; // count of case statements
+//                script[g_scriptPtr]++=0; // count of case statements
 //                g_caseScriptPtr=g_scriptPtr;        // the first case's pointer.
 //                bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
-//                *g_scriptPtr++=0; // leave spot for 'default' location (null if none)
+//                script[g_scriptPtr]++=0; // leave spot for 'default' location (null if none)
 
 ////                temptextptr=textptr;
 //                // probably does not allow nesting...
@@ -4972,9 +4974,9 @@ function C_ParseCommand(loop): number
 //                {
 //                    // leave room for statements
 //                    bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
-//                    *g_scriptPtr++=0; // value check
+//                    script[g_scriptPtr]++=0; // value check
 //                    bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
-//                    *g_scriptPtr++=0; // code offset
+//                    script[g_scriptPtr]++=0; // code offset
 //                    C_SkipComments();
 //                }
 
@@ -5193,7 +5195,7 @@ function C_ParseCommand(loop): number
 //            // syntax: addlog
 
 //            // prints the line number in the log file.
-//            /*        *g_scriptPtr=g_lineNumber;
+//            /*        script[g_scriptPtr]=g_lineNumber;
 //            g_scriptPtr++; */
 //            continue;
 
@@ -5254,11 +5256,11 @@ function C_ParseCommand(loop): number
 //                    {
 //                        C_GetNextValue(LABEL_DEFINE);
 //                        g_scriptPtr--;
-//                        j |= *g_scriptPtr;
+//                        j |= script[g_scriptPtr];
 //                    }
 //                    while (C_GetKeyword() == -1);
 //                    bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
-//                    *g_scriptPtr = j;
+//                    script[g_scriptPtr] = j;
 //                    g_scriptPtr++;
 //                    break;
 //                case CON_IFSOUND:
@@ -5406,7 +5408,7 @@ function C_ParseCommand(loop): number
 
 //            C_GetNextValue(LABEL_DEFINE);
 //            g_scriptPtr--;
-//            j = *g_scriptPtr;
+//            j = script[g_scriptPtr];
 //            C_SkipComments();
 
 //            if (j < 0 || j > MAXVOLUMES-1)
@@ -5441,7 +5443,7 @@ function C_ParseCommand(loop): number
 //            g_scriptPtr--;
 //            C_GetNextValue(LABEL_DEFINE);
 //            g_scriptPtr--;
-//            j = *g_scriptPtr;
+//            j = script[g_scriptPtr];
 //            C_SkipComments();
 
 //            if (j < 0 || j > NUMGAMEFUNCTIONS-1)
@@ -5493,7 +5495,7 @@ function C_ParseCommand(loop): number
 
 //            C_GetNextValue(LABEL_DEFINE);
 //            g_scriptPtr--;
-//            j = *g_scriptPtr;
+//            j = script[g_scriptPtr];
 //            C_SkipComments();
 
 //            if (j < 0 || j >= MAXSKILLS)
@@ -5652,11 +5654,11 @@ function C_ParseCommand(loop): number
 //            g_scriptPtr--;
 //            C_GetNextValue(LABEL_DEFINE);
 //            g_scriptPtr--;
-//            j = *g_scriptPtr;
+//            j = script[g_scriptPtr];
 
 //            C_GetNextValue(LABEL_DEFINE);
 //            g_scriptPtr--;
-//            GametypeFlags[j] = *g_scriptPtr;
+//            GametypeFlags[j] = script[g_scriptPtr];
 
 //            C_SkipComments();
 
@@ -5691,10 +5693,10 @@ function C_ParseCommand(loop): number
 //            g_scriptPtr--;
 //            C_GetNextValue(LABEL_DEFINE);
 //            g_scriptPtr--;
-//            j = *g_scriptPtr;
+//            j = script[g_scriptPtr];
 //            C_GetNextValue(LABEL_DEFINE);
 //            g_scriptPtr--;
-//            k = *g_scriptPtr;
+//            k = script[g_scriptPtr];
 //            C_SkipComments();
 
 //            if (j < 0 || j > MAXVOLUMES-1)
@@ -5745,7 +5747,7 @@ function C_ParseCommand(loop): number
 //                (((textptr[textptrIdx+0]-'0')*10+(textptr[textptrIdx+1]-'0'))*REALGAMETICSPERSEC*60)+
 //                (((textptr[textptrIdx+3]-'0')*10+(textptr[textptrIdx+4]-'0'))*REALGAMETICSPERSEC);
 
-//            textptr += 5;
+//            textptrIdx += 5;
 //            while (textptr[textptrIdx] == ' '  || textptr[textptrIdx] == '\t') textptrIdx++;
 
 //            // cheap hack, 0.99 doesn't have the 3D Realms time
@@ -5755,7 +5757,7 @@ function C_ParseCommand(loop): number
 //                    (((textptr[textptrIdx+0]-'0')*10+(textptr[textptrIdx+1]-'0'))*REALGAMETICSPERSEC*60)+
 //                    (((textptr[textptrIdx+3]-'0')*10+(textptr[textptrIdx+4]-'0'))*REALGAMETICSPERSEC);
 
-//                textptr += 5;
+//                textptrIdx += 5;
 //                while (textptr[textptrIdx] == ' '  || textptr[textptrIdx] == '\t') textptrIdx++;
 //            }
 //            else if (g_scriptVersion == 10) g_scriptVersion = 9;
@@ -5863,7 +5865,7 @@ function C_ParseCommand(loop): number
 //            {
 //                *(ScriptQuoteRedefinitions[g_numQuoteRedefinitions]+i) = '\0';
 //                bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
-//                *g_scriptPtr++=g_numQuoteRedefinitions;
+//                script[g_scriptPtr]++=g_numQuoteRedefinitions;
 //                g_numQuoteRedefinitions++;
 //            }
 //            continue;
@@ -6107,7 +6109,7 @@ function C_ParseCommand(loop): number
 //                {
 //                    C_GetNextValue(LABEL_DEFINE);
 //                    g_scriptPtr--;
-//                    params[j] = *g_scriptPtr;
+//                    params[j] = script[g_scriptPtr];
 
 //                    if (j != 12 && j != 21 && j != 25) continue;
 
@@ -6419,7 +6421,7 @@ function C_Compile(filenam: string) : void
     mptr.array[fs] = 0;
 
     kread(fp,mptr,fs);
-    textptr = mptr.array.asString();
+    textptr = mptr.array.toString();
     textptrIdx = 0;
     kclose(fp);
     

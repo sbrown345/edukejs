@@ -85,7 +85,7 @@ test("strcmp", function () {
 });
 
 test("uint8array string conversions", function () {
-    strictEqual("abc".toUint8Array().asString(), "abc", "'abc' is returned");
+    strictEqual("abc".toUint8Array().toString(), "abc", "'abc' is returned");
 });
 
 // duke funcs
