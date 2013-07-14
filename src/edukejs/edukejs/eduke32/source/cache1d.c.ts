@@ -810,7 +810,6 @@ function initgroupfile(filename : string) : number
 
 function kopen4load(filename: string, /*char*/ searchfirst: number) : number
 {
-    assert.uint8(searchfirst);
     var j, k, fil, newhandle = MAXOPENFILES-1;
     var bad, gfileptr;
     var i;
@@ -902,7 +901,7 @@ function kopen4load(filename: string, /*char*/ searchfirst: number) : number
 //        return newhandle;
 //    }
 //#endif
-    debugger;
+    
     for (k=numgroupfiles-1; k>=0; k--)
     {
         if (searchfirst == 1) k = 0;
@@ -936,13 +935,13 @@ function kopen4load(filename: string, /*char*/ searchfirst: number) : number
     return(-1);
 }
 
-//int32_t kread(int32_t handle, void *buffer, int32_t leng)
-//{
-//    int32_t i;
-//    int32_t filenum = filehan[handle];
-//    int32_t groupnum = filegrp[handle];
+function kread(handle: number, buffer: Ptr, leng : number) : number
+{
+    var i;
+    var filenum = filehan[handle];
+    var groupnum = filegrp[handle];
 
-//    if (groupnum == 255) return(Bread(filenum,buffer,leng));
+    if (groupnum == 255) return(Bread(filenum,buffer,leng));
 //#ifdef WITHKPLIB
 //    else if (groupnum == 254)
 //    {
@@ -957,23 +956,23 @@ function kopen4load(filename: string, /*char*/ searchfirst: number) : number
 //    }
 //#endif
 
-//    if (groupfil[groupnum] != -1)
-//    {
-//        i = gfileoffs[groupnum][filenum]+filepos[handle];
-//        if (i != groupfilpos[groupnum])
-//        {
-//            Blseek(groupfil[groupnum],i+((gnumfiles[groupnum]+1)<<4),BSEEK_SET);
-//            groupfilpos[groupnum] = i;
-//        }
-//        leng = min(leng,(gfileoffs[groupnum][filenum+1]-gfileoffs[groupnum][filenum])-filepos[handle]);
-//        leng = Bread(groupfil[groupnum],buffer,leng);
-//        filepos[handle] += leng;
-//        groupfilpos[groupnum] += leng;
-//        return(leng);
-//    }
+    if (groupfil[groupnum] != -1)
+    {
+        i = gfileoffs[groupnum][filenum]+filepos[handle];
+        if (i != groupfilpos[groupnum])
+        {
+            Blseek(groupfil[groupnum],i+((gnumfiles[groupnum]+1)<<4),BSEEK_SET);
+            groupfilpos[groupnum] = i;
+        }
+        leng = min(leng,(gfileoffs[groupnum][filenum+1]-gfileoffs[groupnum][filenum])-filepos[handle]);
+        leng = Bread(groupfil[groupnum],buffer,leng);
+        filepos[handle] += leng;
+        groupfilpos[groupnum] += leng;
+        return(leng);
+    }
 
-//    return(0);
-//}
+    return(0);
+}
 
 //int32_t klseek(int32_t handle, int32_t offset, int32_t whence)
 //{
@@ -1016,7 +1015,7 @@ function kopen4load(filename: string, /*char*/ searchfirst: number) : number
 
 function kfilelength(handle : number) : number
 {
-    assert.isInt32(handle);
+    assert.int32(handle);
 
     var i, groupnum;
 
@@ -1066,10 +1065,10 @@ function kfilelength(handle : number) : number
 //    return(-1);
 //}
 
-//void kclose(int32_t handle)
-//{
-//    if (handle < 0) return;
-//    if (filegrp[handle] == 255) Bclose(filehan[handle]);
+function kclose(handle: number): void
+{
+    if (handle < 0) return;
+    if (filegrp[handle] == 255) Bclose(filehan[handle]);
 //#ifdef WITHKPLIB
 //    else if (filegrp[handle] == 254)
 //    {
@@ -1077,8 +1076,8 @@ function kfilelength(handle : number) : number
 //        kzcurhand = -1;
 //    }
 //#endif
-//    filehan[handle] = -1;
-//}
+    filehan[handle] = -1;
+}
 
 //static int32_t klistaddentry(CACHE1D_FIND_REC **rec, const char *name, int32_t type, int32_t source)
 //{

@@ -94,25 +94,25 @@ var tempbuf = new Uint8Array(MAXSECTORS<<1),packbuf = new Uint8Array(PACKBUF_SIZ
 //G_EXTERN int16_t neartagsector,neartagwall,neartagsprite;
 //G_EXTERN int32_t *animateptr[MAXANIMATES];
 //G_EXTERN int32_t animategoal[MAXANIMATES],animatevel[MAXANIMATES],g_animateCount;
-//G_EXTERN int32_t cloudtotalclock;
-//G_EXTERN int32_t fricxv,fricyv;
-//G_EXTERN int32_t g_currentFrameRate;
-//G_EXTERN int32_t g_currentMenu;
-//G_EXTERN int32_t g_damageCameras,g_freezerSelfDamage;
-//G_EXTERN int32_t g_doQuickSave;
-//G_EXTERN uint16_t g_earthquakeTime;
-//G_EXTERN int32_t g_gameQuit;
-//G_EXTERN int32_t g_groupFileHandle;
-//G_EXTERN int32_t g_impactDamage,g_maxPlayerHealth;
-//G_EXTERN int32_t g_musicSize;
-//G_EXTERN int32_t g_numLabels,g_numDefaultLabels;
-//G_EXTERN int32_t g_numRealPalettes;
-//G_EXTERN int32_t g_scriptDebug;
-//G_EXTERN int32_t g_showShareware;
-//G_EXTERN int8_t g_numPlayerSprites;
-//G_EXTERN int32_t g_tripbombLaserMode;
-//G_EXTERN int32_t msx[2048],msy[2048];
-//G_EXTERN int32_t neartaghitdist,lockclock,g_startArmorAmount;
+//G_EXTERN int32_t cloudtotalclock:number;
+var fricxv:number,fricyv:number;                             //G_EXTERN int32_t 
+var g_currentFrameRate:number;                               //G_EXTERN int32_t 
+var g_currentMenu:number;                                    //G_EXTERN int32_t 
+var g_damageCameras:number,g_freezerSelfDamage:number;       //G_EXTERN int32_t 
+var g_doQuickSave:number;                                    //G_EXTERN int32_t 
+var g_earthquakeTime:number;                                 //G_EXTERN uint16_t
+var g_gameQuit:number;                                       //G_EXTERN int32_t 
+var g_groupFileHandle:number;                                //G_EXTERN int32_t 
+var g_impactDamage:number,g_maxPlayerHealth:number;          //G_EXTERN int32_t 
+var g_musicSize:number;                                      //G_EXTERN int32_t 
+var g_numLabels:number,g_numDefaultLabels:number;
+//G_EXTERN int32_t g_numRealPalettes:number;
+var g_scriptDebug:number; //G_EXTERN int32_t 
+//G_EXTERN int32_t g_showShareware:number;
+//G_EXTERN int8_t g_numPlayerSprites:number;
+//G_EXTERN int32_t g_tripbombLaserMode:number;
+//G_EXTERN int32_t msx[2048]:number,msy[2048]:number;
+//G_EXTERN int32_t neartaghitdist:number,lockclock:number,g_startArmorAmount:number;
 var playerswhenstarted : number; ////G_EXTERN int32_t
 //G_EXTERN int32_t screenpeek;
 //G_EXTERN int32_t startofdynamicinterpolations;
@@ -120,7 +120,8 @@ var playerswhenstarted : number; ////G_EXTERN int32_t
 //G_EXTERN intptr_t *g_parsingActorPtr;
 //G_EXTERN intptr_t *g_scriptPtr,*insptr;
 var labelcode: number, labeltype: number;//G_EXTERN int32_t *labelcode,*labeltype;
-//G_EXTERN intptr_t *script;
+var script:  Uint32Array;//G_EXTERN intptr_t *script;
+var scriptIdx: number = 0;
 //G_EXTERN map_t MapInfo[(MAXVOLUMES+1)*MAXLEVELS];  // +1 volume for "intro", "briefing" music
 //#pragma pack(push,1)
 //G_EXTERN playerdata_t g_player[MAXPLAYERS];
@@ -152,7 +153,7 @@ var labelcode: number, labeltype: number;//G_EXTERN int32_t *labelcode,*labeltyp
 //G_EXTERN int32_t g_timerTicsPerSecond;
 //G_EXTERN int32_t g_actorRespawnTime;
 //G_EXTERN int32_t g_itemRespawnTime;
-//G_EXTERN int32_t g_scriptSize;
+var g_scriptSize: number;
 //G_EXTERN int16_t BlimpSpawnSprites[15];
 //G_EXTERN int32_t g_playerFriction;
 //G_EXTERN int32_t g_numFreezeBounces;

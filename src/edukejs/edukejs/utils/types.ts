@@ -61,7 +61,7 @@ class R<T> {
 }
 
 interface String {
-  toUint8Array: () => Uint8Array; // <-- Whatever signature you want.
+  toUint8Array: () => Uint8Array;
 }
 
 String.prototype.toUint8Array = function () : Uint8Array {
@@ -71,4 +71,17 @@ String.prototype.toUint8Array = function () : Uint8Array {
     }
 
     return array;
+}
+
+interface Uint8Array {
+  asString: () => string;
+}
+
+Uint8Array.prototype.asString = function () : string {
+    var str = "";
+    for (var i = 0; i < this.length; i++) {
+        str = String.fromCharCode(this[i]);
+    }
+
+    return str;
 }

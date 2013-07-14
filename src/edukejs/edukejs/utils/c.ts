@@ -50,6 +50,20 @@ function _open(path: string, oflags: number, mode: number): number {
     return 4; // it happened to be 4 debugging the original
 }
 
+function lseek(fileHandle: number, offset: number, origin: number) : void {
+    var source = fileHandles[fileHandle]; 
+    switch(origin) {
+        case BSEEK_SET:
+            source.idx = offset;
+            break;
+        default:
+            todoThrow();
+    }
+}
+
+var min = Math.min;
+var ma = Math.max;
+
 function memcmp(buf1 : Uint8Array, buf2 : Uint8Array, count : number) : number {
     for (var i = 0; i < count; i++) {
         if(buf1[i] === buf2[i]) {
@@ -111,6 +125,19 @@ function sizeof(obj: any) : number {
     }
     
     return obj.buffer.byteLength;
+}
+
+function strcmp(str1: string, str2: string) : number {
+    assert.isString(str1).isString(str2);
+    if (str1 == str2) {
+        return 0;
+    }
+
+    if(str1 > str2) {
+        return 1;
+    }
+
+    return -1;
 }
 
 function strcpy(destination: Uint8Array, source: string) : void {

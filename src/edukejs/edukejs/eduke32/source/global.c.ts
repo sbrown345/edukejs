@@ -109,7 +109,7 @@ var ud = new user_defs();
 //int32_t g_bouncemineBlastRadius = 2500;
 //int32_t g_seenineBlastRadius = 2048;
 
-//int32_t g_scriptSize = 1048576;
+g_scriptSize = 1048576;
 
 //int16_t BlimpSpawnSprites[15] =
 //{

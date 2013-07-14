@@ -426,9 +426,9 @@ var BS_IREAD = 0x0100;//S_IREAD;
 //# define BS_IFBLK  S_IFBLK
 //# define BS_IFDIR  S_IFDIR
 //# define BS_IFREG  S_IFREG
-//# define BSEEK_SET SEEK_SET
-//# define BSEEK_CUR SEEK_CUR
-//# define BSEEK_END SEEK_END
+var BSEEK_SET = 0;//SEEK_SET
+var BSEEK_CUR = 1;//SEEK_CUR
+var BSEEK_END = 2;//SEEK_END
 //#else
 //# define BO_BINARY 0
 //# define BO_TEXT   1
@@ -540,7 +540,7 @@ var Bopen = _open;
 var Bclose = _close
 //# define Bwrite write
 var Bread = read;
-//# define Blseek lseek
+var Blseek = lseek;
 //# if defined(__GNUC__)
 //#  define Btell(h) lseek(h,0,SEEK_CUR)
 //# else
@@ -573,7 +573,7 @@ var Bread = read;
 //# define Bputs puts
 var Bstrcpy = strcpy
 //# define Bstrncpy strncpy
-//# define Bstrcmp strcmp
+var Bstrcmp = strcmp;
 //# define Bstrncmp strncmp
 //# if defined(_MSC_VER) 
 //#  define Bstrcasecmp _stricmp

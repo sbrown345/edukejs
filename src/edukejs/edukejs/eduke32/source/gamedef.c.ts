@@ -142,14 +142,14 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //};
 //#endif
 
-//char g_szScriptFileName[BMAX_PATH] = "(none)";  // file we're currently compiling
+var g_szScriptFileName = "(none)";  // file we're currently compiling  //char g_szScriptFileName[BMAX_PATH] 
 
-//int32_t g_totalLines,g_lineNumber;
+var g_totalLines:number,g_lineNumber:number;//int32_t 
 //char g_szBuf[1024];
 
 //#if !defined LUNATIC
-//static char g_szCurrentBlockName[256] = "(none)", g_szLastBlockName[256] = "NULL";
-//static int32_t g_checkingIfElse, g_processingState, g_lastKeyword = -1;
+var g_szCurrentBlockName/*[256]*/ = "(none)", g_szLastBlockName/*[256]*/ = "NULL";
+var g_checkingIfElse, g_processingState, g_lastKeyword = -1;//static int32_t 
 
 //// The pointer to the start of the case table in a switch statement.
 //// First entry is 'default' code.
@@ -158,7 +158,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //static int32_t g_numCases = 0;
 //static int32_t g_checkingSwitch = 0, g_currentEvent = -1;
 //static int32_t g_labelsOnly = 0, g_skipKeywordCheck = 0, g_dynamicTileMapping = 0, g_dynamicSoundMapping = 0;
-//static int32_t g_numBraces = 0;
+var g_numBraces = 0;////static int32_t 
 
 //static int32_t C_ParseCommand(int32_t loop);
 //static int32_t C_SetScriptSize(int32_t size);
@@ -210,17 +210,18 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 var apScriptGameEvent: Int32Array = new Int32Array(MAXGAMEEVENTS);
 
 //#if !defined LUNATIC
-//static intptr_t *g_parsingEventPtr=NULL;
+var g_parsingEventPtr: number = NULL; ////static intptr_t *
 
 aGameVars = newStructArray(gamevar_t, MAXGAMEVARS);
 aGameArrays = newStructArray(gamearray_t, MAXGAMEARRAYS);
 //int32_t g_gameVarCount=0;
 //int32_t g_gameArrayCount=0;
 
-//static char *textptr;
+var textptr : string; //static char *
+var textptrIdx: number;
 //#endif
 
-//int32_t g_numCompilerErrors,g_numCompilerWarnings;
+var g_numCompilerErrors:number,g_numCompilerWarnings:number; ///int32_t 
 
 //extern int32_t g_maxSoundPos;
 
@@ -1208,7 +1209,7 @@ aGameArrays = newStructArray(gamearray_t, MAXGAMEARRAYS);
 
 //#endif
 
-//char *bitptr; // pointer to bitmap of which bytecode positions contain pointers
+var bitptr: Uint8Array; // pointer to bitmap of which bytecode positions contain pointers //char *
 //#define BITPTR_POINTER 1
 
 //#if !defined LUNATIC
@@ -1281,8 +1282,9 @@ function C_InitHashes(): void
 //#define IFELSE_MAGIC 31337
 //static int32_t g_ifElseAborted;
 
-//static int32_t C_SetScriptSize(int32_t newsize)
-//{
+function C_SetScriptSize(/*int32_t*/ newsize: number) : number
+{
+    todoThrow();
 //    intptr_t oscriptPtr = (unsigned)(g_scriptPtr-script);
 //    intptr_t ocaseScriptPtr = (unsigned)(g_caseScriptPtr-script);
 //    intptr_t oparsingEventPtr = (unsigned)(g_parsingEventPtr-script);
@@ -1369,84 +1371,90 @@ function C_InitHashes(): void
 //    G_Util_PtrToIdx(apScriptGameEvent, MAXGAMEEVENTS, script, P2I_BACK_NON0);
 
 //    Bfree(scriptptrs);
-//    return 0;
-//}
+    return 0;
+}
 
-//static int32_t ispecial(const char c)
-//{
-//    if (c == ' ' || c == 0x0d || c == '(' || c == ')' ||
-//            c == ',' || c == ';' || (c == 0x0a /*&& ++g_lineNumber*/))
-//        return 1;
+function ispecial(/*const char */c: string) : number
+{
+    assert.areEqual(1, c.length).isString(c);
+    if (c == ' ' || c.charCodeAt(0) == 0x0d || c == '(' || c == ')' ||
+            c == ',' || c == ';' || (c.charCodeAt(0) == 0x0a /*&& ++g_lineNumber*/))
+        return 1;
 
-//    return 0;
-//}
+    return 0;
+}
 
-//#define C_NextLine() while (*textptr != 0x0a && *textptr != 0x0d && *textptr != 0) textptr++
+//#define C_NextLine() while (textptr[textptrIdx] != 0x0a && textptr[textptrIdx] != 0x0d && textptr[textptrIdx] != 0) textptrIdx++
+function C_NextLine() {
+     while (textptr[textptrIdx] != 0x0a && textptr[textptrIdx] != 0x0d && textptr[textptrIdx] != 0) 
+         textptrIdx++
+}
 
-//static int32_t C_SkipComments(void)
-//{
-//    do
-//    {
-//        switch (*textptr)
-//        {
-//        case '\n':
-//            g_lineNumber++;
-//        case ' ':
-//        case '\t':
-//        case '\r':
-//        case 0x1a:
-//            textptr++;
-//            break;
-//        case '/':
-//            switch (textptr[1])
-//            {
-//            case '/': // C++ style comment
-//                if (!(g_numCompilerErrors || g_numCompilerWarnings) && g_scriptDebug > 1)
-//                    initprintf("%s:%d: debug: got comment.\n",g_szScriptFileName,g_lineNumber);
-//                C_NextLine();
-//                continue;
-//            case '*': // beginning of a C style comment
-//                if (!(g_numCompilerErrors || g_numCompilerWarnings) && g_scriptDebug > 1)
-//                    initprintf("%s:%d: debug: got start of comment block.\n",g_szScriptFileName,g_lineNumber);
-//                do
-//                {
-//                    if (*textptr == '\n')
-//                        g_lineNumber++;
-//                    textptr++;
-//                }
-//                while (*textptr && (textptr[0] != '*' || textptr[1] != '/'));
+function C_SkipComments() : number
+{
+    do
+    {
+        switch (textptr[textptrIdx])
+        {
+        case '\n':
+            g_lineNumber++;
+        case ' ':
+        case '\t':
+        case '\r':
+        case 0x1a:
+            textptrIdx++;
+            break;
+        case '/':
+            switch (textptr[1])
+            {
+            case '/': // C++ style comment
+                if (!(g_numCompilerErrors || g_numCompilerWarnings) && g_scriptDebug > 1)
+                    initprintf("%s:%d: debug: got comment.\n",g_szScriptFileName,g_lineNumber);
+                C_NextLine();
+                continue;
+            case '*': // beginning of a C style comment
+                if (!(g_numCompilerErrors || g_numCompilerWarnings) && g_scriptDebug > 1)
+                    initprintf("%s:%d: debug: got start of comment block.\n",g_szScriptFileName,g_lineNumber);
+                do
+                {
+                    if (textptr[textptrIdx] == '\n')
+                        g_lineNumber++;
+                    textptrIdx++;
+                }
+                while (textptr[textptrIdx] && (textptr[0] != '*' || textptr[1] != '/'));
 
-//                if (!*textptr)
-//                {
-//                    if (!(g_numCompilerErrors || g_numCompilerWarnings) && g_scriptDebug)
-//                        initprintf("%s:%d: debug: EOF in comment!\n",g_szScriptFileName,g_lineNumber);
-//                    C_ReportError(-1);
-//                    initprintf("%s:%d: error: found `/*' with no `*/'.\n",g_szScriptFileName,g_lineNumber);
-//                    g_parsingActorPtr = NULL; g_processingState = g_numBraces = 0;
-//                    g_numCompilerErrors++;
-//                    continue;
-//                }
+                if (!textptr[textptrIdx])
+                {
+                    if (!(g_numCompilerErrors || g_numCompilerWarnings) && g_scriptDebug)
+                        initprintf("%s:%d: debug: EOF in comment!\n",g_szScriptFileName,g_lineNumber);
+                    C_ReportError(-1);
+                    initprintf("%s:%d: error: found `/*' with no `*/'.\n",g_szScriptFileName,g_lineNumber);
+                    g_parsingActorPtr = NULL; g_processingState = g_numBraces = 0;
+                    g_numCompilerErrors++;
+                    continue;
+                }
 
-//                if (!(g_numCompilerErrors || g_numCompilerWarnings) && g_scriptDebug > 1)
-//                    initprintf("%s:%d: debug: got end of comment block.\n",g_szScriptFileName,g_lineNumber);
+                if (!(g_numCompilerErrors || g_numCompilerWarnings) && g_scriptDebug > 1)
+                    initprintf("%s:%d: debug: got end of comment block.\n",g_szScriptFileName,g_lineNumber);
 
-//                textptr+=2;
-//                continue;
-//            }
-//            continue;
+                textptrIdx+=2;
+                continue;
+            }
+            continue;
 
-//        default:
-//            if (ispecial(*textptr))
-//            {
-//                textptr++;
-//                continue;
-//            }
-//        case 0: // EOF
-//            return ((g_scriptPtr-script) > (g_scriptSize-32)) ? C_SetScriptSize(g_scriptSize<<1) : 0;
-//        }
-//    }
-//    while (1);
-//}
+        default:
+            if (ispecial(textptr[textptrIdx]))
+            {
+                textptrIdx++;
+                continue;
+            }
+        case 0: // EOF
+            todoThrow("check first return bit, was originally: (g_scriptPtr-script) ");
+            return ((g_scriptPtr-scriptIdx) > (g_scriptSize-32)) ? C_SetScriptSize(g_scriptSize<<1) : 0;
+        }
+    }
+    while (1);
+}
 
 //#define GetDefID(szGameLabel) hash_find(&h_gamevars,szGameLabel)
 //#define GetADefID(szGameLabel) hash_find(&h_arrays,szGameLabel)
@@ -1480,8 +1488,8 @@ function C_InitHashes(): void
 
 //    C_SkipComments();
 
-//    while (ispecial(*textptr) == 0 && *textptr!='['&& *textptr!=']' && *textptr!='\t' && *textptr!='\n' && *textptr!='\r')
-//        label[(g_numLabels<<6)+(i++)] = *(textptr++);
+//    while (ispecial(textptr[textptrIdx]) == 0 && textptr[textptrIdx]!='['&& textptr[textptrIdx]!=']' && textptr[textptrIdx]!='\t' && textptr[textptrIdx]!='\n' && textptr[textptrIdx]!='\r')
+//        label[(g_numLabels<<6)+(i++)] = *(textptrIdx++);
 //    label[(g_numLabels<<6)+i] = 0;
 
 //    if (!(g_numCompilerErrors|g_numCompilerWarnings) && g_scriptDebug > 1)
@@ -1502,14 +1510,14 @@ function C_InitHashes(): void
 
 //    while (isaltok(*temptextptr) == 0)
 //    {
-//        temptextptr++;
+//        temptextptrIdx++;
 //        if (*temptextptr == 0)
 //            return 0;
 //    }
 
 //    i = 0;
 //    while (isaltok(*temptextptr))
-//        tempbuf[i++] = *(temptextptr++);
+//        tempbuf[i++] = *(temptextptrIdx++);
 //    tempbuf[i] = 0;
 
 //    return hash_find(&h_keywords,tempbuf);
@@ -1521,7 +1529,7 @@ function C_InitHashes(): void
 
 //    C_SkipComments();
 
-//    if (*textptr == 0) // EOF
+//    if (textptr[textptrIdx] == 0) // EOF
 //        return -2;
 
 //    l = 0;
@@ -1613,7 +1621,7 @@ function C_InitHashes(): void
 
 //    C_SkipComments();
 
-//    if (!type && !g_labelsOnly && (isdigit(*textptr) || ((*textptr == '-') && (isdigit(*(textptr+1))))))
+//    if (!type && !g_labelsOnly && (isdigit(textptr[textptrIdx]) || ((textptr[textptrIdx] == '-') && (isdigit(textptr[textptrIdx+1])))))
 //    {
 //        bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
 
@@ -1631,13 +1639,13 @@ function C_InitHashes(): void
 //        bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
 //        g_scriptPtr++;
 //#if 1
-//        while (!ispecial(*textptr) && *textptr != ']') textptr++;
+//        while (!ispecial(textptr[textptrIdx]) && textptr[textptrIdx] != ']') textptrIdx++;
 //#else
 //        C_GetNextLabelName();
 //#endif
 //        return;
 //    }
-//    else if ((*textptr == '-')/* && !isdigit(*(textptr+1))*/)
+//    else if ((textptr[textptrIdx] == '-')/* && !isdigit(textptr[textptrIdx+1])*/)
 //    {
 //        if (!type)
 //        {
@@ -1653,7 +1661,7 @@ function C_InitHashes(): void
 //            return;
 //        }
 
-//        textptr++;
+//        textptrIdx++;
 //    }
 
 //    C_GetNextLabelName();
@@ -1666,12 +1674,12 @@ function C_InitHashes(): void
 //    }
 
 //    C_SkipComments(); //skip comments and whitespace
-//    if ((*textptr == '['))     //read of array as a gamevar
+//    if ((textptr[textptrIdx] == '['))     //read of array as a gamevar
 //    {
 //        int32_t lLabelID = -1;
 
 //        f |= (MAXGAMEVARS<<2);
-//        textptr++;
+//        textptrIdx++;
 //        i=GetADefID(label+(g_numLabels<<6));
 //        if (i < 0)
 //        {
@@ -1694,13 +1702,13 @@ function C_InitHashes(): void
 //        C_GetNextVarType(0);
 //        C_SkipComments();
 
-//        if (*textptr != ']')
+//        if (textptr[textptrIdx] != ']')
 //        {
 //            g_numCompilerErrors++;
 //            C_ReportError(ERROR_GAMEARRAYBNC);
 //            return;
 //        }
-//        textptr++;
+//        textptrIdx++;
 
 //        //writing arrays in this way is not supported because it would require too many changes to other code
 
@@ -1713,23 +1721,23 @@ function C_InitHashes(): void
 
 //        if (f & (MAXGAMEVARS<<3))
 //        {
-//            while (*textptr != '.')
+//            while (textptr[textptrIdx] != '.')
 //            {
-//                if (*textptr == 0xa)
+//                if (textptr[textptrIdx] == 0xa)
 //                    break;
-//                if (!*textptr)
+//                if (!textptr[textptrIdx])
 //                    break;
 
-//                textptr++;
+//                textptrIdx++;
 //            }
 
-//            if (*textptr != '.')
+//            if (textptr[textptrIdx] != '.')
 //            {
 //                g_numCompilerErrors++;
 //                C_ReportError(ERROR_SYNTAXERROR);
 //                return;
 //            }
-//            textptr++;
+//            textptrIdx++;
 //            /// now pointing at 'xxx'
 //            C_GetNextLabelName();
 //            /*initprintf("found xxx label of \"%s\"\n",   label+(g_numLabels<<6));*/
@@ -1818,7 +1826,7 @@ function C_InitHashes(): void
 //        }
 //        g_numCompilerErrors++;
 //        C_ReportError(ERROR_NOTAGAMEVAR);
-//        textptr++;
+//        textptrIdx++;
 //        return;
 
 //    }
@@ -1865,7 +1873,7 @@ function C_InitHashes(): void
 
 //    C_SkipComments();
 
-//    if (*textptr == 0) // EOF
+//    if (textptr[textptrIdx] == 0) // EOF
 //        return -1;
 
 //    l = 0;
@@ -1880,7 +1888,7 @@ function C_InitHashes(): void
 //    {
 //        g_numCompilerErrors++;
 //        C_ReportError(ERROR_ISAKEYWORD);
-//        textptr+=l;
+//        textptrIdx+=l;
 //    }
 
 //    i = hash_find(&h_labels,tempbuf);
@@ -1916,18 +1924,18 @@ function C_InitHashes(): void
 //        return -1;  // valid label name, but wrong type
 //    }
 
-//    if (isdigit(*textptr) == 0 && *textptr != '-')
+//    if (isdigit(textptr[textptrIdx]) == 0 && textptr[textptrIdx] != '-')
 //    {
 //        C_ReportError(ERROR_PARAMUNDEFINED);
 //        g_numCompilerErrors++;
 //        bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
 //        *g_scriptPtr = 0;
 //        g_scriptPtr++;
-//        textptr+=l;
+//        textptrIdx+=l;
 //        return -1; // error!
 //    }
 
-//    if (isdigit(*textptr) && g_labelsOnly)
+//    if (isdigit(textptr[textptrIdx]) && g_labelsOnly)
 //    {
 //        C_ReportError(WARNING_LABELSONLY);
 //        g_numCompilerWarnings++;
@@ -2095,8 +2103,8 @@ function C_InitHashes(): void
 //    kclose(fp);
 //    mptr[j] = 0;
 
-//    if (*textptr == '"') // skip past the closing quote if it's there so we don't screw up the next line
-//        textptr++;
+//    if (textptr[textptrIdx] == '"') // skip past the closing quote if it's there so we don't screw up the next line
+//        textptrIdx++;
 //    origtptr = textptr;
 
 //    Bstrcpy(parentScriptFileName, g_szScriptFileName);
@@ -2500,23 +2508,23 @@ function C_InitHashes(): void
 //}
 
 //#if !defined LUNATIC
-//static int32_t C_ParseCommand(int32_t loop)
-//{
-//    int32_t i, j=0, k=0, tw, otw;
+function C_ParseCommand(loop): number
+{
+    var i:number, j=0, k=0, tw:number, otw:number;
 ////    char *temptextptr;
 //    intptr_t *tempscrptr = NULL;
+    debugger;
+    do
+    {
+        if (quitevent)
+        {
+            initprintf("Aborted.\n");
+            G_Shutdown();
+            exit(0);
+        }
 
-//    do
-//    {
-//        if (quitevent)
-//        {
-//            initprintf("Aborted.\n");
-//            G_Shutdown();
-//            exit(0);
-//        }
-
-//        if (g_numCompilerErrors > 63 || (*textptr == '\0') || (*(textptr+1) == '\0') || C_SkipComments())
-//            return 1;
+        if (g_numCompilerErrors > 63 || (textptr[textptrIdx] == '\0') || (textptr[textptrIdx+1] == '\0') || C_SkipComments())
+            return 1;
 
 //        if (g_scriptDebug)
 //            C_ReportError(-1);
@@ -2639,12 +2647,12 @@ function C_InitHashes(): void
 //                // gets the value of wall[<var>].xxx into <VAR>
 
 //                // now get name of .xxx
-//                while ((*textptr != '['))
+//                while ((textptr[textptrIdx] != '['))
 //                {
-//                    textptr++;
+//                    textptrIdx++;
 //                }
-//                if (*textptr == '[')
-//                    textptr++;
+//                if (textptr[textptrIdx] == '[')
+//                    textptrIdx++;
 
 //                // get the ID of the DEF
 //                if (tw == CON_SETTHISPROJECTILE)
@@ -2652,22 +2660,22 @@ function C_InitHashes(): void
 //                C_GetNextVar();
 //                g_labelsOnly = 0;
 //                // now get name of .xxx
-//                while (*textptr != '.')
+//                while (textptr[textptrIdx] != '.')
 //                {
-//                    if (*textptr == 0xa)
+//                    if (textptr[textptrIdx] == 0xa)
 //                        break;
-//                    if (!*textptr)
+//                    if (!textptr[textptrIdx])
 //                        break;
 
-//                    textptr++;
+//                    textptrIdx++;
 //                }
-//                if (*textptr!='.')
+//                if (textptr[textptrIdx]!='.')
 //                {
 //                    g_numCompilerErrors++;
 //                    C_ReportError(ERROR_SYNTAXERROR);
 //                    continue;
 //                }
-//                textptr++;
+//                textptrIdx++;
 //                /// now pointing at 'xxx'
 //                C_GetNextLabelName();
 //                //printf("found xxx label of \"%s\"\n",   label+(g_numLabels<<6));
@@ -2709,7 +2717,7 @@ function C_InitHashes(): void
 //            // (see top of this files for flags)
 //            //printf("Got gamedef. Getting Label. '%.20s'\n",textptr);
 
-//            if (isdigit(*textptr) || (*textptr == '-'))
+//            if (isdigit(textptr[textptrIdx]) || (textptr[textptrIdx] == '-'))
 //            {
 //                C_GetNextLabelName();
 //                g_numCompilerErrors++;
@@ -2755,7 +2763,7 @@ function C_InitHashes(): void
 //            continue;
 
 //        case CON_GAMEARRAY:
-//            if (isdigit(*textptr) || (*textptr == '-'))
+//            if (isdigit(textptr[textptrIdx]) || (textptr[textptrIdx] == '-'))
 //            {
 //                C_GetNextLabelName();
 //                g_numCompilerErrors++;
@@ -3001,9 +3009,9 @@ function C_InitHashes(): void
 //            C_SkipComments();
 
 //            j = 0;
-//            while (isaltok(*textptr))
+//            while (isaltok(textptr[textptrIdx]))
 //            {
-//                tempbuf[j] = *(textptr++);
+//                tempbuf[j] = *(textptrIdx++);
 //                j++;
 //            }
 //            tempbuf[j] = '\0';
@@ -3465,34 +3473,34 @@ function C_InitHashes(): void
 //                // gets the value of sector[<var>].xxx into <VAR>
 
 //                // now get name of .xxx
-//                while ((*textptr != '['))
+//                while ((textptr[textptrIdx] != '['))
 //                {
-//                    textptr++;
+//                    textptrIdx++;
 //                }
-//                if (*textptr == '[')
-//                    textptr++;
+//                if (textptr[textptrIdx] == '[')
+//                    textptrIdx++;
 
 //                // get the ID of the DEF
 //                g_labelsOnly = 1;
 //                C_GetNextVar();
 //                g_labelsOnly = 0;
 //                // now get name of .xxx
-//                while (*textptr != '.')
+//                while (textptr[textptrIdx] != '.')
 //                {
-//                    if (*textptr == 0xa)
+//                    if (textptr[textptrIdx] == 0xa)
 //                        break;
-//                    if (!*textptr)
+//                    if (!textptr[textptrIdx])
 //                        break;
 
-//                    textptr++;
+//                    textptrIdx++;
 //                }
-//                if (*textptr!='.')
+//                if (textptr[textptrIdx]!='.')
 //                {
 //                    g_numCompilerErrors++;
 //                    C_ReportError(ERROR_SYNTAXERROR);
 //                    continue;
 //                }
-//                textptr++;
+//                textptrIdx++;
 //                /// now pointing at 'xxx'
 //                C_GetNextLabelName();
 //                //printf("found xxx label of \"%s\"\n",   label+(g_numLabels<<6));
@@ -3595,34 +3603,34 @@ function C_InitHashes(): void
 //                // gets the value of wall[<var>].xxx into <VAR>
 
 //                // now get name of .xxx
-//                while ((*textptr != '['))
+//                while ((textptr[textptrIdx] != '['))
 //                {
-//                    textptr++;
+//                    textptrIdx++;
 //                }
-//                if (*textptr == '[')
-//                    textptr++;
+//                if (textptr[textptrIdx] == '[')
+//                    textptrIdx++;
 
 //                // get the ID of the DEF
 //                g_labelsOnly = 1;
 //                C_GetNextVar();
 //                g_labelsOnly = 0;
 //                // now get name of .xxx
-//                while (*textptr != '.')
+//                while (textptr[textptrIdx] != '.')
 //                {
-//                    if (*textptr == 0xa)
+//                    if (textptr[textptrIdx] == 0xa)
 //                        break;
-//                    if (!*textptr)
+//                    if (!textptr[textptrIdx])
 //                        break;
 
-//                    textptr++;
+//                    textptrIdx++;
 //                }
-//                if (*textptr!='.')
+//                if (textptr[textptrIdx]!='.')
 //                {
 //                    g_numCompilerErrors++;
 //                    C_ReportError(ERROR_SYNTAXERROR);
 //                    continue;
 //                }
-//                textptr++;
+//                textptrIdx++;
 //                /// now pointing at 'xxx'
 //                C_GetNextLabelName();
 //                //printf("found xxx label of \"%s\"\n",   label+(g_numLabels<<6));
@@ -3657,34 +3665,34 @@ function C_InitHashes(): void
 //                // gets the value of wall[<var>].xxx into <VAR>
 
 //                // now get name of .xxx
-//                while ((*textptr != '['))
+//                while ((textptr[textptrIdx] != '['))
 //                {
-//                    textptr++;
+//                    textptrIdx++;
 //                }
-//                if (*textptr == '[')
-//                    textptr++;
+//                if (textptr[textptrIdx] == '[')
+//                    textptrIdx++;
 
 //                // get the ID of the DEF
 //                g_labelsOnly = 1;
 //                C_GetNextVar();
 //                g_labelsOnly = 0;
 //                // now get name of .xxx
-//                while (*textptr != '.')
+//                while (textptr[textptrIdx] != '.')
 //                {
-//                    if (*textptr == 0xa)
+//                    if (textptr[textptrIdx] == 0xa)
 //                        break;
-//                    if (!*textptr)
+//                    if (!textptr[textptrIdx])
 //                        break;
 
-//                    textptr++;
+//                    textptrIdx++;
 //                }
-//                if (*textptr!='.')
+//                if (textptr[textptrIdx]!='.')
 //                {
 //                    g_numCompilerErrors++;
 //                    C_ReportError(ERROR_SYNTAXERROR);
 //                    continue;
 //                }
-//                textptr++;
+//                textptrIdx++;
 //                /// now pointing at 'xxx'
 //                C_GetNextLabelName();
 //                //printf("found xxx label of \"%s\"\n",   label+(g_numLabels<<6));
@@ -3733,34 +3741,34 @@ function C_InitHashes(): void
 //                // gets the value of wall[<var>].xxx into <VAR>
 
 //                // now get name of .xxx
-//                while ((*textptr != '['))
+//                while ((textptr[textptrIdx] != '['))
 //                {
-//                    textptr++;
+//                    textptrIdx++;
 //                }
-//                if (*textptr == '[')
-//                    textptr++;
+//                if (textptr[textptrIdx] == '[')
+//                    textptrIdx++;
 
 //                // get the ID of the DEF
 //                g_labelsOnly = 1;
 //                C_GetNextVar();
 //                g_labelsOnly = 0;
 //                // now get name of .xxx
-//                while (*textptr != '.')
+//                while (textptr[textptrIdx] != '.')
 //                {
-//                    if (*textptr == 0xa)
+//                    if (textptr[textptrIdx] == 0xa)
 //                        break;
-//                    if (!*textptr)
+//                    if (!textptr[textptrIdx])
 //                        break;
 
-//                    textptr++;
+//                    textptrIdx++;
 //                }
-//                if (*textptr!='.')
+//                if (textptr[textptrIdx]!='.')
 //                {
 //                    g_numCompilerErrors++;
 //                    C_ReportError(ERROR_SYNTAXERROR);
 //                    continue;
 //                }
-//                textptr++;
+//                textptrIdx++;
 //                /// now pointing at 'xxx'
 //                C_GetNextLabelName();
 //                //printf("found xxx label of \"%s\"\n",   label+(g_numLabels<<6));
@@ -3796,22 +3804,22 @@ function C_InitHashes(): void
 //                // gets the value of ud.xxx into <VAR>
 
 //                // now get name of .xxx
-//                while (*textptr != '.')
+//                while (textptr[textptrIdx] != '.')
 //                {
-//                    if (*textptr == 0xa)
+//                    if (textptr[textptrIdx] == 0xa)
 //                        break;
-//                    if (!*textptr)
+//                    if (!textptr[textptrIdx])
 //                        break;
 
-//                    textptr++;
+//                    textptrIdx++;
 //                }
-//                if (*textptr!='.')
+//                if (textptr[textptrIdx]!='.')
 //                {
 //                    g_numCompilerErrors++;
 //                    C_ReportError(ERROR_SYNTAXERROR);
 //                    continue;
 //                }
-//                textptr++;
+//                textptrIdx++;
 //                /// now pointing at 'xxx'
 //                C_GetNextLabelName();
 //                //printf("found xxx label of \"%s\"\n",   label+(g_numLabels<<6));
@@ -3846,34 +3854,34 @@ function C_InitHashes(): void
 //                // gets the value of the per-actor variable varx into VAR
 
 //                // now get name of <var>
-//                while ((*textptr != '['))
+//                while ((textptr[textptrIdx] != '['))
 //                {
-//                    textptr++;
+//                    textptrIdx++;
 //                }
-//                if (*textptr == '[')
-//                    textptr++;
+//                if (textptr[textptrIdx] == '[')
+//                    textptrIdx++;
 
 //                // get the ID of the DEF
 //                g_labelsOnly = 1;
 //                C_GetNextVar();
 //                g_labelsOnly = 0;
 //                // now get name of .<varx>
-//                while (*textptr != '.')
+//                while (textptr[textptrIdx] != '.')
 //                {
-//                    if (*textptr == 0xa)
+//                    if (textptr[textptrIdx] == 0xa)
 //                        break;
-//                    if (!*textptr)
+//                    if (!textptr[textptrIdx])
 //                        break;
 
-//                    textptr++;
+//                    textptrIdx++;
 //                }
-//                if (*textptr!='.')
+//                if (textptr[textptrIdx]!='.')
 //                {
 //                    g_numCompilerErrors++;
 //                    C_ReportError(ERROR_SYNTAXERROR);
 //                    continue;
 //                }
-//                textptr++;
+//                textptrIdx++;
 
 //                if (g_scriptPtr[-1] == g_iThisActorID) // convert to "setvarvar"
 //                {
@@ -3976,11 +3984,11 @@ function C_InitHashes(): void
 //                // gets the value of wall[<var>].xxx into <VAR>
 
 //                // now get name of .xxx
-//                while ((*textptr != '['))
-//                    textptr++;
+//                while ((textptr[textptrIdx] != '['))
+//                    textptrIdx++;
 
-//                if (*textptr == '[')
-//                    textptr++;
+//                if (textptr[textptrIdx] == '[')
+//                    textptrIdx++;
 
 //                // get the ID of the DEF
 //                g_labelsOnly = 1;
@@ -3988,23 +3996,23 @@ function C_InitHashes(): void
 //                g_labelsOnly = 0;
 //                // now get name of .xxx
 
-//                while (*textptr != '.')
+//                while (textptr[textptrIdx] != '.')
 //                {
-//                    if (*textptr == 0xa)
+//                    if (textptr[textptrIdx] == 0xa)
 //                        break;
-//                    if (!*textptr)
+//                    if (!textptr[textptrIdx])
 //                        break;
 
-//                    textptr++;
+//                    textptrIdx++;
 //                }
 
-//                if (*textptr != '.')
+//                if (textptr[textptrIdx] != '.')
 //                {
 //                    g_numCompilerErrors++;
 //                    C_ReportError(ERROR_SYNTAXERROR);
 //                    continue;
 //                }
-//                textptr++;
+//                textptrIdx++;
 //                /// now pointing at 'xxx'
 
 //                C_GetNextLabelName();
@@ -4057,34 +4065,34 @@ function C_InitHashes(): void
 //                // gets the value of wall[<var>].xxx into <VAR>
 
 //                // now get name of .xxx
-//                while ((*textptr != '['))
+//                while ((textptr[textptrIdx] != '['))
 //                {
-//                    textptr++;
+//                    textptrIdx++;
 //                }
-//                if (*textptr == '[')
-//                    textptr++;
+//                if (textptr[textptrIdx] == '[')
+//                    textptrIdx++;
 
 //                // get the ID of the DEF
 //                g_labelsOnly = 1;
 //                C_GetNextVar();
 //                g_labelsOnly = 0;
 //                // now get name of .xxx
-//                while (*textptr != '.')
+//                while (textptr[textptrIdx] != '.')
 //                {
-//                    if (*textptr == 0xa)
+//                    if (textptr[textptrIdx] == 0xa)
 //                        break;
-//                    if (!*textptr)
+//                    if (!textptr[textptrIdx])
 //                        break;
 
-//                    textptr++;
+//                    textptrIdx++;
 //                }
-//                if (*textptr!='.')
+//                if (textptr[textptrIdx]!='.')
 //                {
 //                    g_numCompilerErrors++;
 //                    C_ReportError(ERROR_SYNTAXERROR);
 //                    continue;
 //                }
-//                textptr++;
+//                textptrIdx++;
 //                /// now pointing at 'xxx'
 //                C_GetNextLabelName();
 //                //printf("found xxx label of \"%s\"\n",   label+(g_numLabels<<6));
@@ -4314,23 +4322,23 @@ function C_InitHashes(): void
 //                return 1;
 //            }
 //            C_SkipComments();// skip comments and whitespace
-//            if (*textptr != '[')
+//            if (textptr[textptrIdx] != '[')
 
 //            {
 //                g_numCompilerErrors++;
 //                C_ReportError(ERROR_GAMEARRAYBNO);
 //                return 1;
 //            }
-//            textptr++;
+//            textptrIdx++;
 //            C_GetNextVar();
 //            C_SkipComments();// skip comments and whitespace
-//            if (*textptr != ']')
+//            if (textptr[textptrIdx] != ']')
 //            {
 //                g_numCompilerErrors++;
 //                C_ReportError(ERROR_GAMEARRAYBNC);
 //                return 1;
 //            }
-//            textptr++;
+//            textptrIdx++;
 //        case CON_SETARRAY:
 //            C_GetNextLabelName();
 //            i=GetADefID(label+(g_numLabels<<6));
@@ -4354,22 +4362,22 @@ function C_InitHashes(): void
 //            }
 
 //            C_SkipComments();// skip comments and whitespace
-//            if (*textptr != '[')
+//            if (textptr[textptrIdx] != '[')
 //            {
 //                g_numCompilerErrors++;
 //                C_ReportError(ERROR_GAMEARRAYBNO);
 //                return 1;
 //            }
-//            textptr++;
+//            textptrIdx++;
 //            C_GetNextVar();
 //            C_SkipComments();// skip comments and whitespace
-//            if (*textptr != ']')
+//            if (textptr[textptrIdx] != ']')
 //            {
 //                g_numCompilerErrors++;
 //                C_ReportError(ERROR_GAMEARRAYBNC);
 //                return 1;
 //            }
-//            textptr++;
+//            textptrIdx++;
 //            C_GetNextVar();
 //            continue;
 //        case CON_GETARRAYSIZE:
@@ -5017,8 +5025,8 @@ function C_InitHashes(): void
 //                //Bsprintf(g_szBuf,"case1: %.12s",textptr);
 //                //AddLog(g_szBuf);
 //                C_GetNextValue(LABEL_DEFINE);
-//                if (*textptr == ':')
-//                    textptr++;
+//                if (textptr[textptrIdx] == ':')
+//                    textptrIdx++;
 //                //Bsprintf(g_szBuf,"case2: %.12s",textptr);
 //                //AddLog(g_szBuf);
 
@@ -5074,8 +5082,8 @@ function C_InitHashes(): void
 
 //            C_SkipComments();
 
-//            if (*textptr == ':')
-//                textptr++;
+//            if (textptr[textptrIdx] == ':')
+//                textptrIdx++;
 
 //            if (g_checkingSwitch<1)
 //            {
@@ -5390,10 +5398,10 @@ function C_InitHashes(): void
 
 //            i = 0;
 
-//            while (*textptr != 0x0a && *textptr != 0x0d && *textptr != 0)
+//            while (textptr[textptrIdx] != 0x0a && textptr[textptrIdx] != 0x0d && textptr[textptrIdx] != 0)
 //            {
-//                EpisodeNames[j][i] = *textptr;
-//                textptr++,i++;
+//                EpisodeNames[j][i] = textptr[textptrIdx];
+//                textptrIdx++,i++;
 //                if (i >= (signed)sizeof(EpisodeNames[j])-1)
 //                {
 //                    initprintf("%s:%d: warning: truncating volume name to %d characters.\n",
@@ -5425,12 +5433,12 @@ function C_InitHashes(): void
 
 //            i = 0;
 
-//            while (*textptr != 0x0a && *textptr != 0x0d && *textptr != 0)
+//            while (textptr[textptrIdx] != 0x0a && textptr[textptrIdx] != 0x0d && textptr[textptrIdx] != 0)
 //            {
-//                gamefunctions[j][i] = *textptr;
-//                keydefaults[j*3][i] = *textptr;
-//                textptr++,i++;
-//                if (*textptr != 0x0a && *textptr != 0x0d && ispecial(*textptr))
+//                gamefunctions[j][i] = textptr[textptrIdx];
+//                keydefaults[j*3][i] = textptr[textptrIdx];
+//                textptrIdx++,i++;
+//                if (textptr[textptrIdx] != 0x0a && textptr[textptrIdx] != 0x0d && ispecial(textptr[textptrIdx]))
 //                {
 //                    initprintf("%s:%d: warning: invalid character in function name.\n",
 //                        g_szScriptFileName,g_lineNumber);
@@ -5477,10 +5485,10 @@ function C_InitHashes(): void
 
 //            i = 0;
 
-//            while (*textptr != 0x0a && *textptr != 0x0d && *textptr != 0)
+//            while (textptr[textptrIdx] != 0x0a && textptr[textptrIdx] != 0x0d && textptr[textptrIdx] != 0)
 //            {
-//                SkillNames[j][i] = *textptr;
-//                textptr++,i++;
+//                SkillNames[j][i] = textptr[textptrIdx];
+//                textptrIdx++,i++;
 //                if (i >= (signed)sizeof(SkillNames[j])-1)
 //                {
 //                    initprintf("%s:%d: warning: truncating skill name to %d characters.\n",
@@ -5509,10 +5517,10 @@ function C_InitHashes(): void
 
 //                i = 0;
 
-//                while (*textptr != 0x0a && *textptr != 0x0d && *textptr != 0)
+//                while (textptr[textptrIdx] != 0x0a && textptr[textptrIdx] != 0x0d && textptr[textptrIdx] != 0)
 //                {
-//                    gamename[i] = *textptr;
-//                    textptr++,i++;
+//                    gamename[i] = textptr[textptrIdx];
+//                    textptrIdx++,i++;
 //                    if (i >= (signed)sizeof(gamename)-1)
 //                    {
 //                        initprintf("%s:%d: warning: truncating game name to %d characters.\n",
@@ -5535,9 +5543,9 @@ function C_InitHashes(): void
 //                C_SkipComments();
 
 //                j = 0;
-//                while (isaltok(*textptr))
+//                while (isaltok(textptr[textptrIdx]))
 //                {
-//                    tempbuf[j] = *(textptr++);
+//                    tempbuf[j] = *(textptrIdx++);
 //                    j++;
 //                }
 //                tempbuf[j] = '\0';
@@ -5552,9 +5560,9 @@ function C_InitHashes(): void
 //                C_SkipComments();
 
 //                j = 0;
-//                while (isaltok(*textptr))
+//                while (isaltok(textptr[textptrIdx]))
 //                {
-//                    tempbuf[j] = *(textptr++);
+//                    tempbuf[j] = *(textptrIdx++);
 //                    j++;
 //                }
 //                tempbuf[j] = '\0';
@@ -5641,10 +5649,10 @@ function C_InitHashes(): void
 
 //            i = 0;
 
-//            while (*textptr != 0x0a && *textptr != 0x0d && *textptr != 0)
+//            while (textptr[textptrIdx] != 0x0a && textptr[textptrIdx] != 0x0d && textptr[textptrIdx] != 0)
 //            {
-//                GametypeNames[j][i] = *textptr;
-//                textptr++,i++;
+//                GametypeNames[j][i] = textptr[textptrIdx];
+//                textptrIdx++,i++;
 //                if (i >= (signed)sizeof(GametypeNames[j])-1)
 //                {
 //                    initprintf("%s:%d: warning: truncating gametype name to %d characters.\n",
@@ -5686,15 +5694,15 @@ function C_InitHashes(): void
 
 //            tempbuf[i] = '/';
 
-//            while (*textptr != ' ' && *textptr != '\t' && *textptr != 0x0a)
+//            while (textptr[textptrIdx] != ' ' && textptr[textptrIdx] != '\t' && textptr[textptrIdx] != 0x0a)
 //            {
-//                tempbuf[i+1] = *textptr;
-//                textptr++,i++;
+//                tempbuf[i+1] = textptr[textptrIdx];
+//                textptrIdx++,i++;
 //                if (i >= BMAX_PATH)
 //                {
 //                    initprintf("%s:%d: error: level file name exceeds limit of %d characters.\n",g_szScriptFileName,g_lineNumber,BMAX_PATH);
 //                    g_numCompilerErrors++;
-//                    while (*textptr != ' ' && *textptr != '\t') textptr++;
+//                    while (textptr[textptrIdx] != ' ' && textptr[textptrIdx] != '\t') textptrIdx++;
 //                    break;
 //                }
 //            }
@@ -5712,30 +5720,30 @@ function C_InitHashes(): void
 //            C_SkipComments();
 
 //            MapInfo[j *MAXLEVELS+k].partime =
-//                (((*(textptr+0)-'0')*10+(*(textptr+1)-'0'))*REALGAMETICSPERSEC*60)+
-//                (((*(textptr+3)-'0')*10+(*(textptr+4)-'0'))*REALGAMETICSPERSEC);
+//                (((textptr[textptrIdx+0]-'0')*10+(textptr[textptrIdx+1]-'0'))*REALGAMETICSPERSEC*60)+
+//                (((textptr[textptrIdx+3]-'0')*10+(textptr[textptrIdx+4]-'0'))*REALGAMETICSPERSEC);
 
 //            textptr += 5;
-//            while (*textptr == ' '  || *textptr == '\t') textptr++;
+//            while (textptr[textptrIdx] == ' '  || textptr[textptrIdx] == '\t') textptrIdx++;
 
 //            // cheap hack, 0.99 doesn't have the 3D Realms time
-//            if (*(textptr+2) == ':')
+//            if (textptr[textptrIdx+2] == ':')
 //            {
 //                MapInfo[j *MAXLEVELS+k].designertime =
-//                    (((*(textptr+0)-'0')*10+(*(textptr+1)-'0'))*REALGAMETICSPERSEC*60)+
-//                    (((*(textptr+3)-'0')*10+(*(textptr+4)-'0'))*REALGAMETICSPERSEC);
+//                    (((textptr[textptrIdx+0]-'0')*10+(textptr[textptrIdx+1]-'0'))*REALGAMETICSPERSEC*60)+
+//                    (((textptr[textptrIdx+3]-'0')*10+(textptr[textptrIdx+4]-'0'))*REALGAMETICSPERSEC);
 
 //                textptr += 5;
-//                while (*textptr == ' '  || *textptr == '\t') textptr++;
+//                while (textptr[textptrIdx] == ' '  || textptr[textptrIdx] == '\t') textptrIdx++;
 //            }
 //            else if (g_scriptVersion == 10) g_scriptVersion = 9;
 
 //            i = 0;
 
-//            while (*textptr != 0x0a && *textptr != 0x0d && *textptr != 0)
+//            while (textptr[textptrIdx] != 0x0a && textptr[textptrIdx] != 0x0d && textptr[textptrIdx] != 0)
 //            {
-//                tempbuf[i] = *textptr;
-//                textptr++,i++;
+//                tempbuf[i] = textptr[textptrIdx];
+//                textptrIdx++,i++;
 //                if (i >= 32)
 //                {
 //                    initprintf("%s:%d: warning: truncating level name to %d characters.\n",
@@ -5785,8 +5793,8 @@ function C_InitHashes(): void
 
 //            i = 0;
 
-//            while (*textptr == ' ' || *textptr == '\t')
-//                textptr++;
+//            while (textptr[textptrIdx] == ' ' || textptr[textptrIdx] == '\t')
+//                textptrIdx++;
 
 //            if (tw == CON_REDEFINEQUOTE)
 //            {
@@ -5799,22 +5807,22 @@ function C_InitHashes(): void
 //                }
 //            }
 
-//            while (*textptr != 0x0a && *textptr != 0x0d && *textptr != 0)
+//            while (textptr[textptrIdx] != 0x0a && textptr[textptrIdx] != 0x0d && textptr[textptrIdx] != 0)
 //            {
 //                /*
-//                if (*textptr == '%' && *(textptr+1) == 's')
+//                if (textptr[textptrIdx] == '%' && textptr[textptrIdx+1] == 's')
 //                {
 //                initprintf("%s:%d: error: quote text contains string identifier.\n",g_szScriptFileName,g_lineNumber);
 //                g_numCompilerErrors++;
-//                while (*textptr != 0x0a && *textptr != 0x0d && *textptr != 0) textptr++;
+//                while (textptr[textptrIdx] != 0x0a && textptr[textptrIdx] != 0x0d && textptr[textptrIdx] != 0) textptrIdx++;
 //                break;
 //                }
 //                */
 //                if (tw == CON_DEFINEQUOTE)
-//                    *(ScriptQuotes[k]+i) = *textptr;
+//                    *(ScriptQuotes[k]+i) = textptr[textptrIdx];
 //                else
-//                    *(ScriptQuoteRedefinitions[g_numQuoteRedefinitions]+i) = *textptr;
-//                textptr++,i++;
+//                    *(ScriptQuoteRedefinitions[g_numQuoteRedefinitions]+i) = textptr[textptrIdx];
+//                textptrIdx++,i++;
 //                if (i >= MAXQUOTELEN-1)
 //                {
 //                    initprintf("%s:%d: warning: truncating quote text to %d characters.\n",g_szScriptFileName,g_lineNumber,MAXQUOTELEN-1);
@@ -5861,12 +5869,12 @@ function C_InitHashes(): void
 //            }
 //            g_scriptPtr--;
 //            i = 0;
-//            while (*textptr == ' ' || *textptr == '\t')
-//                textptr++;
-//            while (*textptr != 0x0a && *textptr != 0x0d && *textptr != 0 && *textptr != ' ')
+//            while (textptr[textptrIdx] == ' ' || textptr[textptrIdx] == '\t')
+//                textptrIdx++;
+//            while (textptr[textptrIdx] != 0x0a && textptr[textptrIdx] != 0x0d && textptr[textptrIdx] != 0 && textptr[textptrIdx] != ' ')
 //            {
-//                CheatStrings[k][i] = *textptr;
-//                textptr++,i++;
+//                CheatStrings[k][i] = textptr[textptrIdx];
+//                textptrIdx++,i++;
 //                if (i >= (signed)sizeof(CheatStrings[k])-1)
 //                {
 //                    initprintf("%s:%d: warning: truncating cheat string to %d characters.\n",
@@ -5905,12 +5913,12 @@ function C_InitHashes(): void
 //                G_GameExit(tempbuf);
 //            }
 
-//            if (*textptr == '\"')
+//            if (textptr[textptrIdx] == '\"')
 //            {
-//                textptr++;
-//                while (*textptr && *textptr != '\"')
+//                textptrIdx++;
+//                while (textptr[textptrIdx] && textptr[textptrIdx] != '\"')
 //                {
-//                    g_sounds[k].filename[i++] = *textptr++;
+//                    g_sounds[k].filename[i++] = textptr[textptrIdx]++;
 //                    if (i >= BMAX_PATH-1)
 //                    {
 //                        initprintf("%s:%d: error: sound filename exceeds limit of %d characters.\n",g_szScriptFileName,g_lineNumber,BMAX_PATH-1);
@@ -5919,11 +5927,11 @@ function C_InitHashes(): void
 //                        break;
 //                    }
 //                }
-//                textptr++;
+//                textptrIdx++;
 //            }
-//            else while (*textptr != ' ' && *textptr != '\t' && *textptr != '\r' && *textptr != '\n')
+//            else while (textptr[textptrIdx] != ' ' && textptr[textptrIdx] != '\t' && textptr[textptrIdx] != '\r' && textptr[textptrIdx] != '\n')
 //            {
-//                g_sounds[k].filename[i++] = *textptr++;
+//                g_sounds[k].filename[i++] = textptr[textptrIdx]++;
 //                if (i >= BMAX_PATH-1)
 //                {
 //                    initprintf("%s:%d: error: sound filename exceeds limit of %d characters.\n",g_szScriptFileName,g_lineNumber,BMAX_PATH-1);
@@ -6133,11 +6141,11 @@ function C_InitHashes(): void
 //            }
 //            continue;
 //        }
-//    }
-//    while (loop);
+    }
+    while (loop);
 
-//    return 0;
-//}
+    return 0;
+}
 
 ///* Anything added with C_AddDefinition() cannot be overwritten in the CONs */
 //static void C_AddDefinition(const char *lLabel,int32_t lValue,int32_t lType)
@@ -6149,9 +6157,10 @@ function C_InitHashes(): void
 //    g_numDefaultLabels++;
 //}
 
-//// KEEPINSYNC lunatic/con_lang.lua
-//static void C_AddDefaultDefinitions(void)
-//{
+// KEEPINSYNC lunatic/con_lang.lua
+function C_AddDefaultDefinitions(): void 
+{
+    todo("C_AddDefaultDefinitions");
 //    int32_t i;
 
 //    for (i=0; i<MAXEVENTS; i++)
@@ -6238,7 +6247,7 @@ function C_InitHashes(): void
 //    C_AddDefinition("PROJ_WORKSLIKE",PROJ_WORKSLIKE,LABEL_DEFINE);
 //    C_AddDefinition("PROJ_XREPEAT",PROJ_XREPEAT,LABEL_DEFINE);
 //    C_AddDefinition("PROJ_YREPEAT",PROJ_YREPEAT,LABEL_DEFINE);
-//}
+}
 //#endif
 
 function C_InitProjectiles() : void
@@ -6302,9 +6311,9 @@ function C_InitProjectiles() : void
 function C_Compile(filenam: string) : void 
 {
     path("C_Compile");
-//    char *mptr;
+    var mptr: Ptr; // //    char *
     var i : number;
-    var fs,fp;
+    var fs:number,fp:number;
     var startcompiletime : number; //    uint32_t
     Bmemset(apScriptGameEvent, 0, 0, sizeof(apScriptGameEvent));
 
@@ -6317,7 +6326,7 @@ function C_Compile(filenam: string) : void
     C_InitProjectiles();
 
     fp = kopen4loadfrommod(filenam,g_loadFromGroupOnly);
-    debugger;
+    
     if (fp == -1) // JBF: was 0
     {
         todoThrow();
@@ -6377,40 +6386,45 @@ function C_Compile(filenam: string) : void
     flushlogwindow = 0;
 
     startcompiletime = getticks();
-    todoThrow();
-//    mptr = (char *)Bmalloc(fs+1);
+    
+    mptr = new Ptr(new Uint8Array(fs+1));//(char *)Bmalloc(fs+1);
 //    if (!mptr)
 //    {
 //        Bsprintf(tempbuf,"Failed allocating %d byte CON text buffer.", fs+1);
 //        G_GameExit(tempbuf);
 //    }
 
-//    mptr[fs] = 0;
+    mptr.array[fs] = 0;
 
-//    textptr = (char *) mptr;
-//    kread(fp,(char *)textptr,fs);
-//    kclose(fp);
+    kread(fp,mptr,fs);
+    textptr = mptr.toString();
+    textptrIdx = 0;
+    kclose(fp);
+    debugger;
+    //if (script != NULL) {
+    //    Bfree(script);
+    //}
 
-//    if (script != NULL)
-//        Bfree(script);
+    script = new Int32Array(g_scriptSize);  //(intptr_t *)Bcalloc(1,g_scriptSize * sizeof(intptr_t));
+    assert.areEqual(4194304, script.buffer.byteLength);
+    scriptIdx = 0;
+    bitptr = new Uint8Array((((g_scriptSize+7)>>3)+1)); //(char *)Bcalloc(1,(((g_scriptSize+7)>>3)+1) * sizeof(uint8_t));
+    assert.areEqual(131073, bitptr.buffer.byteLength);
+//    initprintf("script: %d, bitptr: %d\n",script,bitptr);
 
-//    script = (intptr_t *)Bcalloc(1,g_scriptSize * sizeof(intptr_t));
-//    bitptr = (char *)Bcalloc(1,(((g_scriptSize+7)>>3)+1) * sizeof(uint8_t));
-////    initprintf("script: %d, bitptr: %d\n",script,bitptr);
+    g_numLabels = g_numDefaultLabels = 0;
+    g_scriptPtr = scriptIdx+3;  // move permits constants 0 and 1; moveptr[1] would be script[2] (reachable?)
+    g_numCompilerWarnings = 0;
+    g_numCompilerErrors = 0;
+    g_lineNumber = 1;
+    g_totalLines = 0;
+    
+    C_AddDefaultDefinitions();
 
-//    g_numLabels = g_numDefaultLabels = 0;
-//    g_scriptPtr = script+3;  // move permits constants 0 and 1; moveptr[1] would be script[2] (reachable?)
-//    g_numCompilerWarnings = 0;
-//    g_numCompilerErrors = 0;
-//    g_lineNumber = 1;
-//    g_totalLines = 0;
-
-//    C_AddDefaultDefinitions();
-
-//    Bstrcpy(g_szScriptFileName, filenam);   // JBF 20031130: Store currently compiling file name
-
-//    C_ParseCommand(1);
-
+    g_szScriptFileName = filenam;   // JBF 20031130: Store currently compiling file name
+    
+    C_ParseCommand(1);
+todoThrow();
 //    for (i=0; i < g_scriptModulesNum; ++i)
 //    {
 //        C_Include(g_scriptModules[i]);
@@ -6516,95 +6530,95 @@ function C_Compile(filenam: string) : void
 //    }
 }
 
-//void C_ReportError(int32_t iError)
-//{
-//    if (Bstrcmp(g_szCurrentBlockName,g_szLastBlockName))
-//    {
-//        if (g_parsingEventPtr || g_processingState || g_parsingActorPtr)
-//            initprintf("%s: In %s `%s':\n",g_szScriptFileName,g_parsingEventPtr?"event":g_parsingActorPtr?"actor":"state",g_szCurrentBlockName);
-//        else initprintf("%s: At top level:\n",g_szScriptFileName);
-//        Bstrcpy(g_szLastBlockName,g_szCurrentBlockName);
-//    }
-//    switch (iError)
-//    {
-//    case ERROR_CLOSEBRACKET:
-//        initprintf("%s:%d: error: found more `}' than `{' before `%s'.\n",g_szScriptFileName,g_lineNumber,tempbuf);
-//        break;
-//    case ERROR_EVENTONLY:
-//        initprintf("%s:%d: error: `%s' only valid during events.\n",g_szScriptFileName,g_lineNumber,tempbuf);
-//        break;
-//    case ERROR_EXCEEDSMAXTILES:
-//        initprintf("%s:%d: error: `%s' value exceeds MAXTILES.  Maximum is %d.\n",g_szScriptFileName,g_lineNumber,tempbuf,MAXTILES-1);
-//        break;
-//    case ERROR_EXPECTEDKEYWORD:
-//        initprintf("%s:%d: error: expected a keyword but found `%s'.\n",g_szScriptFileName,g_lineNumber,tempbuf);
-//        break;
-//    case ERROR_FOUNDWITHIN:
-//        initprintf("%s:%d: error: found `%s' within %s.\n",g_szScriptFileName,g_lineNumber,tempbuf,g_parsingEventPtr?"an event":g_parsingActorPtr?"an actor":"a state");
-//        break;
-//    case ERROR_ISAKEYWORD:
-//        initprintf("%s:%d: error: symbol `%s' is a keyword.\n",g_szScriptFileName,g_lineNumber,label+(g_numLabels<<6));
-//        break;
-//    case ERROR_NOENDSWITCH:
-//        initprintf("%s:%d: error: did not find `endswitch' before `%s'.\n",g_szScriptFileName,g_lineNumber,label+(g_numLabels<<6));
-//        break;
-//    case ERROR_NOTAGAMEDEF:
-//        initprintf("%s:%d: error: symbol `%s' is not a game definition.\n",g_szScriptFileName,g_lineNumber,label+(g_numLabels<<6));
-//        break;
-//    case ERROR_NOTAGAMEVAR:
-//        initprintf("%s:%d: error: symbol `%s' is not a game variable.\n",g_szScriptFileName,g_lineNumber,label+(g_numLabels<<6));
-//        break;
-//    case ERROR_NOTAGAMEARRAY:
-//        initprintf("%s:%d: error: symbol `%s' is not a game array.\n",g_szScriptFileName,g_lineNumber,label+(g_numLabels<<6));
-//        break;
-//    case ERROR_GAMEARRAYBNC:
-//        initprintf("%s:%d: error: square brackets for index of game array not closed, expected ] found %c\n",g_szScriptFileName,g_lineNumber,*textptr);
-//        break;
-//    case ERROR_GAMEARRAYBNO:
-//        initprintf("%s:%d: error: square brackets for index of game array not opened, expected [ found %c\n",g_szScriptFileName,g_lineNumber,*textptr);
-//        break;
-//    case ERROR_INVALIDARRAYWRITE:
-//        initprintf("%s:%d: error: arrays can only be written to using `setarray' %c\n",g_szScriptFileName,g_lineNumber,*textptr);
-//        break;
-//    case ERROR_OPENBRACKET:
-//        initprintf("%s:%d: error: found more `{' than `}' before `%s'.\n",g_szScriptFileName,g_lineNumber,tempbuf);
-//        break;
-//    case ERROR_PARAMUNDEFINED:
-//        initprintf("%s:%d: error: parameter `%s' is undefined.\n",g_szScriptFileName,g_lineNumber,tempbuf);
-//        break;
-//    case ERROR_SYMBOLNOTRECOGNIZED:
-//        initprintf("%s:%d: error: symbol `%s' is not recognized.\n",g_szScriptFileName,g_lineNumber,label+(g_numLabels<<6));
-//        break;
-//    case ERROR_SYNTAXERROR:
-//        initprintf("%s:%d: error: syntax error.\n",g_szScriptFileName,g_lineNumber);
-//        break;
-//    case ERROR_VARREADONLY:
-//        initprintf("%s:%d: error: variable `%s' is read-only.\n",g_szScriptFileName,g_lineNumber,label+(g_numLabels<<6));
-//        break;
-//    case ERROR_ARRAYREADONLY:
-//        initprintf("%s:%d: error: array `%s' is read-only.\n",g_szScriptFileName,g_lineNumber,label+(g_numLabels<<6));
-//        break;
-//    case ERROR_VARTYPEMISMATCH:
-//        initprintf("%s:%d: error: variable `%s' is of the wrong type.\n",g_szScriptFileName,g_lineNumber,label+(g_numLabels<<6));
-//        break;
-//    case WARNING_BADGAMEVAR:
-//        initprintf("%s:%d: warning: variable `%s' should be either per-player OR per-actor, not both.\n",g_szScriptFileName,g_lineNumber,label+(g_numLabels<<6));
-//        break;
-//    case WARNING_DUPLICATECASE:
-//        initprintf("%s:%d: warning: duplicate case ignored.\n",g_szScriptFileName,g_lineNumber);
-//        break;
-//    case WARNING_DUPLICATEDEFINITION:
-//        initprintf("%s:%d: warning: duplicate game definition `%s' ignored.\n",g_szScriptFileName,g_lineNumber,label+(g_numLabels<<6));
-//        break;
-//    case WARNING_EVENTSYNC:
-//        initprintf("%s:%d: warning: found `%s' within a local event.\n",g_szScriptFileName,g_lineNumber,tempbuf);
-//        break;
-//    case WARNING_LABELSONLY:
-//        initprintf("%s:%d: warning: expected a label, found a constant.\n",g_szScriptFileName,g_lineNumber);
-//        break;
-//    case WARNING_NAMEMATCHESVAR:
-//        initprintf("%s:%d: warning: symbol `%s' already used for game variable.\n",g_szScriptFileName,g_lineNumber,label+(g_numLabels<<6));
-//        break;
-//    }
-//}
+function C_ReportError(iError : number) : void
+{
+    if (Bstrcmp(g_szCurrentBlockName,g_szLastBlockName))
+    {
+        if (g_parsingEventPtr || g_processingState || g_parsingActorPtr)
+            initprintf("%s: In %s `%s':\n",g_szScriptFileName,g_parsingEventPtr?"event":g_parsingActorPtr?"actor":"state",g_szCurrentBlockName);
+        else initprintf("%s: At top level:\n",g_szScriptFileName);
+        g_szLastBlockName = g_szCurrentBlockName;//Bstrcpy(g_szLastBlockName,g_szCurrentBlockName);
+    }
+    switch (iError)
+    {
+    case ERROR_CLOSEBRACKET:
+        initprintf("%s:%d: error: found more `}' than `{' before `%s'.\n",g_szScriptFileName,g_lineNumber,tempbuf);
+        break;
+    case ERROR_EVENTONLY:
+        initprintf("%s:%d: error: `%s' only valid during events.\n",g_szScriptFileName,g_lineNumber,tempbuf);
+        break;
+    case ERROR_EXCEEDSMAXTILES:
+        initprintf("%s:%d: error: `%s' value exceeds MAXTILES.  Maximum is %d.\n",g_szScriptFileName,g_lineNumber,tempbuf,MAXTILES-1);
+        break;
+    case ERROR_EXPECTEDKEYWORD:
+        initprintf("%s:%d: error: expected a keyword but found `%s'.\n",g_szScriptFileName,g_lineNumber,tempbuf);
+        break;
+    case ERROR_FOUNDWITHIN:
+        initprintf("%s:%d: error: found `%s' within %s.\n",g_szScriptFileName,g_lineNumber,tempbuf,g_parsingEventPtr?"an event":g_parsingActorPtr?"an actor":"a state");
+        break;
+    case ERROR_ISAKEYWORD:
+        initprintf("%s:%d: error: symbol `%s' is a keyword.\n",g_szScriptFileName,g_lineNumber,label+(g_numLabels<<6));
+        break;
+    case ERROR_NOENDSWITCH:
+        initprintf("%s:%d: error: did not find `endswitch' before `%s'.\n",g_szScriptFileName,g_lineNumber,label+(g_numLabels<<6));
+        break;
+    case ERROR_NOTAGAMEDEF:
+        initprintf("%s:%d: error: symbol `%s' is not a game definition.\n",g_szScriptFileName,g_lineNumber,label+(g_numLabels<<6));
+        break;
+    case ERROR_NOTAGAMEVAR:
+        initprintf("%s:%d: error: symbol `%s' is not a game variable.\n",g_szScriptFileName,g_lineNumber,label+(g_numLabels<<6));
+        break;
+    case ERROR_NOTAGAMEARRAY:
+        initprintf("%s:%d: error: symbol `%s' is not a game array.\n",g_szScriptFileName,g_lineNumber,label+(g_numLabels<<6));
+        break;
+    case ERROR_GAMEARRAYBNC:
+        initprintf("%s:%d: error: square brackets for index of game array not closed, expected ] found %c\n",g_szScriptFileName,g_lineNumber,textptr[textptrIdx]);
+        break;
+    case ERROR_GAMEARRAYBNO:
+        initprintf("%s:%d: error: square brackets for index of game array not opened, expected [ found %c\n",g_szScriptFileName,g_lineNumber,textptr[textptrIdx]);
+        break;
+    case ERROR_INVALIDARRAYWRITE:
+        initprintf("%s:%d: error: arrays can only be written to using `setarray' %c\n",g_szScriptFileName,g_lineNumber,textptr[textptrIdx]);
+        break;
+    case ERROR_OPENBRACKET:
+        initprintf("%s:%d: error: found more `{' than `}' before `%s'.\n",g_szScriptFileName,g_lineNumber,tempbuf);
+        break;
+    case ERROR_PARAMUNDEFINED:
+        initprintf("%s:%d: error: parameter `%s' is undefined.\n",g_szScriptFileName,g_lineNumber,tempbuf);
+        break;
+    case ERROR_SYMBOLNOTRECOGNIZED:
+        initprintf("%s:%d: error: symbol `%s' is not recognized.\n",g_szScriptFileName,g_lineNumber,label+(g_numLabels<<6));
+        break;
+    case ERROR_SYNTAXERROR:
+        initprintf("%s:%d: error: syntax error.\n",g_szScriptFileName,g_lineNumber);
+        break;
+    case ERROR_VARREADONLY:
+        initprintf("%s:%d: error: variable `%s' is read-only.\n",g_szScriptFileName,g_lineNumber,label+(g_numLabels<<6));
+        break;
+    case ERROR_ARRAYREADONLY:
+        initprintf("%s:%d: error: array `%s' is read-only.\n",g_szScriptFileName,g_lineNumber,label+(g_numLabels<<6));
+        break;
+    case ERROR_VARTYPEMISMATCH:
+        initprintf("%s:%d: error: variable `%s' is of the wrong type.\n",g_szScriptFileName,g_lineNumber,label+(g_numLabels<<6));
+        break;
+    case WARNING_BADGAMEVAR:
+        initprintf("%s:%d: warning: variable `%s' should be either per-player OR per-actor, not both.\n",g_szScriptFileName,g_lineNumber,label+(g_numLabels<<6));
+        break;
+    case WARNING_DUPLICATECASE:
+        initprintf("%s:%d: warning: duplicate case ignored.\n",g_szScriptFileName,g_lineNumber);
+        break;
+    case WARNING_DUPLICATEDEFINITION:
+        initprintf("%s:%d: warning: duplicate game definition `%s' ignored.\n",g_szScriptFileName,g_lineNumber,label+(g_numLabels<<6));
+        break;
+    case WARNING_EVENTSYNC:
+        initprintf("%s:%d: warning: found `%s' within a local event.\n",g_szScriptFileName,g_lineNumber,tempbuf);
+        break;
+    case WARNING_LABELSONLY:
+        initprintf("%s:%d: warning: expected a label, found a constant.\n",g_szScriptFileName,g_lineNumber);
+        break;
+    case WARNING_NAMEMATCHESVAR:
+        initprintf("%s:%d: warning: symbol `%s' already used for game variable.\n",g_szScriptFileName,g_lineNumber,label+(g_numLabels<<6));
+        break;
+    }
+}
 //#endif

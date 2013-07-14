@@ -77,3 +77,9 @@ test("memcmp", function () {
     strictEqual(memcmp(new Uint8Array([100, 98]), [98, 99], 2), 1, "buf1 is greater");
     strictEqual(memcmp(new Uint8Array([90, 98]), [98, 99], 2), -1, "buf1 is less than");
 });
+
+test("strcmp", function () {
+    strictEqual(memcmp("AA", "AA", 2), 0, "strings matche");
+    strictEqual(memcmp("ZZ", "AA", 2), 1, "first string is greater than second");
+    strictEqual(memcmp("AA", "ZZ", 2), -1, "first string is less than second");
+});

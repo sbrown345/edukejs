@@ -197,7 +197,7 @@ var _buildargv = NULL;
 //char videomodereset = 0;
 
 //// input and events
-//char quitevent=0;
+var quitevent=0;//char
 //char appactive=1;
 //char realfs=0;
 //char regrabmouse=0;
