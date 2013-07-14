@@ -87,3 +87,9 @@ test("strcmp", function () {
 test("uint8array string conversions", function () {
     strictEqual("abc".toUint8Array().asString(), "abc", "'abc' is returned");
 });
+
+// duke funcs
+test("hash_getcode", function () {
+    strictEqual(hash_getcode("az"), 5860926, "correct hashcode");
+    strictEqual(hash_getcode("DUKE"), 2088718394, "correct hashcode");
+});

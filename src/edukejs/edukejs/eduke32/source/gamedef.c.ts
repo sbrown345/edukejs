@@ -1213,43 +1213,44 @@ var bitptr: Uint8Array; // pointer to bitmap of which bytecode positions contain
 //#define BITPTR_POINTER 1
 
 //#if !defined LUNATIC
-var h_gamevars : Object; //hashtable_t    = { MAXGAMEVARS>>1, NULL };
-var h_arrays : Object;//hashtable_t { MAXGAMEARRAYS>>1, NULL };
-var h_labels : Object;      //hashtable_t = { 11264>>1, NULL };
+var h_gamevars = new hashtable_t(MAXGAMEVARS>>1, null);
+var h_arrays = new hashtable_t(MAXGAMEARRAYS>>1, null);
+var h_labels = new hashtable_t(11264>>1 ,null);
 
-var  h_keywords ;//static hashtable_t      = { CON_END>>1, NULL };
+var h_keywords = new hashtable_t(CON_END>>1, null);
 
-var sectorH  : Object;//static hashtable_t    = { SECTOR_END>>1, NULL };
-var wallH    : Object;//static hashtable_t    = { WALL_END>>1, NULL };
-var userdefH : Object;//static hashtable_t    = { USERDEFS_END>>1, NULL };
+var sectorH  = new hashtable_t(SECTOR_END>>1, null);
+var wallH    = new hashtable_t(WALL_END>>1, null);
+var userdefH = new hashtable_t(USERDEFS_END>>1, null);
 
-var projectileH  : Object;//static hashtable_t = { PROJ_END>>1, NULL };
-var playerH      : Object;//static hashtable_t = { PLAYER_END>>1, NULL };
-var inputH       : Object;//static hashtable_t = { INPUT_END>>1, NULL };
-var actorH       : Object;//static hashtable_t = { ACTOR_END>>1, NULL };
-var tspriteH     : Object;//static hashtable_t = { ACTOR_END>>1, NULL };
+var projectileH = new hashtable_t(PROJ_END>>1, null);
+var playerH     = new hashtable_t(PLAYER_END>>1, null);
+var inputH      = new hashtable_t(INPUT_END>>1, null);
+var actorH      = new hashtable_t(ACTOR_END>>1, null);
+var tspriteH    = new hashtable_t(ACTOR_END>>1, null);
 
 function C_InitHashes(): void
 {
-    todo("C_InitHashes");
     var i : number;
 
-    h_gamevars = {}; //hash_init(&h_gamevars);
-    h_arrays = {}; //hash_init(&h_arrays);
-    h_labels = {}; //hash_init(&h_labels);
+    hash_init(h_gamevars);
+    hash_init(h_arrays);
+    hash_init(h_labels);
     inithashnames();
     initsoundhashnames();
 
-    h_keywords = {};//hash_init(&h_keywords);
-    sectorH = {};//hash_init(&sectorH);
-    wallH = {};//hash_init(&wallH);
-    userdefH = {};//hash_init(&userdefH);
-    projectileH = {};//hash_init(&projectileH);
-    playerH = {};//hash_init(&playerH);
-    inputH = {};//hash_init(&inputH);
-    actorH = {};//hash_init(&actorH);
-    tspriteH = {};//hash_init(&tspriteH);
+    debugger;
+    hash_init(h_keywords);
+    hash_init(sectorH);
+    hash_init(wallH);
+    hash_init(userdefH);
+    hash_init(projectileH);
+    hash_init(playerH);
+    hash_init(inputH);
+    hash_init(actorH);
+    hash_init(tspriteH);
 
+    todo("C_InitHashes");
     //g_scriptLastKeyword = NUMKEYWORDS-1;
     //// determine last CON keyword for backward compatibility with older mods
     //if (g_scriptDateVersion < g_keywdate[NUMKEYWDATES-1].date)
@@ -1536,15 +1537,15 @@ function C_GetNextKeyword(): number //Returns its code #
     l = 0;
     while (isaltok(textptr[textptrIdx+l]))
     {
-        tempbuf[l] = textptr[l];
+        tempbuf[l] = textptr.charCodeAt(l);
         l++;
     }
     tempbuf[l] = 0;
 
     debugger;
-    todoThrow();
-    //if ((i = hash_find(&h_keywords,tempbuf)) >= 0)
-    //{
+    if ((i = hash_find(h_keywords,tempbuf.asString())) >= 0)
+    {
+        debugger;
     //    if (i == CON_LEFTBRACE || i == CON_RIGHTBRACE || i == CON_NULLOP)
     //        *g_scriptPtr = i + (IFELSE_MAGIC<<12);
     //    else *g_scriptPtr = i + (g_lineNumber<<12);
@@ -1556,7 +1557,7 @@ function C_GetNextKeyword(): number //Returns its code #
     //    if (!(g_numCompilerErrors || g_numCompilerWarnings) && g_scriptDebug)
     //        initprintf("%s:%d: debug: translating keyword `%s'.\n",g_szScriptFileName,g_lineNumber,keyw[i]);
     //    return i;
-    //}
+    }
 
     //textptr += l;
     //g_numCompilerErrors++;

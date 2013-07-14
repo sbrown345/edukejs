@@ -1537,7 +1537,7 @@ var RESERVEDSLOT11 = RESERVEDSLOT11__STATIC;
 var RESERVEDSLOT12 = RESERVEDSLOT12__STATIC;
 
 //#if !defined LUNATIC
-var h_names = {};//static hashtable_t h_names = {512, NULL};
+var h_names = new hashtable_t(512, null);
 
 //void G_ProcessDynamicTileMapping(const char *szLabel, int32_t lValue)
 //{

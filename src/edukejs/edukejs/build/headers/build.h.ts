@@ -1334,18 +1334,27 @@ var numsectors, numwalls; //EXTERN int16_t
 
 //// Hash functions
 
-function hashitem_t ()// size is 12/24 bits.
-{
-    this.string = "";  //char *;
-    this.key = 0;//int32_t ;
-    this.next = null;//_hashitem;
-} //hashitem_t;
+class hashitem_t { // size is 12/24 bits.
+    str: string;
+    key: number;
+    next: hashitem_t;
 
-function hashtable_t()
-{
-    this.size = 0;//int32_t
-    this.items = null;//hashitem_t **
-} //hashtable_t;
+    constructor() {
+        this.str = "";
+        this.key = 0;
+        this.next = null;
+    }
+}
+
+class hashtable_t {
+    size: number;//int32_t
+    items: hashitem_t[];
+
+    constructor(size: number, items: hashitem_t[]) {
+        this.size = size;
+        this.items = items;
+    }
+}
 
 //void hash_init(hashtable_t *t);
 //void hash_free(hashtable_t *t);

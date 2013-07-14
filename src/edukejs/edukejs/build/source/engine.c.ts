@@ -17017,102 +17017,96 @@ function preinitengine() : number
 //#endif
 //}
 
-function hash_init(/*hashtable_t **/t) : void
+function hash_init(t:hashtable_t) : void
 {
     hash_free(t);
-    //t.items = newStructArray(hashitem_t, t.size);//(hashitem_t **)Bcalloc(1, t->size * sizeof(hashitem_t));
+    t.items = Array();
 }
 
-function hash_free(/*hashtable_t **/t) : void
+function hash_free(t: hashtable_t) : void
 {
-    for (var key in t) {
-        t[key] = null;
+   var  cur, tmp; //hashitem_t *
+   var  i; //int32_t
+   var  num; //int32_t
+
+    if (!t.items)
+        return;
+//    initprintf("*free, num:%d\n",t.size);
+    i = t.size-1;
+    do
+    {
+        cur = t.items[i];
+        num = 0;
+        while (cur)
+        {
+            tmp = cur;
+            cur = cur.next;
+//          initprintf("Free %4d \"%s\"\n",tmp.key,(tmp.string)?tmp.string:".");
+            if (tmp.str)
+            {
+                tmp.str = null;
+            }
+            tmp = null;
+            num++;
+        }
+//        initprintf("#%4d: %3d\t",i,num);
     }
-//   var  cur, tmp; //hashitem_t *
-//   var  i; //int32_t
-//   var  num; //int32_t
-
-//    if (!t[0].items)
-//        return;
-////    initprintf("*free, num:%d\n",t.size);
-//    i= t.size-1;
-//    do
-//    {
-//        cur = t.items[i];
-//        num = 0;
-//        while (cur)
-//        {
-//            tmp = cur;
-//            cur = cur.next;
-////          initprintf("Free %4d \"%s\"\n",tmp.key,(tmp.string)?tmp.string:".");
-//            if (tmp.string)
-//            {
-//                tmp.string = null;
-//            }
-//            tmp = null;
-//            num++;
-//        }
-////        initprintf("#%4d: %3d\t",i,num);
-//    }
-//    while (--i > -1);
-//    t.items = null;
+    while (--i > -1);
+    t.items = null;
 }
 
-//// djb3 algorithm
-//static inline uint32_t hash_getcode(const char *s)
-//{
-//    uint32_t h = 5381;
-//    int32_t ch;
-
-//    while ((ch = *s++) != '\0')
-//        h = ((h << 5) + h) ^ ch;
-
-//    return h;
-//}
-
-// hashtable_t *t, const char *s, int32_t key, int32_t replace
-function hash_add(t: Object, s: string, key: number, replace: number)
+// djb3 algorithm
+function hash_getcode(/*const char **/s: string) : number
 {
-    t[key] = s;
+    var h = 5381 >>> 0;
+    var ch;
+    var sIdx = 0;
+    while ((ch = s.charCodeAt(sIdx++)))
+        h = uint32(((h << 5) + h) ^ ch);
 
-    //var cur, prev;
-    //var code;
+    return h;
+}
 
-    //if (t.items == NULL)
-    //{
-    //    initprintf("hash_add(): table not initialized!\n");
-    //    return;
-    //}
+function hash_add(t: hashtable_t, s: string, key: number, replace: number) : void
+{
+    var cur: hashitem_t, prev: hashitem_t;
+    var code: number;
 
-    //code = hash_getcode(s) % t.size;
-    //cur = t.items[code];
+    if (!t.items)
+    {
+        initprintf("hash_add(): table not initialized!\n");
+        return;
+    }
 
-    //if (!cur)
-    //{
-    //    cur = (hashitem_t *)Bcalloc(1,sizeof(hashitem_t));
-    //    cur.string = Bstrdup(s);
-    //    cur.key = key;
-    //    cur.next = NULL;
-    //    t.items[code] = cur;
-    //    return;
-    //}
+    code = hash_getcode(s) % t.size;
+    cur = t.items[code];
 
-    //do
-    //{
-    //    if (Bstrcmp(s,cur.string) == 0)
-    //    {
-    //        if (replace) cur.key = key;
-    //        return;
-    //    }
-    //    prev = cur;
-    //}
-    //while ((cur = cur.next));
+    if (!cur)
+    {
+        cur = new  hashitem_t();
+        cur.str = Bstrdup(s);
+        cur.key = key;
+        cur.next = null;
+        t.items[code] = cur;
+        return;
+    }
 
-    //cur = (hashitem_t *)Bcalloc(1,sizeof(hashitem_t));
-    //cur.string = Bstrdup(s);
-    //cur.key = key;
-    //cur.next = NULL;
-    //prev.next = cur;
+    do
+    {
+        if (Bstrcmp(s,cur.str) == 0)
+        {
+            if (replace) cur.key = key;
+            return;
+        }
+        prev = cur;
+    }
+    while ((cur = cur.next));
+
+    cur = new hashitem_t();
+    cur.str = Bstrdup(s);
+    cur.key = key;
+    cur.next = null;
+    prev.next = cur;
 }
 
 //// delete at most once
@@ -17153,25 +17147,25 @@ function hash_add(t: Object, s: string, key: number, replace: number)
 //    while ((cur = cur->next));
 //}
 
-//int32_t hash_find(const hashtable_t *t, const char *s)
-//{
-//    hashitem_t *cur;
+function hash_find(/*const hashtable_t **/t: hashtable_t, /*const char **/s: string): number
+{
+    var cur: hashitem_t;
 
-//    if (t->items == NULL)
-//    {
-//        initprintf("hash_find(): table not initialized!\n");
-//        return -1;
-//    }
+    if (!t.items)
+    {
+        initprintf("hash_find(): table not initialized!\n");
+        return -1;
+    }
 
-//    if ((cur = t->items[hash_getcode(s) % t->size]) == NULL) return -1;
+    if (!(cur = t.items[hash_getcode(s) % t.size])) return -1;
 
-//    do
-//        if (Bstrcmp(s,cur->string) == 0)
-//            return cur->key;
-//    while ((cur = cur->next));
+    do
+        if (Bstrcmp(s,cur.str) == 0)
+            return cur.key;
+    while ((cur = cur.next));
 
-//    return -1;
-//}
+    return -1;
+}
 
 //int32_t hash_findcase(const hashtable_t *t, const char *s)
 //{

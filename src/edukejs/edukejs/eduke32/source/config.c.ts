@@ -97,7 +97,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //===================
 //*/
 
-var h_gamefuncs = {};//{ NUMGAMEFUNCTIONS<<1, NULL }; //hashtable_t 
+var h_gamefuncs = new hashtable_t(NUMGAMEFUNCTIONS<<1, null);
 
 //int32_t CONFIG_FunctionNameToNum(const char *func)
 //{
