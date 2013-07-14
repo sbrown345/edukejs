@@ -15,7 +15,7 @@ test("isUint8", function () {
     strictEqual(assert.test.isUint8(max + 1), false, (max + 1) + "  is not an uint8");
 });
 
-test("isInt32", function () {
+test("isTypedArrayValue (isInt32)", function () {
     strictEqual(assert.test.isInt32(1), true, "1 is an int32");
     strictEqual(assert.test.isInt32(1.1), false, "1.1 is not an int");
     strictEqual(assert.test.isInt32("1"), false, "'1' string is not an int");
@@ -26,6 +26,20 @@ test("isInt32", function () {
     strictEqual(assert.test.isInt32(max), true, max + " is an int32");
     strictEqual(assert.test.isInt32(min - 1), false, (min - 1) + " is not an int32");
     strictEqual(assert.test.isInt32(max + 1), false, (max + 1) + "  is not an int32");
+});
+
+
+test("isTypedArrayValue (isUint32)", function () {
+    strictEqual(assert.test.isUint32(1), true, "1 is a uint32");
+    strictEqual(assert.test.isUint32(1.1), false, "1.1 is not a uint32");
+    strictEqual(assert.test.isUint32("1"), false, "'1' string is not a uint32");
+    strictEqual(assert.test.isUint32({}), false, "object is not a uint32");
+    var min = 0;
+    var max = 4294967295;
+    strictEqual(assert.test.isUint32(min), true, min + " is a uint32");
+    strictEqual(assert.test.isUint32(max), true, max + " is a uint32");
+    strictEqual(assert.test.isUint32(min - 1), false, (min - 1) + " is not a uint32");
+    strictEqual(assert.test.isUint32(max + 1), false, (max + 1) + "  is not a uint32");
 });
 
 test("isString", function () {

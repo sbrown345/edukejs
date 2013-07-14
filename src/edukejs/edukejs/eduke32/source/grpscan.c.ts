@@ -215,6 +215,7 @@ var listgrps = null;   //struct grpfile
 
 function LoadGameList(): void
 {
+    path("LoadGameList");
     var fg; //grpfile
     //CACHE1D_FIND_REC *srch, *sidx;
     
@@ -374,6 +375,7 @@ function LoadGameList(): void
 
 function ScanGroups() : number
 {
+    path("ScanGroups");
 //    CACHE1D_FIND_REC *srch, *sidx;
 //    struct grpcache *fg, *fgg;
     var grp;

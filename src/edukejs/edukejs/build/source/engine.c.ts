@@ -1348,6 +1348,7 @@ var loadsprite;//static spritetype *
 
 function clipmapinfo_init() : void
 {
+    path("clipmapinfo_init");
     var i; // int32_t
 
     numclipmaps = 0;
@@ -8540,6 +8541,9 @@ var tsprite_s = newStructArray(spritetype, MAXSPRITESONSCREEN);
 //#endif
 function preinitengine() : number
 {
+    debugger;
+    path("preinitengine");
+    todo("initsystem etc");
 //    char *e;
 //    if (initsystem()) exit(9);
 
@@ -8610,7 +8614,7 @@ function preinitengine() : number
 //            Bprintf("Disabling P6 optimizations.\n");
 //            dommxoverlay = 0;
 //        }
-if (dommxoverlay) todo("mmxoverlay();");
+    if (dommxoverlay) todo("mmxoverlay();");
 
     validmodecnt = 0;
     todo("getvalidmodes() - want to resize depending on browser window"); //getvalidmodes();

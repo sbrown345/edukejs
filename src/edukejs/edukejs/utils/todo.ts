@@ -12,3 +12,21 @@ function todo(reason?) {
 function todoThrow() {
     throw "todo";
 }
+
+// track all temp hardcoded stuff
+function tempHC(fn: () => void): void {
+    fn();
+}
+
+// the first version will take the most direct route, add these markers in to track
+function path(location: string) : void {
+    var stack = (new Error()).stack;
+    var depth = stack.split("\n").length - 4; // skip first line, this function, load gamme, xhr load
+    depth = Math.max(0, depth);
+    var spacing = Array(depth+1).join(" ");
+    console.info("%cpath: %s%s", "color: red", spacing, location);
+}
+
+interface Error {
+    stack: string
+}

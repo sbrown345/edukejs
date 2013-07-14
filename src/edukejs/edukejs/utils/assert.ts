@@ -10,6 +10,11 @@
             return assert;
         },
 
+        uint32: function (v: number) {
+            assertValue(assert.test.isUint32, v);
+            return assert;
+        },
+
         "char": function (v: number) {
             assertValue(assert.test.isUint8, v);
             return assert;
@@ -75,6 +80,9 @@
             },
             isInt32: function (v: number): boolean {
                 return assert.test.isTypedArrayValue(Int32Array, v);
+            },
+            isUint32: function (v: number): boolean {
+                return assert.test.isTypedArrayValue(Uint32Array, v);
             },
             isType: function (type, v): boolean {
                 return v instanceof type;

@@ -71,8 +71,9 @@ function memcmp(buf1 : Uint8Array, buf2 : Uint8Array, count : number) : number {
 function memset(array: any, startIndex: number, value: number, num: number) : void {
     assert.int32(startIndex).uint8(value).int32(num);
 
+    var uint8Array = new Uint8Array(array.buffer);
     for (var i = startIndex; i < num; i++) {
-        array[i] = value;
+        uint8Array[i] = value;
     }
 }
 

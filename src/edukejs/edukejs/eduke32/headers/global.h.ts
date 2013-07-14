@@ -69,7 +69,7 @@ var label : string;//G_EXTERN char *label;
 //G_EXTERN char EnvMusicFilename[MAXVOLUMES+1][BMAX_PATH];
 //G_EXTERN char g_RTSPlaying;
 //G_EXTERN int32_t g_musicIndex;
-//G_EXTERN char g_loadFromGroupOnly;
+var g_loadFromGroupOnly : number;//char
 var g_numSkills : number; // char
 //G_EXTERN char myjumpingtoggle,myonground,myhardlanding,myreturntocenter;
 //G_EXTERN char pus,pub;

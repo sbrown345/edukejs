@@ -621,7 +621,7 @@ var Bstrupr = strupr;
 var Bmemset = memset;
 var Bmemcmp = memcmp;
 //# define Bscanf scanf
-//# define Bprintf printf
+var Bprintf  = printf;
 //# define Bsscanf sscanf
 var Bsprintf = function (buf: Uint8Array, format: string, ...args: any[]) {
     var output = sprintf(format, args);

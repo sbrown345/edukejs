@@ -668,7 +668,8 @@ function /*int32_t */ CONFIG_ReadSetup() : number
         if (!g_grpNamePtr && g_usingAddon == 0)
         {
             todo("config SCRIPT_GetStringPtr, setting g_grpNamePtr manually!");
-            g_grpNamePtr = "DUKE3D.GRP"; // TODO TEMP CODE
+            tempHC(() => g_grpNamePtr = "DUKE3D.GRP");
+
 
             // REAL CODE:
             //SCRIPT_GetStringPtr(ud.config.scripthandle, "Setup","SelectedGRP",&g_grpNamePtr);

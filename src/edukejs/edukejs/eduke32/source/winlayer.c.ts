@@ -360,6 +360,7 @@ var _buildargv = NULL;
 //
 function WinMain(hInst, hPrevInst, lpCmdLine, nCmdShow)
 {
+    path("WinMain");
     var r;
 //#ifdef USE_OPENGL
 //    char *argp;

@@ -1561,7 +1561,6 @@ var h_names = {};//static hashtable_t h_names = {512, NULL};
 function inithashnames() : void
 {
     var i : number;
-    debugger
     hash_init(h_names);
 
     for (i=0; g_dynTileList[i].staticval >= 0; i++)

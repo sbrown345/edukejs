@@ -94,8 +94,8 @@ function gamearray_t() {
 
 //# define GAR_ELTSZ (sizeof(aGameArrays[0].plValues[0]))
 
-var aGameVars = newStructArray(gamevar_t , MAXGAMEVARS);
-var aGameArrays = newStructArray(gamearray_t, MAXGAMEARRAYS);
+var aGameVars : Array;
+var aGameArrays : Array;
 var g_gameVarCount : number;
 var g_gameArrayCount : number;
 

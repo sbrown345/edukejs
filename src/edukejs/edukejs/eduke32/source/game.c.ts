@@ -9548,6 +9548,7 @@ function loaddefinitions_game(/*const char **/fn, /*int32_t*/ preload) : number
 function G_CheckCommandLine(/*int32_t */argc: number, /*string*/argv: string) : void
 {
     assert.originalArgsFromFunction(arguments, G_CheckCommandLine);
+    path("G_CheckCommandLine");
 //    int16_t i = 1, j;
 //    const char *c, *k;
 
@@ -10501,6 +10502,7 @@ function G_Shutdown() : void
 
 function G_CompileScripts() : void
 {
+    path("G_CompileScripts");
 //#if !defined LUNATIC
     var psm = pathsearchmode;
 
@@ -10707,6 +10709,7 @@ function G_CompileScripts() : void
 
 function G_Startup() : void
 {
+    path("G_Startup");
     var i : number;
 
     todo("inittimer(TICRATE);")
@@ -11066,6 +11069,7 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
 
 /*int32_t*/ function app_main(/*int32_t*/ argc, /*const char ***/argv)
 {
+    path("app_main");
     var i = 0, j;
 //    char cwd[BMAX_PATH];
 ////    extern char datetimestring[];

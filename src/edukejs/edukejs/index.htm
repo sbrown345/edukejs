@@ -11,6 +11,8 @@
     <script src="eduke.js"></script>
 
     <script>
+        path("index.htm");
+
         var xhr = new XMLHttpRequest();
         xhr.open('GET', 'DUKE3D.GRP', true);
         xhr.responseType = 'arraybuffer';
@@ -22,6 +24,8 @@
         xhr.send();
 
         function loadGame(grpData) {
+            path("index.htm loaded grp");
+
             if(grpData.length != hardcoded.grpSize) {
                 throw "Incorrect file size for " + (shareware ? "demo" : "full") + " grp";
             }

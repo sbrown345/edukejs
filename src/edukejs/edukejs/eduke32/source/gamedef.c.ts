@@ -212,8 +212,8 @@ var apScriptGameEvent: Int32Array = new Int32Array(MAXGAMEEVENTS);
 //#if !defined LUNATIC
 //static intptr_t *g_parsingEventPtr=NULL;
 
-var aGameVars = newStructArray(gamevar_t, MAXGAMEVARS);
-//gamearray_t aGameArrays[MAXGAMEARRAYS];
+aGameVars = newStructArray(gamevar_t, MAXGAMEVARS);
+aGameArrays = newStructArray(gamearray_t, MAXGAMEARRAYS);
 //int32_t g_gameVarCount=0;
 //int32_t g_gameArrayCount=0;
 
@@ -1212,42 +1212,42 @@ var aGameVars = newStructArray(gamevar_t, MAXGAMEVARS);
 //#define BITPTR_POINTER 1
 
 //#if !defined LUNATIC
-//hashtable_t h_gamevars    = { MAXGAMEVARS>>1, NULL };
-//hashtable_t h_arrays      = { MAXGAMEARRAYS>>1, NULL };
-//hashtable_t h_labels      = { 11264>>1, NULL };
+var h_gamevars : Object; //hashtable_t    = { MAXGAMEVARS>>1, NULL };
+var h_arrays : Object;//hashtable_t { MAXGAMEARRAYS>>1, NULL };
+var h_labels : Object;      //hashtable_t = { 11264>>1, NULL };
 
-//static hashtable_t h_keywords       = { CON_END>>1, NULL };
+var  h_keywords ;//static hashtable_t      = { CON_END>>1, NULL };
 
-//static hashtable_t sectorH     = { SECTOR_END>>1, NULL };
-//static hashtable_t wallH       = { WALL_END>>1, NULL };
-//static hashtable_t userdefH    = { USERDEFS_END>>1, NULL };
+var sectorH  : Object;//static hashtable_t    = { SECTOR_END>>1, NULL };
+var wallH    : Object;//static hashtable_t    = { WALL_END>>1, NULL };
+var userdefH : Object;//static hashtable_t    = { USERDEFS_END>>1, NULL };
 
-//static hashtable_t projectileH = { PROJ_END>>1, NULL };
-//static hashtable_t playerH     = { PLAYER_END>>1, NULL };
-//static hashtable_t inputH      = { INPUT_END>>1, NULL };
-//static hashtable_t actorH      = { ACTOR_END>>1, NULL };
-//static hashtable_t tspriteH    = { ACTOR_END>>1, NULL };
+var projectileH  : Object;//static hashtable_t = { PROJ_END>>1, NULL };
+var playerH      : Object;//static hashtable_t = { PLAYER_END>>1, NULL };
+var inputH       : Object;//static hashtable_t = { INPUT_END>>1, NULL };
+var actorH       : Object;//static hashtable_t = { ACTOR_END>>1, NULL };
+var tspriteH     : Object;//static hashtable_t = { ACTOR_END>>1, NULL };
 
 function C_InitHashes(): void
 {
     todo("C_InitHashes");
     var i : number;
 
-    var h_gamevars = {};//hash_init(&h_gamevars);
-    var h_arrays = {};//hash_init(&h_arrays);
-    var h_labels = {};//hash_init(&h_labels);
+    h_gamevars = {}; //hash_init(&h_gamevars);
+    h_arrays = {}; //hash_init(&h_arrays);
+    h_labels = {}; //hash_init(&h_labels);
     inithashnames();
     initsoundhashnames();
 
-    var h_keywords = {};//hash_init(&h_keywords);
-    var sectorH = {};//hash_init(&sectorH);
-    var wallH = {};//hash_init(&wallH);
-    var userdefH = {};//hash_init(&userdefH);
-    var projectileH = {};//hash_init(&projectileH);
-    var playerH = {};//hash_init(&playerH);
-    var inputH = {};//hash_init(&inputH);
-    var actorH = {};//hash_init(&actorH);
-    var tspriteH = {};//hash_init(&tspriteH);
+    h_keywords = {};//hash_init(&h_keywords);
+    sectorH = {};//hash_init(&sectorH);
+    wallH = {};//hash_init(&wallH);
+    userdefH = {};//hash_init(&userdefH);
+    projectileH = {};//hash_init(&projectileH);
+    playerH = {};//hash_init(&playerH);
+    inputH = {};//hash_init(&inputH);
+    actorH = {};//hash_init(&actorH);
+    tspriteH = {};//hash_init(&tspriteH);
 
     //g_scriptLastKeyword = NUMKEYWORDS-1;
     //// determine last CON keyword for backward compatibility with older mods
@@ -6301,11 +6301,11 @@ function C_InitProjectiles() : void
 
 function C_Compile(filenam: string) : void 
 {
+    path("C_Compile");
 //    char *mptr;
     var i : number;
     var fs,fp;
 //    uint32_t startcompiletime;
-    debugger
     Bmemset(apScriptGameEvent, 0, 0, sizeof(apScriptGameEvent));
 
     for (i = MAXTILES - 1; i >= 0; i--)
@@ -6316,6 +6316,7 @@ function C_Compile(filenam: string) : void
 
     C_InitProjectiles();
 
+    debugger;
     fp = kopen4loadfrommod(filenam,g_loadFromGroupOnly);
 //    if (fp == -1) // JBF: was 0
 //    {

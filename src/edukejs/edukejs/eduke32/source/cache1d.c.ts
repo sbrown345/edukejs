@@ -550,6 +550,7 @@ function findfrompath(fn : string, where : Ref) : number
 
 function openfrompath(fn: string , flags: number, mode: number) : number
 {
+    path("openfrompath");
     var pfn = new Ref("");
     var h : number;
 
