@@ -1,8 +1,8 @@
 ﻿/// <reference path="assert.ts" />
 
-var NULL = null;
-var TRUE = 1;
-var FALSE = 0;
+var NULL:number = null;
+var TRUE:number = 1;
+var FALSE:number = 0;
 
 function exit(code: number) {
     todoThrow();
@@ -150,4 +150,10 @@ function strcpy(destination: Uint8Array, source: string) : void {
 
 function strupr(str: string) : string {
     return str.toUpperCase();
+}
+
+function isalnum(c: string) : boolean {
+    return (c >= "0" && c <= "9")
+        || (c >= "A" && c <= "Z")
+        || (c >= "a" && c <= "z");
 }

@@ -79,7 +79,11 @@ test("memcmp", function () {
 });
 
 test("strcmp", function () {
-    strictEqual(memcmp("AA", "AA", 2), 0, "strings matche");
+    strictEqual(memcmp("AA", "AA", 2), 0, "strings match");
     strictEqual(memcmp("ZZ", "AA", 2), 1, "first string is greater than second");
     strictEqual(memcmp("AA", "ZZ", 2), -1, "first string is less than second");
+});
+
+test("uint8array string conversions", function () {
+    strictEqual("abc".toUint8Array().asString(), "abc", "'abc' is returned");
 });

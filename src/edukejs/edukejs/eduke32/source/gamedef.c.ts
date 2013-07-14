@@ -1401,11 +1401,11 @@ function C_SkipComments() : number
         case ' ':
         case '\t':
         case '\r':
-        case 0x1a:
+        case String.fromCharCode(0x1a):
             textptrIdx++;
             break;
         case '/':
-            switch (textptr[1])
+            switch (textptr[textptrIdx+1])
             {
             case '/': // C++ style comment
                 if (!(g_numCompilerErrors || g_numCompilerWarnings) && g_scriptDebug > 1)
@@ -1421,10 +1421,11 @@ function C_SkipComments() : number
                         g_lineNumber++;
                     textptrIdx++;
                 }
-                while (textptr[textptrIdx] && (textptr[0] != '*' || textptr[1] != '/'));
+                while (textptr[textptrIdx] && (textptr[textptrIdx+0] != '*' || textptr[textptrIdx+1] != '/'));
 
                 if (!textptr[textptrIdx])
                 {
+                    debugger;
                     if (!(g_numCompilerErrors || g_numCompilerWarnings) && g_scriptDebug)
                         initprintf("%s:%d: debug: EOF in comment!\n",g_szScriptFileName,g_lineNumber);
                     C_ReportError(-1);
@@ -1449,7 +1450,6 @@ function C_SkipComments() : number
                 continue;
             }
         case 0: // EOF
-            todoThrow("check first return bit, was originally: (g_scriptPtr-script) ");
             return ((g_scriptPtr-scriptIdx) > (g_scriptSize-32)) ? C_SetScriptSize(g_scriptSize<<1) : 0;
         }
     }
@@ -1459,11 +1459,12 @@ function C_SkipComments() : number
 //#define GetDefID(szGameLabel) hash_find(&h_gamevars,szGameLabel)
 //#define GetADefID(szGameLabel) hash_find(&h_arrays,szGameLabel)
 
-//static int32_t isaltok(const char c)
-//{
-//    return (isalnum(c) || c == '{' || c == '}' || c == '/' || c == '\\' ||
-//            c == '*' || c == '-' || c == '_' || c == '.');
-//}
+function isaltok(/*const char */c: string) : boolean
+{
+    assert.isString(c).areEqual(1, c.length);
+    return (isalnum(c) || c == '{' || c == '}' || c == '/' || c == '\\' ||
+            c == '*' || c == '-' || c == '_' || c == '.');
+}
 
 //static inline int32_t C_GetLabelNameID(const memberlabel_t *pLabel, hashtable_t *tH, const char *psz)
 //{
@@ -1523,50 +1524,52 @@ function C_SkipComments() : number
 //    return hash_find(&h_keywords,tempbuf);
 //}
 
-//static int32_t C_GetNextKeyword(void) //Returns its code #
-//{
-//    int32_t i, l;
+function C_GetNextKeyword(): number //Returns its code #
+{
+    var i:number, l:number;
 
-//    C_SkipComments();
+    C_SkipComments();
 
-//    if (textptr[textptrIdx] == 0) // EOF
-//        return -2;
+    if (textptr[textptrIdx] == 0) // EOF
+        return -2;
 
-//    l = 0;
-//    while (isaltok(*(textptr+l)))
-//    {
-//        tempbuf[l] = textptr[l];
-//        l++;
-//    }
-//    tempbuf[l] = 0;
+    l = 0;
+    while (isaltok(textptr[textptrIdx+l]))
+    {
+        tempbuf[l] = textptr[l];
+        l++;
+    }
+    tempbuf[l] = 0;
 
-//    if ((i = hash_find(&h_keywords,tempbuf)) >= 0)
-//    {
-//        if (i == CON_LEFTBRACE || i == CON_RIGHTBRACE || i == CON_NULLOP)
-//            *g_scriptPtr = i + (IFELSE_MAGIC<<12);
-//        else *g_scriptPtr = i + (g_lineNumber<<12);
+    debugger;
+    todoThrow();
+    //if ((i = hash_find(&h_keywords,tempbuf)) >= 0)
+    //{
+    //    if (i == CON_LEFTBRACE || i == CON_RIGHTBRACE || i == CON_NULLOP)
+    //        *g_scriptPtr = i + (IFELSE_MAGIC<<12);
+    //    else *g_scriptPtr = i + (g_lineNumber<<12);
 
-//        bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
-//        textptr += l;
-//        g_scriptPtr++;
+    //    bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
+    //    textptr += l;
+    //    g_scriptPtr++;
 
-//        if (!(g_numCompilerErrors || g_numCompilerWarnings) && g_scriptDebug)
-//            initprintf("%s:%d: debug: translating keyword `%s'.\n",g_szScriptFileName,g_lineNumber,keyw[i]);
-//        return i;
-//    }
+    //    if (!(g_numCompilerErrors || g_numCompilerWarnings) && g_scriptDebug)
+    //        initprintf("%s:%d: debug: translating keyword `%s'.\n",g_szScriptFileName,g_lineNumber,keyw[i]);
+    //    return i;
+    //}
 
-//    textptr += l;
-//    g_numCompilerErrors++;
+    //textptr += l;
+    //g_numCompilerErrors++;
 
-//    if ((tempbuf[0] == '{' || tempbuf[0] == '}') && tempbuf[1] != 0)
-//    {
-//        C_ReportError(-1);
-//        initprintf("%s:%d: error: expected whitespace between `%c' and `%s'.\n",g_szScriptFileName,g_lineNumber,tempbuf[0],tempbuf+1);
-//    }
-//    else C_ReportError(ERROR_EXPECTEDKEYWORD);
+    //if ((tempbuf[0] == '{' || tempbuf[0] == '}') && tempbuf[1] != 0)
+    //{
+    //    C_ReportError(-1);
+    //    initprintf("%s:%d: error: expected whitespace between `%c' and `%s'.\n",g_szScriptFileName,g_lineNumber,tempbuf[0],tempbuf+1);
+    //}
+    //else C_ReportError(ERROR_EXPECTEDKEYWORD);
 
-//    return -1;
-//}
+    return -1;
+}
 
 //static int32_t parse_decimal_number(void)  // (textptr)
 //{
@@ -1627,7 +1630,7 @@ function C_SkipComments() : number
 
 //        *g_scriptPtr++ = MAXGAMEVARS;
 
-//        if (tolower(textptr[1])=='x')  // hex constants
+//        if (tolower(textptr[textptrIdx+1])=='x')  // hex constants
 //            *g_scriptPtr = parse_hex_constant(textptr+2);
 //        else
 //            *g_scriptPtr = parse_decimal_number();
@@ -1877,7 +1880,7 @@ function C_SkipComments() : number
 //        return -1;
 
 //    l = 0;
-//    while (isaltok(*(textptr+l)))
+//    while (isaltok(textptr[textptrIdx+l]))
 //    {
 //        tempbuf[l] = textptr[l];
 //        l++;
@@ -1945,7 +1948,7 @@ function C_SkipComments() : number
 //    do
 //    {
 //        // FIXME: check for 0-9 A-F for hex
-//        if (textptr[0] == '0' && textptr[1] == 'x') break; // kill the warning for hex
+//        if (textptr[textptrIdx+0] == '0' && textptr[textptrIdx+1] == 'x') break; // kill the warning for hex
 //        if (!isdigit(textptr[i--]))
 //        {
 //            C_ReportError(-1);
@@ -1958,7 +1961,7 @@ function C_SkipComments() : number
 
 //    bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
 
-//    if (tolower(textptr[1])=='x')
+//    if (tolower(textptr[textptrIdx+1])=='x')
 //        *g_scriptPtr = parse_hex_constant(textptr+2);
 //    else
 //        *g_scriptPtr = parse_decimal_number();
@@ -2512,8 +2515,8 @@ function C_ParseCommand(loop): number
 {
     var i:number, j=0, k=0, tw:number, otw:number;
 ////    char *temptextptr;
-//    intptr_t *tempscrptr = NULL;
-    debugger;
+    var tempscrptr: number = NULL; // intptr_t *
+    
     do
     {
         if (quitevent)
@@ -2526,18 +2529,19 @@ function C_ParseCommand(loop): number
         if (g_numCompilerErrors > 63 || (textptr[textptrIdx] == '\0') || (textptr[textptrIdx+1] == '\0') || C_SkipComments())
             return 1;
 
-//        if (g_scriptDebug)
-//            C_ReportError(-1);
+        if (g_scriptDebug)
+            C_ReportError(-1);
 
-//        tempscrptr = NULL; // temptextptr = NULL;
-//        otw = g_lastKeyword;
-
-//        switch ((g_lastKeyword = tw = C_GetNextKeyword()))
-//        {
-//        default:
-//        case -1:
-//        case -2:
-//            return 1; //End
+        tempscrptr = NULL; // temptextptr = NULL;
+        otw = g_lastKeyword;
+        debugger;
+        switch ((g_lastKeyword = tw = C_GetNextKeyword()))
+        {
+        default:
+            throw "todo "  + tw;
+        case -1:
+        case -2:
+            return 1; //End
 //        case CON_STATE:
 //            if (g_parsingActorPtr == NULL && g_processingState == 0)
 //            {
@@ -6140,7 +6144,7 @@ function C_ParseCommand(loop): number
 //                G_DoGameStartup(params);
 //            }
 //            continue;
-//        }
+        }
     }
     while (loop);
 
@@ -6397,10 +6401,10 @@ function C_Compile(filenam: string) : void
     mptr.array[fs] = 0;
 
     kread(fp,mptr,fs);
-    textptr = mptr.toString();
+    textptr = mptr.array.asString();
     textptrIdx = 0;
     kclose(fp);
-    debugger;
+    
     //if (script != NULL) {
     //    Bfree(script);
     //}

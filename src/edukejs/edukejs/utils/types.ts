@@ -80,7 +80,7 @@ interface Uint8Array {
 Uint8Array.prototype.asString = function () : string {
     var str = "";
     for (var i = 0; i < this.length; i++) {
-        str = String.fromCharCode(this[i]);
+        str += String.fromCharCode(this[i]);
     }
 
     return str;
