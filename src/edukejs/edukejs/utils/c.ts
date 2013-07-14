@@ -1,6 +1,6 @@
 ﻿/// <reference path="assert.ts" />
 
-var NULL:number = null;
+var NULL = null;
 var TRUE:number = 1;
 var FALSE:number = 0;
 

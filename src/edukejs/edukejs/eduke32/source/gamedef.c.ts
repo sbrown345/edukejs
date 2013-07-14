@@ -1225,7 +1225,7 @@ var InputLabels : memberlabel_t[]=
 //#endif
 
 var bitptr: Uint8Array; // pointer to bitmap of which bytecode positions contain pointers //char *
-//#define BITPTR_POINTER 1
+var BITPTR_POINTER = 1;
 
 //#if !defined LUNATIC
 var h_gamevars = new hashtable_t(MAXGAMEVARS>>1, null);
@@ -1548,13 +1548,13 @@ function C_GetNextKeyword(): number //Returns its code #
 
     C_SkipComments();
 
-    if (textptr[textptrIdx] == 0) // EOF
+    if (!textptr[textptrIdx]) // EOF
         return -2;
 
     l = 0;
     while (isaltok(textptr[textptrIdx+l]))
     {
-        tempbuf[l] = textptr.charCodeAt(l);
+        tempbuf[l] = textptr.charCodeAt(textptrIdx+l);
         l++;
     }
     tempbuf[l] = 0;
@@ -1562,18 +1562,17 @@ function C_GetNextKeyword(): number //Returns its code #
     debugger;
     if ((i = hash_find(h_keywords,tempbuf.asString())) >= 0)
     {
-        debugger;
-    //    if (i == CON_LEFTBRACE || i == CON_RIGHTBRACE || i == CON_NULLOP)
-    //        *g_scriptPtr = i + (IFELSE_MAGIC<<12);
-    //    else *g_scriptPtr = i + (g_lineNumber<<12);
+        if (i == CON_LEFTBRACE || i == CON_RIGHTBRACE || i == CON_NULLOP)
+            script[g_scriptPtr] = i + (IFELSE_MAGIC<<12);
+        else script[g_scriptPtr] = i + (g_lineNumber<<12);
 
-    //    bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
-    //    textptr += l;
-    //    g_scriptPtr++;
+        bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
+        textptr += l;
+        g_scriptPtr++;
 
-    //    if (!(g_numCompilerErrors || g_numCompilerWarnings) && g_scriptDebug)
-    //        initprintf("%s:%d: debug: translating keyword `%s'.\n",g_szScriptFileName,g_lineNumber,keyw[i]);
-    //    return i;
+        if (!(g_numCompilerErrors || g_numCompilerWarnings) && g_scriptDebug)
+            initprintf("%s:%d: debug: translating keyword `%s'.\n",g_szScriptFileName,g_lineNumber,keyw[i]);
+        return i;
     }
 
     //textptr += l;
@@ -1585,7 +1584,7 @@ function C_GetNextKeyword(): number //Returns its code #
     //    initprintf("%s:%d: error: expected whitespace between `%c' and `%s'.\n",g_szScriptFileName,g_lineNumber,tempbuf[0],tempbuf+1);
     //}
     //else C_ReportError(ERROR_EXPECTEDKEYWORD);
-
+    throw "todo";
     return -1;
 }
 
@@ -2556,6 +2555,7 @@ function C_ParseCommand(loop): number
         switch ((g_lastKeyword = tw = C_GetNextKeyword()))
         {
         default:
+            debugger;
             throw "todo "  + tw;
         case -1:
         case -2:
