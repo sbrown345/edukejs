@@ -148,6 +148,11 @@ function strcmp(str1: string, str2: string) : number {
     return -1;
 }
 
+function strncmp(str1: string, str2: string, num: number) : number {
+    assert.isString(str1).isString(str2);
+    return strcmp(str1.substr(0, num), str2.substr(0, num));
+}
+
 function strcpy(destination: Uint8Array, source: string) : void {
     assert.isType(Uint8Array, destination).isString(source);
 

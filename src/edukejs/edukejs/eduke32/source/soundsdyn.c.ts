@@ -26,6 +26,7 @@
 /// <reference path="../../eduke32/headers/grpscan.h.ts" />
 /// <reference path="../../eduke32/headers/namesdyn.h.ts" />
 /// <reference path="../../eduke32/headers/player.h.ts" />
+/// <reference path="../../eduke32/headers/quotes.h.ts" />
 /// <reference path="../../eduke32/headers/soundsdyn.h.ts" />
 
 /// <reference path="../../eduke32/source/baselayer.c.ts" />
@@ -40,6 +41,7 @@
 /// <reference path="../../eduke32/source/namesdyn.c.ts" />
 /// <reference path="../../eduke32/source/net.c.ts" />
 /// <reference path="../../eduke32/source/osd.c.ts" />
+/// <reference path="../../eduke32/source/player.c.ts" />
 /// <reference path="../../eduke32/source/winlayer.c.ts" />
 
 //-------------------------------------------------------------------------
@@ -919,10 +921,10 @@ function initsoundhashnames() : void
         hash_add(h_names, g_dynSoundList[i].str, i, 0);
 }
 
-//void freesoundhashnames(void)
-//{
-//    hash_free(&h_names);
-//}
+function freesoundhashnames(): void
+{
+    hash_free(h_names);
+}
 //#endif
 //#endif
 

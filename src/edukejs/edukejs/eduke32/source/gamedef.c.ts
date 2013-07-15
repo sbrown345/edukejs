@@ -26,6 +26,7 @@
 /// <reference path="../../eduke32/headers/grpscan.h.ts" />
 /// <reference path="../../eduke32/headers/namesdyn.h.ts" />
 /// <reference path="../../eduke32/headers/player.h.ts" />
+/// <reference path="../../eduke32/headers/quotes.h.ts" />
 /// <reference path="../../eduke32/headers/soundsdyn.h.ts" />
 
 /// <reference path="../../eduke32/source/baselayer.c.ts" />
@@ -39,6 +40,7 @@
 /// <reference path="../../eduke32/source/namesdyn.c.ts" />
 /// <reference path="../../eduke32/source/net.c.ts" />
 /// <reference path="../../eduke32/source/osd.c.ts" />
+/// <reference path="../../eduke32/source/player.c.ts" />
 /// <reference path="../../eduke32/source/osdfuncs.c.ts" />
 /// <reference path="../../eduke32/source/soundsdyn.c.ts" />
 /// <reference path="../../eduke32/source/winlayer.c.ts" />
@@ -177,7 +179,7 @@ var g_numBraces = 0;////static int32_t
 //static int32_t C_SetScriptSize(int32_t size);
 //#endif
 
-//int32_t g_numQuoteRedefinitions = 0;
+var g_numQuoteRedefinitions = 0; //int32_t 
 
 //#ifdef LUNATIC
 //weapondata_t g_playerWeapon[MAXPLAYERS][MAX_WEAPONS];
@@ -2417,120 +2419,120 @@ function C_Include(confile: string) :  void
 //    g_tile[j].flags |= SPRITE_PROJECTILE;
 //}
 
-//int32_t C_AllocQuote(int32_t qnum)
-//{
-//    if (ScriptQuotes[qnum] == NULL)
-//    {
-//        ScriptQuotes[qnum] = (char *)Bcalloc(MAXQUOTELEN,sizeof(uint8_t));
-//        if (ScriptQuotes[qnum] == NULL)
-//        {
-//            Bsprintf(tempbuf, "Failed allocating %d byte quote text buffer.", MAXQUOTELEN);
-//            G_GameExit(tempbuf);
-//        }
+function C_AllocQuote(qnum: number) : number
+{
+    if (ScriptQuotes[qnum] == NULL)
+    {
+        ScriptQuotes[qnum] = "";//(char *)Bcalloc(MAXQUOTELEN,sizeof(uint8_t));
+        if (ScriptQuotes[qnum] == NULL)
+        {
+            Bsprintf(tempbuf, "Failed allocating %d byte quote text buffer.", MAXQUOTELEN);
+            G_GameExit(tempbuf.toString());
+        }
 
-//        return 1;
-//    }
+        return 1;
+    }
 
-//    return 0;
-//}
+    return 0;
+}
 
-//void C_InitQuotes(void)
-//{
-//    int32_t i;
+function C_InitQuotes(): void
+{
+    var i:number;
+    debugger;
+    for (i=127; i>=0; i--)
+        C_AllocQuote(i);
 
-//    for (i=127; i>=0; i--)
-//        C_AllocQuote(i);
+    for (i=MAXQUOTELEN-7; i>=0; i--)
+        if (Bstrncmp(ScriptQuotes[13][i],"SPACE",5) == 0)
+        {
+            var tmp = "";//Bmemset(tempbuf,0,sizeof(tempbuf));
+            tmp += ScriptQuotes[13];////Bstrncpy(tempbuf,ScriptQuotes[13],i);
+            tmp+= "OPEN";//Bstrcat(tempbuf,"OPEN");
+            tmp+=ScriptQuotes[13][i+5];//Bstrcat(tempbuf,ScriptQuotes[13][i+5]);
+            ScriptQuotes[13] = tmp;//Bstrncpy(ScriptQuotes[13],tempbuf,MAXQUOTELEN-1);
+            i = MAXQUOTELEN-7;
+        }
 
-//    for (i=MAXQUOTELEN-7; i>=0; i--)
-//        if (Bstrncmp(&ScriptQuotes[13][i],"SPACE",5) == 0)
-//        {
-//            Bmemset(tempbuf,0,sizeof(tempbuf));
-//            Bstrncpy(tempbuf,ScriptQuotes[13],i);
-//            Bstrcat(tempbuf,"OPEN");
-//            Bstrcat(tempbuf,&ScriptQuotes[13][i+5]);
-//            Bstrncpy(ScriptQuotes[13],tempbuf,MAXQUOTELEN-1);
-//            i = MAXQUOTELEN-7;
-//        }
+    // most of these are based on Blood, obviously
+    {
+        var PlayerObituaries =
+        [
+            "^02%s^02 beat %s^02 like a cur",
+            "^02%s^02 broke %s",
+            "^02%s^02 body bagged %s",
+            "^02%s^02 boned %s^02 like a fish",
+            "^02%s^02 castrated %s",
+            "^02%s^02 creamed %s",
+            "^02%s^02 crushed %s",
+            "^02%s^02 destroyed %s",
+            "^02%s^02 diced %s",
+            "^02%s^02 disemboweled %s",
+            "^02%s^02 erased %s",
+            "^02%s^02 eviscerated %s",
+            "^02%s^02 flailed %s",
+            "^02%s^02 flattened %s",
+            "^02%s^02 gave AnAl MaDnEsS to %s",
+            "^02%s^02 gave %s^02 Anal Justice",
+            "^02%s^02 hosed %s",
+            "^02%s^02 hurt %s^02 real bad",
+            "^02%s^02 killed %s",
+            "^02%s^02 made dog meat out of %s",
+            "^02%s^02 made mincemeat out of %s",
+            "^02%s^02 manhandled %s",
+            "^02%s^02 massacred %s",
+            "^02%s^02 mutilated %s",
+            "^02%s^02 murdered %s",
+            "^02%s^02 neutered %s",
+            "^02%s^02 punted %s",
+            "^02%s^02 reamed %s",
+            "^02%s^02 ripped %s^02 a new orifice",
+            "^02%s^02 rocked %s",
+            "^02%s^02 sent %s^02 to hell",
+            "^02%s^02 shredded %s",
+            "^02%s^02 slashed %s",
+            "^02%s^02 slaughtered %s",
+            "^02%s^02 sliced %s",
+            "^02%s^02 smacked %s around",
+            "^02%s^02 smashed %s",
+            "^02%s^02 snuffed %s",
+            "^02%s^02 sodomized %s",
+            "^02%s^02 splattered %s",
+            "^02%s^02 sprayed %s",
+            "^02%s^02 squashed %s",
+            "^02%s^02 throttled %s",
+            "^02%s^02 toasted %s",
+            "^02%s^02 vented %s",
+            "^02%s^02 ventilated %s",
+            "^02%s^02 wasted %s",
+            "^02%s^02 wrecked %s",
+        ];
 
-//    // most of these are based on Blood, obviously
-//    {
-//        const char *PlayerObituaries[] =
-//        {
-//            "^02%s^02 beat %s^02 like a cur",
-//            "^02%s^02 broke %s",
-//            "^02%s^02 body bagged %s",
-//            "^02%s^02 boned %s^02 like a fish",
-//            "^02%s^02 castrated %s",
-//            "^02%s^02 creamed %s",
-//            "^02%s^02 crushed %s",
-//            "^02%s^02 destroyed %s",
-//            "^02%s^02 diced %s",
-//            "^02%s^02 disemboweled %s",
-//            "^02%s^02 erased %s",
-//            "^02%s^02 eviscerated %s",
-//            "^02%s^02 flailed %s",
-//            "^02%s^02 flattened %s",
-//            "^02%s^02 gave AnAl MaDnEsS to %s",
-//            "^02%s^02 gave %s^02 Anal Justice",
-//            "^02%s^02 hosed %s",
-//            "^02%s^02 hurt %s^02 real bad",
-//            "^02%s^02 killed %s",
-//            "^02%s^02 made dog meat out of %s",
-//            "^02%s^02 made mincemeat out of %s",
-//            "^02%s^02 manhandled %s",
-//            "^02%s^02 massacred %s",
-//            "^02%s^02 mutilated %s",
-//            "^02%s^02 murdered %s",
-//            "^02%s^02 neutered %s",
-//            "^02%s^02 punted %s",
-//            "^02%s^02 reamed %s",
-//            "^02%s^02 ripped %s^02 a new orifice",
-//            "^02%s^02 rocked %s",
-//            "^02%s^02 sent %s^02 to hell",
-//            "^02%s^02 shredded %s",
-//            "^02%s^02 slashed %s",
-//            "^02%s^02 slaughtered %s",
-//            "^02%s^02 sliced %s",
-//            "^02%s^02 smacked %s around",
-//            "^02%s^02 smashed %s",
-//            "^02%s^02 snuffed %s",
-//            "^02%s^02 sodomized %s",
-//            "^02%s^02 splattered %s",
-//            "^02%s^02 sprayed %s",
-//            "^02%s^02 squashed %s",
-//            "^02%s^02 throttled %s",
-//            "^02%s^02 toasted %s",
-//            "^02%s^02 vented %s",
-//            "^02%s^02 ventilated %s",
-//            "^02%s^02 wasted %s",
-//            "^02%s^02 wrecked %s",
-//        };
+        var PlayerSelfObituaries =
+        [
+            "^02%s^02 is excrement",
+            "^02%s^02 is hamburger",
+            "^02%s^02 suffered scrotum separation",
+            "^02%s^02 volunteered for population control",
+            "^02%s^02 has suicided",
+            "^02%s^02 bled out",
+        ];
 
-//        const char *PlayerSelfObituaries[] =
-//        {
-//            "^02%s^02 is excrement",
-//            "^02%s^02 is hamburger",
-//            "^02%s^02 suffered scrotum separation",
-//            "^02%s^02 volunteered for population control",
-//            "^02%s^02 has suicided",
-//            "^02%s^02 bled out",
-//        };
+        g_numObituaries = (sizeof(PlayerObituaries)/sizeof(PlayerObituaries[0]));
+        for (i=g_numObituaries-1; i>=0; i--)
+        {
+            if (C_AllocQuote(i+OBITQUOTEINDEX))
+                ScriptQuotes[i+OBITQUOTEINDEX] = PlayerObituaries[i];
+        }
 
-//        g_numObituaries = (sizeof(PlayerObituaries)/sizeof(PlayerObituaries[0]));
-//        for (i=g_numObituaries-1; i>=0; i--)
-//        {
-//            if (C_AllocQuote(i+OBITQUOTEINDEX))
-//                Bstrcpy(ScriptQuotes[i+OBITQUOTEINDEX],PlayerObituaries[i]);
-//        }
-
-//        g_numSelfObituaries = (sizeof(PlayerSelfObituaries)/sizeof(PlayerSelfObituaries[0]));
-//        for (i=g_numSelfObituaries-1; i>=0; i--)
-//        {
-//            if (C_AllocQuote(i+SUICIDEQUOTEINDEX))
-//                Bstrcpy(ScriptQuotes[i+SUICIDEQUOTEINDEX],PlayerSelfObituaries[i]);
-//        }
-//    }
-//}
+        g_numSelfObituaries = (sizeof(PlayerSelfObituaries)/sizeof(PlayerSelfObituaries[0]));
+        for (i=g_numSelfObituaries-1; i>=0; i--)
+        {
+            if (C_AllocQuote(i+SUICIDEQUOTEINDEX))
+                ScriptQuotes[i+SUICIDEQUOTEINDEX] = PlayerSelfObituaries[i];
+        }
+    }
+}
 
 //#if !defined LUNATIC
 function C_ParseCommand(loop: number): number
@@ -6450,110 +6452,110 @@ function C_Compile(filenam: string) : void
     g_szScriptFileName = filenam;   // JBF 20031130: Store currently compiling file name
     
     C_ParseCommand(1);
-todoThrow();
-//    for (i=0; i < g_scriptModulesNum; ++i)
-//    {
-//        C_Include(g_scriptModules[i]);
-//        Bfree(g_scriptModules[i]);
-//    }
+    debugger;
+    for (i=0; i < g_scriptModulesNum; ++i)
+    {
+        C_Include(g_scriptModules[i]);
+        g_scriptModules[i] = "";        //Bfree(g_scriptModules[i]);
+    }
 //    Bfree(g_scriptModules);
-//    g_scriptModules = NULL;
+    g_scriptModules = null;
 
-//    flushlogwindow = 1;
+    flushlogwindow = 1;
 
-//    if (g_numCompilerErrors > 63)
-//        initprintf("fatal error: too many errors: Aborted\n");
+    if (g_numCompilerErrors > 63)
+        initprintf("fatal error: too many errors: Aborted\n");
 
-//    //*script = (intptr_t) g_scriptPtr;
+    //*script = (intptr_t) g_scriptPtr;
 
-//    Bfree(mptr);
-//    mptr = NULL;
+    //Bfree(mptr);
+    mptr = NULL;
 
-//    if (g_numCompilerWarnings|g_numCompilerErrors)
-//        initprintf("Found %d warning(s), %d error(s).\n",g_numCompilerWarnings,g_numCompilerErrors);
+    if (g_numCompilerWarnings|g_numCompilerErrors)
+        initprintf("Found %d warning(s), %d error(s).\n",g_numCompilerWarnings,g_numCompilerErrors);
 
-//    if (g_numCompilerErrors)
-//    {
-//        if (g_loadFromGroupOnly)
-//        {
-//            Bsprintf(buf,"Error compiling CON files.");
-//            G_GameExit(buf);
-//        }
-//        else
-//        {
-//            if (g_groupFileHandle != -1 && g_loadFromGroupOnly == 0)
-//            {
-////                initprintf("Error(s) found in file `%s'.  Do you want to use the INTERNAL DEFAULTS (y/N)?\n",filenam);
+    if (g_numCompilerErrors)
+    {
+        if (g_loadFromGroupOnly)
+        {
+            Bsprintf(buf,"Error compiling CON files.");
+            G_GameExit(buf.toString());
+        }
+        else
+        {
+            if (g_groupFileHandle != -1 && g_loadFromGroupOnly == 0)
+            {
+//                initprintf("Error(s) found in file `%s'.  Do you want to use the INTERNAL DEFAULTS (y/N)?\n",filenam);
 
-//                i=wm_ynbox("CON File Compilation Error", "Error(s) found in file `%s'. Do you want to use the "
-//                           "INTERNAL DEFAULTS?",filenam);
-//                if (i) i = 'y';
-//                if (i == 'y' || i == 'Y')
-//                {
-//                    initprintf(" Yes\n");
-//                    g_loadFromGroupOnly = 1;
-//                    return;
-//                }
-//                else
-//                {
+                i=wm_ynbox("CON File Compilation Error", "Error(s) found in file `%s'. Do you want to use the "+
+                           "INTERNAL DEFAULTS?",filenam);
+                if (i) i = 'y'.charCodeAt(0);
+                if (i == 'y'.charCodeAt(0) || i == 'Y'.charCodeAt(0))
+                {
+                    initprintf(" Yes\n");
+                    g_loadFromGroupOnly = 1;
+                    return;
+                }
+                else
+                {
 //# if (defined _WIN32 || (defined RENDERTYPESDL && ((defined __APPLE__ && defined OSX_STARTUPWINDOW) || defined HAVE_GTK2)))
 //                    while (!quitevent) // keep the window open so people can copy CON errors out of it
 //                        handleevents();
 //# endif
-//                    G_GameExit("");
-//                }
-//            }
-//        }
-//    }
-//    else
-//    {
-//        int32_t j=0, k=0, l=0;
+                    G_GameExit("");
+                }
+            }
+        }
+    }
+    else
+    {
+        var j=0, k=0, l=0;
 
-//        hash_free(h_keywords);
-//        freehashnames();
-//        freesoundhashnames();
+        hash_free(h_keywords);
+        freehashnames();
+        freesoundhashnames();
 
-//        hash_free(&sectorH);
-//        hash_free(&wallH);
-//        hash_free(&userdefH);
+        hash_free(sectorH);
+        hash_free(wallH);
+        hash_free(userdefH);
 
-//        hash_free(&projectileH);
-//        hash_free(&playerH);
-//        hash_free(&inputH);
-//        hash_free(&actorH);
-//        hash_free(&tspriteH);
+        hash_free(projectileH);
+        hash_free(playerH);
+        hash_free(inputH);
+        hash_free(actorH);
+        hash_free(tspriteH);
 
-//        g_totalLines += g_lineNumber;
+        g_totalLines += g_lineNumber;
 
-//        C_SetScriptSize(g_scriptPtr-script+8);
+        C_SetScriptSize(g_scriptPtr-scriptIdx+8);
 
-//        initprintf("Script compiled in %dms, %ld*%db, language version %s\n", getticks() - startcompiletime,
-//                   (unsigned long)(g_scriptPtr-script), (int32_t)sizeof(intptr_t), C_ScriptVersionString(g_scriptVersion));
+        initprintf("Script compiled in %dms, %ld*%db, language version %s\n", getticks() - startcompiletime,
+                   /*(unsigned long)*/uint32(g_scriptPtr-scriptIdx), 4, "JavaScript");
 
-//        initprintf("%d/%d labels, %d/%d variables, %d/%d arrays\n", g_numLabels,
-//                   (int32_t)min((MAXSECTORS * sizeof(sectortype)/sizeof(int32_t)),
-//                                MAXSPRITES * sizeof(spritetype)/(1<<6)),
-//                   g_gameVarCount, MAXGAMEVARS, g_gameArrayCount, MAXGAMEARRAYS);
+        initprintf("%d/%d labels, %d/%d variables, %d/%d arrays\n", g_numLabels,
+                   int32(min((MAXSECTORS * 40 / 4),
+                                MAXSPRITES * sizeof(spritetype)/(1<<6))>>0),
+                   g_gameVarCount, MAXGAMEVARS, g_gameArrayCount, MAXGAMEARRAYS);
 
-//        for (i=MAXQUOTES-1; i>=0; i--)
-//            if (ScriptQuotes[i])
-//                j++;
-//        for (i=MAXGAMEEVENTS-1; i>=0; i--)
-//            if (apScriptGameEvent[i])
-//                k++;
-//        for (i=MAXTILES-1; i>=0; i--)
-//            if (g_tile[i].execPtr)
-//                l++;
+        for (i=MAXQUOTES-1; i>=0; i--)
+            if (ScriptQuotes[i])
+                j++;
+        for (i=MAXGAMEEVENTS-1; i>=0; i--)
+            if (apScriptGameEvent[i])
+                k++;
+        for (i=MAXTILES-1; i>=0; i--)
+            if (g_tile[i].execPtr)
+                l++;
 
-//        if (j) initprintf("%d quotes, ", j);
-//        if (g_numQuoteRedefinitions) initprintf("%d strings, ", g_numQuoteRedefinitions);
-//        if (k) initprintf("%d events, ", k);
-//        if (l) initprintf("%d actors", l);
+        if (j) initprintf("%d quotes, ", j);
+        if (g_numQuoteRedefinitions) initprintf("%d strings, ", g_numQuoteRedefinitions);
+        if (k) initprintf("%d events, ", k);
+        if (l) initprintf("%d actors", l);
 
-//        initprintf("\n");
+        initprintf("\n");
 
-//        C_InitQuotes();
-//    }
+        C_InitQuotes();
+    }
 }
 
 function C_ReportError(iError : number) : void

@@ -25,6 +25,7 @@
 /// <reference path="../../eduke32/headers/global.h.ts" />
 /// <reference path="../../eduke32/headers/grpscan.h.ts" />
 /// <reference path="../../eduke32/headers/player.h.ts" />
+/// <reference path="../../eduke32/headers/quotes.h.ts" />
 
 /// <reference path="../../eduke32/source/baselayer.c.ts" />
 /// <reference path="../../eduke32/source/cache1d.c.ts" />
@@ -37,6 +38,7 @@
 /// <reference path="../../eduke32/source/namesdyn.c.ts" />
 /// <reference path="../../eduke32/source/net.c.ts" />
 /// <reference path="../../eduke32/source/osd.c.ts" />
+/// <reference path="../../eduke32/source/player.c.ts" />
 /// <reference path="../../eduke32/source/osdfuncs.c.ts" />
 /// <reference path="../../eduke32/source/soundsdyn.c.ts" />
 /// <reference path="../../eduke32/source/winlayer.c.ts" />
@@ -181,8 +183,8 @@ var g_gameNamePtr = ""; ////const char *
 //// g_rtsNamePtr can point to an argv[] element
 //const char *g_rtsNamePtr = NULL;
 
-//char **g_scriptModules = NULL;
-//int32_t g_scriptModulesNum = 0;
+var g_scriptModules: string[]/*Uint8Array[]*/ = null; //char **
+var g_scriptModulesNum: number = 0; //int32
 //char **g_defModules = NULL;
 //int32_t g_defModulesNum = 0;
 //int32_t g_dependencyCRC = 0;

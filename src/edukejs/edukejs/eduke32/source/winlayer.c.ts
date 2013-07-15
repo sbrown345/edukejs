@@ -25,6 +25,7 @@
 /// <reference path="../../eduke32/headers/global.h.ts" />
 /// <reference path="../../eduke32/headers/grpscan.h.ts" />
 /// <reference path="../../eduke32/headers/player.h.ts" />
+/// <reference path="../../eduke32/headers/quotes.h.ts" />
 
 /// <reference path="../../eduke32/source/baselayer.c.ts" />
 /// <reference path="../../eduke32/source/cache1d.c.ts" />
@@ -38,8 +39,9 @@
 /// <reference path="../../eduke32/source/namesdyn.c.ts" />
 /// <reference path="../../eduke32/source/net.c.ts" />
 /// <reference path="../../eduke32/source/osd.c.ts" />
-/// <reference path="../../eduke32/source/soundsdyn.c.ts" />
 /// <reference path="../../eduke32/source/osdfuncs.c.ts" />
+/// <reference path="../../eduke32/source/player.c.ts" />
+/// <reference path="../../eduke32/source/soundsdyn.c.ts" />
 
 
 
@@ -261,9 +263,9 @@ var quitevent=0;//char
 
 
 
-////
-//// wm_msgbox/wm_ynbox() -- window-manager-provided message boxes
-////
+//
+// wm_msgbox/wm_ynbox() -- window-manager-provided message boxes
+//
 //int32_t wm_msgbox(char *name, char *fmt, ...)
 //{
 //    char buf[2048];
@@ -279,7 +281,8 @@ var quitevent=0;//char
 
 
 //int32_t wm_ynbox(char *name, char *fmt, ...)
-//{
+function wm_ynbox(name: string, fmt : string, ...args: any[]): number
+{
 //    char buf[2048];
 //    va_list va;
 //    int32_t r;
@@ -290,8 +293,11 @@ var quitevent=0;//char
 
 //    r = MessageBox((HWND)win_gethwnd(),buf,name,MB_YESNO|MB_ICONQUESTION|MB_TASKMODAL);
 //    if (r==IDYES) return 1;
-//    return 0;
-//}
+//    return 0;    
+    args.unshift(fmt);
+    var output = sprintf.apply(this, args);
+    return confirm(output) ? 1 : 0;
+}
 
 ////
 //// wm_setapptitle() -- changes the window title

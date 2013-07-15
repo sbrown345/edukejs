@@ -94,9 +94,14 @@ test("memcmp", function () {
 });
 
 test("strcmp", function () {
-    strictEqual(memcmp("AA", "AA", 2), 0, "strings match");
-    strictEqual(memcmp("ZZ", "AA", 2), 1, "first string is greater than second");
-    strictEqual(memcmp("AA", "ZZ", 2), -1, "first string is less than second");
+    strictEqual(strcmp("AA", "AA"), 0, "strings match");
+    strictEqual(strcmp("ZZ", "AA"), 1, "first string is greater than second");
+    strictEqual(strcmp("AA", "ZZ"), -1, "first string is less than second");
+});
+
+test("strncmp", function () {
+    strictEqual(strncmp("AA", "ABBB", 1), 0, "strings match");
+    strictEqual(strncmp("A", "A", 10), 0, "strings match");
 });
 
 test("strlen", function () {

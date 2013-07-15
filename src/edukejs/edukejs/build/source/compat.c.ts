@@ -180,10 +180,10 @@ function Bstrdup(s : string) : string
 //    return strcmp(s1,s2);
 //}
 
-//int32_t Bstrncmp(const char *s1, const char *s2, bsize_t n)
-//{
-//    return strncmp(s1,s2,n);
-//}
+function Bstrncmp(s1: string, s2: string, n: number): number
+{
+    return strncmp(s1,s2,n);
+}
 
 //int32_t Bstrcasecmp(const char *s1, const char *s2)
 //{

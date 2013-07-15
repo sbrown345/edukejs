@@ -78,6 +78,7 @@
     <Content Include="eduke32\headers\grpscan.h.ts" />
     <Content Include="eduke32\headers\namesdyn.h.ts" />
     <Content Include="eduke32\headers\player.h.ts" />
+    <Content Include="eduke32\headers\quotes.h.ts" />
     <Content Include="eduke32\headers\soundsdyn.h.ts" />
     <Content Include="eduke32\headers\_functio.h.ts" />
     <Content Include="eduke32\source\baselayer.c.ts" />
@@ -90,6 +91,7 @@
     <Content Include="eduke32\source\grpscan.c.ts" />
     <Content Include="eduke32\source\namesdyn.c.ts" />
     <Content Include="eduke32\source\net.c.ts" />
+    <Content Include="eduke32\source\player.c.ts" />
     <Content Include="eduke32\source\soundsdyn.c.ts" />
     <Content Include="eduke32\source\winlayer.c.ts" />
     <Content Include="index.htm" />

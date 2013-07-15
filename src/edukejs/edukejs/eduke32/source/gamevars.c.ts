@@ -27,6 +27,7 @@
 /// <reference path="../../eduke32/headers/grpscan.h.ts" />
 /// <reference path="../../eduke32/headers/namesdyn.h.ts" />
 /// <reference path="../../eduke32/headers/player.h.ts" />
+/// <reference path="../../eduke32/headers/quotes.h.ts" />
 /// <reference path="../../eduke32/headers/soundsdyn.h.ts" />
 
 /// <reference path="../../eduke32/source/baselayer.c.ts" />
@@ -41,6 +42,7 @@
 /// <reference path="../../eduke32/source/net.c.ts" />
 /// <reference path="../../eduke32/source/osd.c.ts" />
 /// <reference path="../../eduke32/source/osdfuncs.c.ts" />
+/// <reference path="../../eduke32/source/player.c.ts" />
 /// <reference path="../../eduke32/source/soundsdyn.c.ts" />
 /// <reference path="../../eduke32/source/winlayer.c.ts" />
 

@@ -1559,7 +1559,7 @@ function G_ProcessDynamicTileMapping(/*const char **/szLabel: string, /*int32_t*
 //    }
 }
 
-function inithashnames() : void
+function inithashnames(): void
 {
     var i : number;
     hash_init(h_names);
@@ -1568,10 +1568,10 @@ function inithashnames() : void
         hash_add(h_names, g_dynTileList[i].str, i, 0);
 }
 
-//void freehashnames(void)
-//{
-//    hash_free(&h_names);
-//}
+function freehashnames(): void
+{
+    hash_free(h_names);
+}
 //#endif
 //#endif
 

@@ -64,7 +64,7 @@ var myconnectindex: number, numplayers: number;
 //// g_tile: tile-specific data THAT DOES NOT CHANGE during the course of a game
 //G_EXTERN tiledata_t g_tile[MAXTILES];
 //G_EXTERN animwalltype animwall[MAXANIMWALLS];
-//G_EXTERN char *ScriptQuotes[MAXQUOTES],*ScriptQuoteRedefinitions[MAXQUOTES];
+var ScriptQuotes: string[] /*[MAXQUOTES]*/,ScriptQuoteRedefinitions: string[]/*[MAXQUOTES]*/; ////G_EXTERN char *
 var label : Uint8Array;//G_EXTERN char *label;
 //G_EXTERN char EnvMusicFilename[MAXVOLUMES+1][BMAX_PATH];
 //G_EXTERN char g_RTSPlaying;
