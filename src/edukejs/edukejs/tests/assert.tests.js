@@ -72,10 +72,19 @@ test("originalArgs", function () {
     strictEqual(assert.failedCount, 1, "is array of chars");
 });
 
-test("printf", function () {
+test("Bsprintf", function () {
     var array = new Uint8Array(10);
-    printf(array, "test%s", "AAAA");
+    Bsprintf(array, "test%s", "AAAA");
     strictEqual(array.toString(), "testAAAA", "array matches");
+
+    array = new Uint8Array(10);
+    Bsprintf(array, "%i %i test", 20, 20);
+    strictEqual(array.toString(), "20 20 test", "array matches");
+
+    // todo: this breaks...
+    //array = new Uint8Array(10);
+    //Bsprintf(array, "test %f %i test %s", 5.5, 20, "again");
+    //strictEqual(array.toString(), "test 5.5 20 tset again", "array matches");
 });
 
 test("memcmp", function () {
@@ -91,8 +100,24 @@ test("strcmp", function () {
 });
 
 test("strlen", function () {
-    strictEqual(strlen(new Uint8Array(9, 9, 9, 0, 0), 3, "strings length is 3"));
-    strictEqual(strlen(new Uint8Array(9, 9, 9, 9, 9), 5, "strings length is 5"));
+    strictEqual(strlen(new Uint8Array([9, 9, 9, 0, 0])), 3, "string length is 3");
+    strictEqual(strlen(new Uint8Array([9, 9, 9, 9, 9])), 5, "string length is 5");
+});
+
+test("strtoll", function () {
+    strictEqual(strtoll("    10", null, 10), 10, "string is 10");
+    strictEqual(strtoll("    +10", null, 10), 10, "string is 10");
+    strictEqual(strtoll("    -10", null, 10), -10, "string is -10");
+    strictEqual(strtoll("    -010", null, 10), -10, "string is -10");
+    strictEqual(strtoll("    +010", null, 10), 10, "string is 10");
+    strictEqual(strtoll("20", null, 10), 20, "string is 20");
+    strictEqual(strtoll("+20", null, 10), 20, "string is 20");
+    strictEqual(strtoll("-20", null, 10), -20, "string is -20");
+    strictEqual(strtoll("-1", null, 10), -1, "string is -1");
+    strictEqual(strtoll("-1", null, 10), -1, "string is 20");
+    strictEqual(strtoll("-9999999 sdfasdf sddf asdf sdf sdaf sd", null, 10), -9999999, "string is -9999999");
+    strictEqual(strtoll("sdfasddfsdfsd fsds dfs d 10", null, 10), 0, "string is 0");
+    strictEqual(strtoll(" +0123456789  fsds dfs d 10", null, 10), 0123456789, "string is 0123456789");
 });
 
 test("uint8array string conversions", function () {

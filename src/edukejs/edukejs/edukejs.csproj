@@ -99,7 +99,6 @@
     <Content Include="eduke32\source\osdfuncs.c.ts" />
     <Content Include="libs\sprintf.ts" />
     <Content Include="libs\sprintf.d.ts" />
-    <Content Include="libs\sprintf.js" />
     <Content Include="tests\assert.tests.js" />
     <Content Include="tests\index.htm" />
     <Content Include="tests\libs\qunit.js" />

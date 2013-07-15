@@ -624,7 +624,8 @@ var Bmemcmp = memcmp;
 var Bprintf  = printf;
 //# define Bsscanf sscanf
 var Bsprintf = function (buf: Uint8Array, format: string, ...args: any[]) {
-    var output = sprintf(format, args);
+    args.unshift(format);
+    var output = sprintf.apply(this, args);
     var i: number;
     for (i = 0; i < output.length; i++) {
         buf[i] = output.charCodeAt(i);
