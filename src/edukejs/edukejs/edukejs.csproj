@@ -107,6 +107,7 @@
     <Content Include="tests\style\qunit.css" />
     <Content Include="utils\assert.ts" />
     <Content Include="utils\c.ts" />
+    <Content Include="utils\logging.ts" />
     <Content Include="utils\types.ts" />
     <Content Include="utils\todo.ts" />
     <Content Include="Web.config" />

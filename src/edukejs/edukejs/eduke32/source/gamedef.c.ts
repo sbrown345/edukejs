@@ -1,5 +1,6 @@
 /// <reference path="../../utils/assert.ts" />
 /// <reference path="../../utils/c.ts" />
+/// <reference path="../../utils/logging.ts" />
 /// <reference path="../../utils/todo.ts" />
 /// <reference path="../../utils/types.ts" />
 
@@ -1408,8 +1409,8 @@ function ispecial(/*const char */c: string) : number
 
 //#define C_NextLine() while (textptr[textptrIdx] != 0x0a && textptr[textptrIdx] != 0x0d && textptr[textptrIdx] != 0) textptrIdx++
 function C_NextLine() {
-     while (textptr[textptrIdx] != 0x0a && textptr[textptrIdx] != 0x0d && textptr[textptrIdx] != 0) 
-         textptrIdx++
+     while (textptr.charCodeAt(textptrIdx) != 0x0a && textptr.charCodeAt(textptrIdx) != 0x0d && textptr.charCodeAt(textptrIdx) != 0) 
+         textptrIdx++;
 }
 
 function C_SkipComments() : number
@@ -1563,8 +1564,11 @@ function C_GetNextKeyword(): number //Returns its code #
     }
     tempbuf[l] = 0;
 
+    log(DEBUG_COMPILE, "%i C_GetNextKeyword %s", g_lineNumber, tempbuf+"");
+
     if ((i = hash_find(h_keywords,tempbuf.toString())) >= 0)
     {
+        log(DEBUG_COMPILE, "%i C_GetNextKeyword????? %s", g_lineNumber, keyw[i]);
         if (i == CON_LEFTBRACE || i == CON_RIGHTBRACE || i == CON_NULLOP)
             script[g_scriptPtr] = i + (IFELSE_MAGIC<<12);
         else script[g_scriptPtr] = i + (g_lineNumber<<12);
@@ -1619,7 +1623,7 @@ function parse_decimal_number() : number // (textptr)
                    g_szScriptFileName,g_lineNumber);
         g_numCompilerWarnings++;
     }
-
+    log(DEBUG_COMPILE, "%i parse_decimal_number %s", g_lineNumber, num);
     return int32(num);
 }
 
