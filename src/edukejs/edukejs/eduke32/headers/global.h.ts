@@ -119,7 +119,8 @@ var playerswhenstarted : number; ////G_EXTERN int32_t
 //G_EXTERN int32_t vel,svel,angvel,horiz,ototalclock;
 //G_EXTERN intptr_t *g_parsingActorPtr;
 //G_EXTERN intptr_t *g_scriptPtr,*insptr;
-var labelcode: number, labeltype: number;//G_EXTERN int32_t *labelcode,*labeltype;
+var labelcode: Int32Array, labeltype: Int32Array;//G_EXTERN int32_t *labelcode,*labeltype;
+var labelcodeIdx : number, labeltypeIdx : number;
 var script:  Uint32Array;//G_EXTERN intptr_t *script;
 var scriptIdx: number = 0;
 //G_EXTERN map_t MapInfo[(MAXVOLUMES+1)*MAXLEVELS];  // +1 volume for "intro", "briefing" music

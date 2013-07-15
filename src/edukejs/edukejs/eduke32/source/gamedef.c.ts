@@ -1479,11 +1479,11 @@ function C_SkipComments() : number
 //#define GetDefID(szGameLabel) hash_find(h_gamevars,szGameLabel)
 //#define GetADefID(szGameLabel) hash_find(h_arrays,szGameLabel)
 
-function isaltok(/*const char */c: string) : boolean
+function isaltok(/*const char */c: string) : number
 {
     assert.isString(c).areEqual(1, c.length);
     return (isalnum(c) || c == '{' || c == '}' || c == '/' || c == '\\' ||
-            c == '*' || c == '-' || c == '_' || c == '.');
+            c == '*' || c == '-' || c == '_' || c == '.') ? 1 : 0;
 }
 
 //static inline int32_t C_GetLabelNameID(const memberlabel_t *pLabel, hashtable_t *tH, const char *psz)
@@ -1517,32 +1517,32 @@ function C_GetNextLabelName() : void
         initprintf("%s:%d: debug: got label `%s'.\n",g_szScriptFileName,g_lineNumber,label.subarray(g_numLabels<<6).toString());
 }
 
-//static int32_t C_GetKeyword(void)
-//{
-//    int32_t i;
-//    char *temptextptr;
+function C_GetKeyword() : number
+{
+    var i: number;
+    var temptextptr: number;
 
-//    C_SkipComments();
+    C_SkipComments();
 
-//    temptextptr = textptr;
+    temptextptr = textptrIdx;
 
-//    if (*temptextptr == 0) // EOF
-//        return -2;
+    if (textptr[temptextptr] == 0) // EOF
+        return -2;
 
-//    while (isaltok(*temptextptr) == 0)
-//    {
-//        temptextptrIdx++;
-//        if (*temptextptr == 0)
-//            return 0;
-//    }
+    while (isaltok(textptr[temptextptr]) == 0)
+    {
+        temptextptr++;
+        if (textptr[temptextptr] == 0)
+            return 0;
+    }
 
-//    i = 0;
-//    while (isaltok(*temptextptr))
-//        tempbuf[i++] = *(temptextptrIdx++);
-//    tempbuf[i] = 0;
+    i = 0;
+    while (isaltok(textptr[temptextptr]))
+        tempbuf[i++] = textptr[temptextptr++];
+    tempbuf[i] = 0;
 
-//    return hash_find(h_keywords,tempbuf);
-//}
+    return hash_find(h_keywords,tempbuf.toString());
+}
 
 function C_GetNextKeyword(): number //Returns its code #
 {
@@ -1592,32 +1592,31 @@ function C_GetNextKeyword(): number //Returns its code #
 function parse_decimal_number() : number // (textptr)
 {
     // decimal constants -- this is finicky business
-    var num = 0 /*temp code*/;// = strtoll(textptr, NULL, 10);  // assume long long to be int64_t  //int64_t
-    todoThrow();
+    var num = strtoll(textptr, textptrIdx, NULL, 10);  // SB: original returned long
 
-//    if (num >= INT32_MIN && num <= INT32_MAX)
-//    {
-//        // all OK
-//    }
-//    else if (num > INT32_MAX && num <= UINT32_MAX)
-//    {
-//        // Number interpreted as uint32, but packed as int32 (on 32-bit archs)
-//        // (CON code in the wild exists that does this).  Note that such conversion
-//        // is implementation-defined (C99 6.3.1.3) but GCC does the 'expected' thing.
+    if (num >= INT32_MIN && num <= INT32_MAX)
+    {
+        // all OK
+    }
+    else if (num > INT32_MAX && num <= UINT32_MAX)
+    {
+        // Number interpreted as uint32, but packed as int32 (on 32-bit archs)
+        // (CON code in the wild exists that does this).  Note that such conversion
+        // is implementation-defined (C99 6.3.1.3) but GCC does the 'expected' thing.
 //#if 0
 //        initprintf("%s:%d: warning: number greater than INT32_MAX converted to a negative one.\n",
 //                   g_szScriptFileName,g_lineNumber);
 //        g_numCompilerWarnings++;
 //#endif
-//    }
-//    else
-//    {
-//        // out of range, this is arguably worse
+    }
+    else
+    {
+        // out of range, this is arguably worse
 
-//        initprintf("%s:%d: warning: number out of the range of a 32-bit integer encountered.\n",
-//                   g_szScriptFileName,g_lineNumber);
-//        g_numCompilerWarnings++;
-//    }
+        initprintf("%s:%d: warning: number out of the range of a 32-bit integer encountered.\n",
+                   g_szScriptFileName,g_lineNumber);
+        g_numCompilerWarnings++;
+    }
 
     return int32(num);
 }
@@ -1913,7 +1912,7 @@ function C_GetNextValue(type: number): number
         C_ReportError(ERROR_ISAKEYWORD);
         textptrIdx+=l;
     }
-    debugger;
+    
     i = hash_find(h_labels,tempbuf.toString());
     if (i>=0)
     {
@@ -2557,7 +2556,7 @@ function C_ParseCommand(loop: number): number
 
         tempscrptr = NULL; // temptextptr = NULL;
         otw = g_lastKeyword;
-        debugger;
+        
         switch ((g_lastKeyword = tw = C_GetNextKeyword()))
         {
         default:
@@ -2851,8 +2850,6 @@ function C_ParseCommand(loop: number): number
                 C_GetNextValue(LABEL_DEFINE);
                 //printf("Translated. '%.20s'\n",textptr);
 
-                debugger;
-
                 i = hash_find(h_labels,label.subarray(g_numLabels<<6).toString());G_ProcessDynamicTileMapping
                 if (i>=0)
                 {
@@ -3132,57 +3129,58 @@ function C_ParseCommand(loop: number): number
 //            }
 //            continue;
 
-//        case CON_ACTION:
-//            if (g_parsingActorPtr || g_processingState)
-//            {
-//                C_GetNextValue(LABEL_ACTION);
-//            }
-//            else
-//            {
-//                g_scriptPtr--;
-//                C_GetNextLabelName();
-//                // Check to see it's already defined
+        case CON_ACTION:
+            debugger;
+            if (g_parsingActorPtr || g_processingState)
+            {
+                C_GetNextValue(LABEL_ACTION);
+            }
+            else
+            {
+                g_scriptPtr--;
+                C_GetNextLabelName();
+                // Check to see it's already defined
 
-//                if (hash_find(h_keywords,label.subarray(g_numLabels<<6).toString())>=0)
-//                {
-//                    g_numCompilerErrors++;
-//                    C_ReportError(ERROR_ISAKEYWORD);
-//                    continue;
-//                }
+                if (hash_find(h_keywords,label.subarray(g_numLabels<<6).toString())>=0)
+                {
+                    g_numCompilerErrors++;
+                    C_ReportError(ERROR_ISAKEYWORD);
+                    continue;
+                }
 
-//                i = hash_find(h_gamevars,label.subarray(g_numLabels<<6).toString());
-//                if (i>=0)
-//                {
-//                    g_numCompilerWarnings++;
-//                    C_ReportError(WARNING_NAMEMATCHESVAR);
-//                }
+                i = hash_find(h_gamevars,label.subarray(g_numLabels<<6).toString());
+                if (i>=0)
+                {
+                    g_numCompilerWarnings++;
+                    C_ReportError(WARNING_NAMEMATCHESVAR);
+                }
 
-//                i = hash_find(h_labels,label.subarray(g_numLabels<<6).toString());
-//                if (i>=0)
-//                {
-//                    g_numCompilerWarnings++;
-//                    initprintf("%s:%d: warning: duplicate action `%s' ignored.\n",g_szScriptFileName,g_lineNumber,label.subarray(g_numLabels<<6).toString());
-//                }
-//                else
-//                {
-//                    labeltype[g_numLabels] = LABEL_ACTION;
-//                    labelcode[g_numLabels] = g_scriptPtr-script;
-//                    hash_add(h_labels,label.subarray(g_numLabels<<6).toString(),g_numLabels,0);
-//                    g_numLabels++;
-//                }
+                i = hash_find(h_labels,label.subarray(g_numLabels<<6).toString());
+                if (i>=0)
+                {
+                    g_numCompilerWarnings++;
+                    initprintf("%s:%d: warning: duplicate action `%s' ignored.\n",g_szScriptFileName,g_lineNumber,label.subarray(g_numLabels<<6).toString());
+                }
+                else
+                {
+                    labeltype[g_numLabels] = LABEL_ACTION;
+                    labelcode[g_numLabels] = g_scriptPtr-scriptIdx;
+                    hash_add(h_labels,label.subarray(g_numLabels<<6).toString(),g_numLabels,0);
+                    g_numLabels++;
+                }
 
-//                for (j=4; j>=0; j--)
-//                {
-//                    if (C_GetKeyword() != -1) break;
-//                    C_GetNextValue(LABEL_DEFINE);
-//                }
-//                for (k=j; k>=0; k--)
-//                {
-//                    bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
-//                    *(g_scriptPtr++) = 0;
-//                }
-//            }
-//            continue;
+                for (j=4; j>=0; j--)
+                {
+                    if (C_GetKeyword() != -1) break;
+                    C_GetNextValue(LABEL_DEFINE);
+                }
+                for (k=j; k>=0; k--)
+                {
+                    bitptr[(g_scriptPtr-scriptIdx)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-scriptIdx)&7));
+                    script[g_scriptPtr++] = 0;
+                }
+            }
+            continue;
 
 //        case CON_ACTOR:
 //        case CON_USERACTOR:

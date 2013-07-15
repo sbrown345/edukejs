@@ -24,7 +24,7 @@ function path(location: string) : void {
     var depth = stack.split("\n").length - 4; // skip first line, this function, load gamme, xhr load
     depth = Math.max(0, depth);
     var spacing = Array(depth+1).join(" ");
-    console.info("%cpath: %s%s", "color: red", spacing, location);
+    console.info("%cpath: %s%s", "color: green", spacing, location);
 }
 
 interface Error {

@@ -4,6 +4,10 @@ var NULL = null;
 var TRUE:number = 1;
 var FALSE:number = 0;
 
+var INT32_MIN = -2147483648;
+var INT32_MAX = 2147483647;
+var UINT32_MAX = 4294967295;
+
 function exit(code: number) {
     todoThrow();
 }
@@ -162,7 +166,7 @@ function strupr(str: string) : string {
     return str.toUpperCase();
 }
 
-function strtoll(str: string, endptr: R<string>, base: number) : number {
+function strtoll(str: string, i: number, endptr: R<string>, base: number) : number {
     if(base !== 10) {
         todoThrow();
     }
@@ -171,7 +175,7 @@ function strtoll(str: string, endptr: R<string>, base: number) : number {
         todoThrow();
     }
 
-    var i = 0;
+    //var i = 0;
 
     for (; i < str.length && /\s/.test(str[i]); i++) {
         //console.log("%i whitespace", i);

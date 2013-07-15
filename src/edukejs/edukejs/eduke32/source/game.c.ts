@@ -10508,9 +10508,9 @@ function G_CompileScripts() : void
     var psm = pathsearchmode;
 
     todo("check this init of labels");
-    label = new Uint8Array(sprite.length * 44/*spritetype size*/);//sprite[0];// (char *)&sprite[0];     // V8: 16384*44/64 = 11264  V7: 4096*44/64 = 2816
-    labelcode = 0;//sector[0];//(int32_t *)&sector[0]; // V8: 4096*40/4 = 40960    V7: 1024*40/4 = 10240
-    labeltype = 0;//wall[0];//(int32_t *)&wall[0];   // V8: 16384*32/4 = 131072  V7: 8192*32/4 = 65536
+    label = new Uint8Array(sprite.length * 44 / 64);//sprite[0];// (char *)&sprite[0];     // V8: 16384*44/64 = 11264  V7: 4096*44/64 = 2816
+    labelcode = new Int32Array(sector.length * 44 / 4);//sector[0];//(int32_t *)&sector[0]; // V8: 4096*40/4 = 40960    V7: 1024*40/4 = 10240
+    labeltype = new Int32Array(wall.length * 32 / 4);//wall[0];//(int32_t *)&wall[0];   // V8: 16384*32/4 = 131072  V7: 8192*32/4 = 65536
 //#endif
 
     if (g_scriptNamePtr)

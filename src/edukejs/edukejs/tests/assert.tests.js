@@ -105,19 +105,22 @@ test("strlen", function () {
 });
 
 test("strtoll", function () {
-    strictEqual(strtoll("    10", null, 10), 10, "string is 10");
-    strictEqual(strtoll("    +10", null, 10), 10, "string is 10");
-    strictEqual(strtoll("    -10", null, 10), -10, "string is -10");
-    strictEqual(strtoll("    -010", null, 10), -10, "string is -10");
-    strictEqual(strtoll("    +010", null, 10), 10, "string is 10");
-    strictEqual(strtoll("20", null, 10), 20, "string is 20");
-    strictEqual(strtoll("+20", null, 10), 20, "string is 20");
-    strictEqual(strtoll("-20", null, 10), -20, "string is -20");
-    strictEqual(strtoll("-1", null, 10), -1, "string is -1");
-    strictEqual(strtoll("-1", null, 10), -1, "string is 20");
-    strictEqual(strtoll("-9999999 sdfasdf sddf asdf sdf sdaf sd", null, 10), -9999999, "string is -9999999");
-    strictEqual(strtoll("sdfasddfsdfsd fsds dfs d 10", null, 10), 0, "string is 0");
-    strictEqual(strtoll(" +0123456789  fsds dfs d 10", null, 10), 0123456789, "string is 0123456789");
+    strictEqual(strtoll("    10",0, null, 10), 10, "string is 10");
+    strictEqual(strtoll("    +10",0, null, 10), 10, "string is 10");
+    strictEqual(strtoll("    -10",0, null, 10), -10, "string is -10");
+    strictEqual(strtoll("    -010",0, null, 10), -10, "string is -10");
+    strictEqual(strtoll("    +010",0, null, 10), 10, "string is 10");
+    strictEqual(strtoll("20",0, null, 10), 20, "string is 20");
+    strictEqual(strtoll("+20",0, null, 10), 20, "string is 20");
+    strictEqual(strtoll("-20",0, null, 10), -20, "string is -20");
+    strictEqual(strtoll("-1",0, null, 10), -1, "string is -1");
+    strictEqual(strtoll("-1",0, null, 10), -1, "string is 20");
+    strictEqual(strtoll("-9999999 sdfasdf sddf asdf sdf sdaf sd",0, null, 10), -9999999, "string is -9999999");
+    strictEqual(strtoll("sdfasddfsdfsd fsds dfs d 10",0, null, 10), 0, "string is 0");
+    strictEqual(strtoll(" +0123456789  fsds dfs d 10",0, null, 10), 0123456789, "string is 0123456789");
+
+    strictEqual(strtoll("    10",5, null, 10), 10, "string is 10");
+    strictEqual(strtoll("111",1, null, 11), 10, "string is 11");
 });
 
 test("uint8array string conversions", function () {
