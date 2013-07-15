@@ -162,11 +162,39 @@ function strupr(str: string) : string {
     return str.toUpperCase();
 }
 
-function strtoll(str: string) : string {
-    for (var i = 0; i < str.length; i++) {
-        throw "todo"
-        //http://www.cplusplus.com/reference/cstdlib/strtol/
+function strtoll(str: string, endptr: R<string>, base: number) : number {
+    if(base !== 10) {
+        todoThrow();
     }
+
+    if(endptr) {
+        todoThrow();
+    }
+
+    var i = 0;
+
+    for (; i < str.length && /\s/.test(str[i]); i++) {
+        //console.log("%i whitespace", i);
+    }
+
+    if(!/[\d-+]/.test(str[i])) {
+        return 0;
+    }
+
+    var output = "";
+    if(str[i] === "-" || str[i] === "+") {
+        //console.log("%i -/= symb: %s", i, str[i]);
+        output += str[i];
+        i++;
+    }
+
+    for (; i < str.length && /[\d]/.test(str[i]); i++) {
+        //console.log("%i digit %s", i, str[i]);
+        output+= str[i];
+    }
+
+    //console.log("parse: %s = %i", output, parseInt(output, base));
+    return parseInt(output, base);
 }
 
 function tolower(s: string): string {
