@@ -675,7 +675,10 @@ function WinMain(hInst, hPrevInst, lpCmdLine, nCmdShow)
 //
 // initprintf() -- prints a string to the intitialization window
 //
-var initprintf = console.log.bind(console);
+var initprintf = function(f: string, ...args: any[])  {
+    args.unshift(f.trim());
+    console.log.apply(console, args);
+};
 //void initprintf(const char *f, ...)
 //{
 //    va_list va;
