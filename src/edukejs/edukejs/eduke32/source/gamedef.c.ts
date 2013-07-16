@@ -1564,11 +1564,8 @@ function C_GetNextKeyword(): number //Returns its code #
     }
     tempbuf[l] = 0;
 
-    log(DEBUG_COMPILE, "%i C_GetNextKeyword %s", g_lineNumber, tempbuf+"");
-
     if ((i = hash_find(h_keywords,tempbuf.toString())) >= 0)
     {
-        log(DEBUG_COMPILE, "%i C_GetNextKeyword????? %s", g_lineNumber, keyw[i]);
         if (i == CON_LEFTBRACE || i == CON_RIGHTBRACE || i == CON_NULLOP)
             script[g_scriptPtr] = i + (IFELSE_MAGIC<<12);
         else script[g_scriptPtr] = i + (g_lineNumber<<12);
@@ -1623,7 +1620,6 @@ function parse_decimal_number() : number // (textptr)
                    g_szScriptFileName,g_lineNumber);
         g_numCompilerWarnings++;
     }
-    log(DEBUG_COMPILE, "%i parse_decimal_number %s", g_lineNumber, num);
     return int32(num);
 }
 
@@ -2833,9 +2829,9 @@ function C_ParseCommand(loop: number): number
 
         case CON_DEFINE:
             {
-                //printf("Got definition. Getting Label. '%.20s'\n",textptr);
+                dlog(DEBUG_COMPILE, "Got definition. Getting Label. '%.20s'\n",textptr.substr(textptrIdx, 20));
                 C_GetNextLabelName();
-                //printf("Got label. '%.20s'\n",textptr);
+                dlog(DEBUG_COMPILE, "Got label. '%.20s'\n",textptr.substr(textptrIdx, 20));
                 // Check to see it's already defined
 
                 if (hash_find(h_keywords,label.subarray(g_numLabels<<6).toString())>=0)
@@ -2856,7 +2852,7 @@ function C_ParseCommand(loop: number): number
                 C_GetNextValue(LABEL_DEFINE);
                 //printf("Translated. '%.20s'\n",textptr);
 
-                i = hash_find(h_labels,label.subarray(g_numLabels<<6).toString());G_ProcessDynamicTileMapping
+                i = hash_find(h_labels,label.subarray(g_numLabels<<6).toString());
                 if (i>=0)
                 {
                     // if (i >= g_numDefaultLabels)
@@ -2871,7 +2867,7 @@ function C_ParseCommand(loop: number): number
                 }
                 else
                 {
-                    //              printf("Defining Definition \"%s\" to be '%d'\n",label.subarray(g_numLabels<<6).toString(),script[g_scriptPtr-1]);
+                    dlog(DEBUG_COMPILE, "Defining Definition \"%s\" to be '%d'\n",label.subarray(g_numLabels<<6).toString(),script[g_scriptPtr-1]);
                     hash_add(h_labels,label.subarray(g_numLabels<<6).toString(),g_numLabels,0);
                     labeltype[g_numLabels] = LABEL_DEFINE;
                     labelcode[g_numLabels++] = script[g_scriptPtr-1];
@@ -3136,7 +3132,6 @@ function C_ParseCommand(loop: number): number
 //            continue;
 
         case CON_ACTION:
-            debugger;
             if (g_parsingActorPtr || g_processingState)
             {
                 C_GetNextValue(LABEL_ACTION);
@@ -6563,13 +6558,13 @@ function C_Compile(filenam: string) : void
 }
 
 function C_ReportError(iError : number) : void
-{debugger;
+{
     if (Bstrcmp(g_szCurrentBlockName,g_szLastBlockName))
     {
         if (g_parsingEventPtr || g_processingState || g_parsingActorPtr)
             initprintf("%s: In %s `%s':\n",g_szScriptFileName,g_parsingEventPtr?"event":g_parsingActorPtr?"actor":"state",g_szCurrentBlockName);
         else initprintf("%s: At top level:\n",g_szScriptFileName);
-        g_szLastBlockName = g_szCurrentBlockName;//Bstrcpy(g_szLastBlockName,g_szCurrentBlockName);
+        g_szLastBlockName = g_szCurrentBlockName;
     }
     switch (iError)
     {

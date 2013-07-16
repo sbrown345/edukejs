@@ -2,6 +2,7 @@
 var hardcoded = {
     grpSize: shareware ? 11035779 : 44356548,
     grpCRC: shareware ? -1740973789 : -46280719,
+    skipChecksum: true,
 };
 
 // keep track of things to do

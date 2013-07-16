@@ -403,7 +403,6 @@ function WinMain(hInst, hPrevInst, lpCmdLine, nCmdShow)
 //    }
 
     // carve up the command line into more recognizable pieces
-    debugger;
     argvbuf = Bstrdup("index.htm " + lpCmdLine/*GetCommandLine()*/);
     _buildargc = 0;
     if (argvbuf)

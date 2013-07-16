@@ -444,22 +444,27 @@ function ScanGroups() : number
 //            if (fh < 0) continue;
 //            if (Bfstat(fh, &st)) continue;
 
-            initprintf(" Checksumming %s...", "hardcoded file, DUKE3D.GRP"/*sidx.name*/);
-            var crcvalRef = new Ref(crcval);
-            crc32init(/*(uint32_t *)&*/ crcvalRef);
-            crcvalRef.$ = int32(crcvalRef.$);
-            do
-            {
-                b = read(fh, buf, BUFFER_SIZE);
-                if (b > 0) crc32block(crcvalRef, new Ptr(buf.array), b);
-            }
-            while (b == BUFFER_SIZE);
+            if(hardcoded.skipChecksum) {
+                initprintf(" Skipped checksumming %s...", "hardcoded file, DUKE3D.GRP"/*sidx.name*/);
+                crcval = hardcoded.grpCRC;
+            } else {
+                initprintf(" Checksumming %s...", "hardcoded file, DUKE3D.GRP"/*sidx.name*/);
+                var crcvalRef = new Ref(crcval);
+                crc32init(/*(uint32_t *)&*/ crcvalRef);
+                crcvalRef.$ = int32(crcvalRef.$);
+                do
+                {
+                    b = read(fh, buf, BUFFER_SIZE);
+                    if (b > 0) crc32block(crcvalRef, new Ptr(buf.array), b);
+                }
+                while (b == BUFFER_SIZE);
             
-            crc32finish(crcvalRef);
-            crcval = int32(crcvalRef.$);
-            assert.areEqual(hardcoded.grpCRC, crcval);
-            _close(fh);
-            initprintf(" Done\n");
+                crc32finish(crcvalRef);
+                crcval = int32(crcvalRef.$);
+                assert.areEqual(hardcoded.grpCRC, crcval);
+                _close(fh);
+                initprintf(" Done\n");
+            }
 
             grp = new grpfile();//(struct grpfile *)Bcalloc(1, sizeof(struct grpfile));
             grp.name = "DUKE3D.GRP";//SB: Hardcoded Bstrdup(sidx.name);
