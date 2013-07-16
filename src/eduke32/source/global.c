@@ -95,3 +95,17 @@ int32_t g_lastSaveSlot = -1;
 char CheatKeys[2] = { sc_D, sc_N };
 
 char setupfilename[BMAX_PATH] = SETUPFILENAME;
+
+
+
+
+// DEBUGGING STUFF TO HELP COMPARE WITH JS PORT
+void dlog(int32_t log, char *format, ...) {
+	if(log) {
+		va_list argptr;
+		va_start(argptr, format);
+		//vfprintf(stderr, format, argptr);
+		vprintf(format, argptr);
+		va_end(argptr);
+	}
+}

@@ -11490,7 +11490,9 @@ int32_t app_main(int32_t argc, const char **argv)
 
     G_Startup(); // a bunch of stuff including compiling cons
 
-    g_player[0].playerquitflag = 1;
+
+
+	g_player[0].playerquitflag = 1;
 
     g_player[myconnectindex].ps->palette = BASEPAL;
 
