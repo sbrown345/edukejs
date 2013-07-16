@@ -127,7 +127,7 @@
 
 var _buildargc = 0;
 var _buildargv = NULL;
-//static char *argvbuf = NULL;
+var argvbuf: string = NULL;
 //extern int32_t app_main(int32_t argc, const char **argv);
 
 //// Windows crud
@@ -402,78 +402,83 @@ function WinMain(hInst, hPrevInst, lpCmdLine, nCmdShow)
 //        return -1;
 //    }
 
-//    // carve up the command line into more recognizable pieces
-//    argvbuf = Bstrdup(GetCommandLine());
-//    _buildargc = 0;
-//    if (argvbuf)
-//    {
-//        char quoted = 0, instring = 0, swallownext = 0;
-//        char *p,*wp; int32_t i;
-//        for (p=wp=argvbuf; *p; p++)
-//        {
-//            if (*p == ' ')
-//            {
-//                if (instring && !quoted)
-//                {
-//                    // end of a string
-//                    *(wp++) = 0;
-//                    instring = 0;
-//                }
-//                else if (instring)
-//                {
-//                    *(wp++) = *p;
-//                }
-//            }
-//            else if (*p == '"' && !swallownext)
-//            {
-//                if (instring && quoted)
-//                {
-//                    // end of a string
-//                    if (p[1] == ' ')
-//                    {
-//                        *(wp++) = 0;
-//                        instring = 0;
-//                        quoted = 0;
-//                    }
-//                    else
-//                    {
-//                        quoted = 0;
-//                    }
-//                }
-//                else if (instring && !quoted)
-//                {
-//                    quoted = 1;
-//                }
-//                else if (!instring)
-//                {
-//                    instring = 1;
-//                    quoted = 1;
-//                    _buildargc++;
-//                }
-//            }
-//            else if (*p == '\\' && p[1] == '"' && !swallownext)
-//            {
-//                swallownext = 1;
-//            }
-//            else
-//            {
-//                if (!instring) _buildargc++;
-//                instring = 1;
-//                *(wp++) = *p;
-//                swallownext = 0;
-//            }
-//        }
-//        *wp = 0;
+    // carve up the command line into more recognizable pieces
+    debugger;
+    argvbuf = Bstrdup("index.htm " + lpCmdLine/*GetCommandLine()*/);
+    _buildargc = 0;
+    if (argvbuf)
+    {
+        var quoted = 0, instring = 0, swallownext = 0;
+        var p: string,wp: Uint8Array; var i;
+        var pIdx: number = 0, wpIdx: number = 0;
+        wp = argvbuf.toUint8Array();
+        for (p=argvbuf; p.charCodeAt(pIdx); pIdx++)
+        {
+            if (p[pIdx] == ' ')
+            {
+                if (instring && !quoted)
+                {
+                    // end of a string
+                    wp[wpIdx++] = 0;
+                    instring = 0;
+                }
+                else if (instring)
+                {
+                    wp[wpIdx++] = p.charCodeAt(pIdx);
+                }
+            }
+            else if (p[pIdx] == '"' && !swallownext)
+            {
+                todoThrow();
+                if (instring && quoted)
+                {
+                    // end of a string
+                    if (p[1] == ' ')
+                    {
+                        wp[wpIdx++] = 0;
+                        instring = 0;
+                        quoted = 0;
+                    }
+                    else
+                    {
+                        quoted = 0;
+                    }
+                }
+                else if (instring && !quoted)
+                {
+                    quoted = 1;
+                }
+                else if (!instring)
+                {
+                    instring = 1;
+                    quoted = 1;
+                    _buildargc++;
+                }
+            }
+            else if (p[pIdx] == '\\' && p[1] == '"' && !swallownext)
+            {
+                todoThrow();
+                swallownext = 1;
+            }
+            else
+            {
+                if (!instring) _buildargc++;
+                instring = 1;
+                wp[wpIdx++] = p.charCodeAt(pIdx);
+                swallownext = 0;
+            }
+        }
+        wp[wpIdx] = 0;
 
-//        _buildargv = (const char **)Bmalloc(sizeof(char *)*(_buildargc+1));
-//        wp = argvbuf;
-//        for (i=0; i<_buildargc; i++,wp++)
-//        {
-//            _buildargv[i] = wp;
-//            while (*wp) wp++;
-//        }
-//        _buildargv[_buildargc] = NULL;
-//    }
+        _buildargv = new Array<string>(_buildargc+1);// (const char **)Bmalloc(sizeof(char *)*(_buildargc+1));
+        wpIdx = 0;
+        for (i=0; i<_buildargc; i++,wpIdx++)
+        {
+            _buildargv[i] = wp.subarray(wpIdx).toString();
+            while (wp[wpIdx]) wpIdx++;
+        }
+        _buildargv[_buildargc] = NULL;
+    }
 
 //    maybe_redirect_outputs();
 

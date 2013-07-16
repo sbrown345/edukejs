@@ -9548,12 +9548,12 @@ function loaddefinitions_game(/*const char **/fn, /*int32_t*/ preload) : number
 //}
 //#endif
 
-function G_CheckCommandLine(/*int32_t */argc: number, /*string*/argv: string) : void
+function G_CheckCommandLine(argc: number, argv: string[]) : void
 {
-    assert.originalArgsFromFunction(arguments, G_CheckCommandLine);
+    debugger;
     path("G_CheckCommandLine");
-//    int16_t i = 1, j;
-//    const char *c, *k;
+    var i = 1, j : number;
+    var c: string, k: string;
 
 //#ifdef LUNATIC
 //    g_argv = argv;
@@ -9593,38 +9593,39 @@ function G_CheckCommandLine(/*int32_t */argc: number, /*string*/argv: string) : 
 //    }
 //#endif
 
-//    if (argc > 1)
-//    {
+    if (argc > 1)
+    {
 //#ifdef LUNATIC
 //        int32_t numlmods = 0;
 //#endif
-//        initprintf("Application parameters: ");
-//        while (i < argc)
-//            initprintf("%s ",argv[i++]);
-//        initprintf("\n");
+        initprintf("Application parameters: ");
+        while (i < argc)
+            initprintf("%s ",argv[i++]);
+        initprintf("\n");
 
-//        i = 1;
-//        do
-//        {
-//            const char *const oc = argv[i];
-//            int32_t shortopt = 0, ignored_short_opt = 0;
+        i = 1;
+        do
+        {
+            var oc = argv[i];
+            var shortopt = 0, ignored_short_opt = 0;
 
-//            c = oc;
+            c = oc;
+            var cIdx = 0;
 
-//            if ((*c == '-')
+            if ((c[cIdx] == '-')
 //#ifdef _WIN32
-//                    || (*c == '/')
+                    || (c[cIdx] == '/')
 //#endif
-//               )
-//            {
-//                shortopt = 0;
+               )
+            {
+                shortopt = 0;
 
-//                if (!Bstrcasecmp(c+1,"?") || !Bstrcasecmp(c+1,"help") || !Bstrcasecmp(c+1,"-help"))
+//                if (!Bstrcasecmp(c.substr(1),"?") || !Bstrcasecmp(c.substr(1),"help") || !Bstrcasecmp(c.substr(1),"-help"))
 //                {
 //                    G_ShowParameterHelp();
 //                    exit(0);
 //                }
-//                if (!Bstrcasecmp(c+1,"addon"))
+//                if (!Bstrcasecmp(c.substr(1),"addon"))
 //                {
 //                    if (argc > i+1)
 //                    {
@@ -9639,12 +9640,12 @@ function G_CheckCommandLine(/*int32_t */argc: number, /*string*/argv: string) : 
 //                    i++;
 //                    continue;
 //                }
-//                if (!Bstrcasecmp(c+1,"debughelp") || !Bstrcasecmp(c+1,"-debughelp"))
+//                if (!Bstrcasecmp(c.substr(1),"debughelp") || !Bstrcasecmp(c.substr(1),"-debughelp"))
 //                {
 //                    G_ShowDebugHelp();
 //                    exit(0);
 //                }
-//                if (!Bstrcasecmp(c+1,"grp") || !Bstrcasecmp(c+1,"g"))
+//                if (!Bstrcasecmp(c.substr(1),"grp") || !Bstrcasecmp(c.substr(1),"g"))
 //                {
 //                    if (argc > i+1)
 //                    {
@@ -9654,7 +9655,7 @@ function G_CheckCommandLine(/*int32_t */argc: number, /*string*/argv: string) : 
 //                    i++;
 //                    continue;
 //                }
-//                if (!Bstrcasecmp(c+1,"game_dir"))
+//                if (!Bstrcasecmp(c.substr(1),"game_dir"))
 //                {
 //                    if (argc > i+1)
 //                    {
@@ -9665,7 +9666,7 @@ function G_CheckCommandLine(/*int32_t */argc: number, /*string*/argv: string) : 
 //                    i++;
 //                    continue;
 //                }
-//                if (!Bstrcasecmp(c+1,"cfg"))
+//                if (!Bstrcasecmp(c.substr(1),"cfg"))
 //                {
 //                    if (argc > i+1)
 //                    {
@@ -9675,7 +9676,7 @@ function G_CheckCommandLine(/*int32_t */argc: number, /*string*/argv: string) : 
 //                    i++;
 //                    continue;
 //                }
-//                if (!Bstrcasecmp(c+1,"gamegrp"))
+//                if (!Bstrcasecmp(c.substr(1),"gamegrp"))
 //                {
 //                    if (argc > i+1)
 //                    {
@@ -9686,31 +9687,31 @@ function G_CheckCommandLine(/*int32_t */argc: number, /*string*/argv: string) : 
 //                    i++;
 //                    continue;
 //                }
-//                if (!Bstrcasecmp(c+1,"nam"))
+//                if (!Bstrcasecmp(c.substr(1),"nam"))
 //                {
 //                    g_gameType = GAMEFLAG_NAM;
 //                    i++;
 //                    continue;
 //                }
-//                if (!Bstrcasecmp(c+1,"napalm"))
+//                if (!Bstrcasecmp(c.substr(1),"napalm"))
 //                {
 //                    g_gameType = GAMEFLAG_NAM|GAMEFLAG_NAPALM;
 //                    i++;
 //                    continue;
 //                }
-//                if (!Bstrcasecmp(c+1,"ww2gi"))
+//                if (!Bstrcasecmp(c.substr(1),"ww2gi"))
 //                {
 //                    g_gameType = GAMEFLAG_WW2GI;
 //                    i++;
 //                    continue;
 //                }
-//                if (!Bstrcasecmp(c+1,"setup"))
+//                if (!Bstrcasecmp(c.substr(1),"setup"))
 //                {
 //                    g_commandSetup = TRUE;
 //                    i++;
 //                    continue;
 //                }
-//                if (!Bstrcasecmp(c+1,"nosetup"))
+//                if (!Bstrcasecmp(c.substr(1),"nosetup"))
 //                {
 //                    g_noSetup = 1;
 //                    g_commandSetup = 0;
@@ -9718,7 +9719,7 @@ function G_CheckCommandLine(/*int32_t */argc: number, /*string*/argv: string) : 
 //                    continue;
 //                }
 //#if defined RENDERTYPEWIN
-//                if (!Bstrcasecmp(c+1,"nodinput"))
+//                if (!Bstrcasecmp(c.substr(1),"nodinput"))
 //                {
 //                    initprintf("DirectInput (joystick) support disabled\n");
 //                    di_disabled = 1;
@@ -9726,14 +9727,14 @@ function G_CheckCommandLine(/*int32_t */argc: number, /*string*/argv: string) : 
 //                    continue;
 //                }
 //#endif
-//                if (!Bstrcasecmp(c+1,"noautoload"))
+//                if (!Bstrcasecmp(c.substr(1),"noautoload"))
 //                {
 //                    initprintf("Autoload disabled\n");
 //                    g_noAutoLoad = 1;
 //                    i++;
 //                    continue;
 //                }
-//                if (!Bstrcasecmp(c+1,"net"))
+//                if (!Bstrcasecmp(c.substr(1),"net"))
 //                {
 //                    G_GameExit("EDuke32 no longer supports legacy networking.\n\n"
 //                               "If using YANG or other launchers that only support legacy netplay, download an older build of EDuke32. "
@@ -9742,7 +9743,7 @@ function G_CheckCommandLine(/*int32_t */argc: number, /*string*/argv: string) : 
 //                               "Other clients can then connect by typing \"connect [host]\" in the console.\n\n"
 //                               "EDuke32 will now close.");
 //                }
-//                if (!Bstrcasecmp(c+1,"port"))
+//                if (!Bstrcasecmp(c.substr(1),"port"))
 //                {
 //                    if (argc > i+1)
 //                    {
@@ -9752,21 +9753,21 @@ function G_CheckCommandLine(/*int32_t */argc: number, /*string*/argv: string) : 
 //                    i++;
 //                    continue;
 //                }
-//                if (!Bstrcasecmp(c+1,"server"))
+//                if (!Bstrcasecmp(c.substr(1),"server"))
 //                {
 //                    g_networkMode = NET_SERVER;
 //                    g_noSetup = g_noLogo = TRUE;
 //                    i++;
 //                    continue;
 //                }
-//                if (!Bstrcasecmp(c+1,"dedicated"))
+//                if (!Bstrcasecmp(c.substr(1),"dedicated"))
 //                {
 //                    g_networkMode = NET_DEDICATED_SERVER;
 //                    g_noSetup = g_noLogo = TRUE;
 //                    i++;
 //                    continue;
 //                }
-//                if (!Bstrcasecmp(c+1,"connect"))
+//                if (!Bstrcasecmp(c.substr(1),"connect"))
 //                {
 //                    if (argc > i+1)
 //                    {
@@ -9777,7 +9778,7 @@ function G_CheckCommandLine(/*int32_t */argc: number, /*string*/argv: string) : 
 //                    i++;
 //                    continue;
 //                }
-//                if (!Bstrcasecmp(c+1,"password"))
+//                if (!Bstrcasecmp(c.substr(1),"password"))
 //                {
 //                    if (argc > i+1)
 //                    {
@@ -9787,7 +9788,7 @@ function G_CheckCommandLine(/*int32_t */argc: number, /*string*/argv: string) : 
 //                    i++;
 //                    continue;
 //                }
-//                if (!Bstrcasecmp(c+1,"name"))
+//                if (!Bstrcasecmp(c.substr(1),"name"))
 //                {
 //                    if (argc > i+1)
 //                    {
@@ -9797,7 +9798,7 @@ function G_CheckCommandLine(/*int32_t */argc: number, /*string*/argv: string) : 
 //                    i++;
 //                    continue;
 //                }
-//                if (!Bstrcasecmp(c+1,"map"))
+//                if (!Bstrcasecmp(c.substr(1),"map"))
 //                {
 //                    if (argc > i+1)
 //                    {
@@ -9807,7 +9808,7 @@ function G_CheckCommandLine(/*int32_t */argc: number, /*string*/argv: string) : 
 //                    i++;
 //                    continue;
 //                }
-//                if (!Bstrcasecmp(c+1,"rts"))
+//                if (!Bstrcasecmp(c.substr(1),"rts"))
 //                {
 //                    if (argc > i+1)
 //                    {
@@ -9819,7 +9820,7 @@ function G_CheckCommandLine(/*int32_t */argc: number, /*string*/argv: string) : 
 //                    i++;
 //                    continue;
 //                }
-//                if (!Bstrcasecmp(c+1,"mx"))
+//                if (!Bstrcasecmp(c.substr(1),"mx"))
 //                {
 //                    if (argc > i+1)
 //                    {
@@ -9831,7 +9832,7 @@ function G_CheckCommandLine(/*int32_t */argc: number, /*string*/argv: string) : 
 //                    i++;
 //                    continue;
 //                }
-//                if (!Bstrcasecmp(c+1,"mh"))
+//                if (!Bstrcasecmp(c.substr(1),"mh"))
 //                {
 //                    if (argc > i+1)
 //                    {
@@ -9844,7 +9845,7 @@ function G_CheckCommandLine(/*int32_t */argc: number, /*string*/argv: string) : 
 //                    continue;
 //                }
 //#ifdef HAVE_CLIPSHAPE_FEATURE
-//                if (!Bstrcasecmp(c+1,"clipmap"))
+//                if (!Bstrcasecmp(c.substr(1),"clipmap"))
 //                {
 //                    if (argc > i+1)
 //                    {
@@ -9857,13 +9858,13 @@ function G_CheckCommandLine(/*int32_t */argc: number, /*string*/argv: string) : 
 //                    continue;
 //                }
 //#endif
-//                if (!Bstrcasecmp(c+1,"condebug"))
-//                {
-//                    g_scriptDebug = 1;
-//                    i++;
-//                    continue;
-//                }
-//                if (!Bstrcasecmp(c+1, "conversion"))
+                if (!Bstrcasecmp(c.substr(1),"condebug"))
+                {
+                    g_scriptDebug = 1;
+                    i++;
+                    continue;
+                }
+//                if (!Bstrcasecmp(c.substr(1), "conversion"))
 //                {
 //                    if (argc > i+1)
 //                    {
@@ -9880,27 +9881,27 @@ function G_CheckCommandLine(/*int32_t */argc: number, /*string*/argv: string) : 
 //                    i++;
 //                    continue;
 //                }
-//                if (!Bstrcasecmp(c+1,"nologo"))
+//                if (!Bstrcasecmp(c.substr(1),"nologo"))
 //                {
 //                    g_noLogo = 1;
 //                    i++;
 //                    continue;
 //                }
-//                if (!Bstrcasecmp(c+1,"rotatesprite-no-widescreen"))
+//                if (!Bstrcasecmp(c.substr(1),"rotatesprite-no-widescreen"))
 //                {
 //                    g_rotatespriteNoWidescreen = 1;
 //                    i++;
 //                    continue;
 //                }
 //#if !defined(_WIN32)
-//                if (!Bstrcasecmp(c+1,"usecwd"))
+//                if (!Bstrcasecmp(c.substr(1),"usecwd"))
 //                {
 //                    usecwd = 1;
 //                    i++;
 //                    continue;
 //                }
 //#endif
-//                if (!Bstrcasecmp(c+1,"cachesize"))
+//                if (!Bstrcasecmp(c.substr(1),"cachesize"))
 //                {
 //                    if (argc > i+1)
 //                    {
@@ -9912,44 +9913,44 @@ function G_CheckCommandLine(/*int32_t */argc: number, /*string*/argv: string) : 
 //                    i++;
 //                    continue;
 //                }
-//                if (!Bstrcasecmp(c+1,"noinstancechecking"))
+//                if (!Bstrcasecmp(c.substr(1),"noinstancechecking"))
 //                {
 //                    i++;
 //                    continue;
 //                }
 //#if defined(RENDERTYPEWIN) && defined(USE_OPENGL)
-//                if (!Bstrcasecmp(c+1,"forcegl"))
+//                if (!Bstrcasecmp(c.substr(1),"forcegl"))
 //                {
 //                    forcegl = 1;
 //                    i++;
 //                    continue;
 //                }
 //#endif
-//            }
+            }
 
-//            if ((*c == '-')
+//            if ((c[cIdx] == '-')
 //#ifdef _WIN32
-//                    || (*c == '/')
+//                    || (c[cIdx] == '/')
 //#endif
 //               )
 //            {
 //                shortopt = 1;
 
-//                c++;
-//                switch (Btolower(*c))
+//                cIdx++;
+//                switch (Btolower(c[cIdx]))
 //                {
 //                case 'a':
 //                    ud.playerai = 1;
 //                    initprintf("Other player AI.\n");
 //                    break;
 //                case 'c':
-//                    c++;
+//                    cIdx++;
 //                    ud.m_coop = 0;
-//                    while ((*c >= '0')&&(*c <= '9'))
+//                    while ((c[cIdx] >= '0')&&(c[cIdx] <= '9'))
 //                    {
 //                        ud.m_coop *= 10;
-//                        ud.m_coop += *c - '0';
-//                        c++;
+//                        ud.m_coop += c[cIdx] - '0';
+//                        cIdx++;
 //                    }
 //                    ud.m_coop--;
 //                    break;
@@ -9958,7 +9959,7 @@ function G_CheckCommandLine(/*int32_t */argc: number, /*string*/argv: string) : 
 //                    char * colon = (char *)Bstrchr(c, ':');
 //                    int32_t framespertic=-1, numrepeats=1;
 
-//                    c++;
+//                    cIdx++;
 
 //                    if (colon && colon != c)
 //                    {
@@ -9990,13 +9991,13 @@ function G_CheckCommandLine(/*int32_t */argc: number, /*string*/argv: string) : 
 //                    break;
 //#endif
 //                case 'g':
-//                    c++;
-//                    if (*c)
+//                    cIdx++;
+//                    if (c[cIdx])
 //                        G_AddGroup(c);
 //                    break;
 //                case 'h':
-//                    c++;
-//                    if (*c)
+//                    cIdx++;
+//                    if (c[cIdx])
 //                    {
 //                        clearDefNamePtr();
 //                        g_defNamePtr = dup_filename(c);
@@ -10004,17 +10005,17 @@ function G_CheckCommandLine(/*int32_t */argc: number, /*string*/argv: string) : 
 //                    }
 //                    break;
 //                case 'j':
-//                    c++;
-//                    if (*c)
+//                    cIdx++;
+//                    if (c[cIdx])
 //                        G_AddPath(c);
 //                    break;
 //                case 'l':
 //                    ud.warp_on = 1;
-//                    c++;
+//                    cIdx++;
 //                    ud.m_level_number = ud.level_number = ((unsigned)(Batoi(c)-1))%MAXLEVELS;
 //                    break;
 //                case 'm':
-//                    if (*(c+1) != 'a' && *(c+1) != 'A')
+//                    if (c[cIdx+1] != 'a' && c[cIdx+1] != 'A')
 //                    {
 //                        ud.m_monsters_off = 1;
 //                        ud.m_player_skill = ud.player_skill = 0;
@@ -10022,13 +10023,13 @@ function G_CheckCommandLine(/*int32_t */argc: number, /*string*/argv: string) : 
 //                    }
 //                    break;
 //                case 'n':
-//                    c++;
-//                    if (*c == 's' || *c == 'S')
+//                    cIdx;
+//                    if (c[cIdx] == 's' || c[cIdx] == 'S')
 //                    {
 //                        g_noSound = 2;
 //                        initprintf("Sound off.\n");
 //                    }
-//                    else if (*c == 'm' || *c == 'M')
+//                    else if (c[cIdx] == 'm' || c[cIdx] == 'M')
 //                    {
 //                        g_noMusic = 1;
 //                        initprintf("Music off.\n");
@@ -10040,7 +10041,7 @@ function G_CheckCommandLine(/*int32_t */argc: number, /*string*/argv: string) : 
 //                    }
 //                    break;
 //                case 'q':
-//                    if (*(++c) == 0)
+//                    if (c[++cIdx] == 0)
 //                    {
 //                        ud.multimode = 1;
 //                        initprintf("Fake multiplayer mode: expected number after -q, falling back to 1 player.\n");
@@ -10074,16 +10075,16 @@ function G_CheckCommandLine(/*int32_t */argc: number, /*string*/argv: string) : 
 //                    initprintf("Demo record mode on.\n");
 //                    break;
 //                case 's':
-//                    c++;
+//                    cIdx++;
 //                    ud.m_player_skill = ud.player_skill = (Batoi(c)%5);
 //                    if (ud.m_player_skill == 4)
 //                        ud.m_respawn_monsters = ud.respawn_monsters = 1;
 //                    break;
 //                case 't':
-//                    c++;
-//                    if (*c == '1') ud.m_respawn_monsters = 1;
-//                    else if (*c == '2') ud.m_respawn_items = 1;
-//                    else if (*c == '3') ud.m_respawn_inventory = 1;
+//                    cIdx++;
+//                    if (c[cIdx] == '1') ud.m_respawn_monsters = 1;
+//                    else if (c[cIdx] == '2') ud.m_respawn_items = 1;
+//                    else if (c[cIdx] == '3') ud.m_respawn_inventory = 1;
 //                    else
 //                    {
 //                        ud.m_respawn_monsters = 1;
@@ -10094,15 +10095,15 @@ function G_CheckCommandLine(/*int32_t */argc: number, /*string*/argv: string) : 
 //                    break;
 //                case 'u':
 //                    g_forceWeaponChoice = 1;
-//                    c++;
+//                    cIdx++;
 //                    j = 0;
-//                    if (*c)
+//                    if (c[cIdx])
 //                    {
 //                        initprintf("Using favorite weapon order(s).\n");
-//                        while (*c)
+//                        while (c[cIdx])
 //                        {
-//                            g_player[0].wchoice[j] = *c-'0';
-//                            c++;
+//                            g_player[0].wchoice[j] = c[cIdx]-'0';
+//                            cIdx++;
 //                            j++;
 //                        }
 //                        while (j < 10)
@@ -10131,7 +10132,7 @@ function G_CheckCommandLine(/*int32_t */argc: number, /*string*/argv: string) : 
 //                    }
 //                    break;
 //                case 'v':
-//                    c++;
+//                    cIdx++;
 //                    ud.warp_on = 1;
 //                    ud.m_volume_number = ud.volume_number = ((unsigned)(Batoi(c)-1))%MAXVOLUMES;
 //                    break;
@@ -10143,8 +10144,8 @@ function G_CheckCommandLine(/*int32_t */argc: number, /*string*/argv: string) : 
 //                    break;
 //#endif
 //                case 'x':
-//                    c++;
-//                    if (*c)
+//                    cIdx++;
+//                    if (c[cIdx])
 //                    {
 //                        clearScriptNamePtr();
 //                        g_scriptNamePtr = dup_filename(c);
@@ -10161,10 +10162,10 @@ function G_CheckCommandLine(/*int32_t */argc: number, /*string*/argv: string) : 
 //                case '7':
 //                case '8':
 //                case '9':
-//                    ud.warp_on = 2 + (*c) - '0';
+//                    ud.warp_on = 2 + (c[cIdx]) - '0';
 //                    break;
 //                case 'z':
-//                    c++;
+//                    cIdx++;
 //                    g_scriptDebug = Batoi(c);
 //                    if (!g_scriptDebug)
 //                        g_scriptDebug = 1;
@@ -10222,13 +10223,13 @@ function G_CheckCommandLine(/*int32_t */argc: number, /*string*/argv: string) : 
 //                }
 //            }
 
-//            if (!shortopt || ignored_short_opt)
-//                initprintf("Warning: ignored application parameter \"%s\".\n", oc);
+            if (!shortopt || ignored_short_opt)
+                initprintf("Warning: ignored application parameter \"%s\".\n", oc);
 
-//            i++;
-//        }
-//        while (i < argc);
-//    }
+            i++;
+        }
+        while (i < argc);
+    }
 }
 
 //static void G_DisplayLogo(void)

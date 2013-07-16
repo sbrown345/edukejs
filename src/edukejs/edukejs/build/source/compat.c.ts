@@ -185,14 +185,10 @@ function Bstrncmp(s1: string, s2: string, n: number): number
     return strncmp(s1,s2,n);
 }
 
-//int32_t Bstrcasecmp(const char *s1, const char *s2)
-//{
-//#ifdef _MSC_VER
-//    return _stricmp(s1,s2);
-//#else
-//    return strcasecmp(s1,s2);
-//#endif
-//}
+function Bstrcasecmp(s1: string, s2: string): number
+{
+    return strcmp(s1.toLowerCase(),s2.toLowerCase());
+}
 
 //int32_t Bstrncasecmp(const char *s1, const char *s2, bsize_t n)
 //{
