@@ -1472,6 +1472,7 @@ function C_SkipComments() : number
                 textptrIdx++;
                 continue;
             }
+        case undefined:
         case 0: // EOF
             return ((g_scriptPtr-scriptIdx) > (g_scriptSize-32)) ? C_SetScriptSize(g_scriptSize<<1) : 0;
         }
@@ -1529,13 +1530,13 @@ function C_GetKeyword() : number
 
     temptextptr = textptrIdx;
 
-    if (textptr[temptextptr] == 0) // EOF
+    if (textptr.charCodeAt(temptextptr) == 0 || isNaN(textptr.charCodeAt(temptextptr))) // EOF
         return -2;
 
     while (isaltok(textptr[temptextptr]) == 0)
     {
         temptextptr++;
-        if (textptr[temptextptr] == 0)
+        if (textptr.charCodeAt(temptextptr) == 0 || isNaN(textptr.charCodeAt(temptextptr)))
             return 0;
     }
 
@@ -1553,7 +1554,7 @@ function C_GetNextKeyword(): number //Returns its code #
 
     C_SkipComments();
 
-    if (!textptr[textptrIdx]) // EOF
+    if (textptr.charCodeAt(textptrIdx) == 0 || isNaN(textptr.charCodeAt(textptrIdx))) // EOF
         return -2;
 
     l = 0;
@@ -1569,6 +1570,7 @@ function C_GetNextKeyword(): number //Returns its code #
         if (i == CON_LEFTBRACE || i == CON_RIGHTBRACE || i == CON_NULLOP)
             script[g_scriptPtr] = i + (IFELSE_MAGIC<<12);
         else script[g_scriptPtr] = i + (g_lineNumber<<12);
+        console.log("script change %i", script[g_scriptPtr]);
 
         bitptr[(g_scriptPtr-scriptIdx)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-scriptIdx)&7));
         textptrIdx += l;
@@ -1620,6 +1622,7 @@ function parse_decimal_number() : number // (textptr)
                    g_szScriptFileName,g_lineNumber);
         g_numCompilerWarnings++;
     }
+    dlog(DEBUG_COMPILE, "parse_decimal_number, %i",  num|0);
     return int32(num);
 }
 
@@ -1897,7 +1900,7 @@ function C_GetNextValue(type: number): number
 
     C_SkipComments();
 
-    if (textptr[textptrIdx] == 0) // EOF
+    if (textptr.charCodeAt(textptrIdx) == 0 || isNaN(textptr.charCodeAt(textptrIdx))) // EOF 
         return -1;
 
     l = 0;
@@ -1931,7 +1934,8 @@ function C_GetNextValue(type: number): number
 
             bitptr[(g_scriptPtr-scriptIdx)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-scriptIdx)&7));
             script[g_scriptPtr++] = labelcode[i];
-
+        console.log("script change %i", script[g_scriptPtr-1]);
+            
             textptrIdx += l;
             return labeltype[i];
         }
@@ -1986,11 +1990,11 @@ function C_GetNextValue(type: number): number
         script[g_scriptPtr] = parse_hex_constant(textptr+2);
     else
         script[g_scriptPtr] = parse_decimal_number();
-
+    console.log("script change %i", script[g_scriptPtr]);
     if (!(g_numCompilerErrors || g_numCompilerWarnings) && g_scriptDebug > 1)
         initprintf("%s:%d: debug: accepted constant %i.\n",
                    g_szScriptFileName,g_lineNumber,/*(long)*/script[g_scriptPtr]);
-
+    console.log("script change %i", script[g_scriptPtr]);
     g_scriptPtr++;
 
     textptrIdx += l;
@@ -2559,6 +2563,7 @@ function C_ParseCommand(loop: number): number
         tempscrptr = NULL; // temptextptr = NULL;
         otw = g_lastKeyword;
         
+        console.log("script[3]: %i, g_lineNumber: %i ",script[3],g_lineNumber);
         switch ((g_lastKeyword = tw = C_GetNextKeyword()))
         {
         default:
@@ -6569,19 +6574,21 @@ function C_ReportError(iError : number) : void
     switch (iError)
     {
     case ERROR_CLOSEBRACKET:
-        initprintf("%s:%d: error: found more `}' than `{' before `%s'.\n",g_szScriptFileName,g_lineNumber,tempbuf);
+        initprintf("%s:%d: error: found more `}' than `{' before `%s'.\n",g_szScriptFileName,g_lineNumber,tempbuf.toString());
+        console.error("C_ReportError stack");
+        debugger;
         break;
     case ERROR_EVENTONLY:
-        initprintf("%s:%d: error: `%s' only valid during events.\n",g_szScriptFileName,g_lineNumber,tempbuf);
+        initprintf("%s:%d: error: `%s' only valid during events.\n",g_szScriptFileName,g_lineNumber,tempbuf.toString());
         break;
     case ERROR_EXCEEDSMAXTILES:
-        initprintf("%s:%d: error: `%s' value exceeds MAXTILES.  Maximum is %d.\n",g_szScriptFileName,g_lineNumber,tempbuf,MAXTILES-1);
+        initprintf("%s:%d: error: `%s' value exceeds MAXTILES.  Maximum is %d.\n",g_szScriptFileName,g_lineNumber,tempbuf.toString(),MAXTILES-1);
         break;
     case ERROR_EXPECTEDKEYWORD:
-        initprintf("%s:%d: error: expected a keyword but found `%s'.\n",g_szScriptFileName,g_lineNumber,tempbuf);
+        initprintf("%s:%d: error: expected a keyword but found `%s'.\n",g_szScriptFileName,g_lineNumber,tempbuf.toString());
         break;
     case ERROR_FOUNDWITHIN:
-        initprintf("%s:%d: error: found `%s' within %s.\n",g_szScriptFileName,g_lineNumber,tempbuf,g_parsingEventPtr?"an event":g_parsingActorPtr?"an actor":"a state");
+        initprintf("%s:%d: error: found `%s' within %s.\n",g_szScriptFileName,g_lineNumber,tempbuf.toString(),g_parsingEventPtr?"an event":g_parsingActorPtr?"an actor":"a state");
         break;
     case ERROR_ISAKEYWORD:
         initprintf("%s:%d: error: symbol `%s' is a keyword.\n",g_szScriptFileName,g_lineNumber,label.subarray(g_numLabels<<6).toString());
@@ -6608,10 +6615,10 @@ function C_ReportError(iError : number) : void
         initprintf("%s:%d: error: arrays can only be written to using `setarray' %c\n",g_szScriptFileName,g_lineNumber,textptr[textptrIdx]);
         break;
     case ERROR_OPENBRACKET:
-        initprintf("%s:%d: error: found more `{' than `}' before `%s'.\n",g_szScriptFileName,g_lineNumber,tempbuf);
+        initprintf("%s:%d: error: found more `{' than `}' before `%s'.\n",g_szScriptFileName,g_lineNumber,tempbuf.toString());
         break;
     case ERROR_PARAMUNDEFINED:
-        initprintf("%s:%d: error: parameter `%s' is undefined.\n",g_szScriptFileName,g_lineNumber,tempbuf);
+        initprintf("%s:%d: error: parameter `%s' is undefined.\n",g_szScriptFileName,g_lineNumber,tempbuf.toString());
         break;
     case ERROR_SYMBOLNOTRECOGNIZED:
         initprintf("%s:%d: error: symbol `%s' is not recognized.\n",g_szScriptFileName,g_lineNumber,label.subarray(g_numLabels<<6).toString());
@@ -6638,7 +6645,7 @@ function C_ReportError(iError : number) : void
         initprintf("%s:%d: warning: duplicate game definition `%s' ignored.\n",g_szScriptFileName,g_lineNumber,label.subarray(g_numLabels<<6).toString());
         break;
     case WARNING_EVENTSYNC:
-        initprintf("%s:%d: warning: found `%s' within a local event.\n",g_szScriptFileName,g_lineNumber,tempbuf);
+        initprintf("%s:%d: warning: found `%s' within a local event.\n",g_szScriptFileName,g_lineNumber,tempbuf.toString());
         break;
     case WARNING_LABELSONLY:
         initprintf("%s:%d: warning: expected a label, found a constant.\n",g_szScriptFileName,g_lineNumber);

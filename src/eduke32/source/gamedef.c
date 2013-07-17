@@ -2786,7 +2786,6 @@ static int32_t C_ParseCommand(int32_t loop)
                 }
                 else
                 {
-					giong wrong here
                     printf("Defining Definition \"%s\" to be '%d'\n",label+(g_numLabels<<6),*(g_scriptPtr-1));
                     hash_add(&h_labels,label+(g_numLabels<<6),g_numLabels,0);
                     labeltype[g_numLabels] = LABEL_DEFINE;
