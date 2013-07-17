@@ -13,7 +13,6 @@ void initcrc32table(void)
         for (k=8; k; k--)
             j = (j&1) ? (0xedb88320L^(j>>1)) : (j>>1);
         crc32table[i] = j;
-		printf("%i,\n", j);
     }
 }
 

@@ -1542,7 +1542,7 @@ function C_GetKeyword() : number
 
     i = 0;
     while (isaltok(textptr[temptextptr]))
-        tempbuf[i++] = textptr[temptextptr++];
+        tempbuf[i++] = textptr.charCodeAt(temptextptr++);
     tempbuf[i] = 0;
 
     return hash_find(h_keywords,tempbuf.toString());
@@ -1587,7 +1587,7 @@ function C_GetNextKeyword(): number //Returns its code #
     if ((tempbuf[0] == '{'.charCodeAt(0) || tempbuf[0] == '}'.charCodeAt(0)) && tempbuf[1] != 0)
     {
         C_ReportError(-1);
-        initprintf("%s:%d: error: expected whitespace between `%c' and `%s'.\n",g_szScriptFileName,g_lineNumber,tempbuf[0],tempbuf.subarray(1).toString());
+        initprintf("%s:%d: error: expected whitespace between `%c' and `%s'.\n",g_szScriptFileName,g_lineNumber,String.fromCharCode(tempbuf[0]),tempbuf.subarray(1).toString());
     }
     else C_ReportError(ERROR_EXPECTEDKEYWORD);
     
@@ -1906,7 +1906,7 @@ function C_GetNextValue(type: number): number
     l = 0;
     while (isaltok(textptr[textptrIdx+l]))
     {
-        tempbuf[l] = textptr[l];
+        tempbuf[l] = textptr.charCodeAt(textptrIdx+l);
         l++;
     }
     tempbuf[l] = 0;
@@ -2989,13 +2989,13 @@ function C_ParseCommand(loop: number): number
 //                    {
 //                        C_SkipComments();
 //                        j = 0;
-//                        tempbuf[j] = '/';
+//                        tempbuf[j] = '/'.charCodeAt(0);
 //                        while (isaltok(*(textptr+j)))
 //                        {
-//                            tempbuf[j+1] = textptr[j];
+//                            tempbuf[j+1] = textptr.charCodeAt(textptr + j);
 //                            j++;
 //                        }
-//                        tempbuf[j+1] = '\0';
+//                        tempbuf[j+1] = '\0'.charCodeAt(0);
 
 //                        if (MapInfo[(k*MAXLEVELS)+i].musicfn == NULL)
 //                            MapInfo[(k*MAXLEVELS)+i].musicfn = (char *)Bcalloc(Bstrlen(tempbuf)+1,sizeof(uint8_t));
@@ -5578,10 +5578,10 @@ function C_ParseCommand(loop: number): number
 //                j = 0;
 //                while (isaltok(textptr[textptrIdx]))
 //                {
-//                    tempbuf[j] = textptr[textptrIdx++];
+//                    tempbuf[j] = textptr.charCodeAt(textptrIdx++);
 //                    j++;
 //                }
-//                tempbuf[j] = '\0';
+//                tempbuf[j] = '\0'.charCodeAt(0);
 
 //                C_SetDefName(tempbuf);
 //            }
@@ -5595,10 +5595,10 @@ function C_ParseCommand(loop: number): number
 //                j = 0;
 //                while (isaltok(textptr[textptrIdx]))
 //                {
-//                    tempbuf[j] = textptr[textptrIdx++];
+//                    tempbuf[j] = textptr.charCodeAt(textptrIdx++);
 //                    j++;
 //                }
-//                tempbuf[j] = '\0';
+//                tempbuf[j] = '\0'.charCodeAt(0);
 //                if (Bstrcmp(setupfilename,SETUPFILENAME) == 0) // not set to something else via -cfg
 //                {
 //                    char temp[BMAX_PATH];
@@ -5725,11 +5725,11 @@ function C_ParseCommand(loop: number): number
 
 //            i = 0;
 
-//            tempbuf[i] = '/';
+//            tempbuf[i] = '/'.charCodeAt(0);
 
 //            while (textptr[textptrIdx] != ' ' && textptr[textptrIdx] != '\t' && textptr[textptrIdx] != 0x0a)
 //            {
-//                tempbuf[i+1] = textptr[textptrIdx];
+//                tempbuf[i+1] = textptr.charCodeAt(textptrIdx);
 //                textptrIdx++,i++;
 //                if (i >= BMAX_PATH)
 //                {
@@ -5739,7 +5739,7 @@ function C_ParseCommand(loop: number): number
 //                    break;
 //                }
 //            }
-//            tempbuf[i+1] = '\0';
+//            tempbuf[i+1] = '\0'.charCodeAt(0);
 
 //            Bcorrectfilename(tempbuf,0);
 
@@ -5775,7 +5775,7 @@ function C_ParseCommand(loop: number): number
 
 //            while (textptr[textptrIdx] != 0x0a && textptr[textptrIdx] != 0x0d && textptr[textptrIdx] != 0)
 //            {
-//                tempbuf[i] = textptr[textptrIdx];
+//                tempbuf[i] = textptr.charCodeAt(textptrIdx);
 //                textptrIdx++,i++;
 //                if (i >= 32)
 //                {
@@ -5787,7 +5787,7 @@ function C_ParseCommand(loop: number): number
 //                }
 //            }
 
-//            tempbuf[i] = '\0';
+//            tempbuf[i] = '\0'.charCodeAt(0);
 
 //            if (MapInfo[j*MAXLEVELS+k].name == NULL)
 //                MapInfo[j*MAXLEVELS+k].name = (char *)Bcalloc(Bstrlen(tempbuf)+1,sizeof(uint8_t));
