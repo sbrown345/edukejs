@@ -86,7 +86,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 var NUMKEYWORDS : number;
 
-//int32_t g_scriptVersion = 13; // 13 = 1.3D-style CON files, 14 = 1.4/1.5 style CON files
+var g_scriptVersion = 13; // 13 = 1.3D-style CON files, 14 = 1.4/1.5 style CON files
 var g_scriptDateVersion = 99999999;  // YYYYMMDD
 //#if !defined LUNATIC
 var  g_scriptLastKeyword; // = NUMKEYWORDS-1;//g_scriptLastKeyword
@@ -2173,67 +2173,67 @@ function C_Include(confile: string) :  void
 //static void check_filename_case(const char *fn) { UNREFERENCED_PARAMETER(fn); }
 //#endif
 
-//void G_DoGameStartup(const int32_t *params)
-//{
-//    int32_t j = 0;
+function G_DoGameStartup(/*const int32_t **/params: Int32Array): void
+{
+    var j = 0;
 
-//    ud.const_visibility = params[j++];
-//    g_impactDamage = params[j++];
-//    g_maxPlayerHealth = g_player[0].ps->max_player_health = g_player[0].ps->max_shield_amount = params[j++];
-//    g_startArmorAmount = params[j++];
-//    g_actorRespawnTime = params[j++];
+    ud.const_visibility = params[j++];
+    g_impactDamage = params[j++];
+    g_maxPlayerHealth = g_player[0].ps.max_player_health = g_player[0].ps.max_shield_amount = params[j++];
+    g_startArmorAmount = params[j++];
+    g_actorRespawnTime = params[j++];
 
-//    if (g_scriptVersion >= 11)
-//        g_itemRespawnTime = params[j++];
-//    else
-//        g_itemRespawnTime = g_actorRespawnTime;
+    if (g_scriptVersion >= 11)
+        g_itemRespawnTime = params[j++];
+    else
+        g_itemRespawnTime = g_actorRespawnTime;
 
-//    if (g_scriptVersion >= 11)
-//        g_playerFriction = params[j++];
+    if (g_scriptVersion >= 11)
+        g_playerFriction = params[j++];
 
-//    if (g_scriptVersion == 14)
-//        g_spriteGravity = params[j++];
+    if (g_scriptVersion == 14)
+        g_spriteGravity = params[j++];
 
-//    if (g_scriptVersion >= 11)
-//    {
-//        g_rpgBlastRadius = params[j++];
-//        g_pipebombBlastRadius = params[j++];
-//        g_shrinkerBlastRadius = params[j++];
-//        g_tripbombBlastRadius = params[j++];
-//        g_morterBlastRadius = params[j++];
-//        g_bouncemineBlastRadius = params[j++];
-//        g_seenineBlastRadius = params[j++];
-//    }
+    if (g_scriptVersion >= 11)
+    {
+        g_rpgBlastRadius = params[j++];
+        g_pipebombBlastRadius = params[j++];
+        g_shrinkerBlastRadius = params[j++];
+        g_tripbombBlastRadius = params[j++];
+        g_morterBlastRadius = params[j++];
+        g_bouncemineBlastRadius = params[j++];
+        g_seenineBlastRadius = params[j++];
+    }
 
-//    g_player[0].ps->max_ammo_amount[PISTOL_WEAPON] = params[j++];
-//    g_player[0].ps->max_ammo_amount[SHOTGUN_WEAPON] = params[j++];
-//    g_player[0].ps->max_ammo_amount[CHAINGUN_WEAPON] = params[j++];
-//    g_player[0].ps->max_ammo_amount[RPG_WEAPON] = params[j++];
-//    g_player[0].ps->max_ammo_amount[HANDBOMB_WEAPON] = params[j++];
-//    g_player[0].ps->max_ammo_amount[SHRINKER_WEAPON] = params[j++];
-//    g_player[0].ps->max_ammo_amount[DEVISTATOR_WEAPON] = params[j++];
-//    g_player[0].ps->max_ammo_amount[TRIPBOMB_WEAPON] = params[j++];
+    g_player[0].ps.max_ammo_amount[PISTOL_WEAPON] = params[j++];
+    g_player[0].ps.max_ammo_amount[SHOTGUN_WEAPON] = params[j++];
+    g_player[0].ps.max_ammo_amount[CHAINGUN_WEAPON] = params[j++];
+    g_player[0].ps.max_ammo_amount[RPG_WEAPON] = params[j++];
+    g_player[0].ps.max_ammo_amount[HANDBOMB_WEAPON] = params[j++];
+    g_player[0].ps.max_ammo_amount[SHRINKER_WEAPON] = params[j++];
+    g_player[0].ps.max_ammo_amount[DEVISTATOR_WEAPON] = params[j++];
+    g_player[0].ps.max_ammo_amount[TRIPBOMB_WEAPON] = params[j++];
 
-//    if (g_scriptVersion >= 13)
-//    {
-//        g_player[0].ps->max_ammo_amount[FREEZE_WEAPON] = params[j++];
+    if (g_scriptVersion >= 13)
+    {
+        g_player[0].ps.max_ammo_amount[FREEZE_WEAPON] = params[j++];
 
-//        if (g_scriptVersion == 14)
-//            g_player[0].ps->max_ammo_amount[GROW_WEAPON] = params[j++];
+        if (g_scriptVersion == 14)
+            g_player[0].ps.max_ammo_amount[GROW_WEAPON] = params[j++];
 
-//        g_damageCameras = params[j++];
-//        g_numFreezeBounces = params[j++];
-//        g_freezerSelfDamage = params[j++];
+        g_damageCameras = params[j++];
+        g_numFreezeBounces = params[j++];
+        g_freezerSelfDamage = params[j++];
 
-//        if (g_scriptVersion == 14)
-//        {
-//            g_spriteDeleteQueueSize = params[j++];
-//            g_spriteDeleteQueueSize = clamp(g_spriteDeleteQueueSize, 0, 1024);
+        if (g_scriptVersion == 14)
+        {
+            g_spriteDeleteQueueSize = params[j++];
+            g_spriteDeleteQueueSize = clamp(g_spriteDeleteQueueSize, 0, 1024);
 
-//            g_tripbombLaserMode = params[j++];
-//        }
-//    }
-//}
+            g_tripbombLaserMode = params[j++];
+        }
+    }
+}
 
 //#ifdef LUNATIC
 //void C_DefineSound(int32_t sndidx, const char *fn, int32_t args[5])
@@ -5800,84 +5800,84 @@ function C_ParseCommand(loop: number): number
 
 //            continue;
 
-//        case CON_DEFINEQUOTE:
-//        case CON_REDEFINEQUOTE:
-//            if (tw == CON_DEFINEQUOTE)
-//            {
-//                g_scriptPtr--;
-//            }
+        case CON_DEFINEQUOTE:
+        case CON_REDEFINEQUOTE:
+            if (tw == CON_DEFINEQUOTE)
+            {
+                g_scriptPtr--;
+            }
 
-//            C_GetNextValue(LABEL_DEFINE);
+            C_GetNextValue(LABEL_DEFINE);
 
-//            k = script[g_scriptPtr-1];
+            k = script[g_scriptPtr-1];
 
-//            if ((unsigned)k >= MAXQUOTES)
-//            {
-//                initprintf("%s:%d: error: quote number exceeds limit of %d.\n",g_szScriptFileName,g_lineNumber,MAXQUOTES);
-//                g_numCompilerErrors++;
-//            }
-//            else
-//            {
-//                C_AllocQuote(k);
-//            }
+            if ((unsigned)k >= MAXQUOTES)
+            {
+                initprintf("%s:%d: error: quote number exceeds limit of %d.\n",g_szScriptFileName,g_lineNumber,MAXQUOTES);
+                g_numCompilerErrors++;
+            }
+            else
+            {
+                C_AllocQuote(k);
+            }
 
-//            if (tw == CON_DEFINEQUOTE)
-//                g_scriptPtr--;
+            if (tw == CON_DEFINEQUOTE)
+                g_scriptPtr--;
 
-//            i = 0;
+            i = 0;
 
-//            while (textptr[textptrIdx] == ' ' || textptr[textptrIdx] == '\t')
-//                textptrIdx++;
+            while (textptr[textptrIdx] == ' ' || textptr[textptrIdx] == '\t')
+                textptrIdx++;
 
-//            if (tw == CON_REDEFINEQUOTE)
-//            {
-//                if (ScriptQuoteRedefinitions[g_numQuoteRedefinitions] == NULL)
-//                    ScriptQuoteRedefinitions[g_numQuoteRedefinitions] = (char *)Bcalloc(MAXQUOTELEN,sizeof(uint8_t));
-//                if (ScriptQuoteRedefinitions[g_numQuoteRedefinitions] == NULL)
-//                {
-//                    Bsprintf(tempbuf,"Failed allocating %" PRIdPTR " byte quote text buffer.",sizeof(uint8_t) * MAXQUOTELEN);
-//                    G_GameExit(tempbuf);
-//                }
-//            }
+            if (tw == CON_REDEFINEQUOTE)
+            {
+                if (ScriptQuoteRedefinitions[g_numQuoteRedefinitions] == NULL)
+                    ScriptQuoteRedefinitions[g_numQuoteRedefinitions] = (char *)Bcalloc(MAXQUOTELEN,sizeof(uint8_t));
+                if (ScriptQuoteRedefinitions[g_numQuoteRedefinitions] == NULL)
+                {
+                    Bsprintf(tempbuf,"Failed allocating %" PRIdPTR " byte quote text buffer.",sizeof(uint8_t) * MAXQUOTELEN);
+                    G_GameExit(tempbuf);
+                }
+            }
 
-//            while (textptr[textptrIdx] != 0x0a && textptr[textptrIdx] != 0x0d && textptr[textptrIdx] != 0)
-//            {
-//                /*
-//                if (textptr[textptrIdx] == '%' && textptr[textptrIdx+1] == 's')
-//                {
-//                initprintf("%s:%d: error: quote text contains string identifier.\n",g_szScriptFileName,g_lineNumber);
-//                g_numCompilerErrors++;
-//                while (textptr[textptrIdx] != 0x0a && textptr[textptrIdx] != 0x0d && textptr[textptrIdx] != 0) textptrIdx++;
-//                break;
-//                }
-//                */
-//                if (tw == CON_DEFINEQUOTE)
-//                    *(ScriptQuotes[k]+i) = textptr[textptrIdx];
-//                else
-//                    *(ScriptQuoteRedefinitions[g_numQuoteRedefinitions]+i) = textptr[textptrIdx];
-//                textptrIdx++,i++;
-//                if (i >= MAXQUOTELEN-1)
-//                {
-//                    initprintf("%s:%d: warning: truncating quote text to %d characters.\n",g_szScriptFileName,g_lineNumber,MAXQUOTELEN-1);
-//                    g_numCompilerWarnings++;
-//                    C_NextLine();
-//                    break;
-//                }
-//            }
+            while (textptr[textptrIdx] != 0x0a && textptr[textptrIdx] != 0x0d && textptr[textptrIdx] != 0)
+            {
+                /*
+                if (textptr[textptrIdx] == '%' && textptr[textptrIdx+1] == 's')
+                {
+                initprintf("%s:%d: error: quote text contains string identifier.\n",g_szScriptFileName,g_lineNumber);
+                g_numCompilerErrors++;
+                while (textptr[textptrIdx] != 0x0a && textptr[textptrIdx] != 0x0d && textptr[textptrIdx] != 0) textptrIdx++;
+                break;
+                }
+                */
+                if (tw == CON_DEFINEQUOTE)
+                    *(ScriptQuotes[k]+i) = textptr[textptrIdx];
+                else
+                    *(ScriptQuoteRedefinitions[g_numQuoteRedefinitions]+i) = textptr[textptrIdx];
+                textptrIdx++,i++;
+                if (i >= MAXQUOTELEN-1)
+                {
+                    initprintf("%s:%d: warning: truncating quote text to %d characters.\n",g_szScriptFileName,g_lineNumber,MAXQUOTELEN-1);
+                    g_numCompilerWarnings++;
+                    C_NextLine();
+                    break;
+                }
+            }
 
-//            if (tw == CON_DEFINEQUOTE)
-//            {
-//                if ((unsigned)k < MAXQUOTES)
-//                    *(ScriptQuotes[k]+i) = '\0';
-//            }
-//            else
-//            {
-//                *(ScriptQuoteRedefinitions[g_numQuoteRedefinitions]+i) = '\0';
-//                bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
-//                script[g_scriptPtr]++=g_numQuoteRedefinitions;
-//                g_numQuoteRedefinitions++;
-//            }
-//            continue;
+            if (tw == CON_DEFINEQUOTE)
+            {
+                if ((unsigned)k < MAXQUOTES)
+                    *(ScriptQuotes[k]+i) = '\0';
+            }
+            else
+            {
+                *(ScriptQuoteRedefinitions[g_numQuoteRedefinitions]+i) = '\0';
+                bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
+                script[g_scriptPtr]++=g_numQuoteRedefinitions;
+                g_numQuoteRedefinitions++;
+            }
+            continue;
 
 //        case CON_CHEATKEYS:
 //            g_scriptPtr--;
@@ -6107,72 +6107,72 @@ function C_ParseCommand(loop: number): number
 //                    g_ifElseAborted = 1;
 //                }
 //            }
-//        case CON_STOPALLSOUNDS:
-//            continue;
-//        case CON_GAMESTARTUP:
-//            {
-//                int32_t params[30];
+        case CON_STOPALLSOUNDS:
+            continue;
+        case CON_GAMESTARTUP:
+            {
+                var params = new Int32Array(30);
 
-//                g_scriptPtr--;
-//                for (j = 0; j < 30; j++)
-//                {
-//                    C_GetNextValue(LABEL_DEFINE);
-//                    g_scriptPtr--;
-//                    params[j] = script[g_scriptPtr];
+                g_scriptPtr--;
+                for (j = 0; j < 30; j++)
+                {
+                    C_GetNextValue(LABEL_DEFINE);
+                    g_scriptPtr--;
+                    params[j] = script[g_scriptPtr];
 
-//                    if (j != 12 && j != 21 && j != 25) continue;
+                    if (j != 12 && j != 21 && j != 25) continue;
 
-//                    if (C_GetKeyword() != -1)
-//                    {
-//                        if (j == 12)
-//                            g_scriptVersion = 10;
-//                        else if (j == 21)
-//                            g_scriptVersion = 11;
-//                        else if (j == 25)
-//                            g_scriptVersion = 13;
-//                        break;
-//                    }
-//                    else
-//                        g_scriptVersion = 14;
-//                }
+                    if (C_GetKeyword() != -1)
+                    {
+                        if (j == 12)
+                            g_scriptVersion = 10;
+                        else if (j == 21)
+                            g_scriptVersion = 11;
+                        else if (j == 25)
+                            g_scriptVersion = 13;
+                        break;
+                    }
+                    else
+                        g_scriptVersion = 14;
+                }
 
-//                /*
-//                v1.3d                   v1.5
-//                DEFAULTVISIBILITY       DEFAULTVISIBILITY
-//                GENERICIMPACTDAMAGE     GENERICIMPACTDAMAGE
-//                MAXPLAYERHEALTH         MAXPLAYERHEALTH
-//                STARTARMORHEALTH        STARTARMORHEALTH
-//                RESPAWNACTORTIME        RESPAWNACTORTIME
-//                RESPAWNITEMTIME         RESPAWNITEMTIME
-//                RUNNINGSPEED            RUNNINGSPEED
-//                RPGBLASTRADIUS          GRAVITATIONALCONSTANT
-//                PIPEBOMBRADIUS          RPGBLASTRADIUS
-//                SHRINKERBLASTRADIUS     PIPEBOMBRADIUS
-//                TRIPBOMBBLASTRADIUS     SHRINKERBLASTRADIUS
-//                MORTERBLASTRADIUS       TRIPBOMBBLASTRADIUS
-//                BOUNCEMINEBLASTRADIUS   MORTERBLASTRADIUS
-//                SEENINEBLASTRADIUS      BOUNCEMINEBLASTRADIUS
-//                MAXPISTOLAMMO           SEENINEBLASTRADIUS
-//                MAXSHOTGUNAMMO          MAXPISTOLAMMO
-//                MAXCHAINGUNAMMO         MAXSHOTGUNAMMO
-//                MAXRPGAMMO              MAXCHAINGUNAMMO
-//                MAXHANDBOMBAMMO         MAXRPGAMMO
-//                MAXSHRINKERAMMO         MAXHANDBOMBAMMO
-//                MAXDEVISTATORAMMO       MAXSHRINKERAMMO
-//                MAXTRIPBOMBAMMO         MAXDEVISTATORAMMO
-//                MAXFREEZEAMMO           MAXTRIPBOMBAMMO
-//                CAMERASDESTRUCTABLE     MAXFREEZEAMMO
-//                NUMFREEZEBOUNCES        MAXGROWAMMO
-//                FREEZERHURTOWNER        CAMERASDESTRUCTABLE
-//                NUMFREEZEBOUNCES
-//                FREEZERHURTOWNER
-//                QSIZE
-//                TRIPBOMBLASERMODE
-//                */
+                /*
+                v1.3d                   v1.5
+                DEFAULTVISIBILITY       DEFAULTVISIBILITY
+                GENERICIMPACTDAMAGE     GENERICIMPACTDAMAGE
+                MAXPLAYERHEALTH         MAXPLAYERHEALTH
+                STARTARMORHEALTH        STARTARMORHEALTH
+                RESPAWNACTORTIME        RESPAWNACTORTIME
+                RESPAWNITEMTIME         RESPAWNITEMTIME
+                RUNNINGSPEED            RUNNINGSPEED
+                RPGBLASTRADIUS          GRAVITATIONALCONSTANT
+                PIPEBOMBRADIUS          RPGBLASTRADIUS
+                SHRINKERBLASTRADIUS     PIPEBOMBRADIUS
+                TRIPBOMBBLASTRADIUS     SHRINKERBLASTRADIUS
+                MORTERBLASTRADIUS       TRIPBOMBBLASTRADIUS
+                BOUNCEMINEBLASTRADIUS   MORTERBLASTRADIUS
+                SEENINEBLASTRADIUS      BOUNCEMINEBLASTRADIUS
+                MAXPISTOLAMMO           SEENINEBLASTRADIUS
+                MAXSHOTGUNAMMO          MAXPISTOLAMMO
+                MAXCHAINGUNAMMO         MAXSHOTGUNAMMO
+                MAXRPGAMMO              MAXCHAINGUNAMMO
+                MAXHANDBOMBAMMO         MAXRPGAMMO
+                MAXSHRINKERAMMO         MAXHANDBOMBAMMO
+                MAXDEVISTATORAMMO       MAXSHRINKERAMMO
+                MAXTRIPBOMBAMMO         MAXDEVISTATORAMMO
+                MAXFREEZEAMMO           MAXTRIPBOMBAMMO
+                CAMERASDESTRUCTABLE     MAXFREEZEAMMO
+                NUMFREEZEBOUNCES        MAXGROWAMMO
+                FREEZERHURTOWNER        CAMERASDESTRUCTABLE
+                NUMFREEZEBOUNCES
+                FREEZERHURTOWNER
+                QSIZE
+                TRIPBOMBLASERMODE
+                */
 
-//                G_DoGameStartup(params);
-//            }
-//            continue;
+                G_DoGameStartup(params);
+            }
+            continue;
         }
     }
     while (loop);

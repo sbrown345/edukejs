@@ -110,9 +110,9 @@ var g_numLabels:number,g_numDefaultLabels:number;
 var g_scriptDebug:number; //G_EXTERN int32_t 
 //G_EXTERN int32_t g_showShareware:number;
 //G_EXTERN int8_t g_numPlayerSprites:number;
-//G_EXTERN int32_t g_tripbombLaserMode:number;
+var g_tripbombLaserMode:number;////G_EXTERN int32_t 
 //G_EXTERN int32_t msx[2048]:number,msy[2048]:number;
-//G_EXTERN int32_t neartaghitdist:number,lockclock:number,g_startArmorAmount:number;
+var neartaghitdist:number,lockclock:number,g_startArmorAmount:number;//G_EXTERN int32_t
 var playerswhenstarted : number; ////G_EXTERN int32_t
 //G_EXTERN int32_t screenpeek;
 //G_EXTERN int32_t startofdynamicinterpolations;
@@ -143,29 +143,29 @@ var scriptIdx: number = 0;
 //#ifndef __global_c__
 //G_EXTERN const char *s_buildRev;
 //G_EXTERN const char *s_buildDate;
-//G_EXTERN int32_t g_spriteGravity;
-//G_EXTERN int16_t g_spriteDeleteQueueSize;
+var g_spriteGravity: number; ////G_EXTERN int32_t 
+var g_spriteDeleteQueueSize: number; ////G_EXTERN int16_t
 //G_EXTERN char EpisodeNames[MAXVOLUMES][33];
 //G_EXTERN char SkillNames[MAXSKILLS][33];
 //G_EXTERN char GametypeNames[MAXGAMETYPES][33];
 //G_EXTERN int32_t GametypeFlags[MAXGAMETYPES];
 //G_EXTERN char g_numGametypes;
 //G_EXTERN char g_numVolumes;
-//G_EXTERN int32_t g_timerTicsPerSecond;
-//G_EXTERN int32_t g_actorRespawnTime;
-//G_EXTERN int32_t g_itemRespawnTime;
+var g_timerTicsPerSecond: number;      //G_EXTERN int32_t
+var g_actorRespawnTime: number;        //G_EXTERN int32_t
+var g_itemRespawnTime: number;         //G_EXTERN int32_t
 var g_scriptSize: number;
-//G_EXTERN int16_t BlimpSpawnSprites[15];
-//G_EXTERN int32_t g_playerFriction;
-//G_EXTERN int32_t g_numFreezeBounces;
-//G_EXTERN int32_t g_lastSaveSlot;
-//G_EXTERN int32_t g_rpgBlastRadius;
-//G_EXTERN int32_t g_pipebombBlastRadius;
-//G_EXTERN int32_t g_tripbombBlastRadius;
-//G_EXTERN int32_t g_shrinkerBlastRadius;
-//G_EXTERN int32_t g_morterBlastRadius;
-//G_EXTERN int32_t g_bouncemineBlastRadius;
-//G_EXTERN int32_t g_seenineBlastRadius;
+var BlimpSpawnSprites = new Int16Array(15); //G_EXTERN int16_t 
+var g_playerFriction:number;              //G_EXTERN int32_t 
+var g_numFreezeBounces:number;            //G_EXTERN int32_t 
+var g_lastSaveSlot:number;                //G_EXTERN int32_t 
+var g_rpgBlastRadius:number;              //G_EXTERN int32_t 
+var g_pipebombBlastRadius:number;         //G_EXTERN int32_t 
+var g_tripbombBlastRadius:number;         //G_EXTERN int32_t 
+var g_shrinkerBlastRadius:number;         //G_EXTERN int32_t 
+var g_morterBlastRadius:number;           //G_EXTERN int32_t 
+var g_bouncemineBlastRadius:number;       //G_EXTERN int32_t 
+var g_seenineBlastRadius:number;          //G_EXTERN int32_t 
 //G_EXTERN char CheatKeys[2];
 //G_EXTERN char setupfilename[BMAX_PATH];
 //#endif

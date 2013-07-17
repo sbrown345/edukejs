@@ -473,11 +473,11 @@ var BSEEK_END = 2;//SEEK_END
 //# define CLAMP_DECL static inline
 //#endif
 
-//// Clamp <in> to [<min>..<max>]. The case in <= min is handled first.
-//CLAMP_DECL int32_t clamp(int32_t in, int32_t min, int32_t max)
-//{
-//    return in <= min ? min : (in >= max ? max : in);
-//}
+// Clamp <in> to [<min>..<max>]. The case in <= min is handled first.
+function clamp($in, min: number, max: number) : number //all int32
+{
+    return $in <= min ? min : ($in >= max ? max : $in);
+}
 
 //// Clamp <in> to [<min>..<max>]. The case in >= max is handled first.
 //CLAMP_DECL int32_t clamp2(int32_t in, int32_t min, int32_t max)

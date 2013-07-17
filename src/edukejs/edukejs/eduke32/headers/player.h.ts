@@ -52,31 +52,31 @@ var NAM_GRENADE_LIFETIME_VAR   = 30;
 //#define WEAPON_POS_START             6
 
 //enum dukeinv_t {
-//    GET_STEROIDS,  // 0
-//    GET_SHIELD,
-//    GET_SCUBA,
-//    GET_HOLODUKE,
-//    GET_JETPACK,
-//    GET_DUMMY1,  // 5
-//    GET_ACCESS,
-//    GET_HEATS,
-//    GET_DUMMY2,
-//    GET_FIRSTAID,
-//    GET_BOOTS,  // 10
-//    GET_MAX
+var GET_STEROIDS=0,  // 0
+    GET_SHIELD=1,
+    GET_SCUBA=2,
+    GET_HOLODUKE=3,
+    GET_JETPACK=4,
+    GET_DUMMY1=5,  // 5
+    GET_ACCESS=6,
+    GET_HEATS7,
+    GET_DUMMY2=8,
+    GET_FIRSTAID=9,
+    GET_BOOTS=10,  // 10
+    GET_MAX=11;
 //};
 
 //// these are not in the same order as the above, and it can't be changed for compat reasons. lame!
 //enum dukeinvicon_t {
-//    ICON_NONE,  // 0
-//    ICON_FIRSTAID,
-//    ICON_STEROIDS,
-//    ICON_HOLODUKE,
-//    ICON_JETPACK,
-//    ICON_HEATS,  // 5
-//    ICON_SCUBA,
-//    ICON_BOOTS,
-//    ICON_MAX
+var ICON_NONE=0,  // 0
+    ICON_FIRSTAID=1,
+    ICON_STEROIDS=2,
+    ICON_HOLODUKE=3,
+    ICON_JETPACK=4,
+    ICON_HEATS=5,  // 5
+    ICON_SCUBA=6,
+    ICON_BOOTS=7,
+    ICON_MAX=8;
 //};
 
 //enum dukeweapon_t {
@@ -196,8 +196,8 @@ function DukePlayer_t() {
 
 //    int16_t loogiex[64], loogiey[64], sbs, sound_pitch;
 
-//    int16_t ang, oang, angvel, cursectnum, look_ang, last_extra, subweapon;
-//    int16_t max_ammo_amount[MAX_WEAPONS], ammo_amount[MAX_WEAPONS], inv_amount[GET_MAX];
+//    int16_t ang, oang, angvel, cursectnum, look_ang, last_extra, subweapon;this.
+      this.max_ammo_amount = new Int16Array(MAX_WEAPONS), this.ammo_amount = new Int16Array(MAX_WEAPONS), this.inv_amount = new Int16Array(GET_MAX);//    int16_t 
 //    int16_t wackedbyactor, pyoff, opyoff;
 
 //    int16_t horiz, horizoff, ohoriz, ohorizoff;
