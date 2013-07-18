@@ -1346,7 +1346,7 @@ function C_SetScriptSize(/*int32_t*/ newsize: number) : number
 //    newscript = (intptr_t *)Brealloc(script, newsize * sizeof(intptr_t));
 //    newbitptr = (char *)Bcalloc(1,(((newsize+7)>>3)+1) * sizeof(uint8_t));
 
-//    if (newscript == NULL || newbitptr == NULL)
+//    if (!newscript || !newbitptr) //maybe check idx???
 //    {
 //        C_ReportError(-1);
 //        initprintf("%s:%d: out of memory: Aborted (%ud)\n",g_szScriptFileName,g_lineNumber,(unsigned)(g_scriptPtr-script));
@@ -2164,12 +2164,12 @@ function C_Include(confile: string) :  void
 //#endif  // !defined LUNATIC
 
 //#ifdef _WIN32
-//static void check_filename_case(const char *fn)
-//{
-//    int32_t fp;
-//    if ((fp = kopen4loadfrommod(fn, g_loadFromGroupOnly)) >= 0)
-//        kclose(fp);
-//}
+function check_filename_case(fn: string): void
+{
+    var fp: number;
+    if ((fp = kopen4loadfrommod(fn, g_loadFromGroupOnly)) >= 0)
+        kclose(fp);
+}
 //#else
 //static void check_filename_case(const char *fn) { UNREFERENCED_PARAMETER(fn); }
 //#endif
@@ -2426,10 +2426,10 @@ function G_DoGameStartup(/*const int32_t **/params: Int32Array): void
 
 function C_AllocQuote(qnum: number) : number
 {
-    if (ScriptQuotes[qnum] == NULL)
+    if (!ScriptQuotes[qnum])
     {
         ScriptQuotes[qnum] = new Uint8Array(MAXQUOTELEN);
-        if (ScriptQuotes[qnum] == NULL)
+        if (!ScriptQuotes[qnum])
         {
             Bsprintf(tempbuf, "Failed allocating %d byte quote text buffer.", MAXQUOTELEN);
             G_GameExit(tempbuf.toString());
@@ -2580,7 +2580,7 @@ function C_ParseCommand(loop: number): number
         case -2:
             return 1; //End
 //        case CON_STATE:
-//            if (g_parsingActorPtr == NULL && g_processingState == 0)
+//            if (!g_parsingActorPtr && g_processingState == 0)
 //            {
 //                C_GetNextLabelName();
 //                g_scriptPtr--;
@@ -2976,72 +2976,73 @@ function C_ParseCommand(loop: number): number
 //            }
 //            continue;
 
-//        case CON_MUSIC:
-//            {
-//                // NOTE: this doesn't get stored in the PCode...
+        case CON_MUSIC:
+            {
+                // NOTE: this doesn't get stored in the PCode...
+                debugger
+                // music 1 stalker.mid dethtoll.mid streets.mid watrwld1.mid snake1.mid
+                //    thecall.mid ahgeez.mid dethtoll.mid streets.mid watrwld1.mid snake1.mid
+                g_scriptPtr--;
+                C_GetNextValue(LABEL_DEFINE); // Volume Number (0/4)
+                g_scriptPtr--;
 
-//                // music 1 stalker.mid dethtoll.mid streets.mid watrwld1.mid snake1.mid
-//                //    thecall.mid ahgeez.mid dethtoll.mid streets.mid watrwld1.mid snake1.mid
-//                g_scriptPtr--;
-//                C_GetNextValue(LABEL_DEFINE); // Volume Number (0/4)
-//                g_scriptPtr--;
+                k = script[g_scriptPtr]-1;
 
-//                k = script[g_scriptPtr]-1;
+                if (k >= 0) // if it's background music
+                {
+                    i = 0;
+                    // get the file name...
+                    while (C_GetKeyword() == -1)
+                    {
+                        C_SkipComments();
+                        j = 0;
+                        tempbuf[j] = '/'.charCodeAt(0);
+                        while (isaltok(textptr[textptrIdx+j]))
+                        {
+                            tempbuf[j+1] = textptr.charCodeAt(textptrIdx + j);
+                            j++;
+                        }
+                        tempbuf[j+1] = 0;
 
-//                if (k >= 0) // if it's background music
-//                {
-//                    i = 0;
-//                    // get the file name...
-//                    while (C_GetKeyword() == -1)
-//                    {
-//                        C_SkipComments();
-//                        j = 0;
-//                        tempbuf[j] = '/'.charCodeAt(0);
-//                        while (isaltok(*(textptr+j)))
-//                        {
-//                            tempbuf[j+1] = textptr.charCodeAt(textptr + j);
-//                            j++;
-//                        }
-//                        tempbuf[j+1] = '\0'.charCodeAt(0);
+                        if (!MapInfo[(k*MAXLEVELS)+i].musicfn)
+                            MapInfo[(k*MAXLEVELS)+i].musicfn = "";//(char *)Bcalloc(Bstrlen(tempbuf)+1,sizeof(uint8_t));
+                        else if ((Bstrlen(tempbuf)+1) > sizeof(MapInfo[(k*MAXLEVELS)+i].musicfn))
+                            todoThrow("MapInfo[(k*MAXLEVELS)+i].musicfn = (char *)Brealloc(MapInfo[(k*MAXLEVELS)+i].musicfn,(Bstrlen(tempbuf)+1));");
 
-//                        if (MapInfo[(k*MAXLEVELS)+i].musicfn == NULL)
-//                            MapInfo[(k*MAXLEVELS)+i].musicfn = (char *)Bcalloc(Bstrlen(tempbuf)+1,sizeof(uint8_t));
-//                        else if ((Bstrlen(tempbuf)+1) > sizeof(MapInfo[(k*MAXLEVELS)+i].musicfn))
-//                            MapInfo[(k*MAXLEVELS)+i].musicfn = (char *)Brealloc(MapInfo[(k*MAXLEVELS)+i].musicfn,(Bstrlen(tempbuf)+1));
+                        MapInfo[(k*MAXLEVELS)+i].musicfn = tempbuf.toString();
 
-//                        Bstrcpy(MapInfo[(k*MAXLEVELS)+i].musicfn,tempbuf);
+                        check_filename_case(tempbuf.toString());
 
-//                        check_filename_case(tempbuf);
+                        textptrIdx += j;
+                        if (i > MAXLEVELS-1) break;
+                        i++;
+                    }
+                }
+                else
+                {
+                    i = 0;
+                    while (C_GetKeyword() == -1)
+                    {
+                        C_SkipComments();
+                        j = 0;
 
-//                        textptrIdx += j;
-//                        if (i > MAXLEVELS-1) break;
-//                        i++;
-//                    }
-//                }
-//                else
-//                {
-//                    i = 0;
-//                    while (C_GetKeyword() == -1)
-//                    {
-//                        C_SkipComments();
-//                        j = 0;
+                        EnvMusicFilename[i]="";
+                        while (isaltok(textptr[textptrIdx+j]))
+                        {
+                            EnvMusicFilename[i] += textptr[textptrIdx + j];
+                            j++;
+                        }
+                        //EnvMusicFilename[i][j] = '\0';
 
-//                        while (isaltok(*(textptr+j)))
-//                        {
-//                            EnvMusicFilename[i][j] = textptr[j];
-//                            j++;
-//                        }
-//                        EnvMusicFilename[i][j] = '\0';
+                        check_filename_case(EnvMusicFilename[i]);
 
-//                        check_filename_case(EnvMusicFilename[i]);
-
-//                        textptrIdx += j;
-//                        if (i > MAXVOLUMES-1) break;
-//                        i++;
-//                    }
-//                }
-//            }
-//            continue;
+                        textptrIdx += j;
+                        if (i > MAXVOLUMES-1) break;
+                        i++;
+                    }
+                }
+            }
+            continue;
 
         case CON_INCLUDE:
             g_scriptPtr--;
@@ -3054,7 +3055,7 @@ function C_ParseCommand(loop: number): number
                 tempbuf[j] =  textptr.charCodeAt(textptrIdx++);
                 j++;
             }
-            tempbuf[j] = '\0'.charCodeAt(0);
+            tempbuf[j] = 0;
 
             C_Include(tempbuf.toString());
             continue;
@@ -3217,9 +3218,9 @@ function C_ParseCommand(loop: number): number
 //            // save the actor name w/o consuming it
 //            C_SkipComments();
 //            j = 0;
-//            while (isaltok(*(textptr+j)))
+//            while (isaltok(textptr[textptrIdx+j]))
 //            {
-//                g_szCurrentBlockName[j] = textptr[j];
+//                g_szCurrentBlockName[j] = textptr[textptrIdx+j];
 //                j++;
 //            }
 //            g_szCurrentBlockName[j] = 0;
@@ -3342,9 +3343,9 @@ function C_ParseCommand(loop: number): number
 
 //            C_SkipComments();
 //            j = 0;
-//            while (isaltok(*(textptr+j)))
+//            while (isaltok(textptr[textptrIdx+j]))
 //            {
-//                g_szCurrentBlockName[j] = textptr[j];
+//                g_szCurrentBlockName[j] = textptr[textptrIdx+j];
 //                j++;
 //            }
 //            g_szCurrentBlockName[j] = 0;
@@ -4573,7 +4574,7 @@ function C_ParseCommand(loop: number): number
 //            }
 
 //        case CON_SPRITEFLAGS:
-//            if (g_parsingActorPtr == NULL && g_processingState == 0)
+//            if (!g_parsingActorPtr && g_processingState == 0)
 //            {
 //                g_scriptPtr--;
 
@@ -4764,7 +4765,7 @@ function C_ParseCommand(loop: number): number
 
 //        case CON_ROTATESPRITE16:
 //        case CON_ROTATESPRITE:
-//            if (g_parsingEventPtr == NULL && g_processingState == 0)
+//            if (!g_parsingEventPtr && g_processingState == 0)
 //            {
 //                C_ReportError(ERROR_EVENTONLY);
 //                g_numCompilerErrors++;
@@ -4780,7 +4781,7 @@ function C_ParseCommand(loop: number): number
 //            continue;
 
 //        case CON_ROTATESPRITEA:
-//            if (g_parsingEventPtr == NULL && g_processingState == 0)
+//            if (!g_parsingEventPtr && g_processingState == 0)
 //            {
 //                C_ReportError(ERROR_EVENTONLY);
 //                g_numCompilerErrors++;
@@ -4791,7 +4792,7 @@ function C_ParseCommand(loop: number): number
 
 //        case CON_SHOWVIEW:
 //        case CON_SHOWVIEWUNBIASED:
-//            if (g_parsingEventPtr == NULL && g_processingState == 0)
+//            if (!g_parsingEventPtr && g_processingState == 0)
 //            {
 //                C_ReportError(ERROR_EVENTONLY);
 //                g_numCompilerErrors++;
@@ -4877,7 +4878,7 @@ function C_ParseCommand(loop: number): number
 //        case CON_DIGITALNUMBER:
 //        case CON_DIGITALNUMBERZ:
 //        case CON_SCREENTEXT:
-//            if (g_parsingEventPtr == NULL && g_processingState == 0)
+//            if (!g_parsingEventPtr && g_processingState == 0)
 //            {
 //                C_ReportError(ERROR_EVENTONLY);
 //                g_numCompilerErrors++;
@@ -4911,7 +4912,7 @@ function C_ParseCommand(loop: number): number
 //        case CON_MYOSPAL:
 //        case CON_MYOSX:
 //        case CON_MYOSPALX:
-//            if (g_parsingEventPtr == NULL && g_processingState == 0)
+//            if !(g_parsingEventPtr && g_processingState == 0)
 //            {
 //                C_ReportError(ERROR_EVENTONLY);
 //                g_numCompilerErrors++;
@@ -5588,7 +5589,7 @@ function C_ParseCommand(loop: number): number
 //                    tempbuf[j] = textptr.charCodeAt(textptrIdx++);
 //                    j++;
 //                }
-//                tempbuf[j] = '\0'.charCodeAt(0);
+//                tempbuf[j] = 0;
 
 //                C_SetDefName(tempbuf);
 //            }
@@ -5605,7 +5606,7 @@ function C_ParseCommand(loop: number): number
 //                    tempbuf[j] = textptr.charCodeAt(textptrIdx++);
 //                    j++;
 //                }
-//                tempbuf[j] = '\0'.charCodeAt(0);
+//                tempbuf[j] = 0;
 //                if (Bstrcmp(setupfilename,SETUPFILENAME) == 0) // not set to something else via -cfg
 //                {
 //                    char temp[BMAX_PATH];
@@ -5714,7 +5715,7 @@ function C_ParseCommand(loop: number): number
             g_scriptPtr--;
             k = script[g_scriptPtr];
             C_SkipComments();
-            debugger;
+            
             if (j < 0 || j > MAXVOLUMES-1)
             {
                 initprintf("%s:%d: error: volume number exceeds maximum volume count.\n",g_szScriptFileName,g_lineNumber);
@@ -5746,7 +5747,7 @@ function C_ParseCommand(loop: number): number
                     break;
                 }
             }
-            tempbuf[i+1] = '\0'.charCodeAt(0);
+            tempbuf[i+1] = 0;
 
             Bcorrectfilename(tempbuf,0);
 
@@ -5794,7 +5795,7 @@ function C_ParseCommand(loop: number): number
                 }
             }
 
-            tempbuf[i] = '\0'.charCodeAt(0);
+            tempbuf[i] = 0;
 
             if (!MapInfo[j*MAXLEVELS+k].name)
                 MapInfo[j*MAXLEVELS+k].name = "";//(char *)Bcalloc(Bstrlen(tempbuf)+1,sizeof(uint8_t));
@@ -5838,9 +5839,9 @@ function C_ParseCommand(loop: number): number
 
             if (tw == CON_REDEFINEQUOTE)
             {
-                if (ScriptQuoteRedefinitions[g_numQuoteRedefinitions] == NULL)
+                if (!ScriptQuoteRedefinitions[g_numQuoteRedefinitions])
                     ScriptQuoteRedefinitions[g_numQuoteRedefinitions] =  new Uint8Array(MAXQUOTELEN);//(char *)Bcalloc(MAXQUOTELEN,sizeof(uint8_t));
-                ////if (ScriptQuoteRedefinitions[g_numQuoteRedefinitions] == NULL)
+                ////if (!ScriptQuoteRedefinitions[g_numQuoteRedefinitions])
                 ////{
                 ////    Bsprintf(tempbuf,"Failed allocating %" PRIdPTR " byte quote text buffer.",sizeof(uint8_t) * MAXQUOTELEN);
                 ////    G_GameExit(tempbuf.toString());
@@ -5945,7 +5946,7 @@ function C_ParseCommand(loop: number): number
 //            i = 0;
 //            C_SkipComments();
 
-//            if (g_sounds[k].filename == NULL)
+//            if (!g_sounds[k].filename)
 //                g_sounds[k].filename = (char *)Bcalloc(BMAX_PATH,sizeof(uint8_t));
 //            if (!g_sounds[k].filename)
 //            {
@@ -6009,7 +6010,7 @@ function C_ParseCommand(loop: number): number
 
 //        case CON_ENDEVENT:
 
-//            if (g_parsingEventPtr == NULL)
+//            if (!g_parsingEventPtr)
 //            {
 //                C_ReportError(-1);
 //                initprintf("%s:%d: error: found `endevent' without open `onevent'.\n",g_szScriptFileName,g_lineNumber);
@@ -6041,7 +6042,7 @@ function C_ParseCommand(loop: number): number
 //            continue;
 
 //        case CON_ENDA:
-//            if (g_parsingActorPtr == NULL)
+//            if (!g_parsingActorPtr)
 //            {
 //                C_ReportError(-1);
 //                initprintf("%s:%d: error: found `enda' without open `actor'.\n",g_szScriptFileName,g_lineNumber);

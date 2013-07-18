@@ -67,7 +67,7 @@ var myconnectindex: number, numplayers: number;
 //G_EXTERN animwalltype animwall[MAXANIMWALLS];
 var ScriptQuotes: Uint8Array[] = new Array<Uint8Array>(MAXQUOTES),ScriptQuoteRedefinitions: Uint8Array[] = new Array<Uint8Array>(MAXQUOTES); ////G_EXTERN char *
 var label : Uint8Array;//G_EXTERN char *label;
-//G_EXTERN char EnvMusicFilename[MAXVOLUMES+1][BMAX_PATH];
+var EnvMusicFilename: string[] = new Array<string>(MAXVOLUMES+1);//[MAXVOLUMES+1][BMAX_PATH];
 //G_EXTERN char g_RTSPlaying;
 //G_EXTERN int32_t g_musicIndex;
 var g_loadFromGroupOnly : number;//char
