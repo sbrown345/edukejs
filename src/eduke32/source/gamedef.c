@@ -2889,7 +2889,8 @@ static int32_t C_ParseCommand(int32_t loop)
 
                 // music 1 stalker.mid dethtoll.mid streets.mid watrwld1.mid snake1.mid
                 //    thecall.mid ahgeez.mid dethtoll.mid streets.mid watrwld1.mid snake1.mid
-                g_scriptPtr--;
+
+				g_scriptPtr--;
                 C_GetNextValue(LABEL_DEFINE); // Volume Number (0/4)
                 g_scriptPtr--;
 
@@ -2911,7 +2912,8 @@ static int32_t C_ParseCommand(int32_t loop)
                         }
                         tempbuf[j+1] = '\0';
 
-                        if (MapInfo[(k*MAXLEVELS)+i].musicfn == NULL)
+
+						if (MapInfo[(k*MAXLEVELS)+i].musicfn == NULL)
                             MapInfo[(k*MAXLEVELS)+i].musicfn = (char *)Bcalloc(Bstrlen(tempbuf)+1,sizeof(uint8_t));
                         else if ((Bstrlen(tempbuf)+1) > sizeof(MapInfo[(k*MAXLEVELS)+i].musicfn))
                             MapInfo[(k*MAXLEVELS)+i].musicfn = (char *)Brealloc(MapInfo[(k*MAXLEVELS)+i].musicfn,(Bstrlen(tempbuf)+1));

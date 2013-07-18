@@ -892,8 +892,9 @@ var JOKE = JOKE__STATIC;
 //#if !defined LUNATIC
 //static hashtable_t h_names = {512, NULL};
 
-//void G_ProcessDynamicSoundMapping(const char *szLabel, int32_t lValue)
-//{
+function G_ProcessDynamicSoundMapping(szLabel: string, lValue: number): void
+{
+    todoThrow();
 //    int32_t i;
 
 //    if ((unsigned)lValue >= MAXSOUNDS || !szLabel)
@@ -909,7 +910,7 @@ var JOKE = JOKE__STATIC;
 //#endif
 //        *di->dynvalptr = lValue;
 //    }
-//}
+}
 
 function initsoundhashnames() : void
 {

@@ -241,3 +241,5 @@ function isalnum(c: string) : boolean {
 function isdigit(c: string) : number  {
     return (c >= "0" && c <= "9") ?  1 : 0;
 }
+
+var uint8_t = {size:1};
