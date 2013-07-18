@@ -2,6 +2,7 @@
 var SKIP_ALL_LOGGING = false;
 
 var DEBUG_COMPILE = true;
+var DEBUG_SCRIPT_CHANGE = false;
 
 var dlog = function (log: boolean, format: string, ...args: any[]) {
     if(!log || SKIP_ALL_LOGGING) return;

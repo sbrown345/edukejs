@@ -1570,7 +1570,7 @@ function C_GetNextKeyword(): number //Returns its code #
         if (i == CON_LEFTBRACE || i == CON_RIGHTBRACE || i == CON_NULLOP)
             script[g_scriptPtr] = i + (IFELSE_MAGIC<<12);
         else script[g_scriptPtr] = i + (g_lineNumber<<12);
-        console.log("script change %i", script[g_scriptPtr]);
+        dlog(DEBUG_SCRIPT_CHANGE, "script change %i", script[g_scriptPtr]);
 
         bitptr[(g_scriptPtr-scriptIdx)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-scriptIdx)&7));
         textptrIdx += l;
@@ -1934,7 +1934,7 @@ function C_GetNextValue(type: number): number
 
             bitptr[(g_scriptPtr-scriptIdx)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-scriptIdx)&7));
             script[g_scriptPtr++] = labelcode[i];
-        console.log("script change %i", script[g_scriptPtr-1]);
+            dlog(DEBUG_SCRIPT_CHANGE, "script change %i", script[g_scriptPtr]);
             
             textptrIdx += l;
             return labeltype[i];
@@ -1990,11 +1990,11 @@ function C_GetNextValue(type: number): number
         script[g_scriptPtr] = parse_hex_constant(textptr+2);
     else
         script[g_scriptPtr] = parse_decimal_number();
-    console.log("script change %i", script[g_scriptPtr]);
+    dlog(DEBUG_SCRIPT_CHANGE, "script change %i", script[g_scriptPtr]);
     if (!(g_numCompilerErrors || g_numCompilerWarnings) && g_scriptDebug > 1)
         initprintf("%s:%d: debug: accepted constant %i.\n",
                    g_szScriptFileName,g_lineNumber,/*(long)*/script[g_scriptPtr]);
-    console.log("script change %i", script[g_scriptPtr]);
+    dlog(DEBUG_SCRIPT_CHANGE, "script change %i", script[g_scriptPtr]);
     g_scriptPtr++;
 
     textptrIdx += l;
@@ -5412,47 +5412,47 @@ function C_ParseCommand(loop: number): number
 
 //            return 1;
 
-//        case CON_BETANAME:
-//            g_scriptPtr--;
-//            j = 0;
-//            C_NextLine();
-//            continue;
+        case CON_BETANAME:
+            g_scriptPtr--;
+            j = 0;
+            C_NextLine();
+            continue;
 
-//        case CON_DEFINEVOLUMENAME:
-//            g_scriptPtr--;
+        case CON_DEFINEVOLUMENAME:
+            g_scriptPtr--;
+            debugger
+            C_GetNextValue(LABEL_DEFINE);
+            g_scriptPtr--;
+            j = script[g_scriptPtr];
+            C_SkipComments();
 
-//            C_GetNextValue(LABEL_DEFINE);
-//            g_scriptPtr--;
-//            j = script[g_scriptPtr];
-//            C_SkipComments();
+            if (j < 0 || j > MAXVOLUMES-1)
+            {
+                initprintf("%s:%d: error: volume number exceeds maximum volume count.\n",
+                    g_szScriptFileName,g_lineNumber);
+                g_numCompilerErrors++;
+                C_NextLine();
+                continue;
+            }
 
-//            if (j < 0 || j > MAXVOLUMES-1)
-//            {
-//                initprintf("%s:%d: error: volume number exceeds maximum volume count.\n",
-//                    g_szScriptFileName,g_lineNumber);
-//                g_numCompilerErrors++;
-//                C_NextLine();
-//                continue;
-//            }
-
-//            i = 0;
-
-//            while (textptr.charCodeAt(textptrIdx) != 0x0a && textptr.charCodeAt(textptrIdx) != 0x0d && textptr.charCodeAt(textptrIdx) != 0)
-//            {
-//                EpisodeNames[j][i] = textptr[textptrIdx];
-//                textptrIdx++,i++;
-//                if (i >= (signed)sizeof(EpisodeNames[j])-1)
-//                {
-//                    initprintf("%s:%d: warning: truncating volume name to %d characters.\n",
-//                        g_szScriptFileName,g_lineNumber,(int32_t)sizeof(EpisodeNames[j])-1);
-//                    g_numCompilerWarnings++;
-//                    C_NextLine();
-//                    break;
-//                }
-//            }
-//            g_numVolumes = j+1;
-//            EpisodeNames[j][i] = '\0';
-//            continue;
+            i = 0;
+            EpisodeNames[j] = "";
+            while (textptr.charCodeAt(textptrIdx) != 0x0a && textptr.charCodeAt(textptrIdx) != 0x0d && textptr.charCodeAt(textptrIdx) != 0)
+            {
+                EpisodeNames[j] += textptr[textptrIdx];
+                textptrIdx++,i++;
+                if (i >= EpisodeNamesLength-1)
+                {
+                    initprintf("%s:%d: warning: truncating volume name to %d characters.\n",
+                        g_szScriptFileName,g_lineNumber,EpisodeNamesLength-1);
+                    g_numCompilerWarnings++;
+                    C_NextLine();
+                    break;
+                }
+            }
+            g_numVolumes = j+1;
+            //EpisodeNames[j][i] = '\0';
+            continue;
 
 //        case CON_DEFINEGAMEFUNCNAME:
 //            g_scriptPtr--;

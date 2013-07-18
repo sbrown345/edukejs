@@ -83,7 +83,8 @@ var ud = new user_defs();
 
 //int16_t g_spriteDeleteQueueSize = 64;
 
-//char EpisodeNames[MAXVOLUMES][33] = { "L.A. Meltdown", "Lunar Apocalypse", "Shrapnel City" };
+var EpisodeNamesLength = 33;
+var EpisodeNames/*[MAXVOLUMES][33] */= [ "L.A. Meltdown", "Lunar Apocalypse", "Shrapnel City","","","",""];
 //char SkillNames[MAXSKILLS][33] = { "Piece Of Cake", "Let's Rock", "Come Get Some", "Damn I'm Good" };
 
 //char GametypeNames[MAXGAMETYPES][33] = { "DukeMatch (Spawn)", "Cooperative Play", "DukeMatch (No Spawn)", "Team DM (Spawn)", "Team DM (No Spawn)" };
@@ -96,9 +97,9 @@ var ud = new user_defs();
 //    /*4+*/8+16+1024+2048+16384+65536+131072,
 //    2+/*4+*/8+16+16384+65536+131072
 //};
-//char g_numGametypes = 5;
+var g_numGametypes = 5;//char
 
-//char g_numVolumes = 3;
+var g_numVolumes = 3;//char
 
 //int32_t g_timerTicsPerSecond = TICRATE;
 

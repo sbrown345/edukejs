@@ -70,9 +70,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //#define MOVEFIFOSIZ         2
 
 //// KEEPINSYNC lunatic/con_lang.lua
-//#define MAXVOLUMES          7
-//#define MAXLEVELS           64
-//#define MAXGAMETYPES        16
+var MAXVOLUMES         = 7;
+var MAXLEVELS          = 64;
+var MAXGAMETYPES       = 16;
 
 //////////// TIMING CONSTANTS //////////
 //// The number of 'totalclock' increments per second:
