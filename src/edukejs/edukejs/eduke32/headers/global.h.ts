@@ -5,6 +5,7 @@
 
 /// <reference path="../../eduke32/headers/function.h.ts" />
 /// <reference path="../../eduke32/headers/player.h.ts" />
+/// <reference path="../../eduke32/headers/sector.h.ts" />
 
 //-------------------------------------------------------------------------
 /*
@@ -123,7 +124,7 @@ var labelcode: Int32Array, labeltype: Int32Array;//G_EXTERN int32_t *labelcode,*
 var labelcodeIdx : number, labeltypeIdx : number;
 var script:  Uint32Array;//G_EXTERN intptr_t *script;
 var scriptIdx: number = 0;
-//G_EXTERN map_t MapInfo[(MAXVOLUMES+1)*MAXLEVELS];  // +1 volume for "intro", "briefing" music
+var MapInfo: map_t[] = newStructArray(map_t, (MAXVOLUMES+1)*MAXLEVELS);  // +1 volume for "intro", "briefing" music //G_EXTERN map_t 
 //#pragma pack(push,1)
 //G_EXTERN playerdata_t g_player[MAXPLAYERS];
 //G_EXTERN playerspawn_t g_playerSpawnPoints[MAXPLAYERS];

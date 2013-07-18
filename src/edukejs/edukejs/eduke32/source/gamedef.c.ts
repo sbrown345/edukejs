@@ -28,6 +28,7 @@
 /// <reference path="../../eduke32/headers/namesdyn.h.ts" />
 /// <reference path="../../eduke32/headers/player.h.ts" />
 /// <reference path="../../eduke32/headers/quotes.h.ts" />
+/// <reference path="../../eduke32/headers/sector.h.ts" />
 /// <reference path="../../eduke32/headers/soundsdyn.h.ts" />
 
 /// <reference path="../../eduke32/source/baselayer.c.ts" />
@@ -760,7 +761,7 @@ var EventNames/*[MAXEVENTS]*/ =
     "EVENT_PREGAME",
     "EVENT_CHANGEMENU"
 ];
-assert.areEqual(MAXEVENTS, EventNames);
+assert.areEqual(MAXEVENTS, EventNames.length);
 
 //#if !defined LUNATIC
 var SectorLabels : memberlabel_t[]=
@@ -5507,7 +5508,6 @@ function C_ParseCommand(loop: number): number
 
         case CON_DEFINESKILLNAME:
             g_scriptPtr--;
-            debugger;
             C_GetNextValue(LABEL_DEFINE);
             g_scriptPtr--;
             j = script[g_scriptPtr];
@@ -5705,107 +5705,107 @@ function C_ParseCommand(loop: number): number
 //            GametypeNames[j][i] = '\0';
 //            continue;
 
-//        case CON_DEFINELEVELNAME:
-//            g_scriptPtr--;
-//            C_GetNextValue(LABEL_DEFINE);
-//            g_scriptPtr--;
-//            j = script[g_scriptPtr];
-//            C_GetNextValue(LABEL_DEFINE);
-//            g_scriptPtr--;
-//            k = script[g_scriptPtr];
-//            C_SkipComments();
+        case CON_DEFINELEVELNAME:
+            g_scriptPtr--;
+            C_GetNextValue(LABEL_DEFINE);
+            g_scriptPtr--;
+            j = script[g_scriptPtr];
+            C_GetNextValue(LABEL_DEFINE);
+            g_scriptPtr--;
+            k = script[g_scriptPtr];
+            C_SkipComments();
+            debugger;
+            if (j < 0 || j > MAXVOLUMES-1)
+            {
+                initprintf("%s:%d: error: volume number exceeds maximum volume count.\n",g_szScriptFileName,g_lineNumber);
+                g_numCompilerErrors++;
+                C_NextLine();
+                continue;
+            }
+            if (k < 0 || k > MAXLEVELS-1)
+            {
+                initprintf("%s:%d: error: level number exceeds maximum number of levels per episode.\n",g_szScriptFileName,g_lineNumber);
+                g_numCompilerErrors++;
+                C_NextLine();
+                continue;
+            }
 
-//            if (j < 0 || j > MAXVOLUMES-1)
-//            {
-//                initprintf("%s:%d: error: volume number exceeds maximum volume count.\n",g_szScriptFileName,g_lineNumber);
-//                g_numCompilerErrors++;
-//                C_NextLine();
-//                continue;
-//            }
-//            if (k < 0 || k > MAXLEVELS-1)
-//            {
-//                initprintf("%s:%d: error: level number exceeds maximum number of levels per episode.\n",g_szScriptFileName,g_lineNumber);
-//                g_numCompilerErrors++;
-//                C_NextLine();
-//                continue;
-//            }
+            i = 0;
 
-//            i = 0;
+            tempbuf[i] = '/'.charCodeAt(0);
 
-//            tempbuf[i] = '/'.charCodeAt(0);
+            while (textptr[textptrIdx] != ' ' && textptr[textptrIdx] != '\t' && textptr.charCodeAt(textptrIdx) != 0x0a)
+            {
+                tempbuf[i+1] = textptr.charCodeAt(textptrIdx);
+                textptrIdx++,i++;
+                if (i >= BMAX_PATH)
+                {
+                    initprintf("%s:%d: error: level file name exceeds limit of %d characters.\n",g_szScriptFileName,g_lineNumber,BMAX_PATH);
+                    g_numCompilerErrors++;
+                    while (textptr[textptrIdx] != ' ' && textptr[textptrIdx] != '\t') textptrIdx++;
+                    break;
+                }
+            }
+            tempbuf[i+1] = '\0'.charCodeAt(0);
 
-//            while (textptr[textptrIdx] != ' ' && textptr[textptrIdx] != '\t' && textptr.charCodeAt(textptrIdx) != 0x0a)
-//            {
-//                tempbuf[i+1] = textptr.charCodeAt(textptrIdx);
-//                textptrIdx++,i++;
-//                if (i >= BMAX_PATH)
-//                {
-//                    initprintf("%s:%d: error: level file name exceeds limit of %d characters.\n",g_szScriptFileName,g_lineNumber,BMAX_PATH);
-//                    g_numCompilerErrors++;
-//                    while (textptr[textptrIdx] != ' ' && textptr[textptrIdx] != '\t') textptrIdx++;
-//                    break;
-//                }
-//            }
-//            tempbuf[i+1] = '\0'.charCodeAt(0);
+            Bcorrectfilename(tempbuf,0);
 
-//            Bcorrectfilename(tempbuf,0);
+            if (!MapInfo[j *MAXLEVELS+k].filename)
+                MapInfo[j *MAXLEVELS+k].filename = "";//(char *)Bcalloc(Bstrlen(tempbuf)+1,sizeof(uint8_t));
+            else if ((Bstrlen(tempbuf)+1) > sizeof(MapInfo[j*MAXLEVELS+k].filename))
+                todoThrow("MapInfo[j *MAXLEVELS+k].filename = (char *)Brealloc(MapInfo[j*MAXLEVELS+k].filename,(Bstrlen(tempbuf)+1));");
 
-//            if (MapInfo[j *MAXLEVELS+k].filename == NULL)
-//                MapInfo[j *MAXLEVELS+k].filename = (char *)Bcalloc(Bstrlen(tempbuf)+1,sizeof(uint8_t));
-//            else if ((Bstrlen(tempbuf)+1) > sizeof(MapInfo[j*MAXLEVELS+k].filename))
-//                MapInfo[j *MAXLEVELS+k].filename = (char *)Brealloc(MapInfo[j*MAXLEVELS+k].filename,(Bstrlen(tempbuf)+1));
+            MapInfo[j*MAXLEVELS+k].filename = tempbuf.toString();
 
-//            Bstrcpy(MapInfo[j*MAXLEVELS+k].filename,tempbuf);
+            C_SkipComments();
 
-//            C_SkipComments();
+            MapInfo[j *MAXLEVELS+k].partime =
+                (((textptr.charCodeAt(textptrIdx+0)-'0'.charCodeAt(0))*10+(textptr.charCodeAt(textptrIdx+1)-'0'.charCodeAt(0)))*REALGAMETICSPERSEC*60)+
+                (((textptr.charCodeAt(textptrIdx+3)-'0'.charCodeAt(0))*10+(textptr.charCodeAt(textptrIdx+4)-'0'.charCodeAt(0)))*REALGAMETICSPERSEC);
 
-//            MapInfo[j *MAXLEVELS+k].partime =
-//                (((textptr[textptrIdx+0]-'0')*10+(textptr[textptrIdx+1]-'0'))*REALGAMETICSPERSEC*60)+
-//                (((textptr[textptrIdx+3]-'0')*10+(textptr[textptrIdx+4]-'0'))*REALGAMETICSPERSEC);
+            textptrIdx += 5;
+            while (textptr[textptrIdx] == ' '  || textptr[textptrIdx] == '\t') textptrIdx++;
 
-//            textptrIdx += 5;
-//            while (textptr[textptrIdx] == ' '  || textptr[textptrIdx] == '\t') textptrIdx++;
+            // cheap hack, 0.99 doesn't have the 3D Realms time
+            if (textptr[textptrIdx+2] == ':')
+            {
+                MapInfo[j *MAXLEVELS+k].designertime =
+                    (((textptr.charCodeAt(textptrIdx+0)-'0'.charCodeAt(0))*10+(textptr.charCodeAt(textptrIdx+1)-'0'.charCodeAt(0)))*REALGAMETICSPERSEC*60)+
+                    (((textptr.charCodeAt(textptrIdx+3)-'0'.charCodeAt(0))*10+(textptr.charCodeAt(textptrIdx+4)-'0'.charCodeAt(0)))*REALGAMETICSPERSEC);
 
-//            // cheap hack, 0.99 doesn't have the 3D Realms time
-//            if (textptr[textptrIdx+2] == ':')
-//            {
-//                MapInfo[j *MAXLEVELS+k].designertime =
-//                    (((textptr[textptrIdx+0]-'0')*10+(textptr[textptrIdx+1]-'0'))*REALGAMETICSPERSEC*60)+
-//                    (((textptr[textptrIdx+3]-'0')*10+(textptr[textptrIdx+4]-'0'))*REALGAMETICSPERSEC);
+                textptrIdx += 5;
+                while (textptr[textptrIdx] == ' '  || textptr[textptrIdx] == '\t') textptrIdx++;
+            }
+            else if (g_scriptVersion == 10) g_scriptVersion = 9;
 
-//                textptrIdx += 5;
-//                while (textptr[textptrIdx] == ' '  || textptr[textptrIdx] == '\t') textptrIdx++;
-//            }
-//            else if (g_scriptVersion == 10) g_scriptVersion = 9;
+            i = 0;
 
-//            i = 0;
+            while (textptr.charCodeAt(textptrIdx) != 0x0a && textptr.charCodeAt(textptrIdx) != 0x0d && textptr.charCodeAt(textptrIdx) != 0)
+            {
+                tempbuf[i] = textptr.charCodeAt(textptrIdx);
+                textptrIdx++,i++;
+                if (i >= 32)
+                {
+                    initprintf("%s:%d: warning: truncating level name to %d characters.\n",
+                        g_szScriptFileName,g_lineNumber,32);
+                    g_numCompilerWarnings++;
+                    C_NextLine();
+                    break;
+                }
+            }
 
-//            while (textptr.charCodeAt(textptrIdx) != 0x0a && textptr.charCodeAt(textptrIdx) != 0x0d && textptr.charCodeAt(textptrIdx) != 0)
-//            {
-//                tempbuf[i] = textptr.charCodeAt(textptrIdx);
-//                textptrIdx++,i++;
-//                if (i >= 32)
-//                {
-//                    initprintf("%s:%d: warning: truncating level name to %d characters.\n",
-//                        g_szScriptFileName,g_lineNumber,32);
-//                    g_numCompilerWarnings++;
-//                    C_NextLine();
-//                    break;
-//                }
-//            }
+            tempbuf[i] = '\0'.charCodeAt(0);
 
-//            tempbuf[i] = '\0'.charCodeAt(0);
+            if (!MapInfo[j*MAXLEVELS+k].name)
+                MapInfo[j*MAXLEVELS+k].name = "";//(char *)Bcalloc(Bstrlen(tempbuf)+1,sizeof(uint8_t));
+            else if ((Bstrlen(tempbuf)+1) > sizeof(MapInfo[j*MAXLEVELS+k].name))
+                todoThrow("MapInfo[j *MAXLEVELS+k].name = (char *)Brealloc(MapInfo[j*MAXLEVELS+k].name,(Bstrlen(tempbuf)+1));");
 
-//            if (MapInfo[j*MAXLEVELS+k].name == NULL)
-//                MapInfo[j*MAXLEVELS+k].name = (char *)Bcalloc(Bstrlen(tempbuf)+1,sizeof(uint8_t));
-//            else if ((Bstrlen(tempbuf)+1) > sizeof(MapInfo[j*MAXLEVELS+k].name))
-//                MapInfo[j *MAXLEVELS+k].name = (char *)Brealloc(MapInfo[j*MAXLEVELS+k].name,(Bstrlen(tempbuf)+1));
+            /*         initprintf("level name string len: %d\n",Bstrlen(tempbuf)); */
 
-//            /*         initprintf("level name string len: %d\n",Bstrlen(tempbuf)); */
+            MapInfo[j*MAXLEVELS+k].name = tempbuf.toString();
 
-//            Bstrcpy(MapInfo[j*MAXLEVELS+k].name,tempbuf);
-
-//            continue;
+            continue;
 
         case CON_DEFINEQUOTE:
         case CON_REDEFINEQUOTE:

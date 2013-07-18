@@ -10516,7 +10516,7 @@ function G_CompileScripts() : void
 //#endif
 
     if (g_scriptNamePtr)
-        Bcorrectfilename(g_scriptNamePtr,0);
+        Bcorrectfilename(g_scriptNamePtr.toUint8Array(),0);
 
 //#if defined LUNATIC
 //    Gv_Init();

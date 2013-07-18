@@ -424,9 +424,10 @@ function Bstrcasecmp(s1: string, s2: string): number
 //#endif
 //}
 
-function Bcorrectfilename(/*char **/ filename: string,  /*int32_t*/ removefn: number): number
+function Bcorrectfilename(/*char **/ filename: Uint8Array,  /*int32_t*/ removefn: number): number
 {
-    todoThrow();
+    // don't think this is required
+
 //    char *fn;
 //    char *tokarr[64], *first, *next = NULL, *token;
 //    int32_t i, ntok = 0, leadslash = 0, trailslash = 0;

@@ -485,7 +485,7 @@ function clamp($in, min: number, max: number) : number //all int32
 //    return in >= max ? max : (in <= min ? min : in);
 //}
 
-//#define BMAX_PATH 256
+var BMAX_PATH=256;
 
 
 //struct Bdirent {

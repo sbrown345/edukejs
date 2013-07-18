@@ -79,6 +79,7 @@
     <Content Include="eduke32\headers\namesdyn.h.ts" />
     <Content Include="eduke32\headers\player.h.ts" />
     <Content Include="eduke32\headers\quotes.h.ts" />
+    <Content Include="eduke32\headers\sector.h.ts" />
     <Content Include="eduke32\headers\soundsdyn.h.ts" />
     <Content Include="eduke32\headers\_functio.h.ts" />
     <Content Include="eduke32\source\baselayer.c.ts" />

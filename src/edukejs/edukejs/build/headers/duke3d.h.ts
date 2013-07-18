@@ -78,7 +78,7 @@ var MAXGAMETYPES       = 16;
 //// The number of 'totalclock' increments per second:
 var TICRATE = 120;
 //// The number of game state updates per second:
-//#define REALGAMETICSPERSEC  30
+var REALGAMETICSPERSEC = 30;
 //// The number of 'totalclock' increments per game state update:
 //// NOTE: calling a game state update a 'frame' is really weird.
 //// (This used to be TICRATE/GAMETICSPERSEC, which was 120/26 = 4.615~ truncated

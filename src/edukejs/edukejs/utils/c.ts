@@ -1,6 +1,6 @@
 ﻿/// <reference path="assert.ts" />
 
-var NULL = null;
+var NULL = null; // ""==null = false,  ""==0 = true           (todo: would be wise to check all these later on)
 var TRUE:number = 1;
 var FALSE:number = 0;
 
@@ -126,6 +126,10 @@ function read(fileHandle: number, dstBuf: Ptr, maxCharCount: number) : number {
 function sizeof(obj: any) : number {
     if (obj.size !== undefined) {
         return obj.size;
+    }
+
+    if (typeof obj === "string") {
+        return obj.length;
     }
     
     return obj.buffer.byteLength;
