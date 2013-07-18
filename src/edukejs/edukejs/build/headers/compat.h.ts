@@ -571,8 +571,8 @@ var Blseek = lseek;
 //# define Bfseek fseek
 //# define Bftell ftell
 //# define Bputs puts
-var Bstrcpy = strcpy
-//# define Bstrncpy strncpy
+var Bstrcpy = strcpy;
+var Bstrncpy = strncpy;
 var Bstrcmp = strcmp;
 //# define Bstrncmp strncmp
 //# if defined(_MSC_VER) 

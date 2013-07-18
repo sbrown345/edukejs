@@ -153,12 +153,26 @@ function strncmp(str1: string, str2: string, num: number) : number {
     return strcmp(str1.substr(0, num), str2.substr(0, num));
 }
 
-function strcpy(destination: Uint8Array, source: string) : void {
+function strcpy(destination: Uint8Array, source: string) : Uint8Array {
     assert.isType(Uint8Array, destination).isString(source);
 
     for (var i = 0; i < source.length; i++) {
         destination[i] = source.charCodeAt(i);
     }
+
+    return destination;
+}
+
+function strncpy(destination: Uint8Array, source: string, numChars: number) : Uint8Array {
+    assert.isType(Uint8Array, destination).isString(source);
+
+    for (var i = 0; i < source.length && i < numChars; i++) {
+        destination[i] = source.charCodeAt(i);
+    }
+
+     destination[i]= 0;
+
+    return destination;
 }
 
 function strlen(charArray: Uint8Array) : number {

@@ -170,7 +170,7 @@ function Bstrdup(s : string) : string
 //    return strcpy(dest,src);
 //}
 
-//char *Bstrncpy(char *dest, const char *src, bsize_t n)
+//function Bstrncpy(dest: Uint8Array, src: string, n: number): Uint8Array
 //{
 //    return Bstrncpy(dest,src,n);
 //}

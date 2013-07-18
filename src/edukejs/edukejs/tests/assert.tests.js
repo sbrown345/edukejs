@@ -104,9 +104,24 @@ test("strncmp", function () {
     strictEqual(strncmp("A", "A", 10), 0, "strings match");
 });
 
+test("strcpy", function () {
+    strictEqual(strcpy(new Uint8Array(10), "abc").toString(), "abc", "destination is abc");
+    strictEqual(strcpy(new Uint8Array(10), "0123456789").toString(), "0123456789", "destination is 0123456789");
+});
+
+test("strncpy", function () {
+    strictEqual(strncpy(new Uint8Array(10), "abc", 1).toString(), "a", "destination is 'a', cutting off 'bc'");
+    strictEqual(strncpy(new Uint8Array(10), "abc", 100).toString(), "abc", "destination is 'abc'");
+});
+
 test("strlen", function () {
     strictEqual(strlen(new Uint8Array([9, 9, 9, 0, 0])), 3, "string length is 3");
     strictEqual(strlen(new Uint8Array([9, 9, 9, 9, 9])), 5, "string length is 5");
+});
+
+test("strupr", function () {
+    strictEqual(strupr("abc"), "ABC", "abc turns to ABC");
+    strictEqual(strupr("ABC"), "ABC", "ABC stays uppercase");
 });
 
 test("strtoll", function () {

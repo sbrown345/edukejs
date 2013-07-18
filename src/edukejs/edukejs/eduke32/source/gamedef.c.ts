@@ -1407,7 +1407,7 @@ function ispecial(/*const char */c: string) : number
     return 0;
 }
 
-//#define C_NextLine() while (textptr[textptrIdx] != 0x0a && textptr[textptrIdx] != 0x0d && textptr[textptrIdx] != 0) textptrIdx++
+//#define C_NextLine() while (textptr.charCodeAt(textptrIdx) != 0x0a && textptr.charCodeAt(textptrIdx) != 0x0d && textptr.charCodeAt(textptrIdx) != 0) textptrIdx++
 function C_NextLine() {
      while (textptr.charCodeAt(textptrIdx) != 0x0a && textptr.charCodeAt(textptrIdx) != 0x0d && textptr.charCodeAt(textptrIdx) != 0) 
          textptrIdx++;
@@ -2427,7 +2427,7 @@ function C_AllocQuote(qnum: number) : number
 {
     if (ScriptQuotes[qnum] == NULL)
     {
-        ScriptQuotes[qnum] = "";//(char *)Bcalloc(MAXQUOTELEN,sizeof(uint8_t));
+        ScriptQuotes[qnum] = new Uint8Array(MAXQUOTELEN);
         if (ScriptQuotes[qnum] == NULL)
         {
             Bsprintf(tempbuf, "Failed allocating %d byte quote text buffer.", MAXQUOTELEN);
@@ -2448,14 +2448,20 @@ function C_InitQuotes(): void
         C_AllocQuote(i);
 
     for (i=MAXQUOTELEN-7; i>=0; i--)
-        if (Bstrncmp(ScriptQuotes[13][i],"SPACE",5) == 0)
+        if (Bstrncmp(ScriptQuotes[13][i].toString(),"SPACE",5) == 0)
         {
-            var tmp = "";//Bmemset(tempbuf,0,sizeof(tempbuf));
-            tmp += ScriptQuotes[13];////Bstrncpy(tempbuf,ScriptQuotes[13],i);
-            tmp+= "OPEN";//Bstrcat(tempbuf,"OPEN");
-            tmp+=ScriptQuotes[13][i+5];//Bstrcat(tempbuf,ScriptQuotes[13][i+5]);
-            ScriptQuotes[13] = tmp;//Bstrncpy(ScriptQuotes[13],tempbuf,MAXQUOTELEN-1);
+            var tmp = "";
+            tmp += ScriptQuotes[13];
+            tmp+= "OPEN";
+            tmp+=ScriptQuotes[13][i+5].toString();
+            Bstrncpy(ScriptQuotes[13],tmp,MAXQUOTELEN-1);
             i = MAXQUOTELEN-7;
+            //Bmemset(tempbuf.buffer,0,sizeof(tempbuf));
+            //Bstrncpy(tempbuf,ScriptQuotes[13],i);
+            //Bstrcat(tempbuf,"OPEN");
+            //Bstrcat(tempbuf,ScriptQuotes[13][i+5]);
+            //Bstrncpy(ScriptQuotes[13],tempbuf,MAXQUOTELEN-1);
+            //i = MAXQUOTELEN-7;
         }
 
     // most of these are based on Blood, obviously
@@ -2526,14 +2532,14 @@ function C_InitQuotes(): void
         for (i=g_numObituaries-1; i>=0; i--)
         {
             if (C_AllocQuote(i+OBITQUOTEINDEX))
-                ScriptQuotes[i+OBITQUOTEINDEX] = PlayerObituaries[i];
+                Bstrcpy(ScriptQuotes[i+OBITQUOTEINDEX],PlayerObituaries[i]);
         }
 
         g_numSelfObituaries = (sizeof(PlayerSelfObituaries)/sizeof(PlayerSelfObituaries[0]));
         for (i=g_numSelfObituaries-1; i>=0; i--)
         {
             if (C_AllocQuote(i+SUICIDEQUOTEINDEX))
-                ScriptQuotes[i+SUICIDEQUOTEINDEX] = PlayerSelfObituaries[i];
+                 Bstrcpy(ScriptQuotes[i+SUICIDEQUOTEINDEX],PlayerSelfObituaries[i]);
         }
     }
 }
@@ -5431,7 +5437,7 @@ function C_ParseCommand(loop: number): number
 
 //            i = 0;
 
-//            while (textptr[textptrIdx] != 0x0a && textptr[textptrIdx] != 0x0d && textptr[textptrIdx] != 0)
+//            while (textptr.charCodeAt(textptrIdx) != 0x0a && textptr.charCodeAt(textptrIdx) != 0x0d && textptr.charCodeAt(textptrIdx) != 0)
 //            {
 //                EpisodeNames[j][i] = textptr[textptrIdx];
 //                textptrIdx++,i++;
@@ -5466,12 +5472,12 @@ function C_ParseCommand(loop: number): number
 
 //            i = 0;
 
-//            while (textptr[textptrIdx] != 0x0a && textptr[textptrIdx] != 0x0d && textptr[textptrIdx] != 0)
+//            while (textptr.charCodeAt(textptrIdx) != 0x0a && textptr.charCodeAt(textptrIdx) != 0x0d && textptr.charCodeAt(textptrIdx) != 0)
 //            {
 //                gamefunctions[j][i] = textptr[textptrIdx];
 //                keydefaults[j*3][i] = textptr[textptrIdx];
 //                textptrIdx++,i++;
-//                if (textptr[textptrIdx] != 0x0a && textptr[textptrIdx] != 0x0d && ispecial(textptr[textptrIdx]))
+//                if (textptr.charCodeAt(textptrIdx) != 0x0a && textptr.charCodeAt(textptrIdx) != 0x0d && ispecial(textptr[textptrIdx]))
 //                {
 //                    initprintf("%s:%d: warning: invalid character in function name.\n",
 //                        g_szScriptFileName,g_lineNumber);
@@ -5518,7 +5524,7 @@ function C_ParseCommand(loop: number): number
 
 //            i = 0;
 
-//            while (textptr[textptrIdx] != 0x0a && textptr[textptrIdx] != 0x0d && textptr[textptrIdx] != 0)
+//            while (textptr.charCodeAt(textptrIdx) != 0x0a && textptr.charCodeAt(textptrIdx) != 0x0d && textptr.charCodeAt(textptrIdx) != 0)
 //            {
 //                SkillNames[j][i] = textptr[textptrIdx];
 //                textptrIdx++,i++;
@@ -5550,7 +5556,7 @@ function C_ParseCommand(loop: number): number
 
 //                i = 0;
 
-//                while (textptr[textptrIdx] != 0x0a && textptr[textptrIdx] != 0x0d && textptr[textptrIdx] != 0)
+//                while (textptr.charCodeAt(textptrIdx) != 0x0a && textptr.charCodeAt(textptrIdx) != 0x0d && textptr.charCodeAt(textptrIdx) != 0)
 //                {
 //                    gamename[i] = textptr[textptrIdx];
 //                    textptrIdx++,i++;
@@ -5682,7 +5688,7 @@ function C_ParseCommand(loop: number): number
 
 //            i = 0;
 
-//            while (textptr[textptrIdx] != 0x0a && textptr[textptrIdx] != 0x0d && textptr[textptrIdx] != 0)
+//            while (textptr.charCodeAt(textptrIdx) != 0x0a && textptr.charCodeAt(textptrIdx) != 0x0d && textptr.charCodeAt(textptrIdx) != 0)
 //            {
 //                GametypeNames[j][i] = textptr[textptrIdx];
 //                textptrIdx++,i++;
@@ -5727,7 +5733,7 @@ function C_ParseCommand(loop: number): number
 
 //            tempbuf[i] = '/'.charCodeAt(0);
 
-//            while (textptr[textptrIdx] != ' ' && textptr[textptrIdx] != '\t' && textptr[textptrIdx] != 0x0a)
+//            while (textptr[textptrIdx] != ' ' && textptr[textptrIdx] != '\t' && textptr.charCodeAt(textptrIdx) != 0x0a)
 //            {
 //                tempbuf[i+1] = textptr.charCodeAt(textptrIdx);
 //                textptrIdx++,i++;
@@ -5773,7 +5779,7 @@ function C_ParseCommand(loop: number): number
 
 //            i = 0;
 
-//            while (textptr[textptrIdx] != 0x0a && textptr[textptrIdx] != 0x0d && textptr[textptrIdx] != 0)
+//            while (textptr.charCodeAt(textptrIdx) != 0x0a && textptr.charCodeAt(textptrIdx) != 0x0d && textptr.charCodeAt(textptrIdx) != 0)
 //            {
 //                tempbuf[i] = textptr.charCodeAt(textptrIdx);
 //                textptrIdx++,i++;
@@ -5811,7 +5817,7 @@ function C_ParseCommand(loop: number): number
 
             k = script[g_scriptPtr-1];
 
-            if ((unsigned)k >= MAXQUOTES)
+            if ((k >>> 0) >= MAXQUOTES)
             {
                 initprintf("%s:%d: error: quote number exceeds limit of %d.\n",g_szScriptFileName,g_lineNumber,MAXQUOTES);
                 g_numCompilerErrors++;
@@ -5832,29 +5838,29 @@ function C_ParseCommand(loop: number): number
             if (tw == CON_REDEFINEQUOTE)
             {
                 if (ScriptQuoteRedefinitions[g_numQuoteRedefinitions] == NULL)
-                    ScriptQuoteRedefinitions[g_numQuoteRedefinitions] = (char *)Bcalloc(MAXQUOTELEN,sizeof(uint8_t));
-                if (ScriptQuoteRedefinitions[g_numQuoteRedefinitions] == NULL)
-                {
-                    Bsprintf(tempbuf,"Failed allocating %" PRIdPTR " byte quote text buffer.",sizeof(uint8_t) * MAXQUOTELEN);
-                    G_GameExit(tempbuf);
-                }
+                    ScriptQuoteRedefinitions[g_numQuoteRedefinitions] =  new Uint8Array(MAXQUOTELEN);//(char *)Bcalloc(MAXQUOTELEN,sizeof(uint8_t));
+                ////if (ScriptQuoteRedefinitions[g_numQuoteRedefinitions] == NULL)
+                ////{
+                ////    Bsprintf(tempbuf,"Failed allocating %" PRIdPTR " byte quote text buffer.",sizeof(uint8_t) * MAXQUOTELEN);
+                ////    G_GameExit(tempbuf.toString());
+                ////}
             }
 
-            while (textptr[textptrIdx] != 0x0a && textptr[textptrIdx] != 0x0d && textptr[textptrIdx] != 0)
+            while (textptr.charCodeAt(textptrIdx) != 0x0a && textptr.charCodeAt(textptrIdx) != 0x0d && textptr.charCodeAt(textptrIdx) != 0)
             {
                 /*
                 if (textptr[textptrIdx] == '%' && textptr[textptrIdx+1] == 's')
                 {
                 initprintf("%s:%d: error: quote text contains string identifier.\n",g_szScriptFileName,g_lineNumber);
                 g_numCompilerErrors++;
-                while (textptr[textptrIdx] != 0x0a && textptr[textptrIdx] != 0x0d && textptr[textptrIdx] != 0) textptrIdx++;
+                while (textptr.charCodeAt(textptrIdx) != 0x0a && textptr.charCodeAt(textptrIdx) != 0x0d && textptr.charCodeAt(textptrIdx) != 0) textptrIdx++;
                 break;
                 }
                 */
                 if (tw == CON_DEFINEQUOTE)
-                    *(ScriptQuotes[k]+i) = textptr[textptrIdx];
+                    ScriptQuotes[k][i] = textptr.charCodeAt(textptrIdx);
                 else
-                    *(ScriptQuoteRedefinitions[g_numQuoteRedefinitions]+i) = textptr[textptrIdx];
+                    ScriptQuoteRedefinitions[g_numQuoteRedefinitions][i] = textptr.charCodeAt(textptrIdx);;
                 textptrIdx++,i++;
                 if (i >= MAXQUOTELEN-1)
                 {
@@ -5867,14 +5873,14 @@ function C_ParseCommand(loop: number): number
 
             if (tw == CON_DEFINEQUOTE)
             {
-                if ((unsigned)k < MAXQUOTES)
-                    *(ScriptQuotes[k]+i) = '\0';
+                if ((k >>> 0) < MAXQUOTES)
+                    ScriptQuotes[k][i] = 0;
             }
             else
             {
-                *(ScriptQuoteRedefinitions[g_numQuoteRedefinitions]+i) = '\0';
-                bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
-                script[g_scriptPtr]++=g_numQuoteRedefinitions;
+                ScriptQuoteRedefinitions[g_numQuoteRedefinitions][i] = 0;
+                bitptr[(g_scriptPtr-scriptIdx)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-scriptIdx)&7));
+                script[g_scriptPtr++]=g_numQuoteRedefinitions;
                 g_numQuoteRedefinitions++;
             }
             continue;
@@ -5904,7 +5910,7 @@ function C_ParseCommand(loop: number): number
 //            i = 0;
 //            while (textptr[textptrIdx] == ' ' || textptr[textptrIdx] == '\t')
 //                textptrIdx++;
-//            while (textptr[textptrIdx] != 0x0a && textptr[textptrIdx] != 0x0d && textptr[textptrIdx] != 0 && textptr[textptrIdx] != ' ')
+//            while (textptr.charCodeAt(textptrIdx) != 0x0a && textptr.charCodeAt(textptrIdx) != 0x0d && textptr.charCodeAt(textptrIdx) != 0 && textptr[textptrIdx] != ' ')
 //            {
 //                CheatStrings[k][i] = textptr[textptrIdx];
 //                textptrIdx++,i++;

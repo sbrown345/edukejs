@@ -87,4 +87,4 @@ Uint8Array.prototype.toString = function () : string {
     }
 
     return str;
-}
+};
