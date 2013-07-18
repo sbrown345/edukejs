@@ -2909,75 +2909,76 @@ function C_ParseCommand(loop: number): number
 //            }
 //            continue;
 
-//        case CON_MOVE:
-//            if (g_parsingActorPtr || g_processingState)
-//            {
-//                if ((C_GetNextValue(LABEL_MOVE|LABEL_DEFINE) == 0) && (script[g_scriptPtr-1] != 0) && (script[g_scriptPtr-1] != 1))
-//                {
-//                    C_ReportError(-1);
-//                    bitptr[(g_scriptPtr-script-1)>>3] &= ~(1<<((g_scriptPtr-script-1)&7));
-//                    script[g_scriptPtr-1] = 0;
-//                    initprintf("%s:%d: warning: expected a move, found a constant.\n",g_szScriptFileName,g_lineNumber);
-//                    g_numCompilerWarnings++;
-//                }
+        case CON_MOVE:
+            debugger;
+            if (g_parsingActorPtr || g_processingState)
+            {
+                if ((C_GetNextValue(LABEL_MOVE|LABEL_DEFINE) == 0) && (script[g_scriptPtr-1] != 0) && (script[g_scriptPtr-1] != 1))
+                {
+                    C_ReportError(-1);
+                    bitptr[(g_scriptPtr-scriptIdx-1)>>3] &= ~(1<<((g_scriptPtr-scriptIdx-1)&7));
+                    script[g_scriptPtr-1] = 0;
+                    initprintf("%s:%d: warning: expected a move, found a constant.\n",g_szScriptFileName,g_lineNumber);
+                    g_numCompilerWarnings++;
+                }
 
-//                j = 0;
-//                while (C_GetKeyword() == -1)
-//                {
-//                    C_GetNextValue(LABEL_DEFINE);
-//                    g_scriptPtr--;
-//                    j |= script[g_scriptPtr];
-//                }
-//                bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
-//                script[g_scriptPtr] = j;
+                j = 0;
+                while (C_GetKeyword() == -1)
+                {
+                    C_GetNextValue(LABEL_DEFINE);
+                    g_scriptPtr--;
+                    j |= script[g_scriptPtr];
+                }
+                bitptr[(g_scriptPtr-scriptIdx)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-scriptIdx)&7));
+                script[g_scriptPtr] = j;
 
-//                g_scriptPtr++;
-//            }
-//            else
-//            {
-//                g_scriptPtr--;
-//                C_GetNextLabelName();
-//                // Check to see it's already defined
+                g_scriptPtr++;
+            }
+            else
+            {
+                g_scriptPtr--;
+                C_GetNextLabelName();
+                // Check to see it's already defined
 
-//                if (hash_find(h_keywords,label.subarray(g_numLabels<<6).toString())>=0)
-//                {
-//                    g_numCompilerErrors++;
-//                    C_ReportError(ERROR_ISAKEYWORD);
-//                    continue;
-//                }
+                if (hash_find(h_keywords,label.subarray(g_numLabels<<6).toString())>=0)
+                {
+                    g_numCompilerErrors++;
+                    C_ReportError(ERROR_ISAKEYWORD);
+                    continue;
+                }
 
-//                if (hash_find(h_gamevars,label.subarray(g_numLabels<<6).toString())>=0)
-//                {
-//                    g_numCompilerWarnings++;
-//                    C_ReportError(WARNING_NAMEMATCHESVAR);
-//                }
+                if (hash_find(h_gamevars,label.subarray(g_numLabels<<6).toString())>=0)
+                {
+                    g_numCompilerWarnings++;
+                    C_ReportError(WARNING_NAMEMATCHESVAR);
+                }
 
-//                if ((i = hash_find(h_labels,label.subarray(g_numLabels<<6).toString())) >= 0)
-//                {
-//                    g_numCompilerWarnings++;
-//                    initprintf("%s:%d: warning: duplicate move `%s' ignored.\n",g_szScriptFileName,g_lineNumber,label.subarray(g_numLabels<<6).toString());
-//                }
-//                else
-//                {
-//                    hash_add(h_labels,label.subarray(g_numLabels<<6).toString(),g_numLabels,0);
-//                    labeltype[g_numLabels] = LABEL_MOVE;
-//                    labelcode[g_numLabels++] = g_scriptPtr-script;
-//                }
+                if ((i = hash_find(h_labels,label.subarray(g_numLabels<<6).toString())) >= 0)
+                {
+                    g_numCompilerWarnings++;
+                    initprintf("%s:%d: warning: duplicate move `%s' ignored.\n",g_szScriptFileName,g_lineNumber,label.subarray(g_numLabels<<6).toString());
+                }
+                else
+                {
+                    hash_add(h_labels,label.subarray(g_numLabels<<6).toString(),g_numLabels,0);
+                    labeltype[g_numLabels] = LABEL_MOVE;
+                    labelcode[g_numLabels++] = g_scriptPtr-scriptIdx;
+                }
 
-//                for (j=1; j>=0; j--)
-//                {
-//                    if (C_GetKeyword() != -1) break;
-//                    C_GetNextValue(LABEL_DEFINE);
-//                }
+                for (j=1; j>=0; j--)
+                {
+                    if (C_GetKeyword() != -1) break;
+                    C_GetNextValue(LABEL_DEFINE);
+                }
 
-//                for (k=j; k>=0; k--)
-//                {
-//                    bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
-//                    script[g_scriptPtr] = 0;
-//                    g_scriptPtr++;
-//                }
-//            }
-//            continue;
+                for (k=j; k>=0; k--)
+                {
+                    bitptr[(g_scriptPtr-scriptIdx)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-scriptIdx)&7));
+                    script[g_scriptPtr] = 0;
+                    g_scriptPtr++;
+                }
+            }
+            continue;
 
         case CON_MUSIC:
             {
