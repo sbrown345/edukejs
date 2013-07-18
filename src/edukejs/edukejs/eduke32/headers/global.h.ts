@@ -39,7 +39,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 //#define MAXINTERPOLATIONS MAXSPRITES
 //// KEEPINSYNC lunatic/con_lang.lua
-//#define MAXSKILLS 7
+var MAXSKILLS=7;
 
 //// duke3d global soup :(
 
@@ -145,8 +145,10 @@ var scriptIdx: number = 0;
 //G_EXTERN const char *s_buildDate;
 var g_spriteGravity: number; ////G_EXTERN int32_t 
 var g_spriteDeleteQueueSize: number; ////G_EXTERN int16_t
-//G_EXTERN char EpisodeNames[MAXVOLUMES][33];
-//G_EXTERN char SkillNames[MAXSKILLS][33];
+var EpisodeNamesLength = 33;
+var EpisodeNames: string[];// [MAXVOLUMES][33];//G_EXTERN char
+var SkillNamesLength = 33;
+var SkillNames: string[]; // [MAXSKILLS][33];
 //G_EXTERN char GametypeNames[MAXGAMETYPES][33];
 //G_EXTERN int32_t GametypeFlags[MAXGAMETYPES];
 //G_EXTERN char g_numGametypes;

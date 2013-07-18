@@ -5420,7 +5420,7 @@ function C_ParseCommand(loop: number): number
 
         case CON_DEFINEVOLUMENAME:
             g_scriptPtr--;
-            debugger
+            
             C_GetNextValue(LABEL_DEFINE);
             g_scriptPtr--;
             j = script[g_scriptPtr];
@@ -5505,47 +5505,48 @@ function C_ParseCommand(loop: number): number
 
 //            continue;
 
-//        case CON_DEFINESKILLNAME:
-//            g_scriptPtr--;
+        case CON_DEFINESKILLNAME:
+            g_scriptPtr--;
+            debugger;
+            C_GetNextValue(LABEL_DEFINE);
+            g_scriptPtr--;
+            j = script[g_scriptPtr];
+            C_SkipComments();
 
-//            C_GetNextValue(LABEL_DEFINE);
-//            g_scriptPtr--;
-//            j = script[g_scriptPtr];
-//            C_SkipComments();
+            if (j < 0 || j >= MAXSKILLS)
+            {
+                initprintf("%s:%d: error: skill number exceeds maximum skill count %d.\n",
+                           g_szScriptFileName,g_lineNumber, MAXSKILLS);
+                g_numCompilerErrors++;
+                C_NextLine();
+                continue;
+            }
 
-//            if (j < 0 || j >= MAXSKILLS)
-//            {
-//                initprintf("%s:%d: error: skill number exceeds maximum skill count %d.\n",
-//                           g_szScriptFileName,g_lineNumber, MAXSKILLS);
-//                g_numCompilerErrors++;
-//                C_NextLine();
-//                continue;
-//            }
+            i = 0;
 
-//            i = 0;
+            SkillNames[j] = "";
+            while (textptr.charCodeAt(textptrIdx) != 0x0a && textptr.charCodeAt(textptrIdx) != 0x0d && textptr.charCodeAt(textptrIdx) != 0)
+            {
+                SkillNames[j] += textptr[textptrIdx];
+                textptrIdx++,i++;
+                if (i >= (SkillNamesLength)-1)
+                {
+                    initprintf("%s:%d: warning: truncating skill name to %d characters.\n",
+                        g_szScriptFileName,g_lineNumber,(SkillNamesLength)-1);
+                    g_numCompilerWarnings++;
+                    C_NextLine();
+                    break;
+                }
+            }
 
-//            while (textptr.charCodeAt(textptrIdx) != 0x0a && textptr.charCodeAt(textptrIdx) != 0x0d && textptr.charCodeAt(textptrIdx) != 0)
-//            {
-//                SkillNames[j][i] = textptr[textptrIdx];
-//                textptrIdx++,i++;
-//                if (i >= (signed)sizeof(SkillNames[j])-1)
-//                {
-//                    initprintf("%s:%d: warning: truncating skill name to %d characters.\n",
-//                        g_szScriptFileName,g_lineNumber,(int32_t)sizeof(SkillNames[j])-1);
-//                    g_numCompilerWarnings++;
-//                    C_NextLine();
-//                    break;
-//                }
-//            }
+            //SkillNames[j][i] = '\0';
 
-//            SkillNames[j][i] = '\0';
+            for (i=0; i<MAXSKILLS; i++)
+                if (!SkillNames[i])
+                    break;
+            g_numSkills = i;
 
-//            for (i=0; i<MAXSKILLS; i++)
-//                if (SkillNames[i][0] == 0)
-//                    break;
-//            g_numSkills = i;
-
-//            continue;
+            continue;
 
 //        case CON_SETGAMENAME:
 //            {
