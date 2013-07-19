@@ -1307,15 +1307,15 @@ function C_InitHashes(): void
 
 //// "magic" number for { and }, overrides line number in compiled code for later detection
 var IFELSE_MAGIC = 31337;
-//static int32_t g_ifElseAborted;
+var g_ifElseAborted = 0;
 
 function C_SetScriptSize(/*int32_t*/ newsize: number) : number
 {
     todoThrow();
-//    intptr_t oscriptPtr = (unsigned)(g_scriptPtr-script);
-//    intptr_t ocaseScriptPtr = (unsigned)(g_caseScriptPtr-script);
-//    intptr_t oparsingEventPtr = (unsigned)(g_parsingEventPtr-script);
-//    intptr_t oparsingActorPtr = (unsigned)(g_parsingActorPtr-script);
+//    intptr_t oscriptPtr = (unsigned)(g_scriptPtr-scriptIdx);
+//    intptr_t ocaseScriptPtr = (unsigned)(g_caseScriptPtr-scriptIdx);
+//    intptr_t oparsingEventPtr = (unsigned)(g_parsingEventPtr-scriptIdx);
+//    intptr_t oparsingActorPtr = (unsigned)(g_parsingActorPtr-scriptIdx);
 //    intptr_t *newscript;
 //    intptr_t i, j;
 //    int32_t osize = g_scriptSize;
@@ -1352,7 +1352,7 @@ function C_SetScriptSize(/*int32_t*/ newsize: number) : number
 //    if (!newscript || !newbitptr) //maybe check idx???
 //    {
 //        C_ReportError(-1);
-//        initprintf("%s:%d: out of memory: Aborted (%ud)\n",g_szScriptFileName,g_lineNumber,(unsigned)(g_scriptPtr-script));
+//        initprintf("%s:%d: out of memory: Aborted (%ud)\n",g_szScriptFileName,g_lineNumber,(unsigned)(g_scriptPtr-scriptIdx));
 //        initprintf("%s", tempbuf);
 //        g_numCompilerErrors++;
 //        return 1;
@@ -1654,7 +1654,7 @@ function parse_hex_constant(/*const char *hexnum*/hexnum: string) : number
 
 //    if (!type && !g_labelsOnly && (isdigit(textptr[textptrIdx]) || ((textptr[textptrIdx] == '-') && (isdigit(textptr[textptrIdx+1])))))
 //    {
-//        bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
+//        bitptr[(g_scriptPtr-scriptIdx)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-scriptIdx)&7));
 
 //        script[g_scriptPtr++] = MAXGAMEVARS;
 
@@ -1667,7 +1667,7 @@ function parse_hex_constant(/*const char *hexnum*/hexnum: string) : number
 //            initprintf("%s:%d: debug: accepted constant %ld in place of gamevar.\n",
 //                       g_szScriptFileName,g_lineNumber,(long)script[g_scriptPtr]);
 
-//        bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
+//        bitptr[(g_scriptPtr-scriptIdx)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-scriptIdx)&7));
 //        g_scriptPtr++;
 //#if 1
 //        while (!ispecial(textptr[textptrIdx]) && textptr[textptrIdx] != ']') textptrIdx++;
@@ -1728,7 +1728,7 @@ function parse_hex_constant(/*const char *hexnum*/hexnum: string) : number
 //            f |= (MAXGAMEVARS<<3);
 //        }
 
-//        bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
+//        bitptr[(g_scriptPtr-scriptIdx)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-scriptIdx)&7));
 //        script[g_scriptPtr++]=(i|f);
 //        C_GetNextVarType(0);
 //        C_SkipComments();
@@ -1792,7 +1792,7 @@ function parse_hex_constant(/*const char *hexnum*/hexnum: string) : number
 //                return;
 //            }
 
-//            bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
+//            bitptr[(g_scriptPtr-scriptIdx)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-scriptIdx)&7));
 
 //            if (i == g_iSpriteVarID)
 //            {
@@ -1844,9 +1844,9 @@ function parse_hex_constant(/*const char *hexnum*/hexnum: string) : number
 //                {
 //                    if (!(g_numCompilerErrors || g_numCompilerWarnings) && g_scriptDebug)
 //                        initprintf("%s:%d: debug: accepted defined label `%s' instead of gamevar.\n",g_szScriptFileName,g_lineNumber,label+(i<<6));
-//                    bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
+//                    bitptr[(g_scriptPtr-scriptIdx)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-scriptIdx)&7));
 //                    script[g_scriptPtr++] = MAXGAMEVARS;
-//                    bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
+//                    bitptr[(g_scriptPtr-scriptIdx)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-scriptIdx)&7));
 //                    script[g_scriptPtr++] = labelcode[i];
 //                    return;
 //                }
@@ -1877,7 +1877,7 @@ function parse_hex_constant(/*const char *hexnum*/hexnum: string) : number
 //    if (!(g_numCompilerErrors || g_numCompilerWarnings) && g_scriptDebug > 1)
 //        initprintf("%s:%d: debug: accepted gamevar `%s'.\n",g_szScriptFileName,g_lineNumber,label.subarray(g_numLabels<<6).toString());
 
-//    bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
+//    bitptr[(g_scriptPtr-scriptIdx)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-scriptIdx)&7));
 //    script[g_scriptPtr++]=(i|f);
 //}
 
@@ -2025,60 +2025,60 @@ function C_GetNextValue(type: number): number
 //    return r;
 //}
 
-//static int32_t C_CheckMalformedBranch(intptr_t lastScriptPtr)
-//{
-//    switch (C_GetKeyword())
-//    {
-//    case CON_RIGHTBRACE:
-//    case CON_ENDA:
-//    case CON_ENDEVENT:
-//    case CON_ENDS:
-//    case CON_ELSE:
-//        g_scriptPtr = lastScriptPtr + &script[0];
-//        g_ifElseAborted = 1;
-//        C_ReportError(-1);
-//        g_numCompilerWarnings++;
-//        initprintf("%s:%d: warning: malformed `%s' branch\n",g_szScriptFileName,g_lineNumber,
-//                   keyw[*(g_scriptPtr) & 0xFFF]);
-//        return 1;
-//    }
-//    return 0;
-//}
+function C_CheckMalformedBranch(lastScriptPtr: number): number
+{
+    switch (C_GetKeyword())
+    {
+    case CON_RIGHTBRACE:
+    case CON_ENDA:
+    case CON_ENDEVENT:
+    case CON_ENDS:
+    case CON_ELSE:
+        g_scriptPtr = lastScriptPtr;// + &script[0];
+        g_ifElseAborted = 1;
+        C_ReportError(-1);
+        g_numCompilerWarnings++;
+        initprintf("%s:%d: warning: malformed `%s' branch\n",g_szScriptFileName,g_lineNumber,
+                   keyw[script[g_scriptPtr] & 0xFFF]);
+        return 1;
+    }
+    return 0;
+}
 
-//static int32_t C_CheckEmptyBranch(int32_t tw, intptr_t lastScriptPtr)
-//{
-//    // ifrnd and the others actually do something when the condition is executed
-//    if ((Bstrncmp(keyw[tw], "if", 2) && tw != CON_ELSE) ||
-//            tw == CON_IFRND || tw == CON_IFHITWEAPON || tw == CON_IFCANSEE || tw == CON_IFCANSEETARGET ||
-//            tw == CON_IFPDISTL || tw == CON_IFPDISTG || tw == CON_IFGOTWEAPONCE)
-//    {
-//        g_ifElseAborted = 0;
-//        return 0;
-//    }
+function C_CheckEmptyBranch(tw: number, lastScriptPtr: number): number
+{
+    // ifrnd and the others actually do something when the condition is executed
+    if ((Bstrncmp(keyw[tw], "if", 2) && tw != CON_ELSE) ||
+            tw == CON_IFRND || tw == CON_IFHITWEAPON || tw == CON_IFCANSEE || tw == CON_IFCANSEETARGET ||
+            tw == CON_IFPDISTL || tw == CON_IFPDISTG || tw == CON_IFGOTWEAPONCE)
+    {
+        g_ifElseAborted = 0;
+        return 0;
+    }
 
-//    if ((*(g_scriptPtr) & 0xFFF) != CON_NULLOP || *(g_scriptPtr)>>12 != IFELSE_MAGIC)
-//        g_ifElseAborted = 0;
+    if ((script[g_scriptPtr] & 0xFFF) != CON_NULLOP || script[g_scriptPtr]>>12 != IFELSE_MAGIC)
+        g_ifElseAborted = 0;
 
-//    if (g_ifElseAborted)
-//    {
-//        C_ReportError(-1);
-//        g_numCompilerWarnings++;
-//        g_scriptPtr = lastScriptPtr + &script[0];
-//        initprintf("%s:%d: warning: empty `%s' branch\n",g_szScriptFileName,g_lineNumber,
-//                   keyw[*(g_scriptPtr) & 0xFFF]);
-//        *(g_scriptPtr) = (CON_NULLOP + (IFELSE_MAGIC<<12));
-//        return 1;
-//    }
-//    return 0;
-//}
+    if (g_ifElseAborted)
+    {
+        C_ReportError(-1);
+        g_numCompilerWarnings++;
+        g_scriptPtr = lastScriptPtr;// + &script[0];
+        initprintf("%s:%d: warning: empty `%s' branch\n",g_szScriptFileName,g_lineNumber,
+                   keyw[script[g_scriptPtr] & 0xFFF]);
+        script[g_scriptPtr] = (CON_NULLOP + (IFELSE_MAGIC<<12));
+        return 1;
+    }
+    return 0;
+}
 
 //static int32_t C_CountCaseStatements()
 //{
 //    int32_t lCount;
 //    char *temptextptr = textptr;
 //    int32_t temp_ScriptLineNumber = g_lineNumber;
-//    intptr_t scriptoffset = (unsigned)(g_scriptPtr-script);
-//    intptr_t caseoffset = (unsigned)(g_caseScriptPtr-script);
+//    intptr_t scriptoffset = (unsigned)(g_scriptPtr-scriptIdx);
+//    intptr_t caseoffset = (unsigned)(g_caseScriptPtr-scriptIdx);
 ////    int32_t i;
 
 //    g_numCases=0;
@@ -2578,107 +2578,108 @@ function C_ParseCommand(loop: number): number
         {
         default:
             debugger;
-            throw "todo "  + tw;
+            throw "todo " + tw + ": " + keyw[tw];
         case -1:
         case -2:
             return 1; //End
-//        case CON_STATE:
-//            if (!g_parsingActorPtr && g_processingState == 0)
-//            {
-//                C_GetNextLabelName();
-//                g_scriptPtr--;
-//                labelcode[g_numLabels] = g_scriptPtr-script;
-//                labeltype[g_numLabels] = LABEL_STATE;
+        case CON_STATE:
+            debugger;
+            if (!g_parsingActorPtr && g_processingState == 0)
+            {
+                C_GetNextLabelName();
+                g_scriptPtr--;
+                labelcode[g_numLabels] = g_scriptPtr-scriptIdx;
+                labeltype[g_numLabels] = LABEL_STATE;
 
-//                g_processingState = 1;
-//                Bsprintf(g_szCurrentBlockName,"%s",label.subarray(g_numLabels<<6).toString());
+                g_processingState = 1;
+                g_szCurrentBlockName = label.subarray(g_numLabels<<6).toString();
 
-//                if (hash_find(h_keywords,label.subarray(g_numLabels<<6).toString())>=0)
-//                {
-//                    g_numCompilerErrors++;
-//                    C_ReportError(ERROR_ISAKEYWORD);
-//                    continue;
-//                }
+                if (hash_find(h_keywords,label.subarray(g_numLabels<<6).toString())>=0)
+                {
+                    g_numCompilerErrors++;
+                    C_ReportError(ERROR_ISAKEYWORD);
+                    continue;
+                }
 
-//                if (hash_find(h_gamevars,label.subarray(g_numLabels<<6).toString())>=0)
-//                {
-//                    g_numCompilerWarnings++;
-//                    C_ReportError(WARNING_NAMEMATCHESVAR);
-//                }
+                if (hash_find(h_gamevars,label.subarray(g_numLabels<<6).toString())>=0)
+                {
+                    g_numCompilerWarnings++;
+                    C_ReportError(WARNING_NAMEMATCHESVAR);
+                }
 
-//                hash_add(h_labels,label.subarray(g_numLabels<<6).toString(),g_numLabels,0);
-//                g_numLabels++;
-//                continue;
-//            }
+                hash_add(h_labels,label.subarray(g_numLabels<<6).toString(),g_numLabels,0);
+                g_numLabels++;
+                continue;
+            }
 
-//            C_GetNextLabelName();
+            C_GetNextLabelName();
 
-//            if ((j = hash_find(h_labels,label.subarray(g_numLabels<<6).toString())) >= 0)
-//            {
-//                if (labeltype[j] & LABEL_STATE)
-//                {
-//                    if (!(g_numCompilerErrors || g_numCompilerWarnings) && g_scriptDebug > 1)
-//                        initprintf("%s:%d: debug: accepted state label `%s'.\n",g_szScriptFileName,g_lineNumber,label+(j<<6));
-//                    script[g_scriptPtr] = (intptr_t)(script+labelcode[j]);
+            if ((j = hash_find(h_labels,label.subarray(g_numLabels<<6).toString())) >= 0)
+            {
+                if (labeltype[j] & LABEL_STATE)
+                {
+                    if (!(g_numCompilerErrors || g_numCompilerWarnings) && g_scriptDebug > 1)
+                        initprintf("%s:%d: debug: accepted state label `%s'.\n",g_szScriptFileName,g_lineNumber,label.subarray(j<<6).toString());
+                    script[g_scriptPtr] = /*(intptr_t)*/(scriptIdx+labelcode[j]);
 
-//                    // 'state' type labels are always script addresses, as far as I can see
-//                    bitptr[(g_scriptPtr-script)>>3] |= (BITPTR_POINTER<<((g_scriptPtr-script)&7));
+                    // 'state' type labels are always script addresses, as far as I can see
+                    bitptr[(g_scriptPtr-scriptIdx)>>3] |= (BITPTR_POINTER<<((g_scriptPtr-scriptIdx)&7));
 
-//                    g_scriptPtr++;
-//                    continue;
-//                }
-//                else
-//                {
-//                    char *gl = (char *)C_GetLabelType(labeltype[j]);
-//                    C_ReportError(-1);
-//                    initprintf("%s:%d: warning: expected state, found %s.\n",g_szScriptFileName,g_lineNumber,gl);
-//                    g_numCompilerWarnings++;
-//                    Bfree(gl);
-//                    script[g_scriptPtr-1] = CON_NULLOP; // get rid of the state, leaving a nullop to satisfy if conditions
-//                    bitptr[(g_scriptPtr-script-1)>>3] &= ~(1<<((g_scriptPtr-script-1)&7));
-//                    continue;  // valid label name, but wrong type
-//                }
-//            }
-//            else
-//            {
-//                C_ReportError(-1);
-//                initprintf("%s:%d: error: state `%s' not found.\n",g_szScriptFileName,g_lineNumber,label.subarray(g_numLabels<<6).toString());
-//                g_numCompilerErrors++;
-//            }
-//            g_scriptPtr++;
-//            continue;
+                    g_scriptPtr++;
+                    continue;
+                }
+                else
+                {
+                    var gl = C_GetLabelType(labeltype[j]);
+                    C_ReportError(-1);
+                    initprintf("%s:%d: warning: expected state, found %s.\n",g_szScriptFileName,g_lineNumber,gl);
+                    g_numCompilerWarnings++;
+                    //Bfree(gl);
+                    script[g_scriptPtr-1] = CON_NULLOP; // get rid of the state, leaving a nullop to satisfy if conditions
+                    bitptr[(g_scriptPtr-scriptIdx-1)>>3] &= ~(1<<((g_scriptPtr-scriptIdx-1)&7));
+                    continue;  // valid label name, but wrong type
+                }
+            }
+            else
+            {
+                C_ReportError(-1);
+                initprintf("%s:%d: error: state `%s' not found.\n",g_szScriptFileName,g_lineNumber,label.subarray(g_numLabels<<6).toString());
+                g_numCompilerErrors++;
+            }
+            g_scriptPtr++;
+            continue;
 
-//        case CON_ENDS:
-//            if (g_processingState == 0)
-//            {
-//                C_ReportError(-1);
-//                initprintf("%s:%d: error: found `ends' without open `state'.\n",g_szScriptFileName,g_lineNumber);
-//                g_numCompilerErrors++;
-//            }
-//            //            else
-//            {
-//                if (g_numBraces > 0)
-//                {
-//                    C_ReportError(ERROR_OPENBRACKET);
-//                    g_numCompilerErrors++;
-//                }
-//                else if (g_numBraces < 0)
-//                {
-//                    C_ReportError(ERROR_CLOSEBRACKET);
-//                    g_numCompilerErrors++;
-//                }
-//                if (g_checkingSwitch > 0)
-//                {
-//                    C_ReportError(ERROR_NOENDSWITCH);
-//                    g_numCompilerErrors++;
+        case CON_ENDS:
+            if (g_processingState == 0)
+            {
+                C_ReportError(-1);
+                initprintf("%s:%d: error: found `ends' without open `state'.\n",g_szScriptFileName,g_lineNumber);
+                g_numCompilerErrors++;
+            }
+            //            else
+            {
+                if (g_numBraces > 0)
+                {
+                    C_ReportError(ERROR_OPENBRACKET);
+                    g_numCompilerErrors++;
+                }
+                else if (g_numBraces < 0)
+                {
+                    C_ReportError(ERROR_CLOSEBRACKET);
+                    g_numCompilerErrors++;
+                }
+                if (g_checkingSwitch > 0)
+                {
+                    C_ReportError(ERROR_NOENDSWITCH);
+                    g_numCompilerErrors++;
 
-//                    g_checkingSwitch = 0; // can't be checking anymore...
-//                }
+                    g_checkingSwitch = 0; // can't be checking anymore...
+                }
 
-//                g_processingState = 0;
-//                Bsprintf(g_szCurrentBlockName,"(none)");
-//            }
-//            continue;
+                g_processingState = 0;
+                g_szCurrentBlockName = "(none)";
+            }
+            continue;
 
 //        case CON_SETTHISPROJECTILE:
 //        case CON_SETPROJECTILE:
@@ -2733,7 +2734,7 @@ function C_ParseCommand(loop: number): number
 //                    continue;
 //                }
 
-//                bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
+//                bitptr[(g_scriptPtr-scriptIdx)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-scriptIdx)&7));
 //                script[g_scriptPtr++]=ProjectileLabels[lLabelID].lId;
 
 //                //printf("member's flags are: %02Xh\n",PlayerLabels[lLabelID].flags);
@@ -2789,7 +2790,7 @@ function C_ParseCommand(loop: number): number
 
 //            C_GetNextValue(LABEL_DEFINE); // get flags
 //            //Bsprintf(g_szBuf,"Adding GameVar=\"%s\", val=%l, flags=%lX",label.subarray(g_numLabels<<6).toString(),
-//            //      *(g_scriptPtr-2), script[g_scriptPtr-1]);
+//            //      script[g_scriptPtr-2], script[g_scriptPtr-1]);
 //            //AddLog(g_szBuf);
 //            if ((script[g_scriptPtr-1]&GAMEVAR_USER_MASK)==3)
 //            {
@@ -2797,7 +2798,7 @@ function C_ParseCommand(loop: number): number
 //                script[g_scriptPtr-1]^=GAMEVAR_PERPLAYER;
 //                C_ReportError(WARNING_BADGAMEVAR);
 //            }
-//            Gv_NewVar(label.subarray(g_numLabels<<6).toString(),*(g_scriptPtr-2),
+//            Gv_NewVar(label.subarray(g_numLabels<<6).toString(),script[g_scriptPtr-2],
 //                (script[g_scriptPtr-1])
 //                // can't define default or secret
 //                & (~(GAMEVAR_DEFAULT | GAMEVAR_SECRET))
@@ -2893,24 +2894,23 @@ function C_ParseCommand(loop: number): number
                 continue;
             }
 
-//        case CON_PALFROM:
-//            for (j=3; j>=0; j--)
-//            {
-//                if (C_GetKeyword() == -1)
-//                    C_GetNextValue(LABEL_DEFINE);
-//                else break;
-//            }
+        case CON_PALFROM:
+            for (j=3; j>=0; j--)
+            {
+                if (C_GetKeyword() == -1)
+                    C_GetNextValue(LABEL_DEFINE);
+                else break;
+            }
 
-//            while (j>-1)
-//            {
-//                bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
-//                script[g_scriptPtr++] = 0;
-//                j--;
-//            }
-//            continue;
+            while (j>-1)
+            {
+                bitptr[(g_scriptPtr-scriptIdx)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-scriptIdx)&7));
+                script[g_scriptPtr++] = 0;
+                j--;
+            }
+            continue;
 
         case CON_MOVE:
-            debugger;
             if (g_parsingActorPtr || g_processingState)
             {
                 if ((C_GetNextValue(LABEL_MOVE|LABEL_DEFINE) == 0) && (script[g_scriptPtr-1] != 0) && (script[g_scriptPtr-1] != 1))
@@ -3064,10 +3064,10 @@ function C_ParseCommand(loop: number): number
             C_Include(tempbuf.toString());
             continue;
 
-//        case CON_INCLUDEDEFAULT:
-//            C_SkipComments();
-//            C_Include(G_DefaultConFile());
-//            continue;
+        case CON_INCLUDEDEFAULT:
+            C_SkipComments();
+            C_Include(G_DefaultConFile());
+            continue;
 
 //        case CON_AI:
 //            if (g_parsingActorPtr || g_processingState)
@@ -3103,7 +3103,7 @@ function C_ParseCommand(loop: number): number
 //                {
 //                    labeltype[g_numLabels] = LABEL_AI;
 //                    hash_add(h_labels,label.subarray(g_numLabels<<6).toString(),g_numLabels,0);
-//                    labelcode[g_numLabels++] = g_scriptPtr-script;
+//                    labelcode[g_numLabels++] = g_scriptPtr-scriptIdx;
 //                }
 
 //                for (j=0; j<3; j++)
@@ -3116,7 +3116,7 @@ function C_ParseCommand(loop: number): number
 //                        if ((C_GetNextValue(LABEL_MOVE|LABEL_DEFINE) == 0) && (script[g_scriptPtr-1] != 0) && (script[g_scriptPtr-1] != 1))
 //                        {
 //                            C_ReportError(-1);
-//                            bitptr[(g_scriptPtr-script-1)>>3] &= ~(1<<((g_scriptPtr-script-1)&7));
+//                            bitptr[(g_scriptPtr-scriptIdx-1)>>3] &= ~(1<<((g_scriptPtr-scriptIdx-1)&7));
 //                            script[g_scriptPtr-1] = 0;
 //                            initprintf("%s:%d: warning: expected a move, found a constant.\n",g_szScriptFileName,g_lineNumber);
 //                            g_numCompilerWarnings++;
@@ -3128,7 +3128,7 @@ function C_ParseCommand(loop: number): number
 //                            g_scriptPtr--;
 //                            k |= script[g_scriptPtr];
 //                        }
-//                        bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
+//                        bitptr[(g_scriptPtr-scriptIdx)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-scriptIdx)&7));
 //                        script[g_scriptPtr] = k;
 //                        g_scriptPtr++;
 //                        j = 666;
@@ -3141,7 +3141,7 @@ function C_ParseCommand(loop: number): number
 
 //                for (k=j; k<3; k++)
 //                {
-//                    bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
+//                    bitptr[(g_scriptPtr-scriptIdx)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-scriptIdx)&7));
 //                    script[g_scriptPtr] = 0;
 //                    g_scriptPtr++;
 //                }
@@ -3200,138 +3200,139 @@ function C_ParseCommand(loop: number): number
             }
             continue;
 
-//        case CON_ACTOR:
-//        case CON_USERACTOR:
-//        case CON_EVENTLOADACTOR:
-//            if (g_processingState || g_parsingActorPtr)
-//            {
-//                C_ReportError(ERROR_FOUNDWITHIN);
-//                g_numCompilerErrors++;
-//            }
+        case CON_ACTOR:
+        case CON_USERACTOR:
+        case CON_EVENTLOADACTOR:
+            debugger;
+            if (g_processingState || g_parsingActorPtr)
+            {
+                C_ReportError(ERROR_FOUNDWITHIN);
+                g_numCompilerErrors++;
+            }
 
-//            g_numBraces = 0;
-//            g_scriptPtr--;
-//            g_parsingActorPtr = g_scriptPtr;
+            g_numBraces = 0;
+            g_scriptPtr--;
+            g_parsingActorPtr = g_scriptPtr;
 
-//            if (tw == CON_USERACTOR)
-//            {
-//                C_GetNextValue(LABEL_DEFINE);
-//                g_scriptPtr--;
-//            }
+            if (tw == CON_USERACTOR)
+            {
+                C_GetNextValue(LABEL_DEFINE);
+                g_scriptPtr--;
+            }
 
-//            // save the actor name w/o consuming it
-//            C_SkipComments();
-//            j = 0;
-//            while (isaltok(textptr[textptrIdx+j]))
-//            {
-//                g_szCurrentBlockName[j] = textptr[textptrIdx+j];
-//                j++;
-//            }
-//            g_szCurrentBlockName[j] = 0;
+            // save the actor name w/o consuming it
+            C_SkipComments();
+            j = 0;
+            g_szCurrentBlockName = "";
+            while (isaltok(textptr[textptrIdx+j]))
+            {
+                g_szCurrentBlockName += textptr[textptrIdx+j];
+                j++;
+            }
 
-//            if (tw == CON_USERACTOR)
-//            {
-//                j = script[g_scriptPtr];
+            if (tw == CON_USERACTOR)
+            {
+                j = script[g_scriptPtr];
 
-//                if (j > 6 || (j&3)==3)
-//                {
-//                    C_ReportError(-1);
-//                    initprintf("%s:%d: warning: invalid useractor type. Must be 0, 1, 2"
-//                               " (notenemy, enemy, enemystayput) or have 4 added (\"doesn't move\").\n",
-//                               g_szScriptFileName,g_lineNumber);
-//                    g_numCompilerWarnings++;
-//                    j = 0;
-//                }
-//            }
+                if (j > 6 || (j&3)==3)
+                {
+                    C_ReportError(-1);
+                    initprintf("%s:%d: warning: invalid useractor type. Must be 0, 1, 2" + 
+                               " (notenemy, enemy, enemystayput) or have 4 added (\"doesn't move\").\n",
+                               g_szScriptFileName,g_lineNumber);
+                    g_numCompilerWarnings++;
+                    j = 0;
+                }
+            }
 
-//            C_GetNextValue(LABEL_DEFINE);
-//            g_scriptPtr--;
+            C_GetNextValue(LABEL_DEFINE);
+            g_scriptPtr--;
 
-//            if ((unsigned)script[g_scriptPtr] >= MAXTILES)
-//            {
-//                C_ReportError(ERROR_EXCEEDSMAXTILES);
-//                g_numCompilerErrors++;
-//                continue;
-//            }
+            if ((script[g_scriptPtr] >>> 0) >= MAXTILES)
+            {
+                C_ReportError(ERROR_EXCEEDSMAXTILES);
+                g_numCompilerErrors++;
+                continue;
+            }
 
-//            if (tw == CON_EVENTLOADACTOR)
-//            {
-//                g_tile[script[g_scriptPtr]].loadPtr = g_parsingActorPtr;
-//                g_checkingIfElse = 0;
-//                continue;
-//            }
+            if (tw == CON_EVENTLOADACTOR)
+            {
+                g_tile[script[g_scriptPtr]].loadPtr = g_parsingActorPtr;
+                g_checkingIfElse = 0;
+                continue;
+            }
 
-//            g_tile[script[g_scriptPtr]].execPtr = g_parsingActorPtr;
+            g_tile[script[g_scriptPtr]].execPtr = g_parsingActorPtr;
 
-//            if (tw == CON_USERACTOR)
-//            {
-//                if (j & 1)
-//                    g_tile[script[g_scriptPtr]].flags |= SPRITE_BADGUY;
+            if (tw == CON_USERACTOR)
+            {
+                if (j & 1)
+                    g_tile[script[g_scriptPtr]].flags |= SPRITE_BADGUY;
 
-//                if (j & 2)
-//                    g_tile[script[g_scriptPtr]].flags |= (SPRITE_BADGUY|SPRITE_BADGUYSTAYPUT);
+                if (j & 2)
+                    g_tile[script[g_scriptPtr]].flags |= (SPRITE_BADGUY|SPRITE_BADGUYSTAYPUT);
 
-//                if (j & 4)
-//                    g_tile[script[g_scriptPtr]].flags |= SPRITE_ROTFIXED;
-//            }
+                if (j & 4)
+                    g_tile[script[g_scriptPtr]].flags |= SPRITE_ROTFIXED;
+            }
 
-//            for (j=0; j<4; j++)
-//            {
-//                bitptr[(g_parsingActorPtr+j-script)>>3] &= ~(1<<((g_parsingActorPtr+j-script)&7));
-//                *(g_parsingActorPtr+j) = 0;
-//                if (j == 3)
-//                {
-//                    j = 0;
-//                    while (C_GetKeyword() == -1)
-//                    {
-//                        C_GetNextValue(LABEL_DEFINE);
-//                        g_scriptPtr--;
-//                        j |= script[g_scriptPtr];
-//                    }
-//                    bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
-//                    script[g_scriptPtr] = j;
-//                    g_scriptPtr++;
-//                    break;
-//                }
-//                else
-//                {
-//                    if (C_GetKeyword() != -1)
-//                    {
-//                        for (i=4-j; i; i--)
-//                        {
-//                            bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
-//                            *(g_scriptPtr++) = 0;
-//                        }
-//                        break;
-//                    }
-//                    switch (j)
-//                    {
-//                    case 0:
-//                        C_GetNextValue(LABEL_DEFINE);
-//                        break;
-//                    case 1:
-//                        C_GetNextValue(LABEL_ACTION);
-//                        break;
-//                    case 2:
-//                        // XXX: LABEL_MOVE|LABEL_DEFINE, what is this shit? compatibility?
-//                        if ((C_GetNextValue(LABEL_MOVE|LABEL_DEFINE) == 0) && (script[g_scriptPtr-1] != 0) && (script[g_scriptPtr-1] != 1))
-//                        {
-//                            C_ReportError(-1);
-//                            bitptr[(g_scriptPtr-script-1)>>3] &= ~(1<<((g_scriptPtr-script-1)&7));
-//                            script[g_scriptPtr-1] = 0;
-//                            initprintf("%s:%d: warning: expected a move, found a constant.\n",g_szScriptFileName,g_lineNumber);
-//                            g_numCompilerWarnings++;
-//                        }
-//                        break;
-//                    }
-//                    if (script[g_scriptPtr-1] >= (intptr_t)&script[0] && script[g_scriptPtr-1] < (intptr_t)&script[g_scriptSize])
-//                        bitptr[(g_parsingActorPtr+j-script)>>3] |= (BITPTR_POINTER<<((g_parsingActorPtr+j-script)&7));
-//                    else bitptr[(g_parsingActorPtr+j-script)>>3] &= ~(1<<((g_parsingActorPtr+j-script)&7));
-//                    *(g_parsingActorPtr+j) = script[g_scriptPtr-1];
-//                }
-//            }
-//            g_checkingIfElse = 0;
-//            continue;
+            for (j=0; j<4; j++)
+            {
+                bitptr[(g_parsingActorPtr+j-scriptIdx)>>3] &= ~(1<<((g_parsingActorPtr+j-scriptIdx)&7));
+                script[g_parsingActorPtr+j] = 0;
+                if (j == 3)
+                {
+                    j = 0;
+                    while (C_GetKeyword() == -1)
+                    {
+                        C_GetNextValue(LABEL_DEFINE);
+                        g_scriptPtr--;
+                        j |= script[g_scriptPtr];
+                    }
+                    bitptr[(g_scriptPtr-scriptIdx)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-scriptIdx)&7));
+                    script[g_scriptPtr] = j;
+                    g_scriptPtr++;
+                    break;
+                }
+                else
+                {
+                    if (C_GetKeyword() != -1)
+                    {
+                        for (i=4-j; i; i--)
+                        {
+                            bitptr[(g_scriptPtr-scriptIdx)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-scriptIdx)&7));
+                            script[g_scriptPtr++] = 0;
+                        }
+                        break;
+                    }
+                    switch (j)
+                    {
+                    case 0:
+                        C_GetNextValue(LABEL_DEFINE);
+                        break;
+                    case 1:
+                        C_GetNextValue(LABEL_ACTION);
+                        break;
+                    case 2:
+                        // XXX: LABEL_MOVE|LABEL_DEFINE, what is this shit? compatibility?
+                        if ((C_GetNextValue(LABEL_MOVE|LABEL_DEFINE) == 0) && (script[g_scriptPtr-1] != 0) && (script[g_scriptPtr-1] != 1))
+                        {
+                            C_ReportError(-1);
+                            bitptr[(g_scriptPtr-scriptIdx-1)>>3] &= ~(1<<((g_scriptPtr-scriptIdx-1)&7));
+                            script[g_scriptPtr-1] = 0;
+                            initprintf("%s:%d: warning: expected a move, found a constant.\n",g_szScriptFileName,g_lineNumber);
+                            g_numCompilerWarnings++;
+                        }
+                        break;
+                    }
+                    if (script[g_scriptPtr-1] >= 0 /*(intptr_t)&script[0]*/ && script[g_scriptPtr-1] < g_scriptSize /*(intptr_t)&script[g_scriptSize]*/)
+                        bitptr[(g_parsingActorPtr+j-scriptIdx)>>3] |= (BITPTR_POINTER<<((g_parsingActorPtr+j-scriptIdx)&7));
+                    else bitptr[(g_parsingActorPtr+j-scriptIdx)>>3] &= ~(1<<((g_parsingActorPtr+j-scriptIdx)&7));
+                    script[g_parsingActorPtr+j] = script[g_scriptPtr-1];
+                }
+            }
+            g_checkingIfElse = 0;
+            continue;
 
 //        case CON_ONEVENT:
 //            if (g_processingState || g_parsingActorPtr)
@@ -3349,7 +3350,7 @@ function C_ParseCommand(loop: number): number
 //            j = 0;
 //            while (isaltok(textptr[textptrIdx+j]))
 //            {
-//                g_szCurrentBlockName[j] = textptr[textptrIdx+j];
+//                g_szCurrentBlockName[j] = textptr[textptrIdx+j];         /// TODO THIS IS STRING !!STRING!!!!
 //                j++;
 //            }
 //            g_szCurrentBlockName[j] = 0;
@@ -3392,122 +3393,122 @@ function C_ParseCommand(loop: number): number
 //            script[g_scriptPtr++] = CON_NULLOP + (g_lineNumber<<12);
 //            continue;
 
-//        case CON_ESPAWN:
-//        case CON_ESHOOT:
-//        case CON_QSPAWN:
-//        case CON_EQSPAWN:
-//        case CON_STRENGTH:
-//        case CON_SHOOT:
-//        case CON_ADDPHEALTH:
-//        case CON_SPAWN:
-//        case CON_CSTAT:
-//        case CON_COUNT:
-//        case CON_ENDOFGAME:
-//        case CON_ENDOFLEVEL:
-//        case CON_SPRITEPAL:
-//        case CON_CACTOR:
-//        case CON_MONEY:
-//        case CON_ADDKILLS:
-//        case CON_DEBUG:
-//        case CON_ADDSTRENGTH:
-//        case CON_CSTATOR:
-//        case CON_MAIL:
-//        case CON_PAPER:
-//        case CON_SLEEPTIME:
-//        case CON_CLIPDIST:
-//        case CON_LOTSOFGLASS:
-//        case CON_SAVENN:
-//        case CON_SAVE:
-//        case CON_ANGOFF:
-//        case CON_QUOTE:
-//        case CON_SOUND:
-//        case CON_GLOBALSOUND:
-//        case CON_SOUNDONCE:
-//        case CON_STOPSOUND:
-//            C_GetNextValue(LABEL_DEFINE);
-//            if (tw == CON_CSTAT)
-//            {
-//                if (script[g_scriptPtr-1] == 32767)
-//                {
-//                    script[g_scriptPtr-1] = 32768;
-//                    C_ReportError(-1);
-//                    initprintf("%s:%d: warning: tried to set cstat 32767, using 32768 instead.\n",g_szScriptFileName,g_lineNumber);
-//                    g_numCompilerWarnings++;
-//                }
-//                else if ((script[g_scriptPtr-1] & 32) && (script[g_scriptPtr-1] & 16))
-//                {
-//                    i = script[g_scriptPtr-1];
-//                    script[g_scriptPtr-1] ^= 48;
-//                    C_ReportError(-1);
-//                    initprintf("%s:%d: warning: tried to set cstat %d, using %d instead.\n",g_szScriptFileName,g_lineNumber,i,(int32_t)(script[g_scriptPtr-1]));
-//                    g_numCompilerWarnings++;
-//                }
-//            }
-//            continue;
+        case CON_ESPAWN:
+        case CON_ESHOOT:
+        case CON_QSPAWN:
+        case CON_EQSPAWN:
+        case CON_STRENGTH:
+        case CON_SHOOT:
+        case CON_ADDPHEALTH:
+        case CON_SPAWN:
+        case CON_CSTAT:
+        case CON_COUNT:
+        case CON_ENDOFGAME:
+        case CON_ENDOFLEVEL:
+        case CON_SPRITEPAL:
+        case CON_CACTOR:
+        case CON_MONEY:
+        case CON_ADDKILLS:
+        case CON_DEBUG:
+        case CON_ADDSTRENGTH:
+        case CON_CSTATOR:
+        case CON_MAIL:
+        case CON_PAPER:
+        case CON_SLEEPTIME:
+        case CON_CLIPDIST:
+        case CON_LOTSOFGLASS:
+        case CON_SAVENN:
+        case CON_SAVE:
+        case CON_ANGOFF:
+        case CON_QUOTE:
+        case CON_SOUND:
+        case CON_GLOBALSOUND:
+        case CON_SOUNDONCE:
+        case CON_STOPSOUND:
+            C_GetNextValue(LABEL_DEFINE);
+            if (tw == CON_CSTAT)
+            {
+                if (script[g_scriptPtr-1] == 32767)
+                {
+                    script[g_scriptPtr-1] = 32768;
+                    C_ReportError(-1);
+                    initprintf("%s:%d: warning: tried to set cstat 32767, using 32768 instead.\n",g_szScriptFileName,g_lineNumber);
+                    g_numCompilerWarnings++;
+                }
+                else if ((script[g_scriptPtr-1] & 32) && (script[g_scriptPtr-1] & 16))
+                {
+                    i = script[g_scriptPtr-1];
+                    script[g_scriptPtr-1] ^= 48;
+                    C_ReportError(-1);
+                    initprintf("%s:%d: warning: tried to set cstat %d, using %d instead.\n",g_szScriptFileName,g_lineNumber,i,(script[g_scriptPtr-1]));
+                    g_numCompilerWarnings++;
+                }
+            }
+            continue;
 
 //        case CON_HITRADIUSVAR:
 //            C_GetManyVars(5);
 //            continue;
-//        case CON_HITRADIUS:
-//            C_GetNextValue(LABEL_DEFINE);
-//            C_GetNextValue(LABEL_DEFINE);
-//            C_GetNextValue(LABEL_DEFINE);
-//        case CON_ADDAMMO:
-//        case CON_ADDWEAPON:
-//        case CON_SIZETO:
-//        case CON_SIZEAT:
-//        case CON_DEBRIS:
-//        case CON_ADDINVENTORY:
-//        case CON_GUTS:
-//            C_GetNextValue(LABEL_DEFINE);
-//            C_GetNextValue(LABEL_DEFINE);
-//            continue;
+        case CON_HITRADIUS:
+            C_GetNextValue(LABEL_DEFINE);
+            C_GetNextValue(LABEL_DEFINE);
+            C_GetNextValue(LABEL_DEFINE);
+        case CON_ADDAMMO:
+        case CON_ADDWEAPON:
+        case CON_SIZETO:
+        case CON_SIZEAT:
+        case CON_DEBRIS:
+        case CON_ADDINVENTORY:
+        case CON_GUTS:
+            C_GetNextValue(LABEL_DEFINE);
+            C_GetNextValue(LABEL_DEFINE);
+            continue;
 
-//        case CON_ELSE:
-//            if (g_checkingIfElse)
-//            {
-//                intptr_t offset;
-//                intptr_t lastScriptPtr = g_scriptPtr - &script[0] - 1;
+        case CON_ELSE:
+            if (g_checkingIfElse)
+            {
+                var offset: number;
+                var lastScriptPtr = g_scriptPtr -/* &script[0] -*/ 1;
 
-//                g_ifElseAborted = 0;
-//                g_checkingIfElse--;
+                g_ifElseAborted = 0;
+                g_checkingIfElse--;
 
-//                if (C_CheckMalformedBranch(lastScriptPtr))
-//                    continue;
+                if (C_CheckMalformedBranch(lastScriptPtr))
+                    continue;
 
-//                tempscrptr = g_scriptPtr;
-//                offset = (unsigned)(tempscrptr-script);
-//                g_scriptPtr++; //Leave a spot for the fail location
-//                C_ParseCommand(0);
+                tempscrptr = g_scriptPtr;
+                offset = unsigned(tempscrptr-scriptIdx);
+                g_scriptPtr++; //Leave a spot for the fail location
+                C_ParseCommand(0);
 
-//                if (C_CheckEmptyBranch(tw, lastScriptPtr))
-//                    continue;
+                if (C_CheckEmptyBranch(tw, lastScriptPtr))
+                    continue;
 
-//                tempscrptr = (intptr_t *)script+offset;
-//                *tempscrptr = (intptr_t) g_scriptPtr;
-//                bitptr[(tempscrptr-script)>>3] |= (BITPTR_POINTER<<((tempscrptr-script)&7));
-//            }
-//            else
-//            {
-//                g_scriptPtr--;
-//                tempscrptr = g_scriptPtr;
-//                g_numCompilerWarnings++;
-//                C_ReportError(-1);
+                tempscrptr = /*(intptr_t *)*/scriptIdx+offset;
+                script[tempscrptr] = /*(intptr_t)*/ g_scriptPtr;
+                bitptr[(tempscrptr-scriptIdx)>>3] |= (BITPTR_POINTER<<((tempscrptr-scriptIdx)&7));
+            }
+            else
+            {
+                g_scriptPtr--;
+                tempscrptr = g_scriptPtr;
+                g_numCompilerWarnings++;
+                C_ReportError(-1);
 
-//                initprintf("%s:%d: warning: found `else' with no `if'.\n",g_szScriptFileName,g_lineNumber);
+                initprintf("%s:%d: warning: found `else' with no `if'.\n",g_szScriptFileName,g_lineNumber);
 
-//                if (C_GetKeyword() == CON_LEFTBRACE)
-//                {
-//                    C_GetNextKeyword();
-//                    g_numBraces++;
+                if (C_GetKeyword() == CON_LEFTBRACE)
+                {
+                    C_GetNextKeyword();
+                    g_numBraces++;
 
-//                    C_ParseCommand(1);
-//                }
-//                else C_ParseCommand(0);
+                    C_ParseCommand(1);
+                }
+                else C_ParseCommand(0);
 
-//                g_scriptPtr = tempscrptr;
-//            }
-//            continue;
+                g_scriptPtr = tempscrptr;
+            }
+            continue;
 
 //        case CON_SETSECTOR:
 //        case CON_GETSECTOR:
@@ -3558,7 +3559,7 @@ function C_ParseCommand(loop: number): number
 //                    C_ReportError(ERROR_SYMBOLNOTRECOGNIZED);
 //                    continue;
 //                }
-//                bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
+//                bitptr[(g_scriptPtr-scriptIdx)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-scriptIdx)&7));
 //                script[g_scriptPtr++]=lLabelID;
 
 //                // now at target VAR...
@@ -3688,7 +3689,7 @@ function C_ParseCommand(loop: number): number
 //                    C_ReportError(ERROR_SYMBOLNOTRECOGNIZED);
 //                    continue;
 //                }
-//                bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
+//                bitptr[(g_scriptPtr-scriptIdx)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-scriptIdx)&7));
 //                script[g_scriptPtr++]=lLabelID;
 
 //                // now at target VAR...
@@ -3751,7 +3752,7 @@ function C_ParseCommand(loop: number): number
 //                    continue;
 //                }
 
-//                bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
+//                bitptr[(g_scriptPtr-scriptIdx)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-scriptIdx)&7));
 //                script[g_scriptPtr++]=PlayerLabels[lLabelID].lId;
 
 //                //printf("member's flags are: %02Xh\n",PlayerLabels[lLabelID].flags);
@@ -3827,7 +3828,7 @@ function C_ParseCommand(loop: number): number
 //                    continue;
 //                }
 
-//                bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
+//                bitptr[(g_scriptPtr-scriptIdx)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-scriptIdx)&7));
 //                script[g_scriptPtr++]=InputLabels[lLabelID].lId;
 
 //                // now at target VAR...
@@ -3877,7 +3878,7 @@ function C_ParseCommand(loop: number): number
 //                    C_ReportError(ERROR_SYMBOLNOTRECOGNIZED);
 //                    continue;
 //                }
-//                bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
+//                bitptr[(g_scriptPtr-scriptIdx)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-scriptIdx)&7));
 //                script[g_scriptPtr++]=lLabelID;
 
 //                // now at target VAR...
@@ -4004,7 +4005,7 @@ function C_ParseCommand(loop: number): number
 //                    }
 //                }
 
-//                bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
+//                bitptr[(g_scriptPtr-scriptIdx)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-scriptIdx)&7));
 //                script[g_scriptPtr++]=i; // the ID of the DEF (offset into array...)
 
 //                switch (tw)
@@ -4072,7 +4073,7 @@ function C_ParseCommand(loop: number): number
 //                    continue;
 //                }
 
-//                bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
+//                bitptr[(g_scriptPtr-scriptIdx)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-scriptIdx)&7));
 //                script[g_scriptPtr++]=ActorLabels[lLabelID].lId;
 
 //                //printf("member's flags are: %02Xh\n",ActorLabels[lLabelID].flags);
@@ -4151,7 +4152,7 @@ function C_ParseCommand(loop: number): number
 //                    continue;
 //                }
 
-//                bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
+//                bitptr[(g_scriptPtr-scriptIdx)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-scriptIdx)&7));
 //                script[g_scriptPtr++]=TsprLabels[lLabelID].lId;
 
 //                //printf("member's flags are: %02Xh\n",ActorLabels[lLabelID].flags);
@@ -4341,7 +4342,7 @@ function C_ParseCommand(loop: number): number
 //            i=GetADefID(label.subarray(g_numLabels<<6).toString());
 //            if (i > (-1))
 //            {
-//                bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
+//                bitptr[(g_scriptPtr-scriptIdx)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-scriptIdx)&7));
 //                script[g_scriptPtr++]=i;
 //            }
 //            else
@@ -4357,7 +4358,7 @@ function C_ParseCommand(loop: number): number
 //            i=GetADefID(label.subarray(g_numLabels<<6).toString());
 //            if (i > (-1))
 //            {
-//                bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
+//                bitptr[(g_scriptPtr-scriptIdx)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-scriptIdx)&7));
 //                script[g_scriptPtr++]=i;
 //            }
 //            else
@@ -4389,7 +4390,7 @@ function C_ParseCommand(loop: number): number
 //            i=GetADefID(label.subarray(g_numLabels<<6).toString());
 //            if (i > (-1))
 //            {
-//                bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
+//                bitptr[(g_scriptPtr-scriptIdx)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-scriptIdx)&7));
 //                script[g_scriptPtr++]=i;
 
 //                if (aGameArrays[i].dwFlags & GAMEARRAY_READONLY)
@@ -4431,7 +4432,7 @@ function C_ParseCommand(loop: number): number
 //            i=GetADefID(label.subarray(g_numLabels<<6).toString());
 //            if (i >= 0)
 //            {
-//                bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
+//                bitptr[(g_scriptPtr-scriptIdx)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-scriptIdx)&7));
 //                script[g_scriptPtr++] = i;
 //                if (tw==CON_RESIZEARRAY && (aGameArrays[i].dwFlags & GAMEARRAY_TYPE_MASK))
 //                {
@@ -4683,7 +4684,7 @@ function C_ParseCommand(loop: number): number
 //                    continue;
 
 //                tempscrptr = g_scriptPtr;
-//                offset = (unsigned)(g_scriptPtr-script);
+//                offset = (unsigned)(g_scriptPtr-scriptIdx);
 //                g_scriptPtr++; // Leave a spot for the fail location
 
 //                C_ParseCommand(0);
@@ -4692,8 +4693,8 @@ function C_ParseCommand(loop: number): number
 //                    continue;
 
 //                tempscrptr = (intptr_t *)script+offset;
-//                *tempscrptr = (intptr_t) g_scriptPtr;
-//                bitptr[(tempscrptr-script)>>3] |= (BITPTR_POINTER<<((tempscrptr-script)&7));
+//                script[tempscrptr] = (intptr_t) g_scriptPtr;
+//                bitptr[(tempscrptr-scriptIdx)>>3] |= (BITPTR_POINTER<<((tempscrptr-scriptIdx)&7));
 
 //                if (tw != CON_WHILEVARVARN)
 //                {
@@ -4730,7 +4731,7 @@ function C_ParseCommand(loop: number): number
 //        case CON_WHILEVARN:
 //            {
 //                intptr_t offset;
-//                intptr_t lastScriptPtr = (g_scriptPtr-script-1);
+//                intptr_t lastScriptPtr = (g_scriptPtr-scriptIdx-1);
 
 //                g_ifElseAborted = 0;
 //                // get the ID of the DEF
@@ -4741,7 +4742,7 @@ function C_ParseCommand(loop: number): number
 //                    continue;
 
 //                tempscrptr = g_scriptPtr;
-//                offset = (unsigned)(tempscrptr-script);
+//                offset = (unsigned)(tempscrptr-scriptIdx);
 //                g_scriptPtr++; //Leave a spot for the fail location
 
 //                C_ParseCommand(0);
@@ -4750,8 +4751,8 @@ function C_ParseCommand(loop: number): number
 //                    continue;
 
 //                tempscrptr = (intptr_t *)script+offset;
-//                *tempscrptr = (intptr_t) g_scriptPtr;
-//                bitptr[(tempscrptr-script)>>3] |= (BITPTR_POINTER<<((tempscrptr-script)&7));
+//                script[tempscrptr] = (intptr_t) g_scriptPtr;
+//                bitptr[(tempscrptr-scriptIdx)>>3] |= (BITPTR_POINTER<<((tempscrptr-scriptIdx)&7));
 
 //                if (tw != CON_WHILEVARN)
 //                {
@@ -4955,13 +4956,13 @@ function C_ParseCommand(loop: number): number
 //                C_GetNextVar();
 
 //                tempscrptr= g_scriptPtr;
-//                tempoffset = (unsigned)(tempscrptr-script);
-//                bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
+//                tempoffset = (unsigned)(tempscrptr-scriptIdx);
+//                bitptr[(g_scriptPtr-scriptIdx)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-scriptIdx)&7));
 //                script[g_scriptPtr++]=0; // leave spot for end location (for after processing)
-//                bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
+//                bitptr[(g_scriptPtr-scriptIdx)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-scriptIdx)&7));
 //                script[g_scriptPtr++]=0; // count of case statements
 //                g_caseScriptPtr=g_scriptPtr;        // the first case's pointer.
-//                bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
+//                bitptr[(g_scriptPtr-scriptIdx)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-scriptIdx)&7));
 //                script[g_scriptPtr++]=0; // leave spot for 'default' location (null if none)
 
 ////                temptextptr=textptr;
@@ -4994,9 +4995,9 @@ function C_ParseCommand(loop: number): number
 //                while (j--)
 //                {
 //                    // leave room for statements
-//                    bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
+//                    bitptr[(g_scriptPtr-scriptIdx)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-scriptIdx)&7));
 //                    script[g_scriptPtr++]=0; // value check
-//                    bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
+//                    bitptr[(g_scriptPtr-scriptIdx)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-scriptIdx)&7));
 //                    script[g_scriptPtr++]=0; // code offset
 //                    C_SkipComments();
 //                }
@@ -5030,7 +5031,7 @@ function C_ParseCommand(loop: number): number
 //                    }
 //                    //            for (j=3;j<3+tempscrptr[1]*2;j+=2)initprintf("%5d %8x\n",tempscrptr[j],tempscrptr[j+1]);
 //                    tempscrptr[0]= (intptr_t)g_scriptPtr - (intptr_t)&script[0];    // save 'end' location
-//                    //            bitptr[(tempscrptr-script)>>3] |= (BITPTR_POINTER<<((tempscrptr-script)&7));
+//                    //            bitptr[(tempscrptr-scriptIdx)>>3] |= (BITPTR_POINTER<<((tempscrptr-scriptIdx)&7));
 //                }
 //                else
 //                {
@@ -5103,7 +5104,7 @@ function C_ParseCommand(loop: number): number
 //                }
 //                //Bsprintf(g_szBuf,"case4: '%.12s'",textptr);
 //                //AddLog(g_szBuf);
-//                tempoffset = (unsigned)(tempscrptr-script);
+//                tempoffset = (unsigned)(tempscrptr-scriptIdx);
 
 //                while (C_ParseCommand(0) == 0)
 //                {
@@ -5147,7 +5148,7 @@ function C_ParseCommand(loop: number): number
 //            if (g_caseScriptPtr)
 //            {
 //                g_caseScriptPtr[0]=(intptr_t)(g_scriptPtr-&script[0]);   // save offset
-//                //            bitptr[(g_caseScriptPtr-script)>>3] |= (BITPTR_POINTER<<((g_caseScriptPtr-script)&7));
+//                //            bitptr[(g_caseScriptPtr-scriptIdx)>>3] |= (BITPTR_POINTER<<((g_caseScriptPtr-scriptIdx)&7));
 //            }
 //            //Bsprintf(g_szBuf,"default: '%.22s'",textptr);
 //            //AddLog(g_szBuf);
@@ -5220,203 +5221,203 @@ function C_ParseCommand(loop: number): number
 //            g_scriptPtr++; */
 //            continue;
 
-//        case CON_IFRND:
-//        case CON_IFPDISTL:
-//        case CON_IFPDISTG:
-//        case CON_IFWASWEAPON:
-//        case CON_IFACTIONCOUNT:
-//        case CON_IFCOUNT:
-//        case CON_IFACTOR:
-//        case CON_IFSTRENGTH:
-//        case CON_IFSPAWNEDBY:
-//        case CON_IFGAPZL:
-//        case CON_IFFLOORDISTL:
-//        case CON_IFCEILINGDISTL:
-//            //        case 74:
-//        case CON_IFPHEALTHL:
-//        case CON_IFSPRITEPAL:
-//        case CON_IFGOTWEAPONCE:
-//        case CON_IFANGDIFFL:
-//        case CON_IFSOUND:
-//        case CON_IFAI:
-//        case CON_IFACTION:
-//        case CON_IFMOVE:
-//        case CON_IFP:
-//        case CON_IFPINVENTORY:
-//        case CON_IFPLAYERSL:
-//            {
-//                intptr_t offset;
-//                intptr_t lastScriptPtr = (g_scriptPtr-&script[0]-1);
+        case CON_IFRND:
+        case CON_IFPDISTL:
+        case CON_IFPDISTG:
+        case CON_IFWASWEAPON:
+        case CON_IFACTIONCOUNT:
+        case CON_IFCOUNT:
+        case CON_IFACTOR:
+        case CON_IFSTRENGTH:
+        case CON_IFSPAWNEDBY:
+        case CON_IFGAPZL:
+        case CON_IFFLOORDISTL:
+        case CON_IFCEILINGDISTL:
+            //        case 74:
+        case CON_IFPHEALTHL:
+        case CON_IFSPRITEPAL:
+        case CON_IFGOTWEAPONCE:
+        case CON_IFANGDIFFL:
+        case CON_IFSOUND:
+        case CON_IFAI:
+        case CON_IFACTION:
+        case CON_IFMOVE:
+        case CON_IFP:
+        case CON_IFPINVENTORY:
+        case CON_IFPLAYERSL:
+            {
+                var offset: number;
+                var lastScriptPtr = (g_scriptPtr-/*&script[0]*/ 0 -1);
 
-//                g_ifElseAborted = 0;
+                g_ifElseAborted = 0;
 
-//                switch (tw)
-//                {
-//                case CON_IFAI:
-//                    C_GetNextValue(LABEL_AI);
-//                    break;
-//                case CON_IFACTION:
-//                    C_GetNextValue(LABEL_ACTION);
-//                    break;
-//                case CON_IFMOVE:
-//                    if ((C_GetNextValue(LABEL_MOVE|LABEL_DEFINE) == 0) && (script[g_scriptPtr-1] != 0) && (script[g_scriptPtr-1] != 1))
-//                    {
-//                        C_ReportError(-1);
-//                        script[g_scriptPtr-1] = 0;
-//                        initprintf("%s:%d: warning: expected a move, found a constant.\n",g_szScriptFileName,g_lineNumber);
-//                        g_numCompilerWarnings++;
-//                    }
-//                    break;
-//                case CON_IFPINVENTORY:
-//                    C_GetNextValue(LABEL_DEFINE);
-//                    C_GetNextValue(LABEL_DEFINE);
-//                    break;
-//                case CON_IFP:
-//                    j = 0;
-//                    do
-//                    {
-//                        C_GetNextValue(LABEL_DEFINE);
-//                        g_scriptPtr--;
-//                        j |= script[g_scriptPtr];
-//                    }
-//                    while (C_GetKeyword() == -1);
-//                    bitptr[(g_scriptPtr-script)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-script)&7));
-//                    script[g_scriptPtr] = j;
-//                    g_scriptPtr++;
-//                    break;
-//                case CON_IFSOUND:
-//                case CON_IFACTORSOUND:
-//                default:
-//                    C_GetNextValue(LABEL_DEFINE);
-//                    break;
-//                }
+                switch (tw)
+                {
+                case CON_IFAI:
+                    C_GetNextValue(LABEL_AI);
+                    break;
+                case CON_IFACTION:
+                    C_GetNextValue(LABEL_ACTION);
+                    break;
+                case CON_IFMOVE:
+                    if ((C_GetNextValue(LABEL_MOVE|LABEL_DEFINE) == 0) && (script[g_scriptPtr-1] != 0) && (script[g_scriptPtr-1] != 1))
+                    {
+                        C_ReportError(-1);
+                        script[g_scriptPtr-1] = 0;
+                        initprintf("%s:%d: warning: expected a move, found a constant.\n",g_szScriptFileName,g_lineNumber);
+                        g_numCompilerWarnings++;
+                    }
+                    break;
+                case CON_IFPINVENTORY:
+                    C_GetNextValue(LABEL_DEFINE);
+                    C_GetNextValue(LABEL_DEFINE);
+                    break;
+                case CON_IFP:
+                    j = 0;
+                    do
+                    {
+                        C_GetNextValue(LABEL_DEFINE);
+                        g_scriptPtr--;
+                        j |= script[g_scriptPtr];
+                    }
+                    while (C_GetKeyword() == -1);
+                    bitptr[(g_scriptPtr-scriptIdx)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-scriptIdx)&7));
+                    script[g_scriptPtr] = j;
+                    g_scriptPtr++;
+                    break;
+                case CON_IFSOUND:
+                case CON_IFACTORSOUND:
+                default:
+                    C_GetNextValue(LABEL_DEFINE);
+                    break;
+                }
 
-//                if (C_CheckMalformedBranch(lastScriptPtr))
-//                    continue;
+                if (C_CheckMalformedBranch(lastScriptPtr))
+                    continue;
 
-//                tempscrptr = g_scriptPtr;
-//                offset = (unsigned)(tempscrptr-script);
+                tempscrptr = g_scriptPtr;
+                offset = (tempscrptr-scriptIdx) >>> 0;
 
-//                g_scriptPtr++; //Leave a spot for the fail location
+                g_scriptPtr++; //Leave a spot for the fail location
 
-//                C_ParseCommand(0);
+                C_ParseCommand(0);
 
-//                if (C_CheckEmptyBranch(tw, lastScriptPtr))
-//                    continue;
+                if (C_CheckEmptyBranch(tw, lastScriptPtr))
+                    continue;
 
-//                tempscrptr = (intptr_t *)script+offset;
-//                *tempscrptr = (intptr_t) g_scriptPtr;
-//                bitptr[(tempscrptr-script)>>3] |= (BITPTR_POINTER<<((tempscrptr-script)&7));
+                tempscrptr = /*(intptr_t *)*/scriptIdx+offset;
+               script[tempscrptr] = /*(intptr_t) */g_scriptPtr;
+                bitptr[(tempscrptr-scriptIdx)>>3] |= (BITPTR_POINTER<<((tempscrptr-scriptIdx)&7));
 
-//                j = C_GetKeyword();
+                j = C_GetKeyword();
 
-//                if (j == CON_ELSE || j == CON_LEFTBRACE)
-//                    g_checkingIfElse++;
+                if (j == CON_ELSE || j == CON_LEFTBRACE)
+                    g_checkingIfElse++;
 
-//                continue;
-//            }
+                continue;
+            }
 
-//        case CON_IFCLIENT:
-//        case CON_IFSERVER:
-//        case CON_IFONWATER:
-//        case CON_IFINWATER:
-//        case CON_IFACTORNOTSTAYPUT:
-//        case CON_IFCANSEE:
-//        case CON_IFHITWEAPON:
-//        case CON_IFSQUISHED:
-//        case CON_IFDEAD:
-//        case CON_IFCANSHOOTTARGET:
-//        case CON_IFHITSPACE:
-//        case CON_IFOUTSIDE:
-//        case CON_IFMULTIPLAYER:
-//        case CON_IFINSPACE:
-//        case CON_IFBULLETNEAR:
-//        case CON_IFRESPAWN:
-//        case CON_IFINOUTERSPACE:
-//        case CON_IFNOTMOVING:
-//        case CON_IFAWAYFROMWALL:
-//        case CON_IFCANSEETARGET:
-//        case CON_IFNOSOUNDS:
-//            {
-//                intptr_t offset;
-//                intptr_t lastScriptPtr = (g_scriptPtr-&script[0]-1);
+        case CON_IFCLIENT:
+        case CON_IFSERVER:
+        case CON_IFONWATER:
+        case CON_IFINWATER:
+        case CON_IFACTORNOTSTAYPUT:
+        case CON_IFCANSEE:
+        case CON_IFHITWEAPON:
+        case CON_IFSQUISHED:
+        case CON_IFDEAD:
+        case CON_IFCANSHOOTTARGET:
+        case CON_IFHITSPACE:
+        case CON_IFOUTSIDE:
+        case CON_IFMULTIPLAYER:
+        case CON_IFINSPACE:
+        case CON_IFBULLETNEAR:
+        case CON_IFRESPAWN:
+        case CON_IFINOUTERSPACE:
+        case CON_IFNOTMOVING:
+        case CON_IFAWAYFROMWALL:
+        case CON_IFCANSEETARGET:
+        case CON_IFNOSOUNDS:
+            {
+                var offset: number;
+                var lastScriptPtr = (g_scriptPtr-/*&script[0]-*/1);
 
-//                g_ifElseAborted = 0;
+                g_ifElseAborted = 0;
 
-//                if (C_CheckMalformedBranch(lastScriptPtr))
-//                    continue;
+                if (C_CheckMalformedBranch(lastScriptPtr))
+                    continue;
 
-//                tempscrptr = g_scriptPtr;
-//                offset = (unsigned)(tempscrptr-script);
+                tempscrptr = g_scriptPtr;
+                offset = (unsigned)(tempscrptr-scriptIdx);
 
-//                g_scriptPtr++; //Leave a spot for the fail location
+                g_scriptPtr++; //Leave a spot for the fail location
 
-//                C_ParseCommand(0);
+                C_ParseCommand(0);
 
-//                if (C_CheckEmptyBranch(tw, lastScriptPtr))
-//                    continue;
+                if (C_CheckEmptyBranch(tw, lastScriptPtr))
+                    continue;
 
-//                tempscrptr = (intptr_t *)script+offset;
-//                *tempscrptr = (intptr_t) g_scriptPtr;
-//                bitptr[(tempscrptr-script)>>3] |= (BITPTR_POINTER<<((tempscrptr-script)&7));
+                tempscrptr = /*(intptr_t *)*/scriptIdx+offset;
+                script[tempscrptr] = /*(intptr_t)*/ g_scriptPtr;
+                bitptr[(tempscrptr-scriptIdx)>>3] |= (BITPTR_POINTER<<((tempscrptr-scriptIdx)&7));
 
-//                j = C_GetKeyword();
+                j = C_GetKeyword();
 
-//                if (j == CON_ELSE || j == CON_LEFTBRACE)
-//                    g_checkingIfElse++;
+                if (j == CON_ELSE || j == CON_LEFTBRACE)
+                    g_checkingIfElse++;
 
-//                continue;
-//            }
+                continue;
+            }
 
-//        case CON_LEFTBRACE:
-//            if (!(g_processingState || g_parsingActorPtr || g_parsingEventPtr))
-//            {
-//                g_numCompilerErrors++;
-//                C_ReportError(ERROR_SYNTAXERROR);
-//            }
-//            g_numBraces++;
+        case CON_LEFTBRACE:
+            if (!(g_processingState || g_parsingActorPtr || g_parsingEventPtr))
+            {
+                g_numCompilerErrors++;
+                C_ReportError(ERROR_SYNTAXERROR);
+            }
+            g_numBraces++;
 
-//            C_ParseCommand(1);
-//            continue;
+            C_ParseCommand(1);
+            continue;
 
-//        case CON_RIGHTBRACE:
-//            g_numBraces--;
+        case CON_RIGHTBRACE:
+            g_numBraces--;
 
-//            if ((*(g_scriptPtr-2)>>12) == (IFELSE_MAGIC) &&
-//                ((*(g_scriptPtr-2) & 0xFFF) == CON_LEFTBRACE)) // rewrite "{ }" into "nullop"
-//            {
-//                //            initprintf("%s:%d: rewriting empty braces '{ }' as 'nullop' from right\n",g_szScriptFileName,g_lineNumber);
-//                *(g_scriptPtr-2) = CON_NULLOP + (IFELSE_MAGIC<<12);
-//                g_scriptPtr -= 2;
+            if ((script[g_scriptPtr-2]>>12) == (IFELSE_MAGIC) &&
+                ((script[g_scriptPtr-2] & 0xFFF) == CON_LEFTBRACE)) // rewrite "{ }" into "nullop"
+            {
+                //            initprintf("%s:%d: rewriting empty braces '{ }' as 'nullop' from right\n",g_szScriptFileName,g_lineNumber);
+                script[g_scriptPtr-2] = CON_NULLOP + (IFELSE_MAGIC<<12);
+                g_scriptPtr -= 2;
 
-//                if (C_GetKeyword() != CON_ELSE && (*(g_scriptPtr-2)&0xFFF) != CON_ELSE)
-//                    g_ifElseAborted = 1;
-//                else g_ifElseAborted = 0;
+                if (C_GetKeyword() != CON_ELSE && (script[g_scriptPtr-2]&0xFFF) != CON_ELSE)
+                    g_ifElseAborted = 1;
+                else g_ifElseAborted = 0;
 
-//                j = C_GetKeyword();
+                j = C_GetKeyword();
 
-//                if (g_checkingIfElse && j != CON_ELSE)
-//                    g_checkingIfElse--;
+                if (g_checkingIfElse && j != CON_ELSE)
+                    g_checkingIfElse--;
 
-//                return 1;
-//            }
+                return 1;
+            }
 
-//            if (g_numBraces < 0)
-//            {
-//                if (g_checkingSwitch)
-//                {
-//                    C_ReportError(ERROR_NOENDSWITCH);
-//                }
+            if (g_numBraces < 0)
+            {
+                if (g_checkingSwitch)
+                {
+                    C_ReportError(ERROR_NOENDSWITCH);
+                }
 
-//                C_ReportError(-1);
-//                initprintf("%s:%d: error: found more `}' than `{'.\n",g_szScriptFileName,g_lineNumber);
-//                g_numCompilerErrors++;
-//            }
+                C_ReportError(-1);
+                initprintf("%s:%d: error: found more `}' than `{'.\n",g_szScriptFileName,g_lineNumber);
+                g_numCompilerErrors++;
+            }
 
-//            if (g_checkingIfElse && j != CON_ELSE)
-//                g_checkingIfElse--;
+            if (g_checkingIfElse && j != CON_ELSE)
+                g_checkingIfElse--;
 
-//            return 1;
+            return 1;
 
         case CON_BETANAME:
             g_scriptPtr--;
@@ -5480,8 +5481,8 @@ function C_ParseCommand(loop: number): number
 
 //            while (textptr.charCodeAt(textptrIdx) != 0x0a && textptr.charCodeAt(textptrIdx) != 0x0d && textptr.charCodeAt(textptrIdx) != 0)
 //            {
-//                gamefunctions[j][i] = textptr[textptrIdx];
-//                keydefaults[j*3][i] = textptr[textptrIdx];
+//                gamefunctions[j][i] = textptr[textptrIdx];         /// TODO THIS IS STRING !!STRING!!!!
+//                keydefaults[j*3][i] = textptr[textptrIdx];         /// TODO THIS IS STRING !!STRING!!!!
 //                textptrIdx++,i++;
 //                if (textptr.charCodeAt(textptrIdx) != 0x0a && textptr.charCodeAt(textptrIdx) != 0x0d && ispecial(textptr[textptrIdx]))
 //                {
@@ -5564,7 +5565,7 @@ function C_ParseCommand(loop: number): number
 
 //                while (textptr.charCodeAt(textptrIdx) != 0x0a && textptr.charCodeAt(textptrIdx) != 0x0d && textptr.charCodeAt(textptrIdx) != 0)
 //                {
-//                    gamename[i] = textptr[textptrIdx];
+//                    gamename[i] = textptr[textptrIdx];         /// TODO THIS IS STRING !!STRING!!!!
 //                    textptrIdx++,i++;
 //                    if (i >= (signed)sizeof(gamename)-1)
 //                    {
@@ -5696,7 +5697,7 @@ function C_ParseCommand(loop: number): number
 
 //            while (textptr.charCodeAt(textptrIdx) != 0x0a && textptr.charCodeAt(textptrIdx) != 0x0d && textptr.charCodeAt(textptrIdx) != 0)
 //            {
-//                GametypeNames[j][i] = textptr[textptrIdx];
+//                GametypeNames[j][i] = textptr[textptrIdx];         /// TODO THIS IS STRING !!STRING!!!!
 //                textptrIdx++,i++;
 //                if (i >= (signed)sizeof(GametypeNames[j])-1)
 //                {
@@ -5918,7 +5919,7 @@ function C_ParseCommand(loop: number): number
 //                textptrIdx++;
 //            while (textptr.charCodeAt(textptrIdx) != 0x0a && textptr.charCodeAt(textptrIdx) != 0x0d && textptr.charCodeAt(textptrIdx) != 0 && textptr[textptrIdx] != ' ')
 //            {
-//                CheatStrings[k][i] = textptr[textptrIdx];
+//                CheatStrings[k][i] = textptr[textptrIdx];         /// TODO THIS IS STRING !!STRING!!!!
 //                textptrIdx++,i++;
 //                if (i >= (signed)sizeof(CheatStrings[k])-1)
 //                {
@@ -6034,10 +6035,10 @@ function C_ParseCommand(loop: number): number
 //            if (previous_event)
 //            {
 //                g_scriptPtr--;
-//                *(g_scriptPtr++) = CON_JUMP;
-//                *(g_scriptPtr++) = MAXGAMEVARS;
-//                *(g_scriptPtr++) = previous_event-script;
-//                *(g_scriptPtr++) = CON_ENDEVENT;
+//                script[g_scriptPtr++] = CON_JUMP;
+//                script[g_scriptPtr++] = MAXGAMEVARS;
+//                script[g_scriptPtr++] = previous_event-scriptIdx;
+//                script[g_scriptPtr++] = CON_ENDEVENT;
 //                previous_event = NULL;
 //            }
 //            g_parsingEventPtr = g_parsingActorPtr = NULL;
@@ -6045,80 +6046,81 @@ function C_ParseCommand(loop: number): number
 //            Bsprintf(g_szCurrentBlockName,"(none)");
 //            continue;
 
-//        case CON_ENDA:
-//            if (!g_parsingActorPtr)
-//            {
-//                C_ReportError(-1);
-//                initprintf("%s:%d: error: found `enda' without open `actor'.\n",g_szScriptFileName,g_lineNumber);
-//                g_numCompilerErrors++;
-//            }
-//            if (g_numBraces != 0)
-//            {
-//                C_ReportError(g_numBraces > 0 ? ERROR_OPENBRACKET : ERROR_CLOSEBRACKET);
-//                g_numCompilerErrors++;
-//            }
-//            g_parsingActorPtr = NULL;
-//            Bsprintf(g_szCurrentBlockName,"(none)");
-//            continue;
+        case CON_ENDA:
+            debugger;
+            if (!g_parsingActorPtr)
+            {
+                C_ReportError(-1);
+                initprintf("%s:%d: error: found `enda' without open `actor'.\n",g_szScriptFileName,g_lineNumber);
+                g_numCompilerErrors++;
+            }
+            if (g_numBraces != 0)
+            {
+                C_ReportError(g_numBraces > 0 ? ERROR_OPENBRACKET : ERROR_CLOSEBRACKET);
+                g_numCompilerErrors++;
+            }
+            g_parsingActorPtr = 0/*NULL*/;
+            g_szCurrentBlockName = "(none)";
+            continue;
 
-//        case CON_RETURN:
-//        case CON_BREAK:
-//            if (g_checkingSwitch)
-//            {
-//                if (otw == CON_BREAK)
-//                {
-//                    C_ReportError(-1);
-//                    initprintf("%s:%d: warning: duplicate `break'.\n",g_szScriptFileName, g_lineNumber);
-//                    g_numCompilerWarnings++;
-//                    g_scriptPtr--;
-//                    continue;
-//                }
-//                return 1;
-//            }
-//            continue;
+        case CON_RETURN:
+        case CON_BREAK:
+            if (g_checkingSwitch)
+            {
+                if (otw == CON_BREAK)
+                {
+                    C_ReportError(-1);
+                    initprintf("%s:%d: warning: duplicate `break'.\n",g_szScriptFileName, g_lineNumber);
+                    g_numCompilerWarnings++;
+                    g_scriptPtr--;
+                    continue;
+                }
+                return 1;
+            }
+            continue;
 
-//        case CON_SCRIPTSIZE:
-//            g_scriptPtr--;
-//            C_GetNextValue(LABEL_DEFINE);
-//            j = script[g_scriptPtr-1];
-//            g_scriptPtr--;
-//            C_SkipComments();
-//            if (C_SetScriptSize(j)) return 1;
-//            continue;
+        case CON_SCRIPTSIZE:
+            g_scriptPtr--;
+            C_GetNextValue(LABEL_DEFINE);
+            j = script[g_scriptPtr-1];
+            g_scriptPtr--;
+            C_SkipComments();
+            if (C_SetScriptSize(j)) return 1;
+            continue;
 
-//        case CON_SHADETO:
-//            g_scriptPtr--;
-//            C_GetNextValue(LABEL_DEFINE);
-//            g_scriptPtr--;
-//            continue;
+        case CON_SHADETO:
+            g_scriptPtr--;
+            C_GetNextValue(LABEL_DEFINE);
+            g_scriptPtr--;
+            continue;
 
-//        case CON_FALL:
-//        case CON_TIP:
-//            //        case 21:
-//        case CON_KILLIT:
-//        case CON_RESETACTIONCOUNT:
-//        case CON_PSTOMP:
-//        case CON_RESETPLAYER:
-//        case CON_RESETCOUNT:
-//        case CON_WACKPLAYER:
-//        case CON_OPERATE:
-//        case CON_RESPAWNHITAG:
-//        case CON_GETLASTPAL:
-//        case CON_PKICK:
-//        case CON_MIKESND:
-//        case CON_TOSSWEAPON:
-//        case CON_NULLOP:
-//            if (tw == CON_NULLOP)
-//            {
-//                if (C_GetKeyword() != CON_ELSE)
-//                {
-//                    C_ReportError(-1);
-//                    g_numCompilerWarnings++;
-//                    initprintf("%s:%d: warning: `nullop' found without `else'\n",g_szScriptFileName,g_lineNumber);
-//                    g_scriptPtr--;
-//                    g_ifElseAborted = 1;
-//                }
-//            }
+        case CON_FALL:
+        case CON_TIP:
+            //        case 21:
+        case CON_KILLIT:
+        case CON_RESETACTIONCOUNT:
+        case CON_PSTOMP:
+        case CON_RESETPLAYER:
+        case CON_RESETCOUNT:
+        case CON_WACKPLAYER:
+        case CON_OPERATE:
+        case CON_RESPAWNHITAG:
+        case CON_GETLASTPAL:
+        case CON_PKICK:
+        case CON_MIKESND:
+        case CON_TOSSWEAPON:
+        case CON_NULLOP:
+            if (tw == CON_NULLOP)
+            {
+                if (C_GetKeyword() != CON_ELSE)
+                {
+                    C_ReportError(-1);
+                    g_numCompilerWarnings++;
+                    initprintf("%s:%d: warning: `nullop' found without `else'\n",g_szScriptFileName,g_lineNumber);
+                    g_scriptPtr--;
+                    g_ifElseAborted = 1;
+                }
+            }
         case CON_STOPALLSOUNDS:
             continue;
         case CON_GAMESTARTUP:

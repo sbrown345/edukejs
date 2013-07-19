@@ -7,6 +7,8 @@ var uint32 = function (v: number): number {
     return v >>> 0;
 };
 
+var unsigned = uint32;
+
 function newStructArray($class: any, count: number) {
     var array = new Array(count);
     for (var i = 0; i < count; i++) {
