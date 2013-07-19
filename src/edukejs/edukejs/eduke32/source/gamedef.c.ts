@@ -173,7 +173,7 @@ var g_checkingIfElse = 0, g_processingState = 0, g_lastKeyword = -1;//static int
 
 //// The pointer to the start of the case table in a switch statement.
 //// First entry is 'default' code.
-//static intptr_t *g_caseScriptPtr=NULL;
+var g_caseScriptPtr=0;
 //static intptr_t *previous_event=NULL;
 var g_numCases = 0;
 var g_checkingSwitch = 0, g_currentEvent = -1;
@@ -1309,95 +1309,95 @@ function C_InitHashes(): void
 var IFELSE_MAGIC = 31337;
 var g_ifElseAborted = 0;
 
-function C_SetScriptSize(/*int32_t*/ newsize: number) : number
+function C_SetScriptSize(/*int32_t*/ newsize: number) : number 
 {
-    todoThrow();
-//    intptr_t oscriptPtr = (unsigned)(g_scriptPtr-scriptIdx);
-//    intptr_t ocaseScriptPtr = (unsigned)(g_caseScriptPtr-scriptIdx);
-//    intptr_t oparsingEventPtr = (unsigned)(g_parsingEventPtr-scriptIdx);
-//    intptr_t oparsingActorPtr = (unsigned)(g_parsingActorPtr-scriptIdx);
-//    intptr_t *newscript;
-//    intptr_t i, j;
-//    int32_t osize = g_scriptSize;
-//    char *scriptptrs;
-//    char *newbitptr;
+    todo("C_SetScriptSize, not needed to load into game");
+    //var oscriptPtr = unsigned(g_scriptPtr-scriptIdx);
+    //var ocaseScriptPtr = unsigned(g_caseScriptPtr-scriptIdx);
+    //var oparsingEventPtr = unsigned(g_parsingEventPtr-scriptIdx);
+    //var oparsingActorPtr = unsigned(g_parsingActorPtr-scriptIdx);
+    //var newscript: Int32Array;
+    //var i: number, j: number;
+    //var osize: number = g_scriptSize;
+    //var scriptptrs: Uint8Array;
+    //var newbitptr: Uint8Array;
 
-//    scriptptrs = (char *)Bcalloc(1, g_scriptSize * sizeof(uint8_t));
+    //scriptptrs = new Uint8Array(g_scriptSize);//(char *)Bcalloc(1, g_scriptSize * sizeof(uint8_t));
 
-//    for (i=g_scriptSize-1; i>=0; i--)
-//    {
-//        if (bitptr[i>>3]&(BITPTR_POINTER<<(i&7)))
-//        {
-//            if ((intptr_t)script[i] < (intptr_t)&script[0] || (intptr_t)script[i] >= (intptr_t)&script[g_scriptSize])
-//            {
-//                g_numCompilerErrors++;
-//                initprintf("Internal compiler error at %" PRIdPTR " (0x%" PRIxPTR ")\n",i,i);
-//            }
+    //for (i=g_scriptSize-1; i>=0; i--)
+    //{
+    //    if (bitptr[i>>3]&(BITPTR_POINTER<<(i&7)))
+    //    {
+    //        if ((intptr_t)script[i] < (intptr_t)&script[0] || (intptr_t)script[i] >= (intptr_t)&script[g_scriptSize])
+    //        {
+    //            g_numCompilerErrors++;
+    //            initprintf("Internal compiler error at %\" PRIdPTR \" (0x%\" PRIxPTR \")\n",i,i);
+    //        }
 
-//            scriptptrs[i] = 1;
-//            script[i] -= (intptr_t)&script[0];
-//        }
-//        else scriptptrs[i] = 0;
-//    }
+    //        scriptptrs[i] = 1;
+    //        script[i] -= (intptr_t)&script[0];
+    //    }
+    //    else scriptptrs[i] = 0;
+    //}
 
-//    G_Util_PtrToIdx2(&g_tile[0].execPtr, MAXTILES, sizeof(tiledata_t), script, P2I_FWD_NON0);
-//    G_Util_PtrToIdx2(&g_tile[0].loadPtr, MAXTILES, sizeof(tiledata_t), script, P2I_FWD_NON0);
-//    G_Util_PtrToIdx(apScriptGameEvent, MAXGAMEEVENTS, script, P2I_FWD_NON0);
+    //G_Util_PtrToIdx2(g_tile[0].execPtr, MAXTILES, sizeof(tiledata_t), script, P2I_FWD_NON0);
+    //G_Util_PtrToIdx2(g_tile[0].loadPtr, MAXTILES, sizeof(tiledata_t), script, P2I_FWD_NON0);
+    //G_Util_PtrToIdx(apScriptGameEvent, MAXGAMEEVENTS, script, P2I_FWD_NON0);
 
-//    initprintf("Resizing code buffer to %d*%d bytes\n",newsize, (int32_t)sizeof(intptr_t));
+    //initprintf("Resizing code buffer to %d*%d bytes\n",newsize, sizeof(intptr_t));
 
-//    newscript = (intptr_t *)Brealloc(script, newsize * sizeof(intptr_t));
-//    newbitptr = (char *)Bcalloc(1,(((newsize+7)>>3)+1) * sizeof(uint8_t));
+    //newscript = new Int32Array(newsize);//(intptr_t *)Brealloc(script, newsize * sizeof(intptr_t));
+    //newbitptr = new Uint8Array((((newsize+7)>>3)+1));//(char *)Bcalloc(1,(((newsize+7)>>3)+1) * sizeof(uint8_t));
 
-//    if (!newscript || !newbitptr) //maybe check idx???
-//    {
-//        C_ReportError(-1);
-//        initprintf("%s:%d: out of memory: Aborted (%ud)\n",g_szScriptFileName,g_lineNumber,(unsigned)(g_scriptPtr-scriptIdx));
-//        initprintf("%s", tempbuf);
-//        g_numCompilerErrors++;
-//        return 1;
-//    }
+    //if (!newscript || !newbitptr) //maybe check idx???
+    //{
+    //    C_ReportError(-1);
+    //    initprintf("%s:%d: out of memory: Aborted (%ud)\n",g_szScriptFileName,g_lineNumber,(unsigned)(g_scriptPtr-scriptIdx));
+    //    initprintf("%s", tempbuf);
+    //    g_numCompilerErrors++;
+    //    return 1;
+    //}
 
-//    if (newsize >= osize)
-//    {
-//        Bmemset(&newscript[0]+osize,0,(newsize-osize) * sizeof(uint8_t));
-//        Bmemcpy(newbitptr,bitptr,sizeof(uint8_t) *((osize+7)>>3));
-//    }
-//    else
-//        Bmemcpy(newbitptr,bitptr,sizeof(uint8_t) *((newsize+7)>>3));
+    //if (newsize >= osize)
+    //{
+    //    Bmemset(&newscript[0]+osize,0,(newsize-osize) * sizeof(uint8_t));
+    //    Bmemcpy(newbitptr,bitptr,sizeof(uint8_t) *((osize+7)>>3));
+    //}
+    //else
+    //    Bmemcpy(newbitptr,bitptr,sizeof(uint8_t) *((newsize+7)>>3));
 
-//    Bfree(bitptr);
-//    bitptr = newbitptr;
-//    if (script != newscript)
-//    {
-//        initprintf("Relocating compiled code from to 0x%" PRIxPTR " to 0x%" PRIxPTR "\n", (intptr_t)script, (intptr_t)newscript);
-//        script = newscript;
-//    }
+    //Bfree(bitptr);
+    //bitptr = newbitptr;
+    //if (script != newscript)
+    //{
+    //    initprintf("Relocating compiled code from to 0x%\" PRIxPTR \" to 0x%\" PRIxPTR \"\n", (intptr_t)script, (intptr_t)newscript);
+    //    script = newscript;
+    //}
 
-//    g_scriptSize = newsize;
-//    g_scriptPtr = (intptr_t *)(script+oscriptPtr);
+    //g_scriptSize = newsize;
+    //g_scriptPtr = (intptr_t *)(script+oscriptPtr);
 
-//    if (g_caseScriptPtr)
-//        g_caseScriptPtr = (intptr_t *)(script+ocaseScriptPtr);
+    //if (g_caseScriptPtr)
+    //    g_caseScriptPtr = (intptr_t *)(script+ocaseScriptPtr);
 
-//    if (g_parsingEventPtr)
-//        g_parsingEventPtr = (intptr_t *)(script+oparsingEventPtr);
+    //if (g_parsingEventPtr)
+    //    g_parsingEventPtr = (intptr_t *)(script+oparsingEventPtr);
 
-//    if (g_parsingActorPtr)
-//        g_parsingActorPtr = (intptr_t *)(script+oparsingActorPtr);
+    //if (g_parsingActorPtr)
+    //    g_parsingActorPtr = (intptr_t *)(script+oparsingActorPtr);
 
-//    for (i=(((newsize>=osize)?osize:newsize))-1; i>=0; i--)
-//        if (scriptptrs[i])
-//        {
-//            j = (intptr_t)script[i]+(intptr_t)&script[0];
-//            script[i] = j;
-//        }
+    //for (i=(((newsize>=osize)?osize:newsize))-1; i>=0; i--)
+    //    if (scriptptrs[i])
+    //    {
+    //        j = (intptr_t)script[i]+(intptr_t)&script[0];
+    //        script[i] = j;
+    //    }
 
-//    G_Util_PtrToIdx2(&g_tile[0].execPtr, MAXTILES, sizeof(tiledata_t), script, P2I_BACK_NON0);
-//    G_Util_PtrToIdx2(&g_tile[0].loadPtr, MAXTILES, sizeof(tiledata_t), script, P2I_BACK_NON0);
-//    G_Util_PtrToIdx(apScriptGameEvent, MAXGAMEEVENTS, script, P2I_BACK_NON0);
+    //G_Util_PtrToIdx2(&g_tile[0].execPtr, MAXTILES, sizeof(tiledata_t), script, P2I_BACK_NON0);
+    //G_Util_PtrToIdx2(&g_tile[0].loadPtr, MAXTILES, sizeof(tiledata_t), script, P2I_BACK_NON0);
+    //G_Util_PtrToIdx(apScriptGameEvent, MAXGAMEEVENTS, script, P2I_BACK_NON0);
 
-//    Bfree(scriptptrs);
+    //Bfree(scriptptrs);
     return 0;
 }
 
