@@ -128,11 +128,11 @@ function sizeof(obj: any) : number {
         return obj.size;
     }
 
-    if (typeof obj === "string") {
-        return obj.length;
+    if(obj.buffer) {
+        return obj.buffer.byteLength;
     }
-    
-    return obj.buffer.byteLength;
+
+    return obj.length;
 }
 
 function strcat(destination: string, source: string): string {

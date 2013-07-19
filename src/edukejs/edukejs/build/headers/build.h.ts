@@ -379,7 +379,7 @@ function spritetype()
     this.lotag = 0, this.hitag = 0;                      //Tracker(Sprite, uint16_t) 
     this.extra = 0;                             //Tracker(Sprite, int16_t)  
 } //spritetype;
-
+spritetype["size"] = 44;
 ////////////////////// END Version 7 map format ////////////////
 
 //#ifdef NEW_MAP_FORMAT

@@ -1,4 +1,4 @@
-﻿var LOG_TO_CONSOLE = true;
+﻿var LOG_TO_CONSOLE = false;
 var SKIP_ALL_LOGGING = false;
 
 var DEBUG_COMPILE = true;

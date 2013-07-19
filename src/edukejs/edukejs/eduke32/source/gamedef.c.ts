@@ -1626,7 +1626,7 @@ function parse_decimal_number() : number // (textptr)
                    g_szScriptFileName,g_lineNumber);
         g_numCompilerWarnings++;
     }
-    dlog(DEBUG_COMPILE, "parse_decimal_number, %i",  num|0);
+    //dlog(DEBUG_COMPILE, "parse_decimal_number, %i",  num|0);
     return int32(num);
 }
 
@@ -2452,7 +2452,7 @@ function C_InitQuotes(): void
         C_AllocQuote(i);
 
     for (i=MAXQUOTELEN-7; i>=0; i--)
-        if (Bstrncmp(ScriptQuotes[13][i].toString(),"SPACE",5) == 0)
+        if (Bstrncmp(ScriptQuotes[13].subarray(i).toString(),"SPACE",5) == 0)
         {
             var tmp = "";
             tmp += ScriptQuotes[13];
@@ -2532,14 +2532,14 @@ function C_InitQuotes(): void
             "^02%s^02 bled out",
         ];
 
-        g_numObituaries = (sizeof(PlayerObituaries)/sizeof(PlayerObituaries[0]));
+        g_numObituaries = int32(sizeof(PlayerObituaries)/sizeof(PlayerObituaries[0]));
         for (i=g_numObituaries-1; i>=0; i--)
         {
             if (C_AllocQuote(i+OBITQUOTEINDEX))
                 Bstrcpy(ScriptQuotes[i+OBITQUOTEINDEX],PlayerObituaries[i]);
         }
 
-        g_numSelfObituaries = (sizeof(PlayerSelfObituaries)/sizeof(PlayerSelfObituaries[0]));
+        g_numSelfObituaries = int32(sizeof(PlayerSelfObituaries)/sizeof(PlayerSelfObituaries[0]));
         for (i=g_numSelfObituaries-1; i>=0; i--)
         {
             if (C_AllocQuote(i+SUICIDEQUOTEINDEX))
@@ -2573,7 +2573,6 @@ function C_ParseCommand(loop: number): number
         tempscrptr = NULL; // temptextptr = NULL;
         otw = g_lastKeyword;
         
-        console.log("script[3]: %i, g_lineNumber: %i ",script[3],g_lineNumber);
         switch ((g_lastKeyword = tw = C_GetNextKeyword()))
         {
         default:
@@ -3202,7 +3201,6 @@ function C_ParseCommand(loop: number): number
         case CON_ACTOR:
         case CON_USERACTOR:
         case CON_EVENTLOADACTOR:
-            debugger;
             if (g_processingState || g_parsingActorPtr)
             {
                 C_ReportError(ERROR_FOUNDWITHIN);
@@ -6046,7 +6044,6 @@ function C_ParseCommand(loop: number): number
 //            continue;
 
         case CON_ENDA:
-            debugger;
             if (!g_parsingActorPtr)
             {
                 C_ReportError(-1);
@@ -6469,7 +6466,7 @@ function C_Compile(filenam: string) : void
     g_szScriptFileName = filenam;   // JBF 20031130: Store currently compiling file name
     
     C_ParseCommand(1);
-    debugger;
+    
     for (i=0; i < g_scriptModulesNum; ++i)
     {
         C_Include(g_scriptModules[i]);
