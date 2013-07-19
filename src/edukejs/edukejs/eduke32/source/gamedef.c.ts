@@ -169,7 +169,7 @@ var g_totalLines:number,g_lineNumber:number;//int32_t
 
 //#if !defined LUNATIC
 var g_szCurrentBlockName/*[256]*/ = "(none)", g_szLastBlockName/*[256]*/ = "NULL";
-var g_checkingIfElse, g_processingState, g_lastKeyword = -1;//static int32_t 
+var g_checkingIfElse = 0, g_processingState = 0, g_lastKeyword = -1;//static int32_t 
 
 //// The pointer to the start of the case table in a switch statement.
 //// First entry is 'default' code.
@@ -2121,14 +2121,14 @@ function C_Include(confile: string) :  void
     j = kfilelength(fp);
 
     mptr = new Ptr(new Uint8Array(j+1));
-    if (!mptr)
-    {
-        kclose(fp);
-        g_numCompilerErrors++;
-        initprintf("%s:%d: error: could not allocate %d bytes to include `%s'.\n",
-            g_szScriptFileName,g_lineNumber,j,confile);
-        return;
-    }
+    //if (!mptr)
+    //{
+    //    kclose(fp);
+    //    g_numCompilerErrors++;
+    //    initprintf("%s:%d: error: could not allocate %d bytes to include `%s'.\n",
+    //        g_szScriptFileName,g_lineNumber,j,confile);
+    //    return;
+    //}
 
     initprintf("Including: %s (%d bytes)\n",confile, j);
     kread(fp, mptr, j);
@@ -2583,7 +2583,6 @@ function C_ParseCommand(loop: number): number
         case -2:
             return 1; //End
         case CON_STATE:
-            debugger;
             if (!g_parsingActorPtr && g_processingState == 0)
             {
                 C_GetNextLabelName();
@@ -3069,84 +3068,84 @@ function C_ParseCommand(loop: number): number
             C_Include(G_DefaultConFile());
             continue;
 
-//        case CON_AI:
-//            if (g_parsingActorPtr || g_processingState)
-//            {
-//                C_GetNextValue(LABEL_AI);
-//            }
-//            else
-//            {
-//                g_scriptPtr--;
-//                C_GetNextLabelName();
+        case CON_AI:
+            if (g_parsingActorPtr || g_processingState)
+            {
+                C_GetNextValue(LABEL_AI);
+            }
+            else
+            {
+                g_scriptPtr--;
+                C_GetNextLabelName();
 
-//                if (hash_find(h_keywords,label.subarray(g_numLabels<<6).toString())>=0)
-//                {
-//                    g_numCompilerErrors++;
-//                    C_ReportError(ERROR_ISAKEYWORD);
-//                    continue;
-//                }
+                if (hash_find(h_keywords,label.subarray(g_numLabels<<6).toString())>=0)
+                {
+                    g_numCompilerErrors++;
+                    C_ReportError(ERROR_ISAKEYWORD);
+                    continue;
+                }
 
-//                i = hash_find(h_gamevars,label.subarray(g_numLabels<<6).toString());
-//                if (i>=0)
-//                {
-//                    g_numCompilerWarnings++;
-//                    C_ReportError(WARNING_NAMEMATCHESVAR);
-//                }
+                i = hash_find(h_gamevars,label.subarray(g_numLabels<<6).toString());
+                if (i>=0)
+                {
+                    g_numCompilerWarnings++;
+                    C_ReportError(WARNING_NAMEMATCHESVAR);
+                }
 
-//                i = hash_find(h_labels,label.subarray(g_numLabels<<6).toString());
-//                if (i>=0)
-//                {
-//                    g_numCompilerWarnings++;
-//                    initprintf("%s:%d: warning: duplicate ai `%s' ignored.\n",g_szScriptFileName,g_lineNumber,label.subarray(g_numLabels<<6).toString());
-//                }
-//                else
-//                {
-//                    labeltype[g_numLabels] = LABEL_AI;
-//                    hash_add(h_labels,label.subarray(g_numLabels<<6).toString(),g_numLabels,0);
-//                    labelcode[g_numLabels++] = g_scriptPtr-scriptIdx;
-//                }
+                i = hash_find(h_labels,label.subarray(g_numLabels<<6).toString());
+                if (i>=0)
+                {
+                    g_numCompilerWarnings++;
+                    initprintf("%s:%d: warning: duplicate ai `%s' ignored.\n",g_szScriptFileName,g_lineNumber,label.subarray(g_numLabels<<6).toString());
+                }
+                else
+                {
+                    labeltype[g_numLabels] = LABEL_AI;
+                    hash_add(h_labels,label.subarray(g_numLabels<<6).toString(),g_numLabels,0);
+                    labelcode[g_numLabels++] = g_scriptPtr-scriptIdx;
+                }
 
-//                for (j=0; j<3; j++)
-//                {
-//                    if (C_GetKeyword() != -1) break;
-//                    if (j == 1)
-//                        C_GetNextValue(LABEL_ACTION);
-//                    else if (j == 2)
-//                    {
-//                        if ((C_GetNextValue(LABEL_MOVE|LABEL_DEFINE) == 0) && (script[g_scriptPtr-1] != 0) && (script[g_scriptPtr-1] != 1))
-//                        {
-//                            C_ReportError(-1);
-//                            bitptr[(g_scriptPtr-scriptIdx-1)>>3] &= ~(1<<((g_scriptPtr-scriptIdx-1)&7));
-//                            script[g_scriptPtr-1] = 0;
-//                            initprintf("%s:%d: warning: expected a move, found a constant.\n",g_szScriptFileName,g_lineNumber);
-//                            g_numCompilerWarnings++;
-//                        }
-//                        k = 0;
-//                        while (C_GetKeyword() == -1)
-//                        {
-//                            C_GetNextValue(LABEL_DEFINE);
-//                            g_scriptPtr--;
-//                            k |= script[g_scriptPtr];
-//                        }
-//                        bitptr[(g_scriptPtr-scriptIdx)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-scriptIdx)&7));
-//                        script[g_scriptPtr] = k;
-//                        g_scriptPtr++;
-//                        j = 666;
-//                        break;
-//                    }
-//                }
+                for (j=0; j<3; j++)
+                {
+                    if (C_GetKeyword() != -1) break;
+                    if (j == 1)
+                        C_GetNextValue(LABEL_ACTION);
+                    else if (j == 2)
+                    {
+                        if ((C_GetNextValue(LABEL_MOVE|LABEL_DEFINE) == 0) && (script[g_scriptPtr-1] != 0) && (script[g_scriptPtr-1] != 1))
+                        {
+                            C_ReportError(-1);
+                            bitptr[(g_scriptPtr-scriptIdx-1)>>3] &= ~(1<<((g_scriptPtr-scriptIdx-1)&7));
+                            script[g_scriptPtr-1] = 0;
+                            initprintf("%s:%d: warning: expected a move, found a constant.\n",g_szScriptFileName,g_lineNumber);
+                            g_numCompilerWarnings++;
+                        }
+                        k = 0;
+                        while (C_GetKeyword() == -1)
+                        {
+                            C_GetNextValue(LABEL_DEFINE);
+                            g_scriptPtr--;
+                            k |= script[g_scriptPtr];
+                        }
+                        bitptr[(g_scriptPtr-scriptIdx)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-scriptIdx)&7));
+                        script[g_scriptPtr] = k;
+                        g_scriptPtr++;
+                        j = 666;
+                        break;
+                    }
+                }
 
-//                if (j == 666)
-//                    continue;
+                if (j == 666)
+                    continue;
 
-//                for (k=j; k<3; k++)
-//                {
-//                    bitptr[(g_scriptPtr-scriptIdx)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-scriptIdx)&7));
-//                    script[g_scriptPtr] = 0;
-//                    g_scriptPtr++;
-//                }
-//            }
-//            continue;
+                for (k=j; k<3; k++)
+                {
+                    bitptr[(g_scriptPtr-scriptIdx)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-scriptIdx)&7));
+                    script[g_scriptPtr] = 0;
+                    g_scriptPtr++;
+                }
+            }
+            continue;
 
         case CON_ACTION:
             if (g_parsingActorPtr || g_processingState)
@@ -5306,7 +5305,7 @@ function C_ParseCommand(loop: number): number
                     continue;
 
                 tempscrptr = /*(intptr_t *)*/scriptIdx+offset;
-               script[tempscrptr] = /*(intptr_t) */g_scriptPtr;
+                script[tempscrptr] = /*(intptr_t) */g_scriptPtr;
                 bitptr[(tempscrptr-scriptIdx)>>3] |= (BITPTR_POINTER<<((tempscrptr-scriptIdx)&7));
 
                 j = C_GetKeyword();
