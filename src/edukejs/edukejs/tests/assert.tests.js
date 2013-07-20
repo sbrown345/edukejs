@@ -93,6 +93,18 @@ test("memcmp", function () {
     strictEqual(memcmp(new Uint8Array([90, 98]), [98, 99], 2), -1, "buf1 is less than");
 });
 
+test("memcpy", function () {
+    var dest = new Uint8Array(4);
+    var source = new Uint8Array([101,102,103,104]);
+    memcpy(dest.buffer, source.buffer, 4);
+    strictEqual(dest.toString(), new Uint8Array([101,102,103,104]).toString(), "array matches");
+
+    dest = new Uint8Array(4);
+    source = new Uint8Array([101,102,103,104]);
+    memcpy(dest.buffer, source.buffer, 2);
+    strictEqual(dest.toString(), new Uint8Array([101,102]).toString(), "array matches when limited to 2");
+});
+
 test("strcmp", function () {
     strictEqual(strcmp("AA", "AA"), 0, "strings match");
     strictEqual(strcmp("ZZ", "AA"), 1, "first string is greater than second");

@@ -7859,15 +7859,15 @@ function clipmapinfo_init() : void
 //    }
 //}
 
-//#define BANG2RAD (PI/1024.0)
+var BANG2RAD = (PI/1024.0);
 
-//static int32_t loadtables(void)
-//{
-//    static char tablesloaded = 0;
+var tablesloaded = 0;
+function loadtables(): number
+{
 
 //    if (tablesloaded == 0)
 //    {
-//        int32_t i;
+//        var i: number;
 
 //        initksqrt();
 
@@ -7886,7 +7886,7 @@ function clipmapinfo_init() : void
 //        for (i=0; i<640; i++)
 //            radarang[1279-i] = -radarang[i];
 
-//#ifdef B_LITTLE_ENDIAN
+////#ifdef B_LITTLE_ENDIAN
 //        i = 0;
 //        if (crc32once((uint8_t *)sintable, sizeof(sintable)) != 0xee1e7aba)
 //            i |= 1;
@@ -7900,7 +7900,7 @@ function clipmapinfo_init() : void
 //            initprintf("WARNING: Calculated %s differ%s from original!\n",
 //                       str[i-1], i==3 ? "" : "s");
 //        }
-//#endif
+////#endif
 //        // TABLES.DAT format:
 //        //kread(fil,sintable,2048*2);
 //        //kread(fil,radarang,640*2);
@@ -7913,8 +7913,8 @@ function clipmapinfo_init() : void
 //        tablesloaded = 1;
 //    }
 
-//    return 0;
-//}
+    return 0;
+}
 
 
 ////
@@ -8627,12 +8627,12 @@ function preinitengine() : number
 }
 
 
-////
-//// initengine
-////
-//int32_t initengine(void)
-//{
-//    int32_t i, j;
+//
+// initengine
+//
+function initengine(): number
+{
+    var i:number, j:number;
 
 //#if !defined _WIN32 && defined DEBUGGINGAIDS && !defined GEKKO
 //    struct sigaction sigact, oldact;
@@ -8642,11 +8642,11 @@ function preinitengine() : number
 //    sigaction(SIGFPE, &sigact, &oldact);
 //#endif
 
-//    if (!preinitcalled)
-//    {
-//        i = preinitengine();
-//        if (i) return i;
-//    }
+    if (!preinitcalled)
+    {
+        i = preinitengine();
+        if (i) return i;
+    }
 
 //#ifdef YAX_DEBUG
 //    hitickspersec = (double)gethitickspersec();
@@ -8654,9 +8654,9 @@ function preinitengine() : number
 //        hitickspersec = 1.0;
 //#endif
 
-//    if (loadtables())
-//        return 1;
-
+    if (loadtables())
+        return 1;
+    todoThrow();
 //    xyaspect = -1;
 
 //    pskyoff[0] = 0; pskybits = 0;
@@ -8706,8 +8706,8 @@ function preinitengine() : number
 //    }
 //#endif
 
-//    return 0;
-//}
+    return 0;
+}
 
 
 //#define DO_FREE_AND_NULL(var) do { \

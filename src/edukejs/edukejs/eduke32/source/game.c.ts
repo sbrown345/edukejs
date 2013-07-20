@@ -10555,7 +10555,7 @@ function G_CompileScripts() : void
     sector = newStructArray(sectortype, MAXSECTORS);// Bmemset(sector, 0, MAXSECTORS*sizeof(sectortype));
     wall = newStructArray(walltype, MAXWALLS);//Bmemset(wall, 0, MAXWALLS*sizeof(walltype));
 
-    throw "VM_OnEvent(EVENT_INIT, -1, -1, -1, 0)";
+    todo("VM_OnEvent(EVENT_INIT, -1, -1, -1, 0)");
     pathsearchmode = psm;
 //#endif
 }
@@ -10722,16 +10722,17 @@ function G_Startup() : void
     initcrc32table();
 
     G_CompileScripts();
-    throw "todo"
-//    if (initengine())
-//    {
-//        wm_msgbox("Build Engine Initialization Error",
-//                  "There was a problem initializing the Build engine: %s", engineerrstr);
-//        G_Cleanup();
-//        ERRprintf("G_Startup: There was a problem initializing the Build engine: %s\n", engineerrstr);
-//        exit(6);
-//    }
-
+    
+    if (initengine())
+    {
+        todoThrow();
+        //wm_msgbox("Build Engine Initialization Error",
+        //          "There was a problem initializing the Build engine: %s", engineerrstr);
+        //G_Cleanup();
+        //ERRprintf("G_Startup: There was a problem initializing the Build engine: %s\n", engineerrstr);
+        //exit(6);
+    }
+throw "todo"
 //    setbasepaltable(basepaltable, BASEPALCOUNT);
 
 //#ifdef LUNATIC

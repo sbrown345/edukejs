@@ -11,7 +11,9 @@ function todo(reason?) {
 }
 
 function todoThrow(message : string = "") {
-    throw "todo " + message;
+    debugger;
+    console.error("todo \n" + message);
+    throw "!";
 }
 
 // track all temp hardcoded stuff
