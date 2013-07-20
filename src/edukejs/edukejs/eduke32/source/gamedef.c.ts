@@ -6569,7 +6569,6 @@ function C_Compile(filenam: string) : void
         initprintf("\n");
 
         C_InitQuotes();
-        todoThrow()
     }
 }
 

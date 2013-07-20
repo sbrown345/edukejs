@@ -86,6 +86,14 @@ function memcmp(buf1 : Uint8Array, buf2 : Uint8Array, count : number) : number {
     return 0;
 }
 
+function memcpy(destination : ArrayBuffer, source : ArrayBuffer, count : number) : void {
+    var destArray = new Uint8Array(destination);
+    var srcArray = new Uint8Array(source);
+    for (var i = 0; i < count; i++) {
+        destArray[i] = srcArray[i];
+    }
+}
+
 function memset(buffer: ArrayBuffer, startIndex: number, value: number, num: number) : void {
     assert.int32(startIndex).uint8(value).int32(num);
 

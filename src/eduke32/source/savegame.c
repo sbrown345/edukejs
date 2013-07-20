@@ -1603,7 +1603,7 @@ static void sv_quotesave()
 }
 static void sv_quoteload()
 {
-    int32_t i;
+    int32_t i;	
     for (i=0; i<MAXQUOTES; i++)
     {
         if (savegame_quotedef[i>>3]&(1<<(i&7)))

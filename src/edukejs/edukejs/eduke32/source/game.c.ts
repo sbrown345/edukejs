@@ -10527,36 +10527,36 @@ function G_CompileScripts() : void
     pathsearchmode = 1;
 
     C_Compile(G_ConFile());
-    todoThrow();
-    //if (g_loadFromGroupOnly) // g_loadFromGroupOnly is true only when compiling fails and internal defaults are utilized
-    //    C_Compile(G_ConFile());
+    
+    if (g_loadFromGroupOnly) // g_loadFromGroupOnly is true only when compiling fails and internal defaults are utilized
+        C_Compile(G_ConFile());
 
-    //if (uint32(g_numLabels) > MAXSPRITES*sizeof(spritetype)/64)   // see the arithmetic above for why
-    //    G_GameExit("Error: too many labels defined!");
+    if (uint32(g_numLabels) > MAXSPRITES*sizeof(spritetype)/64)   // see the arithmetic above for why
+        G_GameExit("Error: too many labels defined!");
 
-    //{
-    //    char *newlabel;
-    //    int32_t *newlabelcode;
+    {
+        var newlabel: Uint8Array;
+        var newlabelcode: Int32Array;
+        debugger
+        newlabel     = new Uint8Array(g_numLabels<<6);//(char *)Bmalloc(g_numLabels<<6);
+        newlabelcode = new Int32Array(g_numLabels);////(int32_t *)Bmalloc(g_numLabels*sizeof(int32_t));
 
-    //    newlabel     = (char *)Bmalloc(g_numLabels<<6);
-    //    newlabelcode = (int32_t *)Bmalloc(g_numLabels*sizeof(int32_t));
+        //if (!newlabel || !newlabelcode)
+        //    G_GameExit("Error: out of memory retaining labels\n");
 
-    //    if (!newlabel || !newlabelcode)
-    //        G_GameExit("Error: out of memory retaining labels\n");
+        Bmemcpy(newlabel.buffer, label.buffer, g_numLabels*64);
+        Bmemcpy(newlabelcode.buffer, labelcode.buffer, g_numLabels*Int32Array.BYTES_PER_ELEMENT);
 
-    //    Bmemcpy(newlabel, label, g_numLabels*64);
-    //    Bmemcpy(newlabelcode, labelcode, g_numLabels*sizeof(int32_t));
+        label = newlabel;
+        labelcode = newlabelcode;
+    }
 
-    //    label = newlabel;
-    //    labelcode = newlabelcode;
-    //}
+    sprite = newStructArray(spritetype, MAXSPRITES);//Bmemset(sprite, 0, MAXSPRITES*sizeof(spritetype));
+    sector = newStructArray(sectortype, MAXSECTORS);// Bmemset(sector, 0, MAXSECTORS*sizeof(sectortype));
+    wall = newStructArray(walltype, MAXWALLS);//Bmemset(wall, 0, MAXWALLS*sizeof(walltype));
 
-    //Bmemset(sprite, 0, MAXSPRITES*sizeof(spritetype));
-    //Bmemset(sector, 0, MAXSECTORS*sizeof(sectortype));
-    //Bmemset(wall, 0, MAXWALLS*sizeof(walltype));
-
-    //VM_OnEvent(EVENT_INIT, -1, -1, -1, 0);
-    //pathsearchmode = psm;
+    throw "VM_OnEvent(EVENT_INIT, -1, -1, -1, 0)";
+    pathsearchmode = psm;
 //#endif
 }
 

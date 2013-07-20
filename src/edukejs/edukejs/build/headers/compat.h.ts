@@ -614,8 +614,8 @@ var Bstrlen = strlen;
 //# define Bisupper isupper
 //# define Bisdigit isdigit
 var Btoupper = toupper;
-//# define Btolower tolower
-//# define Bmemcpy memcpy
+var Btolower = tolower;
+var Bmemcpy = memcpy;
 //# define Bmemmove memmove
 //# define Bmemchr memchr
 var Bmemset = memset;
