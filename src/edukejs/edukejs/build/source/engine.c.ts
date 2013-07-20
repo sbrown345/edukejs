@@ -225,7 +225,7 @@ var indrawroomsandmasks = 0;//int32_t
 //    268435456, 536870912, 1073741824, 2147483647
 //};
 
-//char britable[16][256]; // JBF 20040207: full 8bit precision
+var britable: Uint8Array[];// [16][256]; // JBF 20040207: full 8bit precision
 
 //extern char textfont[2048], smalltextfont[2048];
 
@@ -7843,21 +7843,21 @@ function clipmapinfo_init() : void
 //}
 
 
-////
-//// loadtables (internal)
-////
-//static inline void calcbritable(void)
-//{
-//    int32_t i,j;
-//    double a,b;
-//    for (i=0; i<16; i++)
-//    {
-//        a = (double)8 / ((double)i+8);
-//        b = (double)255 / pow((double)255,a);
-//        for (j=0; j<256; j++) // JBF 20040207: full 8bit precision
-//            britable[i][j] = (uint8_t)(pow((double)j,a)*b);
-//    }
-//}
+//
+// loadtables (internal)
+//
+function calcbritable()
+{
+    var i: number,j: number; //int
+    var a: number,b: number; //double 
+    for (i=0; i<16; i++)
+    {
+        a = 8 / (i+8);
+        b = 255 / pow(255,a);
+        for (j=0; j<256; j++) // JBF 20040207: full 8bit precision
+            britable[i][j] = (pow(j,a)*b);
+    }
+}
 
 var BANG2RAD = (PI/1024.0);
 
@@ -7865,53 +7865,53 @@ var tablesloaded = 0;
 function loadtables(): number
 {
 
-//    if (tablesloaded == 0)
-//    {
-//        var i: number;
+    if (tablesloaded == 0)
+    {
+        var i: number;
 
-//        initksqrt();
+        initksqrt();
 
-//        for (i=0; i<2048; i++)
-//            reciptable[i] = divscale30(2048, i+2048);
+        for (i=0; i<2048; i++)
+            reciptable[i] = divscale30(2048, i+2048);
 
-//        for (i=0; i<=512; i++)
-//            sintable[i] = (int16_t)(16384*sin(i*BANG2RAD));
-//        for (i=513; i<1024; i++)
-//            sintable[i] = sintable[1024-i];
-//        for (i=1024; i<2048; i++)
-//            sintable[i] = -sintable[i-1024];
+        for (i=0; i<=512; i++)
+            sintable[i] = (int16_t)(16384*sin(i*BANG2RAD));
+        for (i=513; i<1024; i++)
+            sintable[i] = sintable[1024-i];
+        for (i=1024; i<2048; i++)
+            sintable[i] = -sintable[i-1024];
 
-//        for (i=0; i<640; i++)
-//            radarang[i] = (int16_t)(-64*atan((640-0.5-i)/160)/BANG2RAD);
-//        for (i=0; i<640; i++)
-//            radarang[1279-i] = -radarang[i];
+        for (i=0; i<640; i++)
+            radarang[i] = (int16_t)(-64*atan((640-0.5-i)/160)/BANG2RAD);
+        for (i=0; i<640; i++)
+            radarang[1279-i] = -radarang[i];
 
-////#ifdef B_LITTLE_ENDIAN
-//        i = 0;
-//        if (crc32once((uint8_t *)sintable, sizeof(sintable)) != 0xee1e7aba)
-//            i |= 1;
-//        if (crc32once((uint8_t *)radarang, 640*sizeof(radarang[0])) != 0xee893d92)
-//            i |= 2;
+//#ifdef B_LITTLE_ENDIAN
+        i = 0;
+        if (crc32once((uint8_t *)sintable, sizeof(sintable)) != 0xee1e7aba)
+            i |= 1;
+        if (crc32once((uint8_t *)radarang, 640*sizeof(radarang[0])) != 0xee893d92)
+            i |= 2;
 
-//        if (i != 0)
-//        {
-//            static const char *str[3] = { "sine table", "arctangent table",
-//                                          "sine and arctangent tables" };
-//            initprintf("WARNING: Calculated %s differ%s from original!\n",
-//                       str[i-1], i==3 ? "" : "s");
-//        }
-////#endif
-//        // TABLES.DAT format:
-//        //kread(fil,sintable,2048*2);
-//        //kread(fil,radarang,640*2);
-//        //kread(fil,textfont,1024);
-//        //kread(fil,smalltextfont,1024);
-//        //kread(fil,britable,1024);
+        if (i != 0)
+        {
+            static const char *str[3] = { "sine table", "arctangent table",
+                                          "sine and arctangent tables" };
+            initprintf("WARNING: Calculated %s differ%s from original!\n",
+                       str[i-1], i==3 ? "" : "s");
+        }
+//#endif
+        // TABLES.DAT format:
+        //kread(fil,sintable,2048*2);
+        //kread(fil,radarang,640*2);
+        //kread(fil,textfont,1024);
+        //kread(fil,smalltextfont,1024);
+        //kread(fil,britable,1024);
 
-//        calcbritable();
+        calcbritable();
 
-//        tablesloaded = 1;
-//    }
+        tablesloaded = 1;
+    }
 
     return 0;
 }

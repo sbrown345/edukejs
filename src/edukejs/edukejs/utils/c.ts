@@ -66,7 +66,8 @@ function lseek(fileHandle: number, offset: number, origin: number) : void {
 }
 
 var min = Math.min;
-var ma = Math.max;
+var max = Math.max;
+var pow = Math.pow;
 
 function memcmp(buf1 : Uint8Array, buf2 : Uint8Array, count : number) : number {
     for (var i = 0; i < count; i++) {

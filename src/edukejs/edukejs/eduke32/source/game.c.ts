@@ -10537,7 +10537,7 @@ function G_CompileScripts() : void
     {
         var newlabel: Uint8Array;
         var newlabelcode: Int32Array;
-        debugger
+        
         newlabel     = new Uint8Array(g_numLabels<<6);//(char *)Bmalloc(g_numLabels<<6);
         newlabelcode = new Int32Array(g_numLabels);////(int32_t *)Bmalloc(g_numLabels*sizeof(int32_t));
 
