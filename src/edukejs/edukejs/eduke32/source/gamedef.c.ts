@@ -2447,7 +2447,7 @@ function C_AllocQuote(qnum: number) : number
 function C_InitQuotes(): void
 {
     var i:number;
-    debugger;
+    
     for (i=127; i>=0; i--)
         C_AllocQuote(i);
 
@@ -2455,15 +2455,15 @@ function C_InitQuotes(): void
         if (Bstrncmp(ScriptQuotes[13].subarray(i).toString(),"SPACE",5) == 0)
         {
             var tmp = "";
-            tmp += ScriptQuotes[13];
+            tmp += ScriptQuotes[13].subarray(0,i).toString();
             tmp+= "OPEN";
-            tmp+=ScriptQuotes[13][i+5].toString();
+            tmp+=ScriptQuotes[13].subarray(i+5).toString();;
             Bstrncpy(ScriptQuotes[13],tmp,MAXQUOTELEN-1);
             i = MAXQUOTELEN-7;
             //Bmemset(tempbuf.buffer,0,sizeof(tempbuf));
-            //Bstrncpy(tempbuf,ScriptQuotes[13],i);
+            //Bstrncpy(tempbuf,ScriptQuotes[13].toString(),i);
             //Bstrcat(tempbuf,"OPEN");
-            //Bstrcat(tempbuf,ScriptQuotes[13][i+5]);
+            //Bstrcat(tempbuf,ScriptQuotes[13].subarray(i+5).toString());
             //Bstrncpy(ScriptQuotes[13],tempbuf,MAXQUOTELEN-1);
             //i = MAXQUOTELEN-7;
         }
@@ -2532,14 +2532,14 @@ function C_InitQuotes(): void
             "^02%s^02 bled out",
         ];
 
-        g_numObituaries = int32(sizeof(PlayerObituaries)/sizeof(PlayerObituaries[0]));
+        g_numObituaries = PlayerObituaries.length;
         for (i=g_numObituaries-1; i>=0; i--)
         {
             if (C_AllocQuote(i+OBITQUOTEINDEX))
                 Bstrcpy(ScriptQuotes[i+OBITQUOTEINDEX],PlayerObituaries[i]);
         }
 
-        g_numSelfObituaries = int32(sizeof(PlayerSelfObituaries)/sizeof(PlayerSelfObituaries[0]));
+        g_numSelfObituaries = PlayerSelfObituaries.length;
         for (i=g_numSelfObituaries-1; i>=0; i--)
         {
             if (C_AllocQuote(i+SUICIDEQUOTEINDEX))
@@ -6569,6 +6569,7 @@ function C_Compile(filenam: string) : void
         initprintf("\n");
 
         C_InitQuotes();
+        todoThrow()
     }
 }
 
