@@ -62,6 +62,7 @@
     <Content Include="build\headers\compat.h.ts" />
     <Content Include="build\headers\crc32.h.ts" />
     <Content Include="build\headers\duke3d.h.ts" />
+    <Content Include="build\headers\pragmas.h.ts" />
     <Content Include="build\source\baselayer.c.ts" />
     <Content Include="build\source\build.c.ts" />
     <Content Include="build\source\compat.c.ts" />

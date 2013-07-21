@@ -736,7 +736,7 @@ var numsectors, numwalls; //EXTERN int16_t
 //EXTERN char display_mirror;
 /*@type {number}*/ var totalclock;
 //EXTERN int32_t numframes, randomseed;
-//EXTERN int16_t sintable[2048];
+var sintable = new Int16Array(2048);
 //EXTERN uint8_t palette[768];
 //EXTERN int16_t numshades;
 //EXTERN char *palookup[MAXPALOOKUPS];

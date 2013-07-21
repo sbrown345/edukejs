@@ -59,6 +59,10 @@
     <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">u:\SDKs\oggvorbis-win32sdk-1.0.1\include;$(IncludePath)</IncludePath>
     <SourcePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SourcePath)</SourcePath>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>C:\dev\oggvorbis-win32sdk-1.0.1\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\dev\oggvorbis-win32sdk-1.0.1\lib;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <BuildLog>
       <Path>

@@ -120,3 +120,4 @@ obj
 /src/edukejs/edukejs.sln.DotSettings.user
 
 /src/edukejs/edukejs/eduke.js.map
+*.pdb

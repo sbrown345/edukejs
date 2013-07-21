@@ -6,8 +6,10 @@
 /// <reference path="../../build/headers/build.h.ts" />
 /// <reference path="../../build/headers/compat.h.ts" />
 /// <reference path="../../build/headers/duke3d.h.ts" />
+/// <reference path="../../build/headers/pragmas.h.ts" />
 
 /// <reference path="../../build/source/crc32.c.ts" />
+
 
 /**************************************************************************************************
 "POLYMOST" code written by Ken Silverman

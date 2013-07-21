@@ -6,10 +6,11 @@
 /// <reference path="../../build/headers/build.h.ts" />
 /// <reference path="../../build/headers/compat.h.ts" />
 /// <reference path="../../build/headers/duke3d.h.ts" />
+/// <reference path="../../build/headers/pragmas.h.ts" />
 
 /// <reference path="../../build/source/crc32.c.ts" />
 
-// "Build Engine & Tools" Copyright (c) 1993-1997 Ken Silverman
+// "Build Engine & Tools" Copyright (c) 1993-1997 Ken Silverman`
 // Ken Silverman's official web site: "http://www.advsys.net/ken"
 // See the included license file "BUILDLIC.TXT" for license info.
 //
@@ -181,7 +182,7 @@ var indrawroomsandmasks = 0;//int32_t
 //extern "C" {
 //#endif
 //int32_t ebpbak, espbak;
-//int32_t reciptable[2048], fpuasm;
+var reciptable = new Int32Array(2048), fpuasm = 0;
 //intptr_t asm1, asm2, asm3, asm4, palookupoffse[4];
 //uint32_t vplce[4];
 //int32_t vince[4];
@@ -209,9 +210,9 @@ var indrawroomsandmasks = 0;//int32_t
 //static char *artptrs[MAXTILEFILES];
 
 //static int32_t no_radarang2 = 0;
-//static int16_t radarang[1280], radarang2[MAXXDIM];
+var radarang = new Int16Array(1280), radarang2 = new Int16Array(MAXXDIM);
 
-//uint16_t ATTRIBUTE((used)) sqrtable[4096], ATTRIBUTE((used)) shlookup[4096+256];
+var sqrtable = new Uint16Array(4096), shlookup = new Uint16Array(4096+256);
 //const char pow2char[8] = {1,2,4,8,16,32,64,128};
 //const int32_t pow2long[32] =
 //{
@@ -225,7 +226,23 @@ var indrawroomsandmasks = 0;//int32_t
 //    268435456, 536870912, 1073741824, 2147483647
 //};
 
-var britable: Uint8Array[];// [16][256]; // JBF 20040207: full 8bit precision
+var britable = [
+    new Int8Array(256),
+    new Int8Array(256),
+    new Int8Array(256),
+    new Int8Array(256),
+    new Int8Array(256),
+    new Int8Array(256),
+    new Int8Array(256),
+    new Int8Array(256),
+    new Int8Array(256),
+    new Int8Array(256),
+    new Int8Array(256),
+    new Int8Array(256),
+    new Int8Array(256),
+    new Int8Array(256),
+    new Int8Array(256),
+    new Int8Array(256)]; // JBF 20040207: full 8bit precision
 
 //extern char textfont[2048], smalltextfont[2048];
 
@@ -2036,30 +2053,31 @@ function clipmapinfo_init() : void
 //    }
 //}
 
-//static inline int32_t msqrtasm(int32_t c)
-//{
-//    _asm
-//    {
-//        push ebx
-//        mov ecx, c
-//        mov eax, 0x40000000
-//        mov ebx, 0x20000000
-//        begit:
-//        cmp ecx, eax
-//        jl skip
-//        sub ecx, eax
-//        lea eax, [eax+ebx*4]
-//        skip:
-//        sub eax, ebx
-//        shr eax, 1
-//        shr ebx, 2
-//        jnz begit
-//        cmp ecx, eax
-//        sbb eax, -1
-//        shr eax, 1
-//        pop ebx
-//    }
-//}
+function msqrtasm(c: number): number    
+{
+    return Math.sqrt(c) | 0;
+    //_asm
+    //{
+    //    push ebx
+    //    mov ecx, c
+    //    mov eax, 0x40000000
+    //    mov ebx, 0x20000000
+    //    begit:
+    //    cmp ecx, eax
+    //    jl skip
+    //    sub ecx, eax
+    //    lea eax, [eax+ebx*4]
+    //    skip:
+    //    sub eax, ebx
+    //    shr eax, 1
+    //    shr ebx, 2
+    //    jnz begit
+    //    cmp ecx, eax
+    //    sbb eax, -1
+    //    shr eax, 1
+    //    pop ebx
+    //}
+}
 
 ////0x007ff000 is (11<<13), 0x3f800000 is (127<<23)
 //static inline int32_t krecipasm(int32_t a)
@@ -7766,22 +7784,22 @@ function clipmapinfo_init() : void
 //}
 
 
-////
-//// initksqrt (internal)
-////
-//static inline void initksqrt(void)
-//{
-//    int32_t i, j, k;
+//
+// initksqrt (internal)
+//
+function initksqrt() : void
+{
+    var i, j, k;
 
-//    j = 1; k = 0;
-//    for (i=0; i<4096; i++)
-//    {
-//        if (i >= j) { j <<= 2; k++; }
-//        sqrtable[i] = (uint16_t)(msqrtasm((i<<18)+131072)<<1);
-//        shlookup[i] = (k<<1)+((10-k)<<8);
-//        if (i < 256) shlookup[i+4096] = ((k+6)<<1)+((10-(k+6))<<8);
-//    }
-//}
+    j = 1; k = 0;
+    for (i=0; i<4096; i++)
+    {
+        if (i >= j) { j <<= 2; k++; }
+        sqrtable[i] = (msqrtasm((i<<18)+131072)<<1);
+        shlookup[i] = (k<<1)+((10-k)<<8);
+        if (i < 256) shlookup[i+4096] = ((k+6)<<1)+((10-(k+6))<<8);
+    }
+}
 
 
 ////
@@ -7846,14 +7864,14 @@ function clipmapinfo_init() : void
 //
 // loadtables (internal)
 //
-function calcbritable()
+function calcbritable(): void
 {
     var i: number,j: number; //int
     var a: number,b: number; //double 
     for (i=0; i<16; i++)
     {
-        a = 8 / (i+8);
-        b = 255 / pow(255,a);
+        a = (8 / (i+8));
+        b = (255 / pow(255,a));
         for (j=0; j<256; j++) // JBF 20040207: full 8bit precision
             britable[i][j] = (pow(j,a)*b);
     }
@@ -7875,28 +7893,28 @@ function loadtables(): number
             reciptable[i] = divscale30(2048, i+2048);
 
         for (i=0; i<=512; i++)
-            sintable[i] = (int16_t)(16384*sin(i*BANG2RAD));
+            sintable[i] = (16384*sin(i*BANG2RAD));
         for (i=513; i<1024; i++)
             sintable[i] = sintable[1024-i];
         for (i=1024; i<2048; i++)
             sintable[i] = -sintable[i-1024];
 
         for (i=0; i<640; i++)
-            radarang[i] = (int16_t)(-64*atan((640-0.5-i)/160)/BANG2RAD);
+            radarang[i] = (-64*atan((640-0.5-i)/160)/BANG2RAD);
         for (i=0; i<640; i++)
             radarang[1279-i] = -radarang[i];
 
 //#ifdef B_LITTLE_ENDIAN
         i = 0;
-        if (crc32once((uint8_t *)sintable, sizeof(sintable)) != 0xee1e7aba)
+        if (crc32once(new Ptr(new Uint8Array(sintable.buffer)), sizeof(sintable)) != 0xee1e7aba)
             i |= 1;
-        if (crc32once((uint8_t *)radarang, 640*sizeof(radarang[0])) != 0xee893d92)
+        if (crc32once(new Ptr(new Uint8Array(radarang.buffer)), 640 * Int16Array.BYTES_PER_ELEMENT) != 0xee893d92)
             i |= 2;
 
         if (i != 0)
         {
-            static const char *str[3] = { "sine table", "arctangent table",
-                                          "sine and arctangent tables" };
+            var str = [ "sine table", "arctangent table",
+                                          "sine and arctangent tables" ];
             initprintf("WARNING: Calculated %s differ%s from original!\n",
                        str[i-1], i==3 ? "" : "s");
         }
@@ -8653,7 +8671,7 @@ function initengine(): number
 //    if (hitickspersec==0.0)
 //        hitickspersec = 1.0;
 //#endif
-
+debugger;
     if (loadtables())
         return 1;
     todoThrow();

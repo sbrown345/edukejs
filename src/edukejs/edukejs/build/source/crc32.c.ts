@@ -264,11 +264,11 @@ function initcrc32table(): void {
     crc32table[255] = 755167117;
 }
 
-//uint32_t crc32once(uint8_t *blk, uint32_t len)
-//{
-//    uint32_t crc;
+function crc32once(/*uint8_t **/ blk: Ptr, /*uint32_t*/ len: number): number //uint32_t
+{
+    var crc = new Ref(0); // uint32_t
 
-//    crc32init(&crc);
-//    crc32block(&crc, blk, len);
-//    return crc32finish(&crc);
-//}
+    crc32init(crc);
+    crc32block(crc, blk, len);
+    return uint32(crc32finish(crc));
+}

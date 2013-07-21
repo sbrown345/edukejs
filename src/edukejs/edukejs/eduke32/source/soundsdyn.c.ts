@@ -7,6 +7,7 @@
 /// <reference path="../../build/headers/cache1d.h.ts" />
 /// <reference path="../../build/headers/compat.h.ts" />
 /// <reference path="../../build/headers/duke3d.h.ts" />
+/// <reference path="../../build/headers/pragmas.h.ts" />
 
 /// <reference path="../../build/source/baselayer.c.ts" />
 /// <reference path="../../build/source/build.c.ts" />
