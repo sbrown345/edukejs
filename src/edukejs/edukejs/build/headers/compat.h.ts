@@ -370,20 +370,20 @@
 //#endif
 
 //#if B_LITTLE_ENDIAN == 1
-//# define B_LITTLE64(x) (x)
+var B_LITTLE64 = function (x) { return x; };
 //# define B_BIG64(x)    B_SWAP64(x)
 var B_LITTLE32 = function (x) {return x;};
 //# define B_BIG32(x)    B_SWAP32(x)
-//# define B_LITTLE16(x) (x)
+var B_LITTLE16 = function (x) { return x; };
 //# define B_BIG16(x)    B_SWAP16(x)
-//#elif B_BIG_ENDIAN == 1
-//# define B_LITTLE64(x) B_SWAP64(x)
-//# define B_BIG64(x)    (x)
-//# define B_LITTLE32(x) B_SWAP32(x)
-//# define B_BIG32(x)    (x)
-//# define B_LITTLE16(x) B_SWAP16(x)
-//# define B_BIG16(x)    (x)
-//#endif
+//////#elif B_BIG_ENDIAN == 1
+//////# define B_LITTLE64(x) B_SWAP64(x)
+//////# define B_BIG64(x)    (x)
+//////# define B_LITTLE32(x) B_SWAP32(x)
+//////# define B_BIG32(x)    (x)
+//////# define B_LITTLE16(x) B_SWAP16(x)
+//////# define B_BIG16(x)    (x)
+//////#endif
 
 //#ifndef FP_OFF
 //# define FP_OFF(__p) ((uintptr_t)(__p))

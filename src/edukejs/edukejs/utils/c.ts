@@ -98,10 +98,10 @@ function memcpy(destination : ArrayBuffer, source : ArrayBuffer, count : number)
     }
 }
 
-function memset(buffer: ArrayBuffer, startIndex: number, value: number, num: number) : void {
-    assert.int32(startIndex).uint8(value).int32(num);
-
-    var uint8Array = new Uint8Array(buffer);
+function memset(ptr: P, value: number, num: number) : void {
+    assert.uint8(value).int32(num);
+    var startIndex = ptr.idx;
+    var uint8Array = new Uint8Array(ptr.buf);
     for (var i = startIndex; i < num; i++) {
         uint8Array[i] = value;
     }

@@ -37,6 +37,15 @@ class Ptr {
     //buf: ArrayBuffer;
     array: Uint8Array;
     idx: number;
+    view: DataView;
+
+    getInt16() {
+        if (!this.view) {
+            this.view = new DataView(this.array.buffer);
+        }
+
+        return this.view.getInt16(this.idx, true);
+    }
 
     constructor(array: Uint8Array, index: number = 0) {
         //this.buf = array.buffer;

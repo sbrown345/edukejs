@@ -974,6 +974,49 @@ function kread(handle: number, buffer: Ptr, leng : number) : number
     return(0);
 }
 
+function kread16(handle: number) : number
+{
+    var i;
+    var filenum = filehan[handle];
+    var groupnum = filegrp[handle];
+    
+    var buffer = new Ptr(new Uint8Array(2));
+    var leng = 2;
+
+    if (groupnum == 255) todoThrow("return(Bread(filenum,buffer,leng));");
+//#ifdef WITHKPLIB
+//    else if (groupnum == 254)
+//    {
+//        if (kzcurhand != handle)
+//        {
+//            if (kztell() >= 0) { filepos[kzcurhand] = kztell(); kzclose(); }
+//            kzcurhand = handle;
+//            kzipopen(filenamsav[handle]);
+//            kzseek(filepos[handle],SEEK_SET);
+//        }
+//        return(kzread(buffer,leng));
+//    }
+//#endif
+
+    if (groupfil[groupnum] != -1)
+    {
+        i = gfileoffs[groupnum][filenum]+filepos[handle];
+        if (i != groupfilpos[groupnum])
+        {
+            Blseek(groupfil[groupnum],i+((gnumfiles[groupnum]+1)<<4),BSEEK_SET);
+            groupfilpos[groupnum] = i;
+        }
+        leng = min(leng,(gfileoffs[groupnum][filenum+1]-gfileoffs[groupnum][filenum])-filepos[handle]);
+        leng = Bread(groupfil[groupnum],buffer,leng);
+        filepos[handle] += leng;
+        groupfilpos[groupnum] += leng;
+
+        return buffer.getInt16();
+    }
+
+    todoThrow("return(0)");
+}
+
 //int32_t klseek(int32_t handle, int32_t offset, int32_t whence)
 //{
 //    int32_t i, groupnum;

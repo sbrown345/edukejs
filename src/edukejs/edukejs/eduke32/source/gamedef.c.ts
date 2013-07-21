@@ -6360,7 +6360,7 @@ function C_Compile(filenam: string) : void
     var i : number;
     var fs:number,fp:number;
     var startcompiletime : number; //    uint32_t
-    Bmemset(apScriptGameEvent, 0, 0, sizeof(apScriptGameEvent));
+    Bmemset(new P(apScriptGameEvent), 0, sizeof(apScriptGameEvent));
 
     for (i = MAXTILES - 1; i >= 0; i--)
         g_tile[i] = new tiledata_t();

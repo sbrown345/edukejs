@@ -7929,9 +7929,9 @@ static void initfastcolorlookup(int32_t rscale, int32_t gscale, int32_t bscale)
     pal1 = (char *)&palette[768-3];
     for (i=255; i>=0; i--,pal1-=3)
     {
-        j = (pal1[0]>>3)*FASTPALGRIDSIZ*FASTPALGRIDSIZ
-            + (pal1[1]>>3)*FASTPALGRIDSIZ + (pal1[2]>>3)
-            + FASTPALGRIDSIZ*FASTPALGRIDSIZ + FASTPALGRIDSIZ+1;
+        j = (pal1[0]>>3)*8*8
+            + (pal1[1]>>3)*8 + (pal1[2]>>3)
+            + 8*8 + 8+1;
         if (colhere[j>>3]&pow2char[j&7]) colnext[i] = colhead[j]; else colnext[i] = -1;
         colhead[j] = i;
         colhere[j>>3] |= pow2char[j&7];

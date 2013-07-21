@@ -213,7 +213,7 @@ var reciptable = new Int32Array(2048), fpuasm = 0;
 var radarang = new Int16Array(1280), radarang2 = new Int16Array(MAXXDIM);
 
 var sqrtable = new Uint16Array(4096), shlookup = new Uint16Array(4096+256);
-//const char pow2char[8] = {1,2,4,8,16,32,64,128};
+var pow2char = new Int8Array([1,2,4,8,16,32,64,128]);
 //const int32_t pow2long[32] =
 //{
 //    1, 2, 4, 8,
@@ -247,7 +247,7 @@ var britable = [
 //extern char textfont[2048], smalltextfont[2048];
 
 //static char kensmessage[128];
-//const char *engineerrstr = "No error";
+var engineerrstr = "No error";
 
 //int32_t showfirstwall=0;
 //int32_t showheightindicators=2;
@@ -258,7 +258,7 @@ var britable = [
 //qlz_state_compress *state_compress = NULL;
 //qlz_state_decompress *state_decompress = NULL;
 
-//int32_t whitecol;
+var whitecol: number;//int32
 
 //#ifdef POLYMER
 //static int16_t maphacklightcnt=0;
@@ -2345,14 +2345,14 @@ function msqrtasm(c: number): number
 //static int32_t xsi[8], ysi[8], horizycent;
 //static int32_t *horizlookup=0, *horizlookup2=0;
 
-//int32_t globalposx, globalposy, globalposz, globalhoriz;
-//int16_t globalang, globalcursectnum;
-//int32_t globalpal, cosglobalang, singlobalang;
+var globalposx: number, globalposy: number, globalposz: number, globalhoriz: number;    //int32_t 
+var globalang: number, globalcursectnum: number;                        //int16_t 
+var globalpal: number, cosglobalang: number, singlobalang: number; //int32_t 
 //int32_t cosviewingrangeglobalang, sinviewingrangeglobalang;
-//static char *globalpalwritten;
+var globalpalwritten: Int8Array; //static char *
 //static int32_t globaluclip, globaldclip;
-//int32_t globvis, globalvisibility;
-//int32_t globalhisibility, globalpisibility, globalcisibility;
+var globvis: number, globalvisibility: number;                               //int32_t 
+var globalhisibility: number, globalpisibility: number, globalcisibility: number;    //int32_t 
 ////char globparaceilclip, globparaflorclip;
 
 var xyaspect: number;//int32
@@ -2379,19 +2379,19 @@ var xyaspect: number;//int32
 //int32_t ydim16, qsetmode = 0;
 //int16_t pointhighlight=-1, linehighlight=-1, highlightcnt=0;
 //static int32_t lastx[MAXYDIM];
-//static char *transluc;
+var transluc: Int8Array; //static char *
 
 var paletteloaded = 0; //char
 
 //int32_t halfxdim16, midydim16;
 
-//#define FASTPALGRIDSIZ 8
-//static int32_t rdist[129], gdist[129], bdist[129];
-//static char colhere[((FASTPALGRIDSIZ+2)*(FASTPALGRIDSIZ+2)*(FASTPALGRIDSIZ+2))>>3];
-//static char colhead[(FASTPALGRIDSIZ+2)*(FASTPALGRIDSIZ+2)*(FASTPALGRIDSIZ+2)];
-//static int32_t colnext[256];
-//static char coldist[8] = {0,1,2,3,4,3,2,1};
-//static int32_t colscan[27];
+var FASTPALGRIDSIZ=8;
+var rdist = new Int32Array(129), gdist = new Int32Array(129), bdist = new Int32Array(129);
+var  colhere: Int8Array = new Int8Array(((FASTPALGRIDSIZ+2)*(FASTPALGRIDSIZ+2)*(FASTPALGRIDSIZ+2))>>3);     //static char
+var  colhead: Int8Array= new Int8Array((FASTPALGRIDSIZ+2)*(FASTPALGRIDSIZ+2)*(FASTPALGRIDSIZ+2));          //static char
+var colnext = new Int32Array(256);
+var coldist = new Int8Array([0,1,2,3,4,3,2,1]);
+var colscan = new Int32Array(27);
 
 //static int16_t clipnum, hitwalls[4];
 //const int32_t hitscangoalx = (1<<29)-1, hitscangoaly = (1<<29)-1;
@@ -7935,139 +7935,140 @@ function loadtables(): number
 }
 
 
-////
-//// initfastcolorlookup (internal)
-////
-//static void initfastcolorlookup(int32_t rscale, int32_t gscale, int32_t bscale)
-//{
-//    int32_t i, j, x, y, z;
-//    const char *pal1;
+//
+// initfastcolorlookup (internal)
+//
+function initfastcolorlookup(rscale: number, gscale: number, bscale: number): void
+{
+    var i: number, j: number, x: number, y: number, z: number;
+    var pal1: Int8Array;//char
 
-//    j = 0;
-//    for (i=64; i>=0; i--)
-//    {
-//        //j = (i-64)*(i-64);
-//        rdist[i] = rdist[128-i] = j*rscale;
-//        gdist[i] = gdist[128-i] = j*gscale;
-//        bdist[i] = bdist[128-i] = j*bscale;
-//        j += 129-(i<<1);
-//    }
+    j = 0;
+    for (i=64; i>=0; i--)
+    {
+        //j = (i-64)*(i-64);
+        rdist[i] = rdist[128-i] = j*rscale;
+        gdist[i] = gdist[128-i] = j*gscale;
+        bdist[i] = bdist[128-i] = j*bscale;
+        j += 129-(i<<1);
+    }
 
-//    Bmemset(colhere,0,sizeof(colhere));
-//    Bmemset(colhead,0,sizeof(colhead));
+    Bmemset(new P(colhere.buffer),0,sizeof(colhere));
+    Bmemset(new P(colhead.buffer),0,sizeof(colhead));
+    debugger
+    pal1 = palette.subarray(768-3);
+    for (i=255; i>=0; i--,pal1-=3)
+    {
+        j = (pal1[0]>>3)*FASTPALGRIDSIZ*FASTPALGRIDSIZ
+            + (pal1[1]>>3)*FASTPALGRIDSIZ + (pal1[2]>>3)
+            + FASTPALGRIDSIZ*FASTPALGRIDSIZ + FASTPALGRIDSIZ+1;
+        if (colhere[j>>3]&pow2char[j&7]) colnext[i] = colhead[j]; else colnext[i] = -1;
+        colhead[j] = i;
+        colhere[j>>3] |= pow2char[j&7];
+    }
 
-//    pal1 = (char *)&palette[768-3];
-//    for (i=255; i>=0; i--,pal1-=3)
-//    {
-//        j = (pal1[0]>>3)*FASTPALGRIDSIZ*FASTPALGRIDSIZ
-//            + (pal1[1]>>3)*FASTPALGRIDSIZ + (pal1[2]>>3)
-//            + FASTPALGRIDSIZ*FASTPALGRIDSIZ + FASTPALGRIDSIZ+1;
-//        if (colhere[j>>3]&pow2char[j&7]) colnext[i] = colhead[j]; else colnext[i] = -1;
-//        colhead[j] = i;
-//        colhere[j>>3] |= pow2char[j&7];
-//    }
-
-//    i = 0;
-//    for (x=-FASTPALGRIDSIZ*FASTPALGRIDSIZ; x<=FASTPALGRIDSIZ*FASTPALGRIDSIZ; x+=FASTPALGRIDSIZ*FASTPALGRIDSIZ)
-//        for (y=-FASTPALGRIDSIZ; y<=FASTPALGRIDSIZ; y+=FASTPALGRIDSIZ)
-//            for (z=-1; z<=1; z++)
-//                colscan[i++] = x+y+z;
-//    i = colscan[13]; colscan[13] = colscan[26]; colscan[26] = i;
-//}
+    i = 0;
+    for (x=-FASTPALGRIDSIZ*FASTPALGRIDSIZ; x<=FASTPALGRIDSIZ*FASTPALGRIDSIZ; x+=FASTPALGRIDSIZ*FASTPALGRIDSIZ)
+        for (y=-FASTPALGRIDSIZ; y<=FASTPALGRIDSIZ; y+=FASTPALGRIDSIZ)
+            for (z=-1; z<=1; z++)
+                colscan[i++] = x+y+z;
+    i = colscan[13]; colscan[13] = colscan[26]; colscan[26] = i;
+}
 
 
-//static void alloc_palookup(int32_t pal)
-//{
-//#if defined ENGINE_USING_A_C || (defined CLASSIC_NONPOW2_YSIZE_WALLS && defined CLASSIC_NONPOW2_YSIZE_SPRITES)
-//    palookup[pal] = (char *)Bmalloc(numshades*256);
-//#else
-//    // The asm functions vlineasm1, mvlineasm1 (maybe others?) access the next
-//    // palookup[...] shade entry for tilesizy==512 tiles.
-//    // See DEBUG_TILESIZY_512 and the comment in a.nasm: vlineasm1.
-//    palookup[pal] = (char *)Bcalloc(numshades+1, 256);
+function alloc_palookup(pal: number): void
+{
+    //#if defined ENGINE_USING_A_C || (defined CLASSIC_NONPOW2_YSIZE_WALLS && defined CLASSIC_NONPOW2_YSIZE_SPRITES)
+    //    palookup[pal] = (char *)Bmalloc(numshades*256);
+    //#else
+    // The asm functions vlineasm1, mvlineasm1 (maybe others?) access the next
+    // palookup[...] shade entry for tilesizy==512 tiles.
+    // See DEBUG_TILESIZY_512 and the comment in a.nasm: vlineasm1.
+    palookup[pal] = new Int8Array((numshades + 1) * 256); //(char *)Bcalloc(numshades+1, 256);
 //#endif
-//}
+}
 
-//static int32_t loadpalette_err(const char *msg)
-//{
-//    engineerrstr = msg;
-//    initprintf("ERROR: %s\n", engineerrstr);
-//    return -1;
-//}
+function loadpalette_err(msg: string) : number
+{
+    engineerrstr = msg;
+    initprintf("ERROR: %s\n", engineerrstr);
+    return -1;
+}
 
-////
-//// loadpalette (internal)
-////
-//static int32_t loadpalette(void)
-//{
-//    int32_t fil, lamedukep=0;
+//
+// loadpalette (internal)
+//
+function loadpalette(): number
+{
+    var fil: number, lamedukep=0;
+    debugger;
+    if (paletteloaded != 0) return 0;
+    if ((fil = kopen4load("palette.dat",0)) == -1)
+        return loadpalette_err("Failed to load \"palette.dat\"!");
 
-//    if (paletteloaded != 0) return 0;
-//    if ((fil = kopen4load("palette.dat",0)) == -1)
-//        return loadpalette_err("Failed to load \"palette.dat\"!");
+    kread(fil,new Ptr(palette),768);
+    numshades = kread16(fil); numshades = B_LITTLE16(numshades);
 
-//    kread(fil,palette,768);
-//    kread(fil,&numshades,2); numshades = B_LITTLE16(numshades);
+    if (numshades <= 0)
+        return loadpalette_err("Invalid number of shades in \"palette.dat\"!");
+    
+    alloc_palookup(0);
 
-//    if (numshades <= 0)
-//        return loadpalette_err("Invalid number of shades in \"palette.dat\"!");
+    transluc = new Int8Array(256*256);
+    if (palookup[0] == NULL || transluc == NULL)
+        return loadpalette_err("Out of memory in loadpalette()!");
 
-//    alloc_palookup(0);
+    globalpalwritten = palookup[0]; globalpal = 0;
+    todo("setpalookupaddress(globalpalwritten); ?!");
 
-//    transluc = (char *)Bcalloc(256, 256);
-//    if (palookup[0] == NULL || transluc == NULL)
-//        return loadpalette_err("Out of memory in loadpalette()!");
+    todo("fixtransluscence(FP_OFF(transluc));");
 
-//    globalpalwritten = palookup[0]; globalpal = 0;
-//    setpalookupaddress(globalpalwritten);
+    // Auto-detect LameDuke. Its PALETTE.DAT doesn't have a 'numshades' 16-bit
+    // int after the base palette, but starts directly with the shade tables.
+    // Thus, the first two bytes will be 00 01, which is 256 if read as
+    // little-endian int16_t.
+    if (numshades ==  256)
+    {
+        todoThrow();
+        //if (klseek(fil, -2, BSEEK_CUR) < 0)
+        //    return loadpalette_err("klseek() failed in loadpalette()!");
 
-//    fixtransluscence(FP_OFF(transluc));
+        //numshades = 32;
+        //lamedukep = 1;
+    }
 
-//    // Auto-detect LameDuke. Its PALETTE.DAT doesn't have a 'numshades' 16-bit
-//    // int after the base palette, but starts directly with the shade tables.
-//    // Thus, the first two bytes will be 00 01, which is 256 if read as
-//    // little-endian int16_t.
-//    if (numshades ==  256)
-//    {
-//        if (klseek(fil, -2, BSEEK_CUR) < 0)
-//            return loadpalette_err("klseek() failed in loadpalette()!");
+    // Read base shade table (palookup 0).
+    kread(fil, new Ptr(palookup[globalpal]), numshades<<8);
+    
+    // Read translucency (blending) table.
+    if (lamedukep)
+    {
+        todoThrow();/*int32_t i, j;
 
-//        numshades = 32;
-//        lamedukep = 1;
-//    }
+        for (i=0; i<256; i++)
+        {
+            // LameDuke's table doesn't have the last row or column.
+            if (i == 255)
+                continue;
 
-//    // Read base shade table (palookup 0).
-//    kread(fil, palookup[globalpal], numshades<<8);
+            // Read the entries above and on the diagonal, if the table is
+            // thought as being row-major.
+            if (kread(fil, &transluc[256*i + i], 256-i-1) < 0)
+                return loadpalette_err("Failed reading LameDuke translucency table!");
 
-//    // Read translucency (blending) table.
-//    if (lamedukep)
-//    {
-//        int32_t i, j;
+            // Duplicate the entries below the diagonal.
+            for (j=0; j<i; j++)
+                transluc[256*i + j] = transluc[256*j + i];
+        }*/
+    }
+    else
+    {
+        if (kread(fil, new Ptr(transluc), 65536) < 0)
+            return loadpalette_err("Failed reading translucency table!");
+    }
 
-//        for (i=0; i<256; i++)
-//        {
-//            // LameDuke's table doesn't have the last row or column.
-//            if (i == 255)
-//                continue;
-
-//            // Read the entries above and on the diagonal, if the table is
-//            // thought as being row-major.
-//            if (kread(fil, &transluc[256*i + i], 256-i-1) < 0)
-//                return loadpalette_err("Failed reading LameDuke translucency table!");
-
-//            // Duplicate the entries below the diagonal.
-//            for (j=0; j<i; j++)
-//                transluc[256*i + j] = transluc[256*j + i];
-//        }
-//    }
-//    else
-//    {
-//        if (kread(fil, transluc, 65536) < 0)
-//            return loadpalette_err("Failed reading translucency table!");
-//    }
-
-//    kclose(fil);
-
+    kclose(fil);
+    
 //#ifdef DEBUG_TILESIZY_512
 //    {
 //        int32_t i;
@@ -8077,34 +8078,34 @@ function loadtables(): number
 //    }
 //#endif
 
-//    // If Duke3D 1.5 GRP or LameDuke, ...
-//    if (crc32once((uint8_t *)transluc, 65536)==0x94a1fac6 || lamedukep)
-//    {
-//        int32_t i;
-//        // ... fix up translucency table so that transluc(255,x)
-//        // and transluc(x,255) is black instead of purple.
-//        for (i=0; i<256; i++)
-//        {
-//            transluc[(255<<8) + i] = transluc[i];
-//            transluc[255 + (i<<8)] = transluc[i<<8];
-//        }
-//    }
+    // If Duke3D 1.5 GRP or LameDuke, ...
+    if (crc32once(/*(uint8_t *)*/new Ptr(transluc), 65536)==0x94a1fac6 || lamedukep)
+    {
+        var i: number;
+        // ... fix up translucency table so that transluc(255,x)
+        // and transluc(x,255) is black instead of purple.
+        for (i=0; i<256; i++)
+        {
+            transluc[(255<<8) + i] = transluc[i];
+            transluc[255 + (i<<8)] = transluc[i<<8];
+        }
+    }
 
-//    initfastcolorlookup(30, 59, 11);
+    initfastcolorlookup(30, 59, 11);
 
-//    {
-//        int32_t i, j, k = 0;
-//        for (i=0; i<256; i++)
-//        {
-//            j = palette[i*3] + palette[i*3+1] + palette[i*3+2];
-//            if (j > k) { k = j; whitecol = i; }
-//        }
-//    }
+    {
+        var i: number, j: number, k = 0;
+        for (i=0; i<256; i++)
+        {
+            j = palette[i*3] + palette[i*3+1] + palette[i*3+2];
+            if (j > k) { k = j; whitecol = i; }
+        }
+    }
 
-//    paletteloaded = 1;
-
-//    return 0;
-//}
+    paletteloaded = 1;
+    todoThrow();
+    return 0;
+}
 
 
 ////
@@ -8703,7 +8704,7 @@ function initengine(): number
     totalclock = 0;
     g_visibility = 512;
     parallaxvisibility = 512;
-    todoThrow();
+    
     if (loadpalette())
         return 1;
 

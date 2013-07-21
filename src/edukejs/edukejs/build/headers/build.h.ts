@@ -737,9 +737,9 @@ var numsectors, numwalls; //EXTERN int16_t
 /*@type {number}*/ var totalclock;
 //EXTERN int32_t numframes, randomseed;
 var sintable = new Int16Array(2048);
-//EXTERN uint8_t palette[768];
-//EXTERN int16_t numshades;
-//EXTERN char *palookup[MAXPALOOKUPS];
+var palette = new Int8Array(768);
+var numshades;//EXTERN int16_t 
+var palookup: Int8Array[] = new Array(MAXPALOOKUPS); //EXTERN char *
 //EXTERN uint8_t **basepaltableptr;
 var parallaxtype: number, showinvisibility: number; //EXTERN char
 var parallaxyoffs: number, parallaxyscale:number;               //EXTERN int32_t
