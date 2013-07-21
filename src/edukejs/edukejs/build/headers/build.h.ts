@@ -741,18 +741,18 @@ var sintable = new Int16Array(2048);
 //EXTERN int16_t numshades;
 //EXTERN char *palookup[MAXPALOOKUPS];
 //EXTERN uint8_t **basepaltableptr;
-//EXTERN char parallaxtype, showinvisibility;
-//EXTERN int32_t parallaxyoffs, parallaxyscale;
-//EXTERN int32_t g_visibility, parallaxvisibility;
-//EXTERN int32_t g_rotatespriteNoWidescreen;
+var parallaxtype: number, showinvisibility: number; //EXTERN char
+var parallaxyoffs: number, parallaxyscale:number;               //EXTERN int32_t
+var g_visibility: number, parallaxvisibility:number;            //EXTERN int32_t
+var g_rotatespriteNoWidescreen: number;                  //EXTERN int32_t
 
 //EXTERN int32_t windowx1, windowy1, windowx2, windowy2;
 //EXTERN int16_t startumost[MAXXDIM], startdmost[MAXXDIM];
 
 //// original multi-psky handling (only one per map)
-//EXTERN int16_t pskyoff[MAXPSKYTILES], pskybits;
+var pskyoff = new Int16Array(MAXPSKYTILES), pskybits: number;
 //// new multi-psky -- up to MAXPSKYMULTIS
-//EXTERN int16_t pskynummultis;
+var pskynummultis: number; //int16_t 
 //EXTERN int32_t pskymultiyscale[MAXPSKYMULTIS];
 //EXTERN int16_t pskymultilist[MAXPSKYMULTIS], pskymultibits[MAXPSKYMULTIS];
 //EXTERN int16_t pskymultioff[MAXPSKYMULTIS][MAXPSKYTILES];

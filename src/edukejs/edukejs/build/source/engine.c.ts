@@ -135,7 +135,7 @@
 //}
 
 ////void loadvoxel(int32_t voxindex) { UNREFERENCED_PARAMATER(voxindex); }
-//int16_t tiletovox[MAXTILES];
+var tiletovox = new Int16Array(MAXTILES);
 //int32_t usevoxels = 1;
 ////#define kloadvoxel loadvoxel
 
@@ -143,16 +143,16 @@
 //int32_t editorgridextent = 131072;
 
 ////These variables need to be copied into BUILD
-//#define MAXXSIZ 256
-//#define MAXYSIZ 256
-//#define MAXZSIZ 255
-//#define MAXVOXMIPS 5
-//static intptr_t voxoff[MAXVOXELS][MAXVOXMIPS];
-//static char voxlock[MAXVOXELS][MAXVOXMIPS];
-//int32_t voxscale[MAXVOXELS];
+var MAXXSIZ = 256;
+var MAXYSIZ = 256;
+var MAXZSIZ = 255;
+var MAXVOXMIPS = 5;
+var voxoff: Int32Array[] = multiDimArray(Int32Array, MAXVOXELS, MAXVOXMIPS);
+var voxlock: Int8Array[] = multiDimArray(Int8Array, MAXVOXELS, MAXVOXMIPS);
+var voxscale = new Int32Array(MAXVOXELS);
 
 //static int32_t ggxinc[MAXXSIZ+1], ggyinc[MAXXSIZ+1];
-//static int32_t lowrecip[1024], nytooclose, nytoofar;
+var lowrecip = new Int32Array(1024), nytooclose: number, nytoofar: number; //static int32_t 
 //static uint32_t distrecip[65536+256];
 
 //static int32_t *lookups = NULL;
@@ -2355,7 +2355,7 @@ function msqrtasm(c: number): number
 //int32_t globalhisibility, globalpisibility, globalcisibility;
 ////char globparaceilclip, globparaflorclip;
 
-//int32_t xyaspect;
+var xyaspect: number;//int32
 //static int32_t viewingrangerecip;
 
 //static char globalxshift, globalyshift;
@@ -2381,7 +2381,7 @@ function msqrtasm(c: number): number
 //static int32_t lastx[MAXYDIM];
 //static char *transluc;
 
-//static char paletteloaded = 0;
+var paletteloaded = 0; //char
 
 //int32_t halfxdim16, midydim16;
 
@@ -2432,9 +2432,9 @@ function msqrtasm(c: number): number
 //    63,63,63,00
 //};
 
-//int16_t searchit;
-//int32_t searchx = -1, searchy;                          //search input
-//int16_t searchsector, searchwall, searchstat;     //search output
+var searchit: number; //int16_t
+var searchx = -1, searchy: number;                          //search input //int32_t 
+var searchsector: number, searchwall: number, searchstat: number;     //search output //int16_t
 
 //// SEARCHBOTTOMWALL:
 ////   When aiming at a the bottom part of a 2-sided wall whose bottom part
@@ -8671,41 +8671,41 @@ function initengine(): number
 //    if (hitickspersec==0.0)
 //        hitickspersec = 1.0;
 //#endif
-debugger;
+
     if (loadtables())
         return 1;
+    
+    xyaspect = -1;
+
+    pskyoff[0] = 0; pskybits = 0;
+    pskynummultis = 0;
+
+    parallaxtype = 2; parallaxyoffs = 0; parallaxyscale = 65536;
+    showinvisibility = 0;
+
+    for (i=1; i<1024; i++)
+        lowrecip[i] = ((1<<24)-1)/i;
+
+    for (i=0; i<MAXVOXELS; i++)
+        for (j=0; j<MAXVOXMIPS; j++)
+        {
+            voxoff[i][j] = 0;
+            voxlock[i][j] = 200;
+        }
+    for (i=0; i<MAXTILES; i++)
+        tiletovox[i] = -1;
+    clearbuf(new P(voxscale.buffer), sizeof(voxscale)>>2, 65536);
+
+    paletteloaded = 0;
+  
+    searchit = 0; searchstat = -1;
+
+    totalclock = 0;
+    g_visibility = 512;
+    parallaxvisibility = 512;
     todoThrow();
-//    xyaspect = -1;
-
-//    pskyoff[0] = 0; pskybits = 0;
-//    pskynummultis = 0;
-
-//    parallaxtype = 2; parallaxyoffs = 0L; parallaxyscale = 65536;
-//    showinvisibility = 0;
-
-//    for (i=1; i<1024; i++)
-//        lowrecip[i] = ((1<<24)-1)/i;
-
-//    for (i=0; i<MAXVOXELS; i++)
-//        for (j=0; j<MAXVOXMIPS; j++)
-//        {
-//            voxoff[i][j] = 0L;
-//            voxlock[i][j] = 200;
-//        }
-//    for (i=0; i<MAXTILES; i++)
-//        tiletovox[i] = -1;
-//    clearbuf(voxscale, sizeof(voxscale)>>2, 65536);
-
-//    paletteloaded = 0;
-
-//    searchit = 0; searchstat = -1;
-
-//    totalclock = 0;
-//    g_visibility = 512;
-//    parallaxvisibility = 512;
-
-//    if (loadpalette())
-//        return 1;
+    if (loadpalette())
+        return 1;
 
 //#ifdef USE_OPENGL
 //    if (!hicfirstinit) hicinit();

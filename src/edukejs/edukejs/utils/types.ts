@@ -45,6 +45,16 @@ class Ptr {
     }
 }
 
+class P {
+    buf: ArrayBuffer;
+    idx: number;
+
+    constructor(buffer: ArrayBuffer, index: number = 0) {
+        this.buf = buffer;
+        this.idx = index;
+    }
+}
+
 
 class Ref {
     $: any;

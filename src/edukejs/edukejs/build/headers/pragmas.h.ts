@@ -373,6 +373,12 @@ function dmulscale32(input1: number, input2: number, input3: number, input4: num
 //	}
 //}
 
+function clearbuf(d: P, c: number, a: number): void {
+    var p = new Int32Array(d.buf);
+    var i = d.idx;
+    while ((c--) > 0) p[i++] = a;
+}
+
 //static inline void copybuf(void *s, void *d, int32_t c)
 //{
 //	int32_t *p = (int32_t*)s, *q = (int32_t*)d;
