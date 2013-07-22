@@ -52,9 +52,14 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //#define VERSION             "2.0.0devel"
 //#define HEAD2               APPNAME" "VERSION
 
-//#define VOLUMEALL           (g_Shareware == 0)
-//#define PLUTOPAK            (g_scriptVersion == 14)
-//#define VOLUMEONE           (g_Shareware == 1)
+Object.defineProperty(window, 'VOLUMEALL', { get: function () { return g_Shareware == 0; } });
+Object.defineProperty(window, 'PLUTOPAK', { get: function () { return g_scriptVersion == 14; } });
+Object.defineProperty(window, 'VOLUMEONE', { get: function () { return g_Shareware == 1; } });
+interface Window {
+    VOLUMEALL: number;
+    PLUTOPAK: number;
+    VOLUMEONE: number;
+}
 
 //// increase by 3, because atomic GRP adds 1, and Shareware adds 2
 //#define BYTEVERSION_JF      279

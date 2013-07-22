@@ -65,8 +65,8 @@ var myconnectindex: number, numplayers: number;
 //// g_tile: tile-specific data THAT DOES NOT CHANGE during the course of a game
 //G_EXTERN tiledata_t g_tile[MAXTILES];
 //G_EXTERN animwalltype animwall[MAXANIMWALLS];
-var ScriptQuotes: Uint8Array[] = new Array<Uint8Array>(MAXQUOTES),ScriptQuoteRedefinitions: Uint8Array[] = new Array<Uint8Array>(MAXQUOTES); ////G_EXTERN char *
-var label : Uint8Array;//G_EXTERN char *label;
+var ScriptQuotes: Int8Array[] = new Array<Int8Array>(MAXQUOTES),ScriptQuoteRedefinitions: Int8Array[] = new Array<Int8Array>(MAXQUOTES); ////G_EXTERN char *
+var label : Int8Array;//G_EXTERN char *label;
 var EnvMusicFilename: string[] = new Array<string>(MAXVOLUMES+1);//[MAXVOLUMES+1][BMAX_PATH];
 //G_EXTERN char g_RTSPlaying;
 //G_EXTERN int32_t g_musicIndex;
@@ -77,7 +77,7 @@ var g_numSkills : number; // char
 //G_EXTERN char ready2send;
 //G_EXTERN char szPlayerName[32];
 //// XXX: menutextbuf overflow possible?
-var tempbuf = new Uint8Array(MAXSECTORS<<1),packbuf = new Uint8Array(PACKBUF_SIZE),menutextbuf = new Uint8Array(128),buf = new Uint8Array(1024)
+var tempbuf = new Int8Array(MAXSECTORS<<1),packbuf = new Int8Array(PACKBUF_SIZE),menutextbuf = new Int8Array(128),buf = new Int8Array(1024);
 //G_EXTERN char typebuflen,typebuf[141];
 //G_EXTERN input_t avg;
 //G_EXTERN input_t loc;

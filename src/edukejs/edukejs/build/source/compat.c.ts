@@ -170,7 +170,7 @@ function Bstrdup(s : string) : string
 //    return strcpy(dest,src);
 //}
 
-//function Bstrncpy(dest: Uint8Array, src: string, n: number): Uint8Array
+//function Bstrncpy(dest: Int8Array, src: string, n: number): Uint8Array
 //{
 //    return Bstrncpy(dest,src,n);
 //}
@@ -424,7 +424,7 @@ function Bstrcasecmp(s1: string, s2: string): number
 //#endif
 //}
 
-function Bcorrectfilename(/*char **/ filename: Uint8Array,  /*int32_t*/ removefn: number): number
+function Bcorrectfilename(/*char **/ filename: Int8Array,  /*int32_t*/ removefn: number): number
 {
     // don't think this is required
 

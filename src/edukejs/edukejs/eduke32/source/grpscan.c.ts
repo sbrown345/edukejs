@@ -8,6 +8,7 @@
 /// <reference path="../../build/headers/compat.h.ts" />
 /// <reference path="../../build/headers/crc32.h.ts" />
 /// <reference path="../../build/headers/duke3d.h.ts" />
+/// <reference path="../../build/headers/engine_priv.h.ts" />
 /// <reference path="../../build/headers/hightile.h.ts" />
 /// <reference path="../../build/headers/mdsprite.h.ts" />
 /// <reference path="../../build/headers/pragmas.h.ts" />

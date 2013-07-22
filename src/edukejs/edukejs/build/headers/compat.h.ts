@@ -598,7 +598,7 @@ var Bstrcat = strcat;
 //# define Bstrncat strncat
 var Bstrlen = strlen;
 //# define Bstrchr strchr
-//# define Bstrrchr strrchr
+var Bstrrchr = strrchr;
 //// XXX: different across 32- and 64-bit archs (e.g.
 //// parsing the decimal representation of 0xffffffff,
 //// 4294967295 -- long is signed, so strtol would
@@ -623,7 +623,7 @@ var Bmemcmp = memcmp;
 //# define Bscanf scanf
 var Bprintf  = printf;
 //# define Bsscanf sscanf
-var Bsprintf = function (buf: Uint8Array, format: string, ...args: any[]) {
+var Bsprintf = function (buf: Int8Array, format: string, ...args: any[]) {
     args.unshift(format);
     var output = sprintf.apply(this, args);
     var i: number;

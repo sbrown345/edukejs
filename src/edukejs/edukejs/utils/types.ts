@@ -47,6 +47,14 @@ class Ptr {
         return this.view.getInt16(this.idx, true);
     }
 
+    getInt32() {
+        if (!this.view) {
+            this.view = new DataView(this.array.buffer);
+        }
+
+        return this.view.getInt32(this.idx, true);
+    }
+
     constructor(array: Uint8Array, index: number = 0) {
         //this.buf = array.buffer;
         this.array = array;
@@ -82,11 +90,11 @@ class R<T> {
 }
 
 interface String {
-  toUint8Array: () => Uint8Array;
+  toInt8Array: () => Int8Array;
 }
 
-String.prototype.toUint8Array = function () : Uint8Array {
-    var array = new Uint8Array(this.length);
+String.prototype.toInt8Array= function () : Int8Array {
+    var array = new Int8Array(this.length);
     for (var i = 0; i < this.length; i++) {
         array[i] = this.charCodeAt(i);
     }
@@ -94,11 +102,11 @@ String.prototype.toUint8Array = function () : Uint8Array {
     return array;
 }
 
-interface Uint8Array {
+interface Int8Array {
   toString: () => string;
 }
 
-Uint8Array.prototype.toString = function () : string {
+Int8Array.prototype.toString = function () : string {
     var str = "";
     for (var i = 0; i < this.length; i++) {
         if(!this[i]) {

@@ -181,8 +181,8 @@ function strncmp(str1: string, str2: string, num: number) : number {
     return strcmp(str1.substr(0, num), str2.substr(0, num));
 }
 
-function strcpy(destination: Uint8Array, source: string) : Uint8Array {
-    assert.isType(Uint8Array, destination).isString(source);
+function strcpy(destination: Int8Array, source: string) : Uint8Array {
+    assert.isType(Int8Array, destination).isString(source);
 
     for (var i = 0; i < source.length; i++) {
         destination[i] = source.charCodeAt(i);
@@ -191,8 +191,8 @@ function strcpy(destination: Uint8Array, source: string) : Uint8Array {
     return destination;
 }
 
-function strncpy(destination: Uint8Array, source: string, numChars: number) : Uint8Array {
-    assert.isType(Uint8Array, destination).isString(source);
+function strncpy(destination: Int8Array, source: string, numChars: number) : Int8Array {
+    assert.isType(Int8Array, destination).isString(source);
 
     for (var i = 0; i < source.length && i < numChars; i++) {
         destination[i] = source.charCodeAt(i);
@@ -203,7 +203,7 @@ function strncpy(destination: Uint8Array, source: string, numChars: number) : Ui
     return destination;
 }
 
-function strlen(charArray: Uint8Array) : number {
+function strlen(charArray: Int8Array) : number {
     var len = 0;
     for (; len < charArray.length && charArray[len]; len++) {}
     return len;
@@ -211,6 +211,16 @@ function strlen(charArray: Uint8Array) : number {
 
 function strupr(str: string) : string {
     return str.toUpperCase();
+}
+
+function strrchr(str: Int8Array, character: number): Int8Array {
+    for (var i = 0; i < str.length; i++) {
+        if(str[i] === character) {
+            return str.subarray(i);
+        }
+    }
+
+    return null;
 }
 
 function strtoll(str: string, i: number, endptr: R<string>, base: number) : number {

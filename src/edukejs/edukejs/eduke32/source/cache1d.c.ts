@@ -599,10 +599,10 @@ var numgroupfiles = 0; //int32
 var gnumfiles = new Uint32Array(MAXGROUPFILES);
 var groupfil = new Int32Array([-1,-1,-1,-1,-1,-1,-1,-1]); assert.areEqual(MAXGROUPFILES, groupfil.length);
 var groupfilpos = new Int32Array(MAXGROUPFILES);
-var gfilelist = new Array<Uint8Array>(MAXGROUPFILES);
+var gfilelist = new Array<Int8Array>(MAXGROUPFILES);
 var gfileoffs = new Array<Int32Array>(MAXGROUPFILES);
 
-var filegrp = new Uint8Array(MAXOPENFILES);
+var filegrp = new Int8Array(MAXOPENFILES);
 var filepos = new Int32Array(MAXOPENFILES);
 var /*intptr_t */ filehan = new Int32Array( //[MAXOPENFILES] =
 [
@@ -663,7 +663,7 @@ function initgroupfile(filename : string) : number
     {
         groupfilpos[numgroupfiles] = 0;
         Bread(groupfil[numgroupfiles],new Ptr(buf),16);
-        if (Bmemcmp(buf, "KenSilverman".toUint8Array(), 12))
+        if (Bmemcmp(buf, "KenSilverman".toInt8Array(), 12))
         {
             todoThrow();
             //Bclose(groupfil[numgroupfiles]);
@@ -673,7 +673,7 @@ function initgroupfile(filename : string) : number
         gnumfiles[numgroupfiles] = B_LITTLE32(new Int32Array(buf.buffer)[12/Int32Array.BYTES_PER_ELEMENT]);//  **((int32_t *)&buf[12])
         assert.areEqual(456, gnumfiles[numgroupfiles]);
 
-        gfilelist[numgroupfiles] = new Uint8Array(gnumfiles[numgroupfiles]<<4);
+        gfilelist[numgroupfiles] = new Int8Array(gnumfiles[numgroupfiles]<<4);
         gfileoffs[numgroupfiles] = new Int32Array(gnumfiles[numgroupfiles]+1);
 
         Bread(groupfil[numgroupfiles],new Ptr(gfilelist[numgroupfiles]),gnumfiles[numgroupfiles]<<4);
@@ -980,8 +980,8 @@ function kread16(handle: number) : number
     var filenum = filehan[handle];
     var groupnum = filegrp[handle];
     
-    var buffer = new Ptr(new Uint8Array(2));
     var leng = 2;
+    var buffer = new Ptr(new Uint8Array(leng));
 
     if (groupnum == 255) todoThrow("return(Bread(filenum,buffer,leng));");
 //#ifdef WITHKPLIB
@@ -1012,6 +1012,49 @@ function kread16(handle: number) : number
         groupfilpos[groupnum] += leng;
 
         return buffer.getInt16();
+    }
+
+    todoThrow("return(0)");
+}
+
+function kread32(handle: number) : number
+{
+    var i;
+    var filenum = filehan[handle];
+    var groupnum = filegrp[handle];
+    
+    var leng = 4;
+    var buffer = new Ptr(new Uint8Array(leng));
+
+    if (groupnum == 255) todoThrow("return(Bread(filenum,buffer,leng));");
+//#ifdef WITHKPLIB
+//    else if (groupnum == 254)
+//    {
+//        if (kzcurhand != handle)
+//        {
+//            if (kztell() >= 0) { filepos[kzcurhand] = kztell(); kzclose(); }
+//            kzcurhand = handle;
+//            kzipopen(filenamsav[handle]);
+//            kzseek(filepos[handle],SEEK_SET);
+//        }
+//        return(kzread(buffer,leng));
+//    }
+//#endif
+
+    if (groupfil[groupnum] != -1)
+    {
+        i = gfileoffs[groupnum][filenum]+filepos[handle];
+        if (i != groupfilpos[groupnum])
+        {
+            Blseek(groupfil[groupnum],i+((gnumfiles[groupnum]+1)<<4),BSEEK_SET);
+            groupfilpos[groupnum] = i;
+        }
+        leng = min(leng,(gfileoffs[groupnum][filenum+1]-gfileoffs[groupnum][filenum])-filepos[handle]);
+        leng = Bread(groupfil[groupnum],buffer,leng);
+        filepos[handle] += leng;
+        groupfilpos[groupnum] += leng;
+
+        return buffer.getInt32();
     }
 
     todoThrow("return(0)");

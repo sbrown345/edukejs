@@ -766,7 +766,7 @@ var pskynummultis: number; //int16_t
 //EXTERN int16_t prevspritesect[MAXSPRITES], prevspritestat[MAXSPRITES];
 //EXTERN int16_t nextspritesect[MAXSPRITES], nextspritestat[MAXSPRITES];
 
-//EXTERN int16_t tilesizx[MAXTILES], tilesizy[MAXTILES];
+var tilesizx = new Int16Array(MAXTILES), tilesizy = new Int16Array(MAXTILES);
 //EXTERN char picsiz[MAXTILES];
 //EXTERN char walock[MAXTILES];
 //#ifdef __cplusplus
@@ -795,14 +795,20 @@ var pskynummultis: number; //int16_t
 //    PICANM_ANIMSPEED_MASK = 15,  // must be 15
 //};
 
-//// NOTE: If the layout of this struct is changed, loadpics() must be modified
-//// accordingly.
-//typedef struct {
-//    uint8_t num;  // animate number
-//    int8_t xofs, yofs;
-//    uint8_t sf;  // anim. speed and flags
-//} picanm_t;
-//EXTERN picanm_t picanm[MAXTILES];
+// NOTE: If the layout of this struct is changed, loadpics() must be modified
+// accordingly.
+class picanm_t {
+     num: number;  // animate number //uint8_t
+     xofs: number; yofs: number; //int8_t
+     sf: number;  // anim. speed and flags //uint8_t
+
+    constructor() {
+        this.num=0;
+        this.xofs=0;this.yofs=0;
+        this.sf=0;
+    }
+}
+var picanm = newStructArray(picanm_t, MAXTILES);
 //EXTERN intptr_t waloff[MAXTILES];  // stores pointers to cache  -- SA
 
 //EXTERN int32_t windowpos, windowx, windowy;

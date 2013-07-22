@@ -7,6 +7,7 @@
 /// <reference path="../../build/headers/cache1d.h.ts" />
 /// <reference path="../../build/headers/compat.h.ts" />
 /// <reference path="../../build/headers/duke3d.h.ts" />
+/// <reference path="../../build/headers/engine_priv.h.ts" />
 /// <reference path="../../build/headers/hightile.h.ts" />
 /// <reference path="../../build/headers/mdsprite.h.ts" />
 /// <reference path="../../build/headers/pragmas.h.ts" />
@@ -415,7 +416,7 @@ function WinMain(hInst, hPrevInst, lpCmdLine, nCmdShow)
         var quoted = 0, instring = 0, swallownext = 0;
         var p: string,wp: Uint8Array; var i;
         var pIdx: number = 0, wpIdx: number = 0;
-        wp = argvbuf.toUint8Array();
+        wp = argvbuf.toInt8Array();
         for (p=argvbuf; p.charCodeAt(pIdx); pIdx++)
         {
             if (p[pIdx] == ' ')

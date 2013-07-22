@@ -7,6 +7,7 @@
 /// <reference path="../../build/headers/cache1d.h.ts" />
 /// <reference path="../../build/headers/compat.h.ts" />
 /// <reference path="../../build/headers/duke3d.h.ts" />
+/// <reference path="../../build/headers/engine_priv.h.ts" />
 /// <reference path="../../build/headers/hightile.h.ts" />
 /// <reference path="../../build/headers/mdsprite.h.ts" />
 /// <reference path="../../build/headers/pragmas.h.ts" />
@@ -1325,7 +1326,7 @@ function Gv_AddSystemVars() : void
 {
     // only call ONCE
 //#if !defined LUNATIC
-    //var aszBuf =  new Uint8Array(64); // char[64]
+    //var aszBuf =  new Int8Array(64); // char[64]
 //#endif
     var i;
 

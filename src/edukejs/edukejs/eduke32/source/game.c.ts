@@ -7,6 +7,7 @@
 /// <reference path="../../build/headers/cache1d.h.ts" />
 /// <reference path="../../build/headers/compat.h.ts" />
 /// <reference path="../../build/headers/duke3d.h.ts" />
+/// <reference path="../../build/headers/engine_priv.h.ts" />
 /// <reference path="../../build/headers/hightile.h.ts" />
 /// <reference path="../../build/headers/mdsprite.h.ts" />
 /// <reference path="../../build/headers/pragmas.h.ts" />
@@ -156,15 +157,15 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //static int32_t g_noAutoLoad = 0;
 var g_noSound = 0;
 var g_noMusic = 0;
-var CommandMap = NULL; //static const char *
-var CommandName = NULL;//static const char *
+var CommandMap: string = NULL; //static const char *
+var CommandName: string = NULL;//static const char *
 //int32_t g_forceWeaponChoice = 0;
 var g_fakeMultiMode : number = 0;
 
-//char boardfilename[BMAX_PATH] = {0}, currentboardfilename[BMAX_PATH] = {0};
+var boardfilename = new Int8Array(BMAX_PATH), currentboardfilename = new Int8Array(BMAX_PATH);
 
 //static char g_rootDir[BMAX_PATH];
-//char g_modDir[BMAX_PATH] = "/";
+var g_modDir = "/"; //[BMAX_PATH] 
 
 
 var water_pal = new Uint8Array(768),slime_pal = new Uint8Array(768),title_pal = new Uint8Array(768),dre_alms = new Uint8Array(768),ending_pal = new Uint8Array(768);
@@ -188,7 +189,7 @@ var g_gameNamePtr = ""; ////const char *
 //// g_rtsNamePtr can point to an argv[] element
 //const char *g_rtsNamePtr = NULL;
 
-var g_scriptModules: string[]/*Uint8Array[]*/ = null; //char **
+var g_scriptModules: string[]/*Int8Array[]*/ = null; //char **
 var g_scriptModulesNum: number = 0; //int32
 //char **g_defModules = NULL;
 //int32_t g_defModulesNum = 0;
@@ -214,7 +215,7 @@ var g_Shareware = 0;
 //// Ideally, we would look at our memory usage on our most cramped platform and figure out
 //// how much of that is needed for the underlying OS and things like SDL instead of guessing
 //#ifndef GEKKO
-//static int32_t MAXCACHE1DSIZE = (24*1048576);
+var MAXCACHE1DSIZE = (24*1048576);
 //#else
 //static int32_t MAXCACHE1DSIZE = (8*1048576);
 //#endif
@@ -9803,7 +9804,7 @@ function G_CheckCommandLine(argc: number, argv: string[]) : void
 //                    continue;
 //                }
                 if (!Bstrcasecmp(c.substr(1),"map"))
-                {debugger
+                {
                     if (argc > i+1)
                     {
                         CommandMap = argv[i+1];
@@ -10515,13 +10516,13 @@ function G_CompileScripts() : void
     var psm = pathsearchmode;
 
     todo("check this init of labels");
-    label = new Uint8Array(sprite.length * 44);//sprite[0];// (char *)&sprite[0];     // V8: 16384*44/64 = 11264  V7: 4096*44/64 = 2816
+    label = new Int8Array(sprite.length * 44);//sprite[0];// (char *)&sprite[0];     // V8: 16384*44/64 = 11264  V7: 4096*44/64 = 2816
     labelcode = new Int32Array(sector.length * 44 / 4);//sector[0];//(int32_t *)&sector[0]; // V8: 4096*40/4 = 40960    V7: 1024*40/4 = 10240
     labeltype = new Int32Array(wall.length * 32 / 4);//wall[0];//(int32_t *)&wall[0];   // V8: 16384*32/4 = 131072  V7: 8192*32/4 = 65536
 //#endif
 
     if (g_scriptNamePtr)
-        Bcorrectfilename(g_scriptNamePtr.toUint8Array(),0);
+        Bcorrectfilename(g_scriptNamePtr.toInt8Array(),0);
 
 //#if defined LUNATIC
 //    Gv_Init();
@@ -10539,10 +10540,10 @@ function G_CompileScripts() : void
         G_GameExit("Error: too many labels defined!");
 
     {
-        var newlabel: Uint8Array;
+        var newlabel: Int8Array;
         var newlabelcode: Int32Array;
         
-        newlabel     = new Uint8Array(g_numLabels<<6);//(char *)Bmalloc(g_numLabels<<6);
+        newlabel     = new Int8Array(g_numLabels<<6);//(char *)Bmalloc(g_numLabels<<6);
         newlabelcode = new Int32Array(g_numLabels);////(int32_t *)Bmalloc(g_numLabels*sizeof(int32_t));
 
         //if (!newlabel || !newlabelcode)
@@ -10771,29 +10772,29 @@ function G_Startup() : void
 
     if (CommandMap)
     {
-        if (VOLUMEONE)
+        if (window.VOLUMEONE)
         {
             initprintf("The -map option is available in the registered version only!\n");
             boardfilename[0] = 0;
         }
         else
         {
-            char *dot, *slash;
+            var dot: Int8Array, slash: Int8Array;
 
-            boardfilename[0] = '/';
+            boardfilename[0] = '/'.charCodeAt(0);
             boardfilename[1] = 0;
-            Bstrcat(boardfilename, CommandMap);
-
-            dot = Bstrrchr(boardfilename,'.');
-            slash = Bstrrchr(boardfilename,'/');
-            if (!slash) slash = Bstrrchr(boardfilename,'\\');
+            boardfilename = Bstrcat(boardfilename.toString(), CommandMap).toInt8Array();
+   
+            dot = Bstrrchr(boardfilename,'.'.charCodeAt(0));
+            slash = Bstrrchr(boardfilename,'/'.charCodeAt(0));
+            if (!slash) slash = Bstrrchr(boardfilename,'\\'.charCodeAt(0));
 
             if ((!slash && !dot) || (slash && dot < slash))
-                Bstrcat(boardfilename,".map");
+                boardfilename = Bstrcat(boardfilename.toString(),".map").toInt8Array();
 
             Bcorrectfilename(boardfilename,0);
 
-            i = kopen4loadfrommod(boardfilename,0);
+            i = kopen4loadfrommod(boardfilename.toString(),0);
             if (i!=-1)
             {
                 initprintf("Using level: \"%s\".\n",boardfilename);
@@ -10806,9 +10807,10 @@ function G_Startup() : void
             }
         }
     }
-    throw "todo";
-//    if (VOLUMEONE)
-//    {
+    
+    if (window.VOLUMEONE)
+    {
+        todoThrow();
 //        initprintf("*** You have run Duke Nukem 3D %d times. ***\n\n",ud.executions);
 
 //        if (ud.executions >= 50 && !DUKEBETA)
@@ -10839,27 +10841,28 @@ function G_Startup() : void
 //            }
 //#endif
 //        }
-//    }
+    }
 
-//    for (i=0; i<MAXPLAYERS; i++)
-//        g_player[i].pingcnt = 0;
+    for (i=0; i<MAXPLAYERS; i++)
+        g_player[i].pingcnt = 0;
+    
+    if (quitevent)
+    {
+        G_Shutdown();
+        return;
+    }
 
-//    if (quitevent)
-//    {
-//        G_Shutdown();
-//        return;
-//    }
+    Net_GetPackets();
 
-//    Net_GetPackets();
+    if (numplayers > 1)
+        initprintf("Multiplayer initialized.\n");
 
-//    if (numplayers > 1)
-//        initprintf("Multiplayer initialized.\n");
+    {
+        var cwd: string;
 
-//    {
-//        char *cwd;
-
-//        if (g_modDir[0] != '/' && (cwd = getcwd(NULL, 0)))
-//        {
+        if (g_modDir[0] != '/' && todoThrow("(cwd = getcwd(NULL, 0))"))
+        {
+            todoThrow();
 //            chdir(g_modDir);
 ////            initprintf("g_rootDir \"%s\"\nmod \"%s\"\ncwd \"%s\"\n",g_rootDir,mod_dir,cwd);
 //            if (loadpics("tiles000.art",MAXCACHE1DSIZE) < 0)
@@ -10870,11 +10873,11 @@ function G_Startup() : void
 //            }
 //            chdir(cwd);
 //            free(cwd);
-//        }
-//        else if (loadpics("tiles000.art",MAXCACHE1DSIZE) < 0)
-//            G_GameExit("Failed loading art.");
-//    }
-
+        }
+        else if (loadpics("tiles000.art",MAXCACHE1DSIZE) < 0)
+            G_GameExit("Failed loading art.");
+    }
+    throw "todo";
 //    // Make the fullscreen nuke logo background non-fullbright.  Has to be
 //    // after dynamic tile remapping (from C_Compile) and loading tiles.
 //    picanm[LOADSCREEN].sf |= PICANM_NOFULLBRIGHT_BIT;

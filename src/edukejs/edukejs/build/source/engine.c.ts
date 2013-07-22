@@ -6,6 +6,7 @@
 /// <reference path="../../build/headers/build.h.ts" />
 /// <reference path="../../build/headers/compat.h.ts" />
 /// <reference path="../../build/headers/duke3d.h.ts" />
+/// <reference path="../../build/headers/engine_priv.h.ts" />
 /// <reference path="../../build/headers/hightile.h.ts" />
 /// <reference path="../../build/headers/mdsprite.h.ts" />
 /// <reference path="../../build/headers/pragmas.h.ts" />
@@ -201,13 +202,13 @@ var reciptable = new Int32Array(2048), fpuasm = 0;
 //palette_t palookupfog[MAXPALOOKUPS];
 //#endif
 
-//static int32_t artversion;
+var artversion: number;//int32
 //static void *pic = NULL;
 //static char tilefilenum[MAXTILES];
 //static int32_t tilefileoffs[MAXTILES];
 //static int32_t lastageclock;
 
-//static int32_t artsize = 0, cachesize = 0;
+var artsize = 0, cachesize = 0;
 
 //// Whole ART file contents loaded from ZIPs in memory.
 //static char *artptrs[MAXTILEFILES];
@@ -2450,7 +2451,7 @@ var searchsector: number, searchwall: number, searchstat: number;     //search o
 
 //double msens = 1.0;
 
-//static char artfilename[20];
+var artfilename = "";
 //static int32_t artfil = -1, artfilnum, artfilplc;
 
 //char inpreparemirror = 0;
@@ -11025,92 +11026,92 @@ function initengine(): number
 //    return (waloff[picnum] != 0 && tilesizx[picnum] > 0 && tilesizy[picnum] > 0);
 //}
 
-////
-//// loadpics
-////
-//int32_t loadpics(const char *filename, int32_t askedsize)
-//{
-//    int32_t i, tilefilei;
+//
+// loadpics
+//
+function loadpics(filename: string, askedsize: number): number
+{
+    var i:number, tilefilei:number;
 
-//    Bstrncpyz(artfilename, filename, sizeof(artfilename));
+    artfilename = filename;//Bstrncpyz(artfilename, filename, sizeof(artfilename));
 
-//    Bmemset(tilesizx, 0, sizeof(tilesizx));
-//    Bmemset(tilesizy, 0, sizeof(tilesizy));
-//    Bmemset(picanm, 0, sizeof(picanm));
+    Bmemset(new P(tilesizx.buffer), 0, sizeof(tilesizx));
+    Bmemset(new P(tilesizy.buffer), 0, sizeof(tilesizy));
+    memsetStruct(picanm, picanm_t, 0, sizeof(picanm));
 
-//    artsize = 0;
+    artsize = 0;
 
-//    for (tilefilei=0; tilefilei<MAXTILEFILES; tilefilei++)
-//    {
-//        int32_t fil;
+    for (tilefilei=0; tilefilei<MAXTILEFILES; tilefilei++)
+    {
+        var fil: number;
 
-//        artfilename[7] = (tilefilei%10)+48;
-//        artfilename[6] = ((tilefilei/10)%10)+48;
-//        artfilename[5] = ((tilefilei/100)%10)+48;
+        artfilename[7] = (tilefilei%10)+48;
+        artfilename[6] = ((tilefilei/10)%10)+48;
+        artfilename[5] = ((tilefilei/100)%10)+48;
 
-//        if ((fil = kopen4load(artfilename,0)) != -1)
-//        {
-//            int32_t localtilestart, localtileend, localnumtiles;
-//            int32_t offscount, numtiles_dummy;
+        if ((fil = kopen4load(artfilename,0)) != -1)
+        {
+            var localtilestart: number, localtileend: number, localnumtiles: number;
+            var offscount: number, numtiles_dummy: number;
 
-//            kread(fil,&artversion,4); artversion = B_LITTLE32(artversion);
-//            if (artversion != 1)
-//            {
-//                initprintf("loadpics: Invalid art file version in %s\n", artfilename);
-//                kclose(fil);
-//                continue;
-//            }
+            artversion = kread32(fil); artversion = B_LITTLE32(artversion);
+            if (artversion != 1)
+            {
+                initprintf("loadpics: Invalid art file version in %s\n", artfilename);
+                kclose(fil);
+                continue;
+            }
 
-//            kread(fil,&numtiles_dummy,4);
-//            kread(fil,&localtilestart,4); localtilestart = B_LITTLE32(localtilestart);
-//            kread(fil,&localtileend,4);   localtileend   = B_LITTLE32(localtileend);
+            numtiles_dummy = kread32(fil);
+            localtilestart = kread32(fil); localtilestart = B_LITTLE32(localtilestart);
+            localtileend = kread32(fil);   localtileend   = B_LITTLE32(localtileend);
 
-//            if ((uint32_t)localtilestart >= MAXTILES || (uint32_t)localtileend >= MAXTILES)
-//            {
-//                initprintf("loadpics: Invalid localtilestart or localtileend in %s\n", artfilename);
-//                kclose(fil);
-//                continue;
-//            }
-//            if (localtileend <= localtilestart)
-//            {
-//                initprintf("loadpics: localtileend <= localtilestart in %s\n", artfilename);
-//                kclose(fil);
-//                continue;
-//            }
+            if (uint32(localtilestart) >= MAXTILES || uint32(localtileend) >= MAXTILES)
+            {
+                initprintf("loadpics: Invalid localtilestart or localtileend in %s\n", artfilename);
+                kclose(fil);
+                continue;
+            }
+            if (localtileend <= localtilestart)
+            {
+                initprintf("loadpics: localtileend <= localtilestart in %s\n", artfilename);
+                kclose(fil);
+                continue;
+            }
 
-//            localnumtiles = (localtileend-localtilestart+1);
+            localnumtiles = (localtileend-localtilestart+1);
 
-//            kread(fil,&tilesizx[localtilestart], localnumtiles<<1);
-//            kread(fil,&tilesizy[localtilestart], localnumtiles<<1);
-//            kread(fil,&picanm[localtilestart], localnumtiles<<2);
+            kread(fil,new Ptr(tilesizx.subarray(localtilestart)), localnumtiles<<1);
+            kread(fil,new Ptr(tilesizy.subarray(localtilestart)), localnumtiles<<1);
+            throw "todo";//kread(fil,new Ptr(picanm.subarray(localtilestart)), localnumtiles<<2);
+            
+            //for (i=localtilestart; i<=localtileend; i++)
+            //{
+            //    tilesizx[i] = B_LITTLE16(tilesizx[i]);
+            //    tilesizy[i] = B_LITTLE16(tilesizy[i]);
 
-//            for (i=localtilestart; i<=localtileend; i++)
-//            {
-//                tilesizx[i] = B_LITTLE16(tilesizx[i]);
-//                tilesizy[i] = B_LITTLE16(tilesizy[i]);
+            //    Bassert(sizeof(picanm_t)==4);
+            //    Bassert(PICANM_ANIMTYPE_MASK == 192);
+            //    // Old on-disk format: anim type is in the 2 highest bits of the lowest byte.
+            //    picanm[i].sf &= ~192;
+            //    picanm[i].sf |= picanm[i].num&192;
+            //    picanm[i].num &= ~192;
 
-//                Bassert(sizeof(picanm_t)==4);
-//                Bassert(PICANM_ANIMTYPE_MASK == 192);
-//                // Old on-disk format: anim type is in the 2 highest bits of the lowest byte.
-//                picanm[i].sf &= ~192;
-//                picanm[i].sf |= picanm[i].num&192;
-//                picanm[i].num &= ~192;
+            //    // don't allow setting texhitscan/nofullbright from ART (yet?)
+            //    picanm[i].sf &= ~PICANM_MISC_MASK;
+            //}
 
-//                // don't allow setting texhitscan/nofullbright from ART (yet?)
-//                picanm[i].sf &= ~PICANM_MISC_MASK;
-//            }
+            //offscount = 4+4+4+4+(localnumtiles<<3);
+            //for (i=localtilestart; i<=localtileend; i++)
+            //{
+            //    var dasiz = tilesizx[i]*tilesizy[i];
 
-//            offscount = 4+4+4+4+(localnumtiles<<3);
-//            for (i=localtilestart; i<=localtileend; i++)
-//            {
-//                int32_t dasiz = tilesizx[i]*tilesizy[i];
+            //    tilefilenum[i] = tilefilei;
+            //    tilefileoffs[i] = offscount;
 
-//                tilefilenum[i] = tilefilei;
-//                tilefileoffs[i] = offscount;
-
-//                offscount += dasiz;
-//                artsize += ((dasiz+15)&0xfffffff0);
-//            }
+            //    offscount += dasiz;
+            //    artsize += ((dasiz+15)&0xfffffff0);
+            //}
 
 //#ifdef WITHKPLIB
 //            if (cache1d_file_fromzip(fil)) // from zip
@@ -11121,34 +11122,34 @@ function initengine(): number
 //                kread(fil, artptrs[tilefilei], i);
 //            }
 //#endif
-//            kclose(fil);
-//        }
-//    }
+            kclose(fil);
+        }
+    }
+    todoThrow()
+    //Bmemset(gotpic, 0, sizeof(gotpic));
 
-//    Bmemset(gotpic, 0, sizeof(gotpic));
+    ////cachesize = min((int32_t)((Bgetsysmemsize()/100)*60),max(artsize,askedsize));
+    //if (Bgetsysmemsize() <= (uint32_t)askedsize)
+    //    cachesize = (Bgetsysmemsize()/100)*60;
+    //else
+    //    cachesize = askedsize;
 
-//    //cachesize = min((int32_t)((Bgetsysmemsize()/100)*60),max(artsize,askedsize));
-//    if (Bgetsysmemsize() <= (uint32_t)askedsize)
-//        cachesize = (Bgetsysmemsize()/100)*60;
-//    else
-//        cachesize = askedsize;
+    //while ((pic = Bmalloc(cachesize)) == NULL)
+    //{
+    //    cachesize -= 65536;
+    //    if (cachesize < 65536) return(-1);
+    //}
+    //initcache((intptr_t)pic, cachesize);
 
-//    while ((pic = Bmalloc(cachesize)) == NULL)
-//    {
-//        cachesize -= 65536;
-//        if (cachesize < 65536) return(-1);
-//    }
-//    initcache((intptr_t)pic, cachesize);
+    //for (i=0; i<MAXTILES; i++)
+    //    set_picsiz(i);
 
-//    for (i=0; i<MAXTILES; i++)
-//        set_picsiz(i);
+    //artfil = -1;
+    //artfilnum = -1;
+    //artfilplc = 0L;
 
-//    artfil = -1;
-//    artfilnum = -1;
-//    artfilplc = 0L;
-
-//    return(0);
-//}
+    return(0);
+}
 
 
 ////
