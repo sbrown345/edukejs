@@ -59,6 +59,11 @@ class Ptr {
         //this.buf = array.buffer;
         this.array = array;
         this.idx = index;
+
+        if (array.BYTES_PER_ELEMENT !== 1) {
+             throw "must be uint8 array (instance of didnt' work!!";
+        }
+
     }
 }
 

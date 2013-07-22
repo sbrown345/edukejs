@@ -2451,7 +2451,7 @@ var searchsector: number, searchwall: number, searchstat: number;     //search o
 
 //double msens = 1.0;
 
-var artfilename = "";
+var artfilename = new Int8Array(20);
 //static int32_t artfil = -1, artfilnum, artfilplc;
 
 //char inpreparemirror = 0;
@@ -8711,7 +8711,7 @@ function initengine(): number
     
     if (loadpalette())
         return 1;
-    debugger
+ 
 //#ifdef USE_OPENGL
     if (!hicfirstinit) hicinit();
     if (!mdinited) mdinit();
@@ -11032,8 +11032,8 @@ function initengine(): number
 function loadpics(filename: string, askedsize: number): number
 {
     var i:number, tilefilei:number;
-
-    artfilename = filename;//Bstrncpyz(artfilename, filename, sizeof(artfilename));
+   
+    Bstrncpyz(artfilename, filename, sizeof(artfilename));
 
     Bmemset(new P(tilesizx.buffer), 0, sizeof(tilesizx));
     Bmemset(new P(tilesizy.buffer), 0, sizeof(tilesizy));
@@ -11049,7 +11049,7 @@ function loadpics(filename: string, askedsize: number): number
         artfilename[6] = ((tilefilei/10)%10)+48;
         artfilename[5] = ((tilefilei/100)%10)+48;
 
-        if ((fil = kopen4load(artfilename,0)) != -1)
+        if ((fil = kopen4load(artfilename.toString(),0)) != -1)
         {
             var localtilestart: number, localtileend: number, localnumtiles: number;
             var offscount: number, numtiles_dummy: number;
@@ -11081,10 +11081,16 @@ function loadpics(filename: string, askedsize: number): number
 
             localnumtiles = (localtileend-localtilestart+1);
 
-            kread(fil,new Ptr(tilesizx.subarray(localtilestart)), localnumtiles<<1);
-            kread(fil,new Ptr(tilesizy.subarray(localtilestart)), localnumtiles<<1);
-            throw "todo";//kread(fil,new Ptr(picanm.subarray(localtilestart)), localnumtiles<<2);
-            
+            kread(fil,new Ptr(new Uint8Array(tilesizx.subarray(localtilestart).buffer)), localnumtiles<<1);
+            kread(fil,new Ptr(new Uint8Array(tilesizy.subarray(localtilestart).buffer)), localnumtiles<<1);
+             debugger
+            var picanmArray = new Uint8Array(localnumtiles<<2);
+            kread(fil,new Ptr(picanmArray), localnumtiles<<2);
+            for (var j = 0; j < picanm.length; j++) {
+                picanm[j].setProps(picanmArray.buffer, j);
+            }
+
+             throw "todo";
             //for (i=localtilestart; i<=localtileend; i++)
             //{
             //    tilesizx[i] = B_LITTLE16(tilesizx[i]);

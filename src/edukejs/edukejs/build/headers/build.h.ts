@@ -801,14 +801,24 @@ class picanm_t {
      num: number;  // animate number //uint8_t
      xofs: number; yofs: number; //int8_t
      sf: number;  // anim. speed and flags //uint8_t
+     size: number;
+
+    setProps(ab: ArrayBuffer, offsetIndex: number) {
+        var dv = new DataView(ab, offsetIndex * this.size);
+        this.num = dv.getUint8(0);
+        this.xofs = dv.getInt8(1);
+        this.yofs = dv.getInt8(2);
+        this.sf = dv.getUint8(3);
+    }
 
     constructor() {
         this.num=0;
         this.xofs=0;this.yofs=0;
         this.sf=0;
-    }
+        this.size = 4;
+    }      
 }
-var picanm = newStructArray(picanm_t, MAXTILES);
+var picanm: picanm_t[] = newStructArray(picanm_t, MAXTILES);
 //EXTERN intptr_t waloff[MAXTILES];  // stores pointers to cache  -- SA
 
 //EXTERN int32_t windowpos, windowx, windowy;

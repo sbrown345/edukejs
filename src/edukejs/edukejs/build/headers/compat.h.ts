@@ -711,13 +711,13 @@ var Bsprintf = function (buf: Int8Array, format: string, ...args: any[]) {
 //char *Bstrupr(char *);
 //#endif
 
-//// Copy min(strlen(src)+1, n) characters into dst, always terminate with a NUL.
-//static inline char *Bstrncpyz(char *dst, const char *src, bsize_t n)
-//{
-//    Bstrncpy(dst, src, n);
-//    dst[n-1] = 0;
-//    return dst;
-//}
+// Copy min(strlen(src)+1, n) characters into dst, always terminate with a NUL.
+function Bstrncpyz(dst: Int8Array, src: string, n: number): Int8Array
+{
+    Bstrncpy(dst, src, n);
+    dst[n-1] = 0;
+    return dst;
+}
 
 //// Append extension when <outbuf> contains no dot.
 //// <ext> can be like ".mhk" or like "_crash.map", no need to start with a dot.
