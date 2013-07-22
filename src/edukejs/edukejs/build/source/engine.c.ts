@@ -6,9 +6,12 @@
 /// <reference path="../../build/headers/build.h.ts" />
 /// <reference path="../../build/headers/compat.h.ts" />
 /// <reference path="../../build/headers/duke3d.h.ts" />
+/// <reference path="../../build/headers/hightile.h.ts" />
+/// <reference path="../../build/headers/mdsprite.h.ts" />
 /// <reference path="../../build/headers/pragmas.h.ts" />
 
 /// <reference path="../../build/source/crc32.c.ts" />
+/// <reference path="../../build/source/mdsprite.c.ts" />
 
 // "Build Engine & Tools" Copyright (c) 1993-1997 Ken Silverman`
 // Ken Silverman's official web site: "http://www.advsys.net/ken"
@@ -2466,7 +2469,7 @@ var searchsector: number, searchwall: number, searchstat: number;     //search o
 //char apptitle[256] = "Build Engine";
 
 //static uint8_t basepalreset=1;
-//uint8_t basepalcount;
+var basepalcount: number; //uint8_t 
 //uint8_t curbasepal;
 
 //static uint32_t g_lastpalettesum = 0;
@@ -7955,7 +7958,7 @@ function initfastcolorlookup(rscale: number, gscale: number, bscale: number): vo
 
     Bmemset(new P(colhere.buffer),0,sizeof(colhere));
     Bmemset(new P(colhead.buffer),0,sizeof(colhead));
-    debugger
+
     pal1 = palette.subarray(768-3);
     for (i=255; i>=0; i--,pal1-=3)
     {
@@ -8001,7 +8004,7 @@ function loadpalette_err(msg: string) : number
 function loadpalette(): number
 {
     var fil: number, lamedukep=0;
-    debugger;
+  
     if (paletteloaded != 0) return 0;
     if ((fil = kopen4load("palette.dat",0)) == -1)
         return loadpalette_err("Failed to load \"palette.dat\"!");
@@ -8103,7 +8106,7 @@ function loadpalette(): number
     }
 
     paletteloaded = 1;
-    todoThrow();
+
     return 0;
 }
 
@@ -8548,7 +8551,7 @@ var preinitcalled = 0; // int32_t
 
 //#ifndef DYNALLOC_ARRAYS
 //# if !defined DEBUG_MAIN_ARRAYS
-var spriteext_s = newStructArray(spriteext_t, MAXSPRITES + MAXUNIQHUDID);
+var spriteext_s /*: spriteext_t[] todo: convert to typescript classes*/ = newStructArray(spriteext_t, MAXSPRITES + MAXUNIQHUDID); 
 var spritesmooth_s = newStructArray(spritesmooth_t, MAXSPRITES + MAXUNIQHUDID);
 var sector_s = newStructArray(sectortype, MAXSECTORS + M32_FIXME_SECTORS); 
 var wall_s = newStructArray(walltype, MAXWALLS + M32_FIXME_WALLS);
@@ -8707,10 +8710,10 @@ function initengine(): number
     
     if (loadpalette())
         return 1;
-
+    debugger
 //#ifdef USE_OPENGL
-//    if (!hicfirstinit) hicinit();
-//    if (!mdinited) mdinit();
+    if (!hicfirstinit) hicinit();
+    if (!mdinited) mdinit();
 //#endif
 
 //#ifdef LUNATIC
@@ -14391,17 +14394,17 @@ function initengine(): number
 //#endif
 //}
 
-////
-//// setbasepaltable
-////
-//void setbasepaltable(uint8_t **thebasepaltable, uint8_t thebasepalcount)
-//{
-//    if (thebasepalcount >= MAXBASEPALS)
-//        thebasepalcount = MAXBASEPALS - 1;
+//
+// setbasepaltable
+//
+function setbasepaltable(/*uint8_t ***/thebasepaltable: Uint8Array[], /*uint8_t */thebasepalcount: number): void
+{
+    if (thebasepalcount >= MAXBASEPALS)
+        thebasepalcount = MAXBASEPALS - 1;
 
-//    basepaltableptr = thebasepaltable;
-//    basepalcount = thebasepalcount;
-//}
+    basepaltableptr = thebasepaltable;
+    basepalcount = thebasepalcount;
+}
 
 ////
 //// setbrightness

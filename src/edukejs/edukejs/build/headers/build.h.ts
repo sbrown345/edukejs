@@ -740,7 +740,7 @@ var sintable = new Int16Array(2048);
 var palette = new Int8Array(768);
 var numshades;//EXTERN int16_t 
 var palookup: Int8Array[] = new Array(MAXPALOOKUPS); //EXTERN char *
-//EXTERN uint8_t **basepaltableptr;
+var basepaltableptr: Uint8Array[]; //EXTERN uint8_t **
 var parallaxtype: number, showinvisibility: number; //EXTERN char
 var parallaxyoffs: number, parallaxyscale:number;               //EXTERN int32_t
 var g_visibility: number, parallaxvisibility:number;            //EXTERN int32_t
@@ -846,9 +846,19 @@ var pskynummultis: number; //int16_t
 //extern void faketimerhandler(void);
 
 //extern char apptitle[256];
-//typedef struct {
-//    char r,g,b,f;
-//} palette_t;
+class palette_t {
+    r: number;
+    g: number;
+    b: number;
+    f: number;
+
+    constructor() {
+        this.r = 0;
+        this.g = 0;
+        this.b = 0;
+        this.f = 0;
+    }
+}
 //extern palette_t curpalette[256], curpalettefaded[256], palfadergb;
 //extern char palfadedelta;
 
@@ -1304,7 +1314,7 @@ var pskynummultis: number; //int16_t
 
 //# define EXTRATILES (MAXTILES/8)
 
-//EXTERN int32_t mdinited;
+var mdinited: number; //EXTERN int32_t 
 //EXTERN tile2model_t tile2model[MAXTILES+EXTRATILES];
 
 //static inline int32_t md_tilehasmodel(int32_t tilenume,int32_t pal)

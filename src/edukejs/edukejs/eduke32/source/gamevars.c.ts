@@ -7,6 +7,8 @@
 /// <reference path="../../build/headers/cache1d.h.ts" />
 /// <reference path="../../build/headers/compat.h.ts" />
 /// <reference path="../../build/headers/duke3d.h.ts" />
+/// <reference path="../../build/headers/hightile.h.ts" />
+/// <reference path="../../build/headers/mdsprite.h.ts" />
 /// <reference path="../../build/headers/pragmas.h.ts" />
 
 /// <reference path="../../build/source/baselayer.c.ts" />
@@ -15,6 +17,7 @@
 /// <reference path="../../build/source/crc32.c.ts" />
 /// <reference path="../../build/source/engine.c.ts" />
 /// <reference path="../../build/source/polymost.c.ts" />
+/// <reference path="../../build/source/hightile.c.ts" />
 
 /// <reference path="../../eduke32/headers/_functio.h.ts" />
 /// <reference path="../../eduke32/headers/actors.h.ts" />
@@ -1119,7 +1122,7 @@ function Gv_ResetSystemDefaults() : void
 //// For example, if
 ////   gamevar WEAPON1_SHOOTS 2200 GAMEVAR_PERPLAYER
 //// was specified at file scope, g_weaponOverridden[1].Shoots will be 1.
-//weapondata_t g_weaponOverridden[MAX_WEAPONS];
+var g_weaponOverridden /* todo typescript class :weapondata_t[]*/ = newStructArray(weapondata_t, MAX_WEAPONS);
 
 var  weapondefaults /*[MAX_WEAPONS] */= [
     /*
@@ -1280,39 +1283,39 @@ function ADDWEAPONVAR(Weapidx, Membname) {
 //# define POSTADDWEAPONVAR(Weapidx, Membname) do {} while (0)
 //#endif
 
-//// Finish a default weapon member after CON translation. If it was not
-//// overridden from CON itself (see example at g_weaponOverridden[]), we set
-//// both the weapondefaults[] entry (probably dead by now) and the live value.
-//#define FINISH_WEAPON_DEFAULT_X(What, i, Membname) do {  \
-//    if (!g_weaponOverridden[i].Membname) \
-//    { \
-//        weapondefaults[i].Membname = G_StaticToDynamic##What(weapondefaults[i].Membname); \
-//        POSTADDWEAPONVAR(i, Membname); \
-//    } \
-//} while (0)
+// Finish a default weapon member after CON translation. If it was not
+// overridden from CON itself (see example at g_weaponOverridden[]), we set
+// both the weapondefaults[] entry (probably dead by now) and the live value.
+////function FINISH_WEAPON_DEFAULT_X(What, i, Membname) { do {  
+////    if (!g_weaponOverridden[i].Membname) 
+////    { 
+////        weapondefaults[i].Membname = G_StaticToDynamic##What(weapondefaults[i].Membname); 
+////        POSTADDWEAPONVAR(i, Membname); 
+////    } 
+////} while (0) }
 
-//#define FINISH_WEAPON_DEFAULT_TILE(i, Membname) FINISH_WEAPON_DEFAULT_X(Tile, i, Membname)
-//#define FINISH_WEAPON_DEFAULT_SOUND(i, Membname) FINISH_WEAPON_DEFAULT_X(Sound, i, Membname)
+////function FINISH_WEAPON_DEFAULT_TILE(i, Membname) {FINISH_WEAPON_DEFAULT_X(Tile, i, Membname);}
+////function FINISH_WEAPON_DEFAULT_SOUND(i, Membname) {FINISH_WEAPON_DEFAULT_X(Sound, i, Membname);}
 
-//// Process the dynamic {tile,sound} mappings after CON has been translated.
-//// We cannot do this before, because the dynamic maps are not yet set up then.
-//void Gv_FinalizeWeaponDefaults(void)
-//{
-//    int32_t i;
+////// Process the dynamic {tile,sound} mappings after CON has been translated.
+////// We cannot do this before, because the dynamic maps are not yet set up then.
+////function Gv_FinalizeWeaponDefaults(): void
+////{
+////    var i: number;
 
-//    for (i=0; i<MAX_WEAPONS; i++)
-//    {
-//        FINISH_WEAPON_DEFAULT_TILE(i, Shoots);
-//        FINISH_WEAPON_DEFAULT_TILE(i, Spawn);
+////    for (i=0; i<MAX_WEAPONS; i++)
+////    {
+////        FINISH_WEAPON_DEFAULT_TILE(i, Shoots);
+////        FINISH_WEAPON_DEFAULT_TILE(i, Spawn);
 
-//        FINISH_WEAPON_DEFAULT_SOUND(i, InitialSound);
-//        FINISH_WEAPON_DEFAULT_SOUND(i, FireSound);
-//        FINISH_WEAPON_DEFAULT_SOUND(i, ReloadSound1);
-//        FINISH_WEAPON_DEFAULT_SOUND(i, Sound2Sound);
-//        FINISH_WEAPON_DEFAULT_SOUND(i, ReloadSound2);
-//        FINISH_WEAPON_DEFAULT_SOUND(i, SelectSound);
-//    }
-//}
+////        FINISH_WEAPON_DEFAULT_SOUND(i, InitialSound);
+////        FINISH_WEAPON_DEFAULT_SOUND(i, FireSound);
+////        FINISH_WEAPON_DEFAULT_SOUND(i, ReloadSound1);
+////        FINISH_WEAPON_DEFAULT_SOUND(i, Sound2Sound);
+////        FINISH_WEAPON_DEFAULT_SOUND(i, ReloadSound2);
+////        FINISH_WEAPON_DEFAULT_SOUND(i, SelectSound);
+////    }
+////}
 //#undef FINISH_WEAPON_DEFAULT_SOUND
 //#undef FINISH_WEAPON_DEFAULT_TILE
 //#undef FINISH_WEAPON_DEFAULT_X

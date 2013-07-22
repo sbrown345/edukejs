@@ -107,6 +107,18 @@ function memset(ptr: P, value: number, num: number) : void {
     }
 }
 
+// any classes reset must have a ctor that resets all properties
+function memsetStruct(array: any[], T: any, value: number, num: number) : void {
+    if(value !==0) {
+        todoThrow("value other than 0 not supported");
+    }
+
+    for (var i = 0; i < num; i++) {
+        //array[i] = new T();
+        T.call(array[i]); // reinint class
+    }
+}
+
 var printf = console.log.bind(console);
 
 function read(fileHandle: number, dstBuf: Ptr, maxCharCount: number) : number {

@@ -44,7 +44,7 @@ function DVPTR(v: number): number {
 }
 
 
-//int16_t DynamicTileMap[MAXTILES];
+var DynamicTileMap = new Int16Array(MAXTILES);
 
 function dynitem(str: string, dynvalptr: number, staticval: number)
 {
@@ -1575,47 +1575,47 @@ function freehashnames(): void
 //#endif
 //#endif
 
-//// This is run after all CON define's have been processed to set up the
-//// dynamic->static tile mapping.
-//void G_InitDynamicTiles(void)
-//{
-//    int32_t i;
+// This is run after all CON define's have been processed to set up the
+// dynamic->static tile mapping.
+function G_InitDynamicTiles(): void
+{
+    var i: number;
 
-//    Bmemset(DynamicTileMap, 0, sizeof(DynamicTileMap));
+    Bmemset(new P(DynamicTileMap.buffer), 0, sizeof(DynamicTileMap));
 
-//    for (i=0; g_dynTileList[i].staticval >= 0; i++)
+    for (i=0; g_dynTileList[i].staticval >= 0; i++)
 //#ifdef DYNTILEREMAP_ENABLE
-//        DynamicTileMap[*(g_dynTileList[i].dynvalptr)] = g_dynTileList[i].staticval;
+        todo("DynamicTileMap[*(g_dynTileList[i].dynvalptr)] = g_dynTileList[i].staticval;");
 //#else
 //        DynamicTileMap[g_dynTileList[i].staticval] = g_dynTileList[i].staticval;
 //#endif
 
-//    BlimpSpawnSprites[0] = RPGSPRITE;
-//    BlimpSpawnSprites[1] = CHAINGUNSPRITE;
-//    BlimpSpawnSprites[2] = DEVISTATORAMMO;
-//    BlimpSpawnSprites[3] = RPGAMMO;
-//    BlimpSpawnSprites[4] = RPGAMMO;
-//    BlimpSpawnSprites[5] = JETPACK;
-//    BlimpSpawnSprites[6] = SHIELD;
-//    BlimpSpawnSprites[7] = FIRSTAID;
-//    BlimpSpawnSprites[8] = STEROIDS;
-//    BlimpSpawnSprites[9] = RPGAMMO;
-//    BlimpSpawnSprites[10] = RPGAMMO;
-//    BlimpSpawnSprites[11] = RPGSPRITE;
-//    BlimpSpawnSprites[12] = RPGAMMO;
-//    BlimpSpawnSprites[13] = FREEZESPRITE;
-//    BlimpSpawnSprites[14] = FREEZEAMMO;
+    BlimpSpawnSprites[0] = RPGSPRITE;
+    BlimpSpawnSprites[1] = CHAINGUNSPRITE;
+    BlimpSpawnSprites[2] = DEVISTATORAMMO;
+    BlimpSpawnSprites[3] = RPGAMMO;
+    BlimpSpawnSprites[4] = RPGAMMO;
+    BlimpSpawnSprites[5] = JETPACK;
+    BlimpSpawnSprites[6] = SHIELD;
+    BlimpSpawnSprites[7] = FIRSTAID;
+    BlimpSpawnSprites[8] = STEROIDS;
+    BlimpSpawnSprites[9] = RPGAMMO;
+    BlimpSpawnSprites[10] = RPGAMMO;
+    BlimpSpawnSprites[11] = RPGSPRITE;
+    BlimpSpawnSprites[12] = RPGAMMO;
+    BlimpSpawnSprites[13] = FREEZESPRITE;
+    BlimpSpawnSprites[14] = FREEZEAMMO;
 
-//    WeaponPickupSprites[0] = KNEE;
-//    WeaponPickupSprites[1] = FIRSTGUNSPRITE;
-//    WeaponPickupSprites[2] = SHOTGUNSPRITE;
-//    WeaponPickupSprites[3] = CHAINGUNSPRITE;
-//    WeaponPickupSprites[4] = RPGSPRITE;
-//    WeaponPickupSprites[5] = HEAVYHBOMB;
-//    WeaponPickupSprites[6] = SHRINKERSPRITE;
-//    WeaponPickupSprites[7] = DEVISTATORSPRITE;
-//    WeaponPickupSprites[8] = TRIPBOMBSPRITE;
-//    WeaponPickupSprites[9] = FREEZESPRITE;
-//    WeaponPickupSprites[10] = HEAVYHBOMB;
-//    WeaponPickupSprites[11] = SHRINKERSPRITE;
-//}
+    WeaponPickupSprites[0] = KNEE;
+    WeaponPickupSprites[1] = FIRSTGUNSPRITE;
+    WeaponPickupSprites[2] = SHOTGUNSPRITE;
+    WeaponPickupSprites[3] = CHAINGUNSPRITE;
+    WeaponPickupSprites[4] = RPGSPRITE;
+    WeaponPickupSprites[5] = HEAVYHBOMB;
+    WeaponPickupSprites[6] = SHRINKERSPRITE;
+    WeaponPickupSprites[7] = DEVISTATORSPRITE;
+    WeaponPickupSprites[8] = TRIPBOMBSPRITE;
+    WeaponPickupSprites[9] = FREEZESPRITE;
+    WeaponPickupSprites[10] = HEAVYHBOMB;
+    WeaponPickupSprites[11] = SHRINKERSPRITE;
+}

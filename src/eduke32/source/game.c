@@ -10676,6 +10676,7 @@ static void G_Startup(void)
         exit(6);
     }
 
+
     setbasepaltable(basepaltable, BASEPALCOUNT);
 
 #ifdef LUNATIC

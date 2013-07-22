@@ -8,6 +8,8 @@
 /// <reference path="../../build/headers/cache1d.h.ts" />
 /// <reference path="../../build/headers/compat.h.ts" />
 /// <reference path="../../build/headers/duke3d.h.ts" />
+/// <reference path="../../build/headers/hightile.h.ts" />
+/// <reference path="../../build/headers/mdsprite.h.ts" />
 /// <reference path="../../build/headers/pragmas.h.ts" />
 /// <reference path="../../build/headers/pragmas.h.ts" />
 /// <reference path="../../build/headers/pragmas.h.ts" />
@@ -18,6 +20,7 @@
 /// <reference path="../../build/source/crc32.c.ts" />
 /// <reference path="../../build/source/engine.c.ts" />
 /// <reference path="../../build/source/polymost.c.ts" />
+/// <reference path="../../build/source/hightile.c.ts" />
 
 /// <reference path="../../eduke32/headers/_functio.h.ts" />
 /// <reference path="../../eduke32/headers/actors.h.ts" />

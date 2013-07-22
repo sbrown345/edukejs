@@ -62,12 +62,16 @@
     <Content Include="build\headers\compat.h.ts" />
     <Content Include="build\headers\crc32.h.ts" />
     <Content Include="build\headers\duke3d.h.ts" />
+    <Content Include="build\headers\hightile.h.ts" />
+    <Content Include="build\headers\mdsprite.h.ts" />
     <Content Include="build\headers\pragmas.h.ts" />
     <Content Include="build\source\baselayer.c.ts" />
     <Content Include="build\source\build.c.ts" />
     <Content Include="build\source\compat.c.ts" />
     <Content Include="build\source\crc32.c.ts" />
     <Content Include="build\source\engine.c.ts" />
+    <Content Include="build\source\hightile.c.ts" />
+    <Content Include="build\source\mdsprite.c.ts" />
     <Content Include="build\source\polymost.c.ts" />
     <Content Include="eduke32\headers\actors.h.ts" />
     <Content Include="eduke32\headers\common_game.h.ts" />

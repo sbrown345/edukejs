@@ -7,6 +7,8 @@
 /// <reference path="../../build/headers/cache1d.h.ts" />
 /// <reference path="../../build/headers/compat.h.ts" />
 /// <reference path="../../build/headers/duke3d.h.ts" />
+/// <reference path="../../build/headers/hightile.h.ts" />
+/// <reference path="../../build/headers/mdsprite.h.ts" />
 /// <reference path="../../build/headers/pragmas.h.ts" />
 
 /// <reference path="../../build/source/baselayer.c.ts" />
@@ -15,6 +17,7 @@
 /// <reference path="../../build/source/crc32.c.ts" />
 /// <reference path="../../build/source/engine.c.ts" />
 /// <reference path="../../build/source/polymost.c.ts" />
+/// <reference path="../../build/source/hightile.c.ts" />
 
 /// <reference path="../../eduke32/headers/_functio.h.ts" />
 /// <reference path="../../eduke32/headers/actors.h.ts" />
@@ -151,10 +154,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //static int32_t g_commandSetup = 0;
 //int32_t g_noSetup = 0;
 //static int32_t g_noAutoLoad = 0;
-//static int32_t g_noSound = 0;
-//static int32_t g_noMusic = 0;
-//static const char *CommandMap = NULL;
-//static const char *CommandName = NULL;
+var g_noSound = 0;
+var g_noMusic = 0;
+var CommandMap = NULL; //static const char *
+var CommandName = NULL;//static const char *
 //int32_t g_forceWeaponChoice = 0;
 var g_fakeMultiMode : number = 0;
 
@@ -164,9 +167,9 @@ var g_fakeMultiMode : number = 0;
 //char g_modDir[BMAX_PATH] = "/";
 
 
-//uint8_t water_pal[768],slime_pal[768],title_pal[768],dre_alms[768],ending_pal[768];
+var water_pal = new Uint8Array(768),slime_pal = new Uint8Array(768),title_pal = new Uint8Array(768),dre_alms = new Uint8Array(768),ending_pal = new Uint8Array(768);
 
-//uint8_t *basepaltable[BASEPALCOUNT] = { palette, water_pal, slime_pal, dre_alms, title_pal, ending_pal, NULL /*anim_pal*/ };
+var basepaltable = [ palette, water_pal, slime_pal, dre_alms, title_pal, ending_pal /*NULL*/ /*anim_pal*/ ];
 
 //int8_t g_noFloorPal[MAXPALOOKUPS];  // 1 if sprite pal should not be taken over from floor pal
 
@@ -9799,16 +9802,16 @@ function G_CheckCommandLine(argc: number, argv: string[]) : void
 //                    i++;
 //                    continue;
 //                }
-//                if (!Bstrcasecmp(c.substr(1),"map"))
-//                {
-//                    if (argc > i+1)
-//                    {
-//                        CommandMap = argv[i+1];
-//                        i++;
-//                    }
-//                    i++;
-//                    continue;
-//                }
+                if (!Bstrcasecmp(c.substr(1),"map"))
+                {debugger
+                    if (argc > i+1)
+                    {
+                        CommandMap = argv[i+1];
+                        i++;
+                    }
+                    i++;
+                    continue;
+                }
 //                if (!Bstrcasecmp(c.substr(1),"rts"))
 //                {
 //                    if (argc > i+1)
@@ -10733,28 +10736,29 @@ function G_Startup() : void
         //ERRprintf("G_Startup: There was a problem initializing the Build engine: %s\n", engineerrstr);
         //exit(6);
     }
-throw "todo"
-//    setbasepaltable(basepaltable, BASEPALCOUNT);
+
+    setbasepaltable(basepaltable, BASEPALCOUNT);
 
 //#ifdef LUNATIC
 //    El_CreateGameState();
 //    C_InitQuotes();
 //#endif
 
-//    G_InitDynamicTiles();
-//    G_InitDynamicSounds();
+    G_InitDynamicTiles();
+    todo("G_InitDynamicSounds();");
+    
+    // These depend on having the dynamic tile and/or sound mappings set up:
+    todo("Gv_FinalizeWeaponDefaults();");
+    todo("G_PostCreateGameState();");
 
-//    // These depend on having the dynamic tile and/or sound mappings set up:
-//    Gv_FinalizeWeaponDefaults();
-//    G_PostCreateGameState();
+    if (g_netServer || ud.multimode > 1) todo("G_CheckGametype();");
 
-//    if (g_netServer || ud.multimode > 1) G_CheckGametype();
+    if (g_noSound) ud.config.SoundToggle = 0;
+    if (g_noMusic) ud.config.MusicToggle = 0;
 
-//    if (g_noSound) ud.config.SoundToggle = 0;
-//    if (g_noMusic) ud.config.MusicToggle = 0;
-
-//    if (CommandName)
-//    {
+    if (CommandName)
+    {
+        todoThrow();
 //        //        Bstrncpy(szPlayerName, CommandName, 9);
 //        //        szPlayerName[10] = '\0';
 //        Bstrcpy(tempbuf,CommandName);
@@ -10763,46 +10767,46 @@ throw "todo"
 //            tempbuf[Bstrlen(tempbuf)-1] = '\0';
 
 //        Bstrncpyz(szPlayerName, tempbuf, sizeof(szPlayerName));
-//    }
+    }
 
-//    if (CommandMap)
-//    {
-//        if (VOLUMEONE)
-//        {
-//            initprintf("The -map option is available in the registered version only!\n");
-//            boardfilename[0] = 0;
-//        }
-//        else
-//        {
-//            char *dot, *slash;
+    if (CommandMap)
+    {
+        if (VOLUMEONE)
+        {
+            initprintf("The -map option is available in the registered version only!\n");
+            boardfilename[0] = 0;
+        }
+        else
+        {
+            char *dot, *slash;
 
-//            boardfilename[0] = '/';
-//            boardfilename[1] = 0;
-//            Bstrcat(boardfilename, CommandMap);
+            boardfilename[0] = '/';
+            boardfilename[1] = 0;
+            Bstrcat(boardfilename, CommandMap);
 
-//            dot = Bstrrchr(boardfilename,'.');
-//            slash = Bstrrchr(boardfilename,'/');
-//            if (!slash) slash = Bstrrchr(boardfilename,'\\');
+            dot = Bstrrchr(boardfilename,'.');
+            slash = Bstrrchr(boardfilename,'/');
+            if (!slash) slash = Bstrrchr(boardfilename,'\\');
 
-//            if ((!slash && !dot) || (slash && dot < slash))
-//                Bstrcat(boardfilename,".map");
+            if ((!slash && !dot) || (slash && dot < slash))
+                Bstrcat(boardfilename,".map");
 
-//            Bcorrectfilename(boardfilename,0);
+            Bcorrectfilename(boardfilename,0);
 
-//            i = kopen4loadfrommod(boardfilename,0);
-//            if (i!=-1)
-//            {
-//                initprintf("Using level: \"%s\".\n",boardfilename);
-//                kclose(i);
-//            }
-//            else
-//            {
-//                initprintf("Level \"%s\" not found.\n",boardfilename);
-//                boardfilename[0] = 0;
-//            }
-//        }
-//    }
-
+            i = kopen4loadfrommod(boardfilename,0);
+            if (i!=-1)
+            {
+                initprintf("Using level: \"%s\".\n",boardfilename);
+                kclose(i);
+            }
+            else
+            {
+                initprintf("Level \"%s\" not found.\n",boardfilename);
+                boardfilename[0] = 0;
+            }
+        }
+    }
+    throw "todo";
 //    if (VOLUMEONE)
 //    {
 //        initprintf("*** You have run Duke Nukem 3D %d times. ***\n\n",ud.executions);

@@ -73,14 +73,14 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //};
 
 //typedef enum basepal_ {
-//    BASEPAL = 0,
-//    WATERPAL,
-//    SLIMEPAL,
-//    DREALMSPAL,
-//    TITLEPAL,
-//    ENDINGPAL,  // 5
-//    ANIMPAL,
-//    BASEPALCOUNT
+var BASEPAL = 0,
+    WATERPAL = 1,
+    SLIMEPAL = 2,
+    DREALMSPAL = 3,
+    TITLEPAL = 4,
+    ENDINGPAL = 5,  // 5
+    ANIMPAL = 6,
+    BASEPALCOUNT = 7;
 //} basepal_t; 
 
 //enum ScreenTextFlags_t {
