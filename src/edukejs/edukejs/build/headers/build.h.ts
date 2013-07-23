@@ -767,13 +767,13 @@ var pskynummultis: number; //int16_t
 //EXTERN int16_t nextspritesect[MAXSPRITES], nextspritestat[MAXSPRITES];
 
 var tilesizx = new Int16Array(MAXTILES), tilesizy = new Int16Array(MAXTILES);
-//EXTERN char picsiz[MAXTILES];
+var picsiz = new Int8Array(MAXTILES);
 //EXTERN char walock[MAXTILES];
 //#ifdef __cplusplus
 //extern "C" {
 //#endif
 //extern const char pow2char[8];
-//extern const int32_t pow2long[32];
+var pow2long: Int32Array;
 //#ifdef __cplusplus
 //};
 //#endif
@@ -782,17 +782,17 @@ var tilesizx = new Int16Array(MAXTILES), tilesizy = new Int16Array(MAXTILES);
 //// |bit(1<<7)
 //// |animtype|animtype|texhitscan|nofullbright|speed|speed|speed|speed|
 //enum {
-//    PICANM_ANIMTYPE_NONE = 0,
-//    PICANM_ANIMTYPE_OSC = (1<<6),
-//    PICANM_ANIMTYPE_FWD = (2<<6),
-//    PICANM_ANIMTYPE_BACK = (3<<6),
-
-//    PICANM_ANIMTYPE_SHIFT = 6,
-//    PICANM_ANIMTYPE_MASK = (3<<6),  // must be 192
-//    PICANM_MISC_MASK = (3<<4),
-//    PICANM_TEXHITSCAN_BIT = (2<<4),
-//    PICANM_NOFULLBRIGHT_BIT = (1<<4),
-//    PICANM_ANIMSPEED_MASK = 15,  // must be 15
+var PICANM_ANIMTYPE_NONE = 0,
+    PICANM_ANIMTYPE_OSC = (1<<6),
+    PICANM_ANIMTYPE_FWD = (2<<6),
+    PICANM_ANIMTYPE_BACK = (3<<6),
+    
+    PICANM_ANIMTYPE_SHIFT = 6,
+    PICANM_ANIMTYPE_MASK = (3<<6),  // must be 192
+    PICANM_MISC_MASK = (3<<4),
+    PICANM_TEXHITSCAN_BIT = (2<<4),
+    PICANM_NOFULLBRIGHT_BIT = (1<<4),
+    PICANM_ANIMSPEED_MASK = 15;  // must be 15
 //};
 
 // NOTE: If the layout of this struct is changed, loadpics() must be modified
@@ -815,8 +815,9 @@ class picanm_t {
         this.num=0;
         this.xofs=0;this.yofs=0;
         this.sf=0;
-        this.size = 4;
-    }      
+    }   
+    
+    public static size = 4;   
 }
 var picanm: picanm_t[] = newStructArray(picanm_t, MAXTILES);
 //EXTERN intptr_t waloff[MAXTILES];  // stores pointers to cache  -- SA
@@ -846,7 +847,7 @@ var picanm: picanm_t[] = newStructArray(picanm_t, MAXTILES);
 //# define GOTPIC_USED
 //#endif
 
-//EXTERN char GOTPIC_USED gotpic[(MAXTILES+7)>>3];
+var gotpic = new Int8Array((MAXTILES+7)>>3);
 //EXTERN char gotsector[(MAXSECTORS+7)>>3];
 
 //EXTERN char editorcolors[256];

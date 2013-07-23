@@ -38,7 +38,7 @@ var pathsearchmode : number;	// 0 = gamefs mode (default), 1 = localfs mode (edi
 //int32_t	ktell(int32_t handle);
 //void	kclose(int32_t handle);
 
-//typedef struct { intptr_t *hand; int32_t leng; char *lock ; } cactype;
+class cactype{ /*intptr_t **/hand: number; /*int32_t */leng: number; /*char **/lock: number; }
 
 //enum {
 //	CACHE1D_FIND_FILE = 1,

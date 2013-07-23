@@ -34,7 +34,6 @@
 
 //    r = GetDeviceCaps(hdc, BITSPIXEL);
 /// <reference path="../../eduke32/source/baselayer.c.ts" />
-/// <reference path="../../eduke32/source/cache1d.c.ts" />
 /// <reference path="../../eduke32/source/common.c.ts" />
 /// <reference path="../../eduke32/source/config.c.ts" />
 /// <reference path="../../eduke32/source/game.c.ts" />

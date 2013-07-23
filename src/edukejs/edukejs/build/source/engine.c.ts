@@ -11,6 +11,7 @@
 /// <reference path="../../build/headers/mdsprite.h.ts" />
 /// <reference path="../../build/headers/pragmas.h.ts" />
 
+/// <reference path="../../build/source/cache1d.c.ts" />
 /// <reference path="../../build/source/crc32.c.ts" />
 /// <reference path="../../build/source/mdsprite.c.ts" />
 
@@ -203,12 +204,12 @@ var reciptable = new Int32Array(2048), fpuasm = 0;
 //#endif
 
 var artversion: number;//int32
-//static void *pic = NULL;
-//static char tilefilenum[MAXTILES];
-//static int32_t tilefileoffs[MAXTILES];
+var pic: P = NULL;
+var tilefilenum = new Int8Array(MAXTILES);
+var tilefileoffs = new Int32Array(MAXTILES);
 //static int32_t lastageclock;
 
-var artsize = 0, cachesize = 0;
+var artsize = 0;//, cachesize = 0 looks like this is in cache1d.c too;
 
 //// Whole ART file contents loaded from ZIPs in memory.
 //static char *artptrs[MAXTILEFILES];
@@ -218,17 +219,17 @@ var radarang = new Int16Array(1280), radarang2 = new Int16Array(MAXXDIM);
 
 var sqrtable = new Uint16Array(4096), shlookup = new Uint16Array(4096+256);
 var pow2char = new Int8Array([1,2,4,8,16,32,64,128]);
-//const int32_t pow2long[32] =
-//{
-//    1, 2, 4, 8,
-//    16, 32, 64, 128,
-//    256, 512, 1024, 2048,
-//    4096, 8192, 16384, 32768,
-//    65536, 131072, 262144, 524288,
-//    1048576, 2097152, 4194304, 8388608,
-//    16777216, 33554432, 67108864, 134217728,
-//    268435456, 536870912, 1073741824, 2147483647
-//};
+pow2long = new Int32Array(
+[
+    1, 2, 4, 8,
+    16, 32, 64, 128,
+    256, 512, 1024, 2048,
+    4096, 8192, 16384, 32768,
+    65536, 131072, 262144, 524288,
+    1048576, 2097152, 4194304, 8388608,
+    16777216, 33554432, 67108864, 134217728,
+    268435456, 536870912, 1073741824, 2147483647
+]);
 
 var britable = [
     new Int8Array(256),
@@ -2452,7 +2453,7 @@ var searchsector: number, searchwall: number, searchstat: number;     //search o
 //double msens = 1.0;
 
 var artfilename = new Int8Array(20);
-//static int32_t artfil = -1, artfilnum, artfilplc;
+var artfil = -1, artfilnum, artfilplc;//static int32_t
 
 //char inpreparemirror = 0;
 //static int32_t mirrorsx1, mirrorsy1, mirrorsx2, mirrorsy2;
@@ -10995,20 +10996,20 @@ function initengine(): number
 //    numframes++;
 //}
 
-//static void set_picsiz(int32_t picnum)
-//{
-//    int32_t j;
+function set_picsiz(picnum: number): void
+{
+    var j: number;
 
-//    j = 15;
-//    while ((j > 1) && (pow2long[j] > tilesizx[picnum]))
-//        j--;
-//    picsiz[picnum] = j;
+    j = 15;
+    while ((j > 1) && (pow2long[j] > tilesizx[picnum]))
+        j--;
+    picsiz[picnum] = j;
 
-//    j = 15;
-//    while ((j > 1) && (pow2long[j] > tilesizy[picnum]))
-//        j--;
-//    picsiz[picnum] |= j<<4;
-//}
+    j = 15;
+    while ((j > 1) && (pow2long[j] > tilesizy[picnum]))
+        j--;
+    picsiz[picnum] |= j<<4;
+}
 
 //void set_tilesiz(int32_t picnum, int16_t dasizx, int16_t dasizy)
 //{
@@ -11081,44 +11082,43 @@ function loadpics(filename: string, askedsize: number): number
 
             localnumtiles = (localtileend-localtilestart+1);
 
-            kread(fil,new Ptr(new Uint8Array(tilesizx.subarray(localtilestart).buffer)), localnumtiles<<1);
-            kread(fil,new Ptr(new Uint8Array(tilesizy.subarray(localtilestart).buffer)), localnumtiles<<1);
-             debugger
+            kread(fil,new Ptr(new Int8Array(tilesizx.buffer).subarray(localtilestart*Int16Array.BYTES_PER_ELEMENT)), localnumtiles<<1);
+            kread(fil,new Ptr(new Int8Array(tilesizy.buffer).subarray(localtilestart*Int16Array.BYTES_PER_ELEMENT)), localnumtiles<<1);
+            
             var picanmArray = new Uint8Array(localnumtiles<<2);
-            kread(fil,new Ptr(picanmArray), localnumtiles<<2);
-            for (var j = 0; j < picanm.length; j++) {
-                picanm[j].setProps(picanmArray.buffer, j);
+            kread(fil,new Ptr(picanmArray), localnumtiles<<2); 
+            for (var j = 0; j < (localnumtiles<<2) / 4; j++) {
+                picanm[j].setProps(picanmArray.buffer, j); // todo: better way!!
             }
 
-             throw "todo";
-            //for (i=localtilestart; i<=localtileend; i++)
-            //{
-            //    tilesizx[i] = B_LITTLE16(tilesizx[i]);
-            //    tilesizy[i] = B_LITTLE16(tilesizy[i]);
+            for (i=localtilestart; i<=localtileend; i++)
+            {
+                tilesizx[i] = B_LITTLE16(tilesizx[i]);
+                tilesizy[i] = B_LITTLE16(tilesizy[i]);
 
-            //    Bassert(sizeof(picanm_t)==4);
-            //    Bassert(PICANM_ANIMTYPE_MASK == 192);
-            //    // Old on-disk format: anim type is in the 2 highest bits of the lowest byte.
-            //    picanm[i].sf &= ~192;
-            //    picanm[i].sf |= picanm[i].num&192;
-            //    picanm[i].num &= ~192;
+                Bassert(sizeof(picanm_t)==4);
+                Bassert(PICANM_ANIMTYPE_MASK == 192);
+                // Old on-disk format: anim type is in the 2 highest bits of the lowest byte.
+                picanm[i].sf &= ~192;
+                picanm[i].sf |= picanm[i].num&192;
+                picanm[i].num &= ~192;
 
-            //    // don't allow setting texhitscan/nofullbright from ART (yet?)
-            //    picanm[i].sf &= ~PICANM_MISC_MASK;
-            //}
+                // don't allow setting texhitscan/nofullbright from ART (yet?)
+                picanm[i].sf &= ~PICANM_MISC_MASK;
+            }
 
-            //offscount = 4+4+4+4+(localnumtiles<<3);
-            //for (i=localtilestart; i<=localtileend; i++)
-            //{
-            //    var dasiz = tilesizx[i]*tilesizy[i];
+            offscount = 4+4+4+4+(localnumtiles<<3);
+            for (i=localtilestart; i<=localtileend; i++)
+            {
+                var dasiz = tilesizx[i]*tilesizy[i];
 
-            //    tilefilenum[i] = tilefilei;
-            //    tilefileoffs[i] = offscount;
+                tilefilenum[i] = tilefilei;
+                tilefileoffs[i] = offscount;
 
-            //    offscount += dasiz;
-            //    artsize += ((dasiz+15)&0xfffffff0);
-            //}
-
+                offscount += dasiz;
+                artsize += ((dasiz+15)&0xfffffff0);
+            }
+  
 //#ifdef WITHKPLIB
 //            if (cache1d_file_fromzip(fil)) // from zip
 //            {
@@ -11131,28 +11131,28 @@ function loadpics(filename: string, askedsize: number): number
             kclose(fil);
         }
     }
-    todoThrow()
-    //Bmemset(gotpic, 0, sizeof(gotpic));
+    
+    Bmemset(new P(gotpic), 0, sizeof(gotpic));
 
     ////cachesize = min((int32_t)((Bgetsysmemsize()/100)*60),max(artsize,askedsize));
     //if (Bgetsysmemsize() <= (uint32_t)askedsize)
     //    cachesize = (Bgetsysmemsize()/100)*60;
     //else
-    //    cachesize = askedsize;
+        cachesize = askedsize;
 
-    //while ((pic = Bmalloc(cachesize)) == NULL)
-    //{
-    //    cachesize -= 65536;
-    //    if (cachesize < 65536) return(-1);
-    //}
-    //initcache((intptr_t)pic, cachesize);
+    while ((pic = Bmalloc(cachesize)) == NULL)
+    {
+        cachesize -= 65536;
+        if (cachesize < 65536) return(-1);
+    }
+    initcache(/*(intptr_t)*/pic.idx, cachesize);
 
-    //for (i=0; i<MAXTILES; i++)
-    //    set_picsiz(i);
+    for (i=0; i<MAXTILES; i++)
+        set_picsiz(i);
 
-    //artfil = -1;
-    //artfilnum = -1;
-    //artfilplc = 0L;
+    artfil = -1;
+    artfilnum = -1;
+    artfilplc = 0;
 
     return(0);
 }

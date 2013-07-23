@@ -65,6 +65,10 @@ function lseek(fileHandle: number, offset: number, origin: number) : void {
     }
 }
 
+function malloc(size: number): P {
+    return new P(new ArrayBuffer(size));
+}
+
 var min = Math.min;
 var max = Math.max;
 var pow = Math.pow;

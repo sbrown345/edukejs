@@ -527,10 +527,10 @@ var BMAX_PATH=256;
 //#endif
 
 //#ifdef __compat_h_macrodef__
-//# define Bassert assert
+var Bassert=console.assert.bind(console);
 //# define Brand rand
 //# define Balloca alloca
-//#  define Bmalloc malloc
+var Bmalloc = malloc;
 //#  define Bcalloc calloc
 //#  define Brealloc realloc
 //#  define Bfree free

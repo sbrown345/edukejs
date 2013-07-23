@@ -86,19 +86,19 @@
 //// Uncomment for easier allocache-allocated bound checking (e.g. with Valgrind)
 ////#define DEBUG_ALLOCACHE_AS_MALLOC
 
-//#define MAXCACHEOBJECTS 9216
+var MAXCACHEOBJECTS=9216;
 
 //#ifndef DEBUG_ALLOCACHE_AS_MALLOC
-//static int32_t cachesize = 0;
+var cachesize = 0; // seems to be same as var in engine.c
 ////static int32_t cachecount = 0;
-//static char zerochar = 0;
-//static intptr_t cachestart = 0;
-//static int32_t agecount = 0;
-//static int32_t lockrecip[200];
+var zerochar = 0;
+var cachestart = 0;
+var agecount = 0;
+var lockrecip = new Int32Array(200);
 //#endif
 
-//int32_t cacnum = 0;
-//cactype cac[MAXCACHEOBJECTS];
+var cacnum = 0;
+var cac = newStructArray(cactype, MAXCACHEOBJECTS);
 
 var toupperlookup = new Uint8Array(
 [
@@ -123,37 +123,37 @@ var toupperlookup = new Uint8Array(
 //static void reportandexit(const char *errormessage);
 
 
-//void initcache(intptr_t dacachestart, int32_t dacachesize)
-//{
+function initcache(/*intptr_t */dacachestart: number, dacachesize: number): void
+{
 //#ifndef DEBUG_ALLOCACHE_AS_MALLOC
-//    int32_t i;
+    var i: number;
 
-//    for (i=1; i<200; i++) lockrecip[i] = (1<<28)/(200-i);
+    for (i=1; i<200; i++) lockrecip[i] = (1<<28)/(200-i);
 
-//    // The following code was relocated here from engine.c, since this
-//    // function is only ever called once (from there), and it seems to
-//    // really belong here:
-//    //
-//    //   initcache((FP_OFF(pic)+15)&0xfffffff0,(cachesize-((-FP_OFF(pic))&15))&0xfffffff0);
-//    //
-//    // I'm not sure why it's necessary, but the code is making sure the
-//    // cache starts on a multiple of 16 bytes?  -- SA
+    // The following code was relocated here from engine.c, since this
+    // function is only ever called once (from there), and it seems to
+    // really belong here:
+    //
+    //   initcache((FP_OFF(pic)+15)&0xfffffff0,(cachesize-((-FP_OFF(pic))&15))&0xfffffff0);
+    //
+    // I'm not sure why it's necessary, but the code is making sure the
+    // cache starts on a multiple of 16 bytes?  -- SA
 
-////printf("BEFORE: cachestart = %x, cachesize = %d\n", dacachestart, dacachesize);
-//    cachestart = ((uintptr_t)dacachestart+15)&~(uintptr_t)0xf;
-//    cachesize = (dacachesize-(((uintptr_t)(dacachestart))&0xf))&~(uintptr_t)0xf;
-////printf("AFTER : cachestart = %x, cachesize = %d\n", cachestart, cachesize);
+//printf("BEFORE: cachestart = %x, cachesize = %d\n", dacachestart, dacachesize);
+    cachestart = (/*(uintptr_t)*/dacachestart+15)&~/*(uintptr_t)*/0xf;
+    cachesize = (dacachesize-((/*(uintptr_t)*/(dacachestart))&0xf))&~/*(uintptr_t)*/0xf;
+//printf("AFTER : cachestart = %x, cachesize = %d\n", cachestart, cachesize);
 
-//    cac[0].leng = cachesize;
-//    cac[0].lock = &zerochar;
-//    cacnum = 1;
+    cac[0].leng = cachesize;
+    cac[0].lock = /*&*/zerochar;
+    cacnum = 1;
 
-//    initprintf("Initialized %.1fM cache\n", (float)(dacachesize/1024.f/1024.f));
+    initprintf("Initialized %.1fM cache\n", (dacachesize/1024.0/1024.0));
 //#else
 //    UNREFERENCED_PARAMETER(dacachestart);
 //    UNREFERENCED_PARAMETER(dacachesize);
 //#endif
-//}
+}
 
 //#ifdef DEBUG_ALLOCACHE_AS_MALLOC
 //void allocache(intptr_t *newhandle, int32_t newbytes, char *newlockptr)
