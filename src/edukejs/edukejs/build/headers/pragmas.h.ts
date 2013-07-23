@@ -168,6 +168,54 @@ function divscale32(i1: number, i2: number): number { return divscale(i1, i2, 32
 //	return mulhi;
 //}
 
+
+////for (var input3 = 1; input3 <= 32; input3++) {
+////    console.log("function mulscale" + input3 + "(input1: number, input2: number): number {return mulscale(input1, input2, " + input3 + ");}");
+////}
+
+function mulscale1(input1: number, input2: number): number {return mulscale(input1, input2, 1);}
+function mulscale2(input1: number, input2: number): number {return mulscale(input1, input2, 2);}
+function mulscale3(input1: number, input2: number): number {return mulscale(input1, input2, 3);}
+function mulscale4(input1: number, input2: number): number {return mulscale(input1, input2, 4);}
+function mulscale5(input1: number, input2: number): number {return mulscale(input1, input2, 5);}
+function mulscale6(input1: number, input2: number): number {return mulscale(input1, input2, 6);}
+function mulscale7(input1: number, input2: number): number {return mulscale(input1, input2, 7);}
+function mulscale8(input1: number, input2: number): number {return mulscale(input1, input2, 8);}
+function mulscale9(input1: number, input2: number): number {return mulscale(input1, input2, 9);}
+function mulscale10(input1: number, input2: number): number {return mulscale(input1, input2, 10);}
+function mulscale11(input1: number, input2: number): number {return mulscale(input1, input2, 11);}
+function mulscale12(input1: number, input2: number): number {return mulscale(input1, input2, 12);}
+function mulscale13(input1: number, input2: number): number {return mulscale(input1, input2, 13);}
+function mulscale14(input1: number, input2: number): number {return mulscale(input1, input2, 14);}
+function mulscale15(input1: number, input2: number): number {return mulscale(input1, input2, 15);}
+function mulscale16(input1: number, input2: number): number {return mulscale(input1, input2, 16);}
+function mulscale17(input1: number, input2: number): number {return mulscale(input1, input2, 17);}
+function mulscale18(input1: number, input2: number): number {return mulscale(input1, input2, 18);}
+function mulscale19(input1: number, input2: number): number {return mulscale(input1, input2, 19);}
+function mulscale20(input1: number, input2: number): number {return mulscale(input1, input2, 20);}
+function mulscale21(input1: number, input2: number): number {return mulscale(input1, input2, 21);}
+function mulscale22(input1: number, input2: number): number {return mulscale(input1, input2, 22);}
+function mulscale23(input1: number, input2: number): number {return mulscale(input1, input2, 23);}
+function mulscale24(input1: number, input2: number): number {return mulscale(input1, input2, 24);}
+function mulscale25(input1: number, input2: number): number {return mulscale(input1, input2, 25);}
+function mulscale26(input1: number, input2: number): number {return mulscale(input1, input2, 26);}
+function mulscale27(input1: number, input2: number): number {return mulscale(input1, input2, 27);}
+function mulscale28(input1: number, input2: number): number {return mulscale(input1, input2, 28);}
+function mulscale29(input1: number, input2: number): number {return mulscale(input1, input2, 29);}
+function mulscale30(input1: number, input2: number): number {return mulscale(input1, input2, 30);}
+function mulscale31(input1: number, input2: number): number {return mulscale(input1, input2, 31);}
+function mulscale32(input1: number, input2: number): number {return mulscale(input1, input2, 32);}
+
+function mulscale(input1: number, input2: number, input3: number) {
+    if ((input1 | 0) != input1) throw "input1 " + input1 + " not an integer";
+    if ((input2 | 0) != input2) throw "input2 " + input2 + " not an integer";
+    if ((input3 | 0) != input3) throw "input3 " + input3 + " not an integer";
+
+    var output = Math.floor(input1 * input2 / Math.pow(2, input3)) | 0;
+    return output;
+}
+
+
 //static inline int32_t dmulscale(int32_t a, int32_t d, int32_t S, int32_t D, int32_t c)
 //{
 //	int32_t mulhi, mullo, sumhi, sumlo;

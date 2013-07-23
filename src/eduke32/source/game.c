@@ -10821,7 +10821,7 @@ static void G_Startup(void)
 //    initprintf("Loading palette/lookups...\n");
     G_LoadExtraPalettes();
 
-    ReadSaveGameHeaders();
+    //ReadSaveGameHeaders();
 
     tilesizx[MIRROR] = tilesizy[MIRROR] = 0;
 

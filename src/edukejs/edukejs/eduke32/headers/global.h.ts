@@ -107,7 +107,7 @@ var g_groupFileHandle:number;                                //G_EXTERN int32_t
 var g_impactDamage:number,g_maxPlayerHealth:number;          //G_EXTERN int32_t 
 var g_musicSize:number;                                      //G_EXTERN int32_t 
 var g_numLabels:number,g_numDefaultLabels:number;
-//G_EXTERN int32_t g_numRealPalettes:number;
+var g_numRealPalettes:number; //G_EXTERN int32_t 
 var g_scriptDebug:number; //G_EXTERN int32_t 
 //G_EXTERN int32_t g_showShareware:number;
 //G_EXTERN int8_t g_numPlayerSprites:number;
@@ -115,7 +115,7 @@ var g_tripbombLaserMode:number;////G_EXTERN int32_t
 //G_EXTERN int32_t msx[2048]:number,msy[2048]:number;
 var neartaghitdist:number,lockclock:number,g_startArmorAmount:number;//G_EXTERN int32_t
 var playerswhenstarted : number; ////G_EXTERN int32_t
-//G_EXTERN int32_t screenpeek;
+var screenpeek: number;
 //G_EXTERN int32_t startofdynamicinterpolations;
 //G_EXTERN int32_t vel,svel,angvel,horiz,ototalclock;
 //G_EXTERN intptr_t *g_parsingActorPtr;

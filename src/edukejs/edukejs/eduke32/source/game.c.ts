@@ -10572,49 +10572,49 @@ function G_CompileScripts() : void
 //        ud.m_respawn_items = ud.m_respawn_inventory = 1;
 //}
 
-//static void G_LoadExtraPalettes(void)
-//{
-//    int32_t j, fp;
-//    uint8_t tmpbyte;
+function G_LoadExtraPalettes(): void
+{
+    var j:number, fp:number;
+    var tmpbyte:number;//uint8_t 
 
-//    fp = kopen4loadfrommod("lookup.dat", 0);
-//    if (fp != -1)
-//        kread(fp, &tmpbyte, 1);
-//    else
-//        G_GameExit("\nERROR: File 'lookup.dat' not found.");
+    fp = kopen4loadfrommod("lookup.dat", 0);
+    if (fp != -1)
+        tmpbyte = kreadu8(fp);
+    else
+        G_GameExit("\nERROR: File 'lookup.dat' not found.");
 
-//    g_numRealPalettes = tmpbyte;
+    g_numRealPalettes = tmpbyte;
 
-//    for (j=g_numRealPalettes+1; j<MAXPALOOKUPS; j++)
-//        makepalookup(j, NULL ,0,0,0, 1);
+    for (j=g_numRealPalettes+1; j<MAXPALOOKUPS; j++)
+        makepalookup(j, NULL ,0,0,0, 1);
 
-//    for (j=g_numRealPalettes-1; j>=0; j--)
-//    {
-//        uint8_t look_pos;
+    for (j=g_numRealPalettes-1; j>=0; j--)
+    {
+        var look_pos: number; //uint8_t
 
-//        kread(fp, &look_pos, 1);
-//        kread(fp, tempbuf, 256);
-//        makepalookup(look_pos, tempbuf, 0,0,0, 1);
-//    }
+        look_pos = kreadu8(fp);
+        kread(fp, new Ptr(tempbuf), 256);
+        makepalookup(look_pos, tempbuf, 0,0,0, 1);
+    }
 
-//    g_numRealPalettes++;
-//    makepalookup(g_numRealPalettes, NULL, 15, 15, 15, 1);
-//    makepalookup(g_numRealPalettes + 1, NULL, 15, 0, 0, 1);
-//    makepalookup(g_numRealPalettes + 2, NULL, 0, 15, 0, 1);
-//    makepalookup(g_numRealPalettes + 3, NULL, 0, 0, 15, 1);
+    g_numRealPalettes++;
+    makepalookup(g_numRealPalettes, NULL, 15, 15, 15, 1);
+    makepalookup(g_numRealPalettes + 1, NULL, 15, 0, 0, 1);
+    makepalookup(g_numRealPalettes + 2, NULL, 0, 15, 0, 1);
+    makepalookup(g_numRealPalettes + 3, NULL, 0, 0, 15, 1);
 
-//    kread(fp,&water_pal[0],768);
-//    kread(fp,&slime_pal[0],768);
-//    kread(fp,&title_pal[0],768);
-//    kread(fp,&dre_alms[0],768);
-//    kread(fp,&ending_pal[0],768);
+    kread(fp,new Ptr(water_pal),768);
+    kread(fp,new Ptr(slime_pal),768);
+    kread(fp,new Ptr(title_pal),768);
+    kread(fp,new Ptr(dre_alms),768);
+    kread(fp,new Ptr(ending_pal),768);
 
-//    palette[765] = palette[766] = palette[767] = 0;
-//    slime_pal[765] = slime_pal[766] = slime_pal[767] = 0;
-//    water_pal[765] = water_pal[766] = water_pal[767] = 0;
+    palette[765] = palette[766] = palette[767] = 0;
+    slime_pal[765] = slime_pal[766] = slime_pal[767] = 0;
+    water_pal[765] = water_pal[766] = water_pal[767] = 0;
 
-//    kclose(fp);
-//}
+    kclose(fp);
+}
 
 //#define SETBGFLAG(Tilenum) g_tile[Tilenum].flags |= SPRITE_HARDCODED_BADGUY
 
@@ -10876,20 +10876,20 @@ function G_Startup() : void
         else if (loadpics("tiles000.art",MAXCACHE1DSIZE) < 0)
             G_GameExit("Failed loading art.");
     }
-    throw "todo";
-//    // Make the fullscreen nuke logo background non-fullbright.  Has to be
-//    // after dynamic tile remapping (from C_Compile) and loading tiles.
-//    picanm[LOADSCREEN].sf |= PICANM_NOFULLBRIGHT_BIT;
+   
+    // Make the fullscreen nuke logo background non-fullbright.  Has to be
+    // after dynamic tile remapping (from C_Compile) and loading tiles.
+    picanm[LOADSCREEN].sf |= PICANM_NOFULLBRIGHT_BIT;
 
-////    initprintf("Loading palette/lookups...\n");
-//    G_LoadExtraPalettes();
+    initprintf("Loading palette/lookups...\n");
+    G_LoadExtraPalettes();
 
-//    ReadSaveGameHeaders();
+    todo("ReadSaveGameHeaders();");
 
-//    tilesizx[MIRROR] = tilesizy[MIRROR] = 0;
+    tilesizx[MIRROR] = tilesizy[MIRROR] = 0;
 
-//    screenpeek = myconnectindex;
-
+    screenpeek = myconnectindex;
+     throw "todo";
 //    Bfflush(NULL);
 }
 

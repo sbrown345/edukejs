@@ -200,7 +200,7 @@ var reciptable = new Int32Array(2048), fpuasm = 0;
 
 //static intptr_t slopalookup[16384];    // was 2048
 //#if defined(USE_OPENGL)
-//palette_t palookupfog[MAXPALOOKUPS];
+var palookupfog: palette_t[] = newStructArray(palette_t, MAXPALOOKUPS);
 //#endif
 
 var artversion: number;//int32
@@ -8113,59 +8113,60 @@ function loadpalette(): number
 }
 
 
-////
-//// getclosestcol
-////
-//int32_t getclosestcol(int32_t r, int32_t g, int32_t b)
-//{
-//    int32_t i, j, k, dist, mindist, retcol;
-//    const char *pal1;
+//
+// getclosestcol
+//
+function getclosestcol(/*int32_t*/ r: number, /*int32_t*/ g: number, /*int32_t*/ b: number): number
+{
+    var i: number, j: number, k: number, dist: number, mindist: number, retcol: number;
+    var pal1: Int8Array;
 
-//    j = (r>>3)*FASTPALGRIDSIZ*FASTPALGRIDSIZ
-//        + (g>>3)*FASTPALGRIDSIZ + (b>>3)
-//        + FASTPALGRIDSIZ*FASTPALGRIDSIZ
-//        + FASTPALGRIDSIZ+1;
-//    mindist = min(rdist[coldist[r&7]+64+8],gdist[coldist[g&7]+64+8]);
-//    mindist = min(mindist,bdist[coldist[b&7]+64+8]);
-//    mindist++;
+    j = (r>>3)*FASTPALGRIDSIZ*FASTPALGRIDSIZ
+        + (g>>3)*FASTPALGRIDSIZ + (b>>3)
+        + FASTPALGRIDSIZ*FASTPALGRIDSIZ
+        + FASTPALGRIDSIZ+1;
+    mindist = min(rdist[coldist[r&7]+64+8],gdist[coldist[g&7]+64+8]);
+    mindist = min(mindist,bdist[coldist[b&7]+64+8]);
+    mindist++;
 
-//    r = 64-r; g = 64-g; b = 64-b;
+    r = 64-r; g = 64-g; b = 64-b;
 
-//    retcol = -1;
-//    for (k=26; k>=0; k--)
-//    {
-//        i = colscan[k]+j; if ((colhere[i>>3]&pow2char[i&7]) == 0) continue;
-//        i = colhead[i];
-//        do
-//        {
-//            pal1 = (char *)&palette[i*3];
-//            dist = gdist[pal1[1]+g];
-//            if (dist < mindist)
-//            {
-//                dist += rdist[pal1[0]+r];
-//                if (dist < mindist)
-//                {
-//                    dist += bdist[pal1[2]+b];
-//                    if (dist < mindist) { mindist = dist; retcol = i; }
-//                }
-//            }
-//            i = colnext[i];
-//        }
-//        while (i >= 0);
-//    }
-//    if (retcol >= 0) return(retcol);
+    retcol = -1;
+    for (k=26; k>=0; k--)
+    {
+        i = colscan[k]+j; if ((colhere[i>>3]&pow2char[i&7]) == 0) continue;
+        i = colhead[i];
+        do
+        {   debugger;throw "todo: this needs testing ";
+            pal1 = palette.subarray(i*3);
+            dist = gdist[pal1[1]+g];
+            if (dist < mindist)
+            {
+                dist += rdist[pal1[0]+r];
+                if (dist < mindist)
+                {
+                    dist += bdist[pal1[2]+b];
+                    if (dist < mindist) { mindist = dist; retcol = i; }
+                }
+            }
+            i = colnext[i];
+        }
+        while (i >= 0);
+    }
+    if (retcol >= 0) return(retcol);
 
-//    mindist = INT32_MAX;
-//    pal1 = (char *)&palette[768-3];
-//    for (i=255; i>=0; i--,pal1-=3)
-//    {
-//        dist = gdist[pal1[1]+g]; if (dist >= mindist) continue;
-//        dist += rdist[pal1[0]+r]; if (dist >= mindist) continue;
-//        dist += bdist[pal1[2]+b]; if (dist >= mindist) continue;
-//        mindist = dist; retcol = i;
-//    }
-//    return(retcol);
-//}
+    mindist = INT32_MAX;
+    var pal1Idx = 768-3;
+    pal1 = palette;
+    for (i=255; i>=0; i--,pal1Idx-=3)
+    {
+        dist = gdist[pal1[pal1Idx+1]+g]; if (dist >= mindist) continue;
+        dist += rdist[pal1[pal1Idx+0]+r]; if (dist >= mindist) continue;
+        dist += bdist[pal1[pal1Idx+2]+b]; if (dist >= mindist) continue;
+        mindist = dist; retcol = i;
+    }
+    return(retcol);
+}
 
 
 //////////// SPRITE LIST MANIPULATION FUNCTIONS //////////
@@ -14319,87 +14320,88 @@ function loadpics(filename: string, askedsize: number): number
 //}
 
 
-////
-//// makepalookup
-////
-//void makepalookup(int32_t palnum, const char *remapbuf, int8_t r, int8_t g, int8_t b, char dastat)
-//{
-//    int32_t i, j, palscale;
-//    const char *ptr;
-//    char *ptr2;
+//
+// makepalookup
+//
+function makepalookup(palnum: number, remapbuf: Int8Array, /*int8_t*/ r: number, /*int8_t*/ g: number, /*int8_t*/ b: number, /*char*/ dastat: number): void
+{
+    var i: number, j: number, palscale: number;
+    var ptr: Ptr; //char *
+    var ptr2: Ptr; // char *
 
-//    static char idmap[256] = {1};
+    var idmap = new Int8Array(256);idmap[0] = 1;
+    
+    if (paletteloaded == 0)
+        return;
 
-//    if (paletteloaded == 0)
-//        return;
+    // NOTE: palnum==0 is allowed
+    if (unsigned(palnum) >= MAXPALOOKUPS)
+        return;
 
-//    // NOTE: palnum==0 is allowed
-//    if ((unsigned)palnum >= MAXPALOOKUPS)
-//        return;
+    if (remapbuf==NULL)
+    {
+        if ((r|g|b) == 0)
+        {
+            palookup[palnum] = palookup[0];  // Alias to base shade table!
+            return;
+        }
 
-//    if (remapbuf==NULL)
-//    {
-//        if ((r|g|b) == 0)
-//        {
-//            palookup[palnum] = palookup[0];  // Alias to base shade table!
-//            return;
-//        }
+        if (idmap[0]==1)  // init identity map
+            for (i=0; i<256; i++)
+                idmap[i] = i;
 
-//        if (idmap[0]==1)  // init identity map
-//            for (i=0; i<256; i++)
-//                idmap[i] = i;
+        remapbuf = idmap;
+    }
 
-//        remapbuf = idmap;
-//    }
+    if (palookup[palnum] == NULL || (palnum!=0 && palookup[palnum] == palookup[0]))
+    {
+        alloc_palookup(palnum);
+        if (palookup[palnum] == NULL)
+            exit(1);
+    }
 
-//    if (palookup[palnum] == NULL || (palnum!=0 && palookup[palnum] == palookup[0]))
-//    {
-//        alloc_palookup(palnum);
-//        if (palookup[palnum] == NULL)
-//            exit(1);
-//    }
+    if (dastat == 0) return;
+    if ((r|g|b|63) != 63) return;
 
-//    if (dastat == 0) return;
-//    if ((r|g|b|63) != 63) return;
+    if ((r|g|b) == 0)
+    {
+        // "black fog"/visibility case -- only remap color indices
 
-//    if ((r|g|b) == 0)
-//    {
-//        // "black fog"/visibility case -- only remap color indices
+        for (i=0; i<256; i++)
+        {
+            ptr = new Ptr(palookup[0], remapbuf[i]);
+            ptr2 = new Ptr(palookup[palnum], i);
 
-//        for (i=0; i<256; i++)
-//        {
-//            ptr = palookup[0] + remapbuf[i];
-//            ptr2 = palookup[palnum] + i;
+            for (j=0; j<numshades; j++)
+                { ptr2.setValue(ptr.getValue()); ptr.idx += 256; ptr2.idx += 256; }
+        }
+    }
+    else
+    {
+        // colored fog case
 
-//            for (j=0; j<numshades; j++)
-//                { *ptr2 = *ptr; ptr += 256; ptr2 += 256; }
-//        }
-//    }
-//    else
-//    {
-//        // colored fog case
+        ptr2 = new Ptr(palookup[palnum]);
 
-//        ptr2 = palookup[palnum];
-
-//        for (i=0; i<numshades; i++)
-//        {
-//            palscale = divscale16(i,numshades);
-//            for (j=0; j<256; j++)
-//            {
-//                ptr = (char *)&palette[remapbuf[j]*3];
-//                *ptr2++ = getclosestcol(ptr[0] + mulscale16(r-ptr[0],palscale),
-//                                        ptr[1] + mulscale16(g-ptr[1],palscale),
-//                                        ptr[2] + mulscale16(b-ptr[2],palscale));
-//            }
-//        }
-//    }
+        for (i=0; i<numshades; i++)
+        {
+            palscale = divscale16(i,numshades);
+            for (j=0; j<256; j++)
+            {
+                ptr = new Ptr( /*(char *)&*/palette.subarray(remapbuf[j]*3));
+                ptr2.setValue(getclosestcol(ptr.array[0] + mulscale16(r-ptr.array[0],palscale),
+                                        ptr.array[1] + mulscale16(g-ptr.array[1],palscale),
+                                        ptr.array[2] + mulscale16(b-ptr.array[2],palscale)));
+                ptr2.idx++;
+            }
+        }
+    }
 
 //#if defined(USE_OPENGL)
-//    palookupfog[palnum].r = r;
-//    palookupfog[palnum].g = g;
-//    palookupfog[palnum].b = b;
+    palookupfog[palnum].r = r;
+    palookupfog[palnum].g = g;
+    palookupfog[palnum].b = b;
 //#endif
-//}
+}
 
 //
 // setbasepaltable

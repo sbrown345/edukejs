@@ -39,9 +39,17 @@ class Ptr {
     idx: number;
     view: DataView;
 
+    getUint8() {
+        if (!this.view) {
+            this.view = new DataView(this.array.buffer); // this breaks if a subarray is passed in
+        }
+
+        return this.view.getUint8(this.idx); // same as getValue!!
+    }
+
     getInt16() {
         if (!this.view) {
-            this.view = new DataView(this.array.buffer);
+            this.view = new DataView(this.array.buffer);// this breaks if a subarray is passed in
         }
 
         return this.view.getInt16(this.idx, true);
@@ -49,15 +57,23 @@ class Ptr {
 
     getInt32() {
         if (!this.view) {
-            this.view = new DataView(this.array.buffer);
+            this.view = new DataView(this.array.buffer);// this breaks if a subarray is passed in
         }
 
         return this.view.getInt32(this.idx, true);
     }
 
+    setValue(v: number) {
+        this.array[this.idx] = v;
+    }
+
+    getValue(): number {
+        return this.array[this.idx];
+    }
+
     constructor(array: Uint8Array, index: number = 0) {
-        //this.buf = array.buffer;
-        this.array = array;
+        //this.buf = array.buffer; 
+        this.array = array; // don't change this to buffer because makepalookup will break because of the subarray stuff - subarrays arraybuffer doesn't take into account the index
         this.idx = index;
 
         if (array.BYTES_PER_ELEMENT !== 1) {
