@@ -8117,6 +8117,7 @@ int32_t getclosestcol(int32_t r, int32_t g, int32_t b)
         }
         while (i >= 0);
     }
+    dlog(DEBUG_PALETTE,"retcol: %i, r: %i, g: %i, b: %i\n", retcol, r, g, b);
     if (retcol >= 0) return(retcol);
 
     mindist = INT32_MAX;
@@ -17179,3 +17180,14 @@ int32_t hash_findcase(const hashtable_t *t, const char *s)
  * vim:ts=8:
  */
 
+
+// DEBUGGING STUFF TO HELP COMPARE WITH JS PORT
+void dlog(int32_t log, char *format, ...) {
+	if(log) {
+		va_list argptr;
+		va_start(argptr, format);
+		//vfprintf(stderr, format, argptr);
+		vprintf(format, argptr);
+		va_end(argptr);
+	}
+}

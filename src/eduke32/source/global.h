@@ -161,9 +161,3 @@ G_EXTERN char setupfilename[BMAX_PATH];
 #endif
 
 #endif
-
-
-
-// DEBUGGING STUFF TO HELP COMPARE WITH JS PORT
-#define COMPILE_DEBUG 1
-void dlog(int32_t log, char *format, ...);

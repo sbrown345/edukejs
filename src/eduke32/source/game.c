@@ -10819,7 +10819,7 @@ static void G_Startup(void)
     picanm[LOADSCREEN].sf |= PICANM_NOFULLBRIGHT_BIT;
 
 //    initprintf("Loading palette/lookups...\n");
-    G_LoadExtraPalettes();
+    G_LoadExtraPalettes();          
 
     //ReadSaveGameHeaders();
 

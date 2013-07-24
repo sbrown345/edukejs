@@ -1,3 +1,4 @@
+/// <reference path="../../utils/logging.ts" />
 /// <reference path="../../utils/assert.ts" />
 /// <reference path="../../utils/c.ts" />
 /// <reference path="../../utils/todo.ts" />
@@ -8161,6 +8162,7 @@ function getclosestcol(/*int32_t*/ r: number, /*int32_t*/ g: number, /*int32_t*/
         }
         while (i >= 0);
     }
+    dlog(DEBUG_PALETTE,"retcol: %i, r: %i, g: %i, b: %i\n", retcol, r, g, b);
     if (retcol >= 0) return(retcol);
 
     mindist = INT32_MAX;
@@ -8173,9 +8175,7 @@ function getclosestcol(/*int32_t*/ r: number, /*int32_t*/ g: number, /*int32_t*/
         dist += bdist[pal1[pal1Idx+2]+b]; if (dist >= mindist) continue;
         mindist = dist; retcol = i;
     }
-
-    //assert.test("getclosestcol", 34545, gdist[3]); // on first run assert two values
-    //assert.test("getclosestcol", -6, gdist[3], 2); // on second run assert two values
+    
     return(retcol);
 }
 
@@ -14406,7 +14406,8 @@ function makepalookup(palnum: number, remapbuf: Int8Array, /*int8_t*/ r: number,
             }
         }
     }
-
+        
+    dlogFlush();
 //#if defined(USE_OPENGL)
     palookupfog[palnum].r = r;
     palookupfog[palnum].g = g;

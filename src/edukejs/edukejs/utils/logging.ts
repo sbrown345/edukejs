@@ -13,13 +13,12 @@ var dlog = function (log: boolean, format: string, ...args: any[]) {
     } else {
         var formatter = new Formatter(format.replace(/%u/g, "%i"));
         args = args.slice(1);
-        var string = formatter.format.apply(formatter, args);
+        var text = formatter.format.apply(formatter, args);
 
-        if (dlogOutputCurrent.length > 100000) {
-            dlogOutput.push(dlogOutputCurrent);
-            dlogOutputCurrent = [];
+        if (dlogOutput[dlogOutput.length-1].length > 100000) {
+            dlogOutput.push([]);
         }
-        dlogOutputCurrent.push(string);
+        dlogOutput[dlogOutput.length-1].push(text);
     }
 };
 
@@ -30,29 +29,29 @@ var dlogConcat = function (arr) {
     return s;
 };
 
-var dlogOutputCurrent = [];
-var dlogOutput = [/*array of string arrays*/];
+var dlogOutput = [[]];
 
-var dlogFlush = function(append) {
+var dlogFlush = function(append = false) {
     for (var i = 0; i <dlogOutput.length; i++) {
 
         var logText = dlogConcat(dlogOutput[i]);
         sendTextNew(logText, i !== 0 || append);
     }
 
-    dlogOutputCurrent = [];
-    dlogOutput = [];
+    dlogOutput = [[]];
 };
 
 function sendTextNew(text: string, append: boolean) {
-    var xhr = new XMLHttpRequest();
-    var body = "string=" + encodeURIComponent(text);
-    if (append) {
-        body += "&append=true";
-    }
-    xhr.open("POST", "log.aspx", false);
-    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-    xhr.send(body);
+    setTimeout(function() {
+        var xhr = new XMLHttpRequest();
+        var body = "string=" + encodeURIComponent(text);
+        if (append) {
+            body += "&append=true";
+        }
+        xhr.open("POST", "log.aspx", false);
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        xhr.send(body);
+    });
 }
 
 var tokenize = function (/*String*/ str, /*RegExp*/ re, /*Function?*/ parseDelim, /*Object?*/ instance) {

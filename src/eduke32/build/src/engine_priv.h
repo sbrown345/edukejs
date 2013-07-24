@@ -213,3 +213,12 @@ static inline void bricolor(palette_t *wpptr, int32_t dacol)
 }
 
 #endif	/* ENGINE_PRIV_H */
+
+
+
+
+
+// DEBUGGING STUFF TO HELP COMPARE WITH JS PORT
+#define DEBUG_COMPILE 0
+#define DEBUG_PALETTE 1
+void dlog(int32_t log, char *format, ...);
