@@ -95,8 +95,22 @@
             areEqual: function (expected: any, actual: any): boolean {
                 return expected == actual;
             }
+        },
+
+        // an assertion to only run once
+        run: function(key: string, expression: boolean, message?: string) {
+            if(runAssertionCounts[key] === undefined) {
+                console.assert(expression, message);
+                runAssertionCounts[key] = 1; // run once
+                
+                if(!expression) {
+                    debugger;
+                }
+            }
         }
     };
+
+    var runAssertionCounts = {};
 
     function checkArray(testFn, value) {
         for (var i = 0; i < value.length; i++) {

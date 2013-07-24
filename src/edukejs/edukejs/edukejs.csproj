@@ -167,7 +167,7 @@
     </VisualStudio>
   </ProjectExtensions>
   <PropertyGroup>
-    <PreBuildEvent>tsc --debug --comments --sourcemap --out $(ProjectDir)eduke.js $(ProjectDir)eduke32\source\game.c.ts</PreBuildEvent>
+    <PreBuildEvent>tsc -target ES5 --debug --comments --sourcemap --out $(ProjectDir)eduke.js $(ProjectDir)eduke32\source\game.c.ts</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

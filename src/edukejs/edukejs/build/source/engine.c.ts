@@ -7958,19 +7958,25 @@ function initfastcolorlookup(rscale: number, gscale: number, bscale: number): vo
         j += 129-(i<<1);
     }
 
+    assert.run("initfastcolorlookup rdist", rdist[99] == 36750);
+    assert.run("initfastcolorlookup gdist", gdist[93] == 49619);
     Bmemset(new P(colhere.buffer),0,sizeof(colhere));
     Bmemset(new P(colhead.buffer),0,sizeof(colhead));
 
-    pal1 = palette.subarray(768-3);
-    for (i=255; i>=0; i--,pal1-=3)
+    pal1 = palette;
+    var pal1Idx = 768-3;
+    for (i=255; i>=0; i--,pal1Idx-=3)
     {
-        j = (pal1[0]>>3)*FASTPALGRIDSIZ*FASTPALGRIDSIZ
-            + (pal1[1]>>3)*FASTPALGRIDSIZ + (pal1[2]>>3)
+        j = (pal1[pal1Idx+0]>>3)*FASTPALGRIDSIZ*FASTPALGRIDSIZ
+            + (pal1[pal1Idx+1]>>3)*FASTPALGRIDSIZ + (pal1[pal1Idx+2]>>3)
             + FASTPALGRIDSIZ*FASTPALGRIDSIZ + FASTPALGRIDSIZ+1;
         if (colhere[j>>3]&pow2char[j&7]) colnext[i] = colhead[j]; else colnext[i] = -1;
         colhead[j] = i;
         colhere[j>>3] |= pow2char[j&7];
     }
+
+    assert.run("initfastcolorlookup colhead", colhead[74] == 84);
+    assert.run("initfastcolorlookup colhere", colhere[71] == -14);
 
     i = 0;
     for (x=-FASTPALGRIDSIZ*FASTPALGRIDSIZ; x<=FASTPALGRIDSIZ*FASTPALGRIDSIZ; x+=FASTPALGRIDSIZ*FASTPALGRIDSIZ)
@@ -7978,6 +7984,7 @@ function initfastcolorlookup(rscale: number, gscale: number, bscale: number): vo
             for (z=-1; z<=1; z++)
                 colscan[i++] = x+y+z;
     i = colscan[13]; colscan[13] = colscan[26]; colscan[26] = i;
+    assert.run("initfastcolorlookup colscan[13]", colscan[13] == 73);
 }
 
 
@@ -8128,6 +8135,7 @@ function getclosestcol(/*int32_t*/ r: number, /*int32_t*/ g: number, /*int32_t*/
     mindist = min(rdist[coldist[r&7]+64+8],gdist[coldist[g&7]+64+8]);
     mindist = min(mindist,bdist[coldist[b&7]+64+8]);
     mindist++;
+    assert.run("mindist", mindist == 705);
 
     r = 64-r; g = 64-g; b = 64-b;
 
@@ -8137,7 +8145,7 @@ function getclosestcol(/*int32_t*/ r: number, /*int32_t*/ g: number, /*int32_t*/
         i = colscan[k]+j; if ((colhere[i>>3]&pow2char[i&7]) == 0) continue;
         i = colhead[i];
         do
-        {   debugger;throw "todo: this needs testing ";
+        {   
             pal1 = palette.subarray(i*3);
             dist = gdist[pal1[1]+g];
             if (dist < mindist)
@@ -8165,6 +8173,9 @@ function getclosestcol(/*int32_t*/ r: number, /*int32_t*/ g: number, /*int32_t*/
         dist += bdist[pal1[pal1Idx+2]+b]; if (dist >= mindist) continue;
         mindist = dist; retcol = i;
     }
+
+    //assert.test("getclosestcol", 34545, gdist[3]); // on first run assert two values
+    //assert.test("getclosestcol", -6, gdist[3], 2); // on second run assert two values
     return(retcol);
 }
 

@@ -864,17 +864,23 @@ var gotpic = new Int8Array((MAXTILES+7)>>3);
 
 //extern char apptitle[256];
 class palette_t {
-    r: number;
-    g: number;
-    b: number;
-    f: number;
+    private _values: Int8Array;
 
     constructor() {
-        this.r = 0;
-        this.g = 0;
-        this.b = 0;
-        this.f = 0;
+        this._values = new Int8Array(4);
     }
+
+    public get r() {return this._values[0];}
+    public set r(v) {this._values[0] = v;}
+     
+    public get g() {return this._values[1];}
+    public set g(v) {this._values[1] = v;}
+
+    public get b() {return this._values[2];}
+    public set b(v) {this._values[2] = v;}
+
+    public get f() {return this._values[3];}
+    public set f(v) {this._values[3] = v;}
 }
 //extern palette_t curpalette[256], curpalettefaded[256], palfadergb;
 //extern char palfadedelta;
