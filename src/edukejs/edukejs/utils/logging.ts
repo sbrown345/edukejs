@@ -1,7 +1,8 @@
 ﻿var LOG_TO_CONSOLE = false;
 var SKIP_ALL_LOGGING = false;
 
-var DEBUG_COMPILE = true;
+var DEBUG_COMPILE = false;
+var DEBUG_PALETTE = true;
 var DEBUG_SCRIPT_CHANGE = false;
 
 var dlog = function (log: boolean, format: string, ...args: any[]) {
@@ -11,6 +12,7 @@ var dlog = function (log: boolean, format: string, ...args: any[]) {
         console.log.apply(console, args);
     } else {
         var formatter = new Formatter(format.replace(/%u/g, "%i"));
+        args = args.slice(1);
         var string = formatter.format.apply(formatter, args);
 
         if (dlogOutputCurrent.length > 100000) {
@@ -42,9 +44,9 @@ var dlogFlush = function(append) {
     dlogOutput = [];
 };
 
-function sendTextNew(string, append) {
+function sendTextNew(text: string, append: boolean) {
     var xhr = new XMLHttpRequest();
-    var body = "string=" + encodeURIComponent(string);
+    var body = "string=" + encodeURIComponent(text);
     if (append) {
         body += "&append=true";
     }
