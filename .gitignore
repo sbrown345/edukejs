@@ -121,3 +121,4 @@ obj
 
 /src/edukejs/edukejs/eduke.js.map
 *.pdb
+/src/eduke32/*.dmp
