@@ -111,11 +111,11 @@ class R<T> {
 }
 
 interface String {
-  toInt8Array: () => Int8Array;
+  toUint8Array: () => Uint8Array;
 }
 
-String.prototype.toInt8Array= function () : Int8Array {
-    var array = new Int8Array(this.length);
+String.prototype.toUint8Array= function () : Uint8Array {
+    var array = new Uint8Array(this.length);
     for (var i = 0; i < this.length; i++) {
         array[i] = this.charCodeAt(i);
     }
@@ -123,11 +123,11 @@ String.prototype.toInt8Array= function () : Int8Array {
     return array;
 }
 
-interface Int8Array {
+interface Uint8Array {
   toString: () => string;
 }
 
-Int8Array.prototype.toString = function () : string {
+Uint8Array.prototype.toString = function () : string {
     var str = "";
     for (var i = 0; i < this.length; i++) {
         if(!this[i]) {

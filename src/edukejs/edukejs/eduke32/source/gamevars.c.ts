@@ -1325,7 +1325,7 @@ function Gv_AddSystemVars() : void
 {
     // only call ONCE
 //#if !defined LUNATIC
-    //var aszBuf =  new Int8Array(64); // char[64]
+    //var aszBuf =  new Uint8Array(64); // char[64]
 //#endif
     var i;
 

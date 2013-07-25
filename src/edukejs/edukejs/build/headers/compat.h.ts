@@ -623,7 +623,7 @@ var Bmemcmp = memcmp;
 //# define Bscanf scanf
 var Bprintf  = printf;
 //# define Bsscanf sscanf
-var Bsprintf = function (buf: Int8Array, format: string, ...args: any[]) {
+var Bsprintf = function (buf: Uint8Array, format: string, ...args: any[]) {
     args.unshift(format);
     var output = sprintf.apply(this, args);
     var i: number;
@@ -712,7 +712,7 @@ var Bsprintf = function (buf: Int8Array, format: string, ...args: any[]) {
 //#endif
 
 // Copy min(strlen(src)+1, n) characters into dst, always terminate with a NUL.
-function Bstrncpyz(dst: Int8Array, src: string, n: number): Int8Array
+function Bstrncpyz(dst: Uint8Array, src: string, n: number): Uint8Array
 {
     Bstrncpy(dst, src, n);
     dst[n-1] = 0;

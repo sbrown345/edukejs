@@ -1239,7 +1239,7 @@ var InputLabels : memberlabel_t[]=
 
 //#endif
 
-var bitptr: Int8Array; // pointer to bitmap of which bytecode positions contain pointers //char *
+var bitptr: Uint8Array; // pointer to bitmap of which bytecode positions contain pointers //char *
 var BITPTR_POINTER = 1;
 
 //#if !defined LUNATIC
@@ -1325,10 +1325,10 @@ function C_SetScriptSize(/*int32_t*/ newsize: number) : number
     //var newscript: Int32Array;
     //var i: number, j: number;
     //var osize: number = g_scriptSize;
-    //var scriptptrs: Int8Array;
-    //var newbitptr: Int8Array;
+    //var scriptptrs: Uint8Array;
+    //var newbitptr: Uint8Array;
 
-    //scriptptrs = new Int8Array(g_scriptSize);//(char *)Bcalloc(1, g_scriptSize * sizeof(uint8_t));
+    //scriptptrs = new Uint8Array(g_scriptSize);//(char *)Bcalloc(1, g_scriptSize * sizeof(uint8_t));
 
     //for (i=g_scriptSize-1; i>=0; i--)
     //{
@@ -1353,7 +1353,7 @@ function C_SetScriptSize(/*int32_t*/ newsize: number) : number
     //initprintf("Resizing code buffer to %d*%d bytes\n",newsize, sizeof(intptr_t));
 
     //newscript = new Int32Array(newsize);//(intptr_t *)Brealloc(script, newsize * sizeof(intptr_t));
-    //newbitptr = new Int8Array((((newsize+7)>>3)+1));//(char *)Bcalloc(1,(((newsize+7)>>3)+1) * sizeof(uint8_t));
+    //newbitptr = new Uint8Array((((newsize+7)>>3)+1));//(char *)Bcalloc(1,(((newsize+7)>>3)+1) * sizeof(uint8_t));
 
     //if (!newscript || !newbitptr) //maybe check idx???
     //{
@@ -2127,7 +2127,7 @@ function C_Include(confile: string) :  void
 
     j = kfilelength(fp);
 
-    mptr = new Ptr(new Int8Array(j+1));
+    mptr = new Ptr(new Uint8Array(j+1));
     //if (!mptr)
     //{
     //    kclose(fp);
@@ -2438,7 +2438,7 @@ function C_AllocQuote(qnum: number) : number
 {
     if (!ScriptQuotes[qnum])
     {
-        ScriptQuotes[qnum] = new Int8Array(MAXQUOTELEN);
+        ScriptQuotes[qnum] = new Uint8Array(MAXQUOTELEN);
         if (!ScriptQuotes[qnum])
         {
             Bsprintf(tempbuf, "Failed allocating %d byte quote text buffer.", MAXQUOTELEN);
@@ -5849,7 +5849,7 @@ function C_ParseCommand(loop: number): number
             if (tw == CON_REDEFINEQUOTE)
             {
                 if (!ScriptQuoteRedefinitions[g_numQuoteRedefinitions])
-                    ScriptQuoteRedefinitions[g_numQuoteRedefinitions] =  new Int8Array(MAXQUOTELEN);//(char *)Bcalloc(MAXQUOTELEN,sizeof(uint8_t));
+                    ScriptQuoteRedefinitions[g_numQuoteRedefinitions] =  new Uint8Array(MAXQUOTELEN);//(char *)Bcalloc(MAXQUOTELEN,sizeof(uint8_t));
                 ////if (!ScriptQuoteRedefinitions[g_numQuoteRedefinitions])
                 ////{
                 ////    Bsprintf(tempbuf,"Failed allocating %" PRIdPTR " byte quote text buffer.",sizeof(uint8_t) * MAXQUOTELEN);
@@ -6436,7 +6436,7 @@ function C_Compile(filenam: string) : void
 
     startcompiletime = getticks();
     
-    mptr = new Ptr(new Int8Array(fs+1));//(char *)Bmalloc(fs+1);
+    mptr = new Ptr(new Uint8Array(fs+1));//(char *)Bmalloc(fs+1);
 //    if (!mptr)
 //    {
 //        Bsprintf(tempbuf,"Failed allocating %d byte CON text buffer.", fs+1);
@@ -6457,7 +6457,7 @@ function C_Compile(filenam: string) : void
     script = new Int32Array(g_scriptSize);  //(intptr_t *)Bcalloc(1,g_scriptSize * sizeof(intptr_t));
     assert.areEqual(4194304, script.buffer.byteLength);
     scriptIdx = 0;
-    bitptr = new Int8Array((((g_scriptSize+7)>>3)+1)); //(char *)Bcalloc(1,(((g_scriptSize+7)>>3)+1) * sizeof(uint8_t));
+    bitptr = new Uint8Array((((g_scriptSize+7)>>3)+1)); //(char *)Bcalloc(1,(((g_scriptSize+7)>>3)+1) * sizeof(uint8_t));
     assert.areEqual(131073, bitptr.buffer.byteLength);
 //    initprintf("script: %d, bitptr: %d\n",script,bitptr);
 

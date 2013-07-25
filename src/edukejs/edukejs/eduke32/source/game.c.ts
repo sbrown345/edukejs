@@ -161,7 +161,7 @@ var CommandName: string = NULL;//static const char *
 //int32_t g_forceWeaponChoice = 0;
 var g_fakeMultiMode : number = 0;
 
-var boardfilename = new Int8Array(BMAX_PATH), currentboardfilename = new Int8Array(BMAX_PATH);
+var boardfilename = new Uint8Array(BMAX_PATH), currentboardfilename = new Uint8Array(BMAX_PATH);
 
 //static char g_rootDir[BMAX_PATH];
 var g_modDir = "/"; //[BMAX_PATH] 
@@ -188,7 +188,7 @@ var g_gameNamePtr = ""; ////const char *
 //// g_rtsNamePtr can point to an argv[] element
 //const char *g_rtsNamePtr = NULL;
 
-var g_scriptModules: string[]/*Int8Array[]*/ = null; //char **
+var g_scriptModules: string[]/*Uint8Array[]*/ = null; //char **
 var g_scriptModulesNum: number = 0; //int32
 //char **g_defModules = NULL;
 //int32_t g_defModulesNum = 0;
@@ -10515,13 +10515,13 @@ function G_CompileScripts() : void
     var psm = pathsearchmode;
 
     todo("check this init of labels");
-    label = new Int8Array(sprite.length * 44);//sprite[0];// (char *)&sprite[0];     // V8: 16384*44/64 = 11264  V7: 4096*44/64 = 2816
+    label = new Uint8Array(sprite.length * 44);//sprite[0];// (char *)&sprite[0];     // V8: 16384*44/64 = 11264  V7: 4096*44/64 = 2816
     labelcode = new Int32Array(sector.length * 44 / 4);//sector[0];//(int32_t *)&sector[0]; // V8: 4096*40/4 = 40960    V7: 1024*40/4 = 10240
     labeltype = new Int32Array(wall.length * 32 / 4);//wall[0];//(int32_t *)&wall[0];   // V8: 16384*32/4 = 131072  V7: 8192*32/4 = 65536
 //#endif
 
     if (g_scriptNamePtr)
-        Bcorrectfilename(g_scriptNamePtr.toInt8Array(),0);
+        Bcorrectfilename(g_scriptNamePtr.toUint8Array(),0);
 
 //#if defined LUNATIC
 //    Gv_Init();
@@ -10539,10 +10539,10 @@ function G_CompileScripts() : void
         G_GameExit("Error: too many labels defined!");
 
     {
-        var newlabel: Int8Array;
+        var newlabel: Uint8Array;
         var newlabelcode: Int32Array;
         
-        newlabel     = new Int8Array(g_numLabels<<6);//(char *)Bmalloc(g_numLabels<<6);
+        newlabel     = new Uint8Array(g_numLabels<<6);//(char *)Bmalloc(g_numLabels<<6);
         newlabelcode = new Int32Array(g_numLabels);////(int32_t *)Bmalloc(g_numLabels*sizeof(int32_t));
 
         //if (!newlabel || !newlabelcode)
@@ -10779,18 +10779,18 @@ function G_Startup() : void
         }
         else
         {
-            var dot: Int8Array, slash: Int8Array;
+            var dot: Uint8Array, slash: Uint8Array;
 
             boardfilename[0] = '/'.charCodeAt(0);
             boardfilename[1] = 0;
-            boardfilename = Bstrcat(boardfilename.toString(), CommandMap).toInt8Array();
+            boardfilename = Bstrcat(boardfilename.toString(), CommandMap).toUint8Array();
    
             dot = Bstrrchr(boardfilename,'.'.charCodeAt(0));
             slash = Bstrrchr(boardfilename,'/'.charCodeAt(0));
             if (!slash) slash = Bstrrchr(boardfilename,'\\'.charCodeAt(0));
 
             if ((!slash && !dot) || (slash && dot < slash))
-                boardfilename = Bstrcat(boardfilename.toString(),".map").toInt8Array();
+                boardfilename = Bstrcat(boardfilename.toString(),".map").toUint8Array();
 
             Bcorrectfilename(boardfilename,0);
 

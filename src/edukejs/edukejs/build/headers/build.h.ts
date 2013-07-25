@@ -737,9 +737,9 @@ var numsectors, numwalls; //EXTERN int16_t
 /*@type {number}*/ var totalclock;
 //EXTERN int32_t numframes, randomseed;
 var sintable = new Int16Array(2048);
-var palette = new Int8Array(768);
+var palette = new Uint8Array(768);
 var numshades;//EXTERN int16_t 
-var palookup: Int8Array[] = new Array(MAXPALOOKUPS); //EXTERN char *
+var palookup: Uint8Array[] = new Array(MAXPALOOKUPS); //EXTERN char *
 var basepaltableptr: Uint8Array[]; //EXTERN uint8_t **
 var parallaxtype: number, showinvisibility: number; //EXTERN char
 var parallaxyoffs: number, parallaxyscale:number;               //EXTERN int32_t
@@ -767,7 +767,7 @@ var pskynummultis: number; //int16_t
 //EXTERN int16_t nextspritesect[MAXSPRITES], nextspritestat[MAXSPRITES];
 
 var tilesizx = new Int16Array(MAXTILES), tilesizy = new Int16Array(MAXTILES);
-var picsiz = new Int8Array(MAXTILES);
+var picsiz = new Uint8Array(MAXTILES);
 //EXTERN char walock[MAXTILES];
 //#ifdef __cplusplus
 //extern "C" {
@@ -847,7 +847,7 @@ var picanm: picanm_t[] = newStructArray(picanm_t, MAXTILES);
 //# define GOTPIC_USED
 //#endif
 
-var gotpic = new Int8Array((MAXTILES+7)>>3);
+var gotpic = new Uint8Array((MAXTILES+7)>>3);
 //EXTERN char gotsector[(MAXSECTORS+7)>>3];
 
 //EXTERN char editorcolors[256];
@@ -864,10 +864,10 @@ var gotpic = new Int8Array((MAXTILES+7)>>3);
 
 //extern char apptitle[256];
 class palette_t {
-    private _values: Int8Array;
+    private _values: Uint8Array;
 
     constructor() {
-        this._values = new Int8Array(4);
+        this._values = new Uint8Array(4);
     }
 
     public get r() {return this._values[0];}

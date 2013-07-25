@@ -599,10 +599,10 @@ var numgroupfiles = 0; //int32
 var gnumfiles = new Uint32Array(MAXGROUPFILES);
 var groupfil = new Int32Array([-1,-1,-1,-1,-1,-1,-1,-1]); assert.areEqual(MAXGROUPFILES, groupfil.length);
 var groupfilpos = new Int32Array(MAXGROUPFILES);
-var gfilelist = new Array<Int8Array>(MAXGROUPFILES);
+var gfilelist = new Array<Uint8Array>(MAXGROUPFILES);
 var gfileoffs = new Array<Int32Array>(MAXGROUPFILES);
 
-var filegrp = new Int8Array(MAXOPENFILES);
+var filegrp = new Uint8Array(MAXOPENFILES);
 var filepos = new Int32Array(MAXOPENFILES);
 var /*intptr_t */ filehan = new Int32Array( //[MAXOPENFILES] =
 [
@@ -663,7 +663,7 @@ function initgroupfile(filename : string) : number
     {
         groupfilpos[numgroupfiles] = 0;
         Bread(groupfil[numgroupfiles],new Ptr(buf),16);
-        if (Bmemcmp(buf, "KenSilverman".toInt8Array(), 12))
+        if (Bmemcmp(buf, "KenSilverman".toUint8Array(), 12))
         {
             todoThrow();
             //Bclose(groupfil[numgroupfiles]);
@@ -673,7 +673,7 @@ function initgroupfile(filename : string) : number
         gnumfiles[numgroupfiles] = B_LITTLE32(new Int32Array(buf.buffer)[12/Int32Array.BYTES_PER_ELEMENT]);//  **((int32_t *)&buf[12])
         assert.areEqual(456, gnumfiles[numgroupfiles]);
 
-        gfilelist[numgroupfiles] = new Int8Array(gnumfiles[numgroupfiles]<<4);
+        gfilelist[numgroupfiles] = new Uint8Array(gnumfiles[numgroupfiles]<<4);
         gfileoffs[numgroupfiles] = new Int32Array(gnumfiles[numgroupfiles]+1);
 
         Bread(groupfil[numgroupfiles],new Ptr(gfilelist[numgroupfiles]),gnumfiles[numgroupfiles]<<4);

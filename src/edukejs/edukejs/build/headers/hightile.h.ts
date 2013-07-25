@@ -3,11 +3,11 @@
 
 class hicskybox_t {
     ignore: number; //int
-    face: Int8Array; //char [6]
+    face: Uint8Array; //char [6]
 
     constructor() {
         this.ignore= 0;
-        this.face= new Int8Array(6);
+        this.face= new Uint8Array(6);
     }
 };
 

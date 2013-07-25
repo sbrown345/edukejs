@@ -154,7 +154,7 @@ var MAXYSIZ = 256;
 var MAXZSIZ = 255;
 var MAXVOXMIPS = 5;
 var voxoff: Int32Array[] = multiDimArray(Int32Array, MAXVOXELS, MAXVOXMIPS);
-var voxlock: Int8Array[] = multiDimArray(Int8Array, MAXVOXELS, MAXVOXMIPS);
+var voxlock: Uint8Array[] = multiDimArray(Uint8Array, MAXVOXELS, MAXVOXMIPS);
 var voxscale = new Int32Array(MAXVOXELS);
 
 //static int32_t ggxinc[MAXXSIZ+1], ggyinc[MAXXSIZ+1];
@@ -206,7 +206,7 @@ var palookupfog: palette_t[] = newStructArray(palette_t, MAXPALOOKUPS);
 
 var artversion: number;//int32
 var pic: P = NULL;
-var tilefilenum = new Int8Array(MAXTILES);
+var tilefilenum = new Uint8Array(MAXTILES);
 var tilefileoffs = new Int32Array(MAXTILES);
 //static int32_t lastageclock;
 
@@ -219,7 +219,7 @@ var artsize = 0;//, cachesize = 0 looks like this is in cache1d.c too;
 var radarang = new Int16Array(1280), radarang2 = new Int16Array(MAXXDIM);
 
 var sqrtable = new Uint16Array(4096), shlookup = new Uint16Array(4096+256);
-var pow2char = new Int8Array([1,2,4,8,16,32,64,128]);
+var pow2char = new Uint8Array([1,2,4,8,16,32,64,128]);
 pow2long = new Int32Array(
 [
     1, 2, 4, 8,
@@ -233,22 +233,22 @@ pow2long = new Int32Array(
 ]);
 
 var britable = [
-    new Int8Array(256),
-    new Int8Array(256),
-    new Int8Array(256),
-    new Int8Array(256),
-    new Int8Array(256),
-    new Int8Array(256),
-    new Int8Array(256),
-    new Int8Array(256),
-    new Int8Array(256),
-    new Int8Array(256),
-    new Int8Array(256),
-    new Int8Array(256),
-    new Int8Array(256),
-    new Int8Array(256),
-    new Int8Array(256),
-    new Int8Array(256)]; // JBF 20040207: full 8bit precision
+    new Uint8Array(256),
+    new Uint8Array(256),
+    new Uint8Array(256),
+    new Uint8Array(256),
+    new Uint8Array(256),
+    new Uint8Array(256),
+    new Uint8Array(256),
+    new Uint8Array(256),
+    new Uint8Array(256),
+    new Uint8Array(256),
+    new Uint8Array(256),
+    new Uint8Array(256),
+    new Uint8Array(256),
+    new Uint8Array(256),
+    new Uint8Array(256),
+    new Uint8Array(256)]; // JBF 20040207: full 8bit precision
 
 //extern char textfont[2048], smalltextfont[2048];
 
@@ -2355,7 +2355,7 @@ var globalposx: number, globalposy: number, globalposz: number, globalhoriz: num
 var globalang: number, globalcursectnum: number;                        //int16_t 
 var globalpal: number, cosglobalang: number, singlobalang: number; //int32_t 
 //int32_t cosviewingrangeglobalang, sinviewingrangeglobalang;
-var globalpalwritten: Int8Array; //static char *
+var globalpalwritten: Uint8Array; //static char *
 //static int32_t globaluclip, globaldclip;
 var globvis: number, globalvisibility: number;                               //int32_t 
 var globalhisibility: number, globalpisibility: number, globalcisibility: number;    //int32_t 
@@ -2385,7 +2385,7 @@ var xyaspect: number;//int32
 //int32_t ydim16, qsetmode = 0;
 //int16_t pointhighlight=-1, linehighlight=-1, highlightcnt=0;
 //static int32_t lastx[MAXYDIM];
-var transluc: Int8Array; //static char *
+var transluc: Uint8Array; //static char *
 
 var paletteloaded = 0; //char
 
@@ -2393,10 +2393,10 @@ var paletteloaded = 0; //char
 
 var FASTPALGRIDSIZ=8;
 var rdist = new Int32Array(129), gdist = new Int32Array(129), bdist = new Int32Array(129);
-var  colhere: Int8Array = new Int8Array(((FASTPALGRIDSIZ+2)*(FASTPALGRIDSIZ+2)*(FASTPALGRIDSIZ+2))>>3);     //static char
-var  colhead: Int8Array= new Int8Array((FASTPALGRIDSIZ+2)*(FASTPALGRIDSIZ+2)*(FASTPALGRIDSIZ+2));          //static char
+var  colhere = new Uint8Array(((FASTPALGRIDSIZ+2)*(FASTPALGRIDSIZ+2)*(FASTPALGRIDSIZ+2))>>3);     //static char
+var  colhead = new Uint8Array((FASTPALGRIDSIZ+2)*(FASTPALGRIDSIZ+2)*(FASTPALGRIDSIZ+2));          //static char
 var colnext = new Int32Array(256);
-var coldist = new Int8Array([0,1,2,3,4,3,2,1]);
+var coldist = new Uint8Array([0,1,2,3,4,3,2,1]);
 var colscan = new Int32Array(27);
 
 //static int16_t clipnum, hitwalls[4];
@@ -2453,7 +2453,7 @@ var searchsector: number, searchwall: number, searchstat: number;     //search o
 
 //double msens = 1.0;
 
-var artfilename = new Int8Array(20);
+var artfilename = new Uint8Array(20);
 var artfil = -1, artfilnum, artfilplc;//static int32_t
 
 //char inpreparemirror = 0;
@@ -7947,7 +7947,7 @@ function loadtables(): number
 function initfastcolorlookup(rscale: number, gscale: number, bscale: number): void
 {
     var i: number, j: number, x: number, y: number, z: number;
-    var pal1: Int8Array;//char
+    var pal1: Uint8Array;//char
 
     j = 0;
     for (i=64; i>=0; i--)
@@ -8002,7 +8002,7 @@ function alloc_palookup(pal: number): void
     // The asm functions vlineasm1, mvlineasm1 (maybe others?) access the next
     // palookup[...] shade entry for tilesizy==512 tiles.
     // See DEBUG_TILESIZY_512 and the comment in a.nasm: vlineasm1.
-    palookup[pal] = new Int8Array((numshades + 1) * 256); //(char *)Bcalloc(numshades+1, 256);
+    palookup[pal] = new Uint8Array((numshades + 1) * 256); //(char *)Bcalloc(numshades+1, 256);
 //#endif
 }
 
@@ -8032,7 +8032,7 @@ function loadpalette(): number
     
     alloc_palookup(0);
 
-    transluc = new Int8Array(256*256);
+    transluc = new Uint8Array(256*256);
     if (palookup[0] == NULL || transluc == NULL)
         return loadpalette_err("Out of memory in loadpalette()!");
 
@@ -8132,7 +8132,7 @@ function loadpalette(): number
 function getclosestcol(/*int32_t*/ r: number, /*int32_t*/ g: number, /*int32_t*/ b: number): number
 {
     var i: number, j: number, k: number, dist: number, mindist: number, retcol: number;
-    var pal1: Int8Array, pal1Idx: number;
+    var pal1: Uint8Array, pal1Idx: number;
 
     j = (r>>3)*FASTPALGRIDSIZ*FASTPALGRIDSIZ
         + (g>>3)*FASTPALGRIDSIZ + (b>>3)
@@ -11104,8 +11104,8 @@ function loadpics(filename: string, askedsize: number): number
 
             localnumtiles = (localtileend-localtilestart+1);
 
-            kread(fil,new Ptr(new Int8Array(tilesizx.buffer).subarray(localtilestart*Int16Array.BYTES_PER_ELEMENT)), localnumtiles<<1);
-            kread(fil,new Ptr(new Int8Array(tilesizy.buffer).subarray(localtilestart*Int16Array.BYTES_PER_ELEMENT)), localnumtiles<<1);
+            kread(fil,new Ptr(new Uint8Array(tilesizx.buffer).subarray(localtilestart*Int16Array.BYTES_PER_ELEMENT)), localnumtiles<<1);
+            kread(fil,new Ptr(new Uint8Array(tilesizy.buffer).subarray(localtilestart*Int16Array.BYTES_PER_ELEMENT)), localnumtiles<<1);
             
             var picanmArray = new Uint8Array(localnumtiles<<2);
             kread(fil,new Ptr(picanmArray), localnumtiles<<2); 
@@ -14344,13 +14344,13 @@ function loadpics(filename: string, askedsize: number): number
 //
 // makepalookup
 //
-function makepalookup(palnum: number, remapbuf: Int8Array, /*int8_t*/ r: number, /*int8_t*/ g: number, /*int8_t*/ b: number, /*char*/ dastat: number): void
+function makepalookup(palnum: number, remapbuf: Uint8Array, /*int8_t*/ r: number, /*int8_t*/ g: number, /*int8_t*/ b: number, /*char*/ dastat: number): void
 {
     var i: number, j: number, palscale: number;
     var ptr: Ptr; //char *
     var ptr2: Ptr; // char *
 
-    var idmap = new Int8Array(256);idmap[0] = 1;
+    var idmap = new Uint8Array(256);idmap[0] = 1;
     
     if (paletteloaded == 0)
         return;

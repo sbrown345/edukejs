@@ -415,7 +415,7 @@ function WinMain(hInst, hPrevInst, lpCmdLine, nCmdShow)
         var quoted = 0, instring = 0, swallownext = 0;
         var p: string,wp: Uint8Array; var i;
         var pIdx: number = 0, wpIdx: number = 0;
-        wp = argvbuf.toInt8Array();
+        wp = argvbuf.toUint8Array();
         for (p=argvbuf; p.charCodeAt(pIdx); pIdx++)
         {
             if (p[pIdx] == ' ')

@@ -73,11 +73,11 @@ test("originalArgs", function () {
 });
 
 test("Bsprintf", function () {
-    var array = new Int8Array(10);
+    var array = new Uint8Array(10);
     Bsprintf(array, "test%s", "AAAA");
     strictEqual(array.toString(), "testAAAA", "array matches");
 
-    array = new Int8Array(10);
+    array = new Uint8Array(10);
     Bsprintf(array, "%i %i test", 20, 20);
     strictEqual(array.toString(), "20 20 test", "array matches");
 
@@ -100,7 +100,7 @@ test("memcpy", function () {
     strictEqual(dest.toString(), new Uint8Array([101,102,103,104]).toString(), "array matches");
 
     dest = new Uint8Array(4);
-    source = new Int8Array([101,102,103,104]);
+    source = new Uint8Array([101, 102, 103, 104]);
     memcpy(dest.buffer, source.buffer, 2);
     strictEqual(dest.toString(), new Uint8Array([101,102]).toString(), "array matches when limited to 2");
 });
@@ -117,18 +117,18 @@ test("strncmp", function () {
 });
 
 test("strcpy", function () {
-    strictEqual(strcpy(new Int8Array(10), "abc").toString(), "abc", "destination is abc");
-    strictEqual(strcpy(new Int8Array(10), "0123456789").toString(), "0123456789", "destination is 0123456789");
+    strictEqual(strcpy(new Uint8Array(10), "abc").toString(), "abc", "destination is abc");
+    strictEqual(strcpy(new Uint8Array(10), "0123456789").toString(), "0123456789", "destination is 0123456789");
 });
 
 test("strncpy", function () {
-    strictEqual(strncpy(new Int8Array(10), "abc", 1).toString(), "a", "destination is 'a', cutting off 'bc'");
-    strictEqual(strncpy(new Int8Array(10), "abc", 100).toString(), "abc", "destination is 'abc'");
+    strictEqual(strncpy(new Uint8Array(10), "abc", 1).toString(), "a", "destination is 'a', cutting off 'bc'");
+    strictEqual(strncpy(new Uint8Array(10), "abc", 100).toString(), "abc", "destination is 'abc'");
 });
 
 test("strlen", function () {
-    strictEqual(strlen(new Int8Array([9, 9, 9, 0, 0])), 3, "string length is 3");
-    strictEqual(strlen(new Int8Array([9, 9, 9, 9, 9])), 5, "string length is 5");
+    strictEqual(strlen(new Uint8Array([9, 9, 9, 0, 0])), 3, "string length is 3");
+    strictEqual(strlen(new Uint8Array([9, 9, 9, 9, 9])), 5, "string length is 5");
 });
 
 test("strupr", function () {
@@ -137,8 +137,8 @@ test("strupr", function () {
 });
 
 test("strrchr", function () {
-    strictEqual(strrchr("abc".toInt8Array(), "b".charCodeAt(0)).toString(), "bc", "abc turns to subarray which is 'bc'");
-    strictEqual(strrchr("abc".toInt8Array(), "d".charCodeAt(0)), null, "d does not exist, retun null");
+    strictEqual(strrchr("abc".toUint8Array(), "b".charCodeAt(0)).toString(), "bc", "abc turns to subarray which is 'bc'");
+    strictEqual(strrchr("abc".toUint8Array(), "d".charCodeAt(0)), null, "d does not exist, retun null");
 });
 
 test("strtoll", function () {
@@ -161,7 +161,7 @@ test("strtoll", function () {
 });
 
 test("uint8array string conversions", function () {
-    strictEqual("abc".toInt8Array().toString(), "abc", "'abc' is returned");
+    strictEqual("abc".toUint8Array().toString(), "abc", "'abc' is returned");
 });
 
 // duke funcs
