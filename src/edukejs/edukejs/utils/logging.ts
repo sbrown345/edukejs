@@ -18,6 +18,7 @@ var dlog = function (log: boolean, format: string, ...args: any[]) {
         if (dlogOutput[dlogOutput.length-1].length > 100000) {
             dlogOutput.push([]);
         }
+
         dlogOutput[dlogOutput.length-1].push(text);
     }
 };
@@ -42,16 +43,14 @@ var dlogFlush = function(append = false) {
 };
 
 function sendTextNew(text: string, append: boolean) {
-    setTimeout(function() {
-        var xhr = new XMLHttpRequest();
-        var body = "string=" + encodeURIComponent(text);
-        if (append) {
-            body += "&append=true";
-        }
-        xhr.open("POST", "log.aspx", false);
-        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-        xhr.send(body);
-    });
+    var xhr = new XMLHttpRequest();
+    var body = "string=" + encodeURIComponent(text);
+    if (append) {
+        body += "&append=true";
+    }
+    xhr.open("POST", "log.aspx", false);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhr.send(body);
 }
 
 var tokenize = function (/*String*/ str, /*RegExp*/ re, /*Function?*/ parseDelim, /*Object?*/ instance) {

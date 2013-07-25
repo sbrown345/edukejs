@@ -10613,6 +10613,7 @@ function G_LoadExtraPalettes(): void
     slime_pal[765] = slime_pal[766] = slime_pal[767] = 0;
     water_pal[765] = water_pal[766] = water_pal[767] = 0;
 
+    dlogFlush();    debugger;
     kclose(fp);
 }
 

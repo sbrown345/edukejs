@@ -7932,7 +7932,11 @@ static void initfastcolorlookup(int32_t rscale, int32_t gscale, int32_t bscale)
         j = (pal1[0]>>3)*8*8
             + (pal1[1]>>3)*8 + (pal1[2]>>3)
             + 8*8 + 8+1;
-        if (colhere[j>>3]&pow2char[j&7]) colnext[i] = colhead[j]; else colnext[i] = -1;
+        if (colhere[j>>3]&pow2char[j&7]) 
+			colnext[i] = colhead[j]; 
+		else 
+			colnext[i] = -1;
+
         colhead[j] = i;
         colhere[j>>3] |= pow2char[j&7];
     }
@@ -8094,7 +8098,7 @@ int32_t getclosestcol(int32_t r, int32_t g, int32_t b)
     mindist++;
 
     r = 64-r; g = 64-g; b = 64-b;
-
+	dlog(DEBUG_PALETTE,"mindist: %i, r: %i, g: %i, b: %i\n", mindist, r, g, b);
     retcol = -1;
     for (k=26; k>=0; k--)
     {
@@ -8110,10 +8114,13 @@ int32_t getclosestcol(int32_t r, int32_t g, int32_t b)
                 if (dist < mindist)
                 {
                     dist += bdist[pal1[2]+b];
+	                dlog(DEBUG_PALETTE,"dist +=: %i, b: %i\n", bdist[pal1[2]+b], b);
+	                dlog(DEBUG_PALETTE,"dist: %i\n", dist);
                     if (dist < mindist) { mindist = dist; retcol = i; }
                 }
             }
             i = colnext[i];
+            dlog(DEBUG_PALETTE,"i: %i\n", i);
         }
         while (i >= 0);
     }

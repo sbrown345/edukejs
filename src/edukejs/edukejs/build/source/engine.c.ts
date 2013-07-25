@@ -7971,13 +7971,18 @@ function initfastcolorlookup(rscale: number, gscale: number, bscale: number): vo
         j = (pal1[pal1Idx+0]>>3)*FASTPALGRIDSIZ*FASTPALGRIDSIZ
             + (pal1[pal1Idx+1]>>3)*FASTPALGRIDSIZ + (pal1[pal1Idx+2]>>3)
             + FASTPALGRIDSIZ*FASTPALGRIDSIZ + FASTPALGRIDSIZ+1;
-        if (colhere[j>>3]&pow2char[j&7]) colnext[i] = colhead[j]; else colnext[i] = -1;
+        if (colhere[j>>3]&pow2char[j&7]) {
+            colnext[i] = colhead[j];
+            if(colnext[i]  < 0)debugger
+        } else 
+             colnext[i] = -1;
         colhead[j] = i;
         colhere[j>>3] |= pow2char[j&7];
     }
 
     assert.run("initfastcolorlookup colhead", colhead[74] == 84);
     assert.run("initfastcolorlookup colhere", colhere[71] == -14);
+    assert.run("initfastcolorlookup colnext", colnext[9] == 174);
 
     i = 0;
     for (x=-FASTPALGRIDSIZ*FASTPALGRIDSIZ; x<=FASTPALGRIDSIZ*FASTPALGRIDSIZ; x+=FASTPALGRIDSIZ*FASTPALGRIDSIZ)
@@ -8127,7 +8132,7 @@ function loadpalette(): number
 function getclosestcol(/*int32_t*/ r: number, /*int32_t*/ g: number, /*int32_t*/ b: number): number
 {
     var i: number, j: number, k: number, dist: number, mindist: number, retcol: number;
-    var pal1: Int8Array;
+    var pal1: Int8Array, pal1Idx: number;
 
     j = (r>>3)*FASTPALGRIDSIZ*FASTPALGRIDSIZ
         + (g>>3)*FASTPALGRIDSIZ + (b>>3)
@@ -8139,7 +8144,7 @@ function getclosestcol(/*int32_t*/ r: number, /*int32_t*/ g: number, /*int32_t*/
     assert.run("mindist", mindist == 705);
 
     r = 64-r; g = 64-g; b = 64-b;
-
+	dlog(DEBUG_PALETTE,"mindist: %i, r: %i, g: %i, b: %i\n", mindist, r, g, b);
     retcol = -1;
     for (k=26; k>=0; k--)
     {
@@ -8147,18 +8152,23 @@ function getclosestcol(/*int32_t*/ r: number, /*int32_t*/ g: number, /*int32_t*/
         i = colhead[i];
         do
         {   
-            pal1 = palette.subarray(i*3);
-            dist = gdist[pal1[1]+g];
+            pal1 = palette;
+            pal1Idx =i*3;
+            dist = gdist[pal1[pal1Idx+1]+g];
             if (dist < mindist)
             {
-                dist += rdist[pal1[0]+r];
+                dist += rdist[pal1[pal1Idx+0]+r];
                 if (dist < mindist)
                 {
-                    dist += bdist[pal1[2]+b];
+                    dist += bdist[pal1[pal1Idx+2]+b];
+	                dlog(DEBUG_PALETTE,"dist +=: %i, b: %i\n", bdist[pal1[pal1Idx+2]+b], b);
+	                dlog(DEBUG_PALETTE,"dist: %i\n", dist);
                     if (dist < mindist) { mindist = dist; retcol = i; }
                 }
             }
             i = colnext[i];
+            if(isNaN(i)) debugger;
+            dlog(DEBUG_PALETTE,"i: %i\n", i);
         }
         while (i >= 0);
     }
@@ -8166,7 +8176,7 @@ function getclosestcol(/*int32_t*/ r: number, /*int32_t*/ g: number, /*int32_t*/
     if (retcol >= 0) return(retcol);
 
     mindist = INT32_MAX;
-    var pal1Idx = 768-3;
+    pal1Idx = 768-3;
     pal1 = palette;
     for (i=255; i>=0; i--,pal1Idx-=3)
     {
@@ -14407,7 +14417,6 @@ function makepalookup(palnum: number, remapbuf: Int8Array, /*int8_t*/ r: number,
         }
     }
         
-    dlogFlush();
 //#if defined(USE_OPENGL)
     palookupfog[palnum].r = r;
     palookupfog[palnum].g = g;
