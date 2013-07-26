@@ -33,11 +33,11 @@ Object.defineProperty(window, 'SHAREWARE', { get: function () { return (g_gameTy
 Object.defineProperty(window, 'DUKEBETA', { get: function () { return (g_gameType & GAMEFLAG_DUKEBETA); } });
 
 //enum Games_t {
-//    GAME_DUKE = 0,
-//    GAME_NAM,
-//    GAME_NAPALM,
-//    GAME_WW2GI,
-//    GAMECOUNT
+var GAME_DUKE = 0,
+    GAME_NAM = 1,
+    GAME_NAPALM = 2,
+    GAME_WW2GI = 3,
+    GAMECOUNT = 4;
 //};
 
 //enum instpath_t {

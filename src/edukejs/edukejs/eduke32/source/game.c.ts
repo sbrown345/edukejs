@@ -180,19 +180,18 @@ var basepaltable = [ palette, water_pal, slime_pal, dre_alms, title_pal, ending_
 //static int32_t g_noLogoAnim = 0;
 //static int32_t g_noLogo = 0;
 
-//const char *defaultrtsfilename[GAMECOUNT] = { "DUKE.RTS", "NAM.RTS", "NAPALM.RTS", "WW2GI.RTS" };
-
+var defaultrtsfilename = [ "DUKE.RTS", "NAM.RTS", "NAPALM.RTS", "WW2GI.RTS" ];
 //// g_gameNamePtr can point to one of: grpfiles[].name (string literal), string
 //// literal, malloc'd block (XXX: possible leak)
 var g_gameNamePtr = ""; ////const char *
 //// g_rtsNamePtr can point to an argv[] element
-//const char *g_rtsNamePtr = NULL;
+var g_rtsNamePtr: string;
 
 var g_scriptModules: string[]/*Uint8Array[]*/ = null; //char **
 var g_scriptModulesNum: number = 0; //int32
-//char **g_defModules = NULL;
-//int32_t g_defModulesNum = 0;
-//int32_t g_dependencyCRC = 0;
+var g_defModules: string[] = NULL; //char **
+var g_defModulesNum = 0;   //int32_t 
+var g_dependencyCRC = 0;   //int32_t 
 var g_usingAddon = 0; //int32_t 
 
 //#ifdef HAVE_CLIPSHAPE_FEATURE
@@ -267,29 +266,30 @@ function kopen4loadfrommod(filename : string, /*char*/ searchfirst : number) :  
     return r;
 }
 
-//const char *G_DefaultRtsFile(void)
-//{
-//    if (DUKE)
-//        return defaultrtsfilename[GAME_DUKE];
-//    else if (WW2GI)
-//        return defaultrtsfilename[GAME_WW2GI];
-//    else if (NAPALM)
-//    {
-//        if (!testkopen(defaultrtsfilename[GAME_NAPALM],0) && testkopen(defaultrtsfilename[GAME_NAM],0))
-//            return defaultrtsfilename[GAME_NAM]; // NAM/NAPALM Sharing
-//        else
-//            return defaultrtsfilename[GAME_NAPALM];
-//    }
-//    else if (NAM)
-//    {
-//        if (!testkopen(defaultrtsfilename[GAME_NAM],0) && testkopen(defaultrtsfilename[GAME_NAPALM],0))
-//            return defaultrtsfilename[GAME_NAPALM]; // NAM/NAPALM Sharing
-//        else
-//            return defaultrtsfilename[GAME_NAM];
-//    }
+function G_DefaultRtsFile(): string
+{
+    if (window.DUKE)
+        return defaultrtsfilename[GAME_DUKE];
+    todoThrow();
+    //else if (WW2GI)
+    //    return defaultrtsfilename[GAME_WW2GI];
+    //else if (NAPALM)
+    //{
+    //    if (!testkopen(defaultrtsfilename[GAME_NAPALM],0) && testkopen(defaultrtsfilename[GAME_NAM],0))
+    //        return defaultrtsfilename[GAME_NAM]; // NAM/NAPALM Sharing
+    //    else
+    //        return defaultrtsfilename[GAME_NAPALM];
+    //}
+    //else if (NAM)
+    //{
+    //    if (!testkopen(defaultrtsfilename[GAME_NAM],0) && testkopen(defaultrtsfilename[GAME_NAPALM],0))
+    //        return defaultrtsfilename[GAME_NAPALM]; // NAM/NAPALM Sharing
+    //    else
+    //        return defaultrtsfilename[GAME_NAM];
+    //}
 
-//    return defaultrtsfilename[0];
-//}
+    //return defaultrtsfilename[0];
+}
 
 //enum gametokens
 //{
@@ -10889,7 +10889,6 @@ function G_Startup() : void
     tilesizx[MIRROR] = tilesizy[MIRROR] = 0;
 
     screenpeek = myconnectindex;
-     throw "todo";
 //    Bfflush(NULL);
 }
 
@@ -11560,71 +11559,72 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
         G_MaybeAllocPlayer(i);
 
     G_Startup(); // a bunch of stuff including compiling cons
-    throw "todo";
-//    g_player[0].playerquitflag = 1;
+  
+    g_player[0].playerquitflag = 1;
 
-//    g_player[myconnectindex].ps->palette = BASEPAL;
+    g_player[myconnectindex].ps.palette = BASEPAL;
 
-//    i = 1;
-//    for (j=numplayers; j<ud.multimode; j++)
-//    {
-//        Bsprintf(g_player[j].user_name,"PLAYER %d",j+1);
-//        g_player[j].ps->team = g_player[j].pteam = i;
-//        g_player[j].ps->weaponswitch = 3;
-//        g_player[j].ps->auto_aim = 0;
-//        i = 1-i;
-//    }
+    i = 1;
+    for (j=numplayers; j<ud.multimode; j++)
+    {
+        Bsprintf(g_player[j].user_name,"PLAYER %d",j+1);
+        g_player[j].ps.team = g_player[j].pteam = i;
+        g_player[j].ps.weaponswitch = 3;
+        g_player[j].ps.auto_aim = 0;
+        i = 1-i;
+    }
 
-//    if (quitevent) return 4;
+    if (quitevent) return 4;
 
-//    {
-//        const char *defsfile = G_DefFile();
-//        if (!loaddefinitionsfile(defsfile))
-//        {
-//            initprintf("Definitions file \"%s\" loaded.\n",defsfile);
-//            loaddefinitions_game(defsfile, FALSE);
-//        }
-//    }
+    {
+        var defsfile = G_DefFile();
+        todo("loaddefinitionsfile");
+        //if (!loaddefinitionsfile(defsfile))
+        //{
+        //    initprintf("Definitions file \"%s\" loaded.\n",defsfile);
+        //    loaddefinitions_game(defsfile, FALSE);
+        //}
+    }
 
-//    for (i=0; i < g_defModulesNum; ++i)
-//        Bfree(g_defModules[i]);
-//    Bfree(g_defModules);
-//    g_defModules = NULL;
+    //for (i=0; i < g_defModulesNum; ++i)
+    //    Bfree(g_defModules[i]);
+    //Bfree(g_defModules);
+    g_defModules = NULL;
 
-//    if (numplayers == 1 && boardfilename[0] != 0)
-//    {
-//        ud.m_level_number = 7;
-//        ud.m_volume_number = 0;
-//        ud.warp_on = 1;
-//    }
+    if (numplayers == 1 && boardfilename[0] != 0)
+    {
+        ud.m_level_number = 7;
+        ud.m_volume_number = NULL;
+        ud.warp_on = 1;
+    }
 
-//    // getnames();
+    // getnames();
 
-//    if (g_netServer || ud.multimode > 1)
-//    {
-//        if (ud.warp_on == 0)
-//        {
-//            ud.m_monsters_off = 1;
-//            ud.m_player_skill = 0;
-//        }
-//    }
+    if (g_netServer || ud.multimode > 1)
+    {
+        if (ud.warp_on == 0)
+        {
+            ud.m_monsters_off = 1;
+            ud.m_player_skill = 0;
+        }
+    }
 
-//    playerswhenstarted = ud.multimode;  // XXX: redundant?
-//    ud.last_level = 0;
+    playerswhenstarted = ud.multimode;  // XXX: redundant?
+    ud.last_level = 0;
 
-//    // the point of this block is to avoid overwriting the default in the cfg while asserting our selection
-//    if (g_rtsNamePtr == NULL &&
-//            (!Bstrcasecmp(ud.rtsname,defaultrtsfilename[GAME_DUKE]) ||
-//            !Bstrcasecmp(ud.rtsname,defaultrtsfilename[GAME_WW2GI]) ||
-//            !Bstrcasecmp(ud.rtsname,defaultrtsfilename[GAME_NAM]) ||
-//            !Bstrcasecmp(ud.rtsname,defaultrtsfilename[GAME_NAPALM])))
-//    {
-//        // ud.last_level is used as a flag here to reset the string to default after load
-//        ud.last_level = (Bstrcpy(ud.rtsname, G_DefaultRtsFile()) == ud.rtsname);
-//    }
+    // the point of this block is to avoid overwriting the default in the cfg while asserting our selection
+    if (g_rtsNamePtr == NULL &&
+            (!Bstrcasecmp(ud.rtsname,defaultrtsfilename[GAME_DUKE]) ||
+            !Bstrcasecmp(ud.rtsname,defaultrtsfilename[GAME_WW2GI]) ||
+            !Bstrcasecmp(ud.rtsname,defaultrtsfilename[GAME_NAM]) ||
+            !Bstrcasecmp(ud.rtsname,defaultrtsfilename[GAME_NAPALM])))
+    {
+        // ud.last_level is used as a flag here to reset the string to default after load
+        ud.last_level = (Bstrcpy(ud.rtsname, G_DefaultRtsFile()) == ud.rtsname) ? 1 : 0;
+    }
 
-//    RTS_Init(ud.rtsname);
-
+   RTS_Init(ud.rtsname);
+  throw "todo";
 //    if (rts_numlumps)
 //        initprintf("Using RTS file \"%s\".\n",ud.rtsname);
 

@@ -58,7 +58,7 @@ var connectpoint2 = new Int32Array(MAXPLAYERS);
 //#include "sector.h"
 //#include "quotes.h"
 
-var myconnectindex: number, numplayers: number;
+var myconnectindex: number = 0, numplayers: number;
 
 //G_EXTERN DukeStatus_t sbar;
 //G_EXTERN actor_t actor[MAXSPRITES];

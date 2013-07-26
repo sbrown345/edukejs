@@ -11511,11 +11511,11 @@ int32_t app_main(int32_t argc, const char **argv)
 
     {
         const char *defsfile = G_DefFile();
-        if (!loaddefinitionsfile(defsfile))
-        {
-            initprintf("Definitions file \"%s\" loaded.\n",defsfile);
-            loaddefinitions_game(defsfile, FALSE);
-        }
+        //if (!loaddefinitionsfile(defsfile))
+        //{
+        //    initprintf("Definitions file \"%s\" loaded.\n",defsfile);
+        //    loaddefinitions_game(defsfile, FALSE);
+        //}
     }
 
     for (i=0; i < g_defModulesNum; ++i)

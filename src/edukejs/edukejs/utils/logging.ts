@@ -2,7 +2,7 @@
 var SKIP_ALL_LOGGING = false;
 
 var DEBUG_COMPILE = false;
-var DEBUG_PALETTE = true;
+var DEBUG_PALETTE = false;
 var DEBUG_SCRIPT_CHANGE = false;
 
 var dlog = function (log: boolean, format: string, ...args: any[]) {

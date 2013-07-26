@@ -306,8 +306,8 @@ var h_gamefuncs = new hashtable_t(NUMGAMEFUNCTIONS<<1, null);
 
 //    ud.config.CheckForUpdates = 1;
 
-//    if (g_rtsNamePtr == NULL)
-//        Bstrcpy(ud.rtsname, G_DefaultRtsFile());
+    if (g_rtsNamePtr == NULL)
+        ud.rtsname =  G_DefaultRtsFile();
 //    Bstrcpy(szPlayerName, "Duke");
 
 //    Bstrcpy(ud.ridecule[0], "An inspiration for birth control.");

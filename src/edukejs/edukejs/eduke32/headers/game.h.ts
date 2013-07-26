@@ -230,14 +230,14 @@ function user_defs() {
         useprecache : 0            //int32_t
     };
 
-    //char overhead_on,last_overhead,showweapons;
-    //char god,warp_on,cashman,eog,showallmap;
-    //char show_help,scrollmode,noclip;
-    //char ridecule[10][40];
-    //char savegame[10][22];
-    //char pwlockout[128],rtsname[128];
-    //char display_bonus_screen;
-    //char show_level_text;
+    //overhead_on,last_overhead,showweapons;    //char 
+    this.god=0,this.warp_on=0,this.cashman=0,this.eog=0,this.showallmap=0; //char 
+    //show_help,scrollmode,noclip;              //char 
+    //ridecule[10][40];                         //char 
+    //savegame[10][22];                         //char 
+    //pwlockout[128],rtsname[128];              //char 
+    //display_bonus_screen;                     //char 
+    //show_level_text;                          //char 
 };
 
 
