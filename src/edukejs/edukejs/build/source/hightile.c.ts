@@ -81,7 +81,7 @@ function hicinit(): void
         hictinting[i].f = 0;
     }
     
-    assert.run("hicinit char -1", hictinting[0].r == -1);
+    assert.run("hicinit char -1", hictinting[0].r == 255);
 
     if (hicfirstinit)
         for (i=MAXTILES-1; i>=0; i--)

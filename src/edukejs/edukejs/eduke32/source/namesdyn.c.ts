@@ -1583,9 +1583,9 @@ function G_InitDynamicTiles(): void
 
     Bmemset(new P(DynamicTileMap.buffer), 0, sizeof(DynamicTileMap));
 
-    for (i=0; g_dynTileList[i].staticval >= 0; i++)
+    todo("for (i=0; g_dynTileList[i].staticval >= 0; i++)"+
 //#ifdef DYNTILEREMAP_ENABLE
-        todo("DynamicTileMap[*(g_dynTileList[i].dynvalptr)] = g_dynTileList[i].staticval;");
+       "DynamicTileMap[*(g_dynTileList[i].dynvalptr)] = g_dynTileList[i].staticval;");
 //#else
 //        DynamicTileMap[g_dynTileList[i].staticval] = g_dynTileList[i].staticval;
 //#endif

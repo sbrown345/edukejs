@@ -7981,7 +7981,7 @@ function initfastcolorlookup(rscale: number, gscale: number, bscale: number): vo
     }
 
     assert.run("initfastcolorlookup colhead", colhead[74] == 84);
-    assert.run("initfastcolorlookup colhere", colhere[71] == -14);
+    assert.run("initfastcolorlookup colhere", colhere[71] == 242);
     assert.run("initfastcolorlookup colnext", colnext[9] == 174);
 
     i = 0;

@@ -217,10 +217,10 @@ function strupr(str: string) : string {
     return str.toUpperCase();
 }
 
-function strrchr(str: Uint8Array, character: number): Uint8Array {
+function strrchr(str: Uint8Array, character: number): Ptr {
     for (var i = 0; i < str.length; i++) {
         if(str[i] === character) {
-            return str.subarray(i);
+            return new Ptr(str, i);
         }
     }
 

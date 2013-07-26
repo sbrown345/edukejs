@@ -10613,7 +10613,6 @@ function G_LoadExtraPalettes(): void
     slime_pal[765] = slime_pal[766] = slime_pal[767] = 0;
     water_pal[765] = water_pal[766] = water_pal[767] = 0;
 
-    dlogFlush();    debugger;
     kclose(fp);
 }
 
@@ -10779,7 +10778,7 @@ function G_Startup() : void
         }
         else
         {
-            var dot: Uint8Array, slash: Uint8Array;
+            var dot: Ptr, slash: Ptr;
 
             boardfilename[0] = '/'.charCodeAt(0);
             boardfilename[1] = 0;
@@ -10789,7 +10788,7 @@ function G_Startup() : void
             slash = Bstrrchr(boardfilename,'/'.charCodeAt(0));
             if (!slash) slash = Bstrrchr(boardfilename,'\\'.charCodeAt(0));
 
-            if ((!slash && !dot) || (slash && dot < slash))
+            if ((!slash && !dot) || (slash && dot.idx < slash.idx))
                 boardfilename = Bstrcat(boardfilename.toString(),".map").toUint8Array();
 
             Bcorrectfilename(boardfilename,0);
@@ -10797,12 +10796,12 @@ function G_Startup() : void
             i = kopen4loadfrommod(boardfilename.toString(),0);
             if (i!=-1)
             {
-                initprintf("Using level: \"%s\".\n",boardfilename);
+                initprintf("Using level: \"%s\".\n",boardfilename.toString());
                 kclose(i);
             }
             else
             {
-                initprintf("Level \"%s\" not found.\n",boardfilename);
+                initprintf("Level \"%s\" not found.\n",boardfilename.toString());
                 boardfilename[0] = 0;
             }
         }

@@ -883,7 +883,7 @@ function kopen4load(filename: string, /*char*/ searchfirst: number) : number
 //    dont_free_pfn = 0;
 //#endif
 
-//    for (; toupperlookup[*filename] == '/'; filename++);
+    for(;filename[0] == "/"; (filename = filename.substr(1)));
 
 //#ifdef WITHKPLIB
 //    if ((kzcurhand != newhandle) && (kztell() >= 0))
