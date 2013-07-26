@@ -83,12 +83,14 @@
     <Content Include="eduke32\headers\global.h.ts" />
     <Content Include="eduke32\headers\grpscan.h.ts" />
     <Content Include="eduke32\headers\namesdyn.h.ts" />
+    <Content Include="eduke32\headers\net.h.ts" />
     <Content Include="eduke32\headers\player.h.ts" />
     <Content Include="eduke32\headers\quotes.h.ts" />
     <Content Include="eduke32\headers\sector.h.ts" />
     <Content Include="eduke32\headers\sounds.h.ts" />
     <Content Include="eduke32\headers\soundsdyn.h.ts" />
     <Content Include="eduke32\headers\_functio.h.ts" />
+    <Content Include="eduke32\headers\_rts.h.ts" />
     <Content Include="eduke32\source\astub.c.ts" />
     <Content Include="eduke32\source\baselayer.c.ts" />
     <Content Include="build\source\cache1d.c.ts" />
@@ -101,6 +103,7 @@
     <Content Include="eduke32\source\namesdyn.c.ts" />
     <Content Include="eduke32\source\net.c.ts" />
     <Content Include="eduke32\source\player.c.ts" />
+    <Content Include="eduke32\source\rts.c.ts" />
     <Content Include="eduke32\source\sounds.c.ts" />
     <Content Include="eduke32\source\soundsdyn.c.ts" />
     <Content Include="eduke32\source\winlayer.c.ts" />

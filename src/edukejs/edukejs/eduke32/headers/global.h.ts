@@ -142,7 +142,7 @@ var MapInfo: map_t[] = newStructArray(map_t, (MAXVOLUMES+1)*MAXLEVELS);  // +1 v
 //G_EXTERN int32_t g_noEnemies;
 
 //#ifndef __global_c__
-//G_EXTERN const char *s_buildRev;
+var s_buildRev = "rXXXX"; //from rev.h
 //G_EXTERN const char *s_buildDate;
 var g_spriteGravity: number; ////G_EXTERN int32_t 
 var g_spriteDeleteQueueSize: number; ////G_EXTERN int16_t

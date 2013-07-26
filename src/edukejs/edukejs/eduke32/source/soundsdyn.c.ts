@@ -21,6 +21,7 @@
 /// <reference path="../../build/source/hightile.c.ts" />
 
 /// <reference path="../../eduke32/headers/_functio.h.ts" />
+/// <reference path="../../eduke32/headers/_rts.h.ts" />
 /// <reference path="../../eduke32/headers/actors.h.ts" />
 /// <reference path="../../eduke32/headers/common_game.h.ts" />
 /// <reference path="../../eduke32/headers/function.h.ts" />
@@ -46,6 +47,7 @@
 /// <reference path="../../eduke32/source/net.c.ts" />
 /// <reference path="../../eduke32/source/osd.c.ts" />
 /// <reference path="../../eduke32/source/player.c.ts" />
+/// <reference path="../../eduke32/source/rts.c.ts" />
 /// <reference path="../../eduke32/source/winlayer.c.ts" />
 
 //-------------------------------------------------------------------------

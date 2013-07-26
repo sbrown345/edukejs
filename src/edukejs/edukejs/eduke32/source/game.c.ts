@@ -21,6 +21,7 @@
 /// <reference path="../../build/source/hightile.c.ts" />
 
 /// <reference path="../../eduke32/headers/_functio.h.ts" />
+/// <reference path="../../eduke32/headers/_rts.h.ts" />
 /// <reference path="../../eduke32/headers/actors.h.ts" />
 /// <reference path="../../eduke32/headers/common_game.h.ts" />
 /// <reference path="../../eduke32/headers/function.h.ts" />
@@ -29,6 +30,7 @@
 /// <reference path="../../eduke32/headers/gameexec.h.ts" />
 /// <reference path="../../eduke32/headers/global.h.ts" />
 /// <reference path="../../eduke32/headers/grpscan.h.ts" />
+/// <reference path="../../eduke32/headers/net.h.ts" />
 /// <reference path="../../eduke32/headers/player.h.ts" />
 /// <reference path="../../eduke32/headers/quotes.h.ts" />
 
@@ -37,13 +39,13 @@
 /// <reference path="../../eduke32/source/common.c.ts" />
 /// <reference path="../../eduke32/source/config.c.ts" />
 /// <reference path="../../eduke32/source/gamedef.c.ts" />
-
 /// <reference path="../../eduke32/source/global.c.ts" />
 /// <reference path="../../eduke32/source/grpscan.c.ts" />
 /// <reference path="../../eduke32/source/namesdyn.c.ts" />
 /// <reference path="../../eduke32/source/net.c.ts" />
 /// <reference path="../../eduke32/source/osd.c.ts" />
 /// <reference path="../../eduke32/source/player.c.ts" />
+/// <reference path="../../eduke32/source/rts.c.ts" />
 /// <reference path="../../eduke32/source/osdfuncs.c.ts" />
 /// <reference path="../../eduke32/source/soundsdyn.c.ts" />
 /// <reference path="../../eduke32/source/winlayer.c.ts" />
@@ -11623,52 +11625,54 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
         ud.last_level = (Bstrcpy(ud.rtsname, G_DefaultRtsFile()) == ud.rtsname) ? 1 : 0;
     }
 
-   RTS_Init(ud.rtsname);
-  throw "todo";
-//    if (rts_numlumps)
-//        initprintf("Using RTS file \"%s\".\n",ud.rtsname);
+    RTS_Init(ud.rtsname);
+  debugger;
+    if (rts_numlumps)
+        initprintf("Using RTS file \"%s\".\n",ud.rtsname);
 
-//    if (ud.last_level)
-//        Bstrcpy(ud.rtsname, defaultrtsfilename[0]);
+    if (ud.last_level)
+        Bstrcpy(ud.rtsname, defaultrtsfilename[0]);
 
-//    ud.last_level = -1;
+    ud.last_level = -1;
 
-//    initprintf("Initializing OSD...\n");
+    initprintf("Initializing OSD...\n");
 
-//    Bsprintf(tempbuf, HEAD2 " %s", s_buildRev);
-//    OSD_SetVersion(tempbuf, 10,0);
-//    registerosdcommands();
+    Bsprintf(tempbuf, HEAD2 + " %s", s_buildRev);
+    OSD_SetVersion(tempbuf.toString(), 10,0);
+    todo(" registerosdcommands();");
 
-//    if (g_networkMode != NET_DEDICATED_SERVER)
-//    {
-//        if (CONTROL_Startup(controltype_keyboardandmouse, &GetTime, TICRATE))
-//        {
-//            ERRprintf("There was an error initializing the CONTROL system.\n");
-//            uninitengine();
-//            exit(5);
-//        }
+    if (g_networkMode != NET_DEDICATED_SERVER)
+    {
+        todo("setup controls");
+        //if (CONTROL_Startup(controltype_keyboardandmouse, &GetTime, TICRATE))
+        //{
+        //    ERRprintf("There was an error initializing the CONTROL system.\n");
+        //    uninitengine();
+        //    exit(5);
+        //}
 
-//        G_SetupGameButtons();
-//        CONFIG_SetupMouse();
-//        CONFIG_SetupJoystick();
+        //G_SetupGameButtons();
+        //CONFIG_SetupMouse();
+        //CONFIG_SetupJoystick();
 
-//        CONTROL_JoystickEnabled = (ud.config.UseJoystick && CONTROL_JoyPresent);
-//        CONTROL_MouseEnabled = (ud.config.UseMouse && CONTROL_MousePresent);
+        //CONTROL_JoystickEnabled = (ud.config.UseJoystick && CONTROL_JoyPresent);
+        //CONTROL_MouseEnabled = (ud.config.UseMouse && CONTROL_MousePresent);
 
-//        // JBF 20040215: evil and nasty place to do this, but joysticks are evil and nasty too
-//        for (i=0; i<joynumaxes; i++)
-//            setjoydeadzone(i,ud.config.JoystickAnalogueDead[i],ud.config.JoystickAnalogueSaturate[i]);
-//    }
+        //// JBF 20040215: evil and nasty place to do this, but joysticks are evil and nasty too
+        //for (i=0; i<joynumaxes; i++)
+        //    setjoydeadzone(i,ud.config.JoystickAnalogueDead[i],ud.config.JoystickAnalogueSaturate[i]);
+    }
 
-//    {
+    {
+        todo("settings stuff");
 //        char *ptr = Bstrdup(setupfilename), *p = strtok(ptr,".");
 //        if (!Bstrcmp(setupfilename, SETUPFILENAME))
 //            Bsprintf(tempbuf, "settings.cfg");
 //        else Bsprintf(tempbuf,"%s_settings.cfg",p);
 //        OSD_Exec(tempbuf);
 //        Bfree(ptr);
-//    }
-
+    }
+    throw "todo";
 //#ifdef HAVE_CLIPSHAPE_FEATURE
 //    if ((i = clipmapinfo_load()) > 0)
 //        initprintf("There was an error loading the sprite clipping map (status %d).\n", i);

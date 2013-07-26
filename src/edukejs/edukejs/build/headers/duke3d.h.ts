@@ -48,9 +48,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //#include "mathutil.h"
 //#include "fx_man.h"
 
-/** @const */ var APPNAME =                 "EDuke32";
-//#define VERSION             "2.0.0devel"
-//#define HEAD2               APPNAME" "VERSION
+var APPNAME = "EDuke32";
+var VERSION = "2.0.0devel";
+var HEAD2 = APPNAME + " " + VERSION;
 
 Object.defineProperty(window, 'VOLUMEALL', { get: function () { return g_Shareware == 0; } });
 Object.defineProperty(window, 'PLUTOPAK', { get: function () { return g_scriptVersion == 14; } });

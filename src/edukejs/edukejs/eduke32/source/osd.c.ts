@@ -21,6 +21,7 @@
 /// <reference path="../../build/source/hightile.c.ts" />
 
 /// <reference path="../../eduke32/headers/_functio.h.ts" />
+/// <reference path="../../eduke32/headers/_rts.h.ts" />
 /// <reference path="../../eduke32/headers/actors.h.ts" />
 /// <reference path="../../eduke32/headers/common_game.h.ts" />
 /// <reference path="../../eduke32/headers/function.h.ts" />
@@ -45,6 +46,7 @@
 /// <reference path="../../eduke32/source/net.c.ts" />
 /// <reference path="../../eduke32/source/osdfuncs.c.ts" />
 /// <reference path="../../eduke32/source/player.c.ts" />
+/// <reference path="../../eduke32/source/rts.c.ts" />
 /// <reference path="../../eduke32/source/soundsdyn.c.ts" />
 /// <reference path="../../eduke32/source/winlayer.c.ts" />
 
@@ -92,10 +94,10 @@
 //// history display
 //static char osdtext[TEXTSIZE];
 //static char osdfmt[TEXTSIZE];
-//static char osdver[32];
-//static int32_t  osdverlen;
-//static int32_t  osdvershade;
-//static int32_t  osdverpal;
+var osdver: string;
+var osdverlen: number;           //static int32_t  
+var osdvershade: number;         //static int32_t  
+var osdverpal: number;           //static int32_t  
 //static int32_t  osdpos=0;           // position next character will be written at
 //static int32_t  osdlines=1;         // # lines of text in the buffer
 //static int32_t  osdrows=20;         // # lines of the buffer that are visible
@@ -2019,16 +2021,16 @@ function OSD_SetParameters(
 //    return 0;
 //}
 
-////
-//// OSD_SetVersionString()
-////
-//void OSD_SetVersion(const char *version, int32_t shade, int32_t pal)
-//{
-//    Bstrcpy(osdver,version);
-//    osdverlen = Bstrlen(osdver);
-//    osdvershade = shade;
-//    osdverpal = pal;
-//}
+//
+// OSD_SetVersionString()
+//
+function OSD_SetVersion(version: string, shade: number, pal: number): void 
+{
+    osdver = version;
+    osdverlen = Bstrlen(osdver.toUint8Array());
+    osdvershade = shade;
+    osdverpal = pal;
+}
 
 ////
 //// addnewsymbol() -- Allocates space for a new symbol and attaches it
