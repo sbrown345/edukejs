@@ -10,8 +10,11 @@
 /// <reference path="../../build/headers/hightile.h.ts" />
 /// <reference path="../../build/headers/mdsprite.h.ts" />
 /// <reference path="../../build/headers/osd.h.ts" />
+/// <reference path="../../build/headers/polymost.h.ts" />
 /// <reference path="../../build/headers/pragmas.h.ts" />
 /// <reference path="../../build/headers/scancodes.h.ts" />
+
+/// <reference path="../../ExternalDependencies/hightile.h.ts" />
 
 /// <reference path="../../build/source/crc32.c.ts" />
 
@@ -130,10 +133,10 @@ var rendmode=0; //int32_t
 //int32_t r_usenewshading = 2;
 //int32_t r_usetileshades = 1;
 //
-//static double gviewxrange, ghoriz;
-//double gyxscale, gxyaspect, ghalfx, grhalfxdown10, grhalfxdown10x;
-//double gcosang, gsinang, gcosang2, gsinang2;
-//double gchang, gshang, gctang, gstang, gvisibility;
+var gviewxrange=0, ghoriz=0;                                    //static 
+var gyxscale=0, gxyaspect=0, ghalfx=0, grhalfxdown10=0, grhalfxdown10x=0;    //double 
+var gcosang=0, gsinang=0, gcosang2=0, gsinang2=0;                          //double 
+var gchang=0, gshang=0, gctang=0, gstang=0, gvisibility=0;                   //double 
 //float gtang = 0.0;
 //double guo, gux, guy; //Screen-based texture mapping parameters
 //double gvo, gvx, gvy;
@@ -200,8 +203,8 @@ var glrendmode = REND_POLYMOST;
 //int32_t r_downsize = 0;
 //int32_t r_downsizevar = -1;
 //
-//// used for fogcalc
-//float fogresult, fogresult2, fogcol[4], fogtable[4*MAXPALOOKUPS];
+// used for fogcalc
+var fogresult = 0.0, fogresult2 = 0.0, fogcol = new Float32Array(4), fogtable = new Float32Array(4*MAXPALOOKUPS); //float 
 //#endif
 //
 //char ptempbuf[MAXWALLSB<<1];
@@ -384,73 +387,73 @@ function gltexinvalidatetype(type: number): void
 //
 //float glox1, gloy1, glox2, gloy2;
 //
-////Use this for both initialization and uninitialization of OpenGL.
-//static int32_t gltexcacnum = -1;
+//Use this for both initialization and uninitialization of OpenGL.
+var gltexcacnum = -1;
 //extern void freevbos(void);
 //
-//void polymost_glreset()
-//{
-//    int32_t i;
-//    pthtyp *pth, *next;
-//
-//    for (i=MAXPALOOKUPS-1; i>=0; i--)
-//    {
-//        fogtable[i<<2] = palookupfog[i].r / 63.f;
-//        fogtable[(i<<2)+1] = palookupfog[i].g / 63.f;
-//        fogtable[(i<<2)+2] = palookupfog[i].b / 63.f;
-//        fogtable[(i<<2)+3] = 0;
-//    }
-//
-//    //Reset if this is -1 (meaning 1st texture call ever), or > 0 (textures in memory)
-//    if (gltexcacnum < 0)
-//    {
-//        gltexcacnum = 0;
-//
-//        //Hack for polymost_dorotatesprite calls before 1st polymost_drawrooms()
-//        gcosang = gcosang2 = ((double)16384)/262144.0;
-//        gsinang = gsinang2 = ((double)    0)/262144.0;
-//    }
-//    else
-//    {
-//        for (i=GLTEXCACHEADSIZ-1; i>=0; i--)
-//        {
-//            for (pth=texcache.list[i]; pth;)
-//            {
-//                next = pth->next;
-//                if (pth->flags & 16) // fullbright textures
-//                {
-//                    bglDeleteTextures(1,&pth->ofb->glpic);
-//                    Bfree(pth->ofb);
-//                }
-//
-//                bglDeleteTextures(1,&pth->glpic);
-//                Bfree(pth);
-//                pth = next;
-//            }
-//
-//            texcache.list[i] = NULL;
-//        }
-//        clearskins();
-//    }
-//
-//    if (polymosttext)
-//        bglDeleteTextures(1,&polymosttext);
-//    polymosttext=0;
-//
-//    freevbos();
-//
-//    memset(texcache.list,0,sizeof(texcache.list));
-//    glox1 = -1;
-//
-//    texcache_freeptrs();
-//
-//    texcache_syncmemcache();
-//#ifdef DEBUGGINGAIDS
-//    OSD_Printf("polymost_glreset()\n");
-//#endif
-//}
-//
-//
+function polymost_glreset(): void
+{
+    var i: number;
+    var pth: pthtyp, next: pthtyp;
+
+    for (i=MAXPALOOKUPS-1; i>=0; i--)
+    {
+        fogtable[i<<2] = palookupfog[i].r / 63.0;
+        fogtable[(i<<2)+1] = palookupfog[i].g / 63.0;
+        fogtable[(i<<2)+2] = palookupfog[i].b / 63.0;
+        fogtable[(i<<2)+3] = 0;
+    }
+
+    //Reset if this is -1 (meaning 1st texture call ever), or > 0 (textures in memory)
+    if (gltexcacnum < 0)
+    {
+        gltexcacnum = 0;
+
+        //Hack for polymost_dorotatesprite calls before 1st polymost_drawrooms()
+        gcosang = gcosang2 = (16384)/262144.0;
+        gsinang = gsinang2 = (    0)/262144.0;
+    }
+    else
+    {
+        for (i=GLTEXCACHEADSIZ-1; i>=0; i--)
+        {
+            for (pth=texcache.list[i]; pth;)
+            {
+                next = pth.next;`
+                if (pth.flags & 16) // fullbright textures
+                {
+                    bglDeleteTextures(1,&pth.ofb.glpic);
+                    Bfree(pth.ofb);
+                }
+
+                bglDeleteTextures(1,&pth.glpic);
+                Bfree(pth);
+                pth = next;
+            }
+
+            texcache.list[i] = NULL;
+        }
+        clearskins();
+    }
+
+    if (polymosttext)
+        bglDeleteTextures(1,&polymosttext);
+    polymosttext=0;
+
+    freevbos();
+
+    memset(texcache.list,0,sizeof(texcache.list));
+    glox1 = -1;
+
+    texcache_freeptrs();
+
+    texcache_syncmemcache();
+#ifdef DEBUGGINGAIDS
+    OSD_Printf("polymost_glreset()\n");
+#endif
+}
+
+
 //// one-time initialization of OpenGL for polymost
 //void polymost_glinit()
 //{

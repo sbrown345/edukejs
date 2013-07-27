@@ -10921,25 +10921,25 @@ function setgamemode(/*char*/ davidoption: number,  daxdim: number,daydim: numbe
   
     setview(0,0,xdim-1,ydim-1);
     clearallviews(0); 
-    setbrightness(curbrightness,0,0);throw "todo";
+    setbrightness(curbrightness,0,0)
 
-//    if (searchx < 0) { searchx = halfxdimen; searchy = (ydimen>>1); }
+    if (searchx < 0) { searchx = halfxdimen; searchy = (ydimen>>1); }
 
-////#ifdef USE_OPENGL
-//    if (getrendermode() >= REND_POLYMOST)
-//    {
-//        polymost_glreset();
-//        polymost_glinit();
-//    }
-////# ifdef POLYMER
-//    if (getrendermode() == REND_POLYMER)
-//    {
-//        if (!polymer_init())
-//            rendmode = REND_POLYMOST;
-//    }
-////#endif
-////#endif
-//    qsetmode = 200;
+//#ifdef USE_OPENGL
+    if (getrendermode() >= REND_POLYMOST)
+    {
+        polymost_glreset();
+        polymost_glinit();
+    }
+//# ifdef POLYMER
+    if (getrendermode() == REND_POLYMER)
+    {
+        if (!polymer_init())
+            rendmode = REND_POLYMOST;
+    }
+//#endif
+//#endif
+    qsetmode = 200;
     return(0);
 }
 
@@ -14540,7 +14540,7 @@ function setbrightness(/*char*/ dabrightness: number, /*uint8_t*/ dapalid: numbe
             gltexinvalidatetype(INVALIDATE_ART);
 //#ifdef POLYMER
         if ((getrendermode() == REND_POLYMER) && doinvalidate)
-            polymer_texinvalidate();
+            todoThrow("polymer_texinvalidate();");
 //#endif
     }
 //#endif

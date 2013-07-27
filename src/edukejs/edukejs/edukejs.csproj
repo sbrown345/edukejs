@@ -62,6 +62,7 @@
     <Content Include="build\headers\cache1d.h.ts" />
     <Content Include="build\headers\compat.h.ts" />
     <Content Include="build\headers\crc32.h.ts" />
+    <Content Include="build\headers\polymost.h.ts" />
     <Content Include="build\headers\texcache.h.ts" />
     <Content Include="eduke32\headers\duke3d.h.ts" />
     <Content Include="build\headers\engine_priv.h.ts" />
@@ -112,6 +113,7 @@
     <Content Include="eduke32\source\soundsdyn.c.ts" />
     <Content Include="eduke32\source\winbits.c.ts" />
     <Content Include="eduke32\source\winlayer.c.ts" />
+    <Content Include="ExternalDependencies\hightile.h.ts" />
     <Content Include="index.htm" />
     <Content Include="eduke32\source\common.c.ts" />
     <Content Include="eduke32\source\game.c.ts" />

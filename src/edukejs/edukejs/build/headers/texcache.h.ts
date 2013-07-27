@@ -8,9 +8,9 @@
 
 //#ifdef USE_OPENGL
 
-//#define TEXCACHEMAGIC "QLZ1"
-//#define GLTEXCACHEADSIZ 8192
-//#define TEXCACHEHASHSIZE 1024
+ var TEXCACHEMAGIC="QLZ1";
+ var GLTEXCACHEADSIZ=8192;
+ var TEXCACHEHASHSIZE=1024;
 
 //enum texcacherr_t
 //{
