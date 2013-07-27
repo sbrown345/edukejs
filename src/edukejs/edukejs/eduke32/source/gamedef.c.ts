@@ -1590,7 +1590,6 @@ function C_GetNextKeyword(): number //Returns its code #
         if (i == CON_LEFTBRACE || i == CON_RIGHTBRACE || i == CON_NULLOP)
             script[g_scriptPtr] = i + (IFELSE_MAGIC<<12);
         else script[g_scriptPtr] = i + (g_lineNumber<<12);
-        if(isNaN( script[g_scriptPtr])) debugger;
         dlog(DEBUG_SCRIPT_CHANGE, "script change %i", script[g_scriptPtr]);
 
         bitptr[(g_scriptPtr-scriptIdx)>>3] &= ~(BITPTR_POINTER<<((g_scriptPtr-scriptIdx)&7));

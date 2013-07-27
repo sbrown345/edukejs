@@ -11629,7 +11629,7 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
     }
 
     RTS_Init(ud.rtsname);
-  debugger;
+  
     if (rts_numlumps)
         initprintf("Using RTS file \"%s\".\n",ud.rtsname);
 

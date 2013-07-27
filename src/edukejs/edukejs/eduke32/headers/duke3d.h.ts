@@ -77,7 +77,7 @@ interface Window {
 //#define RECSYNCBUFSIZ       2520   //2520 is the (LCM of 1-8)*3
 //#define MOVEFIFOSIZ         2
 
-//// KEEPINSYNC lunatic/con_lang.lua
+// KEEPINSYNC lunatic/con_lang.lua
 var MAXVOLUMES         = 7;
 var MAXLEVELS          = 64;
 var MAXGAMETYPES       = 16;

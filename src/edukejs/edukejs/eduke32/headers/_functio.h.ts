@@ -4,7 +4,6 @@
 /// <reference path="../../utils/types.ts" />
 
 /// <reference path="../../eduke32/headers/_rts.h.ts" />
-/// <reference path="../../eduke32/headers/duke3d.h.ts" />
 /// <reference path="../../eduke32/headers/function.h.ts" />
 /// <reference path="../../eduke32/headers/global.h.ts" />
 /// <reference path="../../eduke32/headers/player.h.ts" />

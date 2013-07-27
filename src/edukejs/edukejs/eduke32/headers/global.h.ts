@@ -6,6 +6,7 @@
 /// <reference path="../../eduke32/headers/duke3d.h.ts" />
 /// <reference path="../../eduke32/headers/function.h.ts" />
 /// <reference path="../../eduke32/headers/player.h.ts" />
+/// <reference path="../../eduke32/headers/quotes.h.ts" />
 /// <reference path="../../eduke32/headers/sector.h.ts" />
 
 //-------------------------------------------------------------------------
