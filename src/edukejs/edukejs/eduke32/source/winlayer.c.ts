@@ -7,7 +7,6 @@
 /// <reference path="../../build/headers/build.h.ts" />
 /// <reference path="../../build/headers/cache1d.h.ts" />
 /// <reference path="../../build/headers/compat.h.ts" />
-/// <reference path="../../build/headers/duke3d.h.ts" />
 /// <reference path="../../build/headers/engine_priv.h.ts" />
 /// <reference path="../../build/headers/hightile.h.ts" />
 /// <reference path="../../build/headers/mdsprite.h.ts" />
@@ -27,6 +26,7 @@
 /// <reference path="../../eduke32/headers/_rts.h.ts" />
 /// <reference path="../../eduke32/headers/actors.h.ts" />
 /// <reference path="../../eduke32/headers/common_game.h.ts" />
+/// <reference path="../../eduke32/headers/duke3d.h.ts" />
 /// <reference path="../../eduke32/headers/function.h.ts" />
 /// <reference path="../../eduke32/headers/game.h.ts" />
 /// <reference path="../../eduke32/headers/gamedef.h.ts" />
@@ -42,6 +42,7 @@
 /// <reference path="../../eduke32/source/game.c.ts" />
 /// <reference path="../../eduke32/source/gamedef.c.ts" />
 /// <reference path="../../eduke32/source/gamevars.c.ts" />
+/// <reference path="../../eduke32/source/glbuild.c.ts" />
 /// <reference path="../../eduke32/source/global.c.ts" />
 /// <reference path="../../eduke32/source/grpscan.c.ts" />
 /// <reference path="../../eduke32/source/namesdyn.c.ts" />
@@ -51,6 +52,7 @@
 /// <reference path="../../eduke32/source/player.c.ts" />
 /// <reference path="../../eduke32/source/rts.c.ts" />
 /// <reference path="../../eduke32/source/soundsdyn.c.ts" />
+/// <reference path="../../eduke32/source/winbits.c.ts" />
 
 
 
@@ -141,7 +143,7 @@ var argvbuf: string = NULL;
 
 //// Windows crud
 //static HINSTANCE hInstance = 0;
-//static HWND hWindow = 0;
+var /*HWND */hWindow = 0;
 //#define WINDOW_STYLE (WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX)
 //static BOOL window_class_registered = FALSE;
 
@@ -1740,7 +1742,7 @@ function setvideomode(x: number, y: number, c: number, fs: number): number
 
     if (hWindow && gammabrightness)
     {
-        setgammaramp(&sysgamma);
+        setgammaramp(/*&sysgamma*/);
         gammabrightness = 0;
     }
 
@@ -1754,9 +1756,10 @@ function setvideomode(x: number, y: number, c: number, fs: number): number
 
     if (!gammabrightness)
     {
-        //        float f = 1.0 + ((float)curbrightness / 10.0);
-        if (getgammaramp(&sysgamma) >= 0) gammabrightness = 1;
-        if (gammabrightness && setgamma() < 0) gammabrightness = 0;
+        todoThrow();
+        ////        float f = 1.0 + ((float)curbrightness / 10.0);
+        //if (getgammaramp(&sysgamma) >= 0) gammabrightness = 1;
+        //if (gammabrightness && setgamma() < 0) gammabrightness = 0;
     }
 
 //#ifdef USE_OPENGL
@@ -2173,7 +2176,7 @@ function setvideomode(x: number, y: number, c: number, fs: number): number
 //
 // setgamma
 //
-function setgammaramp(/*LPDDGAMMARAMP */gt): number
+function setgammaramp(/*LPDDGAMMARAMPgt */): number
 {
     todo("probably dont need this: setgammaramp");
     //if (!fullscreen || bpp > 8)
@@ -2992,11 +2995,11 @@ function setgammaramp(/*LPDDGAMMARAMP */gt): number
 //}
 //#endif
 
-////
-//// CreateAppWindow() -- create the application window
-////
-//static BOOL CreateAppWindow(int32_t modenum)
-//{
+//
+// CreateAppWindow() -- create the application window
+//
+function CreateAppWindow(modenum: number): number
+{
 //    RECT rect;
 //    int32_t w, h, x, y, stylebits = 0, stylebitsex = 0;
 //    int32_t width, height, fs, bitspp;
@@ -3243,8 +3246,8 @@ function setgammaramp(/*LPDDGAMMARAMP */gt): number
 
 //    UpdateWindow(hWindow);
 
-//    return FALSE;
-//}
+    return FALSE;
+}
 
 
 ////

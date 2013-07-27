@@ -3,6 +3,7 @@
 /// <reference path="../../utils/todo.ts" />
 /// <reference path="../../utils/types.ts" />
 
+/// <reference path="../../eduke32/headers/duke3d.h.ts" />
 /// <reference path="../../eduke32/headers/function.h.ts" />
 /// <reference path="../../eduke32/headers/global.h.ts" />
 /// <reference path="../../eduke32/headers/player.h.ts" />
@@ -270,7 +271,7 @@ function user_defs() {
 //extern int32_t althud_shadows;
 //extern int32_t cacnum;
 ////extern int32_t drawing_ror;
-//extern int32_t g_Shareware;
+var g_Shareware: number = 0; //int32_t
 //#if !defined LUNATIC
 //extern int32_t g_cameraClock;
 //extern int32_t g_cameraDistance;

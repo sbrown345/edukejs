@@ -6,7 +6,6 @@
 /// <reference path="../../utils/types.ts" />
 
 /// <reference path="build.h.ts" />
-/// <reference path="duke3d.h.ts" />
 
 //#ifndef _mdsprite_h_
 //# define _mdsprite_h_

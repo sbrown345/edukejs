@@ -153,7 +153,7 @@ var qsetmode: number;
 
 function in3dmode(): number
 {
-    return (qsetmode==200);
+    return (qsetmode==200)?1:0;
 }
 
 //int32_t initsystem(void);

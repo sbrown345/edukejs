@@ -26,7 +26,7 @@
 
 //int64_t win_timerfreq = 0;
 
-//char silentvideomodeswitch = 0;
+var silentvideomodeswitch = 0; //char 
 
 //static char taskswitching = 1;
 

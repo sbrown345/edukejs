@@ -7,7 +7,6 @@
 /// <reference path="../../build/headers/baselayer.h.ts" />
 /// <reference path="../../build/headers/build.h.ts" />
 /// <reference path="../../build/headers/compat.h.ts" />
-/// <reference path="../../build/headers/duke3d.h.ts" />
 /// <reference path="../../build/headers/engine_priv.h.ts" />
 /// <reference path="../../build/headers/hightile.h.ts" />
 /// <reference path="../../build/headers/mdsprite.h.ts" />
@@ -10869,7 +10868,7 @@ function setgamemode(/*char*/ davidoption: number,  daxdim: number,daydim: numbe
             (davidoption == fullscreen) && (xdim == daxdim) && (ydim == daydim) && (bpp == dabpp))
         return(0);
 
-    kensmessage = "!!!! BUILD engine&tools programmed by Ken Silverman of E.G. RI."+
+    kensmessage = "!!!! BUILD engine&tools programmed by Ken Silverman of E.G. RI." +
            "  (c) Copyright 1995 Ken Silverman.  Summary:  BUILD = Ken. !!!!";
     //  if (getkensmessagecrc(FP_OFF(kensmessage)) != 0x56c764d4)
     //      { OSD_Printf("Nice try.\n"); exit(0); }

@@ -6,7 +6,6 @@
 /// <reference path="../../build/headers/baselayer.h.ts" />
 /// <reference path="../../build/headers/build.h.ts" />
 /// <reference path="../../build/headers/compat.h.ts" />
-/// <reference path="../../build/headers/duke3d.h.ts" />
 /// <reference path="../../build/headers/engine_priv.h.ts" />
 /// <reference path="../../build/headers/hightile.h.ts" />
 /// <reference path="../../build/headers/mdsprite.h.ts" />
@@ -108,7 +107,7 @@ Low priority:
 //
 //extern char textfont[2048], smalltextfont[2048];
 //
-//int32_t rendmode=0;
+var rendmode=0; //int32_t 
 //int32_t usemodels=1, usehightile=1;
 //
 //#include <math.h> //<-important!

@@ -1,3 +1,6 @@
+/// <reference path="game.h.ts" />
+
+
 //-------------------------------------------------------------------------
 /*
 Copyright (C) 2010 EDuke32 developers and contributors

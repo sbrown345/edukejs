@@ -7,7 +7,6 @@
 /// <reference path="../../build/headers/build.h.ts" />
 /// <reference path="../../build/headers/cache1d.h.ts" />
 /// <reference path="../../build/headers/compat.h.ts" />
-/// <reference path="../../build/headers/duke3d.h.ts" />
 /// <reference path="../../build/headers/engine_priv.h.ts" />
 /// <reference path="../../build/headers/hightile.h.ts" />
 /// <reference path="../../build/headers/mdsprite.h.ts" />
@@ -26,6 +25,7 @@
 /// <reference path="../../eduke32/headers/_rts.h.ts" />
 /// <reference path="../../eduke32/headers/actors.h.ts" />
 /// <reference path="../../eduke32/headers/common_game.h.ts" />
+/// <reference path="../../eduke32/headers/duke3d.h.ts" />
 /// <reference path="../../eduke32/headers/function.h.ts" />
 /// <reference path="../../eduke32/headers/game.h.ts" />
 /// <reference path="../../eduke32/headers/gamedef.h.ts" />
@@ -49,6 +49,8 @@
 /// <reference path="../../eduke32/source/rts.c.ts" />
 /// <reference path="../../eduke32/source/osdfuncs.c.ts" />
 /// <reference path="../../eduke32/source/soundsdyn.c.ts" />
+/// <reference path="../../eduke32/source/winbits.c.ts" />
+/// <reference path="../../eduke32/source/winlayer.c.ts" />
 /// <reference path="../../eduke32/source/winbits.c.ts" />
 /// <reference path="../../eduke32/source/winlayer.c.ts" />
 
@@ -205,7 +207,7 @@ var g_clipMapFilesNum: number = 0; //int32_t
 
 //extern int32_t lastvisinc;
 
-var g_Shareware = 0;
+g_Shareware = 0;
 
 //#define MAXUSERQUOTES 6
 //int32_t quotebot, quotebotgoal;
@@ -10551,8 +10553,8 @@ function G_CompileScripts() : void
         //if (!newlabel || !newlabelcode)
         //    G_GameExit("Error: out of memory retaining labels\n");
 
-        Bmemcpy(newlabel.buffer, label.buffer, g_numLabels*64);
-        Bmemcpy(newlabelcode.buffer, labelcode.buffer, g_numLabels*Int32Array.BYTES_PER_ELEMENT);
+        Bmemcpy(new P(newlabel.buffer), new P(label.buffer), g_numLabels*64);
+        Bmemcpy(new P(newlabelcode.buffer), new P(labelcode.buffer), g_numLabels*Int32Array.BYTES_PER_ELEMENT);
 
         label = newlabel;
         labelcode = newlabelcode;
@@ -11694,6 +11696,7 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
 
     if (g_networkMode != NET_DEDICATED_SERVER)
     {
+        debugger;
         if (setgamemode(ud.config.ScreenMode,ud.config.ScreenWidth,ud.config.ScreenHeight,ud.config.ScreenBPP) < 0)
         {
             todoThrow();

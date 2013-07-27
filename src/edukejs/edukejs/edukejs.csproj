@@ -62,7 +62,7 @@
     <Content Include="build\headers\cache1d.h.ts" />
     <Content Include="build\headers\compat.h.ts" />
     <Content Include="build\headers\crc32.h.ts" />
-    <Content Include="build\headers\duke3d.h.ts" />
+    <Content Include="eduke32\headers\duke3d.h.ts" />
     <Content Include="build\headers\engine_priv.h.ts" />
     <Content Include="build\headers\hightile.h.ts" />
     <Content Include="build\headers\mdsprite.h.ts" />
@@ -100,6 +100,7 @@
     <Content Include="eduke32\source\gamedef.c.ts" />
     <Content Include="eduke32\headers\gameexec.h.ts" />
     <Content Include="eduke32\source\gamevars.c.ts" />
+    <Content Include="eduke32\source\glbuild.c.ts" />
     <Content Include="eduke32\source\global.c.ts" />
     <Content Include="eduke32\source\grpscan.c.ts" />
     <Content Include="eduke32\source\namesdyn.c.ts" />
