@@ -50,6 +50,7 @@
 /// <reference path="../../eduke32/source/player.c.ts" />
 /// <reference path="../../eduke32/source/rts.c.ts" />
 /// <reference path="../../eduke32/source/soundsdyn.c.ts" />
+/// <reference path="../../eduke32/source/winbits.c.ts" />
 /// <reference path="../../eduke32/source/winlayer.c.ts" />
 
 

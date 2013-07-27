@@ -10853,7 +10853,6 @@ function initengine(): number
 // setgamemode
 //
 // JBF: davidoption now functions as a windowed-mode flag (0 == windowed, 1 == fullscreen)
-var videomodereset: number; //extern char 
 function setgamemode(/*char*/ davidoption: number,  daxdim: number,daydim: number, dabpp: number):  number
 {
     var j: number;
@@ -10882,7 +10881,7 @@ function setgamemode(/*char*/ davidoption: number,  daxdim: number,daydim: numbe
     j = bpp;
 
     g_lastpalettesum = 0;
-    if (setvideomode(/*daxdim,daydim,dabpp,davidoption*/) < 0) return(-1);
+    if (setvideomode(daxdim,daydim,dabpp,davidoption) < 0) return(-1);
 
     // Workaround possible bugs in the GL driver
     //makeasmwriteable();
@@ -10898,7 +10897,7 @@ function setgamemode(/*char*/ davidoption: number,  daxdim: number,daydim: numbe
         lookups = null;//Bfree(lookups);
 
     j = ydim*4;  //Leave room for horizlookup&horizlookup2
-    lookups = (int32_t *)Bmalloc(2*j*sizeof(lookups[0]));
+    lookups = new Int32Array(2*j*Int32Array.BYTES_PER_ELEMENT);//(int32_t *)Bmalloc(2*j*sizeof(lookups[0]));
 
     //if (lookups == NULL)
     //{

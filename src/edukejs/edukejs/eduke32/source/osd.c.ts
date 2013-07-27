@@ -50,6 +50,7 @@
 /// <reference path="../../eduke32/source/player.c.ts" />
 /// <reference path="../../eduke32/source/rts.c.ts" />
 /// <reference path="../../eduke32/source/soundsdyn.c.ts" />
+/// <reference path="../../eduke32/source/winbits.c.ts" />
 /// <reference path="../../eduke32/source/winlayer.c.ts" />
 
 
@@ -94,8 +95,8 @@ var white=-1;            // colour of white (used by default display routines)//
 //static uint32_t osdflags = 0;
 
 //// history display
-//static char osdtext[TEXTSIZE];
-//static char osdfmt[TEXTSIZE];
+var osdtext = new Uint8Array(TEXTSIZE);     //static char
+var osdfmt = new Uint8Array(TEXTSIZE);      //static char
 var osdver: string;
 var osdverlen: number;           //static int32_t  
 var osdvershade: number;         //static int32_t  
@@ -1500,12 +1501,12 @@ function OSD_ResizeDisplay(w: number, h: number): void
     Bmemset(new P(newtext), asc_Space, TEXTSIZE);
     for (i=j-1; i>=0; i--)
     {
-        Bmemcpy(newtext+newcols*i, osdtext+osdcols*i, k);
-        Bmemcpy(newfmt+newcols*i, osdfmt+osdcols*i, k);
+        Bmemcpy(new P(newtext, newcols*i), new P(osdtext, osdcols*i), k);
+        Bmemcpy(new P(newfmt, newcols*i),new P(osdfmt,  osdcols*i), k);
     }
 
-    Bmemcpy(osdtext, newtext, TEXTSIZE);
-    Bmemcpy(osdfmt, newfmt, TEXTSIZE);
+    Bmemcpy(new P(osdtext), new P(newtext), TEXTSIZE);
+    Bmemcpy(new P(osdfmt), new P(newfmt), TEXTSIZE);
     osdcols = newcols;
     osdmaxlines = newmaxlines;
     osdmaxrows = getrowheight(h)-2;

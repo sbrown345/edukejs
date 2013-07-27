@@ -85,11 +85,25 @@ class Ptr {
 
 class P {
     buf: ArrayBuffer;
+    arr: Uint8Array;
     idx: number;
 
-    constructor(buffer: ArrayBuffer, index: number = 0) {
+    s(v: number, offset: number = 0): void {
+        this.arr[this.idx + offset] = v;
+    }
+
+    v(offset: number = 0): number {
+        return this.arr[this.idx + offset];
+    }
+
+    incr(): void {
+        this.idx++;
+    }
+
+    constructor(buffer: ArrayBuffer, indexOffset: number = 0) {
         this.buf = buffer;
-        this.idx = index;
+        this.arr = new Uint8Array(buffer);
+        this.idx = indexOffset;
     }
 }
 

@@ -146,7 +146,7 @@ var argvbuf: string = NULL;
 //static BOOL window_class_registered = FALSE;
 
 //static DDGAMMARAMP sysgamma;
-//extern int32_t curbrightness, gammabrightness;
+var curbrightness: number, gammabrightness: number;
 
 //#ifdef USE_OPENGL
 //// OpenGL stuff
@@ -1711,7 +1711,7 @@ function checkvideomode(/*int32_t *x, int32_t *y, int32_t c, int32_t fs, int32_t
 //
 
 //#ifdef USE_OPENGL
-//static HWND hGLWindow = NULL;
+var hGLWindow = NULL; //static HWND
 //#endif
 
 function setvideomode(x: number, y: number, c: number, fs: number): number
@@ -1744,7 +1744,7 @@ function setvideomode(x: number, y: number, c: number, fs: number): number
         gammabrightness = 0;
     }
 
-    win_setvideomode(c);
+    todo("win_setvideomode(c);");
 
     if (!silentvideomodeswitch)
         initprintf("Setting video mode %dx%d (%d-bit %s)\n",
@@ -2170,51 +2170,52 @@ function setvideomode(x: number, y: number, c: number, fs: number): number
 //}*/
 
 
-////
-//// setgamma
-////
-//static int32_t setgammaramp(LPDDGAMMARAMP gt)
-//{
-//    if (!fullscreen || bpp > 8)
-//    {
-//        // GL and windowed mode use DIB method
-//        int32_t i;
-//        HDC hDC = GetDC(hWindow);
-//        i = SetDeviceGammaRamp(hDC, gt) ? 0 : -1;
-//        ReleaseDC(hWindow, hDC);
-//        return i;
-//    }
-//    else if (appactive)
-//    {
-//        // fullscreen uses DirectX
-//        LPDIRECTDRAWGAMMACONTROL gam;
-//        HRESULT hr;
+//
+// setgamma
+//
+function setgammaramp(/*LPDDGAMMARAMP */gt): number
+{
+    todo("probably dont need this: setgammaramp");
+    //if (!fullscreen || bpp > 8)
+    //{
+    //    // GL and windowed mode use DIB method
+    //    int32_t i;
+    //    HDC hDC = GetDC(hWindow);
+    //    i = SetDeviceGammaRamp(hDC, gt) ? 0 : -1;
+    //    ReleaseDC(hWindow, hDC);
+    //    return i;
+    //}
+    //else if (appactive)
+    //{
+    //    // fullscreen uses DirectX
+    //    LPDIRECTDRAWGAMMACONTROL gam;
+    //    HRESULT hr;
 
-//        if (!(DDdwCaps2 & DDCAPS2_PRIMARYGAMMA)) return -1;
+    //    if (!(DDdwCaps2 & DDCAPS2_PRIMARYGAMMA)) return -1;
 
-//        hr = IDirectDrawSurface_QueryInterface(lpDDSPrimary, bREFIID IID_IDirectDrawGammaControl, (LPVOID *)&gam);
-//        if (hr != DD_OK)
-//        {
-//            //            ShowDDrawErrorBox("Error querying gamma control", hr);
-//            initprintf("Error querying gamma control: %s\n",GetDDrawError(hr));
-//            return -1;
-//        }
+    //    hr = IDirectDrawSurface_QueryInterface(lpDDSPrimary, bREFIID IID_IDirectDrawGammaControl, (LPVOID *)&gam);
+    //    if (hr != DD_OK)
+    //    {
+    //        //            ShowDDrawErrorBox("Error querying gamma control", hr);
+    //        initprintf("Error querying gamma control: %s\n",GetDDrawError(hr));
+    //        return -1;
+    //    }
 
-//        hr = IDirectDrawGammaControl_SetGammaRamp(gam, 0, gt);
-//        if (hr != DD_OK)
-//        {
-//            IDirectDrawGammaControl_Release(gam);
-//            initprintf("Error setting gamma ramp: %s\n",GetDDrawError(hr));
-//            //            ShowDDrawErrorBox("Error setting gamma ramp", hr);
-//            return -1;
-//        }
+    //    hr = IDirectDrawGammaControl_SetGammaRamp(gam, 0, gt);
+    //    if (hr != DD_OK)
+    //    {
+    //        IDirectDrawGammaControl_Release(gam);
+    //        initprintf("Error setting gamma ramp: %s\n",GetDDrawError(hr));
+    //        //            ShowDDrawErrorBox("Error setting gamma ramp", hr);
+    //        return -1;
+    //    }
 
-//        IDirectDrawGammaControl_Release(gam);
-//        return 0;
-//    }
+    //    IDirectDrawGammaControl_Release(gam);
+    //    return 0;
+    //}
 
-//    return 0;
-//}
+    return 0;
+}
 
 //int32_t setgamma(void)
 //{

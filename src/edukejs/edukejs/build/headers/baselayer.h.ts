@@ -43,34 +43,85 @@ var xres: number = 0, yres: number = 0, bpp: number = 0, fullscreen: number = 0,
 //void fullscreen_tint_gl(uint8_t r, uint8_t g, uint8_t b, uint8_t f);
 //extern int32_t osdcmd_glinfo(const osdfuncparm_t *parm);
 
-//struct glinfo_t {
-//    const char *vendor;
-//    const char *renderer;
-//    const char *version;
-//    const char *extensions;
+class glinfo_t {
+    vendor: string;           //    const char *
+    renderer: string;         //    const char *
+    version: string;          //    const char *
+    extensions: string;       //    const char *
+    maxanisotropy: number;         //    float
+    bgra: number;                   //    char 
+    clamptoedge: number;            //    char 
+    texcompr: number;               //    char 
+    texnpot: number;                //    char 
+    multisample: number;            //    char 
+    nvmultisamplehint: number;      //    char 
+    arbfp: number;                  //    char 
+    depthtex: number;               //    char 
+    shadow: number;                 //    char 
+    fbos: number;                   //    char 
+    rect: number;                   //    char 
+    multitex: number;               //    char 
+    envcombine: number;             //    char 
+    vbos: number;                   //    char 
+    vsync: number;                  //    char 
+    sm4: number;                    //    char 
+    occlusionqueries: number;       //    char 
+    glsl: number;                   //    char 
+    debugoutput: number;            //    char 
+    dumped: number;                 //    char 
 
-//    float maxanisotropy;
-//    char bgra;
-//    char clamptoedge;
-//    char texcompr;
-//    char texnpot;
-//    char multisample;
-//    char nvmultisamplehint;
-//    char arbfp;
-//    char depthtex;
-//    char shadow;
-//    char fbos;
-//    char rect;
-//    char multitex;
-//    char envcombine;
-//    char vbos;
-//    char vsync;
-//    char sm4;
-//    char occlusionqueries;
-//    char glsl;
-//    char debugoutput;
-//    char dumped;
-//};
+    constructor(vendor: string,          
+        renderer: string,        
+        version: string,         
+        extensions: string,      
+        maxanisotropy: number,   
+        bgra: number,            
+        clamptoedge: number,     
+        texcompr: number,        
+        texnpot: number,         
+        multisample: number,     
+        nvmultisamplehint: number,
+        arbfp: number,           
+        depthtex: number,        
+        shadow: number,          
+        fbos: number,            
+        rect: number,            
+        multitex: number,        
+        envcombine: number,      
+        vbos: number,            
+        vsync: number,           
+        sm4: number,             
+        occlusionqueries: number,
+        glsl: number,            
+        debugoutput: number,     
+        dumped: number) {
+            this.vendor =  vendor;           //    const char *
+            this.renderer =  renderer;         //    const char *
+            this.version =  version;          //    const char *
+            this.extensions =  extensions;       //    const char *
+            this.maxanisotropy =  maxanisotropy;         //    float
+            this.bgra =  bgra;                   //    char 
+            this.clamptoedge =  clamptoedge;            //    char 
+            this.texcompr =  texcompr;               //    char 
+            this.texnpot =  texnpot;                //    char 
+            this.multisample =  multisample;            //    char 
+            this.nvmultisamplehint =  nvmultisamplehint;      //    char 
+            this.arbfp =  arbfp;                  //    char 
+            this.depthtex =  depthtex;               //    char 
+            this.shadow =  shadow;                 //    char 
+            this.fbos =  fbos;                   //    char 
+            this.rect =  rect;                   //    char 
+            this.multitex =  multitex;               //    char 
+            this.envcombine =  envcombine;             //    char 
+            this.vbos =  vbos;                   //    char 
+            this.vsync =  vsync;                  //    char 
+            this.sm4 =  sm4;                    //    char 
+            this.occlusionqueries =  occlusionqueries;       //    char 
+            this.glsl =  glsl;                   //    char 
+            this.debugoutput =  debugoutput;            //    char 
+            this.dumped =  dumped;                 //    char 
+    }
+};
 
 //extern struct glinfo_t glinfo;
 //extern void setvsync(int32_t sync);

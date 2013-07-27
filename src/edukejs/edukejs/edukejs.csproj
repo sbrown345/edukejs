@@ -108,6 +108,7 @@
     <Content Include="eduke32\source\rts.c.ts" />
     <Content Include="eduke32\source\sounds.c.ts" />
     <Content Include="eduke32\source\soundsdyn.c.ts" />
+    <Content Include="eduke32\source\winbits.c.ts" />
     <Content Include="eduke32\source\winlayer.c.ts" />
     <Content Include="index.htm" />
     <Content Include="eduke32\source\common.c.ts" />

@@ -173,35 +173,34 @@
 //    bglPopMatrix();
 //}
 
-//struct glinfo_t glinfo =
-//{
-//    "Unknown",  // vendor
-//    "Unknown",  // renderer
-//    "0.0.0",    // version
-//    "",         // extensions
+var  glinfo = new glinfo_t(
+    "Unknown",  // vendor
+    "Unknown",  // renderer
+    "0.0.0",    // version
+    "",         // extensions
 
-//    1.0,        // max anisotropy
-//    0,          // brga texture format
-//    0,          // clamp-to-edge support
-//    0,          // texture compression
-//    0,          // non-power-of-two textures
-//    0,          // multisampling
-//    0,          // nvidia multisampling hint
-//    0,          // ARBfp
-//    0,          // depth textures
-//    0,          // shadow comparison
-//    0,          // Frame Buffer Objects
-//    0,          // rectangle textures
-//    0,          // multitexturing
-//    0,          // env_combine
-//    0,          // Vertex Buffer Objects
-//    0,          // VSync support
-//    0,          // Shader Model 4 support
-//    0,          // Occlusion Queries
-//    0,          // GLSL
-//    0,          // Debug Output
-//    0,          // GL info dumped
-//};
+    1.0,        // max anisotropy
+    0,          // brga texture format
+    0,          // clamp-to-edge support
+    0,          // texture compression
+    0,          // non-power-of-two textures
+    0,          // multisampling
+    0,          // nvidia multisampling hint
+    0,          // ARBfp
+    0,          // depth textures
+    0,          // shadow comparison
+    0,          // Frame Buffer Objects
+    0,          // rectangle textures
+    0,          // multitexturing
+    0,          // env_combine
+    0,          // Vertex Buffer Objects
+    0,          // VSync support
+    0,          // Shader Model 4 support
+    0,          // Occlusion Queries
+    0,          // GLSL
+    0,          // Debug Output
+    0          // GL info dumped
+);
 //#endif
 
 var flushlogwindow = 1; //int32_t 

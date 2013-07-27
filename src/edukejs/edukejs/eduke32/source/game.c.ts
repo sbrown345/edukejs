@@ -13,7 +13,6 @@
 /// <reference path="../../build/headers/mdsprite.h.ts" />
 /// <reference path="../../build/headers/osd.h.ts" />
 /// <reference path="../../build/headers/pragmas.h.ts" />
-/// <reference path="../../build/headers/scancodes.h.ts" />
 
 /// <reference path="../../build/source/baselayer.c.ts" />
 /// <reference path="../../build/source/build.c.ts" />
@@ -50,6 +49,7 @@
 /// <reference path="../../eduke32/source/rts.c.ts" />
 /// <reference path="../../eduke32/source/osdfuncs.c.ts" />
 /// <reference path="../../eduke32/source/soundsdyn.c.ts" />
+/// <reference path="../../eduke32/source/winbits.c.ts" />
 /// <reference path="../../eduke32/source/winlayer.c.ts" />
 
 
@@ -11732,7 +11732,7 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
             ud.config.ScreenBPP = bpp[i];
         }
 
-        setbrightness(ud.brightness>>2,g_player[myconnectindex].ps->palette,0);
+        todoThrow("setbrightness(ud.brightness>>2,g_player[myconnectindex].ps->palette,0);");
 
         todo("S_MusicStartup();");
         todo("S_SoundStartup();");

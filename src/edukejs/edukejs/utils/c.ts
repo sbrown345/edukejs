@@ -93,12 +93,12 @@ function memcmp(buf1 : Uint8Array, buf2 : Uint8Array, count : number) : number {
     return 0;
 }
 
-function memcpy(destination : ArrayBuffer, source : ArrayBuffer, count : number) : void {
+function memcpy(destination : P, source : P, count : number) : void {
     // todo: check if slice method exists and use that https://developer.mozilla.org/en-US/docs/Web/JavaScript/Typed_arrays/ArrayBuffer
-    var destArray = new Uint8Array(destination);
-    var srcArray = new Uint8Array(source);
     for (var i = 0; i < count; i++) {
-        destArray[i] = srcArray[i];
+        destination.s(source.v());
+        destination.incr();
+        source.incr();
     }
 }
 
