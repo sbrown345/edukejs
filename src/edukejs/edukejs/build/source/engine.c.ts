@@ -171,8 +171,8 @@ var indrawroomsandmasks = 0;//int32_t
 var oxdimen = -1, oviewingrange = -1, oxyaspect = -1;
 
 //// r_usenewaspect is the cvar, newaspect_enable to trigger the new behaviour in the code
-//int32_t r_usenewaspect = 1, newaspect_enable=0;
-//uint32_t r_screenxy = 0;
+var r_usenewaspect = 1, newaspect_enable=0;    //int32_t 
+var  r_screenxy = 0;                           //uint32_t
 
 //int32_t curbrightness = 0, gammabrightness = 0;
 
@@ -2343,9 +2343,9 @@ function msqrtasm(c: number): number
 //#ifdef HIGH_PRECISION_SPRITE
 //static float swallf[MAXXDIM];
 //#endif
-//int32_t xdimen = -1, xdimenrecip, halfxdimen, xdimenscale, xdimscale;
-//int32_t ydimen;
-//static int32_t wx1, wy1, wx2, wy2;
+var xdimen: number = -1, xdimenrecip: number, halfxdimen: number, xdimenscale: number, xdimscale: number;      //int32_t 
+var ydimen: number;                                                            //int32_t 
+var wx1: number, wy1: number, wx2: number, wy2: number;//static int32_t 
 //intptr_t frameoffset;
 
 //static int32_t nrx1[8], nry1[8], nrx2[8], nry2[8]; // JBF 20031206: Thanks Ken
@@ -2366,7 +2366,7 @@ var globalhisibility: number, globalpisibility: number, globalcisibility: number
 ////char globparaceilclip, globparaflorclip;
 
 var xyaspect: number;//int32
-//static int32_t viewingrangerecip;
+var viewingrangerecip: number; //static int32_t
 
 //static char globalxshift, globalyshift;
 //static int32_t globalxpanning, globalypanning;
@@ -10917,8 +10917,8 @@ function setgamemode(/*char*/ davidoption: number,  daxdim: number,daydim: numbe
     oxyaspect = oxdimen = oviewingrange = -1;
  
     calc_ylookup(bytesperline, ydim);
-   throw "todo";
-//    setview(0,0,xdim-1,ydim-1);
+  
+    setview(0,0,xdim-1,ydim-1); throw "todo";
 //    clearallviews(0);
 //    setbrightness(curbrightness,0,0);
 
@@ -14156,94 +14156,94 @@ function loadtile(tilenume: number): void
 //#endif
 //}
 
-//int32_t setaspect_new_use_dimen = 0;
+var setaspect_new_use_dimen = 0;
 
-//void setaspect_new()
-//{
-//    if (r_usenewaspect && newaspect_enable && getrendermode() != REND_POLYMER)
-//    {
-//        // The correction factor 100/107 has been found
-//        // out experimentally. Squares FTW!
-//        int32_t vr, yx=(65536*4*100)/(3*107);
-//        int32_t y, x;
+function setaspect_new(): void
+{
+    if (r_usenewaspect && newaspect_enable && getrendermode() != REND_POLYMER)
+    {
+        // The correction factor 100/107 has been found
+        // out experimentally. Squares FTW!
+        var vr: number, yx=(65536*4*100)/(3*107);
+        var y: number, x: number;
 
-//        const int32_t xd = setaspect_new_use_dimen ? xdimen : xdim;
-//        const int32_t yd = setaspect_new_use_dimen ? ydimen : ydim;
+        var xd = setaspect_new_use_dimen ? xdimen : xdim;
+        var yd = setaspect_new_use_dimen ? ydimen : ydim;
+        
+        if (fullscreen && !setaspect_new_use_dimen)
+        {
+            var screenw = r_screenxy/100|0;
+            var screenh = r_screenxy%100;
 
-//        if (fullscreen && !setaspect_new_use_dimen)
-//        {
-//            const int32_t screenw = r_screenxy/100;
-//            const int32_t screenh = r_screenxy%100;
+            if (screenw==0 || screenh==0)
+            {
+                // Assume square pixel aspect.
+                x = xd;
+                y = yd;
+            }
+            else
+            {
+                var pixratio: number;
 
-//            if (screenw==0 || screenh==0)
-//            {
-//                // Assume square pixel aspect.
-//                x = xd;
-//                y = yd;
-//            }
-//            else
-//            {
-//                int32_t pixratio;
+                x = screenw;
+                y = screenh;
 
-//                x = screenw;
-//                y = screenh;
+                pixratio = divscale16(xdim*screenh, ydim*screenw);
+                yx = divscale16(yx, pixratio);
+            }
+        }
+        else
+        {
+            x = xd;
+            y = yd;
+        }
 
-//                pixratio = divscale16(xdim*screenh, ydim*screenw);
-//                yx = divscale16(yx, pixratio);
-//            }
-//        }
-//        else
-//        {
-//            x = xd;
-//            y = yd;
-//        }
+        vr = divscale16(x*3, y*4);
 
-//        vr = divscale16(x*3, y*4);
+        setaspect(vr, yx);
+    }
+    else
+        setaspect(65536, divscale16(ydim*320, xdim*200));
+}
 
-//        setaspect(vr, yx);
-//    }
-//    else
-//        setaspect(65536, divscale16(ydim*320, xdim*200));
-//}
+//
+// setview
+//
+function setview(x1: number, y1: number, x2: number, y2: number): void
+{
+    var i: number;
 
-////
-//// setview
-////
-//void setview(int32_t x1, int32_t y1, int32_t x2, int32_t y2)
-//{
-//    int32_t i;
+    windowx1 = x1; wx1 = (x1<<12);
+    windowy1 = y1; wy1 = (y1<<12);
+    windowx2 = x2; wx2 = ((x2+1)<<12);
+    windowy2 = y2; wy2 = ((y2+1)<<12);
 
-//    windowx1 = x1; wx1 = (x1<<12);
-//    windowy1 = y1; wy1 = (y1<<12);
-//    windowx2 = x2; wx2 = ((x2+1)<<12);
-//    windowy2 = y2; wy2 = ((y2+1)<<12);
+    xdimen = (x2-x1)+1; halfxdimen = (xdimen>>1);
+    xdimenrecip = divscale32(1,xdimen);
+    ydimen = (y2-y1)+1;
 
-//    xdimen = (x2-x1)+1; halfxdimen = (xdimen>>1);
-//    xdimenrecip = divscale32(1L,xdimen);
-//    ydimen = (y2-y1)+1;
+    setaspect_new();
 
-//    setaspect_new();
-
-//    for (i=0; i<windowx1; i++) { startumost[i] = 1, startdmost[i] = 0; }
-//    for (i=windowx1; i<=windowx2; i++)
-//        { startumost[i] = windowy1, startdmost[i] = windowy2+1; }
-//    for (i=windowx2+1; i<xdim; i++) { startumost[i] = 1, startdmost[i] = 0; }
-//}
+    for (i=0; i<windowx1; i++) { startumost[i] = 1, startdmost[i] = 0; }
+    for (i=windowx1; i<=windowx2; i++)
+        { startumost[i] = windowy1, startdmost[i] = windowy2+1; }
+    for (i=windowx2+1; i<xdim; i++) { startumost[i] = 1, startdmost[i] = 0; }
+}
 
 
-////
-//// setaspect
-////
-//void setaspect(int32_t daxrange, int32_t daaspect)
-//{
-//    viewingrange = daxrange;
-//    viewingrangerecip = divscale32(1,daxrange);
+//
+// setaspect
+//
+function setaspect(daxrange: number, daaspect: number): void
+{
+    viewingrange = daxrange;
+    viewingrangerecip = divscale32(1,daxrange);
 
-//    yxaspect = daaspect;
-//    xyaspect = divscale32(1,yxaspect);
-//    xdimenscale = scale(xdimen,yxaspect,320);
-//    xdimscale = scale(320,xyaspect,xdimen);
-//}
+    yxaspect = daaspect;
+    xyaspect = divscale32(1,yxaspect);
+    xdimenscale = scale(xdimen,yxaspect,320);
+    xdimscale = scale(320,xyaspect,xdimen);
+}
 
 
 ////

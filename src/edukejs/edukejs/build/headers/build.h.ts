@@ -754,12 +754,12 @@ var parallaxyoffs: number, parallaxyscale:number;               //EXTERN int32_t
 var g_visibility: number, parallaxvisibility:number;            //EXTERN int32_t
 var g_rotatespriteNoWidescreen: number;                  //EXTERN int32_t
 
-//EXTERN int32_t windowx1, windowy1, windowx2, windowy2;
-//EXTERN int16_t startumost[MAXXDIM], startdmost[MAXXDIM];
+var windowx1:number, windowy1:number, windowx2:number, windowy2:number; //EXTERN int32_t 
+var startumost = new Int16Array(MAXXDIM), startdmost = new Int16Array(MAXXDIM); //EXTERN int16_t 
 
-//// original multi-psky handling (only one per map)
+// original multi-psky handling (only one per map)
 var pskyoff = new Int16Array(MAXPSKYTILES), pskybits: number;
-//// new multi-psky -- up to MAXPSKYMULTIS
+// new multi-psky -- up to MAXPSKYMULTIS
 var pskynummultis: number; //int16_t 
 //EXTERN int32_t pskymultiyscale[MAXPSKYMULTIS];
 //EXTERN int16_t pskymultilist[MAXPSKYMULTIS], pskymultibits[MAXPSKYMULTIS];
@@ -913,14 +913,14 @@ class palette_t {
 
 //EXTERN int32_t editorzrange[2];
 
-//static inline int32_t getrendermode(void)
-//{
+function getrendermode(): number
+{
 //#ifndef USE_OPENGL
-//    return REND_CLASSIC;
+    return REND_CLASSIC;
 //#else
 //    return rendmode;
 //#endif
-//}
+}
 
 ///*************************************************************************
 //POSITION VARIABLES:

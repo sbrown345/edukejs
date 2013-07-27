@@ -2409,6 +2409,7 @@ function clearbuf(d: P, c: number, a: number): void {
 
 //static inline int32_t sqr(int32_t eax) { return (eax) * (eax); }
 //static inline int32_t scale(int32_t eax, int32_t edx, int32_t ecx) { return dw((qw(eax) * qw(edx)) / qw(ecx)); }
+function scale(input1: number, input2: number, input3: number): number {return (input1 * input2 / input3) | 0;}
 //static inline int32_t mulscale(int32_t eax, int32_t edx, int32_t ecx) { return dw((qw(eax) * qw(edx)) >> by(ecx)); }
 //static inline int32_t dmulscale(int32_t eax, int32_t edx, int32_t esi, int32_t edi, int32_t ecx) { return dw(((qw(eax) * qw(edx)) + (qw(esi) * qw(edi))) >> by(ecx)); }
 
