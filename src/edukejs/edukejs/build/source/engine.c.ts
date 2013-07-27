@@ -10854,8 +10854,8 @@ function initengine(): number
 // JBF: davidoption now functions as a windowed-mode flag (0 == windowed, 1 == fullscreen)
 function setgamemode(/*char*/ davidoption: number,  daxdim: number,daydim: number, dabpp: number):  number
 {
+    path("setgamemode");
     var j: number;
-
 //#ifdef USE_OPENGL
     var nogl: number = 0;
 

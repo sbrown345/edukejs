@@ -11625,7 +11625,7 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
             !Bstrcasecmp(ud.rtsname,defaultrtsfilename[GAME_NAPALM])))
     {
         // ud.last_level is used as a flag here to reset the string to default after load
-        ud.last_level = (Bstrcpy(ud.rtsname, G_DefaultRtsFile()) == ud.rtsname) ? 1 : 0;
+        ud.last_level = ((ud.rtsname = G_DefaultRtsFile()) == ud.rtsname) ? 1 : 0;
     }
 
     RTS_Init(ud.rtsname);

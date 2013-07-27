@@ -139,107 +139,147 @@ var BASEPAL = 0,
 //# define CAMERACLOCK g_cameraClock
 //#endif
 
-function user_defs() {
+class user_defs {
     //#if !defined LUNATIC
     //vec3_t camerapos;
     //#endif
-    this.const_visibility = 0; this.uw_framerate = 0;
-    this.camera_time = 0; this.folfvel = 0; this.folavel = 0; this.folx = 0; this.foly = 0; this.fola = 0;
-    this.reccnt = 0; this.crosshairscale = 0;
+    const_visibility: number; uw_framerate: number;
+    camera_time: number; folfvel: number; folavel: number; folx: number; foly: number; fola: number;
+    reccnt: number; crosshairscale: number;
 
-    this.runkey_mode = 0; this.statusbarscale = 0; this.mouseaiming = 0; this.weaponswitch = 0; this.drawweapon = 0;   // JBF 20031125                    // int32_t 
-    this.democams = 0; this.color = 0; this.msgdisptime = 0; this.statusbarmode = 0;                                                              // int32_t 
-    this.m_noexits = 0; this.noexits = 0; this.autovote = 0; this.automsg = 0; this.idplayers = 0;                                                         // int32_t 
-    this.team = 0; this.viewbob = 0; this.weaponsway = 0; this.althud = 0; this.weaponscale = 0; this.textscale = 0;                                    // int32_t 
+    runkey_mode: number; statusbarscale: number; mouseaiming: number; weaponswitch: number; drawweapon: number;   // JBF 20031125                    // int32_t 
+    democams: number; color: number; msgdisptime: number; statusbarmode: number;                                                              // int32_t 
+    m_noexits: number; noexits: number; autovote: number; automsg: number; idplayers: number;                                                         // int32_t 
+    team: number; viewbob: number; weaponsway: number; althud: number; weaponscale: number; textscale: number;                                    // int32_t 
     //
-    this.entered_name = 0; this.screen_tilting = 0; this.shadows = 0; this.fta_on = 0; this.executions = 0; this.auto_run = 0;                               // int32_t 
-    this.coords = 0; this.tickrate = 0; this.levelstats = 0; this.m_coop = 0; this.coop = 0; this.screen_size = 0; this.lockout = 0; this.crosshair = 0;         // int32_t 
-    this.playerai = 0; this.angleinterpolation = 0; this.obituaries = 0;                                                                           // int32_t 
+    entered_name: number; screen_tilting: number; shadows: number; fta_on: number; executions: number; auto_run: number;                               // int32_t 
+    coords: number; tickrate: number; levelstats: number; m_coop: number; coop: number; screen_size: number; lockout: number; crosshair: number;         // int32_t 
+    playerai: number; angleinterpolation: number; obituaries: number;                                                                           // int32_t 
     //
-    this.respawn_monsters = 0; this.respawn_items = 0; this.respawn_inventory = 0; this.recstat = 0; this.monsters_off = 0; this.brightness = 0;             // int32_t 
-    this.m_respawn_items = 0; this.m_respawn_monsters = 0; this.m_respawn_inventory = 0; this.m_recstat = 0; this.m_monsters_off = 0; this.detail = 0;        // int32_t 
-    this.m_ffire = 0; this.ffire = 0; this.m_player_skill = 0; this.m_level_number = 0; this.m_volume_number = 0; this.multimode = 0;                         // int32_t 
-    this.player_skill = 0; this.level_number = 0; this.volume_number = 0; this.m_marker = 0; this.marker = 0; this.mouseflip = 0;                            // int32_t 
+    respawn_monsters: number; respawn_items: number; respawn_inventory: number; recstat: number; monsters_off: number; brightness: number;             // int32_t 
+    m_respawn_items: number; m_respawn_monsters: number; m_respawn_inventory: number; m_recstat: number; m_monsters_off: number; detail: number;        // int32_t 
+    m_ffire: number; ffire: number; m_player_skill: number; m_level_number: number; m_volume_number: number; multimode: number;                         // int32_t 
+    player_skill: number; level_number: number; volume_number: number; m_marker: number; marker: number; mouseflip: number;                            // int32_t 
 
-    this.configversion = 0;  // int32_t 
+    configversion: number;  // int32_t 
     //#if !defined LUNATIC
-    this.cameraang = 0; this.camerasect = 0; this.camerahoriz = 0;//int16_t 
+    cameraang: number; camerasect: number; camerahoriz: number;//int16_t 
     //#endif
-    this.pause_on = 0; this.from_bonus = 0;                            //int16_t 
-    this.camerasprite = 0; this.last_camsprite = 0;                 //int16_t 
-    this.last_level = 0; this.secretlevel = 0; this.bgstretch = 0;      //int16_t 
+    pause_on: number; from_bonus: number;                            //int16_t 
+    camerasprite: number; last_camsprite: number;                 //int16_t 
+    last_level: number; secretlevel: number; bgstretch: number;      //int16_t 
 
-    this.config = {
-        UseJoystick:0,                 //int32_t
-        UseMouse:0,                    //int32_t
-        AutoAim:0,                     //int32_t
-        ShowOpponentWeapons:0,         //int32_t
-        MouseDeadZone:0, MouseBias:0,     //int32_t
-        SmoothInput:0,                 //int32_t
-
-        ////// JBF 20031211: Store the input settings because
-        ////// (currently) jmact can't regurgitate them
-        ////int32_t MouseFunctions[MAXMOUSEBUTTONS][2];               //int32_t
-        ////int32_t MouseDigitalFunctions[MAXMOUSEAXES][2];           //int32_t
-        ////int32_t MouseAnalogueAxes[MAXMOUSEAXES];                  //int32_t
-        ////int32_t MouseAnalogueScale[MAXMOUSEAXES];                 //int32_t   -- TODO: ARRAYS
-        ////int32_t JoystickFunctions[MAXJOYBUTTONS][2];              //int32_t
-        ////int32_t JoystickDigitalFunctions[MAXJOYAXES][2];          //int32_t
-        ////int32_t JoystickAnalogueAxes[MAXJOYAXES];                 //int32_t
-        ////int32_t JoystickAnalogueScale[MAXJOYAXES];                //int32_t
-        ////int32_t JoystickAnalogueDead[MAXJOYAXES];                 //int32_t
-        ////int32_t JoystickAnalogueSaturate[MAXJOYAXES];             //int32_t
-        ////uint8_t KeyboardKeys[NUMGAMEFUNCTIONS][2]; //uint8_t
-
-        //
-        // Sound variables
-        //
-        FXDevice:0,           //int32_t
-        MusicDevice:0,        //int32_t
-        FXVolume:0,           //int32_t
-        MusicVolume:0,        //int32_t
-        SoundToggle:0,        //int32_t
-        MusicToggle:0,        //int32_t
-        VoiceToggle:0,        //int32_t
-        AmbienceToggle:0,     //int32_t
-    
-        NumVoices:0,          //int32_t
-        NumChannels:0,        //int32_t
-        NumBits:0,            //int32_t
-        MixRate:0,            //int32_t
-    
-        ReverseStereo:0,      //int32_t
-
-        //
-        // Screen variables
-        //
-
-        ScreenMode:0,             //int32_t
-    
-        ScreenWidth:0,            //int32_t
-        ScreenHeight:0,           //int32_t
-        ScreenBPP:0,              //int32_t
-    
-        ForceSetup:0,             //int32_t
-        NoAutoLoad:0,             //int32_t
-    
-        scripthandle:0,           //int32_t
-        setupread : 0,              //int32_t
-    
-        CheckForUpdates:0,        //int32_t
-        LastUpdateCheck:0,        //int32_t
-        useprecache : 0            //int32_t
-    };
+    config: config;
 
     //overhead_on,last_overhead,showweapons;    //char 
-    this.god=0,this.warp_on=0,this.cashman=0,this.eog=0,this.showallmap=0; //char 
+    god: number;warp_on: number;cashman: number;eog: number;showallmap: number; //char 
     //show_help,scrollmode,noclip;              //char 
-    this.ridecule = Array(10);//[10][40];                         //char 
+    ridecule: string[];// = Array(10);//[10][40];                         //char 
     //savegame[10][22];                         //char 
-    //pwlockout[128],rtsname[128];              //char 
-    //display_bonus_screen;                     //char 
-    //show_level_text;                          //char 
+    pwlockout: string/*[128]*/; rtsname: string/*[128]*/;              //char 
+    display_bonus_screen:number;                     //char 
+    show_level_text:number;                          //char 
+
+    constructor() {
+    //#if !defined LUNATIC
+    //    vec3_t camerapos;
+    //#endif
+        this.const_visibility=0,this.uw_framerate=0;
+        this.camera_time=0,this.folfvel=0,this.folavel=0,this.folx=0,this.foly=0,this.fola=0;
+        this.reccnt=0,this.crosshairscale=0;
+
+        this.runkey_mode=0,this.statusbarscale=0,this.mouseaiming=0,this.weaponswitch=0,this.drawweapon=0;   // JBF 20031125
+        this.democams=0,this.color=0,this.msgdisptime=0,this.statusbarmode=0;
+        this.m_noexits=0,this.noexits=0,this.autovote=0,this.automsg=0,this.idplayers=0;
+        this.team=0,this. viewbob=0,this. weaponsway=0,this. althud=0,this. weaponscale=0,this. textscale=0;
+
+        this.entered_name=0,this.screen_tilting=0,this.shadows=0,this.fta_on=0,this.executions=0,this.auto_run=0;
+        this.coords=0,this.tickrate=0,this.levelstats=0,this.m_coop=0,this.coop=0,this.screen_size=0,this.lockout=0,this.crosshair=0;
+        this.playerai=0,this.angleinterpolation=0,this.obituaries=0;
+
+        this.respawn_monsters=0,this.respawn_items=0,this.respawn_inventory=0,this.recstat=0,this.monsters_off=0,this.brightness=0;
+        this.m_respawn_items=0,this.m_respawn_monsters=0,this.m_respawn_inventory=0,this.m_recstat=0,this.m_monsters_off=0,this.detail=0;
+        this.m_ffire=0,this.ffire=0,this.m_player_skill=0,this.m_level_number=0,this.m_volume_number=0,this.multimode=0;
+        this.player_skill=0,this.level_number=0,this.volume_number=0,this.m_marker=0,this.marker=0,this.mouseflip=0;
+
+        this.configversion=0;
+    //#if !defined LUNATIC
+        this.cameraang=0,this. camerasect=0,this. camerahoriz=0;
+    //#endif
+        this.pause_on=0,this.from_bonus=0;
+        this.camerasprite=0,this.last_camsprite=0;
+        this.last_level=0,this.secretlevel=0,this. bgstretch=0;
+
+        this.config = new config();
+
+        // todo - more init if needed
+    }
 };
+
+class config {
+    UseJoystick: number;
+    UseMouse: number;
+    AutoAim: number;
+    ShowOpponentWeapons: number;
+    MouseDeadZone: number;MouseBias: number;
+    SmoothInput: number;
+
+    // JBF 20031211: Store the input settings because
+    // (currently) jmact can't regurgitate them
+    MouseFunctions/*[MAXMOUSEBUTTONS][2]*/: Uint32Array[];
+    MouseDigitalFunctions/*[MAXMOUSEAXES][2]*/: Uint32Array[];
+    MouseAnalogueAxes/*[MAXMOUSEAXES]*/: Uint32Array/*[]*/;
+    MouseAnalogueScale/*[MAXMOUSEAXES]*/: Uint32Array;
+    JoystickFunctions/*[MAXJOYBUTTONS]*//*[2]*/: Uint32Array;
+    JoystickDigitalFunctions/*[MAXJOYAXES]*//*[2]*/: Uint32Array;
+    JoystickAnalogueAxes/*[MAXJOYAXES]*/: Uint32Array;
+    JoystickAnalogueScale/*[MAXJOYAXES]*/: Uint32Array;
+    JoystickAnalogueDead/*[MAXJOYAXES]*/: Uint32Array;
+    JoystickAnalogueSaturate/*[MAXJOYAXES]*/: Uint32Array;
+    KeyboardKeys: Uint8Array[];//[NUMGAMEFUNCTIONS][2]: number;
+
+    //
+    // Sound variables
+    //
+    FXDevice: number;
+    MusicDevice: number;
+    FXVolume: number;
+    MusicVolume: number;
+    SoundToggle: number;
+    MusicToggle: number;
+    VoiceToggle: number;
+    AmbienceToggle: number;
+
+    NumVoices: number;
+    NumChannels: number;
+    NumBits: number;
+    MixRate: number;
+
+    ReverseStereo: number;
+
+    //
+    // Screen variables
+    //
+
+    ScreenMode: number;
+
+    ScreenWidth: number;
+    ScreenHeight: number;
+    ScreenBPP: number;
+
+    ForceSetup: number;
+    NoAutoLoad: number;
+
+    scripthandle: number;
+    setupread: number;
+
+    CheckForUpdates: number;
+    LastUpdateCheck: number;
+    useprecache: number;
+
+    constructor() {
+    }
+} ;
 
 
 //extern cactype cac[];
