@@ -75,7 +75,7 @@ var g_numSkills : number; // char
 //G_EXTERN char myjumpingtoggle,myonground,myhardlanding,myreturntocenter;
 //G_EXTERN char pus,pub;
 //G_EXTERN char ready2send;
-//G_EXTERN char szPlayerName[32];
+var szPlayerName: string; //G_EXTERN char [32]
 //// XXX: menutextbuf overflow possible?
 var tempbuf = new Uint8Array(MAXSECTORS<<1),packbuf = new Uint8Array(PACKBUF_SIZE),menutextbuf = new Uint8Array(128),buf = new Uint8Array(1024);
 //G_EXTERN char typebuflen,typebuf[141];

@@ -169,12 +169,12 @@ function user_defs() {
     this.last_level = 0; this.secretlevel = 0; this.bgstretch = 0;      //int16_t 
 
     this.config = {
-        //UseJoystick=0;                 //int32_t
-        //UseMouse=0;                    //int32_t
-        //AutoAim=0;                     //int32_t
-        //ShowOpponentWeapons=0;         //int32_t
-        //MouseDeadZone=0; MouseBias=0;     //int32_t
-        //SmoothInput=0;                 //int32_t
+        UseJoystick:0,                 //int32_t
+        UseMouse:0,                    //int32_t
+        AutoAim:0,                     //int32_t
+        ShowOpponentWeapons:0,         //int32_t
+        MouseDeadZone:0, MouseBias:0,     //int32_t
+        SmoothInput:0,                 //int32_t
 
         ////// JBF 20031211: Store the input settings because
         ////// (currently) jmact can't regurgitate them
@@ -190,50 +190,50 @@ function user_defs() {
         ////int32_t JoystickAnalogueSaturate[MAXJOYAXES];             //int32_t
         ////uint8_t KeyboardKeys[NUMGAMEFUNCTIONS][2]; //uint8_t
 
-        ////
-        //// Sound variables
-        ////
-        //FXDevice=0;           //int32_t
-        //MusicDevice=0;        //int32_t
-        //FXVolume=0;           //int32_t
-        //MusicVolume=0;        //int32_t
-        //SoundToggle=0;        //int32_t
-        //MusicToggle=0;        //int32_t
-        //VoiceToggle=0;        //int32_t
-        //AmbienceToggle=0;     //int32_t
+        //
+        // Sound variables
+        //
+        FXDevice:0,           //int32_t
+        MusicDevice:0,        //int32_t
+        FXVolume:0,           //int32_t
+        MusicVolume:0,        //int32_t
+        SoundToggle:0,        //int32_t
+        MusicToggle:0,        //int32_t
+        VoiceToggle:0,        //int32_t
+        AmbienceToggle:0,     //int32_t
     
-        //NumVoices=0;          //int32_t
-        //NumChannels=0;        //int32_t
-        //NumBits=0;            //int32_t
-        //MixRate=0;            //int32_t
+        NumVoices:0,          //int32_t
+        NumChannels:0,        //int32_t
+        NumBits:0,            //int32_t
+        MixRate:0,            //int32_t
     
-        //ReverseStereo=0;      //int32_t
+        ReverseStereo:0,      //int32_t
 
-        ////
-        //// Screen variables
-        ////
+        //
+        // Screen variables
+        //
 
-        //ScreenMode=0;             //int32_t
+        ScreenMode:0,             //int32_t
     
-        //ScreenWidth=0;            //int32_t
-        //ScreenHeight=0;           //int32_t
-        //ScreenBPP=0;              //int32_t
+        ScreenWidth:0,            //int32_t
+        ScreenHeight:0,           //int32_t
+        ScreenBPP:0,              //int32_t
     
-        //ForceSetup=0;             //int32_t
-        //NoAutoLoad=0;             //int32_t
+        ForceSetup:0,             //int32_t
+        NoAutoLoad:0,             //int32_t
     
-        //scripthandle=0;           //int32_t
+        scripthandle:0,           //int32_t
         setupread : 0,              //int32_t
     
-        //CheckForUpdates=0;        //int32_t
-        //LastUpdateCheck=0;        //int32_t
+        CheckForUpdates:0,        //int32_t
+        LastUpdateCheck:0,        //int32_t
         useprecache : 0            //int32_t
     };
 
     //overhead_on,last_overhead,showweapons;    //char 
     this.god=0,this.warp_on=0,this.cashman=0,this.eog=0,this.showallmap=0; //char 
     //show_help,scrollmode,noclip;              //char 
-    //ridecule[10][40];                         //char 
+    this.ridecule = Array(10);//[10][40];                         //char 
     //savegame[10][22];                         //char 
     //pwlockout[128],rtsname[128];              //char 
     //display_bonus_screen;                     //char 

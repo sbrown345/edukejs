@@ -221,110 +221,110 @@ var h_gamefuncs = new hashtable_t(NUMGAMEFUNCTIONS<<1, null);
 //    }
 //}
 
-//void CONFIG_SetDefaults(void)
-//{
-//    // JBF 20031211
-//    int32_t i;
+function CONFIG_SetDefaults()
+{
+    // JBF 20031211
+    var i: number;
 
-//    ud.config.scripthandle = -1;
-//    ud.config.ScreenWidth = 1024;
-//    ud.config.ScreenHeight = 768;
-//    ud.config.ScreenMode = 0;
+    ud.config.scripthandle = -1;
+    ud.config.ScreenWidth = 1024;
+    ud.config.ScreenHeight = 768;
+    ud.config.ScreenMode = 0;
 //#ifdef USE_OPENGL
-//    ud.config.ScreenBPP = 32;
+    ud.config.ScreenBPP = 32;
 //#else
 //    ud.config.ScreenBPP = 8;
 //#endif
-//    ud.config.useprecache = 1;
-//    ud.config.ForceSetup = 1;
-//    ud.config.NoAutoLoad = 1;
-//    ud.config.AmbienceToggle = 1;
-//    ud.config.AutoAim = 1;
-//    ud.config.FXDevice = 0;
-//    ud.config.FXVolume = 225;
+    ud.config.useprecache = 1;
+    ud.config.ForceSetup = 1;
+    ud.config.NoAutoLoad = 1;
+    ud.config.AmbienceToggle = 1;
+    ud.config.AutoAim = 1;
+    ud.config.FXDevice = 0;
+    ud.config.FXVolume = 225;
 //#if defined(_WIN32)
-//    ud.config.MixRate = 44100;
+    ud.config.MixRate = 44100;
 //#else
 //    ud.config.MixRate = 48000;
 //#endif
-//    ud.config.MouseBias = 0;
-//    ud.config.MouseDeadZone = 0;
-//    ud.config.MusicDevice = 0;
-//    ud.config.MusicToggle = 1;
-//    ud.config.MusicVolume = 195;
-//    g_myAimMode = g_player[0].ps->aim_mode = 1;
-//    ud.config.NumBits = 16;
-//    ud.config.NumChannels = 2;
-//    ud.config.NumVoices = 32;
-//    ud.config.ReverseStereo = 0;
-//    ud.auto_run = 1;
-//    ud.config.ShowOpponentWeapons = 0;
-//    ud.config.SmoothInput = 1;
-//    ud.config.SoundToggle = 1;
-//    ud.althud = 1;
-//    ud.automsg = 0;
-//    ud.autovote = 0;
-//    ud.brightness = 8;
-//    ud.camerasprite = -1;
-//    ud.color = 0;
-//    ud.crosshair = 1;
-//    ud.crosshairscale = 50;
-//    ud.obituaries = 1;
-//    ud.democams = 1;
-//    ud.detail = 1;
-//    ud.drawweapon = 1;
-//    ud.idplayers = 1;
-//    ud.levelstats = 0;
-//    ud.lockout = 0;
-//    ud.m_ffire = 1;
-//    ud.m_marker = 1;
-//    ud.mouseaiming = 0;
-//    ud.mouseflip = 1;
-//    ud.msgdisptime = 120;
-//    ud.pwlockout[0] = '\0';
-//    ud.runkey_mode = 0;
-//    ud.screen_size = 4;
-//    ud.screen_tilting = 1;
-//    ud.shadows = 1;
-//    ud.statusbarmode = 1;
-//    ud.statusbarscale = 100;
-//    ud.team = 0;
-//    ud.viewbob = 1;
-//    ud.weaponsway = 1;
-//    ud.weaponswitch = 3;	// new+empty
-//    ud.angleinterpolation = 0;
+    ud.config.MouseBias = 0;
+    ud.config.MouseDeadZone = 0;
+    ud.config.MusicDevice = 0;
+    ud.config.MusicToggle = 1;
+    ud.config.MusicVolume = 195;
+    g_myAimMode = g_player[0].ps.aim_mode = 1;
+    ud.config.NumBits = 16;
+    ud.config.NumChannels = 2;
+    ud.config.NumVoices = 32;
+    ud.config.ReverseStereo = 0;
+    ud.auto_run = 1;
+    ud.config.ShowOpponentWeapons = 0;
+    ud.config.SmoothInput = 1;
+    ud.config.SoundToggle = 1;
+    ud.althud = 1;
+    ud.automsg = 0;
+    ud.autovote = 0;
+    ud.brightness = 8;
+    ud.camerasprite = -1;
+    ud.color = 0;
+    ud.crosshair = 1;
+    ud.crosshairscale = 50;
+    ud.obituaries = 1;
+    ud.democams = 1;
+    ud.detail = 1;
+    ud.drawweapon = 1;
+    ud.idplayers = 1;
+    ud.levelstats = 0;
+    ud.lockout = 0;
+    ud.m_ffire = 1;
+    ud.m_marker = 1;
+    ud.mouseaiming = 0;
+    ud.mouseflip = 1;
+    ud.msgdisptime = 120;
+    ud.pwlockout = "";
+    ud.runkey_mode = 0;
+    ud.screen_size = 4;
+    ud.screen_tilting = 1;
+    ud.shadows = 1;
+    ud.statusbarmode = 1;
+    ud.statusbarscale = 100;
+    ud.team = 0;
+    ud.viewbob = 1;
+    ud.weaponsway = 1;
+    ud.weaponswitch = 3;	// new+empty
+    ud.angleinterpolation = 0;
 //#ifdef GEKKO
 //    ud.config.UseJoystick = 1;
 //#else
-//    ud.config.UseJoystick = 0;
+    ud.config.UseJoystick = 0;
 //#endif
-//    ud.config.UseMouse = 1;
-//    ud.config.VoiceToggle = 5; // bitfield, 1 = local, 2 = dummy, 4 = other players in DM
-//    ud.display_bonus_screen = 1;
-//    ud.show_level_text = 1;
-//    ud.configversion = 0;
-//    ud.weaponscale = 100;
-//    ud.textscale = 100;
+    ud.config.UseMouse = 1;
+    ud.config.VoiceToggle = 5; // bitfield, 1 = local, 2 = dummy, 4 = other players in DM
+    ud.display_bonus_screen = 1;
+    ud.show_level_text = 1;
+    ud.configversion = 0;
+    ud.weaponscale = 100;
+    ud.textscale = 100;
 
-//    ud.config.CheckForUpdates = 1;
+    ud.config.CheckForUpdates = 1;
 
     if (g_rtsNamePtr == NULL)
         ud.rtsname =  G_DefaultRtsFile();
-//    Bstrcpy(szPlayerName, "Duke");
+    szPlayerName = "Duke";
 
-//    Bstrcpy(ud.ridecule[0], "An inspiration for birth control.");
-//    Bstrcpy(ud.ridecule[1], "You're gonna die for that!");
-//    Bstrcpy(ud.ridecule[2], "It hurts to be you.");
-//    Bstrcpy(ud.ridecule[3], "Lucky Son of a Bitch.");
-//    Bstrcpy(ud.ridecule[4], "Hmmm....Payback time.");
-//    Bstrcpy(ud.ridecule[5], "You bottom dwelling scum sucker.");
-//    Bstrcpy(ud.ridecule[6], "Damn, you're ugly.");
-//    Bstrcpy(ud.ridecule[7], "Ha ha ha...Wasted!");
-//    Bstrcpy(ud.ridecule[8], "You suck!");
-//    Bstrcpy(ud.ridecule[9], "AARRRGHHHHH!!!");
+    ud.ridecule[0] = "An inspiration for birth control.";
+    ud.ridecule[1] = "You're gonna die for that!";
+    ud.ridecule[2] = "It hurts to be you.";
+    ud.ridecule[3] = "Lucky Son of a Bitch.";
+    ud.ridecule[4] = "Hmmm....Payback time.";
+    ud.ridecule[5] = "You bottom dwelling scum sucker.";
+    ud.ridecule[6] = "Damn, you're ugly.";
+    ud.ridecule[7] = "Ha ha ha...Wasted!";
+    ud.ridecule[8] = "You suck!";
+    ud.ridecule[9] = "AARRRGHHHHH!!!";
 
-//    // JBF 20031211
-
+    // JBF 20031211
+    todo("setup CONFIG_SetDefaults - controls");
 //    CONFIG_SetDefaultKeys((const char (*)[MAXGAMEFUNCLEN])keydefaults);
 
 //    memset(ud.config.MouseFunctions, -1, sizeof(ud.config.MouseFunctions));
@@ -378,7 +378,7 @@ var h_gamefuncs = new hashtable_t(NUMGAMEFUNCTIONS<<1, null);
 //        ud.config.JoystickAnalogueAxes[i] = CONFIG_AnalogNameToNum(joystickanalogdefaults[i]);
 //        CONTROL_MapAnalogAxis(i, ud.config.JoystickAnalogueAxes[i], controldevice_joystick);
 //    }
-//}
+}
 
 
 //// wrapper for CONTROL_MapKey(), generates key bindings to reflect changes to keyboard setup
@@ -609,7 +609,7 @@ function /*int32_t */ CONFIG_ReadSetup() : number
 //    char tempbuf[1024];
 
 //    CONTROL_ClearAssignments();
-//    CONFIG_SetDefaults();
+    CONFIG_SetDefaults();
 
 //    ud.config.setupread = 1;
 

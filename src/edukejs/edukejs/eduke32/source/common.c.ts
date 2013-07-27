@@ -75,9 +75,8 @@
 //#include "common.h"
 //#include "common_game.h"
 //
-debugger;
 var g_gameType = GAMEFLAG_DUKE;
-assert.areEqual(1, g_gameType);
+
 //
 //// grp/con/def handling
 //

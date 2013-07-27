@@ -197,8 +197,8 @@ var g_dependencyCRC = 0;   //int32_t
 var g_usingAddon = 0; //int32_t 
 
 //#ifdef HAVE_CLIPSHAPE_FEATURE
-//char **g_clipMapFiles = NULL;
-//int32_t g_clipMapFilesNum = 0;
+var g_clipMapFiles: string[] = NULL;
+var g_clipMapFilesNum: number = 0; //int32_t 
 //#endif
 
 //extern int32_t lastvisinc;
@@ -272,7 +272,6 @@ function G_DefaultRtsFile(): string
 {
     if (window.DUKE)
         return defaultrtsfilename[GAME_DUKE];
-    todoThrow();
     //else if (WW2GI)
     //    return defaultrtsfilename[GAME_WW2GI];
     //else if (NAPALM)
@@ -1305,8 +1304,8 @@ function G_DefaultRtsFile(): string
 
 //// minitext_yofs: in hud_scale-independent, (<<16)-scaled, 0-200-normalized y coords,
 //// (sb&ROTATESPRITE_MAX) only.
-//static int32_t minitext_yofs = 0;
-//static int32_t minitext_lowercase = 0;
+var minitext_yofs = 0;              //static int32_t
+var minitext_lowercase = 0;         //static int32_t
 //int32_t minitext_(int32_t x,int32_t y,const char *t,int32_t s,int32_t p,int32_t sb)
 //{
 //    vec2_t dim;
@@ -11631,7 +11630,7 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
         initprintf("Using RTS file \"%s\".\n",ud.rtsname);
 
     if (ud.last_level)
-        Bstrcpy(ud.rtsname, defaultrtsfilename[0]);
+        ud.rtsname = defaultrtsfilename[0];
 
     ud.last_level = -1;
 
@@ -11672,7 +11671,7 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
 //        OSD_Exec(tempbuf);
 //        Bfree(ptr);
     }
-    throw "todo";
+ 
 //#ifdef HAVE_CLIPSHAPE_FEATURE
 //    if ((i = clipmapinfo_load()) > 0)
 //        initprintf("There was an error loading the sprite clipping map (status %d).\n", i);
@@ -11680,21 +11679,22 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
 //    for (i=0; i < g_clipMapFilesNum; ++i)
 //        Bfree (g_clipMapFiles[i]);
 //    Bfree (g_clipMapFiles);
-//    g_clipMapFiles = NULL;
+    g_clipMapFiles = NULL;
 //#endif
 
-//    // check if the minifont will support lowercase letters (3136-3161)
-//    // there is room for them in tiles012.art between "[\]^_." and "{|}~"
-//    minitext_lowercase = 1;
-//    for (i = MINIFONT + ('a'-'!'); minitext_lowercase && i < MINIFONT + ('z'-'!') + 1; ++i)
-//        minitext_lowercase &= tile_exists(i);
+    // check if the minifont will support lowercase letters (3136-3161)
+    // there is room for them in tiles012.art between "[\]^_." and "{|}~"
+    minitext_lowercase = 1;
+    for (i = MINIFONT + ('a'.charCodeAt(0)-'!'.charCodeAt(0)); minitext_lowercase && i < MINIFONT + ('z'.charCodeAt(0)-'!'.charCodeAt(0)) + 1; ++i)
+        minitext_lowercase &= tile_exists(i);
+   
+    OSD_Exec("autoexec.cfg");
 
-//    OSD_Exec("autoexec.cfg");
-
-//    if (g_networkMode != NET_DEDICATED_SERVER)
-//    {
-//        if (setgamemode(ud.config.ScreenMode,ud.config.ScreenWidth,ud.config.ScreenHeight,ud.config.ScreenBPP) < 0)
-//        {
+    if (g_networkMode != NET_DEDICATED_SERVER)
+    {
+        if (setgamemode(ud.config.ScreenMode,ud.config.ScreenWidth,ud.config.ScreenHeight,ud.config.ScreenBPP) < 0)
+        {
+            todoThrow();
 //            int32_t i = 0;
 //            int32_t xres[] = {ud.config.ScreenWidth,800,640,320};
 //            int32_t yres[] = {ud.config.ScreenHeight,600,480,240};
@@ -11703,7 +11703,7 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
 //            initprintf("Failure setting video mode %dx%dx%d %s! Attempting safer mode...\n",
 //                       ud.config.ScreenWidth,ud.config.ScreenHeight,ud.config.ScreenBPP,ud.config.ScreenMode?"fullscreen":"windowed");
 
-//#ifdef USE_OPENGL
+////#ifdef USE_OPENGL
 //            {
 //                int32_t j = 0;
 //                while (setgamemode(0,xres[i],yres[i],bpp[j]) < 0)
@@ -11725,18 +11725,18 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
 //                i++;
 //            }
 //#endif
-//            ud.config.ScreenWidth = xres[i];
-//            ud.config.ScreenHeight = yres[i];
-//            ud.config.ScreenBPP = bpp[i];
-//        }
+            ud.config.ScreenWidth = xres[i];
+            ud.config.ScreenHeight = yres[i];
+            ud.config.ScreenBPP = bpp[i];
+        }
 
-//        setbrightness(ud.brightness>>2,g_player[myconnectindex].ps->palette,0);
+        setbrightness(ud.brightness>>2,g_player[myconnectindex].ps->palette,0);
 
-//        S_MusicStartup();
-//        S_SoundStartup();
-//    }
-////    loadtmb();
-
+        todo("S_MusicStartup();");
+        todo("S_SoundStartup();");
+    }
+//    loadtmb();
+    throw "todo";
 //    if (ud.warp_on > 1 && (!g_netServer && ud.multimode < 2))
 //    {
 //        clearview(0L);

@@ -7973,7 +7973,6 @@ function initfastcolorlookup(rscale: number, gscale: number, bscale: number): vo
             + FASTPALGRIDSIZ*FASTPALGRIDSIZ + FASTPALGRIDSIZ+1;
         if (colhere[j>>3]&pow2char[j&7]) {
             colnext[i] = colhead[j];
-            if(colnext[i]  < 0)debugger
         } else 
              colnext[i] = -1;
         colhead[j] = i;
@@ -8167,7 +8166,6 @@ function getclosestcol(/*int32_t*/ r: number, /*int32_t*/ g: number, /*int32_t*/
                 }
             }
             i = colnext[i];
-            if(isNaN(i)) debugger;
             dlog(DEBUG_PALETTE,"i: %i\n", i);
         }
         while (i >= 0);
@@ -10848,96 +10846,96 @@ function initengine(): number
 //}
 
 
-////
-//// setgamemode
-////
-//// JBF: davidoption now functions as a windowed-mode flag (0 == windowed, 1 == fullscreen)
-//extern char videomodereset;
-//int32_t setgamemode(char davidoption, int32_t daxdim, int32_t daydim, int32_t dabpp)
-//{
-//    int32_t j;
+//
+// setgamemode
+//
+// JBF: davidoption now functions as a windowed-mode flag (0 == windowed, 1 == fullscreen)
+var videomodereset: number; //extern char 
+function setgamemode(/*char*/ davidoption: number,  daxdim: number,daydim: number, dabpp: number):  number
+{
+    var j: number;
 
-//#ifdef USE_OPENGL
-//    extern char nogl;
+#ifdef USE_OPENGL
+    extern char nogl;
 
-//    if (nogl) dabpp = 8;
-//#endif
-//    daxdim = max(320, daxdim);
-//    daydim = max(200, daydim);
+    if (nogl) dabpp = 8;
+#endif
+    daxdim = max(320, daxdim);
+    daydim = max(200, daydim);
 
-//    if (in3dmode() && videomodereset == 0 &&
-//            (davidoption == fullscreen) && (xdim == daxdim) && (ydim == daydim) && (bpp == dabpp))
-//        return(0);
+    if (in3dmode() && videomodereset == 0 &&
+            (davidoption == fullscreen) && (xdim == daxdim) && (ydim == daydim) && (bpp == dabpp))
+        return(0);
 
-//    Bstrcpy(kensmessage,"!!!! BUILD engine&tools programmed by Ken Silverman of E.G. RI."
-//           "  (c) Copyright 1995 Ken Silverman.  Summary:  BUILD = Ken. !!!!");
-//    //  if (getkensmessagecrc(FP_OFF(kensmessage)) != 0x56c764d4)
-//    //      { OSD_Printf("Nice try.\n"); exit(0); }
+    Bstrcpy(kensmessage,"!!!! BUILD engine&tools programmed by Ken Silverman of E.G. RI."+
+           "  (c) Copyright 1995 Ken Silverman.  Summary:  BUILD = Ken. !!!!");
+    //  if (getkensmessagecrc(FP_OFF(kensmessage)) != 0x56c764d4)
+    //      { OSD_Printf("Nice try.\n"); exit(0); }
 
-//    //if (checkvideomode(&daxdim, &daydim, dabpp, davidoption)<0) return (-1);
+    //if (checkvideomode(&daxdim, &daydim, dabpp, davidoption)<0) return (-1);
 
-//    //bytesperline is set in this function
+    //bytesperline is set in this function
 
-//    j = bpp;
+    j = bpp;
 
-//    g_lastpalettesum = 0;
-//    if (setvideomode(daxdim,daydim,dabpp,davidoption) < 0) return(-1);
+    g_lastpalettesum = 0;
+    if (setvideomode(daxdim,daydim,dabpp,davidoption) < 0) return(-1);
 
-//    // Workaround possible bugs in the GL driver
-//    makeasmwriteable();
+    // Workaround possible bugs in the GL driver
+    makeasmwriteable();
 
-//#ifdef USE_OPENGL
-//    if (dabpp > 8) rendmode = glrendmode;    // GL renderer
-//    else if (dabpp == 8 && j > 8) rendmode = REND_CLASSIC;
-//#endif
+#ifdef USE_OPENGL
+    if (dabpp > 8) rendmode = glrendmode;    // GL renderer
+    else if (dabpp == 8 && j > 8) rendmode = REND_CLASSIC;
+#endif
 
-//    xdim = daxdim; ydim = daydim;
+    xdim = daxdim; ydim = daydim;
 
-//    if (lookups != NULL)
-//        Bfree(lookups);
+    if (lookups != NULL)
+        Bfree(lookups);
 
-//    j = ydim*4;  //Leave room for horizlookup&horizlookup2
-//    lookups = (int32_t *)Bmalloc(2*j*sizeof(lookups[0]));
+    j = ydim*4;  //Leave room for horizlookup&horizlookup2
+    lookups = (int32_t *)Bmalloc(2*j*sizeof(lookups[0]));
 
-//    if (lookups == NULL)
-//    {
-//        initprintf("OUT OF MEMORY in setgamemode!\n");
-//        uninitengine();
-//        exit(1);
-//    }
+    if (lookups == NULL)
+    {
+        initprintf("OUT OF MEMORY in setgamemode!\n");
+        uninitengine();
+        exit(1);
+    }
 
-//    horizlookup = lookups;
-//    horizlookup2 = lookups + j;
-//    horizycent = ((ydim*4)>>1);
+    horizlookup = lookups;
+    horizlookup2 = lookups + j;
+    horizycent = ((ydim*4)>>1);
 
-//    //Force drawrooms to call dosetaspect & recalculate stuff
-//    oxyaspect = oxdimen = oviewingrange = -1;
+    //Force drawrooms to call dosetaspect & recalculate stuff
+    oxyaspect = oxdimen = oviewingrange = -1;
 
-//    calc_ylookup(bytesperline, ydim);
+    calc_ylookup(bytesperline, ydim);
 
-//    setview(0L,0L,xdim-1,ydim-1);
-//    clearallviews(0L);
-//    setbrightness(curbrightness,0,0);
+    setview(0L,0L,xdim-1,ydim-1);
+    clearallviews(0L);
+    setbrightness(curbrightness,0,0);
 
-//    if (searchx < 0) { searchx = halfxdimen; searchy = (ydimen>>1); }
+    if (searchx < 0) { searchx = halfxdimen; searchy = (ydimen>>1); }
 
-//#ifdef USE_OPENGL
-//    if (getrendermode() >= REND_POLYMOST)
-//    {
-//        polymost_glreset();
-//        polymost_glinit();
-//    }
-//# ifdef POLYMER
-//    if (getrendermode() == REND_POLYMER)
-//    {
-//        if (!polymer_init())
-//            rendmode = REND_POLYMOST;
-//    }
-//#endif
-//#endif
-//    qsetmode = 200;
-//    return(0);
-//}
+#ifdef USE_OPENGL
+    if (getrendermode() >= REND_POLYMOST)
+    {
+        polymost_glreset();
+        polymost_glinit();
+    }
+# ifdef POLYMER
+    if (getrendermode() == REND_POLYMER)
+    {
+        if (!polymer_init())
+            rendmode = REND_POLYMOST;
+    }
+#endif
+#endif
+    qsetmode = 200;
+    return(0);
+}
 
 
 ////
@@ -11041,13 +11039,13 @@ function set_picsiz(picnum: number): void
 //    set_picsiz(picnum);
 //}
 
-//int32_t tile_exists(int32_t picnum)
-//{
-//    if (waloff[picnum] == 0)
-//        loadtile(picnum);
+function tile_exists(picnum: number): number
+{
+    if (waloff[picnum] == 0)
+        loadtile(picnum);
 
-//    return (waloff[picnum] != 0 && tilesizx[picnum] > 0 && tilesizy[picnum] > 0);
-//}
+    return (waloff[picnum] != 0 && tilesizx[picnum] > 0 && tilesizy[picnum] > 0) ? 1 : 0;
+}
 
 //
 // loadpics
@@ -11180,18 +11178,18 @@ function loadpics(filename: string, askedsize: number): number
 }
 
 
-////
-//// loadtile
-////
-//void loadtile(int16_t tilenume)
-//{
-//    int32_t i, dasiz;
+//
+// loadtile
+//
+function loadtile(tilenume: number): void
+{
+    var i: number, dasiz: number; 
 
-//    if ((unsigned)tilenume >= (unsigned)MAXTILES) return;
-//    if ((dasiz = tilesizx[tilenume]*tilesizy[tilenume]) <= 0) return;
+    if (unsigned(tilenume) >= unsigned(MAXTILES)) return;
+    if ((dasiz = tilesizx[tilenume]*tilesizy[tilenume]) <= 0) return;
 
-//    i = tilefilenum[tilenume];
-
+    i = tilefilenum[tilenume];
+    todoThrow();
 //#ifdef WITHKPLIB
 //    if (artptrs[i]) // from zip
 //    {
@@ -11283,7 +11281,7 @@ function loadpics(filename: string, askedsize: number): number
 //        picanm[tilenume].yofs = 12;
 //    }
 //#endif
-//}
+}
 
 ////
 //// allocatepermanenttile

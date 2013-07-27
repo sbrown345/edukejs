@@ -2672,7 +2672,7 @@ var g_numSelfObituaries = 0;
 //#define MAXANGVEL    127
 //#define MAXHORIZ     127
 
-//int32_t g_myAimMode = 0, g_myAimStat = 0, g_oldAimStat = 0;
+var g_myAimMode = 0, g_myAimStat = 0, g_oldAimStat = 0; //int32_t 
 //int32_t mouseyaxismode = -1;
 //int32_t g_emuJumpTics = 0;
 

@@ -299,28 +299,30 @@ var osdverpal: number;           //static int32_t
 //    return ptr;
 //}
 
-//int32_t OSD_Exec(const char *szScript)
-//{
-//    FILE *fp = fopenfrompath(szScript, "r");
+function OSD_Exec(szScript: string): number
+{
+    todo("OSD_Exec");
+    return 1;
+    //FILE *fp = fopenfrompath(szScript, "r");
 
-//    if (fp != NULL)
-//    {
-//        char line[256], *cp;
+    //if (fp != NULL)
+    //{
+    //    char line[256], *cp;
 
-//        OSD_Printf("Executing \"%s\"\n", szScript);
-//        osdexecscript++;
-//        while (fgets(line, sizeof(line), fp) != NULL)
-//        {
-//            cp = strtok(line,"\r\n");
-//            if (cp)
-//                OSD_Dispatch(cp);
-//        }
-//        osdexecscript--;
-//        fclose(fp);
-//        return 0;
-//    }
-//    return 1;
-//}
+    //    OSD_Printf("Executing \"%s\"\n", szScript);
+    //    osdexecscript++;
+    //    while (fgets(line, sizeof(line), fp) != NULL)
+    //    {
+    //        cp = strtok(line,"\r\n");
+    //        if (cp)
+    //            OSD_Dispatch(cp);
+    //    }
+    //    osdexecscript--;
+    //    fclose(fp);
+    //    return 0;
+    //}
+    //return 1;
+}
 
 //int32_t OSD_ParsingScript(void)
 //{

@@ -6,7 +6,7 @@
 
 //#ifndef EDUKE32_COMMON_GAME_H_
 //#define EDUKE32_COMMON_GAME_H_
-debugger
+
 var GAMEFLAG_DUKE      = 0x00000001;
 var GAMEFLAG_NAM       = 0x00000002;
 var GAMEFLAG_NAPALM    = 0x00000004;
