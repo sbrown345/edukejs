@@ -113,7 +113,7 @@ function memset(ptr: P, value: number, num: number) : void {
 
 // any classes reset must have a ctor that resets all properties
 function memsetStruct(array: any[], T: any, value: number, num: number) : void {
-    if(value !==0) {
+    if(value !== 0) {
         todoThrow("value other than 0 not supported");
     }
 

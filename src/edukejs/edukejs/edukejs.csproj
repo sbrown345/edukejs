@@ -57,6 +57,7 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="build\headers\baselayer.h.ts" />
     <Content Include="build\headers\build.h.ts" />
     <Content Include="build\headers\cache1d.h.ts" />
     <Content Include="build\headers\compat.h.ts" />
@@ -65,7 +66,9 @@
     <Content Include="build\headers\engine_priv.h.ts" />
     <Content Include="build\headers\hightile.h.ts" />
     <Content Include="build\headers\mdsprite.h.ts" />
+    <Content Include="build\headers\osd.h.ts" />
     <Content Include="build\headers\pragmas.h.ts" />
+    <Content Include="build\headers\scancodes.h.ts" />
     <Content Include="build\source\baselayer.c.ts" />
     <Content Include="build\source\build.c.ts" />
     <Content Include="build\source\compat.c.ts" />
@@ -92,7 +95,6 @@
     <Content Include="eduke32\headers\_functio.h.ts" />
     <Content Include="eduke32\headers\_rts.h.ts" />
     <Content Include="eduke32\source\astub.c.ts" />
-    <Content Include="eduke32\source\baselayer.c.ts" />
     <Content Include="build\source\cache1d.c.ts" />
     <Content Include="eduke32\source\config.c.ts" />
     <Content Include="eduke32\source\gamedef.c.ts" />

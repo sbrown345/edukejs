@@ -3,6 +3,7 @@
 /// <reference path="../../utils/todo.ts" />
 /// <reference path="../../utils/types.ts" />
 
+/// <reference path="../../build/headers/baselayer.h.ts" />
 /// <reference path="../../build/headers/build.h.ts" />
 /// <reference path="../../build/headers/cache1d.h.ts" />
 /// <reference path="../../build/headers/compat.h.ts" />
@@ -10,7 +11,9 @@
 /// <reference path="../../build/headers/engine_priv.h.ts" />
 /// <reference path="../../build/headers/hightile.h.ts" />
 /// <reference path="../../build/headers/mdsprite.h.ts" />
+/// <reference path="../../build/headers/osd.h.ts" />
 /// <reference path="../../build/headers/pragmas.h.ts" />
+/// <reference path="../../build/headers/scancodes.h.ts" />
 
 /// <reference path="../../build/source/baselayer.c.ts" />
 /// <reference path="../../build/source/build.c.ts" />
@@ -34,7 +37,6 @@
 /// <reference path="../../eduke32/headers/quotes.h.ts" />
 
 /// <reference path="../../eduke32/source/astub.c.ts" />
-/// <reference path="../../eduke32/source/baselayer.c.ts" />
 /// <reference path="../../eduke32/source/common.c.ts" />
 /// <reference path="../../eduke32/source/config.c.ts" />
 /// <reference path="../../eduke32/source/game.c.ts" />
@@ -79,7 +81,7 @@
 //// static int32_t _internal_osdfunc_dumpbuildinfo(const osdfuncparm_t *);
 //// static int32_t _internal_osdfunc_setrendermode(const osdfuncparm_t *);
 
-//static int32_t white=-1;            // colour of white (used by default display routines)
+var white=-1;            // colour of white (used by default display routines)//in32_t
 //static void _internal_drawosdchar(int32_t, int32_t, char, int32_t, int32_t);
 //static void _internal_drawosdstr(int32_t, int32_t, const char *, int32_t, int32_t, int32_t);
 //static void _internal_drawosdcursor(int32_t,int32_t,int32_t,int32_t);
@@ -98,28 +100,28 @@ var osdver: string;
 var osdverlen: number;           //static int32_t  
 var osdvershade: number;         //static int32_t  
 var osdverpal: number;           //static int32_t  
-//static int32_t  osdpos=0;           // position next character will be written at
-//static int32_t  osdlines=1;         // # lines of text in the buffer
-//static int32_t  osdrows=20;         // # lines of the buffer that are visible
-//static int32_t  osdrowscur=-1;
-//static int32_t  osdscroll=0;
-//static int32_t  osdcols=60;         // width of onscreen display in text columns
-//static int32_t  osdmaxrows=20;      // maximum number of lines which can fit on the screen
-//static int32_t  osdmaxlines=TEXTSIZE/60;    // maximum lines which can fit in the buffer
-//static int32_t  osdhead=0;          // topmost visible line number
+var osdpos=0;           // position next character will be written at                //static int32_t
+var osdlines=1;         // # lines of text in the buffer                             //static int32_t
+var osdrows=20;         // # lines of the buffer that are visible                    //static int32_t
+var osdrowscur=-1;                                                                   //static int32_t
+var osdscroll=0;                                                                     //static int32_t
+var osdcols=60;         // width of onscreen display in text columns                 //static int32_t
+var osdmaxrows=20;      // maximum number of lines which can fit on the screen       //static int32_t
+var osdmaxlines=TEXTSIZE/60|0;    // maximum lines which can fit in the buffer
+var osdhead=0;          // topmost visible line number//static int32_t  
 //static BFILE *osdlog=NULL;      // log filehandle
-//static int32_t  osdkey=sc_Tilde;
-//static int32_t  keytime=0;
-//static int32_t osdscrtime = 0;
+var osdkey=sc_Tilde;      //static int32_t  
+var keytime=0;            //static int32_t  
+var osdscrtime = 0;        //static int32_t  
 
 //// command prompt editing
 //static char osdeditbuf[OSD_EDITLENGTH+1];   // editing buffer
 //static char osdedittmp[OSD_EDITLENGTH+1];   // editing buffer temporary workspace
-//static int32_t  osdeditlen=0;       // length of characters in edit buffer
-//static int32_t  osdeditcursor=0;        // position of cursor in edit buffer
-//static int32_t  osdeditwinstart=0;
-//static int32_t  osdeditwinend=60-1-3;
-//#define editlinewidth (osdcols-1-3)
+var osdeditlen=0;       // length of characters in edit buffer       //static int32_t  
+var osdeditcursor=0;        // position of cursor in edit buffer     //static int32_t  
+var osdeditwinstart=0;                                               //static int32_t  
+var osdeditwinend=60-1-3;                                            //static int32_t  
+var editlinewidth = (osdcols-1-3);
 
 //// command processing
 //static int32_t  osdhistorypos=-1;       // position we are at in the history buffer
@@ -1477,45 +1479,45 @@ function OSD_SetParameters(
 //}
 
 
-////
-//// OSD_ResizeDisplay() -- Handles readjustment of the display when the screen resolution
-////  changes on us.
-////
-//void OSD_ResizeDisplay(int32_t w, int32_t h)
-//{
-//    int32_t newcols;
-//    int32_t newmaxlines;
-//    char newtext[TEXTSIZE];
-//    char newfmt[TEXTSIZE];
-//    int32_t i,j,k;
+//
+// OSD_ResizeDisplay() -- Handles readjustment of the display when the screen resolution
+//  changes on us.
+//
+function OSD_ResizeDisplay(w: number, h: number): void
+{
+    var newcols;        //int32_t
+    var newmaxlines;    //int32_t
+    var newtext = new Uint8Array(TEXTSIZE);
+    var newfmt  = new Uint8Array(TEXTSIZE);
+    var i,j,k;
 
-//    newcols = getcolumnwidth(w);
-//    newmaxlines = TEXTSIZE / newcols;
+    newcols = getcolumnwidth(w);
+    newmaxlines = TEXTSIZE / newcols;
 
-//    j = min(newmaxlines, osdmaxlines);
-//    k = min(newcols, osdcols);
+    j = min(newmaxlines, osdmaxlines);
+    k = min(newcols, osdcols);
 
-//    Bmemset(newtext, asc_Space, TEXTSIZE);
-//    for (i=j-1; i>=0; i--)
-//    {
-//        Bmemcpy(newtext+newcols*i, osdtext+osdcols*i, k);
-//        Bmemcpy(newfmt+newcols*i, osdfmt+osdcols*i, k);
-//    }
+    Bmemset(new P(newtext), asc_Space, TEXTSIZE);
+    for (i=j-1; i>=0; i--)
+    {
+        Bmemcpy(newtext+newcols*i, osdtext+osdcols*i, k);
+        Bmemcpy(newfmt+newcols*i, osdfmt+osdcols*i, k);
+    }
 
-//    Bmemcpy(osdtext, newtext, TEXTSIZE);
-//    Bmemcpy(osdfmt, newfmt, TEXTSIZE);
-//    osdcols = newcols;
-//    osdmaxlines = newmaxlines;
-//    osdmaxrows = getrowheight(h)-2;
+    Bmemcpy(osdtext, newtext, TEXTSIZE);
+    Bmemcpy(osdfmt, newfmt, TEXTSIZE);
+    osdcols = newcols;
+    osdmaxlines = newmaxlines;
+    osdmaxrows = getrowheight(h)-2;
 
-//    if (osdrows > osdmaxrows) osdrows = osdmaxrows;
+    if (osdrows > osdmaxrows) osdrows = osdmaxrows;
 
-//    osdpos = 0;
-//    osdhead = 0;
-//    osdeditwinstart = 0;
-//    osdeditwinend = editlinewidth;
-//    white = -1;
-//}
+    osdpos = 0;
+    osdhead = 0;
+    osdeditwinstart = 0;
+    osdeditwinend = editlinewidth;
+    white = -1;
+}
 
 
 ////

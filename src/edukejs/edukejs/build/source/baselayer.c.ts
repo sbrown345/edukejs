@@ -367,9 +367,10 @@ var flushlogwindow = 1; //int32_t
 //    return r;
 //}
 
-//int32_t baselayer_init(void)
-//{
-//    uint32_t i;
+function baselayer_init(): number
+{
+    var i: number;
+    todo("init cvars etc in baselayer_init");
 //#ifdef _WIN32
 //// on Windows, don't save the "r_screenaspect" cvar because the physical screen size is
 //// determined at startup
@@ -424,8 +425,8 @@ var flushlogwindow = 1; //int32_t
 //    polymost_initosdfuncs();
 //#endif
 
-//    return 0;
-//}
+    return 0;
+}
 
 
 //#if defined _WIN32

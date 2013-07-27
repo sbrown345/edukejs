@@ -3,6 +3,7 @@
 /// <reference path="../../utils/todo.ts" />
 /// <reference path="../../utils/types.ts" />
 
+/// <reference path="../../build/headers/baselayer.h.ts" />
 /// <reference path="../../build/headers/build.h.ts" />
 /// <reference path="../../build/headers/cache1d.h.ts" />
 /// <reference path="../../build/headers/compat.h.ts" />
@@ -10,7 +11,9 @@
 /// <reference path="../../build/headers/engine_priv.h.ts" />
 /// <reference path="../../build/headers/hightile.h.ts" />
 /// <reference path="../../build/headers/mdsprite.h.ts" />
+/// <reference path="../../build/headers/osd.h.ts" />
 /// <reference path="../../build/headers/pragmas.h.ts" />
+/// <reference path="../../build/headers/scancodes.h.ts" />
 
 /// <reference path="../../build/source/baselayer.c.ts" />
 /// <reference path="../../build/source/build.c.ts" />
@@ -34,7 +37,6 @@
 /// <reference path="../../eduke32/headers/quotes.h.ts" />
 
 //    r = GetDeviceCaps(hdc, BITSPIXEL);
-/// <reference path="../../eduke32/source/baselayer.c.ts" />
 /// <reference path="../../eduke32/source/common.c.ts" />
 /// <reference path="../../eduke32/source/config.c.ts" />
 /// <reference path="../../eduke32/source/game.c.ts" />
@@ -180,33 +182,33 @@ var argvbuf: string = NULL;
 //static BOOL CreateAppWindow(int32_t modenum);
 //static void DestroyAppWindow(void);
 
-//// video
-//static int32_t desktopxdim=0;
-//static int32_t desktopydim=0;
-//static int32_t desktopbpp=0;
-//static int32_t modesetusing=-1;
-//static int32_t curvidmode = -1;
-//static int32_t customxdim = 640;
-//static int32_t customydim = 480;
-//static int32_t custombpp = 8;
-//static int32_t customfs = 0;
+// video
+var desktopxdim:number = 0;    //static int32_t 
+var desktopydim:number = 0;    //static int32_t 
+var desktopbpp:number = 0;     //static int32_t 
+var modesetusing:number = -1;  //static int32_t 
+var curvidmode:number = -1;  //static int32_t 
+var customxdim:number = 640; //static int32_t 
+var customydim:number = 480; //static int32_t 
+var custombpp:number = 8;    //static int32_t 
+var customfs:number = 0;     //static int32_t 
 //static uint32_t modeschecked=0;
-//int32_t xres=-1;
-//int32_t yres=-1;
-//int32_t fullscreen=0;
-//int32_t bpp=0;
-//int32_t bytesperline=0;
-//int32_t lockcount=0;
-//int32_t glcolourdepth=32;
-//int32_t vsync=0;
+xres=-1;
+yres=-1;
+fullscreen=0;
+bpp=0;
+bytesperline=0;
+var lockcount=0;
+var glcolourdepth=32;
+var vsync=0;
 //uint32_t maxrefreshfreq=60;
 //intptr_t frameplace=0;
-//char modechange=1;
-//char repaintneeded=0;
-//char offscreenrendering=0;
-//char videomodereset = 0;
+var modechange=1;             //char
+var repaintneeded=0;          //char
+var offscreenrendering=0;     //char
+var videomodereset = 0;       //char
 
-//// input and events
+// input and events
 var quitevent=0;//char
 //char appactive=1;
 //char realfs=0;
@@ -214,9 +216,9 @@ var quitevent=0;//char
 //uint32_t mousewheel[2] = { 0,0 };
 
 
-////-------------------------------------------------------------------------------------------------
-////  DINPUT (JOYSTICK)
-////=================================================================================================
+//-------------------------------------------------------------------------------------------------
+//  DINPUT (JOYSTICK)
+//=================================================================================================
 
 //#define JOYSTICK	0
 
@@ -227,7 +229,7 @@ var quitevent=0;//char
 //static GUID                  guidDevs;
 
 //char di_disabled = 0;
-//static char di_devacquired;
+var di_devacquired: number = 0;
 //static HANDLE di_inputevt = 0;
 //static int32_t joyblast=0;
 
@@ -246,9 +248,9 @@ var quitevent=0;//char
 
 
 
-////-------------------------------------------------------------------------------------------------
-////  MAIN CRAP
-////=================================================================================================
+//-------------------------------------------------------------------------------------------------
+//  MAIN CRAP
+//=================================================================================================
 
 
 ////
@@ -1271,11 +1273,12 @@ var initprintf = function(f: string, ...args: any[])  {
 //    }
 //}
 
-////
-//// AcquireInputDevices() -- (un)acquires the input devices
-////
-//static void AcquireInputDevices(char acquire)
-//{
+//
+// AcquireInputDevices() -- (un)acquires the input devices
+//
+function AcquireInputDevices(/*char */acquire: number): void
+{
+    todo("AcquireInputDevices");
 //    DWORD flags;
 //    HRESULT result;
 
@@ -1317,7 +1320,7 @@ var initprintf = function(f: string, ...args: any[])  {
 //    if (FAILED(result))
 //        initprintf("IDirectInputDevice7_SetCooperativeLevel(%s): %s\n",
 //                   devicedef.name, GetDInputError(result));
-//}
+}
 
 ////
 //// ProcessInputDevices() -- processes the input devices
@@ -1642,11 +1645,13 @@ function getticks() : number //uint32_t
 //static int32_t setgammaramp(LPDDGAMMARAMP gt);
 //static int32_t getgammaramp(LPDDGAMMARAMP gt);
 
-////
-//// checkvideomode() -- makes sure the video mode passed is legal
-////
-//int32_t checkvideomode(int32_t *x, int32_t *y, int32_t c, int32_t fs, int32_t forced)
-//{
+//
+// checkvideomode() -- makes sure the video mode passed is legal
+//
+function checkvideomode(/*int32_t *x, int32_t *y, int32_t c, int32_t fs, int32_t forced*/): number
+{
+    todo("checkvideomode");
+    return 29;
 //    int32_t i, nearest=-1, dx, dy, odx=9999, ody=9999;
 
 //    getvalidmodes();
@@ -1698,73 +1703,73 @@ function getticks() : number //uint32_t
 //    *y = validmode[nearest].ydim;
 
 //    return nearest;		// JBF 20031206: Returns the mode number
-//}
+}
 
 
-////
-//// setvideomode() -- set the video mode
-////
+//
+// setvideomode() -- set the video mode
+//
 
 //#ifdef USE_OPENGL
 //static HWND hGLWindow = NULL;
 //#endif
 
-//int32_t setvideomode(int32_t x, int32_t y, int32_t c, int32_t fs)
-//{
-//    char inp;
-//    int32_t modenum;
+function setvideomode(x: number, y: number, c: number, fs: number): number
+{
+    var inp: number;
+    var modenum: number;
 
-//    if ((fs == fullscreen) && (x == xres) && (y == yres) && (c == bpp) && !videomodereset)
-//    {
-//        OSD_ResizeDisplay(xres,yres);
-//        return 0;
-//    }
+    if ((fs == fullscreen) && (x == xres) && (y == yres) && (c == bpp) && !videomodereset)
+    {
+        OSD_ResizeDisplay(xres,yres);
+        return 0;
+    }
+    todo("checkvideomode, return 0x7fffffff and set to canvas size (canvas size should stretch to screen)");
+    modenum = checkvideomode(/*&x,&y,c,fs,0*/);
+    if (modenum < 0) return -1;
+    if (modenum == 0x7fffffff)
+    {
+        customxdim = x;
+        customydim = y;
+        custombpp  = c;
+        customfs   = fs;
+    }
 
-//    modenum = checkvideomode(&x,&y,c,fs,0);
-//    if (modenum < 0) return -1;
-//    if (modenum == 0x7fffffff)
-//    {
-//        customxdim = x;
-//        customydim = y;
-//        custombpp  = c;
-//        customfs   = fs;
-//    }
+    inp = di_devacquired;
+    AcquireInputDevices(0);
 
-//    inp = di_devacquired;
-//    AcquireInputDevices(0);
+    if (hWindow && gammabrightness)
+    {
+        setgammaramp(&sysgamma);
+        gammabrightness = 0;
+    }
 
-//    if (hWindow && gammabrightness)
-//    {
-//        setgammaramp(&sysgamma);
-//        gammabrightness = 0;
-//    }
+    win_setvideomode(c);
 
-//    win_setvideomode(c);
+    if (!silentvideomodeswitch)
+        initprintf("Setting video mode %dx%d (%d-bit %s)\n",
+                   x,y,c, ((fs&1) ? "fullscreen" : "windowed"));
 
-//    if (!silentvideomodeswitch)
-//        initprintf("Setting video mode %dx%d (%d-bit %s)\n",
-//                   x,y,c, ((fs&1) ? "fullscreen" : "windowed"));
+    if (CreateAppWindow(modenum)) return -1;
 
-//    if (CreateAppWindow(modenum)) return -1;
-
-//    if (!gammabrightness)
-//    {
-//        //        float f = 1.0 + ((float)curbrightness / 10.0);
-//        if (getgammaramp(&sysgamma) >= 0) gammabrightness = 1;
-//        if (gammabrightness && setgamma() < 0) gammabrightness = 0;
-//    }
+    if (!gammabrightness)
+    {
+        //        float f = 1.0 + ((float)curbrightness / 10.0);
+        if (getgammaramp(&sysgamma) >= 0) gammabrightness = 1;
+        if (gammabrightness && setgamma() < 0) gammabrightness = 0;
+    }
 
 //#ifdef USE_OPENGL
-//    if (hGLWindow && glinfo.vsync) bwglSwapIntervalEXT(vsync);
+    if (hGLWindow && glinfo.vsync) bwglSwapIntervalEXT(vsync);
 //#endif
-//    if (inp) AcquireInputDevices(1);
-//    modechange=1;
-//    videomodereset = 0;
-//    OSD_ResizeDisplay(xres,yres);
-//    //baselayer_onvideomodechange(c>8);
+    if (inp) AcquireInputDevices(1);
+    modechange=1;
+    videomodereset = 0;
+    OSD_ResizeDisplay(xres,yres);
+    //baselayer_onvideomodechange(c>8);
 
-//    return 0;
-//}
+    return 0;
+}
 
 
 ////

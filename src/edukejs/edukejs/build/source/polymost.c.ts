@@ -3,13 +3,16 @@
 /// <reference path="../../utils/todo.ts" />
 /// <reference path="../../utils/types.ts" />
 
+/// <reference path="../../build/headers/baselayer.h.ts" />
 /// <reference path="../../build/headers/build.h.ts" />
 /// <reference path="../../build/headers/compat.h.ts" />
 /// <reference path="../../build/headers/duke3d.h.ts" />
 /// <reference path="../../build/headers/engine_priv.h.ts" />
 /// <reference path="../../build/headers/hightile.h.ts" />
 /// <reference path="../../build/headers/mdsprite.h.ts" />
+/// <reference path="../../build/headers/osd.h.ts" />
 /// <reference path="../../build/headers/pragmas.h.ts" />
+/// <reference path="../../build/headers/scancodes.h.ts" />
 
 /// <reference path="../../build/source/crc32.c.ts" />
 
@@ -167,7 +170,7 @@ var glusetexcache = 2, glusememcache = 1; ////int32_t
 //int32_t glwidescreen = 0;
 //int32_t glprojectionhacks = 1;
 //static GLuint polymosttext = 0;
-//int32_t glrendmode = REND_POLYMOST;
+var glrendmode = REND_POLYMOST;
 //
 //// This variable, and 'shadeforfullbrightpass' control the drawing of
 //// fullbright tiles.  Also see 'fullbrightloadingpass'.

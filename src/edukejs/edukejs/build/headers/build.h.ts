@@ -18,9 +18,9 @@
 //#endif
 
 //enum rendmode_t {
-//    REND_CLASSIC,
-//    REND_POLYMOST = 3,
-//    REND_POLYMER
+var REND_CLASSIC = 0,
+    REND_POLYMOST = 3,
+    REND_POLYMER = 4;
 //};
 
 var PI=3.14159265358979323846;
@@ -697,8 +697,8 @@ var spritesmooth;//EXTERN spritesmooth_t spritesmooth[MAXSPRITES+MAXUNIQHUDID];
 //EXTERN int16_t thewall[MAXWALLSB];
 //EXTERN spritetype *tspriteptr[MAXSPRITESONSCREEN + 1];
 
-//EXTERN int32_t xdim, ydim, numpages;
-//EXTERN int32_t yxaspect, viewingrange;
+var xdim: number, ydim: number, numpages: number;       //EXTERN int32_t 
+var yxaspect: number, viewingrange: number;     //EXTERN int32_t 
 //#ifdef __cplusplus
 //extern "C" {
 //#endif

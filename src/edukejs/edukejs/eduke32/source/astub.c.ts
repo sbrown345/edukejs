@@ -3,6 +3,7 @@
 /// <reference path="../../utils/todo.ts" />
 /// <reference path="../../utils/types.ts" />
 
+/// <reference path="../../build/headers/baselayer.h.ts" />
 /// <reference path="../../build/headers/build.h.ts" />
 /// <reference path="../../build/headers/cache1d.h.ts" />
 /// <reference path="../../build/headers/compat.h.ts" />
@@ -10,7 +11,9 @@
 /// <reference path="../../build/headers/engine_priv.h.ts" />
 /// <reference path="../../build/headers/hightile.h.ts" />
 /// <reference path="../../build/headers/mdsprite.h.ts" />
+/// <reference path="../../build/headers/osd.h.ts" />
 /// <reference path="../../build/headers/pragmas.h.ts" />
+/// <reference path="../../build/headers/scancodes.h.ts" />
 
 /// <reference path="../../build/source/baselayer.c.ts" />
 /// <reference path="../../build/source/build.c.ts" />

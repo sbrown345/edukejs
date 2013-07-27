@@ -4,13 +4,16 @@
 /// <reference path="../../utils/todo.ts" />
 /// <reference path="../../utils/types.ts" />
 
+/// <reference path="../../build/headers/baselayer.h.ts" />
 /// <reference path="../../build/headers/build.h.ts" />
 /// <reference path="../../build/headers/compat.h.ts" />
 /// <reference path="../../build/headers/duke3d.h.ts" />
 /// <reference path="../../build/headers/engine_priv.h.ts" />
 /// <reference path="../../build/headers/hightile.h.ts" />
 /// <reference path="../../build/headers/mdsprite.h.ts" />
+/// <reference path="../../build/headers/osd.h.ts" />
 /// <reference path="../../build/headers/pragmas.h.ts" />
+/// <reference path="../../build/headers/scancodes.h.ts" />
 
 /// <reference path="../../build/source/cache1d.c.ts" />
 /// <reference path="../../build/source/crc32.c.ts" />
@@ -161,11 +164,11 @@ var voxscale = new Int32Array(MAXVOXELS);
 var lowrecip = new Int32Array(1024), nytooclose: number, nytoofar: number; //static int32_t 
 //static uint32_t distrecip[65536+256];
 
-//static int32_t *lookups = NULL;
+var lookups:Int32Array = NULL; //int32_t *
 var dommxoverlay = 1, beforedrawrooms = 1; //static int32_t 
 var indrawroomsandmasks = 0;//int32_t 
 
-//static int32_t oxdimen = -1, oviewingrange = -1, oxyaspect = -1;
+var oxdimen = -1, oviewingrange = -1, oxyaspect = -1;
 
 //// r_usenewaspect is the cvar, newaspect_enable to trigger the new behaviour in the code
 //int32_t r_usenewaspect = 1, newaspect_enable=0;
@@ -252,7 +255,7 @@ var britable = [
 
 //extern char textfont[2048], smalltextfont[2048];
 
-//static char kensmessage[128];
+var kensmessage: string;
 var engineerrstr = "No error";
 
 //int32_t showfirstwall=0;
@@ -2348,8 +2351,8 @@ function msqrtasm(c: number): number
 //static int32_t nrx1[8], nry1[8], nrx2[8], nry2[8]; // JBF 20031206: Thanks Ken
 
 //static int32_t rxi[8], ryi[8], rzi[8], rxi2[8], ryi2[8], rzi2[8];
-//static int32_t xsi[8], ysi[8], horizycent;
-//static int32_t *horizlookup=0, *horizlookup2=0;
+var xsi = new Int32Array(8), ysi = new Int32Array(8), horizycent: number; //static int32_t 
+var horizlookup: Ptr/*Int32Array*/, horizlookup2: Ptr/*Int32Array*/;
 
 var globalposx: number, globalposy: number, globalposz: number, globalhoriz: number;    //int32_t 
 var globalang: number, globalcursectnum: number;                        //int16_t 
@@ -2475,7 +2478,7 @@ var artfil = -1, artfilnum, artfilplc;//static int32_t
 var basepalcount: number; //uint8_t 
 //uint8_t curbasepal;
 
-//static uint32_t g_lastpalettesum = 0;
+var g_lastpalettesum = 0 >>> 0; //static uint32_t 
 //palette_t curpalette[256];			// the current palette, unadjusted for brightness or tint
 //palette_t curpalettefaded[256];		// the current palette, adjusted for brightness and tint (ie. what gets sent to the card)
 //palette_t palfadergb = { 0,0,0,0 };
@@ -10855,11 +10858,11 @@ function setgamemode(/*char*/ davidoption: number,  daxdim: number,daydim: numbe
 {
     var j: number;
 
-#ifdef USE_OPENGL
-    extern char nogl;
+//#ifdef USE_OPENGL
+    var nogl: number = 0;
 
     if (nogl) dabpp = 8;
-#endif
+//#endif
     daxdim = max(320, daxdim);
     daydim = max(200, daydim);
 
@@ -10867,8 +10870,8 @@ function setgamemode(/*char*/ davidoption: number,  daxdim: number,daydim: numbe
             (davidoption == fullscreen) && (xdim == daxdim) && (ydim == daydim) && (bpp == dabpp))
         return(0);
 
-    Bstrcpy(kensmessage,"!!!! BUILD engine&tools programmed by Ken Silverman of E.G. RI."+
-           "  (c) Copyright 1995 Ken Silverman.  Summary:  BUILD = Ken. !!!!");
+    kensmessage = "!!!! BUILD engine&tools programmed by Ken Silverman of E.G. RI."+
+           "  (c) Copyright 1995 Ken Silverman.  Summary:  BUILD = Ken. !!!!";
     //  if (getkensmessagecrc(FP_OFF(kensmessage)) != 0x56c764d4)
     //      { OSD_Printf("Nice try.\n"); exit(0); }
 
@@ -10879,61 +10882,61 @@ function setgamemode(/*char*/ davidoption: number,  daxdim: number,daydim: numbe
     j = bpp;
 
     g_lastpalettesum = 0;
-    if (setvideomode(daxdim,daydim,dabpp,davidoption) < 0) return(-1);
+    if (setvideomode(/*daxdim,daydim,dabpp,davidoption*/) < 0) return(-1);
 
     // Workaround possible bugs in the GL driver
-    makeasmwriteable();
+    //makeasmwriteable();
 
-#ifdef USE_OPENGL
+//#ifdef USE_OPENGL
     if (dabpp > 8) rendmode = glrendmode;    // GL renderer
     else if (dabpp == 8 && j > 8) rendmode = REND_CLASSIC;
-#endif
+//#endif
 
     xdim = daxdim; ydim = daydim;
 
     if (lookups != NULL)
-        Bfree(lookups);
+        lookups = null;//Bfree(lookups);
 
     j = ydim*4;  //Leave room for horizlookup&horizlookup2
     lookups = (int32_t *)Bmalloc(2*j*sizeof(lookups[0]));
 
-    if (lookups == NULL)
-    {
-        initprintf("OUT OF MEMORY in setgamemode!\n");
-        uninitengine();
-        exit(1);
-    }
+    //if (lookups == NULL)
+    //{
+    //    initprintf("OUT OF MEMORY in setgamemode!\n");
+    //    uninitengine();
+    //    exit(1);
+    //}
 
-    horizlookup = lookups;
-    horizlookup2 = lookups + j;
+    horizlookup = new Ptr(lookups);
+    horizlookup2 = new Ptr(lookups, j); // careful here, its an int32, the idx is for 1 byte per element
     horizycent = ((ydim*4)>>1);
 
     //Force drawrooms to call dosetaspect & recalculate stuff
     oxyaspect = oxdimen = oviewingrange = -1;
+    throw "todo";
+//    calc_ylookup(bytesperline, ydim);
 
-    calc_ylookup(bytesperline, ydim);
+//    setview(0,0,xdim-1,ydim-1);
+//    clearallviews(0);
+//    setbrightness(curbrightness,0,0);
 
-    setview(0L,0L,xdim-1,ydim-1);
-    clearallviews(0L);
-    setbrightness(curbrightness,0,0);
+//    if (searchx < 0) { searchx = halfxdimen; searchy = (ydimen>>1); }
 
-    if (searchx < 0) { searchx = halfxdimen; searchy = (ydimen>>1); }
-
-#ifdef USE_OPENGL
-    if (getrendermode() >= REND_POLYMOST)
-    {
-        polymost_glreset();
-        polymost_glinit();
-    }
-# ifdef POLYMER
-    if (getrendermode() == REND_POLYMER)
-    {
-        if (!polymer_init())
-            rendmode = REND_POLYMOST;
-    }
-#endif
-#endif
-    qsetmode = 200;
+////#ifdef USE_OPENGL
+//    if (getrendermode() >= REND_POLYMOST)
+//    {
+//        polymost_glreset();
+//        polymost_glinit();
+//    }
+////# ifdef POLYMER
+//    if (getrendermode() == REND_POLYMER)
+//    {
+//        if (!polymer_init())
+//            rendmode = REND_POLYMOST;
+//    }
+////#endif
+////#endif
+//    qsetmode = 200;
     return(0);
 }
 
