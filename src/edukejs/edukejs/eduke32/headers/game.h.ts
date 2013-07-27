@@ -171,11 +171,11 @@ class user_defs {
 
     config: config;
 
-    //overhead_on,last_overhead,showweapons;    //char 
+    overhead_on: number;last_overhead: number;showweapons: number;    //char 
     god: number;warp_on: number;cashman: number;eog: number;showallmap: number; //char 
-    //show_help,scrollmode,noclip;              //char 
+    show_help: number;scrollmode: number;noclip: number;              //char 
     ridecule: string[];// = Array(10);//[10][40];                         //char 
-    //savegame[10][22];                         //char 
+    savegame: string [];//[10][22];                         //char 
     pwlockout: string/*[128]*/; rtsname: string/*[128]*/;              //char 
     display_bonus_screen:number;                     //char 
     show_level_text:number;                          //char 
@@ -212,7 +212,14 @@ class user_defs {
 
         this.config = new config();
 
-        // todo - more init if needed
+        this.overhead_on=0;this.last_overhead=0;this.showweapons=0;    //char 
+        this.god=0;this.warp_on=0;this.cashman=0;this.eog=0;this.showallmap=0; //char 
+        this.show_help=0;this.scrollmode=0;this.noclip=0;              //char 
+        this.ridecule= new Array<string>(10);//[10][40];                         //char 
+        this.savegame= new Array<string>(10);//[22];                         //char 
+        this.pwlockout= ""/*[128]*/; this.rtsname=""/*[128]*/;              //char 
+        this.display_bonus_screen=0;                     //char 
+        this.show_level_text=0;                          //char 
     }
 };
 
