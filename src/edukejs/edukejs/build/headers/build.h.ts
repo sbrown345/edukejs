@@ -741,7 +741,7 @@ var validmode = newStructArray(validmode_t, MAXVALIDMODES);
 
 var Numsprites; //EXTERN int32_t
 var numsectors, numwalls; //EXTERN int16_t 
-//EXTERN char display_mirror;
+var display_mirror: number;//EXTERN char 
 /*@type {number}*/ var totalclock;
 //EXTERN int32_t numframes, randomseed;
 var sintable = new Int16Array(2048);
@@ -1028,9 +1028,9 @@ function getrendermode(): number
 //    int32_t x, y;
 //} vec2_t;
 
-//typedef struct {
-//    int32_t x, y, z;
-//} vec3_t;
+class vec3_t{
+    x: number; y: number; z: number;//    int32_t
+};
 
 //typedef struct {
 //    vec3_t pos;
@@ -1388,7 +1388,7 @@ class hashitem_t { // size is 12/24 bits.
 }
 
 class hashtable_t {
-    size: number;//int32_t
+    size: number; //int32_t
     items: hashitem_t[];
 
     constructor(size: number, items: hashitem_t[]) {

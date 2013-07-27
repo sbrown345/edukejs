@@ -109,30 +109,31 @@
 
 //extern int32_t timerticspersec;
 
-//void freevbos()
-//{
-//    int32_t i;
+function freevbos(): void
+{
+    todoThrow("freevbos");
+    //var i: number;
 
-//    for (i=0; i<nextmodelid; i++)
-//        if (models[i]->mdnum == 3)
-//        {
-//            md3model_t *m = (md3model_t *)models[i];
-//            if (m->vbos)
-//            {
-//                //            OSD_Printf("freeing model %d vbo\n",i);
-//                bglDeleteBuffersARB(m->head.numsurfs, m->vbos);
-//                Bfree(m->vbos);
-//                m->vbos = NULL;
-//            }
-//        }
+    //for (i=0; i<nextmodelid; i++)
+    //    if (models[i].mdnum == 3)
+    //    {
+    //        var m: md3model_t = models[i];
+    //        if (m.vbos)
+    //        {
+    //            //            OSD_Printf("freeing model %d vbo\n",i);
+    //            bglDeleteBuffersARB(m.head.numsurfs, m.vbos);
+    //            Bfree(m.vbos);
+    //            m.vbos = NULL;
+    //        }
+    //    }
 
-//    if (allocvbos)
-//    {
-//        bglDeleteBuffersARB(allocvbos, indexvbos);
-//        bglDeleteBuffersARB(allocvbos, vertvbos);
-//        allocvbos = 0;
-//    }
-//}
+    //if (allocvbos)
+    //{
+    //    bglDeleteBuffersARB(allocvbos, indexvbos);
+    //    bglDeleteBuffersARB(allocvbos, vertvbos);
+    //    allocvbos = 0;
+    //}
+}
 
 //void freeallmodels()
 //{
@@ -194,68 +195,70 @@
 //    }
 //}
 
-//void clearskins()
-//{
-//    int32_t i, j;
+function clearskins(): void
+{
+    var i:number, j:number;
 
-//    for (i=0; i<nextmodelid; i++)
-//    {
+    for (i=0; i<nextmodelid; i++)
+    {
+        todoThrow();
 //        mdmodel_t *m = models[i];
 
-//        if (m->mdnum == 1)
+//        if (m.mdnum == 1)
 //        {
 //            voxmodel_t *v = (voxmodel_t *)m;
 
 //            for (j=0; j<MAXPALOOKUPS; j++)
-//                if (v->texid[j])
+//                if (v.texid[j])
 //                {
-//                    bglDeleteTextures(1, &v->texid[j]);
-//                    v->texid[j] = 0;
+//                    bglDeleteTextures(1, &v.texid[j]);
+//                    v.texid[j] = 0;
 //                }
 //        }
-//        else if (m->mdnum == 2 || m->mdnum == 3)
+//        else if (m.mdnum == 2 || m.mdnum == 3)
 //        {
 //            mdskinmap_t *sk;
 //            md2model_t *m2 = (md2model_t *)m;
 
-//            for (j=0; j<m2->numskins*(HICEFFECTMASK+1); j++)
-//                if (m2->texid[j])
+//            for (j=0; j<m2.numskins*(HICEFFECTMASK+1); j++)
+//                if (m2.texid[j])
 //                {
-//                    GLuint otexid = m2->texid[j];
+//                    GLuint otexid = m2.texid[j];
 
-//                    bglDeleteTextures(1, &m2->texid[j]);
-//                    m2->texid[j] = 0;
+//                    bglDeleteTextures(1, &m2.texid[j]);
+//                    m2.texid[j] = 0;
 
 //                    nullskintexids(otexid);
 //                }
 
-//            for (sk=m2->skinmap; sk; sk=sk->next)
+//            for (sk=m2.skinmap; sk; sk=sk.next)
 //                for (j=0; j<(HICEFFECTMASK+1); j++)
-//                    if (sk->texid[j])
+//                    if (sk.texid[j])
 //                    {
-//                        GLuint otexid = sk->texid[j];
+//                        GLuint otexid = sk.texid[j];
 
-//                        bglDeleteTextures(1, &sk->texid[j]);
-//                        sk->texid[j] = 0;
+//                        bglDeleteTextures(1, &sk.texid[j]);
+//                        sk.texid[j] = 0;
 
 //                        nullskintexids(otexid);
 //                    }
 //        }
-//    }
+    }
+    todoThrow();
+    //for (i=0; i<MAXVOXELS; i++)
+    //{
+    //    var v: voxmodel_t  = voxmodels[i];
+    //    if (!v) continue;
 
-//    for (i=0; i<MAXVOXELS; i++)
-//    {
-//        voxmodel_t *v = voxmodels[i];
-//        if (!v) continue;
-
-//        for (j=0; j<MAXPALOOKUPS; j++)
-//            if (v->texid[j])
-//            {
-//                bglDeleteTextures(1, &v->texid[j]);
-//                v->texid[j] = 0;
-//            }
-//    }
-//}
+    //    for (j=0; j<MAXPALOOKUPS; j++)
+    //        if (v.texid[j])
+    //        {
+    //            todoThrow();
+    //            //bglDeleteTextures(1, &v.texid[j]);
+    //            //v.texid[j] = 0;
+    //        }
+    //}
+}
 
 function mdinit(): void 
 {

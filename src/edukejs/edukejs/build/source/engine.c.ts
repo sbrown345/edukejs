@@ -175,7 +175,7 @@ var oxdimen = -1, oviewingrange = -1, oxyaspect = -1;
 var r_usenewaspect = 1, newaspect_enable=0;    //int32_t 
 var  r_screenxy = 0;                           //uint32_t
 
-//int32_t curbrightness = 0, gammabrightness = 0;
+curbrightness = 0, gammabrightness = 0;
 
 //double vid_gamma = DEFAULT_GAMMA;
 //double vid_contrast = DEFAULT_CONTRAST;
@@ -10928,14 +10928,14 @@ function setgamemode(/*char*/ davidoption: number,  daxdim: number,daydim: numbe
 //#ifdef USE_OPENGL
     if (getrendermode() >= REND_POLYMOST)
     {
-        polymost_glreset();
-        polymost_glinit();
+        todo("polymost_glreset();");
+        todo("polymost_glinit();");
     }
 //# ifdef POLYMER
     if (getrendermode() == REND_POLYMER)
     {
-        if (!polymer_init())
-            rendmode = REND_POLYMOST;
+        todoThrow("if (!polymer_init())");
+            //rendmode = REND_POLYMOST;
     }
 //#endif
 //#endif
@@ -14471,7 +14471,7 @@ function setbrightness(/*char*/ dabrightness: number, /*uint8_t*/ dapalid: numbe
     basepalreset = 0;
 
     dapal = basepaltableptr[curbasepal];
-
+    assert.run("dapal", dapal[7]==3);
     if (!(flags&4))
     {
         curbrightness = clamp(dabrightness, 0, 15);
@@ -14504,14 +14504,14 @@ function setbrightness(/*char*/ dabrightness: number, /*uint8_t*/ dapalid: numbe
         var lastpalettesum=0;//static uint32_t
 
         var curpalettefadedArray = new Uint8Array(curpalettefaded.length * 4);
-        for (var k = 0; k < curpalettefadedArray.length; k++) {
+        for (var k = 0; k < curpalettefaded.length; k++) {
             curpalettefadedArray[k*4+0] = curpalettefaded[k].r;
             curpalettefadedArray[k*4+1] = curpalettefaded[k].g;
             curpalettefadedArray[k*4+2] = curpalettefaded[k].b;
             curpalettefadedArray[k*4+3] = curpalettefaded[k].f;
         }
-        var newpalettesum = crc32once(/*(uint8_t *)*/new Ptr(curpalettefadedArray), sizeof(curpalettefaded));
-
+        var newpalettesum = crc32once(/*(uint8_t *)*/new Ptr(curpalettefadedArray), curpalettefaded.length*4);
+        assert.run("newpalettesum", newpalettesum == 164294398);
         palsumdidchange = (newpalettesum != lastpalettesum)?1:0;
 
         if (palsumdidchange || newpalettesum != g_lastpalettesum)
@@ -14535,9 +14535,9 @@ function setbrightness(/*char*/ dabrightness: number, /*uint8_t*/ dapalid: numbe
         var doinvalidate = (paldidchange || (palsumdidchange && nohwgamma)); //const int32_t
 
         if (!(flags&2) && doinvalidate)
-            gltexinvalidatetype(INVALIDATE_ALL);
+            todo("gltexinvalidatetype(INVALIDATE_ALL);");
         if (!(flags&8) && doinvalidate)
-            gltexinvalidatetype(INVALIDATE_ART);
+            todo("gltexinvalidatetype(INVALIDATE_ART);");
 //#ifdef POLYMER
         if ((getrendermode() == REND_POLYMER) && doinvalidate)
             todoThrow("polymer_texinvalidate();");

@@ -46,11 +46,13 @@
 /// <reference path="../../eduke32/source/gamedef.c.ts" />
 /// <reference path="../../eduke32/source/global.c.ts" />
 /// <reference path="../../eduke32/source/grpscan.c.ts" />
+/// <reference path="../../eduke32/source/menus.c.ts" />
 /// <reference path="../../eduke32/source/namesdyn.c.ts" />
 /// <reference path="../../eduke32/source/net.c.ts" />
 /// <reference path="../../eduke32/source/osd.c.ts" />
 /// <reference path="../../eduke32/source/osdfuncs.c.ts" />
 /// <reference path="../../eduke32/source/player.c.ts" />
+/// <reference path="../../eduke32/source/premap.c.ts" />
 /// <reference path="../../eduke32/source/rts.c.ts" />
 /// <reference path="../../eduke32/source/soundsdyn.c.ts" />
 /// <reference path="../../eduke32/source/winbits.c.ts" />
@@ -414,9 +416,10 @@ function Gv_Clear() : void
 //    OSD_Printf("\n// end of game definitions\n");
 //}
 
-//// XXX: This function is very strange.
-//void Gv_ResetVars(void) /* this is called during a new game and nowhere else */
-//{
+// XXX: This function is very strange.
+function Gv_ResetVars():void /* this is called during a new game and nowhere else */
+{
+    todo("Gv_ResetVars??");
 //    int32_t i;
 
 //    Gv_Free();
@@ -435,7 +438,7 @@ function Gv_Clear() : void
 //        if (aGameArrays[i].szLabel != NULL && (aGameArrays[i].dwFlags & GAMEARRAY_RESET))
 //            Gv_NewArray(aGameArrays[i].szLabel,aGameArrays[i].plValues,aGameArrays[i].size,aGameArrays[i].dwFlags);
 //    }
-//}
+}
 
 //int32_t Gv_NewArray(const char *pszLabel, void *arrayptr, intptr_t asize, uint32_t dwFlags)
 //{
@@ -1592,8 +1595,9 @@ function Gv_InitWeaponPointers() : void
     //}
 }
 
-//void Gv_RefreshPointers(void)
-//{
+function Gv_RefreshPointers(): void 
+{
+    todo("Gv_RefreshPointers");
 //    aGameVars[Gv_GetVarIndex("RESPAWN_MONSTERS")].val.lValue = (intptr_t)&ud.respawn_monsters;
 //    aGameVars[Gv_GetVarIndex("RESPAWN_ITEMS")].val.lValue = (intptr_t)&ud.respawn_items;
 //    aGameVars[Gv_GetVarIndex("RESPAWN_INVENTORY")].val.lValue = (intptr_t)&ud.respawn_inventory;
@@ -1676,5 +1680,5 @@ function Gv_InitWeaponPointers() : void
 //# ifdef USE_OPENGL
 //    aGameVars[Gv_GetVarIndex("rendmode")].val.lValue = (intptr_t)&rendmode;
 //# endif
-//}
+}
 //#endif

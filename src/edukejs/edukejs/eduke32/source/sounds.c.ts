@@ -944,8 +944,10 @@ var g_numEnvSoundsPlaying,g_maxSoundPos = 0; //int32
 //    return 0;
 //}
 
-//int32_t S_CheckSoundPlaying(int32_t i, int32_t num)
-//{
-//    if (num > g_maxSoundPos || num < 0) return 0;
-//    return (i == -1) ? (g_soundlocks[num] >= 200) : g_sounds[num].num;
-//}
+function S_CheckSoundPlaying(i:number, num:number):number
+{
+    // todo
+    return 0;
+    //if (num > g_maxSoundPos || num < 0) return 0;
+    //return (i == -1) ? (g_soundlocks[num] >= 200) : g_sounds[num].num;
+}

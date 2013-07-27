@@ -37,40 +37,40 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //#define USERQUOTE_RIGHTOFFSET   14
 
 //enum GametypeFlags_t {
-//    GAMETYPE_COOP                   = 0x00000001,
-//    GAMETYPE_WEAPSTAY               = 0x00000002,
-//    GAMETYPE_FRAGBAR                = 0x00000004,
-//    GAMETYPE_SCORESHEET             = 0x00000008,
-//    GAMETYPE_DMSWITCHES             = 0x00000010,
-//    GAMETYPE_COOPSPAWN              = 0x00000020,
-//    GAMETYPE_ACCESSCARDSPRITES      = 0x00000040,
-//    GAMETYPE_COOPVIEW               = 0x00000080,
-//    GAMETYPE_COOPSOUND              = 0x00000100,
-//    GAMETYPE_OTHERPLAYERSINMAP      = 0x00000200,
-//    GAMETYPE_ITEMRESPAWN            = 0x00000400,
-//    GAMETYPE_MARKEROPTION           = 0x00000800,
-//    GAMETYPE_PLAYERSFRIENDLY        = 0x00001000,
-//    GAMETYPE_FIXEDRESPAWN           = 0x00002000,
-//    GAMETYPE_ACCESSATSTART          = 0x00004000,
-//    GAMETYPE_PRESERVEINVENTORYDEATH = 0x00008000,
-//    GAMETYPE_TDM                    = 0x00010000,
-//    GAMETYPE_TDMSPAWN               = 0x00020000
+var GAMETYPE_COOP                   = 0x00000001,
+    GAMETYPE_WEAPSTAY               = 0x00000002,
+    GAMETYPE_FRAGBAR                = 0x00000004,
+    GAMETYPE_SCORESHEET             = 0x00000008,
+    GAMETYPE_DMSWITCHES             = 0x00000010,
+    GAMETYPE_COOPSPAWN              = 0x00000020,
+    GAMETYPE_ACCESSCARDSPRITES      = 0x00000040,
+    GAMETYPE_COOPVIEW               = 0x00000080,
+    GAMETYPE_COOPSOUND              = 0x00000100,
+    GAMETYPE_OTHERPLAYERSINMAP      = 0x00000200,
+    GAMETYPE_ITEMRESPAWN            = 0x00000400,
+    GAMETYPE_MARKEROPTION           = 0x00000800,
+    GAMETYPE_PLAYERSFRIENDLY        = 0x00001000,
+    GAMETYPE_FIXEDRESPAWN           = 0x00002000,
+    GAMETYPE_ACCESSATSTART          = 0x00004000,
+    GAMETYPE_PRESERVEINVENTORYDEATH = 0x00008000,
+    GAMETYPE_TDM                    = 0x00010000,
+    GAMETYPE_TDMSPAWN               = 0x00020000;
 //};
 
 //// logo control
 //enum LogoFlags_t {
-//    LOGO_ENABLED           = 0x00000001,
-//    LOGO_PLAYANIM          = 0x00000002,
-//    LOGO_PLAYMUSIC         = 0x00000004,
-//    LOGO_3DRSCREEN         = 0x00000008,
-//    LOGO_TITLESCREEN       = 0x00000010,
-//    LOGO_DUKENUKEM         = 0x00000020,
-//    LOGO_THREEDEE          = 0x00000040,
-//    LOGO_PLUTOPAKSPRITE    = 0x00000080,
-//    LOGO_SHAREWARESCREENS  = 0x00000100,
-//    LOGO_TENSCREEN         = 0x00000200,
-//    LOGO_STOPANIMSOUNDS    = 0x00000400,
-//    LOGO_NOE4CUTSCENE      = 0x00000800,
+var LOGO_ENABLED           = 0x00000001,
+    LOGO_PLAYANIM          = 0x00000002,
+    LOGO_PLAYMUSIC         = 0x00000004,
+    LOGO_3DRSCREEN         = 0x00000008,
+    LOGO_TITLESCREEN       = 0x00000010,
+    LOGO_DUKENUKEM         = 0x00000020,
+    LOGO_THREEDEE          = 0x00000040,
+    LOGO_PLUTOPAKSPRITE    = 0x00000080,
+    LOGO_SHAREWARESCREENS  = 0x00000100,
+    LOGO_TENSCREEN         = 0x00000200,
+    LOGO_STOPANIMSOUNDS    = 0x00000400,
+    LOGO_NOE4CUTSCENE      = 0x00000800;
 //};
 
 //typedef enum basepal_ {
@@ -111,15 +111,19 @@ var BASEPAL = 0,
 
 //void A_DeleteSprite(int32_t s);
 
-//static inline int32_t G_GetLogoFlags(void)
-//{
+function G_GetLogoFlags(): number
+{
+    todoThrow();
+    var tempToAllowCompile = -999999999; 
+    return tempToAllowCompile;
+
 //#if !defined LUNATIC
 //    return Gv_GetVarByLabel("LOGO_FLAGS",255, -1, -1);
 //#else
 //    extern int32_t g_logoFlags;
 //    return g_logoFlags;
 //#endif
-//}
+}
 
 //#ifdef LUNATIC
 //typedef struct {
@@ -468,11 +472,12 @@ var g_Shareware: number = 0; //int32_t
 
 //extern void G_MaybeAllocPlayer(int32_t pnum);
 
-//static inline void G_HandleAsync(void)
-//{
-//    handleevents();
-//    Net_GetPackets();
-//}
+function G_HandleAsync()
+{
+    todo("G_HandleAsync !!!");
+    //handleevents();
+    //Net_GetPackets();
+}
 
 //static inline int32_t calc_smoothratio(int32_t totalclk, int32_t ototalclk)
 //{

@@ -76,7 +76,7 @@ var g_loadFromGroupOnly : number;//char
 var g_numSkills : number; // char
 //G_EXTERN char myjumpingtoggle,myonground,myhardlanding,myreturntocenter;
 //G_EXTERN char pus,pub;
-//G_EXTERN char ready2send;
+var ready2send: number;//G_EXTERN char 
 var szPlayerName: string; //G_EXTERN char [32]
 //// XXX: menutextbuf overflow possible?
 var tempbuf = new Uint8Array(MAXSECTORS<<1),packbuf = new Uint8Array(PACKBUF_SIZE),menutextbuf = new Uint8Array(128),buf = new Uint8Array(1024);
@@ -111,8 +111,8 @@ var g_musicSize:number;                                      //G_EXTERN int32_t
 var g_numLabels:number,g_numDefaultLabels:number;
 var g_numRealPalettes:number; //G_EXTERN int32_t 
 var g_scriptDebug:number; //G_EXTERN int32_t 
-//G_EXTERN int32_t g_showShareware:number;
-//G_EXTERN int8_t g_numPlayerSprites:number;
+var g_showShareware:number;//G_EXTERN int32_t 
+var g_numPlayerSprites:number;//G_EXTERN int8_t 
 var g_tripbombLaserMode:number;////G_EXTERN int32_t 
 //G_EXTERN int32_t msx[2048]:number,msy[2048]:number;
 var neartaghitdist:number,lockclock:number,g_startArmorAmount:number;//G_EXTERN int32_t

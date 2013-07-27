@@ -35,8 +35,8 @@
 //void polymost_glreset(void);
 
 //enum {
-//    INVALIDATE_ALL,
-//    INVALIDATE_ART
+var INVALIDATE_ALL=0,
+    INVALIDATE_ART=1;
 //};
 
 //void gltexinvalidate(int32_t dapicnum, int32_t dapalnum, int32_t dameth);
@@ -79,7 +79,7 @@ class pthtyp
 
     sizx: number; sizy: number; //uint16_t
     scalex: number; scaley: number; //float 
-    ofb: number; // only fullbright //struct pthtyp_t *
+    ofb: pthtyp; // only fullbright //struct pthtyp_t *
 } /*pthtyp*/;
 
 //extern int32_t gloadtile_art(int32_t,int32_t,int32_t,int32_t,pthtyp *,int32_t);

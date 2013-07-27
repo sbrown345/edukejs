@@ -175,71 +175,71 @@ function input_t() {
 //// Need to carefully think about implications!
 //// TODO: rearrange this if the opportunity arises!
 //// KEEPINSYNC lunatic/defs.ilua
-function DukePlayer_t() {
-//    vec3_t pos, opos, vel, npos;
-//    int32_t bobposx, bobposy;
-//    int32_t truefz, truecz, player_par;
-//    int32_t randomflamex, exitx, exity;
-//    int32_t runspeed, max_player_health, max_shield_amount;
-//    int32_t autostep, autostep_sbw;
+class DukePlayer_t {
+    pos: vec3_t; opos: vec3_t; vel:vec3_t; npos:vec3_t;        
+    bobposx:number; bobposy;                                  //int32_t
+    truefz:number; truecz:number; player_par;                        //int32_t
+    randomflamex:number; exitx:number; exity;                        //int32_t
+    runspeed:number; max_player_health:number; max_shield_amount;    //int32_t
+    autostep:number; autostep_sbw;                            //int32_t
 
-//    uint32_t interface_toggle_flag;
+    interface_toggle_flag:number;   //uint32_t
 //#ifdef LUNATIC
 //    int32_t pipebombControl, pipebombLifetime, pipebombLifetimeVar;
 //    int32_t tripbombControl, tripbombLifetime, tripbombLifetimeVar;
-
+//
 //    int32_t zrange;
 //    int16_t angrange, autoaimang;
 //#endif
-//    uint16_t max_actors_killed, actors_killed;
-//    uint16_t gotweapon, zoom;
+    max_actors_killed:number; actors_killed:number;                                                 //uint16_t
+    gotweapon:number; zoom:number;                                                                  //uint16_t
 
-//    int16_t loogiex[64], loogiey[64], sbs, sound_pitch;
+    loogiex: Uint16Array/*[64]*/; loogiey: Uint16Array/*[64]*/; sb:number;s; sound_pitch:number;                                       //int16_t
 
-//    int16_t ang, oang, angvel, cursectnum, look_ang, last_extra, subweapon;this.
-      this.max_ammo_amount = new Int16Array(MAX_WEAPONS), this.ammo_amount = new Int16Array(MAX_WEAPONS), this.inv_amount = new Int16Array(GET_MAX);//    int16_t 
-//    int16_t wackedbyactor, pyoff, opyoff;
+    ang:number; oang:number; angvel:number; cursectnum:number; look_ang:number; last_extra:number; subweapon:number;                   //int16_t
+    max_ammo_amount: Int16Array/*[MAX_WEAPONS]*/; ammo_amount: Int16Array/*[MAX_WEAPONS]*/; inv_amount: Int16Array/*[GET_MAX]*/;      //int16_t
+    wackedbyactor:number; pyoff:number; opyoff:number;                                                     //int16_t
 
-//    int16_t horiz, horizoff, ohoriz, ohorizoff;
-//    int16_t newowner, jumping_counter, airleft;
-//    int16_t fta, ftq, access_wallnum, access_spritenum;
-//    int16_t got_access, weapon_ang, visibility;
-//    int16_t somethingonplayer, on_crane, i, one_parallax_sectnum;
-//    int16_t random_club_frame, one_eighty_count;
-//    int16_t dummyplayersprite, extra_extra8;
-//    int16_t actorsqu, timebeforeexit, customexitsound, last_pissed_time;
+    horiz:number; horizoff:number; ohoriz:number; ohorizoff:number;                                             //int16_t
+    newowner:number; jumping_counter:number; airleft:number;                                             //int16_t
+    fta:number; ftq:number; access_wallnum:number; access_spritenum:number;                                     //int16_t
+    got_access:number; weapon_ang:number; visibility:number;                                             //int16_t
+    somethingonplayer:number; on_crane:number; i:number; one_parallax_sectnum:number;                           //int16_t
+    random_club_frame:number; one_eighty_count:number;                                            //int16_t
+    dummyplayersprite:number; extra_extra8:number;                                                //int16_t
+    actorsqu:number; timebeforeexit:number; customexitsound:number; last_pissed_time:number;                    //int16_t
 
-//    int16_t weaprecs[MAX_WEAPONS], weapon_sway, crack_time, bobcounter;
+    weaprecs:Int16Array /*[MAX_WEAPONS]*/; weapon_sway:number; crack_time:number; bobcounter:number;                     //int16_t
 
-//    int16_t orotscrnang, rotscrnang, dead_flag;   // JBF 20031220: added orotscrnang
-//    int16_t holoduke_on, pycount;
-//    int16_t transporter_hold;
+    orotscrnang:number; rotscrnang:number; dead_flag:number;   // JBF 20031220: added orotscrnang      //int16_t
+    holoduke_on:number; pycount:number;                                                         //int16_t
+    transporter_hold:number;                                                             //int16_t
 
-//    uint8_t max_secret_rooms, secret_rooms;
-//    // XXX: 255 values for frag(gedself) seems too small.
-//    uint8_t frag, fraggedself, quick_kick, last_quick_kick;
-//    uint8_t return_to_center, reloading, weapreccnt;
-//    uint8_t aim_mode, auto_aim, weaponswitch, movement_lock, team;
-//    uint8_t tipincs, hbomb_hold_delay, frag_ps, kickback_pic;
+    max_secret_rooms:number; secret_rooms;                             //uint8_t 
+    // XXX: 255 values for frag(gedself) seems too small.
+    frag:number; fraggedself:number; quick_kick:number; last_quick_kick:number;             //uint8_t 
+    return_to_center:number; reloading:number; weapreccnt:number;                    //uint8_t 
+    aim_mode:number; auto_aim:number; weaponswitch:number; movement_lock:number; team:number;      //uint8_t 
+    tipincs:number; hbomb_hold_delay:number; frag_ps:number; kickback_pic:number;           //uint8_t 
 
-//    uint8_t gm, on_warping_sector, footprintcount, hurt_delay;
-//    uint8_t hbomb_on, jumping_toggle, rapid_fire_hold, on_ground;
-//    uint8_t inven_icon, buttonpalette, over_shoulder_on, show_empty_weapon;
+    gm:number; on_warping_sector:number; footprintcount:number; hurt_delay:number;                   //uint8_t 
+    hbomb_on:number; jumping_toggle:number; rapid_fire_hold:number; on_ground:number;                //uint8_t 
+    inven_icon:number; buttonpalette:number; over_shoulder_on:number; show_empty_weapon:number;      //uint8_t 
 
-//    uint8_t jetpack_on, spritebridge, lastrandomspot;
-//    uint8_t scuba_on, footprintpal, heat_on, invdisptime;
+    jetpack_on:number; spritebridge:number; lastrandomspot:number;                //uint8_t 
+    scuba_on:number; footprintpal:number; heat_on:number; invdisptime:number;            //uint8_t 
 
-//    uint8_t holster_weapon, falling_counter, footprintshade;
-//    uint8_t refresh_inventory, last_full_weapon;
+    holster_weapon:number; falling_counter:number; footprintshade:number;         //uint8_t 
+    refresh_inventory:number; last_full_weapon:number;                     //uint8_t 
 
-//    uint8_t toggle_key_flag, knuckle_incs, knee_incs, access_incs;
-//    uint8_t walking_snd_toggle, palookup, hard_landing, fist_incs;
+    toggle_key_flag:number; knuckle_incs:number; knee_incs:number; access_incs:number;    //uint8_t 
+    walking_snd_toggle:number; palookup:number; hard_landing:number; fist_incs:number;    //uint8_t 
 
-//    int8_t numloogs, loogcnt, scream_voice;
-//    int8_t last_weapon, cheat_phase, weapon_pos, wantweaponfire, curr_weapon;
+    numloogs:number; loogcnt:number; scream_voice:number;                                        //int8_t 
+    last_weapon:number; cheat_phase:number; weapon_pos:number; wantweaponfire:number; curr_weapon:number;      //int8_t 
 
-//    uint8_t palette;
-//    palette_t pals;
+    palette:number; //uint8_t 
+    pals: palette_t;
 
 //#ifdef LUNATIC
 //    int8_t palsfadespeed, palsfadenext, palsfadeprio, padding2_;
@@ -249,6 +249,15 @@ function DukePlayer_t() {
 //    struct { int32_t idx; } wa;
 //#endif
 //    int8_t padding_;
+
+    constructor() {
+        this.loogiex = new Uint16Array(64);
+        this.loogiey = new Uint16Array(64);
+        this.max_ammo_amount = new Int16Array(MAX_WEAPONS);
+        this.ammo_amount = new Int16Array(MAX_WEAPONS);
+        this.inv_amount = new Int16Array(GET_MAX);
+        this.weaprecs = new Int16Array(MAX_WEAPONS);
+    }
 } //DukePlayer_t;
 
 //// KEEPINSYNC lunatic/defs.ilua

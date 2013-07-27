@@ -14,8 +14,6 @@
 /// <reference path="../../build/headers/pragmas.h.ts" />
 /// <reference path="../../build/headers/scancodes.h.ts" />
 
-/// <reference path="../../ExternalDependencies/hightile.h.ts" />
-
 /// <reference path="../../build/source/crc32.c.ts" />
 
 
@@ -171,7 +169,7 @@ var glusetexcache = 2, glusememcache = 1; ////int32_t
 //int32_t glpolygonmode = 0;     // 0:GL_FILL,1:GL_LINE,2:GL_POINT //FUK
 //int32_t glwidescreen = 0;
 //int32_t glprojectionhacks = 1;
-//static GLuint polymosttext = 0;
+var polymosttext = 0; //static GLuint 
 var glrendmode = REND_POLYMOST;
 //
 //// This variable, and 'shadeforfullbrightpass' control the drawing of
@@ -298,27 +296,26 @@ var fogresult = 0.0, fogresult2 = 0.0, fogcol = new Float32Array(4), fogtable = 
 //Use this for palette effects ... but not ones that change every frame!
 function gltexinvalidatetype(type: number): void
 {
-    todo("gltexinvalidatetype");
-//    int32_t j;
-//    pthtyp *pth;
+    var j: number;
+    var pth: pthtyp ;
 
-//    for (j=GLTEXCACHEADSIZ-1; j>=0; j--)
-//    {
-//        for (pth=texcache.list[j]; pth; pth=pth->next)
-//        {
-//            if (type == INVALIDATE_ALL || (type == INVALIDATE_ART && pth->hicr == NULL))
-//            {
-//                pth->flags |= 128;
-//                if (pth->flags & 16)
-//                    pth->ofb->flags |= 128;
-//            }
-//        }
-//    }
+    for (j=GLTEXCACHEADSIZ-1; j>=0; j--)
+    {
+        for (pth=texcache.list[j]; pth; pth=pth.next)
+        {
+            if (type == INVALIDATE_ALL || (type == INVALIDATE_ART && pth.hicr == NULL))
+            {
+                pth.flags |= 128;
+                if (pth.flags & 16)
+                    pth.ofb.flags |= 128;
+            }
+        }
+    }
 
-//    if (type == INVALIDATE_ALL)
-//        clearskins();
+    if (type == INVALIDATE_ALL)
+        clearskins();
 //#ifdef DEBUGGINGAIDS
-//    OSD_Printf("gltexinvalidateall()\n");
+    OSD_Printf("gltexinvalidateall()\n");
 //#endif
 }
 //
@@ -393,64 +390,67 @@ var gltexcacnum = -1;
 //
 function polymost_glreset(): void
 {
-    var i: number;
-    var pth: pthtyp, next: pthtyp;
+    todoThrow();
+    //var i: number;
+    //var pth: pthtyp, next: pthtyp;
 
-    for (i=MAXPALOOKUPS-1; i>=0; i--)
-    {
-        fogtable[i<<2] = palookupfog[i].r / 63.0;
-        fogtable[(i<<2)+1] = palookupfog[i].g / 63.0;
-        fogtable[(i<<2)+2] = palookupfog[i].b / 63.0;
-        fogtable[(i<<2)+3] = 0;
-    }
+    //for (i=MAXPALOOKUPS-1; i>=0; i--)
+    //{
+    //    fogtable[i<<2] = palookupfog[i].r / 63.0;
+    //    fogtable[(i<<2)+1] = palookupfog[i].g / 63.0;
+    //    fogtable[(i<<2)+2] = palookupfog[i].b / 63.0;
+    //    fogtable[(i<<2)+3] = 0;
+    //}
 
-    //Reset if this is -1 (meaning 1st texture call ever), or > 0 (textures in memory)
-    if (gltexcacnum < 0)
-    {
-        gltexcacnum = 0;
+    ////Reset if this is -1 (meaning 1st texture call ever), or > 0 (textures in memory)
+    //if (gltexcacnum < 0)
+    //{
+    //    gltexcacnum = 0;
 
-        //Hack for polymost_dorotatesprite calls before 1st polymost_drawrooms()
-        gcosang = gcosang2 = (16384)/262144.0;
-        gsinang = gsinang2 = (    0)/262144.0;
-    }
-    else
-    {
-        for (i=GLTEXCACHEADSIZ-1; i>=0; i--)
-        {
-            for (pth=texcache.list[i]; pth;)
-            {
-                next = pth.next;`
-                if (pth.flags & 16) // fullbright textures
-                {
-                    bglDeleteTextures(1,&pth.ofb.glpic);
-                    Bfree(pth.ofb);
-                }
+    //    //Hack for polymost_dorotatesprite calls before 1st polymost_drawrooms()
+    //    gcosang = gcosang2 = (16384)/262144.0;
+    //    gsinang = gsinang2 = (    0)/262144.0;
+    //}
+    //else
+    //{
+    //    for (i=GLTEXCACHEADSIZ-1; i>=0; i--)
+    //    {
+    //        for (pth=texcache.list[i]; pth;)
+    //        {
+    //            todoThrow();
+    //            //next = pth.next;
+    //            //if (pth.flags & 16) // fullbright textures
+    //            //{
+    //            //    bglDeleteTextures(1,&pth.ofb.glpic);
+    //            //    Bfree(pth.ofb);
+    //            //}
 
-                bglDeleteTextures(1,&pth.glpic);
-                Bfree(pth);
-                pth = next;
-            }
+    //            //bglDeleteTextures(1,&pth.glpic);
+    //            //Bfree(pth);
+    //            //pth = next;
+    //        }
 
-            texcache.list[i] = NULL;
-        }
-        clearskins();
-    }
+    //        texcache.list[i] = NULL;
+    //    }
+    //    clearskins();
+    //}
 
-    if (polymosttext)
-        bglDeleteTextures(1,&polymosttext);
-    polymosttext=0;
+    //if (polymosttext)
+    //    todo("bglDeleteTextures(1,&polymosttext);");
+    //polymosttext=0;
 
-    freevbos();
+    //freevbos();
 
-    memset(texcache.list,0,sizeof(texcache.list));
-    glox1 = -1;
+    //memsetStruct(texcache.list,globaltexcache,0,sizeof(texcache.list));
+    //glox1 = -1;
 
-    texcache_freeptrs();
+    //texcache_freeptrs();
 
-    texcache_syncmemcache();
-#ifdef DEBUGGINGAIDS
-    OSD_Printf("polymost_glreset()\n");
-#endif
+    //texcache_syncmemcache();
+
+    //if(DEBUGGINGAIDS)
+    //    OSD_Printf("polymost_glreset()\n");
+    //}
 }
 
 

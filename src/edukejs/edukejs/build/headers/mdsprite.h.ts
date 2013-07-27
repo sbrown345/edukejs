@@ -15,14 +15,14 @@
 
 //#define SHIFTMOD32(a) ((a)&31)
 
-//typedef struct
-//{
+class mdmodel_t
+{
 //    int32_t mdnum; //VOX=1, MD2=2, MD3=3. NOTE: must be first in structure!
 //    int32_t shadeoff;
 //    float scale, bscale, zadd, yoffset;
 //    GLuint *texid;	// skins
 //    int32_t flags;
-//} mdmodel_t;
+}// mdmodel_t;
 
 //typedef struct _mdanim_t
 //{
@@ -195,8 +195,8 @@
 //typedef struct { uint16_t x, y, z, u, v; } vert_t;
 //#endif
 //typedef struct { vert_t v[4]; } voxrect_t;
-//typedef struct
-//{
+class voxmodel_t
+{
 //    //WARNING: This top block is a union of md2model,md3model,voxmodel: Make sure it matches!
 //    int32_t mdnum; //VOX=1, MD2=2, MD3=3. NOTE: must be first in structure!
 //    int32_t shadeoff;
@@ -210,9 +210,9 @@
 //    int32_t xsiz, ysiz, zsiz;
 //    float xpiv, ypiv, zpiv;
 //    int32_t is8bit;
-//} voxmodel_t;
+} ;
 
-//EXTERN mdmodel_t **models;
+var models: mdmodel_t[];//EXTERN mdmodel_t **
 
 //void updateanimation(md2model_t *m, const spritetype *tspr, uint8_t lpal);
 //int32_t mdloadskin(md2model_t *m, int32_t number, int32_t pal, int32_t surf);
@@ -235,9 +235,9 @@ class hudtyp{ /*float */xadd: number; yadd: number; zadd: number; /*int16_t */an
 
 var  hudmem = multiDimArray(hudtyp, 2, MAXTILES);
 
-//EXTERN int32_t mdpause;
-//EXTERN int32_t nextmodelid;
-//EXTERN voxmodel_t *voxmodels[MAXVOXELS];
+var mdpause; //EXTERN int32_t 
+var nextmodelid; //EXTERN int32_t 
+var voxmodels: voxmodel_t[] = newStructArray(voxmodel_t, MAXVOXELS);
 
 //void voxfree(voxmodel_t *m);
 //voxmodel_t *voxload(const char *filnam);

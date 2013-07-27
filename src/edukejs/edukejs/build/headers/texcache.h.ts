@@ -1,7 +1,8 @@
 /// <reference path="../../utils/assert.ts" />
 /// <reference path="../../utils/c.ts" />
 /// <reference path="../../utils/todo.ts" />
-/// <reference path="../../utils/types.ts" />
+
+/// <reference path="build.h.ts" />
 
 //#ifndef _texcache_h_
 //# define _texcache_h_
@@ -23,33 +24,50 @@
 //    TEXCACHEERRORS
 //};
 
-//struct texcacheitem_t
-//{
-//    char name[BMAX_PATH];
-//    int32_t offset;
-//    int32_t len;
-//    struct texcacheitem_t *next;
-//};
+class texcacheitem_t
+{
+    name: string;//[BMAX_PATH];
+    offset: number;           //int32_t 
+    len: number;              //int32_t 
+    next: texcacheitem_t;
 
-//typedef struct texcacheitem_t texcacheindex;
+    constructor() {
+        this.name = "";
+        this.offset = 0;
+        this.len = 0;
+        this.next = new texcacheitem_t();
+    }
+};
 
-//typedef struct {
-//    int32_t filehandle, filepos, numentries;
-//    FILE *index;
-//    pthtyp *list[GLTEXCACHEADSIZ];
-//    texcacheindex *firstindex, *currentindex, *ptrs[MAXTILES<<1];
-//    hashtable_t hashes;
-//    struct {
-//        uint8_t *ptr;
-//        size_t size;
-//        // Set to 1 when we failed (re)allocating space for the memcache or failing to
-//        // read into it (which would presumably generate followup errors spamming the
-//        // log otherwise):
-//        int32_t noalloc;
-//    } memcache;
-//} globaltexcache;
+class texcacheindex extends texcacheitem_t { }
 
-var texcache = function() : number {todoThrow("init texcache in gltexinvalidatetype"); return -9999999999999999;};
+class globaltexcache{
+    filehandle: number; filepos: number; numentries: number; //int32_t
+    index: number; //FILE *
+    list: pthtyp[];//[GLTEXCACHEADSIZ];
+    firstindex: texcacheindex; currentindex: texcacheindex; ptrs: texcacheindex [];//[MAXTILES<<1];
+    hashes: hashtable_t;
+    memcache: memcache;
+
+    constructor() {
+        this.filehandle = 0; this.filepos = 0; this.numentries = 0;
+        this.index = 0;
+        this.list = newStructArray(pthtyp, GLTEXCACHEADSIZ);
+        this.hashes = new hashtable_t(0, null);
+        this.memcache = new memcache();
+    }
+} ;
+
+class memcache {
+    ptr: Uint8Array;
+    size: number; //size
+    // Set to 1 when we failed (re)allocating space for the memcache or failing to
+    // read into it (which would presumably generate followup errors spamming the
+    // log otherwise):
+    noalloc: number; //int32
+}
+
+var texcache: globaltexcache;
 
 //extern char TEXCACHEFILE[BMAX_PATH];
 

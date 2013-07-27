@@ -42,10 +42,12 @@
 /// <reference path="../../eduke32/source/gamedef.c.ts" />
 /// <reference path="../../eduke32/source/global.c.ts" />
 /// <reference path="../../eduke32/source/grpscan.c.ts" />
+/// <reference path="../../eduke32/source/menus.c.ts" />
 /// <reference path="../../eduke32/source/namesdyn.c.ts" />
 /// <reference path="../../eduke32/source/net.c.ts" />
 /// <reference path="../../eduke32/source/osd.c.ts" />
 /// <reference path="../../eduke32/source/player.c.ts" />
+/// <reference path="../../eduke32/source/premap.c.ts" />
 /// <reference path="../../eduke32/source/rts.c.ts" />
 /// <reference path="../../eduke32/source/osdfuncs.c.ts" />
 /// <reference path="../../eduke32/source/soundsdyn.c.ts" />
@@ -179,12 +181,12 @@ var basepaltable = [ palette, water_pal, slime_pal, dre_alms, title_pal, ending_
 
 //int8_t g_noFloorPal[MAXPALOOKUPS];  // 1 if sprite pal should not be taken over from floor pal
 
-//int32_t voting = -1;
-//int32_t vote_map = -1, vote_episode = -1;
+var voting = -1;                           //int32_t 
+var vote_map = -1, vote_episode = -1;      //int32_t 
 
-//static int32_t g_Debug = 0;
-//static int32_t g_noLogoAnim = 0;
-//static int32_t g_noLogo = 0;
+var g_Debug = 0;                  //static int32_t
+var g_noLogoAnim = 0;             //static int32_t
+var g_noLogo = 0;                 //static int32_t
 
 var defaultrtsfilename = [ "DUKE.RTS", "NAM.RTS", "NAPALM.RTS", "WW2GI.RTS" ];
 //// g_gameNamePtr can point to one of: grpfiles[].name (string literal), string
@@ -3290,8 +3292,9 @@ function G_GameExit(/*const char **/msg : string) : void
 //palette_t DefaultCrosshairColors = { 0, 0, 0, 0 };
 //int32_t g_crosshairSum = 0;
 
-//void G_GetCrosshairColor(void)
-//{
+function G_GetCrosshairColor(): void
+{
+    //todo
 //    // use the brightest color in the original 8-bit tile
 //    int32_t bri = 0, j = 0, i;
 //    int32_t ii;
@@ -3324,7 +3327,7 @@ function G_GameExit(/*const char **/msg : string) : void
 //    Bmemcpy(&CrosshairColors, &curpalette[bri], sizeof(palette_t));
 //    Bmemcpy(&DefaultCrosshairColors, &curpalette[bri], sizeof(palette_t));
 //    DefaultCrosshairColors.f = 1; // this flag signifies that the color has been detected
-//}
+}
 
 //void G_SetCrosshairColor(int32_t r, int32_t g, int32_t b)
 //{
@@ -10925,17 +10928,18 @@ function G_Startup() : void
 //    }
 //}
 
-//void G_BackToMenu(void)
-//{
-//    boardfilename[0] = 0;
-//    if (ud.recstat == 1) G_CloseDemoWrite();
-//    ud.warp_on = 0;
-//    g_player[myconnectindex].ps->gm = MODE_MENU;
-//    M_ChangeMenu(MENU_MAIN);
-//    KB_FlushKeyboardQueue();
-//    Bsprintf(tempbuf, "%s - " APPNAME, g_gameNamePtr);
-//    wm_setapptitle(tempbuf);
-//}
+function G_BackToMenu(): void
+{
+    todoThrow();
+    //boardfilename[0] = 0;
+    //if (ud.recstat == 1) G_CloseDemoWrite();
+    //ud.warp_on = 0;
+    //g_player[myconnectindex].ps->gm = MODE_MENU;
+    //M_ChangeMenu(MENU_MAIN);
+    //KB_FlushKeyboardQueue();
+    //Bsprintf(tempbuf, "%s - " APPNAME, g_gameNamePtr);
+    //wm_setapptitle(tempbuf);
+}
 
 //static int32_t G_EndOfLevel(void)
 //{
@@ -11735,15 +11739,16 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
             ud.config.ScreenBPP = bpp[i];
         }
 
-        todoThrow("setbrightness(ud.brightness>>2,g_player[myconnectindex].ps->palette,0);");
+        todo("setbrightness(ud.brightness>>2,g_player[myconnectindex].ps->palette,0);");
 
         todo("S_MusicStartup();");
         todo("S_SoundStartup();");
     }
 //    loadtmb();
-    throw "todo";
-//    if (ud.warp_on > 1 && (!g_netServer && ud.multimode < 2))
-//    {
+  
+    if (ud.warp_on > 1 && (!g_netServer && ud.multimode < 2))
+    {
+        todoThrow();
 //        clearview(0L);
 //        //g_player[myconnectindex].ps->palette = palette;
 //        //G_FadePalette(0,0,0,0);
@@ -11754,23 +11759,24 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
 
 //        if (G_LoadPlayer(ud.warp_on-2))
 //            ud.warp_on = 0;
-//    }
+    }
 
-//    FX_StopAllSounds();
-//    S_ClearSoundLocks();
+    todo("FX_StopAllSounds();");
+    todo("S_ClearSoundLocks();");
 
 //    //    getpackets();
 
-//MAIN_LOOP_RESTART:
+    todo("MAIN_LOOP_RESTART:");/// TODO ASYNC LOOP
 
-//    if (g_networkMode != NET_DEDICATED_SERVER)
-//    {
-//        G_GetCrosshairColor();
-//        G_SetCrosshairColor(CrosshairColors.r, CrosshairColors.g, CrosshairColors.b);
-//    }
+    if (g_networkMode != NET_DEDICATED_SERVER)
+    {
+        G_GetCrosshairColor();
+        // todo G_SetCrosshairColor(CrosshairColors.r, CrosshairColors.g, CrosshairColors.b)
+    }
 
-//    if (ud.warp_on == 0)
-//    {
+    if (ud.warp_on == 0)
+    {
+        todoThrow();
 //        if ((g_netServer || ud.multimode > 1) && boardfilename[0] != 0)
 //        {
 //            ud.m_level_number = 7;
@@ -11805,14 +11811,14 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
 //                goto MAIN_LOOP_RESTART;
 //            }
 //        }
-//    }
-//    else if (ud.warp_on == 1)
-//    {
-//        G_NewGame(ud.m_volume_number,ud.m_level_number,ud.m_player_skill);
+    }
+    else if (ud.warp_on == 1)
+    {
+        G_NewGame(ud.m_volume_number,ud.m_level_number,ud.m_player_skill);
 
-//        if (G_EnterLevel(MODE_GAME)) G_BackToMenu();
-//    }
-//    else G_UpdateScreenArea();
+        if (G_EnterLevel(MODE_GAME)) G_BackToMenu();
+    }
+    else todoThrow("G_UpdateScreenArea();");
 
 ////    G_GameExit(" "); ///
 

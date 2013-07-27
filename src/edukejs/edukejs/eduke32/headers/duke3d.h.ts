@@ -1,6 +1,10 @@
 /// <reference path="game.h.ts" />
 
 
+/* Defines */
+var DEBUGGINGAIDS = true;
+
+
 //-------------------------------------------------------------------------
 /*
 Copyright (C) 2010 EDuke32 developers and contributors
@@ -94,7 +98,7 @@ var REALGAMETICSPERSEC = 30;
 //#define TICSPERFRAME        (TICRATE/REALGAMETICSPERSEC)
 //// Used as a constant to satisfy all of the calculations written with ticrate =
 //// 26 in mind:
-//#define GAMETICSPERSEC      26
+var GAMETICSPERSEC     =26;
 
 
 var PACKBUF_SIZE        = 32768;

@@ -66,7 +66,6 @@
     <Content Include="build\headers\texcache.h.ts" />
     <Content Include="eduke32\headers\duke3d.h.ts" />
     <Content Include="build\headers\engine_priv.h.ts" />
-    <Content Include="build\headers\hightile.h.ts" />
     <Content Include="build\headers\mdsprite.h.ts" />
     <Content Include="build\headers\osd.h.ts" />
     <Content Include="build\headers\pragmas.h.ts" />
@@ -105,15 +104,17 @@
     <Content Include="eduke32\source\glbuild.c.ts" />
     <Content Include="eduke32\source\global.c.ts" />
     <Content Include="eduke32\source\grpscan.c.ts" />
+    <Content Include="eduke32\source\menus.c.ts" />
     <Content Include="eduke32\source\namesdyn.c.ts" />
     <Content Include="eduke32\source\net.c.ts" />
     <Content Include="eduke32\source\player.c.ts" />
+    <Content Include="eduke32\source\premap.c.ts" />
     <Content Include="eduke32\source\rts.c.ts" />
     <Content Include="eduke32\source\sounds.c.ts" />
     <Content Include="eduke32\source\soundsdyn.c.ts" />
     <Content Include="eduke32\source\winbits.c.ts" />
     <Content Include="eduke32\source\winlayer.c.ts" />
-    <Content Include="ExternalDependencies\hightile.h.ts" />
+    <Content Include="build\headers\hightile.h.ts" />
     <Content Include="index.htm" />
     <Content Include="eduke32\source\common.c.ts" />
     <Content Include="eduke32\source\game.c.ts" />
@@ -146,6 +147,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="ExternalDependencies\" />
     <Folder Include="style\" />
   </ItemGroup>
   <PropertyGroup>

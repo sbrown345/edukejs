@@ -44,10 +44,12 @@
 /// <reference path="../../eduke32/source/glbuild.c.ts" />
 /// <reference path="../../eduke32/source/global.c.ts" />
 /// <reference path="../../eduke32/source/grpscan.c.ts" />
+/// <reference path="../../eduke32/source/menus.c.ts" />
 /// <reference path="../../eduke32/source/namesdyn.c.ts" />
 /// <reference path="../../eduke32/source/net.c.ts" />
 /// <reference path="../../eduke32/source/osdfuncs.c.ts" />
 /// <reference path="../../eduke32/source/player.c.ts" />
+/// <reference path="../../eduke32/source/premap.c.ts" />
 /// <reference path="../../eduke32/source/rts.c.ts" />
 /// <reference path="../../eduke32/source/soundsdyn.c.ts" />
 /// <reference path="../../eduke32/source/winbits.c.ts" />
@@ -1654,9 +1656,11 @@ function OSD_ResizeDisplay(w: number, h: number): void
 //    Bmemset(osdfmt, osdtextpal, osdcols);
 //    if (osdlines < osdmaxlines) osdlines++;
 //}
-//#define MAX_ERRORS 4096
-//void OSD_Printf(const char *fmt, ...)
-//{
+var MAX_ERRORS=4096;
+function OSD_Printf(fmt: string, ...args: any[]): void
+{
+    todo("finish OSD_Printf");
+    console.log("OSD_Printf", args);
 //    static char tmpstr[8192];
 //    char *chp, p=osdtextpal, s=osdtextshade;
 //    va_list va;
@@ -1767,7 +1771,7 @@ function OSD_ResizeDisplay(w: number, h: number): void
 //    while (*(++chp));
 
 //    mutex_unlock(&m_osdprintf);
-//}
+}
 
 
 ////
