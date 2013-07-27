@@ -290,14 +290,15 @@ var glrendmode = REND_POLYMOST;
 //        }
 //}
 //
-////Make all textures "dirty" so they reload, but not re-allocate
-////This should be much faster than polymost_glreset()
-////Use this for palette effects ... but not ones that change every frame!
-//void gltexinvalidatetype(int32_t type)
-//{
+//Make all textures "dirty" so they reload, but not re-allocate
+//This should be much faster than polymost_glreset()
+//Use this for palette effects ... but not ones that change every frame!
+function gltexinvalidatetype(type: number): void
+{
+    todo("gltexinvalidatetype");
 //    int32_t j;
 //    pthtyp *pth;
-//
+
 //    for (j=GLTEXCACHEADSIZ-1; j>=0; j--)
 //    {
 //        for (pth=texcache.list[j]; pth; pth=pth->next)
@@ -310,13 +311,13 @@ var glrendmode = REND_POLYMOST;
 //            }
 //        }
 //    }
-//
+
 //    if (type == INVALIDATE_ALL)
 //        clearskins();
 //#ifdef DEBUGGINGAIDS
 //    OSD_Printf("gltexinvalidateall()\n");
 //#endif
-//}
+}
 //
 //static void bind_2d_texture(GLuint texture)
 //{

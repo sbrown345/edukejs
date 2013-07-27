@@ -2103,61 +2103,61 @@ function setvideomode(x: number, y: number, c: number, fs: number): number
 //}
 
 
-////
-//// setpalette() -- set palette values
-//// New behaviour: curpalettefaded is the live palette, and any changes this function
-//// makes are done to it and not the base palette.
-////
-//int32_t setpalette(int32_t start, int32_t num)
-//{
-//    int32_t i, n;
-//    HRESULT result;
-//    RGBQUAD *rgb;
-//    //HPALETTE hPalPrev;
+//
+// setpalette() -- set palette values
+// New behaviour: curpalettefaded is the live palette, and any changes this function
+// makes are done to it and not the base palette.
+//
+function setpalette(start: number, num: number): number
+{
+    //var i: number, n: number;
+    ////HRESULT result;
+    ////RGBQUAD *rgb;
+    ////HPALETTE hPalPrev;
 
-//    static struct logpal
-//    {
-//        WORD palVersion;
-//        WORD palNumEntries;
-//        PALETTEENTRY palPalEntry[256];
-//    } lpal;
+    //static struct logpal
+    //{
+    //    WORD palVersion;
+    //    WORD palNumEntries;
+    //    PALETTEENTRY palPalEntry[256];
+    //} lpal;
 
-//    if (bpp > 8) return 0;	// no palette in opengl
+    if (bpp > 8) return 0;	// no palette in opengl
+    todoThrow();
+    //Bmemcpy(lpal.palPalEntry, curpalettefaded, sizeof(lpal.palPalEntry));
+    //for (i=start, n=num-1; n>0; i++, n--)
+    //    curpalettefaded[i].f = lpal.palPalEntry[i].peFlags = PC_NOCOLLAPSE;
 
-//    Bmemcpy(lpal.palPalEntry, curpalettefaded, sizeof(lpal.palPalEntry));
-//    for (i=start, n=num-1; n>0; i++, n--)
-//        curpalettefaded[i].f = lpal.palPalEntry[i].peFlags = PC_NOCOLLAPSE;
+    //if (fullscreen)
+    //{
+    //    if (!lpDDPalette) return -1;
+    //    result = IDirectDrawPalette_SetEntries(lpDDPalette, 0, 0, 256, (LPPALETTEENTRY)lpal.palPalEntry);
+    //    if (result != DD_OK)
+    //    {
+    //        initprintf("Palette set failed: %s\n", GetDDrawError(result));
+    //        return -1;
+    //    }
 
-//    if (fullscreen)
-//    {
-//        if (!lpDDPalette) return -1;
-//        result = IDirectDrawPalette_SetEntries(lpDDPalette, 0, 0, 256, (LPPALETTEENTRY)lpal.palPalEntry);
-//        if (result != DD_OK)
-//        {
-//            initprintf("Palette set failed: %s\n", GetDDrawError(result));
-//            return -1;
-//        }
+    //    return 0;
+    //}
 
-//        return 0;
-//    }
+    //if (num > 0)
+    //{
+    //    rgb = (RGBQUAD *)Bmalloc(sizeof(RGBQUAD)*num);
+    //    for (i=start, n=0; n<num; i++, n++)
+    //    {
+    //        rgb[n].rgbBlue = lpal.palPalEntry[i].peBlue;
+    //        rgb[n].rgbGreen = lpal.palPalEntry[i].peGreen;
+    //        rgb[n].rgbRed = lpal.palPalEntry[i].peRed;
+    //        rgb[n].rgbReserved = 0;
+    //    }
 
-//    if (num > 0)
-//    {
-//        rgb = (RGBQUAD *)Bmalloc(sizeof(RGBQUAD)*num);
-//        for (i=start, n=0; n<num; i++, n++)
-//        {
-//            rgb[n].rgbBlue = lpal.palPalEntry[i].peBlue;
-//            rgb[n].rgbGreen = lpal.palPalEntry[i].peGreen;
-//            rgb[n].rgbRed = lpal.palPalEntry[i].peRed;
-//            rgb[n].rgbReserved = 0;
-//        }
+    //    SetDIBColorTable(hDCSection, start, num, rgb);
+    //    Bfree(rgb);
+    //}
 
-//        SetDIBColorTable(hDCSection, start, num, rgb);
-//        Bfree(rgb);
-//    }
-
-//    return 0;
-//}
+    //return 0;
+}
 
 ////
 //// getpalette() -- get palette values
@@ -2225,35 +2225,37 @@ function setgammaramp(/*LPDDGAMMARAMPgt */): number
     return 0;
 }
 
-//int32_t setgamma(void)
-//{
-//    int32_t i;
-//    static DDGAMMARAMP gammaTable;
-//    float gamma = max(0.1f,min(4.f,vid_gamma));
-//    float contrast = max(0.1f,min(3.f,vid_contrast));
-//    float bright = max(-0.8f,min(0.8f,vid_brightness));
+function setgamma(): number
+{
+    todo("setgamma");
+    return 0;
+    //int32_t i;
+    //static DDGAMMARAMP gammaTable;
+    //float gamma = max(0.1f,min(4.f,vid_gamma));
+    //float contrast = max(0.1f,min(3.f,vid_contrast));
+    //float bright = max(-0.8f,min(0.8f,vid_brightness));
 
-//    double invgamma = 1 / gamma;
-//    double norm = pow(255., invgamma - 1);
+    //double invgamma = 1 / gamma;
+    //double norm = pow(255., invgamma - 1);
 
-//    if (!hWindow) return -1;
+    //if (!hWindow) return -1;
 
-//    if (winlayer_have_ATI && bpp==8 && fullscreen)
-//        return -1;
+    //if (winlayer_have_ATI && bpp==8 && fullscreen)
+    //    return -1;
 
-//    // This formula is taken from Doomsday
+    //// This formula is taken from Doomsday
 
-//    for (i = 0; i < 256; i++)
-//    {
-//        double val = i * contrast - (contrast - 1) * 127;
-//        if (gamma != 1) val = pow(val, invgamma) / norm;
-//        val += bright * 128;
+    //for (i = 0; i < 256; i++)
+    //{
+    //    double val = i * contrast - (contrast - 1) * 127;
+    //    if (gamma != 1) val = pow(val, invgamma) / norm;
+    //    val += bright * 128;
 
-//        gammaTable.red[i] = gammaTable.green[i] = gammaTable.blue[i] = (WORD)max(0.f,(double)min(0xffff,val*256));
-//    }
+    //    gammaTable.red[i] = gammaTable.green[i] = gammaTable.blue[i] = (WORD)max(0.f,(double)min(0xffff,val*256));
+    //}
 
-//    return setgammaramp(&gammaTable);
-//}
+    //return setgammaramp(&gammaTable);
+}
 
 //static int32_t getgammaramp(LPDDGAMMARAMP gt)
 //{

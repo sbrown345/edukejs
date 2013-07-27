@@ -62,6 +62,7 @@
     <Content Include="build\headers\cache1d.h.ts" />
     <Content Include="build\headers\compat.h.ts" />
     <Content Include="build\headers\crc32.h.ts" />
+    <Content Include="build\headers\texcache.h.ts" />
     <Content Include="eduke32\headers\duke3d.h.ts" />
     <Content Include="build\headers\engine_priv.h.ts" />
     <Content Include="build\headers\hightile.h.ts" />

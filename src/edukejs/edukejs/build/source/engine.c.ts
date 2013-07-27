@@ -13,6 +13,7 @@
 /// <reference path="../../build/headers/osd.h.ts" />
 /// <reference path="../../build/headers/pragmas.h.ts" />
 /// <reference path="../../build/headers/scancodes.h.ts" />
+/// <reference path="../../build/headers/texcache.h.ts" />
 
 /// <reference path="../../build/source/cache1d.c.ts" />
 /// <reference path="../../build/source/crc32.c.ts" />
@@ -2475,15 +2476,15 @@ var artfil = -1, artfilnum, artfilplc;//static int32_t
 
 //char apptitle[256] = "Build Engine";
 
-//static uint8_t basepalreset=1;
+var basepalreset=1;//static uint8_t 
 var basepalcount: number; //uint8_t 
-//uint8_t curbasepal;
+var curbasepal = 0;//uint8_t 
 
 var g_lastpalettesum = 0 >>> 0; //static uint32_t 
-//palette_t curpalette[256];			// the current palette, unadjusted for brightness or tint
-//palette_t curpalettefaded[256];		// the current palette, adjusted for brightness and tint (ie. what gets sent to the card)
-//palette_t palfadergb = { 0,0,0,0 };
-//char palfadedelta = 0;
+var curpalette = newStructArray(palette_t, 256);			// the current palette, unadjusted for brightness or tint //palette_t 
+var curpalettefaded = newStructArray(palette_t, 256);		// the current palette, adjusted for brightness and tint (ie. what gets sent to the card)
+var palfadergb = new palette_t();//{ 0,0,0,0 };
+var palfadedelta = 0; //char 
 
 
 
@@ -10918,9 +10919,9 @@ function setgamemode(/*char*/ davidoption: number,  daxdim: number,daydim: numbe
  
     calc_ylookup(bytesperline, ydim);
   
-    setview(0,0,xdim-1,ydim-1); throw "todo";
-//    clearallviews(0);
-//    setbrightness(curbrightness,0,0);
+    setview(0,0,xdim-1,ydim-1);
+    clearallviews(0); 
+    setbrightness(curbrightness,0,0);throw "todo";
 
 //    if (searchx < 0) { searchx = halfxdimen; searchy = (ydimen>>1); }
 
@@ -14439,109 +14440,117 @@ function setbasepaltable(/*uint8_t ***/thebasepaltable: Uint8Array[], /*uint8_t 
     basepalcount = thebasepalcount;
 }
 
-////
-//// setbrightness
-////
-//// flags:
-////  1: don't setpalette(),  DON'T USE THIS FLAG!
-////  2: don't gltexinvalidateall()
-////  4: don't calc curbrightness from dabrightness,  DON'T USE THIS FLAG!
-////  8: don't gltexinvalidate8()
-//// 16: don't reset palfade*
-//void setbrightness(char dabrightness, uint8_t dapalid, uint8_t flags)
-//{
-//    int32_t i, j, nohwgamma;
-//    const uint8_t *dapal;
+//
+// setbrightness
+//
+// flags:
+//  1: don't setpalette(),  DON'T USE THIS FLAG!
+//  2: don't gltexinvalidateall()
+//  4: don't calc curbrightness from dabrightness,  DON'T USE THIS FLAG!
+//  8: don't gltexinvalidate8()
+// 16: don't reset palfade*
+function setbrightness(/*char*/ dabrightness: number, /*uint8_t*/ dapalid: number, /*uint8_t*/ flags: number): void
+{
+    var i: number, j: number, nohwgamma: number; //: number
+    var dapal: Uint8Array;
 
 //#ifdef USE_OPENGL
-//    int32_t paldidchange;
+    var paldidchange: number;
 //#endif
-//    int32_t palsumdidchange;
-////    uint32_t lastbright = curbrightness;
+    var palsumdidchange: number;
+//    uint32_t lastbright = curbrightness;
 
-//    Bassert((flags&4)==0);
+    Bassert((flags&4)==0);
 
-//    if (dapalid >= basepalcount)
-//        dapalid = 0;
+    if (dapalid >= basepalcount)
+        dapalid = 0;
 //#ifdef USE_OPENGL
-//    paldidchange = (curbasepal != dapalid || basepalreset);
+    paldidchange = (curbasepal != dapalid || basepalreset);
 //#endif
-//    curbasepal = dapalid;
-//    basepalreset = 0;
+    curbasepal = dapalid;
+    basepalreset = 0;
 
-//    dapal = basepaltableptr[curbasepal];
+    dapal = basepaltableptr[curbasepal];
 
-//    if (!(flags&4))
-//    {
-//        curbrightness = clamp(dabrightness, 0, 15);
-////        if (lastbright != (unsigned)curbrightness)
-////            vid_gamma = 1.0 + ((float)curbrightness / 10.0);
-//    }
+    if (!(flags&4))
+    {
+        curbrightness = clamp(dabrightness, 0, 15);
+//        if (lastbright != (unsigned)curbrightness)
+//            vid_gamma = 1.0 + ((float)curbrightness / 10.0);
+    }
 
-//    nohwgamma = setgamma();
-//    j = nohwgamma ? curbrightness : 0;
+    nohwgamma = setgamma();
+    j = nohwgamma ? curbrightness : 0;
 
-//    for (i=0; i<256; i++)
-//    {
-//        // save palette without any brightness adjustment
-//        curpalette[i].r = dapal[i*3+0] << 2;
-//        curpalette[i].g = dapal[i*3+1] << 2;
-//        curpalette[i].b = dapal[i*3+2] << 2;
-//        curpalette[i].f = 0;
+    for (i=0; i<256; i++)
+    {
+        // save palette without any brightness adjustment
+        curpalette[i].r = dapal[i*3+0] << 2;
+        curpalette[i].g = dapal[i*3+1] << 2;
+        curpalette[i].b = dapal[i*3+2] << 2;
+        curpalette[i].f = 0;
 
-//        // brightness adjust the palette
-//        curpalettefaded[i].b = britable[j][ curpalette[i].b ];
-//        curpalettefaded[i].g = britable[j][ curpalette[i].g ];
-//        curpalettefaded[i].r = britable[j][ curpalette[i].r ];
-//        curpalettefaded[i].f = 0;
-//    }
+        // brightness adjust the palette
+        curpalettefaded[i].b = britable[j][ curpalette[i].b ];
+        curpalettefaded[i].g = britable[j][ curpalette[i].g ];
+        curpalettefaded[i].r = britable[j][ curpalette[i].r ];
+        curpalettefaded[i].f = 0;
+    }
 
-//    if ((flags&16) && palfadedelta)  // keep the fade
-//        setpalettefade_calc(palfadedelta>>2);
+    if ((flags&16) && palfadedelta)  // keep the fade
+        todoThrow("setpalettefade_calc(palfadedelta>>2)");
 
-//    {
-//        static uint32_t lastpalettesum=0;
-//        uint32_t newpalettesum = crc32once((uint8_t *)curpalettefaded, sizeof(curpalettefaded));
+    {
+        var lastpalettesum=0;//static uint32_t
 
-//        palsumdidchange = (newpalettesum != lastpalettesum);
+        var curpalettefadedArray = new Uint8Array(curpalettefaded.length * 4);
+        for (var k = 0; k < curpalettefadedArray.length; k++) {
+            curpalettefadedArray[k*4+0] = curpalettefaded[k].r;
+            curpalettefadedArray[k*4+1] = curpalettefaded[k].g;
+            curpalettefadedArray[k*4+2] = curpalettefaded[k].b;
+            curpalettefadedArray[k*4+3] = curpalettefaded[k].f;
+        }
+        var newpalettesum = crc32once(/*(uint8_t *)*/new Ptr(curpalettefadedArray), sizeof(curpalettefaded));
 
-//        if (palsumdidchange || newpalettesum != g_lastpalettesum)
-//        {
-////            if ((flags&1) == 0)
-//                setpalette(0,256);
-//        }
+        palsumdidchange = (newpalettesum != lastpalettesum)?1:0;
 
-//        g_lastpalettesum = lastpalettesum = newpalettesum;
-//    }
+        if (palsumdidchange || newpalettesum != g_lastpalettesum)
+        {
+//            if ((flags&1) == 0)
+                setpalette(0,256);
+        }
+
+        g_lastpalettesum = lastpalettesum = newpalettesum;
+    }
 
 //#ifdef USE_OPENGL
-//    if (getrendermode() >= REND_POLYMOST)
-//    {
-//        // Only reset the textures if the corresponding preserve flags are clear and
-//        // either (a) the new palette is different to the last, or (b) the brightness
-//        // changed and we couldn't set it using hardware gamma.
+    if (getrendermode() >= REND_POLYMOST)
+    {
+        // Only reset the textures if the corresponding preserve flags are clear and
+        // either (a) the new palette is different to the last, or (b) the brightness
+        // changed and we couldn't set it using hardware gamma.
 
-//        // XXX: no-HW-gamma OpenGL platforms will exhibit bad performance with
-//        // simultaneous basepal and tint changes?
-//        const int32_t doinvalidate = (paldidchange || (palsumdidchange && nohwgamma));
+        // XXX: no-HW-gamma OpenGL platforms will exhibit bad performance with
+        // simultaneous basepal and tint changes?
+        var doinvalidate = (paldidchange || (palsumdidchange && nohwgamma)); //const int32_t
 
-//        if (!(flags&2) && doinvalidate)
-//            gltexinvalidatetype(INVALIDATE_ALL);
-//        if (!(flags&8) && doinvalidate)
-//            gltexinvalidatetype(INVALIDATE_ART);
+        if (!(flags&2) && doinvalidate)
+            gltexinvalidatetype(INVALIDATE_ALL);
+        if (!(flags&8) && doinvalidate)
+            gltexinvalidatetype(INVALIDATE_ART);
 //#ifdef POLYMER
-//        if ((getrendermode() == REND_POLYMER) && doinvalidate)
-//            polymer_texinvalidate();
+        if ((getrendermode() == REND_POLYMER) && doinvalidate)
+            polymer_texinvalidate();
 //#endif
-//    }
+    }
 //#endif
 
-//    if ((flags&16)==0)
-//    {
-//        palfadergb.r = palfadergb.g = palfadergb.b = 0;
-//        palfadedelta = 0;
-//    }
-//}
+    if ((flags&16)==0)
+    {
+        palfadergb.r = palfadergb.g = palfadergb.b = 0;
+        palfadedelta = 0;
+    }
+}
 
 //static inline palette_t getpal(int32_t col)
 //{
@@ -14650,15 +14659,15 @@ function setbasepaltable(/*uint8_t ***/thebasepaltable: Uint8Array[], /*uint8_t 
 //}
 
 
-////
-//// clearallviews
-////
-//void clearallviews(int32_t dacol)
-//{
-//    if (!in3dmode()) return;
-//    //dacol += (dacol<<8); dacol += (dacol<<16);
-
-//#ifdef USE_OPENGL
+//
+// clearallviews
+//
+function clearallviews(dacol: number): void
+{
+    if (!in3dmode()) return;
+    //dacol += (dacol<<8); dacol += (dacol<<16);
+    todoThrow();
+////#ifdef USE_OPENGL
 //    if (getrendermode() >= REND_POLYMOST)
 //    {
 //        palette_t p = getpal(dacol);
@@ -14671,7 +14680,7 @@ function setbasepaltable(/*uint8_t ***/thebasepaltable: Uint8Array[], /*uint8_t 
 //        bglClear(GL_COLOR_BUFFER_BIT);
 //        return;
 //    }
-//#endif
+////#endif
 
 //    begindrawing(); //{{{
 //    Bmemset((void *)frameplace,dacol,bytesperline*yres);
@@ -14679,7 +14688,7 @@ function setbasepaltable(/*uint8_t ***/thebasepaltable: Uint8Array[], /*uint8_t 
 //    //nextpage();
 
 //    faketimerhandler();
-//}
+}
 
 
 ////
