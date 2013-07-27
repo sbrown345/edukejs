@@ -1,3 +1,5 @@
+/// <reference path="../../build/headers/build.h.ts" />
+
 //#include "compat.h"
 //#include "osd.h"
 //#include "build.h"
@@ -46,12 +48,12 @@
 //    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 //};
 
-//int32_t defaultres[][2] =
-//{
-//    {1920, 1440}, {1920, 1200}, {1920, 1080}, {1680, 1050}, {1600, 1200}, {1600, 900}, {1366, 768}, {1280, 1024}, 
-//    {1280, 960}, {1152, 864}, {1024, 768}, {1024, 600}, {800, 600}, {640, 480}, {640, 400}, 
-//    {512, 384}, {480, 360}, {400, 300}, {320, 240}, {320, 200}, {0, 0}
-//};
+defaultres =
+[
+    [1920, 1440], [1920, 1200], [1920, 1080], [1680, 1050], [1600, 1200], [1600, 900], [1366, 768], [1280, 1024], 
+    [1280, 960], [1152, 864], [1024, 768], [1024, 600], [800, 600], [640, 480], [640, 400], 
+    [512, 384], [480, 360], [400, 300], [320, 240], [320, 200], [0, 0]
+];
 
 
 //void SetKey(int32_t key, int32_t state)
@@ -127,21 +129,21 @@
 //    *b = joyb;
 //}
 
-//// Calculate ylookup[] and call setvlinebpl()
-//void calc_ylookup(int32_t bpl, int32_t lastyidx)
-//{
-//    int32_t i, j=0;
+// Calculate ylookup[] and call setvlinebpl()
+function calc_ylookup(bpl: number, lastyidx: number): void 
+{
+    var i: number, j=0;
 
-//    Bassert(lastyidx <= MAXYDIM);
+    Bassert(lastyidx <= MAXYDIM);
 
-//    for (i=0; i<=lastyidx; i++)
-//    {
-//        ylookup[i] = j;
-//        j += bpl;
-//    }
+    for (i=0; i<=lastyidx; i++)
+    {
+        ylookup[i] = j;
+        j += bpl;
+    }
 
-//    setvlinebpl(bpl);
-//}
+    todo("setvlinebpl(bpl);");
+}
 
 //#ifdef USE_OPENGL
 //void fullscreen_tint_gl(uint8_t r, uint8_t g, uint8_t b, uint8_t f)

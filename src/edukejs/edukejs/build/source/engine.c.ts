@@ -164,6 +164,7 @@ var lowrecip = new Int32Array(1024), nytooclose: number, nytoofar: number; //sta
 //static uint32_t distrecip[65536+256];
 
 var lookups:Int32Array = NULL; //int32_t *
+var lookupsIdx: number;
 var dommxoverlay = 1, beforedrawrooms = 1; //static int32_t 
 var indrawroomsandmasks = 0;//int32_t 
 
@@ -2351,7 +2352,8 @@ function msqrtasm(c: number): number
 
 //static int32_t rxi[8], ryi[8], rzi[8], rxi2[8], ryi2[8], rzi2[8];
 var xsi = new Int32Array(8), ysi = new Int32Array(8), horizycent: number; //static int32_t 
-var horizlookup: Ptr/*Int32Array*/, horizlookup2: Ptr/*Int32Array*/;
+var horizlookup: Int32Array, horizlookup2: Int32Array;
+var horizlookupIdx = 0, horizlookup2Idx = 0;
 
 var globalposx: number, globalposy: number, globalposz: number, globalhoriz: number;    //int32_t 
 var globalang: number, globalcursectnum: number;                        //int16_t 
@@ -10905,15 +10907,17 @@ function setgamemode(/*char*/ davidoption: number,  daxdim: number,daydim: numbe
     //    exit(1);
     //}
 
-    horizlookup = new Ptr(lookups);
-    horizlookup2 = new Ptr(lookups, j); // careful here, its an int32, the idx is for 1 byte per element
+    horizlookup = lookups;
+    horizlookupIdx = 0;
+    horizlookup2 = lookups; horizlookup2Idx = j; // careful here, its an int32, the idx is for 1 byte per element
     horizycent = ((ydim*4)>>1);
+    assert.run("setgamemode horizycent", 1536);
 
     //Force drawrooms to call dosetaspect & recalculate stuff
     oxyaspect = oxdimen = oviewingrange = -1;
-    throw "todo";
-//    calc_ylookup(bytesperline, ydim);
-
+ 
+    calc_ylookup(bytesperline, ydim);
+   throw "todo";
 //    setview(0,0,xdim-1,ydim-1);
 //    clearallviews(0);
 //    setbrightness(curbrightness,0,0);

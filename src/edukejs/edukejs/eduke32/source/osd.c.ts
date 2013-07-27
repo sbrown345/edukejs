@@ -124,7 +124,7 @@ var osdeditlen=0;       // length of characters in edit buffer       //static in
 var osdeditcursor=0;        // position of cursor in edit buffer     //static int32_t  
 var osdeditwinstart=0;                                               //static int32_t  
 var osdeditwinend=60-1-3;                                            //static int32_t  
-var editlinewidth = (osdcols-1-3);
+var editlinewidth = function(): number {return osdcols-1-3;};
 
 //// command processing
 //static int32_t  osdhistorypos=-1;       // position we are at in the history buffer
@@ -1495,7 +1495,7 @@ function OSD_ResizeDisplay(w: number, h: number): void
     var i,j,k;
 
     newcols = getcolumnwidth(w);
-    newmaxlines = TEXTSIZE / newcols;
+    newmaxlines = TEXTSIZE / newcols | 0;
 
     j = min(newmaxlines, osdmaxlines);
     k = min(newcols, osdcols);
@@ -1518,7 +1518,8 @@ function OSD_ResizeDisplay(w: number, h: number): void
     osdpos = 0;
     osdhead = 0;
     osdeditwinstart = 0;
-    osdeditwinend = editlinewidth;
+    osdeditwinend = editlinewidth();
+    assert.run("OSD_ResizeDisplay editlinewidth", editlinewidth() == 109);
     white = -1;
 }
 

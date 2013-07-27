@@ -136,7 +136,7 @@ class glinfo_t {
 //extern char scantoasc[128], remap[256], key_names[256][24];
 //extern int32_t remapinit;
 
-//extern int32_t defaultres[][2];
+var defaultres: Array<Array<number>>;//[][2]
 
 //extern void SetKey(int32_t key, int32_t state);
 

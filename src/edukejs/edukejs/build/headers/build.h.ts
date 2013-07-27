@@ -702,21 +702,29 @@ var yxaspect: number, viewingrange: number;     //EXTERN int32_t
 //#ifdef __cplusplus
 //extern "C" {
 //#endif
-//EXTERN intptr_t ylookup[MAXYDIM+1];
+var ylookup = new Int32Array(MAXYDIM+1); //EXTERN intptr_t 
 //#ifdef __cplusplus
 //};
 //#endif
 
-//#define MAXVALIDMODES 256
+var MAXVALIDMODES=256;
 var validmodecnt : number; //EXTERN int32_t 
-//struct validmode_t {
-//    int32_t xdim,ydim;
-//    char bpp;
-//    char fs;    // bit 0 = fullscreen flag
-//    char filler[2];
-//    int32_t extra; // internal use
-//};
-//EXTERN struct validmode_t validmode[MAXVALIDMODES];
+class validmode_t {
+    xdim: number; ydim: number; //int32_t
+    bpp: number;                                 //char 
+    fs: number;    // bit 0 = fullscreen flag    //char 
+    filler: Uint8Array;//[2];                           //char 
+    extra: number; // internal use  //int32_t
+
+    constructor() {
+        this.xdim = 0;this.ydim = 0;
+        this.bpp = 0;
+        this.fs = 0;
+        this.filler = new Uint8Array(2);
+        this.extra = 0;
+    }
+};
+var validmode = newStructArray(validmode_t, MAXVALIDMODES);
 
 //EXTERN int32_t numyaxbunches;
 //#ifdef YAX_ENABLE

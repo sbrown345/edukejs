@@ -107,6 +107,28 @@ class P {
     }
 }
 
+////class Pt {
+////    arr: Array;
+////    idx: number;
+
+////    s(v: number, offset: number = 0): void {
+////        this.arr[this.idx + offset] = v;
+////    }
+
+////    v(offset: number = 0): number {
+////        return this.arr[this.idx + offset];
+////    }
+
+////    incr(): void {
+////        this.idx++;
+////    }
+
+////    constructor(arr: Array, indexOffset: number = 0) {
+////        this.arr = arr;
+////        this.idx = indexOffset;
+////    }
+////}
+
 
 class Ref {
     $: any;

@@ -203,7 +203,7 @@ var lockcount=0;
 var glcolourdepth=32;
 var vsync=0;
 //uint32_t maxrefreshfreq=60;
-//intptr_t frameplace=0;
+var frameplace=0;//intptr_t 
 var modechange=1;             //char
 var repaintneeded=0;          //char
 var offscreenrendering=0;     //char
@@ -1651,9 +1651,7 @@ function getticks() : number //uint32_t
 //
 function checkvideomode(/*int32_t *x, int32_t *y, int32_t c, int32_t fs, int32_t forced*/): number
 {
-    todo("checkvideomode");
-    return 29;
-//    int32_t i, nearest=-1, dx, dy, odx=9999, ody=9999;
+    var i: number, nearest=-1, dx: number, dy: number, odx=9999, ody=9999;
 
 //    getvalidmodes();
 
@@ -1703,7 +1701,16 @@ function checkvideomode(/*int32_t *x, int32_t *y, int32_t c, int32_t fs, int32_t
 //    *x = validmode[nearest].xdim;
 //    *y = validmode[nearest].ydim;
 
-//    return nearest;		// JBF 20031206: Returns the mode number
+    tempHC(() => {
+        nearest = 29;
+        validmode[nearest].xdim = 1024;
+        validmode[nearest].ydim = 768;
+        validmode[nearest].bpp = 32;
+        validmode[nearest].fs = 0;
+        validmode[nearest].extra = -1;
+    });
+
+    return nearest;		// JBF 20031206: Returns the mode number
 }
 
 
@@ -1755,10 +1762,9 @@ function setvideomode(x: number, y: number, c: number, fs: number): number
 
     if (!gammabrightness)
     {
-        todoThrow();
-        ////        float f = 1.0 + ((float)curbrightness / 10.0);
-        //if (getgammaramp(&sysgamma) >= 0) gammabrightness = 1;
-        //if (gammabrightness && setgamma() < 0) gammabrightness = 0;
+        //        float f = 1.0 + ((float)curbrightness / 10.0);
+        todo("if (getgammaramp(&sysgamma) >= 0)"); gammabrightness = 1;
+        todo("if (gammabrightness && setgamma() < 0) gammabrightness = 0;");
     }
 
 //#ifdef USE_OPENGL
@@ -2999,69 +3005,72 @@ function setgammaramp(/*LPDDGAMMARAMPgt */): number
 //
 function CreateAppWindow(modenum: number): number
 {
+    path("CreateAppWindow:");
 //    RECT rect;
-//    int32_t w, h, x, y, stylebits = 0, stylebitsex = 0;
-//    int32_t width, height, fs, bitspp;
+    var w: number, h: number, x: number, y: number, stylebits = 0, stylebitsex = 0;
+    var width: number, height: number, fs: number, bitspp: number;
 
 //    HRESULT result;
 
-//    if (modenum == 0x7fffffff)
-//    {
-//        width = customxdim;
-//        height = customydim;
-//        fs = customfs;
-//        bitspp = custombpp;
-//    }
-//    else
-//    {
-//        width = validmode[modenum].xdim;
-//        height = validmode[modenum].ydim;
-//        fs = validmode[modenum].fs;
-//        bitspp = validmode[modenum].bpp;
-//    }
+    if (modenum == 0x7fffffff)
+    {
+        width = customxdim;
+        height = customydim;
+        fs = customfs;
+        bitspp = custombpp;
+    }
+    else
+    {
+        width = validmode[modenum].xdim;
+        height = validmode[modenum].ydim;
+        fs = validmode[modenum].fs;
+        bitspp = validmode[modenum].bpp;
+    }
 
-//    if (width == xres && height == yres && fs == fullscreen && bitspp == bpp && !videomodereset) return FALSE;
+    if (width == xres && height == yres && fs == fullscreen && bitspp == bpp && !videomodereset) return FALSE;
 
-//    if (hWindow)
-//    {
-//        if (bpp > 8)
-//        {
+    if (hWindow)
+    {
+        if (bpp > 8)
+        {
 //#ifdef USE_OPENGL
-//            ReleaseOpenGL();
+            todo("ReleaseOpenGL();");
 //#endif
-//        }
-//        else
-//        {
-//            ReleaseDirectDrawSurfaces();
-//        }
+        }
+        else
+        {
+            todoThrow("ReleaseDirectDrawSurfaces();");
+        }
 
-//        if (!fs && fullscreen)
-//        {
-//            // restore previous display mode and set to normal cooperative level
-//            RestoreDirectDrawMode();
+        if (!fs && fullscreen)
+        {
+            // restore previous display mode and set to normal cooperative level
+            todoThrow("RestoreDirectDrawMode();");
 //#ifdef USE_OPENGL
-//        }
-//        else if (fs && fullscreen)
-//        {
-//            // using CDS for GL modes, so restore from DirectDraw
-//            if (bpp != bitspp) RestoreDirectDrawMode();
+        }
+        else if (fs && fullscreen)
+        {
+            // using CDS for GL modes, so restore from DirectDraw
+            if (bpp != bitspp) todoThrow("RestoreDirectDrawMode()");
 //#endif
-//        }
+        }
 
 
-//        ShowWindow(hWindow, SW_HIDE);	// so Windows redraws what's behind if the window shrinks
-//    }
+        todoThrow("ShowWindow(hWindow, SW_HIDE);");	// so Windows redraws what's behind if the window shrinks
+    }
 
-//    if (fs)
-//    {
-//        stylebitsex = WS_EX_TOPMOST;
-//        stylebits = WS_POPUP;
-//    }
-//    else
-//    {
-//        stylebitsex = 0;
-//        stylebits = WINDOW_STYLE;
-//    }
+    todo("CreateAppWindow");
+
+    //if (fs)
+    //{
+    //    stylebitsex = WS_EX_TOPMOST;
+    //    stylebits = WS_POPUP;
+    //}
+    //else
+    //{
+    //    stylebitsex = 0;
+    //    stylebits = WINDOW_STYLE;
+    //}
 
 //    if (!hWindow)
 //    {
@@ -3228,22 +3237,22 @@ function CreateAppWindow(modenum: number): number
 //        }
 //    }
 
-//    xres = width;
-//    yres = height;
-//    bpp = bitspp;
-//    fullscreen = fs;
-//    curvidmode = modenum;
+    xres = width;
+    yres = height;
+    bpp = bitspp;
+    fullscreen = fs;
+    curvidmode = modenum;
 
-//    frameplace = 0;
-//    lockcount = 0;
+    frameplace = 0;
+    lockcount = 0;
 
-//    // bytesperline is set when framebuffer is locked
-//    //bytesperline = width;
+    // bytesperline is set when framebuffer is locked
+    //bytesperline = width;
 
-//    modechange = 1;
-//    OSD_ResizeDisplay(xres,yres);
+    modechange = 1;
+    OSD_ResizeDisplay(xres,yres);
 
-//    UpdateWindow(hWindow);
+    //UpdateWindow(hWindow);
 
     return FALSE;
 }
