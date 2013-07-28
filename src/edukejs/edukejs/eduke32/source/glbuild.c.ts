@@ -69,14 +69,14 @@ var bglDisable = gl.disable.bind(gl);//bglDisableProcPtr ;
 //bglDepthMaskProcPtr bglDepthMask;
 //bglDepthRangeProcPtr bglDepthRange;
 
-//// Matrix
+// Matrix
 var bglMatrixMode = gl.matrixMode.bind(gl);//bglMatrixModeProcPtr ;
 //bglOrthoProcPtr bglOrtho;
 //bglFrustumProcPtr bglFrustum;
 var bglViewport = gl.viewport.bind(gl);//bglViewportProcPtr ;
 var bglPushMatrix = gl.pushMatrix.bind(gl);//bglPushMatrixProcPtr ;
 //bglPopMatrixProcPtr bglPopMatrix;
-//bglLoadIdentityProcPtr bglLoadIdentity;
+var bglLoadIdentity = gl.loadIdentity.bind(gl);//bglLoadIdentityProcPtr ;
 var bglLoadMatrixf = gl.loadMatrix.bind(gl);//bglLoadMatrixfProcPtr ;
 //bglLoadMatrixdProcPtr bglLoadMatrixd;
 //bglMultMatrixfProcPtr bglMultMatrixf;

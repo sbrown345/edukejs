@@ -135,10 +135,10 @@ var gviewxrange=0, ghoriz=0;                                    //static double
 var gyxscale=0, gxyaspect=0, ghalfx=0, grhalfxdown10=0, grhalfxdown10x=0;    //double 
 var gcosang=0, gsinang=0, gcosang2=0, gsinang2=0;                          //double 
 var gchang=0, gshang=0, gctang=0, gstang=0, gvisibility=0;                   //double 
-//float gtang = 0.0;
-//double guo, gux, guy; //Screen-based texture mapping parameters
-//double gvo, gvx, gvy;
-//double gdo, gdx, gdy;
+var gtang = 0.0; //float
+var guo = 0.0, gux = 0.0, guy = 0.0; //Screen-based texture mapping parameters     //double 
+var gvo = 0.0, gvx = 0.0, gvy = 0.0;                                               //double 
+var gdo = 0.0, gdx = 0.0, gdy = 0.0;                                               //double 
 //
 //static int32_t preview_mouseaim=0;  // when 1, displays a CROSSHAIR tsprite at the _real_ aimed position
 //
@@ -1300,56 +1300,57 @@ function polymost_glreset(): void
 ////    +4 means it's a sprite, so wraparound isn't needed
 //
 //// drawpoly's hack globals
-//static int32_t pow2xsplit = 0, skyclamphack = 0;
-//static float alpha = 0.f;
-//
-//void drawpoly(double *dpx, double *dpy, int32_t n, int32_t method)
-//{
-//    double ngdx = 0.0, ngdy = 0.0, ngdo = 0.0, ngux = 0.0, nguy = 0.0, nguo = 0.0;
-//    double ngvx = 0.0, ngvy = 0.0, ngvo = 0.0, dp, up, vp, du0 = 0.0, du1 = 0.0, dui, duj;
-//    double f, r, ox, oy, oz, ox2, oy2, oz2, dd[16], uu[16], vv[16], px[16], py[16], uoffs;
-//    int32_t i, j, k, nn, ix0, ix1, tsizx, tsizy;
-//    int32_t xx, yy, dorot;
+var pow2xsplit = 0, skyclamphack = 0; //static int32_t 
+var alpha = 0.0;
+
+function drawpoly(/*double **/dpx: R<number>, /*double **/dpy: R<number>, n:number, method: number): void
+{
+    var ngdx = 0.0, ngdy = 0.0, ngdo = 0.0, ngux = 0.0, nguy = 0.0, nguo = 0.0;             //double 
+    var ngvx = 0.0, ngvy = 0.0, ngvo = 0.0, dp, up, vp, du0 = 0.0, du1 = 0.0, dui, duj;     //double 
+    var f = 0.0, r = 0.0, ox = 0.0, oy = 0.0, oz = 0.0, ox2 = 0.0, oy = 0.02, oz2 = 0.0, dd = new Float64Array(16), uu = new Float64Array(16), vv = new Float64Array(16), px = new Float64Array(16), py = new Float64Array(16), uoffs=0.0;     //double 
+    var i=0, j=0, k=0, nn=0, ix0=0, ix1=0, tsizx=0, tsizy=0; //int32_t
+    var xx, yy, dorot; //int32_t
 //#ifdef USE_OPENGL
-//    pthtyp *pth, *detailpth, *glowpth;
-//    int32_t texunits = GL_TEXTURE0_ARB;
+    var pth: pthtyp, detailpth: pthtyp, glowpth: pthtyp;
+    var texunits = GL_TEXTURE0_ARB; //int32_t
 //#endif
-//    // backup of the n for possible redrawing of fullbright
-//    int32_t n_ = n, method_ = method;
-//
-//    if (method == -1) return;
+    // backup of the n for possible redrawing of fullbright
+    var n_ = n, method_ = method; //int32_t
+
+    if (method == -1) return;
 //#ifdef YAX_ENABLE
-//    if (g_nodraw) return;
+    if (g_nodraw) return;
 //#endif
-//
-//    if (n == 3)
-//    {
-//        if ((dpx[0]-dpx[1])*(dpy[2]-dpy[1]) >= (dpx[2]-dpx[1])*(dpy[0]-dpy[1])) return; //for triangle
-//    }
-//    else
-//    {
-//        f = 0; //f is area of polygon / 2
-//        for (i=n-2,j=n-1,k=0; k<n; i=j,j=k,k++) f += (dpx[i]-dpx[k])*dpy[j];
-//        if (f <= 0) return;
-//    }
-//
-//    //Load texture (globalpicnum)
-//    if ((uint32_t)globalpicnum >= MAXTILES) globalpicnum = 0;
-//    setgotpic(globalpicnum);
-//    tsizx = tilesizx[globalpicnum];
-//    tsizy = tilesizy[globalpicnum];
-//    if (palookup[globalpal] == NULL)
-//        globalpal = 0;
-//    if (!waloff[globalpicnum])
-//    {
-//        loadtile(globalpicnum);
-//        if (!waloff[globalpicnum])
-//        {
-//            if (getrendermode() < REND_POLYMOST) return;
-//            tsizx = tsizy = 1; method = 1; //Hack to update Z-buffer for invalid mirror textures
-//        }
-//    }
-//
+
+    if (n == 3)
+    {
+        if ((dpx[0]-dpx[1])*(dpy[2]-dpy[1]) >= (dpx[2]-dpx[1])*(dpy[0]-dpy[1])) return; //for triangle
+    }
+    else
+    {
+        f = 0; //f is area of polygon / 2
+        for (i=n-2,j=n-1,k=0; k<n; i=j,j=k,k++) f += (dpx[i]-dpx[k])*dpy[j];
+        if (f <= 0) return;
+    }
+
+    //Load texture (globalpicnum)
+    if (/*(uint32_t)*/globalpicnum >= MAXTILES) globalpicnum = 0;
+    setgotpic(globalpicnum);
+    tsizx = tilesizx[globalpicnum];
+    tsizy = tilesizy[globalpicnum];
+    if (palookup[globalpal] == NULL)
+        globalpal = 0;
+  
+    if (!waloff[globalpicnum])
+    {
+        loadtile(globalpicnum);
+        if (!waloff[globalpicnum])
+        {
+            if (getrendermode() < REND_POLYMOST) return;
+            tsizx = tsizy = 1; method = 1; //Hack to update Z-buffer for invalid mirror textures
+        }
+    }
+  todoThrow();
 //    j = 0; dorot = ((gchang != 1.0) || (gctang != 1.0));
 //    if (dorot)
 //    {
@@ -1781,9 +1782,9 @@ function polymost_glreset(): void
 //        //for(i=0,j=n-1;i<n;j=i,i++) drawline2d(px[i]+(ox-px[i])*.125,py[i]+(oy-py[i])*.125,px[j]+(ox-px[j])*.125,py[j]+(oy-py[j])*.125,31);
 //    }
 //*/
-//}
-//
-//
+}
+
+
 //static void vsp_finalize_init(vsptyp *vsp, int32_t vcnt)
 //{
 //    int32_t i;
@@ -4399,7 +4400,8 @@ function polymost_dorotatesprite(sx: number, sy, z: number, a: number, picnum: n
   
 //#ifdef USE_OPENGL
     if (getrendermode() >= REND_POLYMOST)
-    {  debugger;
+    {  
+        debugger;
         bglViewport(0,0,xdim,ydim); glox1 = -1; //Force fullscreen (glox1=-1 forces it to restore)
         bglMatrixMode(gl.PROJECTION);
         for (var i = 0; i < m.length; i++) {memset(new P(m[i]),0,sizeof(m[i]));}
@@ -4412,7 +4414,6 @@ function polymost_dorotatesprite(sx: number, sy, z: number, a: number, picnum: n
         bglDisable(gl.DEPTH_TEST);
         bglDisable(gl.ALPHA_TEST);
         bglEnable(gl.TEXTURE_2D);
-        todoThrow();
 //        
 //# ifdef POLYMER
 //        if (getrendermode() == REND_POLYMER) {
@@ -4425,122 +4426,130 @@ function polymost_dorotatesprite(sx: number, sy, z: number, a: number, picnum: n
 todoThrow();
 //#endif
 //
-//    method = 0;
-//    if (!(dastat&64))
-//    {
-//        method = 1;
-//        if (dastat&1) { if (!(dastat&32)) method = 2; else method = 3; }
-//    }
-//    method |= 4; //Use OpenGL clamping - dorotatesprite never repeats
-//
-//    alpha = daalpha / 255.0f;
-//
-//    xsiz = tilesizx[globalpicnum];
-//    ysiz = tilesizy[globalpicnum];
-//
-//    if (dastat&16)
-//    {
-//        xoff = 0;
-//        yoff = 0;
-//    }
-//    else
-//    {
-//        xoff = picanm[globalpicnum].xofs + (xsiz>>1);
-//        yoff = picanm[globalpicnum].yofs + (ysiz>>1);
-//    }
-//
-//    if (dastat&4)
-//        yoff = ysiz-yoff;
-//
-//    {
-//        int32_t temp;
-//        dorotspr_handle_bit2(&sx, &sy, &z, dastat, cx1+cx2, cy1+cy2, &temp, &ourxyaspect);
-//    }
-//
-//    d = (double)z/(65536.0*16384.0);
-//    cosang2 = cosang = (double)sintable[(a+512)&2047]*d;
-//    sinang2 = sinang = (double)sintable[a&2047]*d;
-//    if ((dastat&2) || (!(dastat&8))) //Don't aspect unscaled perms
-//    {
-//        d = (double)ourxyaspect/65536.0;
-//        cosang2 *= d;
-//        sinang2 *= d;
-//    }
-//
-//    px[0] = (double)sx/65536.0 - (double)xoff*cosang2+ (double)yoff*sinang2;
-//    py[0] = (double)sy/65536.0 - (double)xoff*sinang - (double)yoff*cosang;
-//    px[1] = px[0] + (double)xsiz*cosang2;
-//    py[1] = py[0] + (double)xsiz*sinang;
-//    px[3] = px[0] - (double)ysiz*sinang2;
-//    py[3] = py[0] + (double)ysiz*cosang;
-//    px[2] = px[1]+px[3]-px[0];
-//    py[2] = py[1]+py[3]-py[0];
-//    n = 4;
-//
-//    gdx = 0; gdy = 0; gdo = 1.0;
-//    //px[0]*gux + py[0]*guy + guo = 0
-//    //px[1]*gux + py[1]*guy + guo = xsiz-.0001
-//    //px[3]*gux + py[3]*guy + guo = 0
-//    d = 1.0/(px[0]*(py[1]-py[3]) + px[1]*(py[3]-py[0]) + px[3]*(py[0]-py[1]));
-//    gux = (py[3]-py[0])*((double)xsiz-.0001)*d;
-//    guy = (px[0]-px[3])*((double)xsiz-.0001)*d;
-//    guo = 0 - px[0]*gux - py[0]*guy;
-//
-//    if (!(dastat&4))
-//    {
-//        //px[0]*gvx + py[0]*gvy + gvo = 0
-//        //px[1]*gvx + py[1]*gvy + gvo = 0
-//        //px[3]*gvx + py[3]*gvy + gvo = ysiz-.0001
-//        gvx = (py[0]-py[1])*((double)ysiz-.0001)*d;
-//        gvy = (px[1]-px[0])*((double)ysiz-.0001)*d;
-//        gvo = 0 - px[0]*gvx - py[0]*gvy;
-//    }
-//    else
-//    {
-//        //px[0]*gvx + py[0]*gvy + gvo = ysiz-.0001
-//        //px[1]*gvx + py[1]*gvy + gvo = ysiz-.0001
-//        //px[3]*gvx + py[3]*gvy + gvo = 0
-//        gvx = (py[1]-py[0])*((double)ysiz-.0001)*d;
-//        gvy = (px[0]-px[1])*((double)ysiz-.0001)*d;
-//        gvo = (double)ysiz-.0001 - px[0]*gvx - py[0]*gvy;
-//    }
-//
-//    cx2++; cy2++;
-//    //Clippoly4 (converted from int32_t to double)
-//    nn = z = 0;
-//    do
-//    {
-//        double fx, x1, x2;
-//        int32_t zz = z+1; if (zz == n) zz = 0;
-//        x1 = px[z]; x2 = px[zz]-x1; if ((cx1 <= x1) && (x1 <= cx2)) { px2[nn] = x1; py2[nn] = py[z]; nn++; }
-//        if (x2 <= 0) fx = cx2; else fx = cx1;  d = fx-x1;
-//        if ((d < x2) != (d < 0)) { px2[nn] = fx; py2[nn] = (py[zz]-py[z])*d/x2 + py[z]; nn++; }
-//        if (x2 <= 0) fx = cx1; else fx = cx2;  d = fx-x1;
-//        if ((d < x2) != (d < 0)) { px2[nn] = fx; py2[nn] = (py[zz]-py[z])*d/x2 + py[z]; nn++; }
-//        z = zz;
-//    }
-//    while (z);
-//
-//    if (nn >= 3)
-//    {
-//        n = z = 0;
-//        do
-//        {
-//            double fy, y1, y2;
-//            int32_t zz = z+1; if (zz == nn) zz = 0;
-//            y1 = py2[z]; y2 = py2[zz]-y1; if ((cy1 <= y1) && (y1 <= cy2)) { py[n] = y1; px[n] = px2[z]; n++; }
-//            if (y2 <= 0) fy = cy2; else fy = cy1;  d = fy-y1;
-//            if ((d < y2) != (d < 0)) { py[n] = fy; px[n] = (px2[zz]-px2[z])*d/y2 + px2[z]; n++; }
-//            if (y2 <= 0) fy = cy1; else fy = cy2;  d = fy-y1;
-//            if ((d < y2) != (d < 0)) { py[n] = fy; px[n] = (px2[zz]-px2[z])*d/y2 + px2[z]; n++; }
-//            z = zz;
-//        }
-//        while (z);
-//
+    method = 0;
+    if (!(dastat&64))
+    {
+        method = 1;
+        if (dastat&1) { if (!(dastat&32)) method = 2; else method = 3; }
+    }
+    method |= 4; //Use OpenGL clamping - dorotatesprite never repeats
+
+    alpha = daalpha / 255.0;
+
+    xsiz = tilesizx[globalpicnum];
+    ysiz = tilesizy[globalpicnum];
+
+    if (dastat&16)
+    {
+        xoff = 0;
+        yoff = 0;
+    }
+    else
+    {
+        xoff = picanm[globalpicnum].xofs + (xsiz>>1);
+        yoff = picanm[globalpicnum].yofs + (ysiz>>1);
+    }
+
+    if (dastat&4)
+        yoff = ysiz-yoff;
+
+    {
+        var $temp = new R<number>(0);
+        var $sx = new R(sx),
+            $sy = new R(sy),
+            $z = new R(z),
+            $ourxyaspect = new R(ourxyaspect);
+        dorotspr_handle_bit2($sx, $sy, $z, dastat, cx1+cx2, cy1+cy2, $temp, $ourxyaspect);
+        sx = $sx.$;
+        sy = $sy.$;
+        z = $z.$;
+        ourxyaspect = $ourxyaspect.$;
+    }
+
+    d = /*(double)*/z/(65536.0*16384.0);
+    cosang2 = cosang = /*(double)*/sintable[(a+512)&2047]*d;
+    sinang2 = sinang = /*(double)*/sintable[a&2047]*d;
+    if ((dastat&2) || (!(dastat&8))) //Don't aspect unscaled perms
+    {
+        d = /*(double)*/ourxyaspect/65536.0;
+        cosang2 *= d;
+        sinang2 *= d;
+    }
+
+    px[0] = /*(double)*/sx/65536.0 - /*(double)*/xoff*cosang2+ /*(double)*/yoff*sinang2;
+    py[0] = /*(double)*/sy/65536.0 - /*(double)*/xoff*sinang - /*(double)*/yoff*cosang;
+    px[1] = px[0] + /*(double)*/xsiz*cosang2;
+    py[1] = py[0] + /*(double)*/xsiz*sinang;
+    px[3] = px[0] - /*(double)*/ysiz*sinang2;
+    py[3] = py[0] + /*(double)*/ysiz*cosang;
+    px[2] = px[1]+px[3]-px[0];
+    py[2] = py[1]+py[3]-py[0];
+    n = 4;
+
+    gdx = 0; gdy = 0; gdo = 1.0;
+    //px[0]*gux + py[0]*guy + guo = 0
+    //px[1]*gux + py[1]*guy + guo = xsiz-.0001
+    //px[3]*gux + py[3]*guy + guo = 0
+    d = 1.0/(px[0]*(py[1]-py[3]) + px[1]*(py[3]-py[0]) + px[3]*(py[0]-py[1]));
+    gux = (py[3]-py[0])*(/*(double)*/xsiz-.0001)*d;
+    guy = (px[0]-px[3])*(/*(double)*/xsiz-.0001)*d;
+    guo = 0 - px[0]*gux - py[0]*guy;
+
+    if (!(dastat&4))
+    {
+        //px[0]*gvx + py[0]*gvy + gvo = 0
+        //px[1]*gvx + py[1]*gvy + gvo = 0
+        //px[3]*gvx + py[3]*gvy + gvo = ysiz-.0001
+        gvx = (py[0]-py[1])*(/*(double)*/ysiz-.0001)*d;
+        gvy = (px[1]-px[0])*(/*(double)*/ysiz-.0001)*d;
+        gvo = 0 - px[0]*gvx - py[0]*gvy;
+    }
+    else
+    {
+        //px[0]*gvx + py[0]*gvy + gvo = ysiz-.0001
+        //px[1]*gvx + py[1]*gvy + gvo = ysiz-.0001
+        //px[3]*gvx + py[3]*gvy + gvo = 0
+        gvx = (py[1]-py[0])*(/*(double)*/ysiz-.0001)*d;
+        gvy = (px[0]-px[1])*(/*(double)*/ysiz-.0001)*d;
+        gvo = /*(double)*/ysiz-.0001 - px[0]*gvx - py[0]*gvy;
+    }
+
+    cx2++; cy2++;
+    //Clippoly4 (converted from int32_t to double)
+    nn = z = 0;
+    do
+    {
+        var fx:number, x1:number, x2:number;//double
+        var zz = z+1;/*int32*/ if (zz == n) zz = 0;
+        x1 = px[z]; x2 = px[zz]-x1; if ((cx1 <= x1) && (x1 <= cx2)) { px2[nn] = x1; py2[nn] = py[z]; nn++; }
+        if (x2 <= 0) fx = cx2; else fx = cx1;  d = fx-x1;
+        if ((d < x2) != (d < 0)) { px2[nn] = fx; py2[nn] = (py[zz]-py[z])*d/x2 + py[z]; nn++; }
+        if (x2 <= 0) fx = cx1; else fx = cx2;  d = fx-x1;
+        if ((d < x2) != (d < 0)) { px2[nn] = fx; py2[nn] = (py[zz]-py[z])*d/x2 + py[z]; nn++; }
+        z = zz;
+    }
+    while (z);
+
+    if (nn >= 3)
+    {
+        n = z = 0;
+        do
+        {
+            var fy:number, y1:number, y2:number; //double
+            var zz = z+1/*int32_t*/; if (zz == nn) zz = 0;
+            y1 = py2[z]; y2 = py2[zz]-y1; if ((cy1 <= y1) && (y1 <= cy2)) { py[n] = y1; px[n] = px2[z]; n++; }
+            if (y2 <= 0) fy = cy2; else fy = cy1;  d = fy-y1;
+            if ((d < y2) != (d < 0)) { py[n] = fy; px[n] = (px2[zz]-px2[z])*d/y2 + px2[z]; n++; }
+            if (y2 <= 0) fy = cy1; else fy = cy2;  d = fy-y1;
+            if ((d < y2) != (d < 0)) { py[n] = fy; px[n] = (px2[zz]-px2[z])*d/y2 + px2[z]; n++; }
+            z = zz;
+        }
+        while (z);
+
 //#ifdef USE_OPENGL
-//        if (!nofog) bglDisable(GL_FOG);
-//        pow2xsplit = 0; drawpoly(px,py,n,method);
-//        if (!nofog) bglEnable(GL_FOG);
+        if (!nofog) todoThrow("bglDisable(GL_FOG);");
+        pow2xsplit = 0; drawpoly(px,py,n,method);
+        if (!nofog) bglEnable(GL_FOG);
 //#else
 //        pow2xsplit = 0; drawpoly(px,py,n,method);
 //#endif

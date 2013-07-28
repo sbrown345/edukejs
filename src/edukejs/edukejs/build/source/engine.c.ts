@@ -19,6 +19,8 @@
 /// <reference path="../../build/source/crc32.c.ts" />
 /// <reference path="../../build/source/mdsprite.c.ts" />
 
+/// <reference path="../../eduke32/source/net.c.ts" />
+
 // "Build Engine & Tools" Copyright (c) 1993-1997 Ken Silverman`
 // Ken Silverman's official web site: "http://www.advsys.net/ken"
 // See the included license file "BUILDLIC.TXT" for license info.
@@ -349,7 +351,7 @@ var whitecol: number;//int32
 //                graysectbitmap[i>>3] |= (1<<(i&7));
 //    }
 //#endif
-
+ 
 //    numgraysects = 0;
 //    for (i=0; i<numsectors; i++)
 //    {
@@ -371,13 +373,13 @@ var whitecol: number;//int32
 //// all references to floor/ceiling bunchnums should be through the
 //// get/set functions!
 
-//int32_t g_nodraw = 0;
-//int32_t scansector_retfast = 0;
-//static int32_t scansector_collectsprites = 1;
-//int32_t yax_globalcf = -1, yax_nomaskpass=0, yax_nomaskdidit;  // engine internal
-//int32_t r_tror_nomaskpass = 1;  // cvar
-//int32_t yax_globallev = YAX_MAXDRAWS;
-//int32_t yax_globalbunch = -1;
+var g_nodraw = 0;               //int32_t 
+var scansector_retfast = 0;     //int32_t 
+var scansector_collectsprites = 1; //static int32_t 
+var yax_globalcf = -1, yax_nomaskpass=0, yax_nomaskdidit=0;  // engine internal    //int32_t 
+var r_tror_nomaskpass = 1;  // cvar                                              //int32_t 
+var yax_globallev = YAX_MAXDRAWS;                                                //int32_t 
+var yax_globalbunch = -1;                                                        //int32_t 
 
 //// duplicated tsprites
 ////  [i]:
@@ -3136,11 +3138,11 @@ var palfadedelta = 0; //char
 //    asm3 = (intptr_t)globalpalwritten + getpalookupsh(mulscale16(r,globvis));
 //    if (!(globalorientation&256))
 //    {
-//        mhline(globalbufplc,(uint32_t)globaly1*r+globalxpanning-asm1*(xr-xl),(xr-xl)<<16,0L,
+//        mhline(globalbufplc,(uint32_t)globaly1*r+globalxpanning-asm1*(xr-xl),(xr-xl)<<16,0,
 //               (uint32_t)globalx2*r+globalypanning-asm2*(xr-xl),ylookup[yp]+xl+frameoffset);
 //        return;
 //    }
-//    thline(globalbufplc,(uint32_t)globaly1*r+globalxpanning-asm1*(xr-xl),(xr-xl)<<16,0L,
+//    thline(globalbufplc,(uint32_t)globaly1*r+globalxpanning-asm1*(xr-xl),(xr-xl)<<16,0,
 //           (uint32_t)globalx2*r+globalypanning-asm2*(xr-xl),ylookup[yp]+xl+frameoffset);
 //}
 
@@ -3291,7 +3293,7 @@ function animateoffs(/*int16_t */tilenum: number, /*int16_t */fakevar: number): 
 
 //    if ((bad&3) == 3)
 //    {
-//        //clearbufbyte(&mostbuf[ix1],(ix2-ix1+1)*sizeof(mostbuf[0]),0L);
+//        //clearbufbyte(&mostbuf[ix1],(ix2-ix1+1)*sizeof(mostbuf[0]),0);
 //        for (i=ix1; i<=ix2; i++) mostbuf[i] = 0;
 //        return(bad);
 //    }
@@ -3312,13 +3314,13 @@ function animateoffs(/*int16_t */tilenum: number, /*int16_t */fakevar: number): 
 //        if ((bad&3) == 2)
 //        {
 //            if (xb1[w] <= xcross) { iy2 = inty; ix2 = xcross; }
-//            //clearbufbyte(&mostbuf[xcross+1],(xb2[w]-xcross)*sizeof(mostbuf[0]),0L);
+//            //clearbufbyte(&mostbuf[xcross+1],(xb2[w]-xcross)*sizeof(mostbuf[0]),0);
 //            for (i=xcross+1; i<=xb2[w]; i++) mostbuf[i] = 0;
 //        }
 //        else
 //        {
 //            if (xcross <= xb2[w]) { iy1 = inty; ix1 = xcross; }
-//            //clearbufbyte(&mostbuf[xb1[w]],(xcross-xb1[w]+1)*sizeof(mostbuf[0]),0L);
+//            //clearbufbyte(&mostbuf[xb1[w]],(xcross-xb1[w]+1)*sizeof(mostbuf[0]),0);
 //            for (i=xb1[w]; i<=xcross; i++) mostbuf[i] = 0;
 //        }
 //    }
@@ -3448,7 +3450,7 @@ function animateoffs(/*int16_t */tilenum: number, /*int16_t */fakevar: number): 
 
 //    if ((bad&3) == 3)
 //    {
-//        //clearbufbyte(&mostbuf[ix1],(ix2-ix1+1)*sizeof(mostbuf[0]),0L);
+//        //clearbufbyte(&mostbuf[ix1],(ix2-ix1+1)*sizeof(mostbuf[0]),0);
 //        for (i=ix1; i<=ix2; i++) mostbuf[i] = 0;
 //        return(bad);
 //    }
@@ -3475,13 +3477,13 @@ function animateoffs(/*int16_t */tilenum: number, /*int16_t */fakevar: number): 
 //        if ((bad&3) == 2)
 //        {
 //            if (xb1[w] <= xcross) { z2 = intz; iy2 = inty; ix2 = xcross; }
-//            //clearbufbyte(&mostbuf[xcross+1],(xb2[w]-xcross)*sizeof(mostbuf[0]),0L);
+//            //clearbufbyte(&mostbuf[xcross+1],(xb2[w]-xcross)*sizeof(mostbuf[0]),0);
 //            for (i=xcross+1; i<=xb2[w]; i++) mostbuf[i] = 0;
 //        }
 //        else
 //        {
 //            if (xcross <= xb2[w]) { z1 = intz; iy1 = inty; ix1 = xcross; }
-//            //clearbufbyte(&mostbuf[xb1[w]],(xcross-xb1[w]+1)*sizeof(mostbuf[0]),0L);
+//            //clearbufbyte(&mostbuf[xb1[w]],(xcross-xb1[w]+1)*sizeof(mostbuf[0]),0);
 //            for (i=xb1[w]; i<=xcross; i++) mostbuf[i] = 0;
 //        }
 //    }
@@ -4211,16 +4213,16 @@ function animateoffs(/*int16_t */tilenum: number, /*int16_t */fakevar: number): 
 //    if (globalispow2)
 //    {
 //        if ((globalorientation&2) == 0)
-//            mhline(globalbufplc,bx,(x2-x1)<<16,0L,by,ylookup[y]+x1+frameoffset);
+//            mhline(globalbufplc,bx,(x2-x1)<<16,0,by,ylookup[y]+x1+frameoffset);
 //        else
-//            thline(globalbufplc,bx,(x2-x1)<<16,0L,by,ylookup[y]+x1+frameoffset);
+//            thline(globalbufplc,bx,(x2-x1)<<16,0,by,ylookup[y]+x1+frameoffset);
 //    }
 //    else
 //    {
 //        if ((globalorientation&2) == 0)
-//            nonpow2_mhline(globalbufplc,bx,(x2-x1)<<16,0L,by,(char *)(ylookup[y]+x1+frameoffset));
+//            nonpow2_mhline(globalbufplc,bx,(x2-x1)<<16,0,by,(char *)(ylookup[y]+x1+frameoffset));
 //        else
-//            nonpow2_thline(globalbufplc,bx,(x2-x1)<<16,0L,by,(char *)(ylookup[y]+x1+frameoffset));
+//            nonpow2_thline(globalbufplc,bx,(x2-x1)<<16,0,by,(char *)(ylookup[y]+x1+frameoffset));
 //    }
 //}
 
@@ -4504,7 +4506,7 @@ function animateoffs(/*int16_t */tilenum: number, /*int16_t */fakevar: number): 
 
 //    globalhorizbak = globalhoriz;
 //    globvis = globalpisibility;
-//    //globalorientation = 0L;
+//    //globalorientation = 0;
 //    if (sec->visibility != 0)
 //        globvis = mulscale4(globvis, (uint8_t)(sec->visibility+16));
 
@@ -5815,7 +5817,7 @@ function animateoffs(/*int16_t */tilenum: number, /*int16_t */fakevar: number): 
 //                if (dalx2 <= darx2)
 //                {
 //                    if ((dalx2 == lx) && (darx2 == rx)) return;
-//                    //clearbufbyte(&dwall[dalx2],(darx2-dalx2+1)*sizeof(dwall[0]),0L);
+//                    //clearbufbyte(&dwall[dalx2],(darx2-dalx2+1)*sizeof(dwall[0]),0);
 //                    for (k=dalx2; k<=darx2; k++) dwall[k] = 0;
 //                }
 //                break;
@@ -6102,7 +6104,7 @@ function animateoffs(/*int16_t */tilenum: number, /*int16_t */fakevar: number): 
 //                        if (dalx2 <= darx2)
 //                        {
 //                            if ((dalx2 == sx1) && (darx2 == sx2)) return;
-//                            //clearbufbyte(&dwall[dalx2],(darx2-dalx2+1)*sizeof(dwall[0]),0L);
+//                            //clearbufbyte(&dwall[dalx2],(darx2-dalx2+1)*sizeof(dwall[0]),0);
 //                            for (k=dalx2; k<=darx2; k++) dwall[k] = 0;
 //                        }
 //                        break;
@@ -6396,7 +6398,7 @@ function animateoffs(/*int16_t */tilenum: number, /*int16_t */fakevar: number): 
 //                if (dalx2 <= darx2)
 //                {
 //                    if ((dalx2 == lx) && (darx2 == rx)) return;
-//                    //clearbufbyte(&dwall[dalx2],(darx2-dalx2+1)*sizeof(dwall[0]),0L);
+//                    //clearbufbyte(&dwall[dalx2],(darx2-dalx2+1)*sizeof(dwall[0]),0);
 //                    for (x=dalx2; x<=darx2; x++) dwall[x] = 0;
 //                }
 //                break;
@@ -6498,7 +6500,7 @@ function animateoffs(/*int16_t */tilenum: number, /*int16_t */fakevar: number): 
 //                if (dalx2 <= darx2)
 //                {
 //                    if ((dalx2 == lx) && (darx2 == rx)) return;
-//                    //clearbufbyte(&swall[dalx2],(darx2-dalx2+1)*sizeof(swall[0]),0L);
+//                    //clearbufbyte(&swall[dalx2],(darx2-dalx2+1)*sizeof(swall[0]),0);
 //                    for (x=dalx2; x<=darx2; x++) swall[x] = 0;
 //                }
 //                break;
@@ -6691,7 +6693,7 @@ function animateoffs(/*int16_t */tilenum: number, /*int16_t */fakevar: number): 
 //            if (lx <= rx)
 //            {
 //                if ((lx == xb1[z]) && (rx == xb2[z])) return;
-//                //clearbufbyte(&dwall[lx],(rx-lx+1)*sizeof(dwall[0]),0L);
+//                //clearbufbyte(&dwall[lx],(rx-lx+1)*sizeof(dwall[0]),0);
 //                for (x=lx; x<=rx; x++) dwall[x] = 0;
 //            }
 //            break;
@@ -6881,9 +6883,9 @@ function animateoffs(/*int16_t */tilenum: number, /*int16_t */fakevar: number): 
 //                const intptr_t p = ylookup[y]+x1+frameplace;
 
 //                if (globalpolytype == 1)
-//                    mhline(globalbufplc,bx,(x2-x1)<<16,0L,by,p);
+//                    mhline(globalbufplc,bx,(x2-x1)<<16,0,by,p);
 //                else
-//                    thline(globalbufplc,bx,(x2-x1)<<16,0L,by,p);
+//                    thline(globalbufplc,bx,(x2-x1)<<16,0,by,p);
 //            }
 //        }
 
@@ -7183,100 +7185,100 @@ function animateoffs(/*int16_t */tilenum: number, /*int16_t */fakevar: number): 
 //}
 
 
-//// INTERNAL helper function for classic/polymost dorotatesprite
-////  sxptr, sxptr, z: in/out
-////  ret_yxaspect, ret_xyaspect: out
-//void dorotspr_handle_bit2(int32_t *sxptr, int32_t *syptr, int32_t *z, int32_t dastat,
-//                          int32_t cx1_plus_cx2, int32_t cy1_plus_cy2,
-//                          int32_t *ret_yxaspect, int32_t *ret_xyaspect)
-//{
-//    if ((dastat&2) == 0)
-//    {
-//        if (!(dastat & 1024) && 4*ydim <= 3*xdim)
-//        {
-//            *ret_yxaspect = (12<<16)/10;
-//            *ret_xyaspect = (10<<16)/12;
-//        }
-//        else
-//        {
-//            *ret_yxaspect = yxaspect;
-//            *ret_xyaspect = xyaspect;
-//        }
+// INTERNAL helper function for classic/polymost dorotatesprite
+//  sxptr, sxptr, z: in/out
+//  ret_yxaspect, ret_xyaspect: out
+function dorotspr_handle_bit2(sxptr: R<number>, syptr: R<number>, z: R<number> , dastat: number,
+                          cx1_plus_cx2: number, cy1_plus_cy2: number,
+                          ret_yxaspect: R<number>, ret_xyaspect: R<number>): void
+{
+    if ((dastat&2) == 0)
+    {
+        if (!(dastat & 1024) && 4*ydim <= 3*xdim)
+        {
+            ret_yxaspect.$ = (12<<16)/10;
+            ret_xyaspect.$ = (10<<16)/12;
+        }
+        else
+        {
+            ret_yxaspect.$ = yxaspect;
+            ret_xyaspect.$ = xyaspect;
+        }
 
-//        // *sxptr and *syptr and *z are left unchanged
+        // *sxptr and *syptr and *z are left unchanged
 
-//        return;
-//    }
-//    else
-//    {
-//        // dastat&2: Auto window size scaling
-//        const int32_t oxdim = xdim;
-//        int32_t xdim = oxdim;  // SHADOWS global
+        return;
+    }
+    else
+    {
+        // dastat&2: Auto window size scaling
+        var oxdim = xdim;
+        var xdim = oxdim;  // SHADOWS global  int32_t
 
-//        int32_t zoomsc, sx=*sxptr, sy=*syptr;
-//        int32_t ouryxaspect = yxaspect, ourxyaspect = xyaspect;
+        var zoomsc, sx=sxptr.$, sy=syptr.$;                   //int32_t 
+        var ouryxaspect = yxaspect, ourxyaspect = xyaspect;   //int32_t 
 
-//        // screen center to s[xy], 320<<16 coords.
-//        const int32_t normxofs = sx-(320<<15), normyofs = sy-(200<<15);
+        // screen center to s[xy], 320<<16 coords.
+        var normxofs = sx-(320<<15), normyofs = sy-(200<<15);//const int32_t 
 
-//        if (!(dastat & 1024) && 4*ydim <= 3*xdim)
-//        {
-//            xdim = (4*ydim)/3;
+        if (!(dastat & 1024) && 4*ydim <= 3*xdim)
+        {
+            xdim = (4*ydim)/3;
 
-//            ouryxaspect = (12<<16)/10;
-//            ourxyaspect = (10<<16)/12;
-//        }
+            ouryxaspect = (12<<16)/10;
+            ourxyaspect = (10<<16)/12;
+        }
 
-//        // nasty hacks go here
-//        if (!(dastat&8))
-//        {
-//            const int32_t twice_midcx = cx1_plus_cx2+2;
+        // nasty hacks go here
+        if (!(dastat&8))
+        {
+            var twice_midcx = cx1_plus_cx2+2;//const int32_t 
 
-//            // screen x center to sx1, scaled to viewport
-//            const int32_t scaledxofs = scale(normxofs, scale(xdimen, xdim, oxdim), 320);
+            // screen x center to sx1, scaled to viewport
+            var scaledxofs = scale(normxofs, scale(xdimen, xdim, oxdim), 320);//const int32_t 
 
-//            int32_t xbord = 0;
+            var xbord = 0;//int32_t
 
-//            if (dastat & (256|512))
-//            {
-//                xbord = scale(oxdim-xdim, twice_midcx, oxdim);
+            if (dastat & (256|512))
+            {
+                xbord = scale(oxdim-xdim, twice_midcx, oxdim);
 
-//                if ((dastat & 512)==0)
-//                    xbord = -xbord;
-//            }
+                if ((dastat & 512)==0)
+                    xbord = -xbord;
+            }
 
-//            sx = ((twice_midcx+xbord)<<15) + scaledxofs;
+            sx = ((twice_midcx+xbord)<<15) + scaledxofs;
 
-//            zoomsc = xdimenscale;   //= scale(xdimen,yxaspect,320);
-//            sy = ((cy1_plus_cy2+2)<<15) + mulscale16(normyofs, zoomsc);
-//        }
-//        else
-//        {
-//            //If not clipping to startmosts, & auto-scaling on, as a
-//            //hard-coded bonus, scale to full screen instead
+            zoomsc = xdimenscale;   //= scale(xdimen,yxaspect,320);
+            sy = ((cy1_plus_cy2+2)<<15) + mulscale16(normyofs, zoomsc);
+        }
+        else
+        {
+            //If not clipping to startmosts, & auto-scaling on, as a
+            //hard-coded bonus, scale to full screen instead
 
-//            sx = (xdim<<15)+32768 + scale(normxofs,xdim,320);
+            sx = (xdim<<15)+32768 + scale(normxofs,xdim,320);
 
-//            if (dastat & 512)
-//                sx += (oxdim-xdim)<<16;
-//            else if ((dastat & 256) == 0)
-//                sx += (oxdim-xdim)<<15;
+            if (dastat & 512)
+                sx += (oxdim-xdim)<<16;
+            else if ((dastat & 256) == 0)
+                sx += (oxdim-xdim)<<15;
 
-//            if (dastat&RS_CENTERORIGIN)
-//                sx += oxdim<<15;
+            if (dastat&RS_CENTERORIGIN)
+                sx += oxdim<<15;
 
-//            zoomsc = scale(xdim, ouryxaspect, 320);
-//            sy = (ydim<<15)+32768 + mulscale16(normyofs, zoomsc);
-//        }
+            zoomsc = scale(xdim, ouryxaspect, 320);
+            sy = (ydim<<15)+32768 + mulscale16(normyofs, zoomsc);
+        }
 
-//        *sxptr = sx;
-//        *syptr = sy;
-//        *z = mulscale16(*z, zoomsc);
+        sxptr.$ = sx.$;
+        syptr.$ = sy.$;
+        z.$ = mulscale16(z.$, zoomsc);
 
-//        *ret_yxaspect = ouryxaspect;
-//        *ret_xyaspect = ourxyaspect;
-//    }
-//}
+        ret_yxaspect.$ = ouryxaspect;
+        ret_xyaspect.$ = ourxyaspect;
+    }
+}
 
 
 //
@@ -7601,16 +7603,16 @@ function dorotatesprite(sx: number, sy, z: number, a: number, picnum: number,
 //                if ((xv2&0x0000ffff) == 0)
 //                {
 //                    qlinemode = 1;
-//                    setupqrhlineasm4(0L,yv2<<16,(xv2>>16)*ysiz+(yv2>>16),palookupoffs,0L,0L);
+//                    setupqrhlineasm4(0,yv2<<16,(xv2>>16)*ysiz+(yv2>>16),palookupoffs,0,0);
 //                }
 //                else
 //                {
 //                    qlinemode = 0;
-//                    setuprhlineasm4(xv2<<16,yv2<<16,(xv2>>16)*ysiz+(yv2>>16),palookupoffs,ysiz,0L);
+//                    setuprhlineasm4(xv2<<16,yv2<<16,(xv2>>16)*ysiz+(yv2>>16),palookupoffs,ysiz,0);
 //                }
 //            }
 //            else
-//                setuprmhlineasm4(xv2<<16,yv2<<16,(xv2>>16)*ysiz+(yv2>>16),palookupoffs,ysiz,0L);
+//                setuprmhlineasm4(xv2<<16,yv2<<16,(xv2>>16)*ysiz+(yv2>>16),palookupoffs,ysiz,0);
 
 //            y1 = uplc[x1];
 //            if (((dastat&8) == 0) && (startumost[x1] > y1)) y1 = startumost[x1];
@@ -7636,10 +7638,10 @@ function dorotatesprite(sx: number, sy, z: number, a: number, picnum: number,
 //                            bx += xv*(y1-oy); by += yv*(y1-oy); oy = y1;
 //                            if (dastat&64)
 //                            {
-//                                if (qlinemode) qrhlineasm4(x-lastx[y1],(bx>>16)*ysiz+(by>>16)+bufplc,0L,0L    ,by<<16,ylookup[y1]+x+frameplace);
-//                                else rhlineasm4(x-lastx[y1],(bx>>16)*ysiz+(by>>16)+bufplc,0L,bx<<16,by<<16,ylookup[y1]+x+frameplace);
+//                                if (qlinemode) qrhlineasm4(x-lastx[y1],(bx>>16)*ysiz+(by>>16)+bufplc,0,0    ,by<<16,ylookup[y1]+x+frameplace);
+//                                else rhlineasm4(x-lastx[y1],(bx>>16)*ysiz+(by>>16)+bufplc,0,bx<<16,by<<16,ylookup[y1]+x+frameplace);
 //                            }
-//                            else rmhlineasm4(x-lastx[y1],(bx>>16)*ysiz+(by>>16)+bufplc,0L,bx<<16,by<<16,ylookup[y1]+x+frameplace);
+//                            else rmhlineasm4(x-lastx[y1],(bx>>16)*ysiz+(by>>16)+bufplc,0,bx<<16,by<<16,ylookup[y1]+x+frameplace);
 //                        }
 //                        y1 = ny1;
 //                    }
@@ -7653,10 +7655,10 @@ function dorotatesprite(sx: number, sy, z: number, a: number, picnum: number,
 //                            bx += xv*(y1-oy); by += yv*(y1-oy); oy = y1;
 //                            if (dastat&64)
 //                            {
-//                                if (qlinemode) qrhlineasm4(x-lastx[y1],(bx>>16)*ysiz+(by>>16)+bufplc,0L,0L    ,by<<16,ylookup[y1]+x+frameplace);
-//                                else rhlineasm4(x-lastx[y1],(bx>>16)*ysiz+(by>>16)+bufplc,0L,bx<<16,by<<16,ylookup[y1]+x+frameplace);
+//                                if (qlinemode) qrhlineasm4(x-lastx[y1],(bx>>16)*ysiz+(by>>16)+bufplc,0,0    ,by<<16,ylookup[y1]+x+frameplace);
+//                                else rhlineasm4(x-lastx[y1],(bx>>16)*ysiz+(by>>16)+bufplc,0,bx<<16,by<<16,ylookup[y1]+x+frameplace);
 //                            }
-//                            else rmhlineasm4(x-lastx[y1],(bx>>16)*ysiz+(by>>16)+bufplc,0L,bx<<16,by<<16,ylookup[y1]+x+frameplace);
+//                            else rmhlineasm4(x-lastx[y1],(bx>>16)*ysiz+(by>>16)+bufplc,0,bx<<16,by<<16,ylookup[y1]+x+frameplace);
 //                        }
 
 //                        while (y1 > ny1) lastx[y1--] = x;
@@ -7670,10 +7672,10 @@ function dorotatesprite(sx: number, sy, z: number, a: number, picnum: number,
 //                        bx += xv*(y2-oy); by += yv*(y2-oy); oy = y2;
 //                        if (dastat&64)
 //                        {
-//                            if (qlinemode) qrhlineasm4(x-lastx[y2],(bx>>16)*ysiz+(by>>16)+bufplc,0L,0L    ,by<<16,ylookup[y2]+x+frameplace);
-//                            else rhlineasm4(x-lastx[y2],(bx>>16)*ysiz+(by>>16)+bufplc,0L,bx<<16,by<<16,ylookup[y2]+x+frameplace);
+//                            if (qlinemode) qrhlineasm4(x-lastx[y2],(bx>>16)*ysiz+(by>>16)+bufplc,0,0    ,by<<16,ylookup[y2]+x+frameplace);
+//                            else rhlineasm4(x-lastx[y2],(bx>>16)*ysiz+(by>>16)+bufplc,0,bx<<16,by<<16,ylookup[y2]+x+frameplace);
 //                        }
-//                        else rmhlineasm4(x-lastx[y2],(bx>>16)*ysiz+(by>>16)+bufplc,0L,bx<<16,by<<16,ylookup[y2]+x+frameplace);
+//                        else rmhlineasm4(x-lastx[y2],(bx>>16)*ysiz+(by>>16)+bufplc,0,bx<<16,by<<16,ylookup[y2]+x+frameplace);
 //                    }
 
 //                    while (y2 < ny2) lastx[y2++] = x;
@@ -7688,10 +7690,10 @@ function dorotatesprite(sx: number, sy, z: number, a: number, picnum: number,
 //                        bx += xv*(y1-oy); by += yv*(y1-oy); oy = y1;
 //                        if (dastat&64)
 //                        {
-//                            if (qlinemode) qrhlineasm4(x-lastx[y1],(bx>>16)*ysiz+(by>>16)+bufplc,0L,0L    ,by<<16,ylookup[y1]+x+frameplace);
-//                            else rhlineasm4(x-lastx[y1],(bx>>16)*ysiz+(by>>16)+bufplc,0L,bx<<16,by<<16,ylookup[y1]+x+frameplace);
+//                            if (qlinemode) qrhlineasm4(x-lastx[y1],(bx>>16)*ysiz+(by>>16)+bufplc,0,0    ,by<<16,ylookup[y1]+x+frameplace);
+//                            else rhlineasm4(x-lastx[y1],(bx>>16)*ysiz+(by>>16)+bufplc,0,bx<<16,by<<16,ylookup[y1]+x+frameplace);
 //                        }
-//                        else rmhlineasm4(x-lastx[y1],(bx>>16)*ysiz+(by>>16)+bufplc,0L,bx<<16,by<<16,ylookup[y1]+x+frameplace);
+//                        else rmhlineasm4(x-lastx[y1],(bx>>16)*ysiz+(by>>16)+bufplc,0,bx<<16,by<<16,ylookup[y1]+x+frameplace);
 //                    }
 
 //                    if (x == x2-1) { bx += xv2; by += yv2; break; }
@@ -7710,10 +7712,10 @@ function dorotatesprite(sx: number, sy, z: number, a: number, picnum: number,
 //                bx += xv*(y1-oy); by += yv*(y1-oy); oy = y1;
 //                if (dastat&64)
 //                {
-//                    if (qlinemode) qrhlineasm4(x2-lastx[y1],(bx>>16)*ysiz+(by>>16)+bufplc,0L,0L,by<<16,ylookup[y1]+x2+frameplace);
-//                    else rhlineasm4(x2-lastx[y1],(bx>>16)*ysiz+(by>>16)+bufplc,0L,bx<<16,by<<16,ylookup[y1]+x2+frameplace);
+//                    if (qlinemode) qrhlineasm4(x2-lastx[y1],(bx>>16)*ysiz+(by>>16)+bufplc,0,0,by<<16,ylookup[y1]+x2+frameplace);
+//                    else rhlineasm4(x2-lastx[y1],(bx>>16)*ysiz+(by>>16)+bufplc,0,bx<<16,by<<16,ylookup[y1]+x2+frameplace);
 //                }
-//                else rmhlineasm4(x2-lastx[y1],(bx>>16)*ysiz+(by>>16)+bufplc,0L,bx<<16,by<<16,ylookup[y1]+x2+frameplace);
+//                else rmhlineasm4(x2-lastx[y1],(bx>>16)*ysiz+(by>>16)+bufplc,0,bx<<16,by<<16,ylookup[y1]+x2+frameplace);
 //            }
 //        }
 //#endif  // !defined ENGINE_USING_A_C
@@ -7724,9 +7726,9 @@ function dorotatesprite(sx: number, sy, z: number, a: number, picnum: number,
 //        {
 //#if !defined ENGINE_USING_A_C
 //            if (dastat&64)
-//                setupspritevline(palookupoffs,(xv>>16)*ysiz,xv<<16,ysiz,yv,0L);
+//                setupspritevline(palookupoffs,(xv>>16)*ysiz,xv<<16,ysiz,yv,0);
 //            else
-//                msetupspritevline(palookupoffs,(xv>>16)*ysiz,xv<<16,ysiz,yv,0L);
+//                msetupspritevline(palookupoffs,(xv>>16)*ysiz,xv<<16,ysiz,yv,0);
 //#else
 //            if (dastat&64)
 //                setupspritevline(palookupoffs,xv,yv,ysiz);
@@ -7737,7 +7739,7 @@ function dorotatesprite(sx: number, sy, z: number, a: number, picnum: number,
 //        else
 //        {
 //#if !defined ENGINE_USING_A_C
-//            tsetupspritevline(palookupoffs,(xv>>16)*ysiz,xv<<16,ysiz,yv,0L);
+//            tsetupspritevline(palookupoffs,(xv>>16)*ysiz,xv<<16,ysiz,yv,0);
 //#else
 //            tsetupspritevline(palookupoffs,xv,yv,ysiz);
 //#endif
@@ -7774,9 +7776,9 @@ function dorotatesprite(sx: number, sy, z: number, a: number, picnum: number,
 //            {
 //#if !defined ENGINE_USING_A_C
 //                if (dastat&64)
-//                    spritevline(0L,by<<16,y2-y1+1,bx<<16,(bx>>16)*ysiz+(by>>16)+bufplc,p);
+//                    spritevline(0,by<<16,y2-y1+1,bx<<16,(bx>>16)*ysiz+(by>>16)+bufplc,p);
 //                else
-//                    mspritevline(0L,by<<16,y2-y1+1,bx<<16,(bx>>16)*ysiz+(by>>16)+bufplc,p);
+//                    mspritevline(0,by<<16,y2-y1+1,bx<<16,(bx>>16)*ysiz+(by>>16)+bufplc,p);
 //#else
 //                if (dastat&64)
 //                    spritevline(bx&65535,by&65535,y2-y1+1,(bx>>16)*ysiz+(by>>16)+bufplc,p);
@@ -7787,7 +7789,7 @@ function dorotatesprite(sx: number, sy, z: number, a: number, picnum: number,
 //            else
 //            {
 //#if !defined ENGINE_USING_A_C
-//                tspritevline(0L,by<<16,y2-y1+1,bx<<16,(bx>>16)*ysiz+(by>>16)+bufplc,p);
+//                tspritevline(0,by<<16,y2-y1+1,bx<<16,(bx>>16)*ysiz+(by>>16)+bufplc,p);
 //#else
 //                tspritevline(bx&65535,by&65535,y2-y1+1,(bx>>16)*ysiz+(by>>16)+bufplc,p);
 //                //transarea += (y2-y1);
@@ -9082,7 +9084,7 @@ function initengine(): number
 //            if (umost[i] <= dmost[i])
 //                { umost[i] = 1; dmost[i] = 0; numhits--; }
 
-//        drawalls(0L);
+//        drawalls(0);
 //        numbunches--;
 //        bunchfirst[0] = bunchfirst[numbunches];
 //        bunchlast[0] = bunchlast[numbunches];
@@ -11206,7 +11208,7 @@ function loadtile(tilenume: number): void
     if ((dasiz = tilesizx[tilenume]*tilesizy[tilenume]) <= 0) return;
 
     i = tilefilenum[tilenume];
-    todoThrow();
+    
 //#ifdef WITHKPLIB
 //    if (artptrs[i]) // from zip
 //    {
@@ -11217,59 +11219,60 @@ function loadtile(tilenume: number): void
 //        return;
 //    }
 //#endif
+    
+    if (i != artfilnum)
+    {
+        if (artfil != -1) kclose(artfil);
+        artfilnum = i;
+        artfilplc = 0;
+        
+        artfilename[7] = (i%10)+48;
+        artfilename[6] = ((i/10)%10)+48;
+        artfilename[5] = ((i/100)%10)+48;
+        artfil = kopen4load(artfilename.toString(),0);
+        faketimerhandler();
+    }
 
-//    if (i != artfilnum)
-//    {
-//        if (artfil != -1) kclose(artfil);
-//        artfilnum = i;
-//        artfilplc = 0L;
+//    if (cachedebug) OSD_Printf("Tile:%d\n",tilenume);
 
-//        artfilename[7] = (i%10)+48;
-//        artfilename[6] = ((i/10)%10)+48;
-//        artfilename[5] = ((i/100)%10)+48;
-//        artfil = kopen4load(artfilename,0);
-//        faketimerhandler();
-//    }
+    // dummy tiles for highres replacements and tilefromtexture definitions
+    if (faketilesiz[tilenume])
+    {
+        todoThrow();
+        //if (faketilesiz[tilenume] == -1)
+        //{
+        //    walock[tilenume] = 255; // permanent tile
+        //    allocache(&waloff[tilenume], dasiz, &walock[tilenume]);
+        //    Bmemset((char *)waloff[tilenume],0,dasiz);
+        //}
+        //else if (faketiledata[tilenume] != NULL)
+        //{
+        //    walock[tilenume] = 255;
+        //    allocache(&waloff[tilenume], dasiz, &walock[tilenume]);
+        //    qlz_decompress(faketiledata[tilenume], (char *)waloff[tilenume], state_decompress);
+        //    Bfree(faketiledata[tilenume]);
+        //    faketiledata[tilenume] = NULL;
+        //}
 
-////    if (cachedebug) OSD_Printf("Tile:%d\n",tilenume);
+        //faketimerhandler();
+        //return;
+    }
 
-//    // dummy tiles for highres replacements and tilefromtexture definitions
-//    if (faketilesiz[tilenume])
-//    {
-//        if (faketilesiz[tilenume] == -1)
-//        {
-//            walock[tilenume] = 255; // permanent tile
-//            allocache(&waloff[tilenume], dasiz, &walock[tilenume]);
-//            Bmemset((char *)waloff[tilenume],0,dasiz);
-//        }
-//        else if (faketiledata[tilenume] != NULL)
-//        {
-//            walock[tilenume] = 255;
-//            allocache(&waloff[tilenume], dasiz, &walock[tilenume]);
-//            qlz_decompress(faketiledata[tilenume], (char *)waloff[tilenume], state_decompress);
-//            Bfree(faketiledata[tilenume]);
-//            faketiledata[tilenume] = NULL;
-//        }
+    if (waloff[tilenume] == 0)
+    {
+        walock[tilenume] = 199;
+        allocache("waloff[tilenume]",dasiz,"walock[tilenume]");
+    }
 
-//        faketimerhandler();
-//        return;
-//    }
-
-//    if (waloff[tilenume] == 0)
-//    {
-//        walock[tilenume] = 199;
-//        allocache(&waloff[tilenume],dasiz,&walock[tilenume]);
-//    }
-
-//    if (artfilplc != tilefileoffs[tilenume])
-//    {
-//        klseek(artfil,tilefileoffs[tilenume]-artfilplc,BSEEK_CUR);
-//        faketimerhandler();
-//    }
-
-//    kread(artfil, (char *)waloff[tilenume], dasiz);
-//    faketimerhandler();
-//    artfilplc = tilefileoffs[tilenume]+dasiz;
+    if (artfilplc != tilefileoffs[tilenume])
+    {
+        klseek(artfil,tilefileoffs[tilenume]-artfilplc,BSEEK_CUR);
+        faketimerhandler();
+    }
+    debugger;
+    kread(artfil, new Ptr(new Uint8Array(waloff.buffer), tilenume)/*(char *)waloff[tilenume]*/, dasiz);
+    faketimerhandler();
+    artfilplc = tilefileoffs[tilenume]+dasiz;
 
 //#ifdef DEBUG_TILESIZY_512
 //    if (tilesizy[tilenume] >= 512)

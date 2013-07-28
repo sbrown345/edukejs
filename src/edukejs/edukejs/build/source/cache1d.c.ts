@@ -165,26 +165,27 @@ function initcache(/*intptr_t */dacachestart: number, dacachesize: number): void
 //        reportandexit("OUT OF MEMORY in allocache as malloc wrapper!");
 //}
 //#else
-//void allocache(intptr_t *newhandle, int32_t newbytes, char *newlockptr)
-//{
-//    int32_t i, /*j,*/ z, zz, bestz=0, daval, bestval, besto=0, o1, o2, sucklen, suckz;
+function allocache(/*intptr_t **/newhandle, newbytes: number, newlockptr): void
+{
+    todo("allocache");
+//     var i=0, /*j=0,*/ z=0, zz=0, bestz=0, daval=0, bestval=0, besto=0=0, o1=0, o2=0, sucklen=0, suckz=0; //int32_t
 
 ////printf("  ==> asking for %d bytes, ", newbytes);
 //    // Make all requests a multiple of 16 bytes
 //    newbytes = (newbytes+15)&0xfffffff0;
 ////printf("allocated %d bytes\n", newbytes);
 
-//    if ((unsigned)newbytes > (unsigned)cachesize)
-//    {
-//        Bprintf("Cachesize: %d\n",cachesize);
-//        Bprintf("*Newhandle: 0x%" PRIxPTR ", Newbytes: %d, *Newlock: %d\n",(intptr_t)newhandle,newbytes,*newlockptr);
-//        reportandexit("BUFFER TOO BIG TO FIT IN CACHE!");
-//    }
+//    //if ((unsigned)newbytes > (unsigned)cachesize)
+//    //{
+//    //    Bprintf("Cachesize: %d\n",cachesize);
+//    //    Bprintf("*Newhandle: 0x%" PRIxPTR ", Newbytes: %d, *Newlock: %d\n",(intptr_t)newhandle,newbytes,*newlockptr);
+//    //    reportandexit("BUFFER TOO BIG TO FIT IN CACHE!");
+//    //}
 
-//    if (*newlockptr == 0)
-//    {
-//        reportandexit("ALLOCACHE CALLED WITH LOCK OF 0!");
-//    }
+//    //if (*newlockptr == 0)
+//    //{
+//    //    reportandexit("ALLOCACHE CALLED WITH LOCK OF 0!");
+//    //}
 
 //    //Find best place
 //    bestval = 0x7fffffff; o1 = cachesize;
@@ -244,7 +245,7 @@ function initcache(/*intptr_t */dacachestart: number, dacachesize: number): void
 //    for (z=cacnum-1; z>bestz; z--) cac[z] = cac[z-1];
 //    cac[bestz].leng = sucklen;
 //    cac[bestz].lock = &zerochar;
-//}
+}
 //#endif
 
 //void agecache(void)

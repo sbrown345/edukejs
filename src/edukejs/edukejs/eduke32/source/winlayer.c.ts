@@ -157,9 +157,9 @@ var curbrightness: number, gammabrightness: number;
 //#ifdef USE_OPENGL
 //// OpenGL stuff
 var hGLRC: WebGLRenderingContext; //static HGLRC   =0
-//char nofog=0;
-//char nogl=0;
-//char forcegl=0;
+var nofog=0; //char 
+var nogl=0;      //char 
+var forcegl=0;   //char 
 //#endif
 
 //static const char *GetDDrawError(HRESULT code);

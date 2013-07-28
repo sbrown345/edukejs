@@ -207,11 +207,11 @@ var MAXUNIQHUDID = 256; //Extra slots so HUD models can store animation state wi
 //#define BXY_MAX 524288
 
 //enum {
-//    ROTATESPRITE_FULL16 = 2048,
+var ROTATESPRITE_FULL16 = 2048,
 //    // ROTATESPRITE_MAX-1 is the mask of all externally available orientation bits
-//    ROTATESPRITE_MAX = 4096,
+    ROTATESPRITE_MAX = 4096,
 
-//    RS_CENTERORIGIN = (1<<30),
+    RS_CENTERORIGIN = (1<<30);
 //};
 
 //    //Make all variables in BUILD.H defined in the ENGINE,
@@ -776,7 +776,7 @@ var pskynummultis: number; //int16_t
 
 var tilesizx = new Int16Array(MAXTILES), tilesizy = new Int16Array(MAXTILES);
 var picsiz = new Uint8Array(MAXTILES);
-//EXTERN char walock[MAXTILES];
+var walock = new Uint8Array(MAXTILES);
 //#ifdef __cplusplus
 //extern "C" {
 //#endif
@@ -860,7 +860,7 @@ var gotpic = new Uint8Array((MAXTILES+7)>>3);
 
 //EXTERN char editorcolors[256];
 
-//EXTERN int32_t faketilesiz[MAXTILES];
+var faketilesiz = new Int32Array(MAXTILES);
 //EXTERN char *faketiledata[MAXTILES];
 
 //EXTERN char spritecol2d[MAXTILES][2];

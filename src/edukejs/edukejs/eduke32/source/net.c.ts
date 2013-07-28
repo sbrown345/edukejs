@@ -174,13 +174,14 @@ var g_netClient = NULL;    ////ENetHost *
 //        rotatesprite_fs(160<<16,(151)<<16,30<<11,0,PLUTOPAKSPRITE+1,0,0,2+8);
 //}
 
-//void faketimerhandler(void)
-//{
+function faketimerhandler(): void
+{
+    todo("faketimerhandler");
 //    if (g_netServer==NULL && g_netClient==NULL)
 //        return;
 
 //    enet_host_service(g_netServer ? g_netServer : g_netClient, NULL, 0);
-//}
+}
 
 //void Net_WaitForServer(void)
 //{

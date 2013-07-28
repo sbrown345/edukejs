@@ -17,7 +17,7 @@ var MAXTILEFILES=256;
 ////#define ENGINE_CLEAR_SCREEN
 
 //#ifdef YAX_ENABLE
-//# define YAX_MAXDRAWS 8
+var YAX_MAXDRAWS  = 8;
 //#endif
 
 //#ifdef __cplusplus
@@ -192,11 +192,11 @@ function DO_TILE_ANIM(Picnum, Fakevar) { do {
 
 //#else	// __GNUC__ && __i386__
 
-//static inline void setgotpic(int32_t tilenume)
-//{
-//	if (walock[tilenume] < 200) walock[tilenume] = 199;
-//	gotpic[tilenume>>3] |= pow2char[tilenume&7];
-//}
+function setgotpic(tilenume:  number): void
+{
+	if (walock[tilenume] < 200) walock[tilenume] = 199;
+	gotpic[tilenume>>3] |= pow2char[tilenume&7];
+}
 
 //#endif
 
