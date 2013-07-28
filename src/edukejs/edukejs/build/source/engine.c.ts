@@ -7271,8 +7271,8 @@ function dorotspr_handle_bit2(sxptr: R<number>, syptr: R<number>, z: R<number> ,
             sy = (ydim<<15)+32768 + mulscale16(normyofs, zoomsc);
         }
 
-        sxptr.$ = sx.$;
-        syptr.$ = sy.$;
+        sxptr.$ = sx;
+        syptr.$ = sy;
         z.$ = mulscale16(z.$, zoomsc);
 
         ret_yxaspect.$ = ouryxaspect;
@@ -11266,7 +11266,7 @@ function loadtile(tilenume: number): void
 
     if (artfilplc != tilefileoffs[tilenume])
     {
-        klseek(artfil,tilefileoffs[tilenume]-artfilplc,BSEEK_CUR);
+        throw "todo klseek(artfil,tilefileoffs[tilenume]-artfilplc,BSEEK_CUR);";
         faketimerhandler();
     }
     debugger;
@@ -14694,7 +14694,7 @@ function clearallviews(dacol: number): void
                       (p.g)/255.0,
                       (p.b)/255.0,
                       0);
-        bglClear(GL_COLOR_BUFFER_BIT);
+        bglClear(gl.COLOR_BUFFER_BIT);
         return;
     }
 //#endif

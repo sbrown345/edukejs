@@ -143,10 +143,10 @@ var gdo = 0.0, gdx = 0.0, gdy = 0.0;                                            
 //static int32_t preview_mouseaim=0;  // when 1, displays a CROSSHAIR tsprite at the _real_ aimed position
 //
 //#ifdef USE_OPENGL
-//static int32_t srepeat = 0, trepeat = 0;
+var srepeat = 0, trepeat = 0; //static int32_t 
 //
-//int32_t glredbluemode = 0;
-//static int32_t lastglredbluemode = 0, redblueclearcnt = 0;
+var glredbluemode = 0;//int32_t 
+var lastglredbluemode = 0, redblueclearcnt = 0;//static int32_t 
 //
 //struct glfiltermodes glfiltermodes[NUMGLFILTERMODES] =
 //{
@@ -171,11 +171,11 @@ var glusetexcache = 2, glusememcache = 1; //int32_t
 //int32_t glprojectionhacks = 1;
 var polymosttext = 0; //static GLuint 
 var glrendmode = REND_POLYMOST;
-//
-//// This variable, and 'shadeforfullbrightpass' control the drawing of
-//// fullbright tiles.  Also see 'fullbrightloadingpass'.
-//static int32_t fullbrightdrawingpass = 0;
-//
+
+// This variable, and 'shadeforfullbrightpass' control the drawing of
+// fullbright tiles.  Also see 'fullbrightloadingpass'.
+var fullbrightdrawingpass = 0;//static int32_t 
+
 //float curpolygonoffset;    // internal polygon offset stack for drawing flat sprites to avoid depth fighting
 //
 // Detail mapping cvar
@@ -193,10 +193,10 @@ var r_glowmapping = 1; //int32_t
 //
 //// model animation smoothing cvar
 //int32_t r_animsmoothing = 1;
-//
-//// fullbright cvar
-//int32_t r_fullbrights = 1;
-//
+
+// fullbright cvar
+var r_fullbrights = 1;
+
 //// texture downsizing
 //int32_t r_downsize = 0;
 //int32_t r_downsizevar = -1;
@@ -259,10 +259,10 @@ var fogresult = 0.0, fogresult2 = 0.0, fogcol = new Float32Array(4), fogtable = 
 //}
 //
 //#ifdef USE_OPENGL
-//int32_t mdtims, omdtims;
-//float alphahackarray[MAXTILES];
-//int32_t drawingskybox = 0;
-//int32_t hicprecaching = 0;
+var mdtims=0, omdtims=0;//int32_t 
+var alphahackarray = new Float32Array(MAXTILES);//float 
+var drawingskybox = 0;      //int32_t 
+var hicprecaching = 0;      //int32_t 
 //
 //
 //static inline int32_t gltexmayhavealpha(int32_t dapicnum, int32_t dapalnum)
@@ -1293,13 +1293,13 @@ function polymost_glreset(): void
 //}
 //
 //#endif
-//
-////(dpx,dpy) specifies an n-sided polygon. The polygon must be a convex clockwise loop.
-////    n must be <= 8 (assume clipping can double number of vertices)
-////method: 0:solid, 1:masked(255 is transparent), 2:transluscent #1, 3:transluscent #2
-////    +4 means it's a sprite, so wraparound isn't needed
-//
-//// drawpoly's hack globals
+
+//(dpx,dpy) specifies an n-sided polygon. The polygon must be a convex clockwise loop.
+//    n must be <= 8 (assume clipping can double number of vertices)
+//method: 0:solid, 1:masked(255 is transparent), 2:transluscent #1, 3:transluscent #2
+//    +4 means it's a sprite, so wraparound isn't needed
+
+// drawpoly's hack globals
 var pow2xsplit = 0, skyclamphack = 0; //static int32_t 
 var alpha = 0.0;
 
@@ -1312,7 +1312,7 @@ function drawpoly(/*double **/dpx: R<number>, /*double **/dpy: R<number>, n:numb
     var xx, yy, dorot; //int32_t
 //#ifdef USE_OPENGL
     var pth: pthtyp, detailpth: pthtyp, glowpth: pthtyp;
-    var texunits = GL_TEXTURE0_ARB; //int32_t
+    var texunits = gl.TEXTURE0_ARB; //int32_t
 //#endif
     // backup of the n for possible redrawing of fullbright
     var n_ = n, method_ = method; //int32_t
@@ -1351,118 +1351,121 @@ function drawpoly(/*double **/dpx: R<number>, /*double **/dpy: R<number>, n:numb
         }
     }
   todoThrow();
-//    j = 0; dorot = ((gchang != 1.0) || (gctang != 1.0));
-//    if (dorot)
-//    {
-//        for (i=0; i<n; i++)
-//        {
-//            ox = dpx[i]-ghalfx;
-//            oy = dpy[i]-ghoriz;
-//            oz = ghalfx;
-//
-//            //Up/down rotation
-//            ox2 = ox;
-//            oy2 = oy*gchang - oz*gshang;
-//            oz2 = oy*gshang + oz*gchang;
-//
-//            //Tilt rotation
-//            ox = ox2*gctang - oy2*gstang;
-//            oy = ox2*gstang + oy2*gctang;
-//            oz = oz2;
-//
-//            r = ghalfx / oz;
-//
-//            dd[j] = (dpx[i]*gdx + dpy[i]*gdy + gdo)*r;
-//            uu[j] = (dpx[i]*gux + dpy[i]*guy + guo)*r;
-//            vv[j] = (dpx[i]*gvx + dpy[i]*gvy + gvo)*r;
-//
-//            px[j] = ox*r + ghalfx;
-//            py[j] = oy*r + ghoriz;
-//            if ((!j) || (px[j] != px[j-1]) || (py[j] != py[j-1])) j++;
-//        }
-//    }
-//    else
-//    {
-//        for (i=0; i<n; i++)
-//        {
-//            px[j] = dpx[i];
-//            py[j] = dpy[i];
-//            if ((!j) || (px[j] != px[j-1]) || (py[j] != py[j-1])) j++;
-//        }
-//    }
-//    while ((j >= 3) && (px[j-1] == px[0]) && (py[j-1] == py[0])) j--;
-//    if (j < 3) return;
-//    n = j;
+    j = 0; dorot = ((gchang != 1.0) || (gctang != 1.0));
+    if (dorot)
+    {
+        todoThrow();
+        //for (i=0; i<n; i++)
+        //{
+        //    ox = dpx[i]-ghalfx;
+        //    oy = dpy[i]-ghoriz;
+        //    oz = ghalfx;
+
+        //    //Up/down rotation
+        //    ox2 = ox;
+        //    oy2 = oy*gchang - oz*gshang;
+        //    oz2 = oy*gshang + oz*gchang;
+
+        //    //Tilt rotation
+        //    ox = ox2*gctang - oy2*gstang;
+        //    oy = ox2*gstang + oy2*gctang;
+        //    oz = oz2;
+
+        //    r = ghalfx / oz;
+
+        //    dd[j] = (dpx[i]*gdx + dpy[i]*gdy + gdo)*r;
+        //    uu[j] = (dpx[i]*gux + dpy[i]*guy + guo)*r;
+        //    vv[j] = (dpx[i]*gvx + dpy[i]*gvy + gvo)*r;
+
+        //    px[j] = ox*r + ghalfx;
+        //    py[j] = oy*r + ghoriz;
+        //    if ((!j) || (px[j] != px[j-1]) || (py[j] != py[j-1])) j++;
+        //}
+    }
+    else
+    {
+        for (i=0; i<n; i++)
+        {
+            px[j] = dpx[i];
+            py[j] = dpy[i];
+            if ((!j) || (px[j] != px[j-1]) || (py[j] != py[j-1])) j++;
+        }
+    }
+    while ((j >= 3) && (px[j-1] == px[0]) && (py[j-1] == py[0])) j--;
+    if (j < 3) return;
+    n = j;
 //
 //#ifdef USE_OPENGL
-//    if (getrendermode() >= REND_POLYMOST)
-//    {
-//        float hackscx, hackscy;
+    if (getrendermode() >= REND_POLYMOST)
+    {
+        var hackscx=0.0, hackscy=0.0; //float
+
+        if (skyclamphack) method |= 4;
+        todoThrow("pth = texcache_fetch(globalpicnum,globalpal,getpalookup(globvis>>2, globalshade),method&(~3));");
+
+        if (!pth)
+        {
+            todoThrow();
+            //if (editstatus)
+            //{
+            //    Bsprintf(ptempbuf, "pth==NULL! (bad pal?) pic=%d pal=%d", globalpicnum, globalpal);
+            //    polymost_printext256(8,8, editorcolors[15],editorcolors[5], ptempbuf, 0);
+            //}
+            //return;
+        }
+
+        if (r_fullbrights && pth.flags & 16)
+            if (indrawroomsandmasks)
+            {
+                if (!fullbrightdrawingpass)
+                    fullbrightdrawingpass = 1;
+                else if (fullbrightdrawingpass == 2)
+                    pth = pth.ofb;
+            }
+
+        // If we aren't rendmode 3, we're in Polymer, which means this code is
+        // used for rotatesprite only. Polymer handles all the material stuff,
+        // just submit the geometry and don't mess with textures.
+        if (getrendermode() == REND_POLYMOST)
+        {
+            bglBindTexture(gl.TEXTURE_2D, pth ? pth.glpic : 0);
+
+            if (srepeat)
+                bglTexParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.REPEAT);
+            if (trepeat)
+                bglTexParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.REPEAT);
+        }
 //
-//        if (skyclamphack) method |= 4;
-//        pth = texcache_fetch(globalpicnum,globalpal,getpalookup(globvis>>2, globalshade),method&(~3));
-//
-//        if (!pth)
-//        {
-//            if (editstatus)
-//            {
-//                Bsprintf(ptempbuf, "pth==NULL! (bad pal?) pic=%d pal=%d", globalpicnum, globalpal);
-//                polymost_printext256(8,8, editorcolors[15],editorcolors[5], ptempbuf, 0);
-//            }
-//            return;
-//        }
-//
-//        if (r_fullbrights && pth->flags & 16)
-//            if (indrawroomsandmasks)
-//            {
-//                if (!fullbrightdrawingpass)
-//                    fullbrightdrawingpass = 1;
-//                else if (fullbrightdrawingpass == 2)
-//                    pth = pth->ofb;
-//            }
-//
-//        // If we aren't rendmode 3, we're in Polymer, which means this code is
-//        // used for rotatesprite only. Polymer handles all the material stuff,
-//        // just submit the geometry and don't mess with textures.
-//        if (getrendermode() == REND_POLYMOST)
-//        {
-//            bglBindTexture(GL_TEXTURE_2D, pth ? pth->glpic : 0);
-//
-//            if (srepeat)
-//                bglTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_REPEAT);
-//            if (trepeat)
-//                bglTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_REPEAT);
-//        }
-//
-//        // texture scale by parkar request
-//        if (pth && pth->hicr && ((pth->hicr->xscale != 1.0f) || (pth->hicr->yscale != 1.0f)) && !drawingskybox)
-//        {
-//            bglMatrixMode(GL_TEXTURE);
-//            bglLoadIdentity();
-//            bglScalef(pth->hicr->xscale, pth->hicr->yscale, 1.0f);
-//            bglMatrixMode(GL_MODELVIEW);
-//        }
-//
+        // texture scale by parkar request
+        if (pth && pth.hicr && ((pth.hicr.xscale != 1.0) || (pth.hicr.yscale != 1.0)) && !drawingskybox)
+        {
+            todoThrow();
+            //bglMatrixMode(GL_TEXTURE);
+            //bglLoadIdentity();
+            //bglScalef(pth.hicr.xscale, pth.hicr.yscale, 1.0f);
+            //bglMatrixMode(GL_MODELVIEW);
+        }
+todoThrow();
 //        // detail texture
 //        detailpth = NULL;
 //        if (r_detailmapping && usehightile && !drawingskybox &&
 //                hicfindsubst(globalpicnum, DETAILPAL, 0))
 //            detailpth = texcache_fetch(globalpicnum, DETAILPAL, 0, method&(~3));
 //
-//        if (detailpth && detailpth->hicr && (detailpth->hicr->palnum == DETAILPAL))
+//        if (detailpth && detailpth.hicr && (detailpth.hicr.palnum == DETAILPAL))
 //        {
-//            polymost_setupdetailtexture(&texunits, detailpth ? detailpth->glpic : 0);
+//            polymost_setupdetailtexture(&texunits, detailpth ? detailpth.glpic : 0);
 //
-//            f = detailpth ? detailpth->hicr->xscale : 1.0;
+//            f = detailpth ? detailpth.hicr.xscale : 1.0;
 //
 //            bglMatrixMode(GL_TEXTURE);
 //            bglLoadIdentity();
 //
-//            if (pth && pth->hicr && ((pth->hicr->xscale != 1.0f) || (pth->hicr->yscale != 1.0f)))
-//                bglScalef(pth->hicr->xscale, pth->hicr->yscale, 1.0f);
+//            if (pth && pth.hicr && ((pth.hicr.xscale != 1.0f) || (pth.hicr.yscale != 1.0f)))
+//                bglScalef(pth.hicr.xscale, pth.hicr.yscale, 1.0f);
 //
-//            if (detailpth && detailpth->hicr && ((detailpth->hicr->xscale != 1.0f) || (detailpth->hicr->yscale != 1.0f)))
-//                bglScalef(detailpth->hicr->xscale, detailpth->hicr->yscale, 1.0f);
+//            if (detailpth && detailpth.hicr && ((detailpth.hicr.xscale != 1.0f) || (detailpth.hicr.yscale != 1.0f)))
+//                bglScalef(detailpth.hicr.xscale, detailpth.hicr.yscale, 1.0f);
 //
 //            bglMatrixMode(GL_MODELVIEW);
 //        }
@@ -1473,15 +1476,15 @@ function drawpoly(/*double **/dpx: R<number>, /*double **/dpy: R<number>, n:numb
 //                hicfindsubst(globalpicnum, GLOWPAL, 0))
 //            glowpth = texcache_fetch(globalpicnum, GLOWPAL, 0, method&(~3));
 //
-//        if (glowpth && glowpth->hicr && (glowpth->hicr->palnum == GLOWPAL))
-//            polymost_setupglowtexture(&texunits, glowpth ? glowpth->glpic : 0);
+//        if (glowpth && glowpth.hicr && (glowpth.hicr.palnum == GLOWPAL))
+//            polymost_setupglowtexture(&texunits, glowpth ? glowpth.glpic : 0);
 //
-//        if (pth && (pth->flags & 2))
+//        if (pth && (pth.flags & 2))
 //        {
-//            hackscx = pth->scalex;
-//            hackscy = pth->scaley;
-//            tsizx = pth->sizx;
-//            tsizy = pth->sizy;
+//            hackscx = pth.scalex;
+//            hackscy = pth.scaley;
+//            tsizx = pth.sizx;
+//            tsizy = pth.sizy;
 //        }
 //        else { hackscx = 1.0; hackscy = 1.0; }
 //
@@ -1512,7 +1515,7 @@ function drawpoly(/*double **/dpx: R<number>, /*double **/dpy: R<number>, n:numb
 //        else
 //        {
 //            float al = 0.0; // PLAG : default alphacut was 0.32 before goodalpha
-//            if (pth && pth->hicr && pth->hicr->alphacut >= 0.0) al = pth->hicr->alphacut;
+//            if (pth && pth.hicr && pth.hicr.alphacut >= 0.0) al = pth.hicr.alphacut;
 //            if (alphahackarray[globalpicnum])
 //                al=alphahackarray[globalpicnum];
 //            if (!waloff[globalpicnum]) al = 0.0;	// invalid textures ignore the alpha cutoff settings
@@ -1555,9 +1558,9 @@ function drawpoly(/*double **/dpx: R<number>, /*double **/dpy: R<number>, n:numb
 //            // rendering isn't for the same palette as what we asked for
 //            if (!(hictinting[globalpal].f&4))
 //            {
-//                if (pth && (pth->flags & 2))
+//                if (pth && (pth.flags & 2))
 //                {
-//                    if (pth->palnum != globalpal)
+//                    if (pth.palnum != globalpal)
 //                    {
 //                        // apply tinting for replaced textures
 //                        pc[0] *= (float)hictinting[globalpal].r / 255.0;
@@ -1765,7 +1768,7 @@ function drawpoly(/*double **/dpx: R<number>, /*double **/dpy: R<number>, n:numb
 //            fullbrightdrawingpass = 0;
 //        }
 //        return;
-//    }
+    }
 //#endif
 //
 ///*
@@ -4416,14 +4419,14 @@ function polymost_dorotatesprite(sx: number, sy, z: number, a: number, picnum: n
         bglEnable(gl.TEXTURE_2D);
 //        
 //# ifdef POLYMER
-//        if (getrendermode() == REND_POLYMER) {
-//            polymer_inb4rotatesprite(picnum, dapalnum, dashade);
-//            r_detailmapping = 0;
-//            r_glowmapping = 0;
-//        }
+        if (getrendermode() == REND_POLYMER) {
+            todoThrow("polymer_inb4rotatesprite(picnum, dapalnum, dashade);");
+            r_detailmapping = 0;
+            r_glowmapping = 0;
+        }
 //# endif
     }
-todoThrow();
+
 //#endif
 //
     method = 0;
@@ -4548,42 +4551,46 @@ todoThrow();
 
 //#ifdef USE_OPENGL
         if (!nofog) todoThrow("bglDisable(GL_FOG);");
-        pow2xsplit = 0; drawpoly(px,py,n,method);
-        if (!nofog) bglEnable(GL_FOG);
+        var $px = new R(px);
+        var $py = new R(py);
+        pow2xsplit = 0; drawpoly($px,$py,n,method);
+        px = $px.$;
+        py = $py.$;
+        if (!nofog) todoThrow("bglEnable(GL_FOG);");
 //#else
 //        pow2xsplit = 0; drawpoly(px,py,n,method);
 //#endif
-//    }
+    }
 //
 //#ifdef USE_OPENGL
-//    if (getrendermode() >= REND_POLYMOST)
-//    {
+    if (getrendermode() >= REND_POLYMOST)
+    {
 //# ifdef POLYMER
-//        if (getrendermode() == REND_POLYMER) {
-//            r_detailmapping = olddetailmapping;
-//            r_glowmapping = oldglowmapping;
-//            polymer_postrotatesprite();
-//        }
+        if (getrendermode() == REND_POLYMER) {
+            r_detailmapping = olddetailmapping;
+            r_glowmapping = oldglowmapping;
+            todoThrow("polymer_postrotatesprite();");
+        }
 //# endif
-//        bglMatrixMode(GL_PROJECTION); bglPopMatrix();
-//        bglMatrixMode(GL_MODELVIEW); bglPopMatrix();
-//    }
+        todoThrow("bglMatrixMode(gl.PROJECTION); bglPopMatrix();");
+        todoThrow("bglMatrixMode(gl.MODELVIEW); bglPopMatrix();");
+    }
 //#endif
-//
-//    globalpicnum = ogpicnum;
-//    globalshade  = ogshade;
-//    globalpal    = ogpal;
-//    ghalfx       = oghalfx;
-//    grhalfxdown10 = ogrhalfxdown10;
-//    grhalfxdown10x = ogrhalfxdown10x;
-//    ghoriz       = oghoriz;
-//    frameoffset  = ofoffset;
-//    gchang = ogchang;
-//    gshang = ogshang;
-//    gctang = ogctang;
-//    gstang = ogstang;
+
+    globalpicnum = ogpicnum;
+    globalshade  = ogshade;
+    globalpal    = ogpal;
+    ghalfx       = oghalfx;
+    grhalfxdown10 = ogrhalfxdown10;
+    grhalfxdown10x = ogrhalfxdown10x;
+    ghoriz       = oghoriz;
+    frameoffset  = ofoffset;
+    gchang = ogchang;
+    gshang = ogshang;
+    gctang = ogctang;
+    gstang = ogstang;
 }
-//
+
 //#ifdef USE_OPENGL
 //static float trapextx[2];
 //static void drawtrap(float x0, float x1, float y0, float x2, float x3, float y1)
