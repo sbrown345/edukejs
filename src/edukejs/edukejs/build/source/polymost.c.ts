@@ -4399,19 +4399,20 @@ function polymost_dorotatesprite(sx: number, sy, z: number, a: number, picnum: n
   
 //#ifdef USE_OPENGL
     if (getrendermode() >= REND_POLYMOST)
-    {  todoThrow();
-//        bglViewport(0,0,xdim,ydim); glox1 = -1; //Force fullscreen (glox1=-1 forces it to restore)
-//        bglMatrixMode(GL_PROJECTION);
-//        memset(m,0,sizeof(m));
-//        m[0][0] = m[2][3] = 1.0f; m[1][1] = ((float)xdim)/((float)ydim); m[2][2] = 1.0001f; m[3][2] = 1-m[2][2];
-//        bglPushMatrix(); bglLoadMatrixf(&m[0][0]);
-//        bglMatrixMode(GL_MODELVIEW);
-//        bglPushMatrix();
-//        bglLoadIdentity();
+    {  debugger;
+        bglViewport(0,0,xdim,ydim); glox1 = -1; //Force fullscreen (glox1=-1 forces it to restore)
+        bglMatrixMode(gl.PROJECTION);
+        for (var i = 0; i < m.length; i++) {memset(new P(m[i]),0,sizeof(m[i]));}
+        m[0][0] = m[2][3] = 1.0; m[1][1] = (/*(float)*/xdim)/(/*(float)*/ydim); m[2][2] = 1.0001; m[3][2] = 1-m[2][2];
+        bglPushMatrix(); bglLoadMatrixf(m[0][0]);
+        bglMatrixMode(gl.MODELVIEW);
+        bglPushMatrix();
+        bglLoadIdentity();
 //
-//        bglDisable(GL_DEPTH_TEST);
-//        bglDisable(GL_ALPHA_TEST);
-//        bglEnable(GL_TEXTURE_2D);
+        bglDisable(gl.DEPTH_TEST);
+        bglDisable(gl.ALPHA_TEST);
+        bglEnable(gl.TEXTURE_2D);
+        todoThrow();
 //        
 //# ifdef POLYMER
 //        if (getrendermode() == REND_POLYMER) {
@@ -4421,7 +4422,6 @@ function polymost_dorotatesprite(sx: number, sy, z: number, a: number, picnum: n
 //        }
 //# endif
     }
-
 todoThrow();
 //#endif
 //

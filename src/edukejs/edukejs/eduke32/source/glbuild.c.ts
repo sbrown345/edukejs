@@ -7,7 +7,7 @@
 
 /// <reference path="../../build/headers/glbuild.h.ts" />
 
-//var gl: WebGLRenderingContext;
+var gl: WebGLRenderingContext;
 initWebGL(document.getElementById("glcanvas"));
 function initWebGL(canvas) {
   // Initialize the global variable gl to null.
@@ -49,8 +49,8 @@ var bglClear = gl.clear.bind(gl);//bglClearProcPtr;
 //bglFrontFaceProcPtr bglFrontFace;
 //bglPolygonOffsetProcPtr bglPolygonOffset;
 //bglPolygonModeProcPtr bglPolygonMode;
-//bglEnableProcPtr bglEnable;
-//bglDisableProcPtr bglDisable;
+var bglEnable = gl.enable.bind(gl);//bglEnableProcPtr bglEnable;
+var bglDisable = gl.disable.bind(gl);//bglDisableProcPtr ;
 //bglGetDoublevProcPtr bglGetDoublev;
 //bglGetFloatvProcPtr bglGetFloatv;
 //bglGetIntegervProcPtr bglGetIntegerv;
@@ -70,14 +70,14 @@ var bglClear = gl.clear.bind(gl);//bglClearProcPtr;
 //bglDepthRangeProcPtr bglDepthRange;
 
 //// Matrix
-//bglMatrixModeProcPtr bglMatrixMode;
+var bglMatrixMode = gl.matrixMode.bind(gl);//bglMatrixModeProcPtr ;
 //bglOrthoProcPtr bglOrtho;
 //bglFrustumProcPtr bglFrustum;
 var bglViewport = gl.viewport.bind(gl);//bglViewportProcPtr ;
-//bglPushMatrixProcPtr bglPushMatrix;
+var bglPushMatrix = gl.pushMatrix.bind(gl);//bglPushMatrixProcPtr ;
 //bglPopMatrixProcPtr bglPopMatrix;
 //bglLoadIdentityProcPtr bglLoadIdentity;
-//bglLoadMatrixfProcPtr bglLoadMatrixf;
+var bglLoadMatrixf = gl.loadMatrix.bind(gl);//bglLoadMatrixfProcPtr ;
 //bglLoadMatrixdProcPtr bglLoadMatrixd;
 //bglMultMatrixfProcPtr bglMultMatrixf;
 //bglMultMatrixdProcPtr bglMultMatrixd;

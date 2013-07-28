@@ -1,8 +1,5 @@
 /// <reference path="../../libs/WebGL.d.ts" />
 
-
-var gl: WebGLRenderingContext;
-
 //#ifndef BGLBUILD_H_INCLUDED_
 //#define BGLBUILD_H_INCLUDED_
 

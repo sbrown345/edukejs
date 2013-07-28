@@ -2797,7 +2797,7 @@ function SetupOpenGL(width: number, height: number, bitspp: number): number
 //        return TRUE;
 //    }
     
-    hGLRC = gl;
+    //hGLRC = gl;
 
     if (!hGLRC)
     {
