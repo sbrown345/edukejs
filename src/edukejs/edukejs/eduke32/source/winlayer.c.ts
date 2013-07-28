@@ -2720,11 +2720,12 @@ function setgamma(): number
 //}
 
 
-////
-//// SetupOpenGL() -- sets up opengl rendering
-////
-//static int32_t SetupOpenGL(int32_t width, int32_t height, int32_t bitspp)
-//{
+//
+// SetupOpenGL() -- sets up opengl rendering
+//
+function SetupOpenGL(width: number, height: number, bitspp: number): number
+{
+    todoThrow();
 //    PIXELFORMATDESCRIPTOR pfd =
 //    {
 //        sizeof(PIXELFORMATDESCRIPTOR),
@@ -3001,8 +3002,8 @@ function setgamma(): number
 //        bpp = oldbpp;
 //    }
 
-//    return FALSE;
-//}
+    return FALSE;
+}
 //#endif
 
 //
@@ -3140,22 +3141,23 @@ function CreateAppWindow(modenum: number): number
 
 //    SetWindowPos(hWindow, HWND_TOP, windowpos?windowx:x, windowpos?windowy:y, w, h, 0);
 
-//    // fullscreen?
-//    if (!fs)
-//    {
-//        if (bitspp > 8)
-//        {
+    // fullscreen?
+    if (!fs)
+    {
+        if (bitspp > 8)
+        {
 //#ifdef USE_OPENGL
-//            // yes, start up opengl
-//            if (SetupOpenGL(width,height,bitspp))
-//                return TRUE;
+            // yes, start up opengl
+            if (SetupOpenGL(width,height,bitspp))
+                return TRUE;
 //#endif
-//        }
-//        else if (SetupDIB(width,height)) // use DIB section
-//            return TRUE;
+        }
+        else if (todoThrow("SetupDIB(width,height)")) // use DIB section
+            return TRUE;
 
-//        modesetusing = -1;
-//    }
+        modesetusing = -1;
+    }
+    todoThrow();
 //    else
 //    {
 //        // yes, set up DirectDraw

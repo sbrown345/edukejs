@@ -399,7 +399,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 function G_DoLoadScreen(statustext: string, percent: number): void
 {
     var i=0,j: number;
-    debugger;
+    
     if (ud.recstat != 2)
     {
         j = VM_OnEvent(EVENT_GETLOADTILE, -1, myconnectindex, -1, LOADSCREEN);
