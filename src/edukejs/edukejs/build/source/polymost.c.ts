@@ -4409,7 +4409,7 @@ function polymost_dorotatesprite(sx: number, sy, z: number, a: number, picnum: n
         bglMatrixMode(gl.PROJECTION);
         for (var i = 0; i < m.length; i++) {memset(new P(m[i]),0,sizeof(m[i]));}
         m[0][0] = m[2][3] = 1.0; m[1][1] = (/*(float)*/xdim)/(/*(float)*/ydim); m[2][2] = 1.0001; m[3][2] = 1-m[2][2];
-        bglPushMatrix(); bglLoadMatrixf(m[0][0]);
+        bglPushMatrix(); bglLoadMatrixf(m/*[0][0]*/);
         bglMatrixMode(gl.MODELVIEW);
         bglPushMatrix();
         bglLoadIdentity();

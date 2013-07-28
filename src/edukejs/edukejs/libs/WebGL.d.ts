@@ -66,8 +66,19 @@ interface WebGLContextAttributes
 /* lightgl */
 declare module GL 
 {
-    export function create(options: any): WebGLRenderingContext;
+    function create(options: any): WebGLRenderingContext;
+    var Matrfix: Matrix;
+
+    interface Matrix {
+
+    }
+
+    var Matrix: {
+        new(m: number[]): Matrix;
+    };
 }
+
+
 
 interface WebGLRenderingContext
 {

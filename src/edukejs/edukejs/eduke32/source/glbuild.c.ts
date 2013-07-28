@@ -63,7 +63,32 @@ var bglViewport = gl.viewport.bind(gl);//bglViewportProcPtr ;
 var bglPushMatrix = gl.pushMatrix.bind(gl);//bglPushMatrixProcPtr ;
 //bglPopMatrixProcPtr bglPopMatrix;
 var bglLoadIdentity = gl.loadIdentity.bind(gl);//bglLoadIdentityProcPtr ;
-var bglLoadMatrixf = gl.loadMatrix.bind(gl);//bglLoadMatrixfProcPtr ;
+var bglLoadMatrixf = function(multiDimMatrix: Float32Array[]) {
+    assert.areEqual(4, multiDimMatrix.length);
+    assert.areEqual(4, multiDimMatrix[0].length);
+
+    var flatMatrix = [
+        multiDimMatrix[0][0],
+        multiDimMatrix[0][1],
+        multiDimMatrix[0][2],
+        multiDimMatrix[0][3],
+        multiDimMatrix[1][0],
+        multiDimMatrix[1][1],
+        multiDimMatrix[1][2],
+        multiDimMatrix[1][3],
+        multiDimMatrix[2][0],
+        multiDimMatrix[2][1],
+        multiDimMatrix[2][2],
+        multiDimMatrix[2][3],
+        multiDimMatrix[3][0],
+        multiDimMatrix[3][1],
+        multiDimMatrix[3][2],
+        multiDimMatrix[3][3]
+    ];
+
+    var mat = new GL.Matrix(flatMatrix);
+    gl.loadMatrix.call(gl, mat);//bglLoadMatrixfProcPtr ;
+};
 //bglLoadMatrixdProcPtr bglLoadMatrixd;
 //bglMultMatrixfProcPtr bglMultMatrixf;
 //bglMultMatrixdProcPtr bglMultMatrixd;
