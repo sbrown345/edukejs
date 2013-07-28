@@ -123,8 +123,10 @@
     <Content Include="eduke32\source\osdfuncs.c.ts" />
     <Content Include="jaudiolib\headers\fx_man.h.ts" />
     <Content Include="jaudiolib\source\fx_man.c.ts" />
+    <Content Include="libs\gl.h.ts" />
     <Content Include="libs\sprintf.ts" />
     <Content Include="libs\sprintf.d.ts" />
+    <Content Include="libs\WebGL.d.ts" />
     <Content Include="log.aspx" />
     <Content Include="tests\assert.tests.js" />
     <Content Include="tests\index.htm" />

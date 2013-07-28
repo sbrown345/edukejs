@@ -916,9 +916,9 @@ class palette_t {
 function getrendermode(): number
 {
 //#ifndef USE_OPENGL
-    return REND_CLASSIC;
+    //return REND_CLASSIC;
 //#else
-//    return rendmode;
+    return rendmode;
 //#endif
 }
 

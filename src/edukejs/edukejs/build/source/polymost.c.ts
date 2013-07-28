@@ -379,11 +379,11 @@ function gltexinvalidatetype(type: number): void
 //        }
 //    }
 //}
-//
-////--------------------------------------------------------------------------------------------------
-//
-//float glox1, gloy1, glox2, gloy2;
-//
+
+//--------------------------------------------------------------------------------------------------
+
+var glox1, gloy1, glox2, gloy2;//float 
+
 //Use this for both initialization and uninitialization of OpenGL.
 var gltexcacnum = -1;
 //extern void freevbos(void);

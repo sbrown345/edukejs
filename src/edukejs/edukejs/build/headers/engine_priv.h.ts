@@ -1,4 +1,4 @@
-/// <reference path="../../build/source/engine_priv.c.ts" />
+/// <reference path="../../build/source/engine.c.ts" />
 
 
 //#ifndef ENGINE_PRIV_H

@@ -4,6 +4,8 @@
 /// <reference path="../../utils/todo.ts" />
 /// <reference path="../../utils/types.ts" />
 
+/// <reference path="../../libs/gl.h.ts" />
+
 /// <reference path="../../build/headers/baselayer.h.ts" />
 /// <reference path="../../build/headers/build.h.ts" />
 /// <reference path="../../build/headers/compat.h.ts" />
@@ -14680,22 +14682,22 @@ function clearallviews(dacol: number): void
 {
     if (!in3dmode()) return;
     //dacol += (dacol<<8); dacol += (dacol<<16);
-    todoThrow();
+  
 //#ifdef USE_OPENGL
     if (getrendermode() >= REND_POLYMOST)
     {
         var p = getpal(dacol);
 
         bglViewport(0,0,xdim,ydim); glox1 = -1;
-        bglClearColor(((float)p.r)/255.0,
-                      ((float)p.g)/255.0,
-                      ((float)p.b)/255.0,
+        bglClearColor((p.r)/255.0,
+                      (p.g)/255.0,
+                      (p.b)/255.0,
                       0);
         bglClear(GL_COLOR_BUFFER_BIT);
         return;
     }
 //#endif
-
+  todoThrow();
 //    begindrawing(); //{{{
 //    Bmemset((void *)frameplace,dacol,bytesperline*yres);
 //    enddrawing();   //}}}
