@@ -4,6 +4,8 @@
 // see: http://www.khronos.org/registry/webgl/specs/latest/
 //
 
+// modified for lightgl
+
 interface WebGLObject
 {
 }
@@ -61,8 +63,27 @@ interface WebGLContextAttributes
 	preserveDrawingBuffer: bool;
 }
 
+/* lightgl */
+declare module GL 
+{
+    export function create(options: any): WebGLRenderingContext;
+}
+
 interface WebGLRenderingContext
 {
+    /* lightgl */
+    MODELVIEW: number;
+    PROJECTION: number;
+    fullscreen(options: any):void;
+    matrixMode(mode: number):void;
+    pushMatrix():void;
+    loadIdentity():void;
+    loadMatrix(m: any/*todo: array??*/):void;
+
+
+    //ALPHA_TEST: number;  - would like this, but commenting out all mentions of it didn't have any effect on the first level roof bit (maybe it would on windows?)
+
+
 	/* ClearBufferMask */
 	DEPTH_BUFFER_BIT: number;
 	STENCIL_BUFFER_BIT: number;

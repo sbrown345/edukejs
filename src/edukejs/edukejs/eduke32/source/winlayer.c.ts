@@ -2799,13 +2799,13 @@ function SetupOpenGL(width: number, height: number, bitspp: number): number
     
     //hGLRC = gl;
 
-    if (!hGLRC)
-    {
-        todoThrow();
-        //ReleaseOpenGL();
-        //ShowErrorBox("Can't create GL RC");
-        return TRUE;
-    }
+    //if (!hGLRC)
+    //{
+    //    todoThrow();
+    //    //ReleaseOpenGL();
+    //    //ShowErrorBox("Can't create GL RC");
+    //    return TRUE;
+    //}
 
 //    if (!bwglMakeCurrent(hDC, hGLRC))
 //    {

@@ -1303,7 +1303,7 @@ function polymost_glreset(): void
 var pow2xsplit = 0, skyclamphack = 0; //static int32_t 
 var alpha = 0.0;
 
-function drawpoly(/*double **/dpx: R<number>, /*double **/dpy: R<number>, n:number, method: number): void
+function drawpoly(dpx: Float64Array, dpy: Float64Array, n:number, method: number): void
 {
     var ngdx = 0.0, ngdy = 0.0, ngdo = 0.0, ngux = 0.0, nguy = 0.0, nguo = 0.0;             //double 
     var ngvx = 0.0, ngvy = 0.0, ngvo = 0.0, dp, up, vp, du0 = 0.0, du1 = 0.0, dui, duj;     //double 
@@ -1312,7 +1312,7 @@ function drawpoly(/*double **/dpx: R<number>, /*double **/dpy: R<number>, n:numb
     var xx, yy, dorot; //int32_t
 //#ifdef USE_OPENGL
     var pth: pthtyp, detailpth: pthtyp, glowpth: pthtyp;
-    var texunits = gl.TEXTURE0_ARB; //int32_t
+    var texunits = todo("gl.TEXTURE0_ARB"); //int32_t
 //#endif
     // backup of the n for possible redrawing of fullbright
     var n_ = n, method_ = method; //int32_t
@@ -1428,12 +1428,12 @@ function drawpoly(/*double **/dpx: R<number>, /*double **/dpy: R<number>, n:numb
         // just submit the geometry and don't mess with textures.
         if (getrendermode() == REND_POLYMOST)
         {
-            bglBindTexture(gl.TEXTURE_2D, pth ? pth.glpic : 0);
+            todoThrow("bglBindTexture(gl.TEXTURE_2D, pth ? pth.glpic : 0);");
 
             if (srepeat)
-                bglTexParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.REPEAT);
+                todoThrow("bglTexParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.REPEAT);");
             if (trepeat)
-                bglTexParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.REPEAT);
+                todoThrow("bglTexParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.REPEAT);");
         }
 //
         // texture scale by parkar request
@@ -4415,7 +4415,7 @@ function polymost_dorotatesprite(sx: number, sy, z: number, a: number, picnum: n
         bglLoadIdentity();
 //
         bglDisable(gl.DEPTH_TEST);
-        bglDisable(gl.ALPHA_TEST);
+        todo("bglDisable(gl.ALPHA_TEST);");
         bglEnable(gl.TEXTURE_2D);
 //        
 //# ifdef POLYMER
@@ -4551,11 +4551,7 @@ function polymost_dorotatesprite(sx: number, sy, z: number, a: number, picnum: n
 
 //#ifdef USE_OPENGL
         if (!nofog) todoThrow("bglDisable(GL_FOG);");
-        var $px = new R(px);
-        var $py = new R(py);
-        pow2xsplit = 0; drawpoly($px,$py,n,method);
-        px = $px.$;
-        py = $py.$;
+        pow2xsplit = 0; drawpoly(px,py,n,method);
         if (!nofog) todoThrow("bglEnable(GL_FOG);");
 //#else
 //        pow2xsplit = 0; drawpoly(px,py,n,method);
