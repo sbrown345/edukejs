@@ -395,10 +395,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //        }
 //}
 
-//static void G_DoLoadScreen(const char *statustext, int32_t percent)
-//{
-//    int32_t i=0,j;
-
+function G_DoLoadScreen(statustext: string, percent: number): void
+{
+    var i=0,j: number;
+    debugger;
 //    if (ud.recstat != 2)
 //    {
 //        j = VM_OnEvent(EVENT_GETLOADTILE, -1, myconnectindex, -1, LOADSCREEN);
@@ -488,7 +488,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //        VM_OnEvent(EVENT_DISPLAYLOADINGSCREEN, g_player[screenpeek].ps->i, screenpeek, -1, 0);
 //        nextpage();
 //    }
-//}
+}
 
 //extern void G_SetCrosshairColor(int32_t r, int32_t g, int32_t b);
 //extern palette_t CrosshairColors;
@@ -1908,7 +1908,7 @@ function G_EnterLevel(g: number): number
         FX_SetReverb(0);
         setgamemode(ud.config.ScreenMode,ud.config.ScreenWidth,ud.config.ScreenHeight,ud.config.ScreenBPP);
     }	       
-      
+      debugger;
     if (boardfilename[0] != 0 && ud.m_level_number == 7 && ud.m_volume_number == 0)
     {
         var volume: number, level: number;

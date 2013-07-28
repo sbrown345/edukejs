@@ -11688,8 +11688,8 @@ MAIN_LOOP_RESTART:
 
     if (g_networkMode != NET_DEDICATED_SERVER)
     {
-        G_GetCrosshairColor();
-        G_SetCrosshairColor(CrosshairColors.r, CrosshairColors.g, CrosshairColors.b);
+        //G_GetCrosshairColor();
+        //G_SetCrosshairColor(CrosshairColors.r, CrosshairColors.g, CrosshairColors.b);
     }
 
     if (ud.warp_on == 0)

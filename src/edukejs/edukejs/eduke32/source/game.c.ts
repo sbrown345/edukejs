@@ -11603,7 +11603,7 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
     if (numplayers == 1 && boardfilename[0] != 0)
     {
         ud.m_level_number = 7;
-        ud.m_volume_number = NULL;
+        ud.m_volume_number = 0;
         ud.warp_on = 1;
     }
 
