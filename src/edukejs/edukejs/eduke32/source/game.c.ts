@@ -11700,7 +11700,6 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
 
     if (g_networkMode != NET_DEDICATED_SERVER)
     {
-        debugger;
         if (setgamemode(ud.config.ScreenMode,ud.config.ScreenWidth,ud.config.ScreenHeight,ud.config.ScreenBPP) < 0)
         {
             todoThrow();
@@ -11773,7 +11772,7 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
         G_GetCrosshairColor();
         // todo G_SetCrosshairColor(CrosshairColors.r, CrosshairColors.g, CrosshairColors.b)
     }
-
+    
     if (ud.warp_on == 0)
     {
         todoThrow();

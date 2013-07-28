@@ -898,8 +898,9 @@ var g_numEnvSoundsPlaying,g_maxSoundPos = 0; //int32
 //    mutex_unlock(&s_mutex);
 //}
 
-//void S_ClearSoundLocks(void)
-//{
+function S_ClearSoundLocks()
+{
+    //todo
 //    int32_t i;
 
 //    for (i=g_maxSoundPos; i >= 0 ; i--)
@@ -909,7 +910,7 @@ var g_numEnvSoundsPlaying,g_maxSoundPos = 0; //int32
 //    for (i=0; i<11; i++)
 //        if (rts_lumplockbyte[i] >= 200)
 //            rts_lumplockbyte[i] = 199;
-//}
+}
 
 //int32_t A_CheckSoundPlaying(int32_t i, int32_t num)
 //{

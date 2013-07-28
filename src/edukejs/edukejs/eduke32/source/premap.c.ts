@@ -22,6 +22,9 @@
 /// <reference path="../../build/source/polymost.c.ts" />
 /// <reference path="../../build/source/hightile.c.ts" />
 
+/// <reference path="../../jaudiolib/headers/fx_man.h.ts" />
+/// <reference path="../../jaudiolib/source/fx_man.c.ts" />
+
 /// <reference path="../../eduke32/headers/_functio.h.ts" />
 /// <reference path="../../eduke32/headers/_rts.h.ts" />
 /// <reference path="../../eduke32/headers/actors.h.ts" />
@@ -1770,21 +1773,21 @@ function G_NewGame(vn: number,ln: number,sk: number): void
 //    }
 //}
 
-//int32_t G_FindLevelByFile(const char *fn)
-//{
-//    int32_t volume, level;
+function G_FindLevelByFile(fn: string): number
+{
+    var volume: number, level: number;
 
-//    for (volume=0; volume<MAXVOLUMES; volume++)
-//    {
-//        for (level=0; level<MAXLEVELS; level++)
-//        {
-//            if (MapInfo[(volume*MAXLEVELS)+level].filename != NULL)
-//                if (!Bstrcasecmp(fn, MapInfo[(volume*MAXLEVELS)+level].filename))
-//                    return ((volume * MAXLEVELS) + level);
-//        }
-//    }
-//    return MAXLEVELS*MAXVOLUMES;
-//}
+    for (volume=0; volume<MAXVOLUMES; volume++)
+    {
+        for (level=0; level<MAXLEVELS; level++)
+        {
+            if (MapInfo[(volume*MAXLEVELS)+level].filename != NULL)
+                if (!Bstrcasecmp(fn, MapInfo[(volume*MAXLEVELS)+level].filename))
+                    return ((volume * MAXLEVELS) + level);
+        }
+    }
+    return MAXLEVELS*MAXVOLUMES;
+}
 
 //void G_FadeLoad(int32_t r, int32_t g, int32_t b, int32_t start, int32_t end, int32_t step, int32_t ticwait)
 //{
@@ -1884,69 +1887,69 @@ function G_EnterLevel(g: number): number
 //    flushpackets();
 //    waitforeverybody();
     vote_map = vote_episode = voting = -1;
-    throw "todo";
-//    if ((g&MODE_DEMO) != MODE_DEMO) ud.recstat = ud.m_recstat;
-//    ud.respawn_monsters = ud.m_respawn_monsters;
-//    ud.respawn_items    = ud.m_respawn_items;
-//    ud.respawn_inventory    = ud.m_respawn_inventory;
-//    ud.monsters_off = ud.m_monsters_off;
-//    ud.coop = ud.m_coop;
-//    ud.marker = ud.m_marker;
-//    ud.ffire = ud.m_ffire;
-//    ud.noexits = ud.m_noexits;
+ 
+    if ((g&MODE_DEMO) != MODE_DEMO) ud.recstat = ud.m_recstat;
+    ud.respawn_monsters = ud.m_respawn_monsters;
+    ud.respawn_items    = ud.m_respawn_items;
+    ud.respawn_inventory    = ud.m_respawn_inventory;
+    ud.monsters_off = ud.m_monsters_off;
+    ud.coop = ud.m_coop;
+    ud.marker = ud.m_marker;
+    ud.ffire = ud.m_ffire;
+    ud.noexits = ud.m_noexits;
 
-//    if ((g&MODE_DEMO) == 0 && ud.recstat == 2)
-//        ud.recstat = 0;
+    if ((g&MODE_DEMO) == 0 && ud.recstat == 2)
+        ud.recstat = 0;
 
-//    if (g_networkMode != NET_DEDICATED_SERVER)
-//    {
-//        FX_StopAllSounds();
-//        S_ClearSoundLocks();
-//        FX_SetReverb(0);
-//        setgamemode(ud.config.ScreenMode,ud.config.ScreenWidth,ud.config.ScreenHeight,ud.config.ScreenBPP);
-//    }	       
+    if (g_networkMode != NET_DEDICATED_SERVER)
+    {
+        FX_StopAllSounds();
+        S_ClearSoundLocks();
+        FX_SetReverb(0);
+        setgamemode(ud.config.ScreenMode,ud.config.ScreenWidth,ud.config.ScreenHeight,ud.config.ScreenBPP);
+    }	       
+      
+    if (boardfilename[0] != 0 && ud.m_level_number == 7 && ud.m_volume_number == 0)
+    {
+        var volume: number, level: number;
 
-//    if (boardfilename[0] != 0 && ud.m_level_number == 7 && ud.m_volume_number == 0)
-//    {
-//        int32_t volume, level;
+        Bcorrectfilename(boardfilename,0);
 
-//        Bcorrectfilename(boardfilename,0);
+        volume = level = G_FindLevelByFile(boardfilename.toString());
 
-//        volume = level = G_FindLevelByFile(boardfilename);
+        if (level != MAXLEVELS*MAXVOLUMES)
+        {
+            level &= MAXLEVELS-1;
+            volume = (volume - level) / MAXLEVELS;
 
-//        if (level != MAXLEVELS*MAXVOLUMES)
-//        {
-//            level &= MAXLEVELS-1;
-//            volume = (volume - level) / MAXLEVELS;
+            ud.level_number = ud.m_level_number = level;
+            ud.volume_number = ud.m_volume_number = volume;
+            boardfilename[0] = 0;
+        }
+    }
+ 
+    mii = (ud.volume_number*MAXLEVELS)+ud.level_number;
 
-//            ud.level_number = ud.m_level_number = level;
-//            ud.volume_number = ud.m_volume_number = volume;
-//            boardfilename[0] = 0;
-//        }
-//    }
+    if (MapInfo[mii].name == NULL || MapInfo[mii].filename == NULL)
+    {
+        if (boardfilename[0] != 0 && ud.m_level_number == 7 && ud.m_volume_number == 0)
+        {
+            if (MapInfo[mii].filename == NULL)
+                MapInfo[mii].filename = "";//(char *)Bcalloc(BMAX_PATH, sizeof(uint8_t));
+            if (MapInfo[mii].name == NULL)
+                MapInfo[mii].name = Bstrdup("User Map");
+        }
+        else
+        {
+            OSD_Printf(OSDTEXT_RED + "Map E%dL%d not defined!\n", ud.volume_number+1, ud.level_number+1);
+            return 1;
+        }
+    }
 
-//    mii = (ud.volume_number*MAXLEVELS)+ud.level_number;
+    i = ud.screen_size;
+    ud.screen_size = 0;
 
-//    if (MapInfo[mii].name == NULL || MapInfo[mii].filename == NULL)
-//    {
-//        if (boardfilename[0] != 0 && ud.m_level_number == 7 && ud.m_volume_number == 0)
-//        {
-//            if (MapInfo[mii].filename == NULL)
-//                MapInfo[mii].filename = (char *)Bcalloc(BMAX_PATH, sizeof(uint8_t));
-//            if (MapInfo[mii].name == NULL)
-//                MapInfo[mii].name = Bstrdup("User Map");
-//        }
-//        else
-//        {
-//            OSD_Printf(OSDTEXT_RED "Map E%dL%d not defined!\n", ud.volume_number+1, ud.level_number+1);
-//            return 1;
-//        }
-//    }
-
-//    i = ud.screen_size;
-//    ud.screen_size = 0;
-
-//    G_DoLoadScreen("Loading map . . .", -1);
+    G_DoLoadScreen("Loading map . . .", -1);throw "todo";
 //    G_UpdateScreenArea();
 
 //    ud.screen_size = i;

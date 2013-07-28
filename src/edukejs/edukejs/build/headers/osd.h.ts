@@ -173,17 +173,17 @@
 //// these correspond to the Duke palettes, so they shouldn't really be here
 //// ...but I don't care
 
-//#define OSDTEXT_BLUE      "^00"
-//#define OSDTEXT_GOLD      "^07"
-//#define OSDTEXT_DARKRED   "^10"
-//#define OSDTEXT_GREEN     "^11"
-//#define OSDTEXT_GRAY      "^12"
-//#define OSDTEXT_DARKGRAY  "^13"
-//#define OSDTEXT_DARKGREEN "^14"
-//#define OSDTEXT_BROWN     "^15"
-//#define OSDTEXT_DARKBLUE  "^16"
-//#define OSDTEXT_RED       "^21"
-//#define OSDTEXT_YELLOW    "^23"
+var OSDTEXT_BLUE     ="^00";
+var OSDTEXT_GOLD     ="^07";
+var OSDTEXT_DARKRED  ="^10";
+var OSDTEXT_GREEN    ="^11";
+var OSDTEXT_GRAY     ="^12";
+var OSDTEXT_DARKGRAY ="^13";
+var OSDTEXT_DARKGREEN="^14";
+var OSDTEXT_BROWN    ="^15";
+var OSDTEXT_DARKBLUE ="^16";
+var OSDTEXT_RED      ="^21";
+var OSDTEXT_YELLOW   ="^23";
 
 //#define OSDTEXT_BRIGHT    "^S0"
 
