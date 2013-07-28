@@ -99,13 +99,13 @@ function DO_TILE_ANIM(Picnum, Fakevar) { do {
 //    return (tspr->owner < 0 || (unsigned)tspr->picnum >= MAXTILES);
 //}
 
-////
-//// getpalookup (internal)
-////
-//static inline int32_t getpalookup(int32_t davis, int32_t dashade)
-//{
-//    return(min(max(dashade+(davis>>8),0),numshades-1));
-//}
+//
+// getpalookup (internal)
+//
+function getpalookup(davis: number, dashade: number)
+{
+    return(min(max(dashade+(davis>>8),0),numshades-1));
+}
 
 //static inline int32_t getpalookupsh(int32_t davis)
 //{

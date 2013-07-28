@@ -1057,7 +1057,7 @@ function kread16(handle: number) : number
         return buffer.getInt16();
     }
 
-    todoThrow("return(0)");
+    return(0);
 }
 
 function kread32(handle: number) : number
@@ -1103,13 +1103,13 @@ function kread32(handle: number) : number
     todoThrow("return(0)");
 }
 
-//int32_t klseek(int32_t handle, int32_t offset, int32_t whence)
-//{
-//    int32_t i, groupnum;
+function klseek(handle: number, offset: number, whence: number): number
+{
+    var i: number, groupnum: number;
 
-//    groupnum = filegrp[handle];
+    groupnum = filegrp[handle];
 
-//    if (groupnum == 255) return(Blseek(filehan[handle],offset,whence));
+    if (groupnum == 255) todoThrow("return(Blseek(filehan[handle],offset,whence));");
 //#ifdef WITHKPLIB
 //    else if (groupnum == 254)
 //    {
@@ -1124,23 +1124,23 @@ function kread32(handle: number) : number
 //    }
 //#endif
 
-//    if (groupfil[groupnum] != -1)
-//    {
-//        switch (whence)
-//        {
-//        case BSEEK_SET:
-//            filepos[handle] = offset; break;
-//        case BSEEK_END:
-//            i = filehan[handle];
-//            filepos[handle] = (gfileoffs[groupnum][i+1]-gfileoffs[groupnum][i])+offset;
-//            break;
-//        case BSEEK_CUR:
-//            filepos[handle] += offset; break;
-//        }
-//        return(filepos[handle]);
-//    }
-//    return(-1);
-//}
+    if (groupfil[groupnum] != -1)
+    {
+        switch (whence)
+        {
+        case BSEEK_SET:
+            filepos[handle] = offset; break;
+        case BSEEK_END:
+            i = filehan[handle];
+            filepos[handle] = (gfileoffs[groupnum][i+1]-gfileoffs[groupnum][i])+offset;
+            break;
+        case BSEEK_CUR:
+            filepos[handle] += offset; break;
+        }
+        return(filepos[handle]);
+    }
+    return(-1);
+}
 
 function kfilelength(handle : number) : number
 {

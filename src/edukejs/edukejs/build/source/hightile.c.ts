@@ -35,37 +35,37 @@ var hictinting: palette_t[] = newStructArray(palette_t, MAXPALOOKUPS);
 var hicreplc: hicreplctyp[] = newStructArray(hicreplctyp, MAXTILES);
 var hicfirstinit = 0;
 
-////
-//// find the index into hicreplc[] which contains the replacement tile particulars
-////
-//hicreplctyp *hicfindsubst(int32_t picnum, int32_t palnum, int32_t skybox)
-//{
-//    if (!hicfirstinit || (uint32_t)picnum >= (uint32_t)MAXTILES) return NULL;
+//
+// find the index into hicreplc[] which contains the replacement tile particulars
+//
+function hicfindsubst(picnum: number, palnum: number, skybox: number): hicreplctyp
+{
+    if (!hicfirstinit || picnum >= MAXTILES) return NULL;
 
-//    do
-//    {
-//        if (skybox)
-//        {
-//            hicreplctyp *hr = hicreplc[picnum];
-//            for (; hr; hr = hr->next)
-//                if (hr->palnum == palnum && hr->skybox && !hr->skybox->ignore)
-//                    return hr;
-//        }
-//        else
-//        {
-//            hicreplctyp *hr = hicreplc[picnum];
-//            for (; hr; hr = hr->next)
-//                if (hr->palnum == palnum && !hr->ignore)
-//                    return hr;
-//        }
+    do
+    {
+        if (skybox)
+        {
+            var hr = hicreplc[picnum];
+            for (; hr; hr = hr.next)
+                if (hr.palnum == palnum && hr.skybox && !hr.skybox.ignore)
+                    return hr;
+        }
+        else
+        {
+            var hr = hicreplc[picnum];
+            for (; hr; hr = hr.next)
+                if (hr.palnum == palnum && !hr.ignore)
+                    return hr;
+        }
 
-//        if (!palnum || palnum >= (MAXPALOOKUPS - RESERVEDPALS)) break;
-//        palnum = 0;
-//    }
-//    while (1);
+        if (!palnum || palnum >= (MAXPALOOKUPS - RESERVEDPALS)) break;
+        palnum = 0;
+    }
+    while (1);
 
-//    return NULL;	// no replacement found
-//}
+    return NULL;	// no replacement found
+}
 
 
 //

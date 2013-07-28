@@ -82,11 +82,11 @@ var MAXPSKYTILES = 256;
 var MAXSPRITESONSCREEN = 4096;
 var MAXUNIQHUDID = 256; //Extra slots so HUD models can store animation state without messing game sprites
 
-//#define RESERVEDPALS 4 // don't forget to increment this when adding reserved pals
-//#define DETAILPAL   (MAXPALOOKUPS - 1)
-//#define GLOWPAL     (MAXPALOOKUPS - 2)
-//#define SPECULARPAL (MAXPALOOKUPS - 3)
-//#define NORMALPAL   (MAXPALOOKUPS - 4)
+var RESERVEDPALS = 4; // don't forget to increment this when adding reserved pals
+var DETAILPAL  =(MAXPALOOKUPS - 1);
+var GLOWPAL    =(MAXPALOOKUPS - 2);
+var SPECULARPAL=(MAXPALOOKUPS - 3);
+var NORMALPAL  =(MAXPALOOKUPS - 4);
 
 //#define TSPR_TEMP 99
 //#define TSPR_MIRROR 100
@@ -697,8 +697,8 @@ var spritesmooth;//EXTERN spritesmooth_t spritesmooth[MAXSPRITES+MAXUNIQHUDID];
 //EXTERN int16_t thewall[MAXWALLSB];
 //EXTERN spritetype *tspriteptr[MAXSPRITESONSCREEN + 1];
 
-var xdim: number, ydim: number, numpages: number;       //EXTERN int32_t 
-var yxaspect: number, viewingrange: number;     //EXTERN int32_t 
+var xdim = 0, ydim = 0, numpages = 0;       //EXTERN int32_t 
+var yxaspect = 0, viewingrange = 0;     //EXTERN int32_t 
 //#ifdef __cplusplus
 //extern "C" {
 //#endif

@@ -270,9 +270,9 @@ var hicprecaching = 0;      //int32_t
 //    const int32_t j = (dapicnum&(GLTEXCACHEADSIZ-1));
 //    pthtyp *pth;
 //
-//    for (pth=texcache.list[j]; pth; pth=pth->next)
-//        if (pth->picnum == dapicnum && pth->palnum == dapalnum)
-//            return ((pth->flags&8) != 0);
+//    for (pth=texcache.list[j]; pth; pth=pth.next)
+//        if (pth.picnum == dapicnum && pth.palnum == dapalnum)
+//            return ((pth.flags&8) != 0);
 //
 //    return 1;
 //}
@@ -282,12 +282,12 @@ var hicprecaching = 0;      //int32_t
 //    const int32_t j = (dapicnum&(GLTEXCACHEADSIZ-1));
 //    pthtyp *pth;
 //
-//    for (pth=texcache.list[j]; pth; pth=pth->next)
-//        if (pth->picnum == dapicnum && pth->palnum == dapalnum && (pth->flags & 1) == ((dameth&4)>>2))
+//    for (pth=texcache.list[j]; pth; pth=pth.next)
+//        if (pth.picnum == dapicnum && pth.palnum == dapalnum && (pth.flags & 1) == ((dameth&4)>>2))
 //        {
-//            pth->flags |= 128;
-//            if (pth->flags & 16)
-//                pth->ofb->flags |= 128;
+//            pth.flags |= 128;
+//            if (pth.flags & 16)
+//                pth.ofb.flags |= 128;
 //        }
 //}
 //
@@ -346,12 +346,12 @@ function gltexinvalidatetype(type: number): void
 //
 //    for (i=GLTEXCACHEADSIZ-1; i>=0; i--)
 //    {
-//        for (pth=texcache.list[i]; pth; pth=pth->next)
+//        for (pth=texcache.list[i]; pth; pth=pth.next)
 //        {
-//            bind_2d_texture(pth->glpic);
+//            bind_2d_texture(pth.glpic);
 //
-//            if (r_fullbrights && pth->flags & 16)
-//                bind_2d_texture(pth->ofb->glpic);
+//            if (r_fullbrights && pth.flags & 16)
+//                bind_2d_texture(pth.ofb.glpic);
 //        }
 //    }
 //
@@ -363,18 +363,18 @@ function gltexinvalidatetype(type: number): void
 //        for (i=0; i<nextmodelid; i++)
 //        {
 //            m = (md2model_t *)models[i];
-//            if (m->mdnum < 2) continue;
-//            for (j=0; j<m->numskins*(HICEFFECTMASK+1); j++)
+//            if (m.mdnum < 2) continue;
+//            for (j=0; j<m.numskins*(HICEFFECTMASK+1); j++)
 //            {
-//                if (!m->texid[j]) continue;
-//                bind_2d_texture(m->texid[j]);
+//                if (!m.texid[j]) continue;
+//                bind_2d_texture(m.texid[j]);
 //            }
 //
-//            for (sk=m->skinmap; sk; sk=sk->next)
+//            for (sk=m.skinmap; sk; sk=sk.next)
 //                for (j=0; j<(HICEFFECTMASK+1); j++)
 //                {
-//                    if (!sk->texid[j]) continue;
-//                    bind_2d_texture(sk->texid[j]);
+//                    if (!sk.texid[j]) continue;
+//                    bind_2d_texture(sk.texid[j]);
 //                }
 //        }
 //    }
@@ -727,7 +727,7 @@ function polymost_glreset(): void
 //        wpptr = &dapic[y*daxsiz2+dox];
 //        for (x=dox; x>=0; x--,wpptr--)
 //        {
-//            if (wpptr->a) continue;
+//            if (wpptr.a) continue;
 //
 //            r = g = b = j = 0;
 //            if ((x>     0) && (wpptr[     -1].a)) { r += wpptr[     -1].r; g += wpptr[     -1].g; b += wpptr[     -1].b; j++; }
@@ -737,13 +737,13 @@ function polymost_glreset(): void
 //            switch (j)
 //            {
 //            case 1:
-//                wpptr->r =   r            ; wpptr->g =   g            ; wpptr->b =   b            ; break;
+//                wpptr.r =   r            ; wpptr.g =   g            ; wpptr.b =   b            ; break;
 //            case 2:
-//                wpptr->r = ((r   +  1)>>1); wpptr->g = ((g   +  1)>>1); wpptr->b = ((b   +  1)>>1); break;
+//                wpptr.r = ((r   +  1)>>1); wpptr.g = ((g   +  1)>>1); wpptr.b = ((b   +  1)>>1); break;
 //            case 3:
-//                wpptr->r = ((r*85+128)>>8); wpptr->g = ((g*85+128)>>8); wpptr->b = ((b*85+128)>>8); break;
+//                wpptr.r = ((r*85+128)>>8); wpptr.g = ((g*85+128)>>8); wpptr.b = ((b*85+128)>>8); break;
 //            case 4:
-//                wpptr->r = ((r   +  2)>>2); wpptr->g = ((g   +  2)>>2); wpptr->b = ((b   +  2)>>2); break;
+//                wpptr.r = ((r   +  2)>>2); wpptr.g = ((g   +  2)>>2); wpptr.b = ((b   +  2)>>2); break;
 //            default:
 //                break;
 //            }
@@ -823,17 +823,17 @@ function polymost_glreset(): void
 //                {
 //                case 0:
 //                case 1:
-//                    wpptr->r = r; wpptr->g = g; wpptr->b = b; wpptr->a = a; break;
+//                    wpptr.r = r; wpptr.g = g; wpptr.b = b; wpptr.a = a; break;
 //                case 2:
-//                    wpptr->r = ((r+1)>>1); wpptr->g = ((g+1)>>1); wpptr->b = ((b+1)>>1); wpptr->a = ((a+1)>>1); break;
+//                    wpptr.r = ((r+1)>>1); wpptr.g = ((g+1)>>1); wpptr.b = ((b+1)>>1); wpptr.a = ((a+1)>>1); break;
 //                case 3:
-//                    wpptr->r = ((r*85+128)>>8); wpptr->g = ((g*85+128)>>8); wpptr->b = ((b*85+128)>>8); wpptr->a = ((a*85+128)>>8); break;
+//                    wpptr.r = ((r*85+128)>>8); wpptr.g = ((g*85+128)>>8); wpptr.b = ((b*85+128)>>8); wpptr.a = ((a*85+128)>>8); break;
 //                case 4:
-//                    wpptr->r = ((r+2)>>2); wpptr->g = ((g+2)>>2); wpptr->b = ((b+2)>>2); wpptr->a = ((a+2)>>2); break;
+//                    wpptr.r = ((r+2)>>2); wpptr.g = ((g+2)>>2); wpptr.b = ((b+2)>>2); wpptr.a = ((a+2)>>2); break;
 //                default:
 //                    break;
 //                }
-//                //if (wpptr->a) wpptr->a = 255;
+//                //if (wpptr.a) wpptr.a = 255;
 //            }
 //        }
 //        if (tsizx >= 0) fixtransparency(-1, pic,(tsizx+(1<<j)-1)>>j,(tsizy+(1<<j)-1)>>j,x3,y3,dameth);
@@ -887,138 +887,138 @@ function polymost_glreset(): void
 //    }
 //}
 //
-//int32_t gloadtile_art(int32_t dapic, int32_t dapal, int32_t dashade, int32_t dameth, pthtyp *pth, int32_t doalloc)
-//{
-//    coltype *pic;
-//    int32_t xsiz, ysiz;
-//    char hasalpha = 0, hasfullbright = 0;
-//
-//    static int32_t fullbrightloadingpass = 0;
-//
-//    int32_t tsizx = tilesizx[dapic];
-//    int32_t tsizy = tilesizy[dapic];
-//
-//    if (!glinfo.texnpot)
-//    {
-//        for (xsiz=1; xsiz<tsizx; xsiz+=xsiz);
-//        for (ysiz=1; ysiz<tsizy; ysiz+=ysiz);
-//    }
-//    else
-//    {
-//        if ((tsizx|tsizy) == 0)
-//        {
-//            xsiz = ysiz = 1;
-//        }
-//        else
-//        {
-//            xsiz = tsizx;
-//            ysiz = tsizy;
-//        }
-//    }
-//
-//    pic = (coltype *)Bmalloc(xsiz*ysiz*sizeof(coltype));
-//    if (!pic) return 1;
-//
-//    if (!waloff[dapic])
-//    {
-//        //Force invalid textures to draw something - an almost purely transparency texture
-//        //This allows the Z-buffer to be updated for mirrors (which are invalidated textures)
-//        pic[0].r = pic[0].g = pic[0].b = 0; pic[0].a = 1;
-//        tsizx = tsizy = 1; hasalpha = 1;
-//    }
-//    else
-//    {
-//        const int32_t dofullbright = !(picanm[dapic].sf&PICANM_NOFULLBRIGHT_BIT);
-//        int32_t y;
-//
-//        for (y=0; y<ysiz; y++)
-//        {
-//            coltype *wpptr = &pic[y*xsiz];
-//            int32_t x, y2;
-//
-//            if (y < tsizy) y2 = y; else y2 = y-tsizy;
-//
-//            for (x=0; x<xsiz; x++,wpptr++)
-//            {
-//                int32_t dacol, x2;
-//
-//                if ((dameth&4) && (x >= tsizx || y >= tsizy)) //Clamp texture
-//                    { wpptr->r = wpptr->g = wpptr->b = wpptr->a = 0; continue; }
-//                if (x < tsizx) x2 = x; else x2 = x-tsizx;
-//
-//                dacol = *(char *)(waloff[dapic]+x2*tsizy+y2);
-//
-//                if (!fullbrightloadingpass)
-//                {
-//                    // regular texture
-//                    if (dacol > 239 && dacol != 255 && dofullbright)
-//                        hasfullbright = 1;
-//
-//                    wpptr->a = 255;
-//                }
-//                else
-//                {
-//                    // texture with only fullbright areas
-//                    if (dacol < 240)    // regular colors
-//                    {
-//                        wpptr->a = 0;
-//                        hasalpha = 1;
-//                    }
-//                    else   // fullbright
-//                    {
-//                        wpptr->a = 255;
-//                    }
-//                }
-//
-//                if (dacol != 255)
-//                {
-//                    char *p = (char *)(palookup[dapal])+(int32_t)(dashade<<8);
-//                    dacol = (uint8_t)p[dacol];
-//                }
-//                else
-//                {
-//                    wpptr->a = 0;
-//                    hasalpha = 1;
-//                }
-//
-//                bricolor((palette_t *)wpptr, dacol);
-//            }
-//        }
-//    }
-//
-//    if (doalloc) bglGenTextures(1,(GLuint *)&pth->glpic); //# of textures (make OpenGL allocate structure)
-//    bglBindTexture(GL_TEXTURE_2D,pth->glpic);
-//
-//    fixtransparency(dapic, pic,tsizx,tsizy,xsiz,ysiz,dameth);
-//    uploadtexture(doalloc,xsiz,ysiz,hasalpha?GL_RGBA:GL_RGB,GL_RGBA,pic,tsizx,tsizy,dameth);
-//
-//    texture_setup(dameth);
-//
-//    Bfree(pic);
-//
-//    pth->picnum = dapic;
-//    pth->palnum = dapal;
-//    pth->shade = dashade;
-//    pth->effects = 0;
-//    pth->flags = ((dameth&4)>>2) | (hasalpha<<3);
-//    pth->hicr = NULL;
-//
-//    if (hasfullbright && !fullbrightloadingpass)
-//    {
-//        // Load the ONLY texture that'll be assembled with the regular one to
-//        // make the final texture with fullbright pixels.
-//        fullbrightloadingpass = 1;
-//        pth->ofb = (pthtyp *)Bcalloc(1,sizeof(pthtyp));
-//        if (!pth->ofb) return 1;
-//        pth->flags |= (1<<4);
-//        if (gloadtile_art(dapic, dapal, 0, dameth, pth->ofb, 1)) return 1;
-//
-//        fullbrightloadingpass = 0;
-//    }
-//
-//    return 0;
-//}
-//
+function gloadtile_art(dapic: number, dapal: number, dashade: number, dameth: number, pth:pthtyp, doalloc: number): number
+{
+    var pic: coltype;
+    var xsiz: number, ysiz: number; //int32_t 
+    var hasalpha = 0, hasfullbright = 0;//char
+
+    var fullbrightloadingpass = 0;//static int32_t 
+
+    var tsizx = tilesizx[dapic];/int32_t 
+    var tsizy = tilesizy[dapic];/int32_t 
+
+    if (!glinfo.texnpot)
+    {
+        for (xsiz=1; xsiz<tsizx; xsiz+=xsiz);
+        for (ysiz=1; ysiz<tsizy; ysiz+=ysiz);
+    }
+    else
+    {
+        if ((tsizx|tsizy) == 0)
+        {
+            xsiz = ysiz = 1;
+        }
+        else
+        {
+            xsiz = tsizx;
+            ysiz = tsizy;
+        }
+    }
+
+    pic = (coltype *)Bmalloc(xsiz*ysiz*sizeof(coltype));
+    if (!pic) return 1;
+
+    if (!waloff[dapic])
+    {
+        //Force invalid textures to draw something - an almost purely transparency texture
+        //This allows the Z-buffer to be updated for mirrors (which are invalidated textures)
+        pic[0].r = pic[0].g = pic[0].b = 0; pic[0].a = 1;
+        tsizx = tsizy = 1; hasalpha = 1;
+    }
+    else
+    {
+        const int32_t dofullbright = !(picanm[dapic].sf&PICANM_NOFULLBRIGHT_BIT);
+        int32_t y;
+
+        for (y=0; y<ysiz; y++)
+        {
+            coltype *wpptr = &pic[y*xsiz];
+            int32_t x, y2;
+
+            if (y < tsizy) y2 = y; else y2 = y-tsizy;
+
+            for (x=0; x<xsiz; x++,wpptr++)
+            {
+                int32_t dacol, x2;
+
+                if ((dameth&4) && (x >= tsizx || y >= tsizy)) //Clamp texture
+                    { wpptr.r = wpptr.g = wpptr.b = wpptr.a = 0; continue; }
+                if (x < tsizx) x2 = x; else x2 = x-tsizx;
+
+                dacol = *(char *)(waloff[dapic]+x2*tsizy+y2);
+
+                if (!fullbrightloadingpass)
+                {
+                    // regular texture
+                    if (dacol > 239 && dacol != 255 && dofullbright)
+                        hasfullbright = 1;
+
+                    wpptr.a = 255;
+                }
+                else
+                {
+                    // texture with only fullbright areas
+                    if (dacol < 240)    // regular colors
+                    {
+                        wpptr.a = 0;
+                        hasalpha = 1;
+                    }
+                    else   // fullbright
+                    {
+                        wpptr.a = 255;
+                    }
+                }
+
+                if (dacol != 255)
+                {
+                    char *p = (char *)(palookup[dapal])+(int32_t)(dashade<<8);
+                    dacol = (uint8_t)p[dacol];
+                }
+                else
+                {
+                    wpptr.a = 0;
+                    hasalpha = 1;
+                }
+
+                bricolor((palette_t *)wpptr, dacol);
+            }
+        }
+    }
+
+    if (doalloc) bglGenTextures(1,(GLuint *)&pth.glpic); //# of textures (make OpenGL allocate structure)
+    bglBindTexture(GL_TEXTURE_2D,pth.glpic);
+
+    fixtransparency(dapic, pic,tsizx,tsizy,xsiz,ysiz,dameth);
+    uploadtexture(doalloc,xsiz,ysiz,hasalpha?GL_RGBA:GL_RGB,GL_RGBA,pic,tsizx,tsizy,dameth);
+
+    texture_setup(dameth);
+
+    Bfree(pic);
+
+    pth.picnum = dapic;
+    pth.palnum = dapal;
+    pth.shade = dashade;
+    pth.effects = 0;
+    pth.flags = ((dameth&4)>>2) | (hasalpha<<3);
+    pth.hicr = NULL;
+
+    if (hasfullbright && !fullbrightloadingpass)
+    {
+        // Load the ONLY texture that'll be assembled with the regular one to
+        // make the final texture with fullbright pixels.
+        fullbrightloadingpass = 1;
+        pth.ofb = (pthtyp *)Bcalloc(1,sizeof(pthtyp));
+        if (!pth.ofb) return 1;
+        pth.flags |= (1<<4);
+        if (gloadtile_art(dapic, dapal, 0, dameth, pth.ofb, 1)) return 1;
+
+        fullbrightloadingpass = 0;
+    }
+
+    return 0;
+}
+
 //int32_t gloadtile_hi(int32_t dapic,int32_t dapalnum, int32_t facen, hicreplctyp *hicr,
 //                            int32_t dameth, pthtyp *pth, int32_t doalloc, char effect)
 //{
@@ -1040,24 +1040,24 @@ function polymost_glreset(): void
 //    if (!hicr) return -1;
 //    if (facen > 0)
 //    {
-//        if (!hicr->skybox) return -1;
+//        if (!hicr.skybox) return -1;
 //        if (facen > 6) return -1;
-//        if (!hicr->skybox->face[facen-1]) return -1;
-//        fn = hicr->skybox->face[facen-1];
+//        if (!hicr.skybox.face[facen-1]) return -1;
+//        fn = hicr.skybox.face[facen-1];
 //    }
 //    else
 //    {
-//        if (!hicr->filename) return -1;
-//        fn = hicr->filename;
+//        if (!hicr.filename) return -1;
+//        fn = hicr.filename;
 //    }
 //
 //    if ((filh = kopen4load(fn, 0)) < 0)
 //    {
 //        OSD_Printf("hightile: %s (pic %d) not found\n", fn, dapic);
 //        if (facen > 0)
-//            hicr->skybox->ignore = 1;
+//            hicr.skybox.ignore = 1;
 //        else
-//            hicr->ignore = 1;
+//            hicr.ignore = 1;
 //        return -1;
 //    }
 //    picfillen = kfilelength(filh);
@@ -1093,8 +1093,8 @@ function polymost_glreset(): void
 //
 //        kpgetdim(picfil,picfillen,&tsizx,&tsizy);
 //        if (tsizx == 0 || tsizy == 0) { Bfree(picfil); return -1; }
-//        pth->sizx = tsizx;
-//        pth->sizy = tsizy;
+//        pth.sizx = tsizx;
+//        pth.sizy = tsizy;
 //
 //        if (!glinfo.texnpot)
 //        {
@@ -1212,30 +1212,30 @@ function polymost_glreset(): void
 //        Bfree(picfil); picfil = 0;
 //
 //        if (tsizx>>r_downsize <= tilesizx[dapic] || tsizy>>r_downsize <= tilesizy[dapic])
-//            hicr->flags |= 17;
+//            hicr.flags |= 17;
 //
-//        if (glinfo.texcompr && glusetexcompr && !(hicr->flags & 1))
+//        if (glinfo.texcompr && glusetexcompr && !(hicr.flags & 1))
 //            intexfmt = (hasalpha == 255) ? GL_COMPRESSED_RGB_ARB : GL_COMPRESSED_RGBA_ARB;
 //        else if (hasalpha == 255) intexfmt = GL_RGB;
 //
 //        if ((doalloc&3)==1)
-//            bglGenTextures(1, &pth->glpic); //# of textures (make OpenGL allocate structure)
-//        bglBindTexture(GL_TEXTURE_2D,pth->glpic);
+//            bglGenTextures(1, &pth.glpic); //# of textures (make OpenGL allocate structure)
+//        bglBindTexture(GL_TEXTURE_2D,pth.glpic);
 //
 //        fixtransparency(-1, pic,tsizx,tsizy,xsiz,ysiz,dameth);
-//        uploadtexture(doalloc,xsiz,ysiz,intexfmt,texfmt,pic,-1,tsizy,dameth|8192|(hicr->flags & 16?4096:0));
+//        uploadtexture(doalloc,xsiz,ysiz,intexfmt,texfmt,pic,-1,tsizy,dameth|8192|(hicr.flags & 16?4096:0));
 //    }
 //
 //    // precalculate scaling parameters for replacement
 //    if (facen > 0)
 //    {
-//        pth->scalex = ((float)tsizx) / 64.0;
-//        pth->scaley = ((float)tsizy) / 64.0;
+//        pth.scalex = ((float)tsizx) / 64.0;
+//        pth.scaley = ((float)tsizy) / 64.0;
 //    }
 //    else
 //    {
-//        pth->scalex = ((float)tsizx) / ((float)tilesizx[dapic]);
-//        pth->scaley = ((float)tsizy) / ((float)tilesizy[dapic]);
+//        pth.scalex = ((float)tsizx) / ((float)tilesizx[dapic]);
+//        pth.scaley = ((float)tsizy) / ((float)tilesizy[dapic]);
 //    }
 //
 //    texture_setup(dameth);
@@ -1243,19 +1243,19 @@ function polymost_glreset(): void
 //    Bfree(pic); pic=NULL;
 //
 //    if (tsizx>>r_downsize <= tilesizx[dapic] || tsizy>>r_downsize <= tilesizy[dapic])
-//        hicr->flags |= (16+1);
+//        hicr.flags |= (16+1);
 //
-//    pth->picnum = dapic;
-//    pth->effects = effect;
-//    pth->flags = ((dameth&4)>>2) + 2 + ((facen>0)<<2); if (hasalpha != 255) pth->flags |= 8;
-//    pth->skyface = facen;
-//    pth->hicr = hicr;
+//    pth.picnum = dapic;
+//    pth.effects = effect;
+//    pth.flags = ((dameth&4)>>2) + 2 + ((facen>0)<<2); if (hasalpha != 255) pth.flags |= 8;
+//    pth.skyface = facen;
+//    pth.hicr = hicr;
 //
-//    if (glinfo.texcompr && glusetexcompr && glusetexcache && !(hicr->flags & 1))
+//    if (glinfo.texcompr && glusetexcompr && glusetexcache && !(hicr.flags & 1))
 //        if (!gotcache)
 //        {
 //            // save off the compressed version
-//            if (hicr->flags & 16) cachead.quality = 0;
+//            if (hicr.flags & 16) cachead.quality = 0;
 //            else cachead.quality = r_downsize;
 //            cachead.xdim = tsizx>>cachead.quality;
 //            cachead.ydim = tsizy>>cachead.quality;
@@ -1265,7 +1265,7 @@ function polymost_glreset(): void
 //                if (xsiz == pow2long[j]) { x |= 1; }
 //                if (ysiz == pow2long[j]) { x |= 2; }
 //            }
-//            cachead.flags = (x!=3) | (hasalpha != 255 ? 2 : 0) | (hicr->flags&16 ? 8 : 0); // handle nocompress
+//            cachead.flags = (x!=3) | (hasalpha != 255 ? 2 : 0) | (hicr.flags&16 ? 8 : 0); // handle nocompress
 /////            OSD_Printf("Caching \"%s\"\n", fn);
 //            texcache_writetex(fn, picfillen+(dapalnum<<8), dameth, effect, &cachead);
 //
@@ -1350,7 +1350,7 @@ function drawpoly(dpx: Float64Array, dpy: Float64Array, n:number, method: number
             tsizx = tsizy = 1; method = 1; //Hack to update Z-buffer for invalid mirror textures
         }
     }
-  todoThrow();
+  
     j = 0; dorot = ((gchang != 1.0) || (gctang != 1.0));
     if (dorot)
     {
@@ -1401,7 +1401,7 @@ function drawpoly(dpx: Float64Array, dpy: Float64Array, n:number, method: number
         var hackscx=0.0, hackscy=0.0; //float
 
         if (skyclamphack) method |= 4;
-        todoThrow("pth = texcache_fetch(globalpicnum,globalpal,getpalookup(globvis>>2, globalshade),method&(~3));");
+        pth = texcache_fetch(globalpicnum,globalpal,getpalookup(globvis>>2, globalshade),method&(~3));
 
         if (!pth)
         {
@@ -2151,19 +2151,19 @@ todoThrow();
 //    // comments from floor code:
 //            //(singlobalang/-16384*(sx-ghalfx) + 0*(sy-ghoriz) + (cosviewingrangeglobalang/16384)*ghalfx)*d + globalposx    = u*16
 //            //(cosglobalang/ 16384*(sx-ghalfx) + 0*(sy-ghoriz) + (sinviewingrangeglobalang/16384)*ghalfx)*d + globalposy    = v*16
-//            //(                  0*(sx-ghalfx) + 1*(sy-ghoriz) + (                             0)*ghalfx)*d + globalposz/16 = (sec->floorz/16)
+//            //(                  0*(sx-ghalfx) + 1*(sy-ghoriz) + (                             0)*ghalfx)*d + globalposz/16 = (sec.floorz/16)
 //    if (!(globalorientation&64))
 //        { ft[0] = globalposx; ft[1] = globalposy; ft[2] = cosglobalang; ft[3] = singlobalang; }
 //    else
 //    {
 //        //relative alignment
-//        fx = (double)(wall[wall[sec->wallptr].point2].x-wall[sec->wallptr].x);
-//        fy = (double)(wall[wall[sec->wallptr].point2].y-wall[sec->wallptr].y);
+//        fx = (double)(wall[wall[sec.wallptr].point2].x-wall[sec.wallptr].x);
+//        fy = (double)(wall[wall[sec.wallptr].point2].y-wall[sec.wallptr].y);
 //        r = 1.0/sqrt(fx*fx+fy*fy); fx *= r; fy *= r;
 //        ft[2] = cosglobalang*fx + singlobalang*fy;
 //        ft[3] = singlobalang*fx - cosglobalang*fy;
-//        ft[0] = ((double)(globalposx-wall[sec->wallptr].x))*fx + ((double)(globalposy-wall[sec->wallptr].y))*fy;
-//        ft[1] = ((double)(globalposy-wall[sec->wallptr].y))*fx - ((double)(globalposx-wall[sec->wallptr].x))*fy;
+//        ft[0] = ((double)(globalposx-wall[sec.wallptr].x))*fx + ((double)(globalposy-wall[sec.wallptr].y))*fy;
+//        ft[1] = ((double)(globalposy-wall[sec.wallptr].y))*fx - ((double)(globalposx-wall[sec.wallptr].x))*fy;
 //        if (!(globalorientation&4)) globalorientation ^= 32; else globalorientation ^= 16;
 //    }
 //    gdx = 0;
@@ -2258,7 +2258,7 @@ todoThrow();
 //        if (globalposz <= getceilzofslope(sectnum,globalposx,globalposy)) domostpolymethod = -1; //Back-face culling
 //    }
 //
-//    calc_and_apply_fog(globalpicnum, global_cf_shade, sec->visibility, global_cf_pal);
+//    calc_and_apply_fog(globalpicnum, global_cf_shade, sec.visibility, global_cf_pal);
 //
 //    pow2xsplit = 0;
 //    alpha = 0.f;
@@ -2326,8 +2326,8 @@ todoThrow();
 //    //DRAW WALLS SECTION!
 //    for (z=bunchfirst[bunch]; z>=0; z=p2[z])
 //    {
-//        wallnum = thewall[z]; wal = &wall[wallnum]; wal2 = &wall[wal->point2];
-//        nextsectnum = wal->nextsector;
+//        wallnum = thewall[z]; wal = &wall[wallnum]; wal2 = &wall[wal.point2];
+//        nextsectnum = wal.nextsector;
 //        nextsec = nextsectnum>=0 ? &sector[nextsectnum] : NULL;
 //
 //#ifdef YAX_ENABLE
@@ -2336,10 +2336,10 @@ todoThrow();
 //#endif
 //
 //        //Offset&Rotate 3D coordinates to screen 3D space
-//        x = wal->x-globalposx; y = wal->y-globalposy;
+//        x = wal.x-globalposx; y = wal.y-globalposy;
 //        xp0 = (double)y*gcosang  - (double)x*gsinang;
 //        yp0 = (double)x*gcosang2 + (double)y*gsinang2;
-//        x = wal2->x-globalposx; y = wal2->y-globalposy;
+//        x = wal2.x-globalposx; y = wal2.y-globalposy;
 //        xp1 = (double)y*gcosang  - (double)x*gsinang;
 //        yp1 = (double)x*gcosang2 + (double)y*gsinang2;
 //
@@ -2350,17 +2350,17 @@ todoThrow();
 //        {
 //            if (yp1 < SCISDIST) continue;
 //            t0 = (SCISDIST-yp0)/(yp1-yp0); xp0 = (xp1-xp0)*t0+xp0; yp0 = SCISDIST;
-//            nx0 = (wal2->x-wal->x)*t0+wal->x;
-//            ny0 = (wal2->y-wal->y)*t0+wal->y;
+//            nx0 = (wal2.x-wal.x)*t0+wal.x;
+//            ny0 = (wal2.y-wal.y)*t0+wal.y;
 //        }
-//        else { t0 = 0.f; nx0 = wal->x; ny0 = wal->y; }
+//        else { t0 = 0.f; nx0 = wal.x; ny0 = wal.y; }
 //        if (yp1 < SCISDIST)
 //        {
 //            t1 = (SCISDIST-oyp0)/(yp1-oyp0); xp1 = (xp1-oxp0)*t1+oxp0; yp1 = SCISDIST;
-//            nx1 = (wal2->x-wal->x)*t1+wal->x;
-//            ny1 = (wal2->y-wal->y)*t1+wal->y;
+//            nx1 = (wal2.x-wal.x)*t1+wal.x;
+//            ny1 = (wal2.y-wal.y)*t1+wal.y;
 //        }
-//        else { t1 = 1.f; nx1 = wal2->x; ny1 = wal2->y; }
+//        else { t1 = 1.f; nx1 = wal2.x; ny1 = wal2.y; }
 //
 //        ryp0 = 1.f/yp0; ryp1 = 1.f/yp1;
 //
@@ -2378,8 +2378,8 @@ todoThrow();
 //        cy1 = ((float)(cz-globalposz))*ryp1 + ghoriz;
 //        fy1 = ((float)(fz-globalposz))*ryp1 + ghoriz;
 //
-//        globalpicnum = sec->floorpicnum; globalshade = sec->floorshade; globalpal = (int32_t)((uint8_t)sec->floorpal);
-//        globalorientation = sec->floorstat;
+//        globalpicnum = sec.floorpicnum; globalshade = sec.floorshade; globalpal = (int32_t)((uint8_t)sec.floorpal);
+//        globalorientation = sec.floorstat;
 //        globvis = globalcisibility;
 //        if (sector[sectnum].visibility != 0) globvis = mulscale4(globvis, (uint8_t)(sector[sectnum].visibility+16));
 //
@@ -2400,14 +2400,14 @@ todoThrow();
 //        }
 //        //
 //
-//        global_cf_shade = sec->floorshade, global_cf_pal = sec->floorpal; global_cf_z = sec->floorz;  // REFACT
-//        global_cf_xpanning = sec->floorxpanning; global_cf_ypanning = sec->floorypanning, global_cf_heinum = sec->floorheinum;
+//        global_cf_shade = sec.floorshade, global_cf_pal = sec.floorpal; global_cf_z = sec.floorz;  // REFACT
+//        global_cf_xpanning = sec.floorxpanning; global_cf_ypanning = sec.floorypanning, global_cf_heinum = sec.floorheinum;
 //        global_getzofslope_func = &getflorzofslope;
 //
 //        if (!(globalorientation&1))
 //        {
 //#ifdef YAX_ENABLE
-//            if (globalposz <= sec->floorz || yax_getbunch(sectnum, YAX_FLOOR) < 0 || yax_getnextwall(wallnum, YAX_FLOOR) >= 0)
+//            if (globalposz <= sec.floorz || yax_getbunch(sectnum, YAX_FLOOR) < 0 || yax_getnextwall(wallnum, YAX_FLOOR) >= 0)
 //#endif
 //                polymost_internal_nonparallaxed(nx0, ny0, nx1, ny1, ryp0, ryp1, x0, x1, fy0, fy1, 1, sectnum);
 //        }
@@ -2417,7 +2417,7 @@ todoThrow();
 //#ifdef USE_OPENGL
 //            if (getrendermode() >= REND_POLYMOST)
 //            {
-//                calc_and_apply_fog_factor(sec->floorpicnum, sec->floorshade, sec->visibility, sec->floorpal, 0.005);
+//                calc_and_apply_fog_factor(sec.floorpicnum, sec.floorshade, sec.visibility, sec.floorpal, 0.005);
 //
 //                //Use clamping for tiled sky textures
 //                for (i=(1<<dapskybits)-1; i>0; i--)
@@ -2453,7 +2453,7 @@ todoThrow();
 //                else domost(x0,fy0,x1,fy1);
 //
 //                if (r_parallaxskypanning)
-//                    vv[0] += dd[0]*((double)sec->floorypanning)*((double)i)/256.0;
+//                    vv[0] += dd[0]*((double)sec.floorypanning)*((double)i)/256.0;
 //
 //                gdx = 0; gdy = 0; gdo = dd[0];
 //                gux = gdo*(t*((double)xdimscale)*((double)yxaspect)*((double)viewingrange))/(16384.0*65536.0*65536.0*5.0*1024.0);
@@ -2468,7 +2468,7 @@ todoThrow();
 //                do
 //                {
 //                    globalpicnum = dapskyoff[y&((1<<dapskybits)-1)]+i;
-//                    guo = gdo*(t*((double)(globalang-(y<<(11-dapskybits))))/2048.0 + (double)((r_parallaxskypanning)?sec->floorxpanning:0)) - gux*ghalfx;
+//                    guo = gdo*(t*((double)(globalang-(y<<(11-dapskybits))))/2048.0 + (double)((r_parallaxskypanning)?sec.floorxpanning:0)) - gux*ghalfx;
 //                    y++;
 //                    ox = fx; fx = ((double)((y<<(11-dapskybits))-globalang))*oz+ghalfx;
 //                    if (fx > x1) { fx = x1; i = -1; }
@@ -2658,8 +2658,8 @@ todoThrow();
 //#endif
 //        }
 //
-//        globalpicnum = sec->ceilingpicnum; globalshade = sec->ceilingshade; globalpal = (int32_t)((uint8_t)sec->ceilingpal);
-//        globalorientation = sec->ceilingstat;
+//        globalpicnum = sec.ceilingpicnum; globalshade = sec.ceilingshade; globalpal = (int32_t)((uint8_t)sec.ceilingpal);
+//        globalorientation = sec.ceilingstat;
 //        globvis = globalcisibility;
 //        if (sector[sectnum].visibility != 0) globvis = mulscale4(globvis, (uint8_t)(sector[sectnum].visibility+16));
 //
@@ -2680,14 +2680,14 @@ todoThrow();
 //        }
 //        //
 //
-//        global_cf_shade = sec->ceilingshade, global_cf_pal = sec->ceilingpal; global_cf_z = sec->ceilingz;  // REFACT
-//        global_cf_xpanning = sec->ceilingxpanning; global_cf_ypanning = sec->ceilingypanning, global_cf_heinum = sec->ceilingheinum;
+//        global_cf_shade = sec.ceilingshade, global_cf_pal = sec.ceilingpal; global_cf_z = sec.ceilingz;  // REFACT
+//        global_cf_xpanning = sec.ceilingxpanning; global_cf_ypanning = sec.ceilingypanning, global_cf_heinum = sec.ceilingheinum;
 //        global_getzofslope_func = &getceilzofslope;
 //
 //        if (!(globalorientation&1))
 //        {
 //#ifdef YAX_ENABLE
-//            if (globalposz >= sec->ceilingz || yax_getbunch(sectnum, YAX_CEILING) < 0 || yax_getnextwall(wallnum, YAX_CEILING) >= 0)
+//            if (globalposz >= sec.ceilingz || yax_getbunch(sectnum, YAX_CEILING) < 0 || yax_getnextwall(wallnum, YAX_CEILING) >= 0)
 //#endif
 //                polymost_internal_nonparallaxed(nx0, ny0, nx1, ny1, ryp0, ryp1, x0, x1, cy0, cy1, 0, sectnum);
 //        }
@@ -2696,7 +2696,7 @@ todoThrow();
 //#ifdef USE_OPENGL
 //            if (getrendermode() >= REND_POLYMOST)
 //            {
-//                calc_and_apply_fog_factor(sec->ceilingpicnum, sec->ceilingshade, sec->visibility, sec->ceilingpal, 0.005);
+//                calc_and_apply_fog_factor(sec.ceilingpicnum, sec.ceilingshade, sec.visibility, sec.ceilingpal, 0.005);
 //
 //                //Use clamping for tiled sky textures
 //                for (i=(1<<dapskybits)-1; i>0; i--)
@@ -2736,7 +2736,7 @@ todoThrow();
 //                else domost(x1,cy1,x0,cy0);
 //
 //                if (r_parallaxskypanning)
-//                    vv[0] += dd[0]*((double)sec->ceilingypanning)*((double)i)/256.0;
+//                    vv[0] += dd[0]*((double)sec.ceilingypanning)*((double)i)/256.0;
 //
 //                gdx = 0; gdy = 0; gdo = dd[0];
 //                gux = gdo*(t*((double)xdimscale)*((double)yxaspect)*((double)viewingrange))/(16384.0*65536.0*65536.0*5.0*1024.0);
@@ -2751,7 +2751,7 @@ todoThrow();
 //                do
 //                {
 //                    globalpicnum = dapskyoff[y&((1<<dapskybits)-1)]+i;
-//                    guo = gdo*(t*((double)(globalang-(y<<(11-dapskybits))))/2048.0 + (double)((r_parallaxskypanning)?sec->ceilingxpanning:0)) - gux*ghalfx;
+//                    guo = gdo*(t*((double)(globalang-(y<<(11-dapskybits))))/2048.0 + (double)((r_parallaxskypanning)?sec.ceilingxpanning:0)) - gux*ghalfx;
 //                    y++;
 //                    ox = fx; fx = ((double)((y<<(11-dapskybits))-globalang))*oz+ghalfx;
 //                    if (fx > x1) { fx = x1; i = -1; }
@@ -2941,34 +2941,34 @@ todoThrow();
 //        }
 //
 //        //(x0,cy0) == (u=             0,v=0,d=)
-//        //(x1,cy0) == (u=wal->xrepeat*8,v=0)
+//        //(x1,cy0) == (u=wal.xrepeat*8,v=0)
 //        //(x0,fy0) == (u=             0,v=v)
 //        //             u = (gux*sx + guy*sy + guo) / (gdx*sx + gdy*sy + gdo)
 //        //             v = (gvx*sx + gvy*sy + gvo) / (gdx*sx + gdy*sy + gdo)
 //        //             0 = (gux*x0 + guy*cy0 + guo) / (gdx*x0 + gdy*cy0 + gdo)
-//        //wal->xrepeat*8 = (gux*x1 + guy*cy0 + guo) / (gdx*x1 + gdy*cy0 + gdo)
+//        //wal.xrepeat*8 = (gux*x1 + guy*cy0 + guo) / (gdx*x1 + gdy*cy0 + gdo)
 //        //             0 = (gvx*x0 + gvy*cy0 + gvo) / (gdx*x0 + gdy*cy0 + gdo)
 //        //             v = (gvx*x0 + gvy*fy0 + gvo) / (gdx*x0 + gdy*fy0 + gdo)
-//        //sx = x0, u = t0*wal->xrepeat*8, d = yp0;
-//        //sx = x1, u = t1*wal->xrepeat*8, d = yp1;
+//        //sx = x0, u = t0*wal.xrepeat*8, d = yp0;
+//        //sx = x1, u = t1*wal.xrepeat*8, d = yp1;
 //        //d = gdx*sx + gdo
 //        //u = (gux*sx + guo) / (gdx*sx + gdo)
 //        //yp0 = gdx*x0 + gdo
 //        //yp1 = gdx*x1 + gdo
-//        //t0*wal->xrepeat*8 = (gux*x0 + guo) / (gdx*x0 + gdo)
-//        //t1*wal->xrepeat*8 = (gux*x1 + guo) / (gdx*x1 + gdo)
+//        //t0*wal.xrepeat*8 = (gux*x0 + guo) / (gdx*x0 + gdo)
+//        //t1*wal.xrepeat*8 = (gux*x1 + guo) / (gdx*x1 + gdo)
 //        //gdx*x0 + gdo = yp0
 //        //gdx*x1 + gdo = yp1
 //        gdx = (ryp0-ryp1)*gxyaspect / (x0-x1);
 //        gdy = 0;
 //        gdo = ryp0*gxyaspect - gdx*x0;
 //
-//        //gux*x0 + guo = t0*wal->xrepeat*8*yp0
-//        //gux*x1 + guo = t1*wal->xrepeat*8*yp1
-//        gux = (t0*ryp0 - t1*ryp1)*gxyaspect*(float)wal->xrepeat*8.f / (x0-x1);
-//        guo = t0*ryp0*gxyaspect*(float)wal->xrepeat*8.f - gux*x0;
-//        guo += (float)wal->xpanning*gdo;
-//        gux += (float)wal->xpanning*gdx;
+//        //gux*x0 + guo = t0*wal.xrepeat*8*yp0
+//        //gux*x1 + guo = t1*wal.xrepeat*8*yp1
+//        gux = (t0*ryp0 - t1*ryp1)*gxyaspect*(float)wal.xrepeat*8.f / (x0-x1);
+//        guo = t0*ryp0*gxyaspect*(float)wal.xrepeat*8.f - gux*x0;
+//        guo += (float)wal.xpanning*gdo;
+//        gux += (float)wal.xpanning*gdx;
 //        guy = 0;
 //        //Derivation for u:
 //        //   (gvx*x0 + gvy*cy0 + gvo) / (gdx*x0 + gdy*cy0 + gdo) = 0
@@ -2989,97 +2989,97 @@ todoThrow();
 //            ocy1 = ((float)(cz-globalposz))*ryp1 + ghoriz;
 //            ofy1 = ((float)(fz-globalposz))*ryp1 + ghoriz;
 //
-//            if ((wal->cstat&48) == 16) maskwall[maskwallcnt++] = z;
+//            if ((wal.cstat&48) == 16) maskwall[maskwallcnt++] = z;
 //
-//            if (((cy0 < ocy0) || (cy1 < ocy1)) && (!((sec->ceilingstat&sector[nextsectnum].ceilingstat)&1)))
+//            if (((cy0 < ocy0) || (cy1 < ocy1)) && (!((sec.ceilingstat&sector[nextsectnum].ceilingstat)&1)))
 //            {
-//                globalpicnum = wal->picnum; globalshade = wal->shade; globalpal = (int32_t)((uint8_t)wal->pal);
+//                globalpicnum = wal.picnum; globalshade = wal.shade; globalpal = (int32_t)((uint8_t)wal.pal);
 //                globvis = globalvisibility;
 //                if (sector[sectnum].visibility != 0) globvis = mulscale4(globvis, (uint8_t)(sector[sectnum].visibility+16));
 //
 //                DO_TILE_ANIM(globalpicnum, wallnum+16384);
 //
-//                if (!(wal->cstat&4)) i = sector[nextsectnum].ceilingz; else i = sec->ceilingz;
+//                if (!(wal.cstat&4)) i = sector[nextsectnum].ceilingz; else i = sec.ceilingz;
 //
 //                // over
-//                calc_ypanning(i, ryp0, ryp1, x0, x1, wal->ypanning, wal->yrepeat, wal->cstat&4);
+//                calc_ypanning(i, ryp0, ryp1, x0, x1, wal.ypanning, wal.yrepeat, wal.cstat&4);
 //
-//                if (wal->cstat&8) //xflip
+//                if (wal.cstat&8) //xflip
 //                {
-//                    t = (float)(wal->xrepeat*8 + wal->xpanning*2);
+//                    t = (float)(wal.xrepeat*8 + wal.xpanning*2);
 //                    gux = gdx*t - gux;
 //                    guy = gdy*t - guy;
 //                    guo = gdo*t - guo;
 //                }
-//                if (wal->cstat&256) { gvx = -gvx; gvy = -gvy; gvo = -gvo; } //yflip
+//                if (wal.cstat&256) { gvx = -gvx; gvy = -gvy; gvo = -gvo; } //yflip
 //
-//                calc_and_apply_fog(wal->picnum, wal->shade, sec->visibility, sec->floorpal);
+//                calc_and_apply_fog(wal.picnum, wal.shade, sec.visibility, sec.floorpal);
 //
 //                pow2xsplit = 1; domost(x1,ocy1,x0,ocy0);
-//                if (wal->cstat&8) { gux = ogux; guy = oguy; guo = oguo; }
+//                if (wal.cstat&8) { gux = ogux; guy = oguy; guo = oguo; }
 //            }
-//            if (((ofy0 < fy0) || (ofy1 < fy1)) && (!((sec->floorstat&sector[nextsectnum].floorstat)&1)))
+//            if (((ofy0 < fy0) || (ofy1 < fy1)) && (!((sec.floorstat&sector[nextsectnum].floorstat)&1)))
 //            {
-//                if (!(wal->cstat&2)) nwal = wal;
+//                if (!(wal.cstat&2)) nwal = wal;
 //                else
 //                {
-//                    nwal = &wall[wal->nextwall];
-//                    guo += (float)(nwal->xpanning-wal->xpanning)*gdo;
-//                    gux += (float)(nwal->xpanning-wal->xpanning)*gdx;
-//                    guy += (float)(nwal->xpanning-wal->xpanning)*gdy;
+//                    nwal = &wall[wal.nextwall];
+//                    guo += (float)(nwal.xpanning-wal.xpanning)*gdo;
+//                    gux += (float)(nwal.xpanning-wal.xpanning)*gdx;
+//                    guy += (float)(nwal.xpanning-wal.xpanning)*gdy;
 //                }
-//                globalpicnum = nwal->picnum; globalshade = nwal->shade; globalpal = (int32_t)((uint8_t)nwal->pal);
+//                globalpicnum = nwal.picnum; globalshade = nwal.shade; globalpal = (int32_t)((uint8_t)nwal.pal);
 //                globvis = globalvisibility;
 //                if (sector[sectnum].visibility != 0) globvis = mulscale4(globvis, (uint8_t)(sector[sectnum].visibility+16));
 //
 //                DO_TILE_ANIM(globalpicnum, wallnum+16384);
 //
-//                if (!(nwal->cstat&4)) i = sector[nextsectnum].floorz; else i = sec->ceilingz;
+//                if (!(nwal.cstat&4)) i = sector[nextsectnum].floorz; else i = sec.ceilingz;
 //
 //                // under
-//                calc_ypanning(i, ryp0, ryp1, x0, x1, nwal->ypanning, wal->yrepeat, !(nwal->cstat&4));
+//                calc_ypanning(i, ryp0, ryp1, x0, x1, nwal.ypanning, wal.yrepeat, !(nwal.cstat&4));
 //
-//                if (wal->cstat&8) //xflip
+//                if (wal.cstat&8) //xflip
 //                {
-//                    t = (float)(wal->xrepeat*8 + nwal->xpanning*2);
+//                    t = (float)(wal.xrepeat*8 + nwal.xpanning*2);
 //                    gux = gdx*t - gux;
 //                    guy = gdy*t - guy;
 //                    guo = gdo*t - guo;
 //                }
-//                if (nwal->cstat&256) { gvx = -gvx; gvy = -gvy; gvo = -gvo; } //yflip
+//                if (nwal.cstat&256) { gvx = -gvx; gvy = -gvy; gvo = -gvo; } //yflip
 //
-//                calc_and_apply_fog(nwal->picnum, nwal->shade, sec->visibility, sec->floorpal);
+//                calc_and_apply_fog(nwal.picnum, nwal.shade, sec.visibility, sec.floorpal);
 //
 //                pow2xsplit = 1; domost(x0,ofy0,x1,ofy1);
-//                if (wal->cstat&(2+8)) { guo = oguo; gux = ogux; guy = oguy; }
+//                if (wal.cstat&(2+8)) { guo = oguo; gux = ogux; guy = oguy; }
 //            }
 //        }
 //
-//        if ((nextsectnum < 0) || (wal->cstat&32))   //White/1-way wall
+//        if ((nextsectnum < 0) || (wal.cstat&32))   //White/1-way wall
 //        {
-//            if (nextsectnum < 0) globalpicnum = wal->picnum; else globalpicnum = wal->overpicnum;
-//            globalshade = wal->shade; globalpal = (int32_t)((uint8_t)wal->pal);
+//            if (nextsectnum < 0) globalpicnum = wal.picnum; else globalpicnum = wal.overpicnum;
+//            globalshade = wal.shade; globalpal = (int32_t)((uint8_t)wal.pal);
 //            globvis = globalvisibility;
 //            if (sector[sectnum].visibility != 0) globvis = mulscale4(globvis, (uint8_t)(sector[sectnum].visibility+16));
 //
 //            DO_TILE_ANIM(globalpicnum, wallnum+16384);
 //
-//            if (nextsectnum >= 0) { if (!(wal->cstat&4)) i = nextsec->ceilingz; else i = sec->ceilingz; }
-//            else { if (!(wal->cstat&4)) i = sec->ceilingz;     else i = sec->floorz; }
+//            if (nextsectnum >= 0) { if (!(wal.cstat&4)) i = nextsec.ceilingz; else i = sec.ceilingz; }
+//            else { if (!(wal.cstat&4)) i = sec.ceilingz;     else i = sec.floorz; }
 //
 //            // white
-//            calc_ypanning(i, ryp0, ryp1, x0, x1, wal->ypanning, wal->yrepeat, !(wal->cstat&4));
+//            calc_ypanning(i, ryp0, ryp1, x0, x1, wal.ypanning, wal.yrepeat, !(wal.cstat&4));
 //
-//            if (wal->cstat&8) //xflip
+//            if (wal.cstat&8) //xflip
 //            {
-//                t = (float)(wal->xrepeat*8 + wal->xpanning*2);
+//                t = (float)(wal.xrepeat*8 + wal.xpanning*2);
 //                gux = gdx*t - gux;
 //                guy = gdy*t - guy;
 //                guo = gdo*t - guo;
 //            }
-//            if (wal->cstat&256) { gvx = -gvx; gvy = -gvy; gvo = -gvo; } //yflip
+//            if (wal.cstat&256) { gvx = -gvx; gvy = -gvy; gvo = -gvo; } //yflip
 //
-//            calc_and_apply_fog(wal->picnum, wal->shade, sec->visibility, sec->floorpal);
+//            calc_and_apply_fog(wal.picnum, wal.shade, sec.visibility, sec.floorpal);
 //
 //            pow2xsplit = 1; domost(x0,-10000,x1,-10000);
 //        }
@@ -3125,13 +3125,13 @@ todoThrow();
 //        for (z=headspritesect[sectnum]; z>=0; z=nextspritesect[z])
 //        {
 //            spr = &sprite[z];
-//            if ((((spr->cstat&0x8000) == 0) || (showinvisibility)) &&
-//                    (spr->xrepeat > 0) && (spr->yrepeat > 0))
+//            if ((((spr.cstat&0x8000) == 0) || (showinvisibility)) &&
+//                    (spr.xrepeat > 0) && (spr.yrepeat > 0))
 //            {
-//                xs = spr->x-globalposx; ys = spr->y-globalposy;
-//                if ((spr->cstat&48) || (xs*gcosang+ys*gsinang > 0) || (usemodels && tile2model[spr->picnum].modelid>=0))
+//                xs = spr.x-globalposx; ys = spr.y-globalposy;
+//                if ((spr.cstat&48) || (xs*gcosang+ys*gsinang > 0) || (usemodels && tile2model[spr.picnum].modelid>=0))
 //                {
-//                    if ((spr->cstat&(64+48))!=(64+16) || dmulscale6(sintable[(spr->ang+512)&2047],-xs, sintable[spr->ang&2047],-ys) > 0)
+//                    if ((spr.cstat&(64+48))!=(64+16) || dmulscale6(sintable[(spr.ang+512)&2047],-xs, sintable[spr.ang&2047],-ys) > 0)
 //                        if (engine_addtsprite(z, sectnum))
 //                            break;
 //                }
@@ -3148,15 +3148,15 @@ todoThrow();
 //        xp2 = 0; yp2 = 0;
 //        for (z=startwall,wal=&wall[z]; z<endwall; z++,wal++)
 //        {
-//            wal2 = &wall[wal->point2];
-//            x1 = wal->x-globalposx; y1 = wal->y-globalposy;
-//            x2 = wal2->x-globalposx; y2 = wal2->y-globalposy;
+//            wal2 = &wall[wal.point2];
+//            x1 = wal.x-globalposx; y1 = wal.y-globalposy;
+//            x2 = wal2.x-globalposx; y2 = wal2.y-globalposy;
 //
-//            nextsectnum = wal->nextsector; //Scan close sectors
+//            nextsectnum = wal.nextsector; //Scan close sectors
 //#ifdef YAX_ENABLE
 //            if (yax_nomaskpass==0 || !yax_isislandwall(z, !yax_globalcf) || (yax_nomaskdidit=1, 0))
 //#endif
-//            if ((nextsectnum >= 0) && (!(wal->cstat&32)) && (!(gotsector[nextsectnum>>3]&pow2char[nextsectnum&7])))
+//            if ((nextsectnum >= 0) && (!(wal.cstat&32)) && (!(gotsector[nextsectnum>>3]&pow2char[nextsectnum&7])))
 //            {
 //                d = (double)x1*(double)y2 - (double)x2*(double)y1; xp1 = (double)(x2-x1); yp1 = (double)(y2-y1);
 //                if (d*d <= (xp1*xp1 + yp1*yp1)*(SCISDIST*SCISDIST*260.0))
@@ -3410,14 +3410,14 @@ todoThrow();
 //                spritetype *tsp = &tsprite[spritesortcnt];
 //                double dadist, x,y,z;
 //                Bmemcpy(tsp, &hit.pos, sizeof(vec3_t));
-//                x = tsp->x-globalposx; y=tsp->y-globalposy; z=(tsp->z-globalposz)/16.0;
+//                x = tsp.x-globalposx; y=tsp.y-globalposy; z=(tsp.z-globalposz)/16.0;
 //                dadist = sqrt(x*x + y*y + z*z);
-//                tsp->sectnum = hit.sect;
-//                tsp->picnum = 2523;  // CROSSHAIR
-//                tsp->cstat = 128;
-//                tsp->owner = MAXSPRITES-1;
-//                tsp->xrepeat = tsp->yrepeat = min(max(1, (int32_t)(dadist*48.0/3200.0)), 255);
-//                sprite[tsp->owner].xoffset = sprite[tsp->owner].yoffset = 0;
+//                tsp.sectnum = hit.sect;
+//                tsp.picnum = 2523;  // CROSSHAIR
+//                tsp.cstat = 128;
+//                tsp.owner = MAXSPRITES-1;
+//                tsp.xrepeat = tsp.yrepeat = min(max(1, (int32_t)(dadist*48.0/3200.0)), 255);
+//                sprite[tsp.owner].xoffset = sprite[tsp.owner].yoffset = 0;
 //                tspriteptr[spritesortcnt++] = tsp;
 //            }
 //
@@ -3549,28 +3549,28 @@ todoThrow();
 //    walltype *wal, *wal2;
 //
 //    z = maskwall[damaskwallcnt];
-//    wal = &wall[thewall[z]]; wal2 = &wall[wal->point2];
+//    wal = &wall[thewall[z]]; wal2 = &wall[wal.point2];
 //    sectnum = thesector[z]; sec = &sector[sectnum];
 //
-////    if (wal->nextsector < 0) return;
+////    if (wal.nextsector < 0) return;
 //    // Without MASKWALL_BAD_ACCESS fix:
-//    // wal->nextsector is -1, WGR2 SVN Lochwood Hollow (Til' Death L1)  (or trueror1.map)
+//    // wal.nextsector is -1, WGR2 SVN Lochwood Hollow (Til' Death L1)  (or trueror1.map)
 //
-//    nsec = &sector[wal->nextsector];
-//    z1 = max(nsec->ceilingz,sec->ceilingz);
-//    z2 = min(nsec->floorz,sec->floorz);
+//    nsec = &sector[wal.nextsector];
+//    z1 = max(nsec.ceilingz,sec.ceilingz);
+//    z2 = min(nsec.floorz,sec.floorz);
 //
-//    globalpicnum = wal->overpicnum; if ((uint32_t)globalpicnum >= MAXTILES) globalpicnum = 0;
+//    globalpicnum = wal.overpicnum; if ((uint32_t)globalpicnum >= MAXTILES) globalpicnum = 0;
 //    globvis = globalvisibility;
 //    if (sector[sectnum].visibility != 0) globvis = mulscale4(globvis, (uint8_t)(sector[sectnum].visibility+16));
 //
 //    DO_TILE_ANIM(globalpicnum, (int16_t)thewall[z]+16384);
-//    globalshade = (int32_t)wal->shade;
-//    globalpal = (int32_t)((uint8_t)wal->pal);
-//    globalorientation = (int32_t)wal->cstat;
+//    globalshade = (int32_t)wal.shade;
+//    globalpal = (int32_t)((uint8_t)wal.pal);
+//    globalorientation = (int32_t)wal.cstat;
 //
-//    sx0 = (float)(wal->x-globalposx); sx1 = (float)(wal2->x-globalposx);
-//    sy0 = (float)(wal->y-globalposy); sy1 = (float)(wal2->y-globalposy);
+//    sx0 = (float)(wal.x-globalposx); sx1 = (float)(wal2.x-globalposx);
+//    sy0 = (float)(wal.y-globalposy); sy1 = (float)(wal2.y-globalposy);
 //    yp0 = sx0*gcosang2 + sy0*gsinang2;
 //    yp1 = sx1*gcosang2 + sy1*gsinang2;
 //    if ((yp0 < SCISDIST) && (yp1 < SCISDIST)) return;
@@ -3584,14 +3584,14 @@ todoThrow();
 //    if (yp1 < SCISDIST) { t1 = (SCISDIST-oyp0)/(yp1-oyp0); xp1 = (xp1-oxp0)*t1+oxp0; yp1 = SCISDIST; }
 //    else { t1 = 1.f; }
 //
-//    m0 = (int32_t)((wal2->x-wal->x)*t0+wal->x);
-//    m1 = (int32_t)((wal2->y-wal->y)*t0+wal->y);
+//    m0 = (int32_t)((wal2.x-wal.x)*t0+wal.x);
+//    m1 = (int32_t)((wal2.y-wal.y)*t0+wal.y);
 //    getzsofslope(sectnum,m0,m1,&cz[0],&fz[0]);
-//    getzsofslope(wal->nextsector,m0,m1,&cz[1],&fz[1]);
-//    m0 = (int32_t)((wal2->x-wal->x)*t1+wal->x);
-//    m1 = (int32_t)((wal2->y-wal->y)*t1+wal->y);
+//    getzsofslope(wal.nextsector,m0,m1,&cz[1],&fz[1]);
+//    m0 = (int32_t)((wal2.x-wal.x)*t1+wal.x);
+//    m1 = (int32_t)((wal2.y-wal.y)*t1+wal.y);
 //    getzsofslope(sectnum,m0,m1,&cz[2],&fz[2]);
-//    getzsofslope(wal->nextsector,m0,m1,&cz[3],&fz[3]);
+//    getzsofslope(wal.nextsector,m0,m1,&cz[3],&fz[3]);
 //
 //    ryp0 = 1.f/yp0; ryp1 = 1.f/yp1;
 //
@@ -3606,32 +3606,32 @@ todoThrow();
 //    gdy = 0;
 //    gdo = ryp0*gxyaspect - gdx*x0;
 //
-//    //gux*x0 + guo = t0*wal->xrepeat*8*yp0
-//    //gux*x1 + guo = t1*wal->xrepeat*8*yp1
-//    gux = (t0*ryp0 - t1*ryp1)*gxyaspect*(float)wal->xrepeat*8.f / (x0-x1);
-//    guo = t0*ryp0*gxyaspect*(float)wal->xrepeat*8.f - gux*x0;
-//    guo += (float)wal->xpanning*gdo;
-//    gux += (float)wal->xpanning*gdx;
+//    //gux*x0 + guo = t0*wal.xrepeat*8*yp0
+//    //gux*x1 + guo = t1*wal.xrepeat*8*yp1
+//    gux = (t0*ryp0 - t1*ryp1)*gxyaspect*(float)wal.xrepeat*8.f / (x0-x1);
+//    guo = t0*ryp0*gxyaspect*(float)wal.xrepeat*8.f - gux*x0;
+//    guo += (float)wal.xpanning*gdo;
+//    gux += (float)wal.xpanning*gdx;
 //    guy = 0;
 //
-//    if (!(wal->cstat&4)) i = z1; else i = z2;
+//    if (!(wal.cstat&4)) i = z1; else i = z2;
 //
 //    // mask
-//    calc_ypanning(i, ryp0, ryp1, x0, x1, wal->ypanning, wal->yrepeat, 0);
+//    calc_ypanning(i, ryp0, ryp1, x0, x1, wal.ypanning, wal.yrepeat, 0);
 //
-//    if (wal->cstat&8) //xflip
+//    if (wal.cstat&8) //xflip
 //    {
-//        t = (float)(wal->xrepeat*8 + wal->xpanning*2);
+//        t = (float)(wal.xrepeat*8 + wal.xpanning*2);
 //        gux = gdx*t - gux;
 //        guy = gdy*t - guy;
 //        guo = gdo*t - guo;
 //    }
-//    if (wal->cstat&256) { gvx = -gvx; gvy = -gvy; gvo = -gvo; } //yflip
+//    if (wal.cstat&256) { gvx = -gvx; gvy = -gvy; gvo = -gvo; } //yflip
 //
 //    method = 1; pow2xsplit = 1;
-//    if (wal->cstat&128) { if (!(wal->cstat&512)) method = 2; else method = 3; }
+//    if (wal.cstat&128) { if (!(wal.cstat&512)) method = 2; else method = 3; }
 //
-//    calc_and_apply_fog(wal->picnum, wal->shade, sec->visibility, sec->floorpal);
+//    calc_and_apply_fog(wal.picnum, wal.shade, sec.visibility, sec.floorpal);
 //
 //    for (i=0; i<2; i++)
 //    {
@@ -3717,39 +3717,39 @@ todoThrow();
 //    if (bad_tspr(tspr))
 //        return;
 //
-//    spritenum         = tspr->owner;
+//    spritenum         = tspr.owner;
 //
-//    DO_TILE_ANIM(tspr->picnum, spritenum+32768);
+//    DO_TILE_ANIM(tspr.picnum, spritenum+32768);
 //
-//    globalpicnum      = tspr->picnum;
-//    globalshade       = tspr->shade;
-//    globalpal         = tspr->pal;
-//    globalorientation = tspr->cstat;
+//    globalpicnum      = tspr.picnum;
+//    globalshade       = tspr.shade;
+//    globalpal         = tspr.pal;
+//    globalorientation = tspr.cstat;
 //    globvis = globalvisibility;
-//    if (sector[tspr->sectnum].visibility != 0) globvis = mulscale4(globvis, (uint8_t)(sector[tspr->sectnum].visibility+16));
+//    if (sector[tspr.sectnum].visibility != 0) globvis = mulscale4(globvis, (uint8_t)(sector[tspr.sectnum].visibility+16));
 //    if ((globalorientation&48) != 48)  	// only non-voxel sprites should do this
 //    {
 //        int32_t flag;
 //        flag = usehightile && h_xsize[globalpicnum];
-//        xoff = (int32_t)tspr->xoffset;
-//        yoff = (int32_t)tspr->yoffset;
+//        xoff = (int32_t)tspr.xoffset;
+//        yoff = (int32_t)tspr.yoffset;
 //        xoff += flag ? h_xoffs[globalpicnum] : picanm[globalpicnum].xofs;
 //        yoff += flag ? h_yoffs[globalpicnum] : picanm[globalpicnum].yofs;
 //    }
 //
 //    method = 1+4;
-//    if (tspr->cstat&2) { if (!(tspr->cstat&512)) method = 2+4; else method = 3+4; }
+//    if (tspr.cstat&2) { if (!(tspr.cstat&512)) method = 2+4; else method = 3+4; }
 //
 //    alpha = spriteext[spritenum].alpha;
 //
 //#ifdef USE_OPENGL
-//    calc_and_apply_fog(tspr->picnum, globalshade, sector[tspr->sectnum].visibility, sector[tspr->sectnum].floorpal);
+//    calc_and_apply_fog(tspr.picnum, globalshade, sector[tspr.sectnum].visibility, sector[tspr.sectnum].floorpal);
 //
 //    while (getrendermode() >= REND_POLYMOST && !(spriteext[spritenum].flags&SPREXT_NOTMD))
 //    {
-//        if (usemodels && tile2model[Ptile2tile(tspr->picnum,tspr->pal)].modelid >= 0 && tile2model[Ptile2tile(tspr->picnum,tspr->pal)].framenum >= 0)
+//        if (usemodels && tile2model[Ptile2tile(tspr.picnum,tspr.pal)].modelid >= 0 && tile2model[Ptile2tile(tspr.picnum,tspr.pal)].framenum >= 0)
 //        {
-//            if (spritenum >= MAXSPRITES || tspr->statnum == TSPR_MIRROR)
+//            if (spritenum >= MAXSPRITES || tspr.statnum == TSPR_MIRROR)
 //            {
 //                if (mddraw(tspr)) return;
 //                break;	// else, render as flat sprite
@@ -3761,22 +3761,22 @@ todoThrow();
 //            break;	// else, render as flat sprite
 //        }
 //
-//        if (usevoxels && (tspr->cstat&48)!=48 && tiletovox[tspr->picnum] >= 0 && voxmodels[tiletovox[tspr->picnum]])
+//        if (usevoxels && (tspr.cstat&48)!=48 && tiletovox[tspr.picnum] >= 0 && voxmodels[tiletovox[tspr.picnum]])
 //        {
-//            if (voxdraw(voxmodels[tiletovox[tspr->picnum]], tspr))
+//            if (voxdraw(voxmodels[tiletovox[tspr.picnum]], tspr))
 //                return;
 //            break;	// else, render as flat sprite
 //        }
 //
-//        if ((tspr->cstat&48)==48 && voxmodels[tspr->picnum])
+//        if ((tspr.cstat&48)==48 && voxmodels[tspr.picnum])
 //        {
-//            voxdraw(voxmodels[tspr->picnum], tspr);
+//            voxdraw(voxmodels[tspr.picnum], tspr);
 //            return;
 //        }
 //        break;
 //    }
 //
-//    if (((tspr->cstat&2) || (gltexmayhavealpha(tspr->picnum,tspr->pal))))
+//    if (((tspr.cstat&2) || (gltexmayhavealpha(tspr.picnum,tspr.pal))))
 //    {
 //        curpolygonoffset += 0.01f;
 //        bglEnable(GL_POLYGON_OFFSET_FILL);
@@ -3784,17 +3784,17 @@ todoThrow();
 //    }
 //#endif
 //
-//    posx=tspr->x;
-//    posy=tspr->y;
+//    posx=tspr.x;
+//    posy=tspr.y;
 //    if (spriteext[spritenum].flags&SPREXT_AWAY1)
 //    {
-//        posx+=(sintable[(tspr->ang+512)&2047]>>13);
-//        posy+=(sintable[(tspr->ang)&2047]>>13);
+//        posx+=(sintable[(tspr.ang+512)&2047]>>13);
+//        posy+=(sintable[(tspr.ang)&2047]>>13);
 //    }
 //    else if (spriteext[spritenum].flags&SPREXT_AWAY2)
 //    {
-//        posx-=(sintable[(tspr->ang+512)&2047]>>13);
-//        posy-=(sintable[(tspr->ang)&2047]>>13);
+//        posx-=(sintable[(tspr.ang+512)&2047]>>13);
+//        posy-=(sintable[(tspr.ang)&2047]>>13);
 //    }
 //
 //    oldsizx=tsizx=tilesizx[globalpicnum];
@@ -3816,18 +3816,18 @@ todoThrow();
 //        // NOTE: yoff not negated not for y flipping, unlike wall and floor
 //        // aligned sprites.
 //
-//        sx0 = (float)(tspr->x-globalposx);
-//        sy0 = (float)(tspr->y-globalposy);
+//        sx0 = (float)(tspr.x-globalposx);
+//        sy0 = (float)(tspr.y-globalposy);
 //        xp0 = sy0*gcosang  - sx0*gsinang;
 //        yp0 = sx0*gcosang2 + sy0*gsinang2;
 //        if (yp0 <= SCISDIST) return;
 //        ryp0 = 1/yp0;
 //        sx0 = ghalfx*xp0*ryp0 + ghalfx;
-//        sy0 = ((float)(tspr->z-globalposz))*gyxscale*ryp0 + ghoriz;
+//        sy0 = ((float)(tspr.z-globalposz))*gyxscale*ryp0 + ghoriz;
 //
 //        f = ryp0*(float)xdimen/160.0;
-//        fx = ((float)tspr->xrepeat)*f;
-//        fy = ((float)tspr->yrepeat)*f*((float)yxaspect/65536.0);
+//        fx = ((float)tspr.xrepeat)*f;
+//        fy = ((float)tspr.yrepeat)*f*((float)yxaspect/65536.0);
 //        sx0 -= fx*(float)xoff; if (tsizx&1) sx0 += fx*.5;
 //        sy0 -= fy*(float)yoff;
 //        fx *= ((float)tsizx);
@@ -3852,14 +3852,14 @@ todoThrow();
 //        gvo -= gdo*((float)(spriteext[spritenum].ypanning)/255.f)*tsizy;
 //
 //        //Clip sprites to ceilings/floors when no parallaxing and not sloped
-//        if (!(sector[tspr->sectnum].ceilingstat&3))
+//        if (!(sector[tspr.sectnum].ceilingstat&3))
 //        {
-//            sy0 = ((float)(sector[tspr->sectnum].ceilingz-globalposz))*gyxscale*ryp0 + ghoriz;
+//            sy0 = ((float)(sector[tspr.sectnum].ceilingz-globalposz))*gyxscale*ryp0 + ghoriz;
 //            if (py[0] < sy0) py[0] = py[1] = sy0;
 //        }
-//        if (!(sector[tspr->sectnum].floorstat&3))
+//        if (!(sector[tspr.sectnum].floorstat&3))
 //        {
-//            sy0 = ((float)(sector[tspr->sectnum].floorz-globalposz))*gyxscale*ryp0 + ghoriz;
+//            sy0 = ((float)(sector[tspr.sectnum].floorz-globalposz))*gyxscale*ryp0 + ghoriz;
 //            if (py[2] > sy0) py[2] = py[3] = sy0;
 //        }
 //
@@ -3887,8 +3887,8 @@ todoThrow();
 //        if (globalorientation&4) xoff = -xoff;
 //        if (globalorientation&8) yoff = -yoff;
 //
-//        xv = (float)tspr->xrepeat * (float)sintable[(tspr->ang)&2047] / 65536.0;
-//        yv = (float)tspr->xrepeat * (float)sintable[(tspr->ang+1536)&2047] / 65536.0;
+//        xv = (float)tspr.xrepeat * (float)sintable[(tspr.ang)&2047] / 65536.0;
+//        yv = (float)tspr.xrepeat * (float)sintable[(tspr.ang+1536)&2047] / 65536.0;
 //        f = (float)(tsizx>>1) + (float)xoff;
 //        x0 = (float)(posx-globalposx) - xv*f; x1 = xv*(float)tsizx + x0;
 //        y0 = (float)(posy-globalposy) - yv*f; y1 = yv*(float)tsizx + y0;
@@ -3906,7 +3906,7 @@ todoThrow();
 //        if (yp1 < SCISDIST) { t1 = (SCISDIST-oyp0)/(yp1-oyp0); xp1 = (xp1-oxp0)*t1+oxp0; yp1 = SCISDIST; }
 //        else { t1 = 1.f; }
 //
-//        f = ((float)tspr->yrepeat) * (float)tsizy * 4;
+//        f = ((float)tspr.yrepeat) * (float)tsizy * 4;
 //
 //        ryp0 = 1.0/yp0;
 //        ryp1 = 1.0/yp1;
@@ -3915,17 +3915,17 @@ todoThrow();
 //        ryp0 *= gyxscale;
 //        ryp1 *= gyxscale;
 //
-//        tspr->z -= ((yoff*tspr->yrepeat)<<2);
+//        tspr.z -= ((yoff*tspr.yrepeat)<<2);
 //        if (globalorientation&128)
 //        {
-//            tspr->z += ((tsizy*tspr->yrepeat)<<1);
-//            if (tsizy&1) tspr->z += (tspr->yrepeat<<1); //Odd yspans
+//            tspr.z += ((tsizy*tspr.yrepeat)<<1);
+//            if (tsizy&1) tspr.z += (tspr.yrepeat<<1); //Odd yspans
 //        }
 //
-//        sc0 = ((float)(tspr->z-globalposz-f))*ryp0 + ghoriz;
-//        sc1 = ((float)(tspr->z-globalposz-f))*ryp1 + ghoriz;
-//        sf0 = ((float)(tspr->z-globalposz))*ryp0 + ghoriz;
-//        sf1 = ((float)(tspr->z-globalposz))*ryp1 + ghoriz;
+//        sc0 = ((float)(tspr.z-globalposz-f))*ryp0 + ghoriz;
+//        sc1 = ((float)(tspr.z-globalposz-f))*ryp1 + ghoriz;
+//        sf0 = ((float)(tspr.z-globalposz))*ryp0 + ghoriz;
+//        sf1 = ((float)(tspr.z-globalposz))*ryp1 + ghoriz;
 //
 //        gdx = (ryp0-ryp1)*gxyaspect / (sx0-sx1);
 //        gdy = 0;
@@ -3974,21 +3974,21 @@ todoThrow();
 //        gvo -= gdo*((float)(spriteext[spritenum].ypanning)/255.f)*tsizy;
 //
 //        //Clip sprites to ceilings/floors when no parallaxing
-//        if (!(sector[tspr->sectnum].ceilingstat&1))
+//        if (!(sector[tspr.sectnum].ceilingstat&1))
 //        {
-//            f = ((float)tspr->yrepeat) * (float)tsizy * 4;
-//            if (sector[tspr->sectnum].ceilingz > tspr->z-f)
+//            f = ((float)tspr.yrepeat) * (float)tsizy * 4;
+//            if (sector[tspr.sectnum].ceilingz > tspr.z-f)
 //            {
-//                sc0 = ((float)(sector[tspr->sectnum].ceilingz-globalposz))*ryp0 + ghoriz;
-//                sc1 = ((float)(sector[tspr->sectnum].ceilingz-globalposz))*ryp1 + ghoriz;
+//                sc0 = ((float)(sector[tspr.sectnum].ceilingz-globalposz))*ryp0 + ghoriz;
+//                sc1 = ((float)(sector[tspr.sectnum].ceilingz-globalposz))*ryp1 + ghoriz;
 //            }
 //        }
-//        if (!(sector[tspr->sectnum].floorstat&1))
+//        if (!(sector[tspr.sectnum].floorstat&1))
 //        {
-//            if (sector[tspr->sectnum].floorz < tspr->z)
+//            if (sector[tspr.sectnum].floorz < tspr.z)
 //            {
-//                sf0 = ((float)(sector[tspr->sectnum].floorz-globalposz))*ryp0 + ghoriz;
-//                sf1 = ((float)(sector[tspr->sectnum].floorz-globalposz))*ryp1 + ghoriz;
+//                sf0 = ((float)(sector[tspr.sectnum].floorz-globalposz))*ryp0 + ghoriz;
+//                sf1 = ((float)(sector[tspr.sectnum].floorz-globalposz))*ryp1 + ghoriz;
 //            }
 //        }
 //
@@ -4027,24 +4027,24 @@ todoThrow();
 //    case 2: //Floor sprite
 //
 //        if ((globalorientation&64) != 0)
-//            if ((globalposz > tspr->z) == (!(globalorientation&8)))
+//            if ((globalposz > tspr.z) == (!(globalorientation&8)))
 //                return;
 //        if ((globalorientation&4) > 0) xoff = -xoff;
 //        if ((globalorientation&8) > 0) yoff = -yoff;
 //
-//        i = (tspr->ang&2047);
+//        i = (tspr.ang&2047);
 //        c = sintable[(i+512)&2047]/65536.0;
 //        s = sintable[i]/65536.0;
-//        x0 = (float)((tsizx>>1)-xoff)*tspr->xrepeat;
-//        y0 = (float)((tsizy>>1)-yoff)*tspr->yrepeat;
-//        x1 = (float)((tsizx>>1)+xoff)*tspr->xrepeat;
-//        y1 = (float)((tsizy>>1)+yoff)*tspr->yrepeat;
+//        x0 = (float)((tsizx>>1)-xoff)*tspr.xrepeat;
+//        y0 = (float)((tsizy>>1)-yoff)*tspr.yrepeat;
+//        x1 = (float)((tsizx>>1)+xoff)*tspr.xrepeat;
+//        y1 = (float)((tsizy>>1)+yoff)*tspr.yrepeat;
 //
 //        //Project 3D to 2D
 //        for (j=0; j<4; j++)
 //        {
-//            sx0 = (float)(tspr->x-globalposx);
-//            sy0 = (float)(tspr->y-globalposy);
+//            sx0 = (float)(tspr.x-globalposx);
+//            sy0 = (float)(tspr.y-globalposy);
 //            if ((j+0)&2) { sy0 -= s*y0; sx0 -= c*y0; }
 //            else { sy0 += s*y1; sx0 += c*y1; }
 //            if ((j+1)&2) { sx0 -= s*x0; sy0 += c*x0; }
@@ -4053,7 +4053,7 @@ todoThrow();
 //            py[j] = sx0*gcosang2 + sy0*gsinang2;
 //        }
 //
-//        if (tspr->z < globalposz) //if floor sprite is above you, reverse order of points
+//        if (tspr.z < globalposz) //if floor sprite is above you, reverse order of points
 //        {
 //            f = px[0]; px[0] = px[1]; px[1] = f;
 //            f = py[0]; py[0] = py[1]; py[1] = f;
@@ -4077,7 +4077,7 @@ todoThrow();
 //        if (npoints < 3) return;
 //
 //        //Project rotated 3D points to screen
-//        f = ((float)(tspr->z-globalposz))*gyxscale;
+//        f = ((float)(tspr.z-globalposz))*gyxscale;
 //        for (j=0; j<npoints; j++)
 //        {
 //            ryp0 = 1/py2[j];
@@ -4087,11 +4087,11 @@ todoThrow();
 //
 //        //gd? Copied from floor rendering code
 //        gdx = 0;
-//        gdy = gxyaspect / (double)(tspr->z-globalposz);
+//        gdy = gxyaspect / (double)(tspr.z-globalposz);
 //        gdo = -ghoriz*gdy;
 //        //copied&modified from relative alignment
-//        xv = (float)tspr->x + s*x1 + c*y1; fx = (double)-(x0+x1)*s;
-//        yv = (float)tspr->y + s*y1 - c*x1; fy = (double)+(x0+x1)*c;
+//        xv = (float)tspr.x + s*x1 + c*y1; fx = (double)-(x0+x1)*s;
+//        yv = (float)tspr.y + s*y1 - c*x1; fy = (double)+(x0+x1)*c;
 //        f = 1.0/sqrt(fx*fx+fy*fy); fx *= f; fy *= f;
 //        ft[2] = singlobalang*fy + cosglobalang*fx;
 //        ft[3] = singlobalang*fx - cosglobalang*fy;
@@ -4103,8 +4103,8 @@ todoThrow();
 //        guo = (double)ft[0]*gdo; gvo = (double)ft[1]*gdo;
 //        guo += (double)(ft[2]/262144.0-gux)*ghalfx;
 //        gvo -= (double)(ft[3]/262144.0+gvx)*ghalfx;
-//        f = 4.0/(float)tspr->xrepeat; gux *= f; guy *= f; guo *= f;
-//        f =-4.0/(float)tspr->yrepeat; gvx *= f; gvy *= f; gvo *= f;
+//        f = 4.0/(float)tspr.xrepeat; gux *= f; guy *= f; guo *= f;
+//        f =-4.0/(float)tspr.yrepeat; gvx *= f; gvy *= f; gvo *= f;
 //        if (globalorientation&4)
 //        {
 //            gux = ((float)tsizx)*gdx - gux;
@@ -4404,7 +4404,6 @@ function polymost_dorotatesprite(sx: number, sy, z: number, a: number, picnum: n
 //#ifdef USE_OPENGL
     if (getrendermode() >= REND_POLYMOST)
     {  
-        debugger;
         bglViewport(0,0,xdim,ydim); glox1 = -1; //Force fullscreen (glox1=-1 forces it to restore)
         bglMatrixMode(gl.PROJECTION);
         for (var i = 0; i < m.length; i++) {memset(new P(m[i]),0,sizeof(m[i]));}
@@ -4413,7 +4412,7 @@ function polymost_dorotatesprite(sx: number, sy, z: number, a: number, picnum: n
         bglMatrixMode(gl.MODELVIEW);
         bglPushMatrix();
         bglLoadIdentity();
-//
+
         bglDisable(gl.DEPTH_TEST);
         todo("bglDisable(gl.ALPHA_TEST);");
         bglEnable(gl.TEXTURE_2D);
@@ -4550,9 +4549,9 @@ function polymost_dorotatesprite(sx: number, sy, z: number, a: number, picnum: n
         while (z);
 
 //#ifdef USE_OPENGL
-        if (!nofog) todoThrow("bglDisable(GL_FOG);");
+        if (!nofog) todo("bglDisable(GL_FOG);");
         pow2xsplit = 0; drawpoly(px,py,n,method);
-        if (!nofog) todoThrow("bglEnable(GL_FOG);");
+        if (!nofog) todo("bglEnable(GL_FOG);");
 //#else
 //        pow2xsplit = 0; drawpoly(px,py,n,method);
 //#endif
@@ -4774,7 +4773,7 @@ function polymost_dorotatesprite(sx: number, sy, z: number, a: number, picnum: n
 //    bglEnable(GL_ALPHA_TEST);
 //    bglEnable(GL_TEXTURE_2D);
 //    pth = texcache_fetch(globalpicnum,globalpal,getpalookup(globvis>>2, globalshade),0);
-//    bglBindTexture(GL_TEXTURE_2D, pth ? pth->glpic : 0);
+//    bglBindTexture(GL_TEXTURE_2D, pth ? pth.glpic : 0);
 //
 //    f = getshadefactor(globalshade);
 //    switch ((globalorientation>>7)&3)
@@ -4840,7 +4839,7 @@ function polymost_dorotatesprite(sx: number, sy, z: number, a: number, picnum: n
 //        usehightile = ousehightile;
 //    }
 //
-//    bglBindTexture(GL_TEXTURE_2D, pth ? pth->glpic : 0);
+//    bglBindTexture(GL_TEXTURE_2D, pth ? pth.glpic : 0);
 //
 //    bglDisable(GL_ALPHA_TEST);
 //
@@ -4850,7 +4849,7 @@ function polymost_dorotatesprite(sx: number, sy, z: number, a: number, picnum: n
 //        else ratio = dimen/scy;
 //    }
 //
-//    if (!pth || (pth->flags & 8))
+//    if (!pth || (pth.flags & 8))
 //    {
 //        bglDisable(GL_TEXTURE_2D);
 //        bglBegin(GL_TRIANGLE_FAN);
@@ -5047,7 +5046,7 @@ function polymost_dorotatesprite(sx: number, sy, z: number, a: number, picnum: n
 //    int32_t m;
 //    const char *p;
 //
-//    if (parm->numparms != 1)
+//    if (parm.numparms != 1)
 //    {
 //        OSD_Printf("Current texturing mode is %s\n", glfiltermodes[gltexfiltermode].name);
 //        OSD_Printf("  Vaild modes are:\n");
@@ -5057,13 +5056,13 @@ function polymost_dorotatesprite(sx: number, sy, z: number, a: number, picnum: n
 //        return OSDCMD_OK;
 //    }
 //
-//    m = Bstrtoul(parm->parms[0], (char **)&p, 10);
-//    if (p == parm->parms[0])
+//    m = Bstrtoul(parm.parms[0], (char **)&p, 10);
+//    if (p == parm.parms[0])
 //    {
 //        // string
 //        for (m = 0; m < NUMGLFILTERMODES; m++)
 //        {
-//            if (!Bstrcasecmp(parm->parms[0], glfiltermodes[m].name))
+//            if (!Bstrcasecmp(parm.parms[0], glfiltermodes[m].name))
 //                break;
 //        }
 //
@@ -5093,7 +5092,7 @@ function polymost_dorotatesprite(sx: number, sy, z: number, a: number, picnum: n
 //        if (r == OSDCMD_OK)
 //        {
 //#ifdef POLYMER
-//            if (!Bstrcasecmp(parm->name, "r_pr_maxlightpasses"))
+//            if (!Bstrcasecmp(parm.name, "r_pr_maxlightpasses"))
 //            {
 //                pr_maxlightpasses = r_pr_maxlightpasses;
 //                return r;
@@ -5107,12 +5106,12 @@ function polymost_dorotatesprite(sx: number, sy, z: number, a: number, picnum: n
 //#ifdef USE_OPENGL
 //    if (r == OSDCMD_OK)
 //    {
-//        if (!Bstrcasecmp(parm->name, "r_swapinterval"))
+//        if (!Bstrcasecmp(parm.name, "r_swapinterval"))
 //        {
 //            setvsync(vsync);
 //            return r;
 //        }
-//        else if (!Bstrcasecmp(parm->name, "r_downsize"))
+//        else if (!Bstrcasecmp(parm.name, "r_downsize"))
 //        {
 //            if (r_downsize != r_downsizevar && r_downsizevar != -1)
 //            {
@@ -5125,18 +5124,18 @@ function polymost_dorotatesprite(sx: number, sy, z: number, a: number, picnum: n
 //
 //            return r;
 //        }
-//        else if (!Bstrcasecmp(parm->name, "r_textureanisotropy"))
+//        else if (!Bstrcasecmp(parm.name, "r_textureanisotropy"))
 //        {
 //            gltexapplyprops();
 //            return r;
 //        }
-//        else if (!Bstrcasecmp(parm->name, "r_texturemode"))
+//        else if (!Bstrcasecmp(parm.name, "r_texturemode"))
 //        {
 //            gltexturemode(parm);
 //            return r;
 //        }
 //#ifdef POLYMER
-//        else if (!Bstrcasecmp(parm->name, "r_pr_maxlightpasses"))
+//        else if (!Bstrcasecmp(parm.name, "r_pr_maxlightpasses"))
 //        {
 //            if (pr_maxlightpasses != r_pr_maxlightpasses)
 //            {
@@ -5276,13 +5275,13 @@ function polymost_dorotatesprite(sx: number, sy, z: number, a: number, picnum: n
 //    if (datype == 0 || !usemodels) return;
 //
 //    mid = md_tilehasmodel(dapicnum,dapalnum);
-//    if (mid < 0 || models[mid]->mdnum < 2) return;
+//    if (mid < 0 || models[mid].mdnum < 2) return;
 //
 //    {
 //        int32_t i,j=0;
 //
-//        if (models[mid]->mdnum == 3)
-//            j = ((md3model_t *)models[mid])->head.numsurfs;
+//        if (models[mid].mdnum == 3)
+//            j = ((md3model_t *)models[mid]).head.numsurfs;
 //
 //        for (i=0; i<=j; i++)
 //            mdloadskin((md2model_t *)models[mid], 0, dapalnum, i);

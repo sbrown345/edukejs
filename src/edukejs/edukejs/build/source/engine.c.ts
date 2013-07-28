@@ -7196,8 +7196,8 @@ function dorotspr_handle_bit2(sxptr: R<number>, syptr: R<number>, z: R<number> ,
     {
         if (!(dastat & 1024) && 4*ydim <= 3*xdim)
         {
-            ret_yxaspect.$ = (12<<16)/10;
-            ret_xyaspect.$ = (10<<16)/12;
+            ret_yxaspect.$ = (12<<16)/10|0;
+            ret_xyaspect.$ = (10<<16)/12|0;
         }
         else
         {
@@ -7212,8 +7212,8 @@ function dorotspr_handle_bit2(sxptr: R<number>, syptr: R<number>, z: R<number> ,
     else
     {
         // dastat&2: Auto window size scaling
-        var oxdim = xdim;
-        var xdim = oxdim;  // SHADOWS global  int32_t
+        var oxdim: number = xdim;
+        var _xdim: number = oxdim;  // SHADOWS global  int32_t  // do not to confuse with external xdim
 
         var zoomsc, sx=sxptr.$, sy=syptr.$;                   //int32_t 
         var ouryxaspect = yxaspect, ourxyaspect = xyaspect;   //int32_t 
@@ -7221,12 +7221,12 @@ function dorotspr_handle_bit2(sxptr: R<number>, syptr: R<number>, z: R<number> ,
         // screen center to s[xy], 320<<16 coords.
         var normxofs = sx-(320<<15), normyofs = sy-(200<<15);//const int32_t 
 
-        if (!(dastat & 1024) && 4*ydim <= 3*xdim)
+        if (!(dastat & 1024) && 4*ydim <= 3*_xdim)
         {
-            xdim = (4*ydim)/3;
+            _xdim = (4*ydim)/3|0;
 
-            ouryxaspect = (12<<16)/10;
-            ourxyaspect = (10<<16)/12;
+            ouryxaspect = (12<<16)/10|0;
+            ourxyaspect = (10<<16)/12|0;
         }
 
         // nasty hacks go here
@@ -7235,13 +7235,13 @@ function dorotspr_handle_bit2(sxptr: R<number>, syptr: R<number>, z: R<number> ,
             var twice_midcx = cx1_plus_cx2+2;//const int32_t 
 
             // screen x center to sx1, scaled to viewport
-            var scaledxofs = scale(normxofs, scale(xdimen, xdim, oxdim), 320);//const int32_t 
+            var scaledxofs = scale(normxofs, scale(xdimen, _xdim, oxdim), 320);//const int32_t 
 
             var xbord = 0;//int32_t
 
             if (dastat & (256|512))
             {
-                xbord = scale(oxdim-xdim, twice_midcx, oxdim);
+                xbord = scale(oxdim-_xdim, twice_midcx, oxdim);
 
                 if ((dastat & 512)==0)
                     xbord = -xbord;
@@ -7257,23 +7257,28 @@ function dorotspr_handle_bit2(sxptr: R<number>, syptr: R<number>, z: R<number> ,
             //If not clipping to startmosts, & auto-scaling on, as a
             //hard-coded bonus, scale to full screen instead
 
-            sx = (xdim<<15)+32768 + scale(normxofs,xdim,320);
+            sx = (_xdim<<15)+32768 + scale(normxofs,_xdim,320);
 
             if (dastat & 512)
-                sx += (oxdim-xdim)<<16;
+                sx += (oxdim-_xdim)<<16;
             else if ((dastat & 256) == 0)
-                sx += (oxdim-xdim)<<15;
+                sx += (oxdim-_xdim)<<15;
 
             if (dastat&RS_CENTERORIGIN)
                 sx += oxdim<<15;
 
-            zoomsc = scale(xdim, ouryxaspect, 320);
+            zoomsc = scale(_xdim, ouryxaspect, 320);
             sy = (ydim<<15)+32768 + mulscale16(normyofs, zoomsc);
         }
+
+        assert.run("dorotspr_handle_bit2 sx", sx == 33587200);
+        assert.run("dorotspr_handle_bit2 sy", sy == 25198592);
+        assert.run("dorotspr_handle_bit2 zoomsc", zoomsc == 251657);
 
         sxptr.$ = sx;
         syptr.$ = sy;
         z.$ = mulscale16(z.$, zoomsc);
+        assert.run("dorotspr_handle_bit2 z.$", z.$ == 251657);
 
         ret_yxaspect.$ = ouryxaspect;
         ret_xyaspect.$ = ourxyaspect;
@@ -11257,7 +11262,7 @@ function loadtile(tilenume: number): void
         //faketimerhandler();
         //return;
     }
-
+    debugger;
     if (waloff[tilenume] == 0)
     {
         walock[tilenume] = 199;
@@ -11266,10 +11271,10 @@ function loadtile(tilenume: number): void
 
     if (artfilplc != tilefileoffs[tilenume])
     {
-        throw "todo klseek(artfil,tilefileoffs[tilenume]-artfilplc,BSEEK_CUR);";
+        klseek(artfil,tilefileoffs[tilenume]-artfilplc,BSEEK_CUR);
         faketimerhandler();
     }
-    debugger;
+    
     kread(artfil, new Ptr(new Uint8Array(waloff.buffer), tilenume)/*(char *)waloff[tilenume]*/, dasiz);
     faketimerhandler();
     artfilplc = tilefileoffs[tilenume]+dasiz;

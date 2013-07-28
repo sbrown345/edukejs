@@ -49,8 +49,8 @@ var INVALIDATE_ALL=0,
 //extern int32_t shadescale_unbounded;
 //extern float alphahackarray[MAXTILES];
 
-//extern int32_t r_usenewshading;
-//extern int32_t r_usetileshades;
+var r_usenewshading=0;       //extern int32_t 
+var r_usetileshades=0;       //extern int32_t 
 
 //extern int16_t globalpicnum;
 //extern int32_t globalpal;
