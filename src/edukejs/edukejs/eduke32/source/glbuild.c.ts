@@ -5,7 +5,9 @@
 /// <reference path="../../utils/types.ts" />
 /// <reference path="../../libs/WebGL.d.ts" />
 
-var gl: WebGLRenderingContext;
+/// <reference path="../../build/headers/glbuild.h.ts" />
+
+//var gl: WebGLRenderingContext;
 initWebGL(document.getElementById("glcanvas"));
 function initWebGL(canvas) {
   // Initialize the global variable gl to null.
@@ -37,8 +39,8 @@ function initWebGL(canvas) {
 //#include "sdl_inc.h"
 //#endif
 
-var bglClearColor = gl.clearColor;//bglClearColorProcPtr;
-var bglClear = gl.clear;//bglClearProcPtr;
+var bglClearColor = gl.clearColor.bind(gl);//bglClearColorProcPtr;
+var bglClear = gl.clear.bind(gl);//bglClearProcPtr;
 //bglColorMaskProcPtr bglColorMask;
 //bglAlphaFuncProcPtr bglAlphaFunc;
 //bglBlendFuncProcPtr bglBlendFunc;
@@ -71,7 +73,7 @@ var bglClear = gl.clear;//bglClearProcPtr;
 //bglMatrixModeProcPtr bglMatrixMode;
 //bglOrthoProcPtr bglOrtho;
 //bglFrustumProcPtr bglFrustum;
-var bglViewport = gl.viewport;//bglViewportProcPtr ;
+var bglViewport = gl.viewport.bind(gl);//bglViewportProcPtr ;
 //bglPushMatrixProcPtr bglPushMatrix;
 //bglPopMatrixProcPtr bglPopMatrix;
 //bglLoadIdentityProcPtr bglLoadIdentity;

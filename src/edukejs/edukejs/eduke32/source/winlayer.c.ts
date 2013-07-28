@@ -3,6 +3,8 @@
 /// <reference path="../../utils/todo.ts" />
 /// <reference path="../../utils/types.ts" />
 
+/// <reference path="../../libs/WebGL.d.ts" />
+
 /// <reference path="../../build/headers/baselayer.h.ts" />
 /// <reference path="../../build/headers/build.h.ts" />
 /// <reference path="../../build/headers/cache1d.h.ts" />
@@ -154,7 +156,7 @@ var curbrightness: number, gammabrightness: number;
 
 //#ifdef USE_OPENGL
 //// OpenGL stuff
-//static HGLRC hGLRC = 0;
+var hGLRC: WebGLRenderingContext; //static HGLRC   =0
 //char nofog=0;
 //char nogl=0;
 //char forcegl=0;
@@ -2725,7 +2727,8 @@ function setgamma(): number
 //
 function SetupOpenGL(width: number, height: number, bitspp: number): number
 {
-    todoThrow();
+    todo("May need stuff in SetupOpenGL");
+    //todoThrow();
 //    PIXELFORMATDESCRIPTOR pfd =
 //    {
 //        sizeof(PIXELFORMATDESCRIPTOR),
@@ -2793,15 +2796,16 @@ function SetupOpenGL(width: number, height: number, bitspp: number): number
 //        ShowErrorBox("Can't set pixel format");
 //        return TRUE;
 //    }
+    
+    hGLRC = gl;
 
-//    hGLRC = bwglCreateContext(hDC);
-
-//    if (!hGLRC)
-//    {
-//        ReleaseOpenGL();
-//        ShowErrorBox("Can't create GL RC");
-//        return TRUE;
-//    }
+    if (!hGLRC)
+    {
+        todoThrow();
+        //ReleaseOpenGL();
+        //ShowErrorBox("Can't create GL RC");
+        return TRUE;
+    }
 
 //    if (!bwglMakeCurrent(hDC, hGLRC))
 //    {
@@ -2810,8 +2814,8 @@ function SetupOpenGL(width: number, height: number, bitspp: number): number
 //        return TRUE;
 //    }
 
-//    loadglextensions();
-
+    todo("loadglextensions(); may not need?");
+    
 //    // We should really be checking for the new WGL extension string instead
 //    // Enable this to leverage ARB_debug_output
 //    if (bwglCreateContextAttribsARB && 0) {
@@ -3157,9 +3161,10 @@ function CreateAppWindow(modenum: number): number
 
         modesetusing = -1;
     }
-    todoThrow();
-//    else
-//    {
+    
+    else
+    {
+        throw "Should not get here";
 //        // yes, set up DirectDraw
 
 //        // clean up after the DIB renderer if it was being used
@@ -3242,7 +3247,7 @@ function CreateAppWindow(modenum: number): number
 //                return TRUE;
 //            }
 //        }
-//    }
+    }
 
     xres = width;
     yres = height;

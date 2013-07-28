@@ -233,7 +233,7 @@ class hudtyp{ /*float */xadd: number; yadd: number; zadd: number; /*int16_t */an
     }
 }
 
-var  hudmem = multiDimArray(hudtyp, 2, MAXTILES);
+var hudmem = [newStructArray(hudtyp, MAXTILES), newStructArray(hudtyp, MAXTILES)];
 
 var mdpause; //EXTERN int32_t 
 var nextmodelid; //EXTERN int32_t 
