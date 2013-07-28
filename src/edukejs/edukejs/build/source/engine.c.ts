@@ -2347,7 +2347,7 @@ function msqrtasm(c: number): number
 var xdimen: number = -1, xdimenrecip: number, halfxdimen: number, xdimenscale: number, xdimscale: number;      //int32_t 
 var ydimen: number;                                                            //int32_t 
 var wx1: number, wy1: number, wx2: number, wy2: number;//static int32_t 
-//intptr_t frameoffset;
+var frameoffset: number; //intptr_t
 
 //static int32_t nrx1[8], nry1[8], nrx2[8], nry2[8]; // JBF 20031206: Thanks Ken
 
@@ -2371,8 +2371,8 @@ var viewingrangerecip: number; //static int32_t
 
 //static char globalxshift, globalyshift;
 //static int32_t globalxpanning, globalypanning;
-//int32_t globalshade, globalorientation;
-//int16_t globalpicnum;
+var globalshade, globalorientation; //int32_t 
+var globalpicnum; //int16_t 
 //static int16_t globalshiftval;
 //#ifdef HIGH_PRECISION_SPRITE
 //static int64_t globalzd;
@@ -2417,19 +2417,30 @@ var colscan = new Int32Array(27);
 //static int16_t clipspritelist[MAXCLIPNUM];  // sector-like sprite clipping
 //static int16_t clipobjectval[MAXCLIPNUM];
 
-//typedef struct
-//{
-//    int32_t sx, sy, z;
-//    int16_t a, picnum;
-//    int8_t dashade;
-//    char dapalnum, dastat;
-//    uint8_t daalpha;
-//    char pagesleft;
-//    int32_t cx1, cy1, cx2, cy2;
-//    int32_t uniqid;    //JF extension
-//} permfifotype;
-//static permfifotype permfifo[MAXPERMS];
-//static int32_t permhead = 0, permtail = 0;
+class permfifotype
+{
+    sx: number; sy: number; z: number;                    // int32_t   
+    a: number; picnum: number;                    // int16_t   
+    dashade: number;                      // int8_t    
+    dapalnum: number; dastat: number;             // char      
+    daalpha: number;                    // uint8_    
+    pagesleft: number;                   // char      
+    cx1: number; cy1: number; cx2: number; cy2: number;           // int32_t   
+    uniqid: number;    //JF extension     // int32_t   
+
+    constructor() {
+        this.sx = 0;this. sy = 0;this. z = 0;
+        this.a = 0;this. picnum = 0;
+        this.dashade = 0;
+        this.dapalnum = 0;this. dastat = 0;  
+        this.daalpha = 0;
+        this.pagesleft = 0;
+        this.cx1 = 0;this. cy1 = 0;this. cx2 = 0;this. cy2 = 0; 
+        this.uniqid = 0;
+    }
+} ;
+var permfifo: permfifotype[] = newStructArray(permfifotype, MAXPERMS); 
+var permhead = 0, permtail = 0; //static int32_t 
 
 //int16_t numscans, numbunches;
 //static int16_t numhits;
@@ -3226,39 +3237,39 @@ var palfadedelta = 0; //char
 //}
 
 
-////
-//// animateoffs (internal)
-////
-//int32_t animateoffs(int16_t tilenum, int16_t fakevar)
-//{
-//    int32_t i, k, offs=0, animnum=picanm[tilenum].num;
+//
+// animateoffs (internal)
+//
+function animateoffs(/*int16_t */tilenum: number, /*int16_t */fakevar: number): number
+{
+    var i: number, k: number, offs=0, animnum: number =picanm[tilenum].num;
 
-//    UNREFERENCED_PARAMETER(fakevar);
+    //UNREFERENCED_PARAMETER(fakevar);
 
-//    i = totalclocklock>>(picanm[tilenum].sf&PICANM_ANIMSPEED_MASK);
+    i = totalclocklock>>(picanm[tilenum].sf&PICANM_ANIMSPEED_MASK);
 
-//    if (picanm[tilenum].num > 0)
-//    {
-//        switch (picanm[tilenum].sf&PICANM_ANIMTYPE_MASK)
-//        {
-//        case PICANM_ANIMTYPE_OSC:
-//            k = (i%(animnum<<1));
-//            if (k < animnum)
-//                offs = k;
-//            else
-//                offs = (animnum<<1)-k;
-//            break;
-//        case PICANM_ANIMTYPE_FWD:
-//            offs = i%(animnum+1);
-//            break;
-//        case PICANM_ANIMTYPE_BACK:
-//            offs = -(i%(animnum+1));
-//            break;
-//        }
-//    }
+    if (picanm[tilenum].num > 0)
+    {
+        switch (picanm[tilenum].sf&PICANM_ANIMTYPE_MASK)
+        {
+        case PICANM_ANIMTYPE_OSC:
+            k = (i%(animnum<<1));
+            if (k < animnum)
+                offs = k;
+            else
+                offs = (animnum<<1)-k;
+            break;
+        case PICANM_ANIMTYPE_FWD:
+            offs = i%(animnum+1);
+            break;
+        case PICANM_ANIMTYPE_BACK:
+            offs = -(i%(animnum+1));
+            break;
+        }
+    }
 
-//    return(offs);
-//}
+    return(offs);
+}
 
 
 ////
@@ -7268,45 +7279,45 @@ var palfadedelta = 0; //char
 //}
 
 
-////
-//// dorotatesprite (internal)
-////
-////JBF 20031206: Thanks to Ken's hunting, s/(rx1|ry1|rx2|ry2)/n\1/ in this function
-//static void dorotatesprite(int32_t sx, int32_t sy, int32_t z, int16_t a, int16_t picnum,
-//                           int8_t dashade, char dapalnum, int32_t dastat, uint8_t daalpha,
-//                           int32_t cx1, int32_t cy1, int32_t cx2, int32_t cy2,
-//                           int32_t uniqid)
-//{
-//    // NOTE: if these are made unsigned (for safety), angled tiles may draw
-//    // incorrectly, showing vertical seams at intervals.
-//    int32_t bx, by;
+//
+// dorotatesprite (internal)
+//
+//JBF 20031206: Thanks to Ken's hunting, s/(rx1|ry1|rx2|ry2)/n\1/ in this function
+function dorotatesprite(sx: number, sy, z: number, a: number, picnum: number,
+                           dashade: number, dapalnum: number, dastat: number, daalpha: number,
+                           cx1: number, cy1: number, cx2: number, cy2: number,
+                           uniqid: number): void
+{
+    // NOTE: if these are made unsigned (for safety), angled tiles may draw
+    // incorrectly, showing vertical seams at intervals.
+    var bx: number, by: number; //int32_t
 
-//    int32_t cosang, sinang, v, nextv, dax1, dax2, oy;
-//    int32_t i, x, y, x1, y1, x2, y2, gx1, gy1;
-//    intptr_t p, bufplc, palookupoffs;
-//    int32_t xsiz, ysiz, xoff, yoff, npoints, yplc, yinc, lx, rx;
-//    int32_t xv, yv, xv2, yv2;
+    var cosang: number, sinang: number, v: number, nextv: number, dax1: number, dax2: number, oy: number;//int32_t
+    var i: number, x: number, y: number, x1: number, y1: number, x2: number, y2: number, gx1: number, gy1;//int32_t
+    var p, bufplc, palookupoffs; //intptr_t
+    var xsiz: number, ysiz: number, xoff: number, yoff: number, npoints: number, yplc: number, yinc: number, lx: number, rx: number;//int32_t
+    var xv: number, yv: number, xv2: number, yv2: number;//int32_t
 
-//    int32_t ouryxaspect, ourxyaspect;
+    var ouryxaspect, ourxyaspect;//int32_t
 
-//    UNREFERENCED_PARAMETER(uniqid);
+    //UNREFERENCED_PARAMETER(uniqid);
 
-//    if (g_rotatespriteNoWidescreen)
-//    {
-//        dastat |= 1024;
-//        dastat &= ~(512+256);
-//    }
+    if (g_rotatespriteNoWidescreen)
+    {
+        dastat |= 1024;
+        dastat &= ~(512+256);
+    }
 
-//    //============================================================================= //POLYMOST BEGINS
+    //============================================================================= //POLYMOST BEGINS
 //#ifdef USE_OPENGL
-//    if (getrendermode() >= REND_POLYMOST && in3dmode())
-//    {
-//        polymost_dorotatesprite(sx,sy,z,a,picnum,dashade,dapalnum,dastat,daalpha,cx1,cy1,cx2,cy2,uniqid);
-//        return;
-//    }
+    if (getrendermode() >= REND_POLYMOST && in3dmode())
+    {
+        polymost_dorotatesprite(sx,sy,z,a,picnum,dashade,dapalnum,dastat,daalpha,cx1,cy1,cx2,cy2,uniqid);
+        return;
+    }
 //#endif
-//    //============================================================================= //POLYMOST ENDS
-
+    //============================================================================= //POLYMOST ENDS
+    todoThrow();
 //    // bound clipping rectangle to screen
 //    if (cx1 < 0) cx1 = 0;
 //    if (cy1 < 0) cy1 = 0;
@@ -7792,7 +7803,7 @@ var palfadedelta = 0; //char
 //            buffermode = obuffermode;
 //            setactivepage(activepage);
 //        }*/
-//}
+}
 
 
 //
@@ -9834,7 +9845,7 @@ function initengine(): number
 //    }
 
 //    if (numsprites != realnumsprites)
-//    {
+//    { 
 //        for (i=0; i<numsprites; i++)
 //            if (sprite[i].statnum == MAXSTATUS)
 //            {
@@ -14256,35 +14267,38 @@ function setaspect(daxrange: number, daaspect: number): void
 //}
 
 
-////
-//// rotatesprite
-////
-//void rotatesprite_(int32_t sx, int32_t sy, int32_t z, int16_t a, int16_t picnum,
-//                  int8_t dashade, char dapalnum, int32_t dastat, uint8_t daalpha,
-//                  int32_t cx1, int32_t cy1, int32_t cx2, int32_t cy2)
-//{
-//    int32_t i;
-//    permfifotype *per, *per2;
+//
+// rotatesprite
+//
+function rotatesprite_(sx: number, sy: number, z: number, a: number, picnum: number,
+                  dashade: number, dapalnum: number, dastat: number, daalpha: number,
+                  cx1: number, cy1: number, cx2: number, cy2: number): void
+{
+    assert.int32(sx).int32(sy).int32(z).int16(a).int16(picnum).int8(dashade).char(dapalnum).int32(dastat).uint8(daalpha)
+        .int32(cx1).int32(cy1).int32(cx2).int32(cy2);
 
-//    if ((unsigned)picnum >= MAXTILES)
-//        return;
+    var i: number;
+    var per: permfifotype, per2: permfifotype;
 
-//    if ((cx1 > cx2) || (cy1 > cy2)) return;
-//    if (z <= 16) return;
-//    DO_TILE_ANIM(picnum, 0xc000);
-//    if ((tilesizx[picnum] <= 0) || (tilesizy[picnum] <= 0)) return;
+    if (unsigned(picnum) >= MAXTILES)
+        return;
 
-//    // Experimental / development bits. ONLY FOR INTERNAL USE!
-//    //  bit RS_CENTERORIGIN: see dorotspr_handle_bit2
-//    ////////////////////
+    if ((cx1 > cx2) || (cy1 > cy2)) return;
+    if (z <= 16) return;
+    DO_TILE_ANIM(picnum, 0xc000);
+    if ((tilesizx[picnum] <= 0) || (tilesizy[picnum] <= 0)) return;
+   
+    // Experimental / development bits. ONLY FOR INTERNAL USE!
+    //  bit RS_CENTERORIGIN: see dorotspr_handle_bit2
+    ////////////////////
 
-//    if (((dastat&128) == 0) || (numpages < 2) || (beforedrawrooms != 0))
-//    {
-//        begindrawing(); //{{{
-//        dorotatesprite(sx,sy,z,a,picnum,dashade,dapalnum,dastat,daalpha,cx1,cy1,cx2,cy2,guniqhudid);
-//        enddrawing();   //}}}
-//    }
-
+    if (((dastat&128) == 0) || (numpages < 2) || (beforedrawrooms != 0))
+    {
+        begindrawing(); //{{{
+        dorotatesprite(sx,sy,z,a,picnum,dashade,dapalnum,dastat,daalpha,cx1,cy1,cx2,cy2,guniqhudid);
+        enddrawing();   //}}}
+    }
+ todoThrow();
 //    if ((dastat&64) && (cx1 <= 0) && (cy1 <= 0) && (cx2 >= xdim-1) && (cy2 >= ydim-1) &&
 //            (sx == (160<<16)) && (sy == (100<<16)) && (z == 65536L) && (a == 0) && ((dastat&1) == 0))
 //        permhead = permtail = 0;
@@ -14293,14 +14307,14 @@ function setaspect(daxrange: number, daaspect: number): void
 //    if (numpages >= 2)
 //    {
 //        per = &permfifo[permhead];
-//        per->sx = sx; per->sy = sy; per->z = z; per->a = a;
-//        per->picnum = picnum;
-//        per->dashade = dashade; per->dapalnum = dapalnum;
-//        per->dastat = dastat;
-//        per->daalpha = daalpha;
-//        per->pagesleft = numpages+((beforedrawrooms&1)<<7);
-//        per->cx1 = cx1; per->cy1 = cy1; per->cx2 = cx2; per->cy2 = cy2;
-//        per->uniqid = guniqhudid;   //JF extension
+//        per.sx = sx; per.sy = sy; per.z = z; per.a = a;
+//        per.picnum = picnum;
+//        per.dashade = dashade; per.dapalnum = dapalnum;
+//        per.dastat = dastat;
+//        per.daalpha = daalpha;
+//        per.pagesleft = numpages+((beforedrawrooms&1)<<7);
+//        per.cx1 = cx1; per.cy1 = cy1; per.cx2 = cx2; per.cy2 = cy2;
+//        per.uniqid = guniqhudid;   //JF extension
 
 //        //Would be better to optimize out true bounding boxes
 //        if (dastat&64)  //If non-masking write, checking for overlapping cases
@@ -14308,41 +14322,41 @@ function setaspect(daxrange: number, daaspect: number): void
 //            for (i=permtail; i!=permhead; i=((i+1)&(MAXPERMS-1)))
 //            {
 //                per2 = &permfifo[i];
-//                if ((per2->pagesleft&127) == 0) continue;
-//                if (per2->sx != per->sx) continue;
-//                if (per2->sy != per->sy) continue;
-//                if (per2->z != per->z) continue;
-//                if (per2->a != per->a) continue;
-//                if (tilesizx[per2->picnum] > tilesizx[per->picnum]) continue;
-//                if (tilesizy[per2->picnum] > tilesizy[per->picnum]) continue;
-//                if (per2->cx1 < per->cx1) continue;
-//                if (per2->cy1 < per->cy1) continue;
-//                if (per2->cx2 > per->cx2) continue;
-//                if (per2->cy2 > per->cy2) continue;
-//                per2->pagesleft = 0;
+//                if ((per2.pagesleft&127) == 0) continue;
+//                if (per2.sx != per.sx) continue;
+//                if (per2.sy != per.sy) continue;
+//                if (per2.z != per.z) continue;
+//                if (per2.a != per.a) continue;
+//                if (tilesizx[per2.picnum] > tilesizx[per.picnum]) continue;
+//                if (tilesizy[per2.picnum] > tilesizy[per.picnum]) continue;
+//                if (per2.cx1 < per.cx1) continue;
+//                if (per2.cy1 < per.cy1) continue;
+//                if (per2.cx2 > per.cx2) continue;
+//                if (per2.cy2 > per.cy2) continue;
+//                per2.pagesleft = 0;
 //            }
-//            if ((per->z == 65536) && (per->a == 0))
+//            if ((per.z == 65536) && (per.a == 0))
 //                for (i=permtail; i!=permhead; i=((i+1)&(MAXPERMS-1)))
 //                {
 //                    per2 = &permfifo[i];
-//                    if ((per2->pagesleft&127) == 0) continue;
-//                    if (per2->z != 65536) continue;
-//                    if (per2->a != 0) continue;
-//                    if (per2->cx1 < per->cx1) continue;
-//                    if (per2->cy1 < per->cy1) continue;
-//                    if (per2->cx2 > per->cx2) continue;
-//                    if (per2->cy2 > per->cy2) continue;
-//                    if ((per2->sx>>16) < (per->sx>>16)) continue;
-//                    if ((per2->sy>>16) < (per->sy>>16)) continue;
-//                    if ((per2->sx>>16)+tilesizx[per2->picnum] > (per->sx>>16)+tilesizx[per->picnum]) continue;
-//                    if ((per2->sy>>16)+tilesizy[per2->picnum] > (per->sy>>16)+tilesizy[per->picnum]) continue;
-//                    per2->pagesleft = 0;
+//                    if ((per2.pagesleft&127) == 0) continue;
+//                    if (per2.z != 65536) continue;
+//                    if (per2.a != 0) continue;
+//                    if (per2.cx1 < per.cx1) continue;
+//                    if (per2.cy1 < per.cy1) continue;
+//                    if (per2.cx2 > per.cx2) continue;
+//                    if (per2.cy2 > per.cy2) continue;
+//                    if ((per2.sx>>16) < (per.sx>>16)) continue;
+//                    if ((per2.sy>>16) < (per.sy>>16)) continue;
+//                    if ((per2.sx>>16)+tilesizx[per2.picnum] > (per.sx>>16)+tilesizx[per.picnum]) continue;
+//                    if ((per2.sy>>16)+tilesizy[per2.picnum] > (per.sy>>16)+tilesizy[per.picnum]) continue;
+//                    per2.pagesleft = 0;
 //                }
 //        }
 
 //        permhead = ((permhead+1)&(MAXPERMS-1));
 //    }
-//}
+}
 
 
 //
@@ -14552,21 +14566,21 @@ function setbrightness(/*char*/ dabrightness: number, /*uint8_t*/ dapalid: numbe
     }
 }
 
-//static inline palette_t getpal(int32_t col)
-//{
-//    if (gammabrightness) return curpalette[col];
-//    else
-//    {
-//        palette_t p;
-//        p.b = britable[curbrightness][ curpalette[col].b ];
-//        p.g	= britable[curbrightness][ curpalette[col].g ];
-//        p.r = britable[curbrightness][ curpalette[col].r ];
-////#ifdef __APPLE__
-//        p.f = 0;  // make gcc on osx happy
-////#endif
-//        return p;
-//    }
-//}
+function getpal(col: number): palette_t 
+{
+    if (gammabrightness) return curpalette[col];
+    else
+    {
+        var p = new palette_t ();
+        p.b = britable[curbrightness][ curpalette[col].b ];
+        p.g	= britable[curbrightness][ curpalette[col].g ];
+        p.r = britable[curbrightness][ curpalette[col].r ];
+//#ifdef __APPLE__
+        p.f = 0;  // make gcc on osx happy
+//#endif
+        return p;
+    }
+}
 
 //static void setpalettefade_calc(uint8_t offset)
 //{
@@ -14667,20 +14681,20 @@ function clearallviews(dacol: number): void
     if (!in3dmode()) return;
     //dacol += (dacol<<8); dacol += (dacol<<16);
     todoThrow();
-////#ifdef USE_OPENGL
-//    if (getrendermode() >= REND_POLYMOST)
-//    {
-//        palette_t p = getpal(dacol);
+//#ifdef USE_OPENGL
+    if (getrendermode() >= REND_POLYMOST)
+    {
+        var p = getpal(dacol);
 
-//        bglViewport(0,0,xdim,ydim); glox1 = -1;
-//        bglClearColor(((float)p.r)/255.0,
-//                      ((float)p.g)/255.0,
-//                      ((float)p.b)/255.0,
-//                      0);
-//        bglClear(GL_COLOR_BUFFER_BIT);
-//        return;
-//    }
-////#endif
+        bglViewport(0,0,xdim,ydim); glox1 = -1;
+        bglClearColor(((float)p.r)/255.0,
+                      ((float)p.g)/255.0,
+                      ((float)p.b)/255.0,
+                      0);
+        bglClear(GL_COLOR_BUFFER_BIT);
+        return;
+    }
+//#endif
 
 //    begindrawing(); //{{{
 //    Bmemset((void *)frameplace,dacol,bytesperline*yres);

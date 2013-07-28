@@ -100,6 +100,7 @@
     <Content Include="eduke32\source\config.c.ts" />
     <Content Include="eduke32\source\gamedef.c.ts" />
     <Content Include="eduke32\headers\gameexec.h.ts" />
+    <Content Include="eduke32\source\gameexec.c.ts" />
     <Content Include="eduke32\source\gamevars.c.ts" />
     <Content Include="eduke32\source\glbuild.c.ts" />
     <Content Include="eduke32\source\global.c.ts" />

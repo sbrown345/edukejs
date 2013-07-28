@@ -109,7 +109,7 @@ Low priority:
 //extern char textfont[2048], smalltextfont[2048];
 //
 var rendmode=0; //int32_t 
-//int32_t usemodels=1, usehightile=1;
+var usemodels=1, usehightile=1;//int32_t 
 //
 //#include <math.h> //<-important!
 //typedef struct { float x, cy[2], fy[2]; int32_t tag; int16_t n, p, ctag, ftag; } vsptyp;
@@ -131,7 +131,7 @@ var rendmode=0; //int32_t
 //int32_t r_usenewshading = 2;
 //int32_t r_usetileshades = 1;
 //
-var gviewxrange=0, ghoriz=0;                                    //static 
+var gviewxrange=0, ghoriz=0;                                    //static double
 var gyxscale=0, gxyaspect=0, ghalfx=0, grhalfxdown10=0, grhalfxdown10x=0;    //double 
 var gcosang=0, gsinang=0, gcosang2=0, gsinang2=0;                          //double 
 var gchang=0, gshang=0, gctang=0, gstang=0, gvisibility=0;                   //double 
@@ -161,7 +161,7 @@ var gchang=0, gshang=0, gctang=0, gstang=0, gvisibility=0;                   //d
 var glanisotropy = 1;            // 0 = maximum supported by card //int32_t 
 var glusetexcompr = 1;//int32_t 
 var gltexfiltermode = 2; // GL_NEAREST_MIPMAP_NEAREST//int32_t 
-var glusetexcache = 2, glusememcache = 1; ////int32_t 
+var glusetexcache = 2, glusememcache = 1; //int32_t 
 //int32_t glmultisample = 0, glnvmultisamplehint = 0;
 //int32_t gltexmaxsize = 0;      // 0 means autodetection on first run
 //int32_t gltexmiplevel = 0;		// discards this many mipmap levels
@@ -178,11 +178,11 @@ var glrendmode = REND_POLYMOST;
 //
 //float curpolygonoffset;    // internal polygon offset stack for drawing flat sprites to avoid depth fighting
 //
-//// Detail mapping cvar
-//int32_t r_detailmapping = 1;
+// Detail mapping cvar
+var r_detailmapping = 1;//int32_t 
 //
-//// Glow mapping cvar
-//int32_t r_glowmapping = 1;
+// Glow mapping cvar
+var r_glowmapping = 1; //int32_t 
 //
 //// Vertex Array model drawing cvar
 //int32_t r_vertexarrays = 1;
@@ -4140,42 +4140,44 @@ function polymost_glreset(): void
 //    tilesizx[globalpicnum]=oldsizx;
 //    tilesizy[globalpicnum]=oldsizy;
 //}
-//
-////sx,sy       center of sprite; screen coords*65536
-////z           zoom*65536. > is zoomed in
-////a           angle (0 is default)
-////dastat&1    1:translucence
-////dastat&2    1:auto-scale mode (use 320*200 coordinates)
-////dastat&4    1:y-flip
-////dastat&8    1:don't clip to startumost/startdmost
-////dastat&16   1:force point passed to be top-left corner, 0:Editart center
-////dastat&32   1:reverse translucence
-////dastat&64   1:non-masked, 0:masked
-////dastat&128  1:draw all pages (permanent)
-////cx1,...     clip window (actual screen coords)
-//void polymost_dorotatesprite(int32_t sx, int32_t sy, int32_t z, int16_t a, int16_t picnum,
-//                             int8_t dashade, char dapalnum, int32_t dastat, uint8_t daalpha,
-//                             int32_t cx1, int32_t cy1, int32_t cx2, int32_t cy2, int32_t uniqid)
-//{
-//    static int32_t onumframes = 0;
-//
-//    int32_t n, nn, xoff, yoff, xsiz, ysiz, method;
-//    int32_t ogpicnum, ogshade, ogpal, ofoffset;
-//    double ogchang, ogshang, ogctang, ogstang, oghalfx, oghoriz;
-//    double ogrhalfxdown10, ogrhalfxdown10x;
-//    double d, cosang, sinang, cosang2, sinang2, px[8], py[8], px2[8], py2[8];
-//    float m[4][4];
-//
-//    int32_t ourxyaspect;
-//
+
+//sx,sy       center of sprite; screen coords*65536
+//z           zoom*65536. > is zoomed in
+//a           angle (0 is default)
+//dastat&1    1:translucence
+//dastat&2    1:auto-scale mode (use 320*200 coordinates)
+//dastat&4    1:y-flip
+//dastat&8    1:don't clip to startumost/startdmost
+//dastat&16   1:force point passed to be top-left corner, 0:Editart center
+//dastat&32   1:reverse translucence
+//dastat&64   1:non-masked, 0:masked
+//dastat&128  1:draw all pages (permanent)
+//cx1,...     clip window (actual screen coords)
+function polymost_dorotatesprite(sx: number, sy, z: number, a: number, picnum: number,
+                           dashade: number, dapalnum: number, dastat: number, daalpha: number,
+                           cx1: number, cy1: number, cx2: number, cy2: number,
+                           uniqid: number): void
+{
+    var onumframes = 0;
+
+    var n: number, nn: number, xoff: number, yoff: number, xsiz: number, ysiz: number, method: number;            //int32_t 
+    var ogpicnum: number, ogshade: number, ogpal: number, ofoffset: number;               //int32_t 
+    var ogchang: number, ogshang: number, ogctang: number, ogstang: number, oghalfx: number, oghoriz: number; //double
+    var ogrhalfxdown10: number, ogrhalfxdown10x; //double
+    var d: number, cosang: number, sinang: number, cosang2: number, sinang2: number, px = new Float64Array(8), py = new Float64Array(8), px2 = new Float64Array(8), py2 = new Float64Array(8);  //double
+    var m = multiDimArray(Float32Array, 4, 4); //float
+
+    var ourxyaspect: number; //int32_t
+
 //#if defined(USE_OPENGL) && defined(POLYMER)
-//    int32_t olddetailmapping = r_detailmapping, oldglowmapping = r_glowmapping;
+    var olddetailmapping: number = r_detailmapping, oldglowmapping: number = r_glowmapping; //int32_t
 //#endif
-//
+
 //#ifdef USE_OPENGL
-//    if (getrendermode() >= REND_POLYMOST && usemodels && hudmem[(dastat&4)>>2][picnum].angadd)
-//    {
-//        const int32_t tilenum = Ptile2tile(picnum,dapalnum);
+    if (getrendermode() >= REND_POLYMOST && usemodels && hudmem[(dastat&4)>>2][picnum].angadd)
+    {
+        todoThrow();
+        //var tilenum = Ptile2tile(picnum,dapalnum);
 //
 //        if (tile2model[tilenum].modelid >= 0 &&
 //            tile2model[tilenum].framenum >= 0)
@@ -4378,26 +4380,26 @@ function polymost_glreset(): void
 //
 //            return;
 //        }
-//    }
+    }
 //#endif
-//
-//    globvis = 0;
-//    ogpicnum = globalpicnum; globalpicnum = picnum;
-//    ogshade  = globalshade;  globalshade  = dashade;
-//    ogpal    = globalpal;    globalpal    = (int32_t)((uint8_t)dapalnum);
-//    oghalfx  = ghalfx;       ghalfx       = (double)(xdim>>1);
-//    ogrhalfxdown10 = grhalfxdown10;    grhalfxdown10 = 1.0/(((double)ghalfx)*1024);
-//    ogrhalfxdown10x = grhalfxdown10x;  grhalfxdown10x = grhalfxdown10;
-//    oghoriz  = ghoriz;       ghoriz       = (double)(ydim>>1);
-//    ofoffset = frameoffset;  frameoffset  = frameplace;
-//    ogchang = gchang; gchang = 1.0;
-//    ogshang = gshang; gshang = 0.0;
-//    ogctang = gctang; gctang = 1.0;
-//    ogstang = gstang; gstang = 0.0;
-//
+
+    globvis = 0;
+    ogpicnum = globalpicnum; globalpicnum = picnum;
+    ogshade  = globalshade;  globalshade  = dashade;
+    ogpal    = globalpal;    globalpal    = uint8(dapalnum);
+    oghalfx  = ghalfx;       ghalfx       = /*(double)*/(xdim>>1);
+    ogrhalfxdown10 = grhalfxdown10;    grhalfxdown10 = 1.0/((/*(double)*/ghalfx)*1024); //doubles
+    ogrhalfxdown10x = grhalfxdown10x;  grhalfxdown10x = grhalfxdown10; //doubles
+    oghoriz  = ghoriz;       ghoriz       = /*(double)*/(ydim>>1);
+    ofoffset = frameoffset;  frameoffset  = frameplace;
+    ogchang = gchang; gchang = 1.0;
+    ogshang = gshang; gshang = 0.0;
+    ogctang = gctang; gctang = 1.0;
+    ogstang = gstang; gstang = 0.0;
+  
 //#ifdef USE_OPENGL
-//    if (getrendermode() >= REND_POLYMOST)
-//    {
+    if (getrendermode() >= REND_POLYMOST)
+    {  todoThrow();
 //        bglViewport(0,0,xdim,ydim); glox1 = -1; //Force fullscreen (glox1=-1 forces it to restore)
 //        bglMatrixMode(GL_PROJECTION);
 //        memset(m,0,sizeof(m));
@@ -4418,7 +4420,9 @@ function polymost_glreset(): void
 //            r_glowmapping = 0;
 //        }
 //# endif
-//    }
+    }
+
+todoThrow();
 //#endif
 //
 //    method = 0;
@@ -4569,7 +4573,7 @@ function polymost_glreset(): void
 //    gshang = ogshang;
 //    gctang = ogctang;
 //    gstang = ogstang;
-//}
+}
 //
 //#ifdef USE_OPENGL
 //static float trapextx[2];

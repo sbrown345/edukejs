@@ -612,9 +612,9 @@ function spritesmooth_t() {
 
 //#define CSTAT_SPRITE_MDHACK 1024
 
-//EXTERN int32_t guniqhudid;
-//EXTERN int32_t spritesortcnt;
-//extern int32_t g_loadedMapVersion;
+var guniqhudid: number = 0;            //EXTERN int32_t 
+var spritesortcnt: number = 0;         //EXTERN int32_t 
+var g_loadedMapVersion: number = 0;    //extern int32_t 
 
 //#if !defined DEBUG_MAIN_ARRAYS
 //EXTERN spriteext_t *spriteext;
@@ -1103,12 +1103,12 @@ class vec3_t{
 //{
 //    rotatesprite_(sx, sy, z, a, picnum, dashade, dapalnum, dastat, 0, cx1, cy1, cx2, cy2);
 //}
-//// Don't clip at all, i.e. the whole screen real estate is available:
-//static inline void rotatesprite_fs(int32_t sx, int32_t sy, int32_t z, int16_t a, int16_t picnum,
-//                                   int8_t dashade, char dapalnum, int32_t dastat)
-//{
-//    rotatesprite_(sx, sy, z, a, picnum, dashade, dapalnum, dastat, 0, 0,0,xdim-1,ydim-1);
-//}
+// Don't clip at all, i.e. the whole screen real estate is available:
+function rotatesprite_fs(sx: number, sy: number, z: number, a: number, picnum: number,
+                                   dashade: number, dapalnum: number, dastat: number): void
+{
+    rotatesprite_(sx, sy, z, a, picnum, dashade, dapalnum, dastat, 0, 0,0,xdim-1,ydim-1);
+}
 
 //static inline void rotatesprite_win(int32_t sx, int32_t sy, int32_t z, int16_t a, int16_t picnum,
 //                                    int8_t dashade, char dapalnum, int32_t dastat)

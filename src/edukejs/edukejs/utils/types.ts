@@ -1,4 +1,16 @@
 ﻿
+var int8ConvertArray = new Int8Array(1);
+var int8 = function (v: number): number {
+   int8ConvertArray[0] = v;
+    return int8ConvertArray[0];
+};
+
+var uint8ConvertArray = new Uint8Array(1);
+var uint8 = function (v: number): number {
+   uint8ConvertArray[0] = v;
+    return uint8ConvertArray[0];
+};
+
 var int32 = function (v: number): number {
     return v | 0;
 };

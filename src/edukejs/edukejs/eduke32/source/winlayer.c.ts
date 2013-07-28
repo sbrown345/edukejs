@@ -40,6 +40,7 @@
 /// <reference path="../../eduke32/source/config.c.ts" />
 /// <reference path="../../eduke32/source/game.c.ts" />
 /// <reference path="../../eduke32/source/gamedef.c.ts" />
+/// <reference path="../../eduke32/source/gameexec.c.ts" />
 /// <reference path="../../eduke32/source/gamevars.c.ts" />
 /// <reference path="../../eduke32/source/glbuild.c.ts" />
 /// <reference path="../../eduke32/source/global.c.ts" />
@@ -1954,60 +1955,60 @@ function setvideomode(x: number, y: number, c: number, fs: number): number
 //}
 
 
-////
-//// begindrawing() -- locks the framebuffer for drawing
-////
-//void begindrawing(void)
-//{
-//    if (bpp > 8)
-//    {
-//        if (offscreenrendering) return;
-//        frameplace = 0;
-//        bytesperline = 0;
-//        modechange = 0;
-//        return;
-//    }
+//
+// begindrawing() -- locks the framebuffer for drawing
+//
+function begindrawing(): void
+{
+    if (bpp > 8)
+    {
+        if (offscreenrendering) return;
+        frameplace = 0;
+        bytesperline = 0;
+        modechange = 0;
+        return;
+    }
+    todoThrow();
+    //if (lockcount++ > 0)
+    //    return;		// already locked
 
-//    if (lockcount++ > 0)
-//        return;		// already locked
+    //if (offscreenrendering) return;
 
-//    if (offscreenrendering) return;
+    //frameplace = fullscreen ? (intptr_t)lpOffscreen : (intptr_t)lpPixels;
 
-//    frameplace = fullscreen ? (intptr_t)lpOffscreen : (intptr_t)lpPixels;
+    //if (!modechange) return;
 
-//    if (!modechange) return;
+    //modechange=0;
 
-//    modechange=0;
+    //if (!fullscreen)
+    //{
+    //    bytesperline = xres|4;
+    //}
+    //else
+    //{
+    //    bytesperline = xres|1;
+    //}
 
-//    if (!fullscreen)
-//    {
-//        bytesperline = xres|4;
-//    }
-//    else
-//    {
-//        bytesperline = xres|1;
-//    }
-
-//    calc_ylookup(bytesperline, ydim);
-//}
+    //calc_ylookup(bytesperline, ydim);
+}
 
 
-////
-//// enddrawing() -- unlocks the framebuffer
-////
-//void enddrawing(void)
-//{
-//    if (bpp > 8)
-//    {
-//        if (!offscreenrendering) frameplace = 0;
-//        return;
-//    }
+//
+// enddrawing() -- unlocks the framebuffer
+//
+function enddrawing(): void
+{
+    if (bpp > 8)
+    {
+        if (!offscreenrendering) frameplace = 0;
+        return;
+    }
 
-//    if (!frameplace) return;
-//    if (lockcount > 1) { lockcount--; return; }
-//    if (!offscreenrendering) frameplace = 0;
-//    lockcount = 0;
-//}
+    if (!frameplace) return;
+    if (lockcount > 1) { lockcount--; return; }
+    if (!offscreenrendering) frameplace = 0;
+    lockcount = 0;
+}
 
 
 ////

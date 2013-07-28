@@ -44,6 +44,7 @@
 /// <reference path="../../eduke32/source/config.c.ts" />
 /// <reference path="../../eduke32/source/game.c.ts" />
 /// <reference path="../../eduke32/source/gamedef.c.ts" />
+/// <reference path="../../eduke32/source/gameexec.c.ts" />
 /// <reference path="../../eduke32/source/gamevars.c.ts" />
 /// <reference path="../../eduke32/source/glbuild.c.ts" />
 /// <reference path="../../eduke32/source/global.c.ts" />
@@ -399,33 +400,33 @@ function G_DoLoadScreen(statustext: string, percent: number): void
 {
     var i=0,j: number;
     debugger;
-//    if (ud.recstat != 2)
-//    {
-//        j = VM_OnEvent(EVENT_GETLOADTILE, -1, myconnectindex, -1, LOADSCREEN);
+    if (ud.recstat != 2)
+    {
+        j = VM_OnEvent(EVENT_GETLOADTILE, -1, myconnectindex, -1, LOADSCREEN);
 
-//        //g_player[myconnectindex].ps->palette = palette;
-//        P_SetGamePalette(g_player[myconnectindex].ps, BASEPAL, 1);    // JBF 20040308
+        //g_player[myconnectindex].ps->palette = palette;
+        P_SetGamePalette(g_player[myconnectindex].ps, BASEPAL, 1);    // JBF 20040308
 
-//        if (!statustext)
-//        {
-//            i = ud.screen_size;
-//            ud.screen_size = 0;
-//            G_UpdateScreenArea();
-//            clearallviews(0);
-//        }
+        if (!statustext)
+        {
+            i = ud.screen_size;
+            ud.screen_size = 0;
+            throw "todo G_UpdateScreenArea();";;
+            clearallviews(0);
+        }
 
-//        if ((uint32_t)j < 2*MAXTILES)
-//        {
-//            clearallviews(0);
+        if (uint32(j) < 2*MAXTILES)
+        {
+            clearallviews(0);
 
-//            rotatesprite_fs(320<<15,200<<15,65536L,0, j > MAXTILES-1?j-MAXTILES:j,0,0,
-//                            2+8+64+(ud.bgstretch?1024:0));
-//        }
-//        else
-//        {
-//            nextpage();
-//            return;
-//        }
+            rotatesprite_fs(320<<15,200<<15,65536,0, j > MAXTILES-1?j-MAXTILES:j,0,0,
+                            2+8+64+(ud.bgstretch?1024:0));
+        }
+        else
+        {
+            throw "todo nextpage();";
+            return;
+        }
 
 //        if (boardfilename[0] != 0 && ud.level_number == 7 && ud.volume_number == 0)
 //        {
@@ -458,9 +459,10 @@ function G_DoLoadScreen(statustext: string, percent: number): void
 //            KB_FlushKeyboardQueue();
 //            ud.screen_size = i;
 //        }
-//    }
-//    else
-//    {
+    }
+    else
+    {
+        todoThrow();
 //        if (!statustext)
 //        {
 //            clearallviews(0);
@@ -474,7 +476,7 @@ function G_DoLoadScreen(statustext: string, percent: number): void
 
 //        if ((uint32_t)j < 2*MAXTILES)
 //        {
-//            rotatesprite_fs(320<<15,200<<15,65536L, 0,j > MAXTILES-1?j-MAXTILES:j,0,0,
+//            rotatesprite_fs(320<<15,200<<15,65536, 0,j > MAXTILES-1?j-MAXTILES:j,0,0,
 //                            2+8+64+(ud.bgstretch?1024:0));
 //        }
 //        else
@@ -487,7 +489,7 @@ function G_DoLoadScreen(statustext: string, percent: number): void
 //        if (statustext) gametext(160,180,statustext,0,2+8+16);
 //        VM_OnEvent(EVENT_DISPLAYLOADINGSCREEN, g_player[screenpeek].ps->i, screenpeek, -1, 0);
 //        nextpage();
-//    }
+    }
 }
 
 //extern void G_SetCrosshairColor(int32_t r, int32_t g, int32_t b);
@@ -631,7 +633,7 @@ function G_DoLoadScreen(statustext: string, percent: number): void
 //    yax_drawrooms(G_DoSpriteAnimations, SECT, 0, 65536);
 
 //    display_mirror = 1;
-//    G_DoSpriteAnimations(SX,SY,SA,65536L);
+//    G_DoSpriteAnimations(SX,SY,SA,65536);
 //    display_mirror = 0;
 //    drawmasks();
 
@@ -1044,7 +1046,7 @@ function G_DoLoadScreen(statustext: string, percent: number): void
 //    switch (DYNAMICTILEMAP(sky))
 //    {
 //    case CLOUDYOCEAN__STATIC:
-//        parallaxyscale = 65536L;
+//        parallaxyscale = 65536;
 //        break;
 //    case MOONSKY1__STATIC :
 //        pskyoff[6]=1;
@@ -1566,7 +1568,7 @@ function G_NewGame(vn: number,ln: number,sk: number): void
 
     display_mirror =        0;
 
-    todo("VM_OnEvent(EVENT_NEWGAME, g_player[myconnectindex].ps.i, myconnectindex, -1, 0);");
+    VM_OnEvent(EVENT_NEWGAME, g_player[myconnectindex].ps.i, myconnectindex, -1, 0);
 }
 
 //static void resetpspritevars(char g)
@@ -1908,7 +1910,7 @@ function G_EnterLevel(g: number): number
         FX_SetReverb(0);
         setgamemode(ud.config.ScreenMode,ud.config.ScreenWidth,ud.config.ScreenHeight,ud.config.ScreenBPP);
     }	       
-      debugger;
+      
     if (boardfilename[0] != 0 && ud.m_level_number == 7 && ud.m_volume_number == 0)
     {
         var volume: number, level: number;

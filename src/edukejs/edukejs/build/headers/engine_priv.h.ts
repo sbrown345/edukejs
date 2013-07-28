@@ -1,3 +1,6 @@
+/// <reference path="../../build/source/engine_priv.c.ts" />
+
+
 //#ifndef ENGINE_PRIV_H
 //#define ENGINE_PRIV_H
 
@@ -84,9 +87,10 @@ var MAXTILEFILES=256;
 
 //void set_globalang(int16_t ang);
 
-//#define DO_TILE_ANIM(Picnum, Fakevar) do { \
-//        if (picanm[Picnum].sf&PICANM_ANIMTYPE_MASK) Picnum += animateoffs(Picnum, Fakevar); \
-//    } while (0)
+function DO_TILE_ANIM(Picnum, Fakevar) { do { 
+        if (picanm[Picnum].sf&PICANM_ANIMTYPE_MASK) Picnum += animateoffs(Picnum, Fakevar); 
+    } while (0); 
+}
 
 //static inline int32_t bad_tspr(const spritetype *tspr)
 //{

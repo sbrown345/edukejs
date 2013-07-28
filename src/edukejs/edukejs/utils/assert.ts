@@ -15,6 +15,11 @@
             return assert;
         },
 
+        int16: function (v: number) {
+            assertValue(assert.test.isInt16, v);
+            return assert;
+        },
+
         "char": function (v: number) {
             assertValue(assert.test.isUint8, v);
             return assert;
@@ -22,6 +27,11 @@
 
         uint8: function (v: number) {
             assertValue(assert.test.isUint8, v);
+            return assert;
+        },
+
+        int8: function (v: number) {
+            assertValue(assert.test.isInt8, v);
             return assert;
         },
 
@@ -75,14 +85,23 @@
             isString: function (v: string): boolean {
                 return v === null || typeof v === "string";
             },
-            isUint8: function (v: number): boolean {
-                return assert.test.isTypedArrayValue(Uint8Array, v);
-            },
             isInt32: function (v: number): boolean {
                 return assert.test.isTypedArrayValue(Int32Array, v);
             },
             isUint32: function (v: number): boolean {
                 return assert.test.isTypedArrayValue(Uint32Array, v);
+            },
+            isInt16: function (v: number): boolean {
+                return assert.test.isTypedArrayValue(Int16Array, v);
+            },
+            isUint16: function (v: number): boolean {
+                return assert.test.isTypedArrayValue(Uint16Array, v);
+            },
+            isInt8: function (v: number): boolean {
+                return assert.test.isTypedArrayValue(Uint8Array, v);
+            },
+            isUint8: function (v: number): boolean {
+                return assert.test.isTypedArrayValue(Uint8Array, v);
             },
             isType: function (type, v): boolean {
                 return v instanceof type;

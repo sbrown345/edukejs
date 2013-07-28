@@ -40,6 +40,7 @@
 /// <reference path="../../eduke32/source/common.c.ts" />
 /// <reference path="../../eduke32/source/config.c.ts" />
 /// <reference path="../../eduke32/source/gamedef.c.ts" />
+/// <reference path="../../eduke32/source/gameexec.c.ts" />
 /// <reference path="../../eduke32/source/global.c.ts" />
 /// <reference path="../../eduke32/source/grpscan.c.ts" />
 /// <reference path="../../eduke32/source/menus.c.ts" />
@@ -381,18 +382,18 @@ function G_DefaultRtsFile(): string
 //    rotatesprite(tx,ty,scl,0,BOTTOMSTATUSBAR,4,0,10+16+64,clx1+clofx,cly1+clofy,clx2+clofx-1,cly2+clofy-1);
 //}
 
-//void P_SetGamePalette(DukePlayer_t *player, uint8_t palid, int32_t set)
-//{
-//    if (palid >= BASEPALCOUNT)
-//        palid = BASEPAL;
+function P_SetGamePalette(player: DukePlayer_t, palid: number, $set: number): void
+{
+    if (palid >= BASEPALCOUNT)
+        palid = BASEPAL;
 
-//    player->palette = palid;
+    player.palette = palid;
 
-//    if (player != g_player[screenpeek].ps)
-//        return;
+    if (player != g_player[screenpeek].ps)
+        return;
 
-//    setbrightness(ud.brightness>>2, palid, set);
-//}
+    setbrightness(ud.brightness>>2, palid, $set);
+}
 
 //// get the string length until the next '\n'
 //int32_t G_GetStringLineLength(const char *text, const char *end, const int32_t iter)
@@ -10567,7 +10568,7 @@ function G_CompileScripts() : void
     sector = newStructArray(sectortype, MAXSECTORS);// Bmemset(sector, 0, MAXSECTORS*sizeof(sectortype));
     wall = newStructArray(walltype, MAXWALLS);//Bmemset(wall, 0, MAXWALLS*sizeof(walltype));
 
-    todo("VM_OnEvent(EVENT_INIT, -1, -1, -1, 0)");
+    VM_OnEvent(EVENT_INIT, -1, -1, -1, 0);
     pathsearchmode = psm;
 //#endif
 }

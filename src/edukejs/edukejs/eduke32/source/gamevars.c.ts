@@ -44,6 +44,7 @@
 /// <reference path="../../eduke32/source/config.c.ts" />
 /// <reference path="../../eduke32/source/game.c.ts" />
 /// <reference path="../../eduke32/source/gamedef.c.ts" />
+/// <reference path="../../eduke32/source/gameexec.c.ts" />
 /// <reference path="../../eduke32/source/global.c.ts" />
 /// <reference path="../../eduke32/source/grpscan.c.ts" />
 /// <reference path="../../eduke32/source/menus.c.ts" />
