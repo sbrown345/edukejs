@@ -2844,7 +2844,7 @@ static int32_t SetupOpenGL(int32_t width, int32_t height, int32_t bitspp)
             else if (!Bstrcmp((char *)p2, "GL_ARB_texture_non_power_of_two"))
             {
                 // support non-power-of-two texture sizes
-                glinfo.texnpot = 1;
+                //glinfo.texnpot = 1;// like webgl
             }
             else if (!Bstrcmp((char *)p2, "GL_ARB_fragment_program"))
             {

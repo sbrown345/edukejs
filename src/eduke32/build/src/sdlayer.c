@@ -1506,8 +1506,8 @@ int32_t setvideomode(int32_t x, int32_t y, int32_t c, int32_t fs)
             }
             else if (!Bstrcmp(p2, "GL_ARB_texture_non_power_of_two"))
             {
-                // support non-power-of-two texture sizes
-                glinfo.texnpot = 1;
+                //// support non-power-of-two texture sizes
+                //glinfo.texnpot = 1;      // like webgl
             }
             else if (!Bstrcmp(p2, "WGL_3DFX_gamma_control"))
             {
