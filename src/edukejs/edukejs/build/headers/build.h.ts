@@ -1332,27 +1332,36 @@ function rotatesprite_fs(sx: number, sy: number, z: number, a: number, picnum: n
 //#endif
 
 //#ifdef USE_OPENGL
-//typedef struct
-//{
-//    // maps build tiles to particular animation frames of a model
-//    int32_t     modelid;
-//    int32_t     skinnum;
-//    int32_t     framenum;   // calculate the number from the name when declaring
-//    float   smoothduration;
-//    int32_t     next;
-//    char    pal;
-//} tile2model_t;
+class tile2model_t
+{
+    // maps build tiles to particular animation frames of a model
+    modelid: number;                                                              //int32_t
+    skinnum: number;                                                              //int32_t
+    framenum: number;   // calculate the number from the name when declaring      //int32_t
+    smoothduration: number;                                                       //float  
+    next: number;                                                                 //int32_t
+    pal: number;                                                                    // char   
 
-//# define EXTRATILES (MAXTILES/8)
+    constructor() {
+        this.modelid= 0;                                                            
+        this.skinnum= 0;                                                            
+        this.framenum= 0;   
+        this.smoothduration= 0;                                                     
+        this.next= 0;                                                               
+        this.pal= 0;      
+    }
+} //tile2model_t;
+
+var EXTRATILES = (MAXTILES/8)|0;
 
 var mdinited: number; //EXTERN int32_t 
-//EXTERN tile2model_t tile2model[MAXTILES+EXTRATILES];
+var tile2model = newStructArray(tile2model_t, MAXTILES+EXTRATILES);
 
-//static inline int32_t md_tilehasmodel(int32_t tilenume,int32_t pal)
-//{
-//    if (!mdinited) return -1;
-//    return tile2model[Ptile2tile(tilenume,pal)].modelid;
-//}
+function md_tilehasmodel(tilenume: number,pal: number): number
+{
+    if (!mdinited) return -1;
+    return tile2model[Ptile2tile(tilenume,pal)].modelid;
+}
 //#endif  // defined USE_OPENGL
 
 //int32_t md_defineframe(int32_t modelid, const char *framename, int32_t tilenume,

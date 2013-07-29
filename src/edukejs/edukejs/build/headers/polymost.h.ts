@@ -50,7 +50,7 @@ var INVALIDATE_ALL=0,
 //extern float curpolygonoffset;
 
 //extern float shadescale;
-//extern int32_t shadescale_unbounded;
+var shadescale_unboundedL: number;//extern int32_t
 //extern float alphahackarray[MAXTILES];
 
 var r_usenewshading=0;       //extern int32_t 
@@ -59,15 +59,15 @@ var r_usetileshades=0;       //extern int32_t
 //extern int16_t globalpicnum;
 //extern int32_t globalpal;
 
-//static inline float getshadefactor(int32_t shade)
-//{
-//    int32_t shadebound = (shadescale_unbounded || shade>=numshades) ? numshades : numshades-1;
-//    float clamped_shade = min(max(shade*shadescale, 0), shadebound);
-//    if (getrendermode() == REND_POLYMOST && r_usetileshades &&
-//        (!usehightile || !hicfindsubst(globalpicnum, globalpal, 0)) &&
-//        (!usemodels || md_tilehasmodel(globalpicnum, globalpal) < 0)) return 1.f;
-//    return ((float)(numshades-clamped_shade))/(float)numshades;
-//}
+function getshadefactor(/*int32_t */shade: number): number /*float*/
+{
+    var shadebound = (shadescale_unbounded || shade>=numshades) ? numshades : numshades-1;
+    /*float*/var clamped_shade = min(max(shade*shadescale, 0), shadebound);
+    if (getrendermode() == REND_POLYMOST && r_usetileshades &&
+        (!usehightile || !hicfindsubst(globalpicnum, globalpal, 0)) &&
+        (!usemodels || md_tilehasmodel(globalpicnum, globalpal) < 0)) return 1.0;
+    return (/*(float)*/(numshades-clamped_shade))//*(float)*/numshades;
+}
 
 class pthtyp
 {

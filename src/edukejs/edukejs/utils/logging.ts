@@ -4,7 +4,7 @@ var SKIP_ALL_LOGGING = false;
 var DEBUG_COMPILE = false;
 var DEBUG_PALETTE = false;
 var DEBUG_SCRIPT_CHANGE = false;
-var DEBUG_LOAD_TILE_ART = true;
+var DEBUG_LOAD_TILE_ART = false;
 
 var dlog = function (log: boolean, format: string, ...args: any[]) {
     if(!log || SKIP_ALL_LOGGING) return;

@@ -82,15 +82,15 @@
 
 //    return curextra++;
 //}
-//int32_t Ptile2tile(int32_t tile,int32_t pallet)
-//{
-//    int32_t t=tile;
-////  if(tile>=1550&&tile<=1589){initprintf("(%d, %d)\n",tile,pallet);pallet=0;}
-//    while ((tile=tile2model[tile].next)!=-1)
-//        if (tile2model[tile].pal==pallet)
-//            return tile;
-//    return t;
-//}
+function Ptile2tile(tile: number, pallet: number): number
+{
+    var t=tile;
+//  if(tile>=1550&&tile<=1589){initprintf("(%d, %d)\n",tile,pallet);pallet=0;}
+    while ((tile=tile2model[tile].next)!=-1)
+        if (tile2model[tile].pal==pallet)
+            return tile;
+    return t;
+}
 
 //#define MODELALLOCGROUP 256
 //static int32_t nummodelsalloced = 0;

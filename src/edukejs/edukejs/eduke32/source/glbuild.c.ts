@@ -106,7 +106,7 @@ var bglLoadMatrixf = function(multiDimMatrix: Float32Array[]) {
 //bglVertex3fvProcPtr bglVertex3fv;
 //bglVertex3dvProcPtr bglVertex3dv;
 //bglRectdProcPtr bglRectd;
-//bglColor4fProcPtr bglColor4f;
+var bglColor4f = gl.color.bind(gl);/*4f*/; //bglColor4fProcPtr 
 //bglColor4ubProcPtr bglColor4ub;
 //bglTexCoord2dProcPtr bglTexCoord2d;
 //bglTexCoord2fProcPtr bglTexCoord2f;
@@ -125,16 +125,18 @@ var bglLoadMatrixf = function(multiDimMatrix: Float32Array[]) {
 
 //// Texture mapping
 //bglTexEnvfProcPtr bglTexEnvf;
-//bglGenTexturesProcPtr bglGenTextures;
+var bglGenTextures = function(/*GLsizei (int)*/ n: number, /*GLuint **/textures) {
+    gl.createTexture.call(gl);
+};//gl.createTexture;//bglGenTexturesProcPtr// http://www.khronos.org/files/webgl/webgl-reference-card-1_0.pdf Note: Corresponding OpenGL ES function is GenTextures
 //bglDeleteTexturesProcPtr bglDeleteTextures;
-//bglBindTextureProcPtr bglBindTexture;
+var bglBindTexture =  gl.bindTexture.bind(gl);//bglBindTextureProcPtr 
 //bglTexImage2DProcPtr bglTexImage2D;
 //bglTexImage3DProcPtr bglTexImage3D;
 //bglCopyTexImage2DProcPtr bglCopyTexImage2D;
 //bglCopyTexSubImage2DProcPtr bglCopyTexSubImage2D;
 //bglTexSubImage2DProcPtr bglTexSubImage2D;
 //bglTexParameterfProcPtr bglTexParameterf;
-//bglTexParameteriProcPtr bglTexParameteri;
+var bglTexParameteri = gl. texParameteri.bind(gl);//bglTexParameteriProcPtr 
 //bglGetTexParameterivProcPtr bglGetTexParameteriv;
 //bglGetTexLevelParameterivProcPtr bglGetTexLevelParameteriv;
 //bglCompressedTexImage2DARBProcPtr bglCompressedTexImage2DARB;
