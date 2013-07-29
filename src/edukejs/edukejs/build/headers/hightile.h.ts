@@ -15,7 +15,7 @@ class hicreplctyp {
     next: hicreplctyp;
     filename: string;
     skybox: hicskybox_t;
-    palnum: string; ignore: string; flags: string; filler: string;
+    palnum: number; ignore: number; flags: number; filler: number;//char
     alphacut: number; xscale: number; yscale: number; specpower: number; specfactor: number; //float
 
     constructor() {

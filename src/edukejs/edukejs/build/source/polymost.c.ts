@@ -15,6 +15,7 @@
 /// <reference path="../../build/headers/scancodes.h.ts" />
 
 /// <reference path="../../build/source/crc32.c.ts" />
+/// <reference path="../../build/source/texcache.c.ts" />
 
 
 /**************************************************************************************************
@@ -888,15 +889,15 @@ function polymost_glreset(): void
 //}
 //
 function gloadtile_art(dapic: number, dapal: number, dashade: number, dameth: number, pth:pthtyp, doalloc: number): number
-{
-    var pic: coltype;
+{debugger;
+    var pic: coltype[];
     var xsiz: number, ysiz: number; //int32_t 
     var hasalpha = 0, hasfullbright = 0;//char
 
     var fullbrightloadingpass = 0;//static int32_t 
 
-    var tsizx = tilesizx[dapic];/int32_t 
-    var tsizy = tilesizy[dapic];/int32_t 
+    var tsizx = tilesizx[dapic];//int32_t 
+    var tsizy = tilesizy[dapic];//int32_t 
 
     if (!glinfo.texnpot)
     {
@@ -916,7 +917,7 @@ function gloadtile_art(dapic: number, dapal: number, dashade: number, dameth: nu
         }
     }
 
-    pic = (coltype *)Bmalloc(xsiz*ysiz*sizeof(coltype));
+    pic = newStructArray(coltype, xsiz*ysiz);//(coltype *)Bmalloc(xsiz*ysiz*sizeof(coltype));
     if (!pic) return 1;
 
     if (!waloff[dapic])
@@ -928,25 +929,25 @@ function gloadtile_art(dapic: number, dapal: number, dashade: number, dameth: nu
     }
     else
     {
-        const int32_t dofullbright = !(picanm[dapic].sf&PICANM_NOFULLBRIGHT_BIT);
-        int32_t y;
+        var dofullbright = (!(picanm[dapic].sf&PICANM_NOFULLBRIGHT_BIT)) ? 1 : 0; //const int32_t
+        var y: number;//int32
 
         for (y=0; y<ysiz; y++)
         {
-            coltype *wpptr = &pic[y*xsiz];
-            int32_t x, y2;
+            var wpptr = pic[y*xsiz];
+            var x: number, y2: number; //int32_t
 
             if (y < tsizy) y2 = y; else y2 = y-tsizy;
 
             for (x=0; x<xsiz; x++,wpptr++)
             {
-                int32_t dacol, x2;
+                var dacol: number, x2: number; //int32_t
 
                 if ((dameth&4) && (x >= tsizx || y >= tsizy)) //Clamp texture
                     { wpptr.r = wpptr.g = wpptr.b = wpptr.a = 0; continue; }
                 if (x < tsizx) x2 = x; else x2 = x-tsizx;
 
-                dacol = *(char *)(waloff[dapic]+x2*tsizy+y2);
+                todoThrow("dacol = *(char *)(waloff[dapic]+x2*tsizy+y2);");
 
                 if (!fullbrightloadingpass)
                 {
@@ -972,8 +973,9 @@ function gloadtile_art(dapic: number, dapal: number, dashade: number, dameth: nu
 
                 if (dacol != 255)
                 {
-                    char *p = (char *)(palookup[dapal])+(int32_t)(dashade<<8);
-                    dacol = (uint8_t)p[dacol];
+                    todoThrow();
+                    //char *p = (char *)(palookup[dapal])+(int32_t)(dashade<<8);
+                    //dacol = (uint8_t)p[dacol];
                 }
                 else
                 {
@@ -981,40 +983,41 @@ function gloadtile_art(dapic: number, dapal: number, dashade: number, dameth: nu
                     hasalpha = 1;
                 }
 
-                bricolor((palette_t *)wpptr, dacol);
+                todoThrow("bricolor((palette_t *)wpptr, dacol);");
             }
         }
     }
+    debugger;
+    todoThrow();
+    //if (doalloc) bglGenTextures(1,(GLuint *)&pth.glpic); //# of textures (make OpenGL allocate structure)
+    //bglBindTexture(gl.TEXTURE_2D,pth.glpic);
 
-    if (doalloc) bglGenTextures(1,(GLuint *)&pth.glpic); //# of textures (make OpenGL allocate structure)
-    bglBindTexture(GL_TEXTURE_2D,pth.glpic);
+    //fixtransparency(dapic, pic,tsizx,tsizy,xsiz,ysiz,dameth);
+    //uploadtexture(doalloc,xsiz,ysiz,hasalpha?gl.RGBA:gl.RGB,gl.RGBA,pic,tsizx,tsizy,dameth);
 
-    fixtransparency(dapic, pic,tsizx,tsizy,xsiz,ysiz,dameth);
-    uploadtexture(doalloc,xsiz,ysiz,hasalpha?GL_RGBA:GL_RGB,GL_RGBA,pic,tsizx,tsizy,dameth);
+    //texture_setup(dameth);
 
-    texture_setup(dameth);
+    //pic = null;//Bfree(pic);
 
-    Bfree(pic);
+    //pth.picnum = dapic;
+    //pth.palnum = dapal;
+    //pth.shade = dashade;
+    //pth.effects = 0;
+    //pth.flags = ((dameth&4)>>2) | (hasalpha<<3);
+    //pth.hicr = NULL;
 
-    pth.picnum = dapic;
-    pth.palnum = dapal;
-    pth.shade = dashade;
-    pth.effects = 0;
-    pth.flags = ((dameth&4)>>2) | (hasalpha<<3);
-    pth.hicr = NULL;
+    //if (hasfullbright && !fullbrightloadingpass)
+    //{
+    //    // Load the ONLY texture that'll be assembled with the regular one to
+    //    // make the final texture with fullbright pixels.
+    //    fullbrightloadingpass = 1;
+    //    pth.ofb = (pthtyp *)Bcalloc(1,sizeof(pthtyp));
+    //    if (!pth.ofb) return 1;
+    //    pth.flags |= (1<<4);
+    //    if (gloadtile_art(dapic, dapal, 0, dameth, pth.ofb, 1)) return 1;
 
-    if (hasfullbright && !fullbrightloadingpass)
-    {
-        // Load the ONLY texture that'll be assembled with the regular one to
-        // make the final texture with fullbright pixels.
-        fullbrightloadingpass = 1;
-        pth.ofb = (pthtyp *)Bcalloc(1,sizeof(pthtyp));
-        if (!pth.ofb) return 1;
-        pth.flags |= (1<<4);
-        if (gloadtile_art(dapic, dapal, 0, dameth, pth.ofb, 1)) return 1;
-
-        fullbrightloadingpass = 0;
-    }
+    //    fullbrightloadingpass = 0;
+    //}
 
     return 0;
 }
@@ -1309,7 +1312,7 @@ function drawpoly(dpx: Float64Array, dpy: Float64Array, n:number, method: number
     var ngvx = 0.0, ngvy = 0.0, ngvo = 0.0, dp, up, vp, du0 = 0.0, du1 = 0.0, dui, duj;     //double 
     var f = 0.0, r = 0.0, ox = 0.0, oy = 0.0, oz = 0.0, ox2 = 0.0, oy = 0.02, oz2 = 0.0, dd = new Float64Array(16), uu = new Float64Array(16), vv = new Float64Array(16), px = new Float64Array(16), py = new Float64Array(16), uoffs=0.0;     //double 
     var i=0, j=0, k=0, nn=0, ix0=0, ix1=0, tsizx=0, tsizy=0; //int32_t
-    var xx, yy, dorot; //int32_t
+    var xx=0, yy=0, dorot=0; //int32_t
 //#ifdef USE_OPENGL
     var pth: pthtyp, detailpth: pthtyp, glowpth: pthtyp;
     var texunits = todo("gl.TEXTURE0_ARB"); //int32_t
@@ -4550,6 +4553,7 @@ function polymost_dorotatesprite(sx: number, sy, z: number, a: number, picnum: n
 
 //#ifdef USE_OPENGL
         if (!nofog) todo("bglDisable(GL_FOG);");
+        debugger;
         pow2xsplit = 0; drawpoly(px,py,n,method);
         if (!nofog) todo("bglEnable(GL_FOG);");
 //#else

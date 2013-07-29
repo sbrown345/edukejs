@@ -89,12 +89,12 @@
 var MAXCACHEOBJECTS=9216;
 
 //#ifndef DEBUG_ALLOCACHE_AS_MALLOC
-var cachesize = 0; // seems to be same as var in engine.c
-////static int32_t cachecount = 0;
-var zerochar = 0;
-var cachestart = 0;
-var agecount = 0;
-var lockrecip = new Int32Array(200);
+//var cachesize = 0; // seems to be same as var in engine.c
+//////static int32_t cachecount = 0;
+//var zerochar = 0;
+//var cachestart = 0;
+//var agecount = 0;
+//var lockrecip = new Int32Array(200);
 //#endif
 
 var cacnum = 0;
@@ -125,49 +125,49 @@ var toupperlookup = new Uint8Array(
 
 function initcache(/*intptr_t */dacachestart: number, dacachesize: number): void
 {
-//#ifndef DEBUG_ALLOCACHE_AS_MALLOC
-    var i: number;
+////#ifndef DEBUG_ALLOCACHE_AS_MALLOC
+//    var i: number;
 
-    for (i=1; i<200; i++) lockrecip[i] = (1<<28)/(200-i);
+//    for (i=1; i<200; i++) lockrecip[i] = (1<<28)/(200-i);
 
-    // The following code was relocated here from engine.c, since this
-    // function is only ever called once (from there), and it seems to
-    // really belong here:
-    //
-    //   initcache((FP_OFF(pic)+15)&0xfffffff0,(cachesize-((-FP_OFF(pic))&15))&0xfffffff0);
-    //
-    // I'm not sure why it's necessary, but the code is making sure the
-    // cache starts on a multiple of 16 bytes?  -- SA
+//    // The following code was relocated here from engine.c, since this
+//    // function is only ever called once (from there), and it seems to
+//    // really belong here:
+//    //
+//    //   initcache((FP_OFF(pic)+15)&0xfffffff0,(cachesize-((-FP_OFF(pic))&15))&0xfffffff0);
+//    //
+//    // I'm not sure why it's necessary, but the code is making sure the
+//    // cache starts on a multiple of 16 bytes?  -- SA
 
-//printf("BEFORE: cachestart = %x, cachesize = %d\n", dacachestart, dacachesize);
-    cachestart = (/*(uintptr_t)*/dacachestart+15)&~/*(uintptr_t)*/0xf;
-    cachesize = (dacachesize-((/*(uintptr_t)*/(dacachestart))&0xf))&~/*(uintptr_t)*/0xf;
-//printf("AFTER : cachestart = %x, cachesize = %d\n", cachestart, cachesize);
+////printf("BEFORE: cachestart = %x, cachesize = %d\n", dacachestart, dacachesize);
+//    cachestart = (/*(uintptr_t)*/dacachestart+15)&~/*(uintptr_t)*/0xf;
+//    cachesize = (dacachesize-((/*(uintptr_t)*/(dacachestart))&0xf))&~/*(uintptr_t)*/0xf;
+////printf("AFTER : cachestart = %x, cachesize = %d\n", cachestart, cachesize);
 
-    cac[0].leng = cachesize;
-    cac[0].lock = /*&*/zerochar;
-    cacnum = 1;
+//    cac[0].leng = cachesize;
+//    cac[0].lock = /*&*/zerochar;
+//    cacnum = 1;
 
-    initprintf("Initialized %.1fM cache\n", (dacachesize/1024.0/1024.0));
-//#else
-//    UNREFERENCED_PARAMETER(dacachestart);
-//    UNREFERENCED_PARAMETER(dacachesize);
+//    initprintf("Initialized %.1fM cache\n", (dacachesize/1024.0/1024.0));
+////#else
+////    UNREFERENCED_PARAMETER(dacachestart);
+////    UNREFERENCED_PARAMETER(dacachesize);
 //#endif
 }
 
 //#ifdef DEBUG_ALLOCACHE_AS_MALLOC
-//void allocache(intptr_t *newhandle, int32_t newbytes, char *newlockptr)
-//{
+function allocache(/*intptr_t **/newhandle, newbytes, newlockptr): void
+{
 //    UNREFERENCED_PARAMETER(newlockptr);
 
 //    *newhandle = (intptr_t)Bmalloc(newbytes);
 //    if (!*newhandle)
 //        reportandexit("OUT OF MEMORY in allocache as malloc wrapper!");
-//}
+}
 //#else
-function allocache(/*intptr_t **/newhandle, newbytes: number, newlockptr): void
-{
-    todo("allocache");
+//function allocache(/*intptr_t **/newhandle, newbytes: number, newlockptr): void
+//{
+//    todo("allocache");
 //     var i=0, /*j=0,*/ z=0, zz=0, bestz=0, daval=0, bestval=0, besto=0=0, o1=0, o2=0, sucklen=0, suckz=0; //int32_t
 
 ////printf("  ==> asking for %d bytes, ", newbytes);
@@ -245,7 +245,7 @@ function allocache(/*intptr_t **/newhandle, newbytes: number, newlockptr): void
 //    for (z=cacnum-1; z>bestz; z--) cac[z] = cac[z-1];
 //    cac[bestz].leng = sucklen;
 //    cac[bestz].lock = &zerochar;
-}
+//}
 //#endif
 
 //void agecache(void)

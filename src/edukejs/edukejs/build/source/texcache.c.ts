@@ -15,6 +15,7 @@
 /// <reference path="../../build/headers/scancodes.h.ts" />
 
 /// <reference path="../../build/source/crc32.c.ts" />
+/// <reference path="../../build/source/polymost.c.ts" />
 
 
 
@@ -162,7 +163,7 @@ function texcache_fetch(dapicnum: number, dapalnum: number, dashade: number, dam
         texcache.list[j] = pth;
 
         return(pth);
-        }
+    }
 }
 
 //static void texcache_closefiles(void)

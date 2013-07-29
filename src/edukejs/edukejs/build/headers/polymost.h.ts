@@ -5,7 +5,7 @@
 
 //#include "hightile.h"
 
-//typedef struct { char r, g, b, a; } coltype;
+class coltype { /*char*/ r: number; g: number; b: number; a: number; public static size = 4; }
 
 //extern int32_t rendmode;
 //extern float gtang;

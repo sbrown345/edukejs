@@ -216,7 +216,7 @@ var tilefilenum = new Uint8Array(MAXTILES);
 var tilefileoffs = new Int32Array(MAXTILES);
 //static int32_t lastageclock;
 
-var artsize = 0;//, cachesize = 0 looks like this is in cache1d.c too;
+var artsize = 0, cachesize = 0; //cachesize - looks like this is in cache1d.c too;
 
 //// Whole ART file contents loaded from ZIPs in memory.
 //static char *artptrs[MAXTILEFILES];
@@ -2472,7 +2472,7 @@ var searchsector: number, searchwall: number, searchstat: number;     //search o
 //double msens = 1.0;
 
 var artfilename = new Uint8Array(20);
-var artfil = -1, artfilnum, artfilplc;//static int32_t
+var artfil = -1, artfilnum: number, artfilplc: number;//static int32_t
 
 //char inpreparemirror = 0;
 //static int32_t mirrorsx1, mirrorsy1, mirrorsx2, mirrorsy2;
@@ -11266,7 +11266,7 @@ function loadtile(tilenume: number): void
     if (waloff[tilenume] == 0)
     {
         walock[tilenume] = 199;
-        allocache("waloff[tilenume]",dasiz,"walock[tilenume]");
+        allocache(waloff[tilenume],dasiz,walock[tilenume]);
     }
 
     if (artfilplc != tilefileoffs[tilenume])
