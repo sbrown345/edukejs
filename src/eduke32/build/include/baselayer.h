@@ -52,8 +52,13 @@ struct glinfo_t {
     float maxanisotropy;
     char bgra;
     char clamptoedge;
-    char texcompr;
-    char texnpot;
+	char texcompr;
+
+	// GL_ARB_texture_non_power_of_two: texnpot, may be possible:
+	// http://stackoverflow.com/questions/3792027/webgl-and-the-power-of-two-problem
+	// http://www.khronos.org/webgl/wiki/WebGL_and_OpenGL_Differences#Non-Power_of_Two_Texture_Support
+	char texnpot;
+
     char multisample;
     char nvmultisamplehint;
     char arbfp;

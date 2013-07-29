@@ -2845,6 +2845,10 @@ static int32_t SetupOpenGL(int32_t width, int32_t height, int32_t bitspp)
             {
                 // support non-power-of-two texture sizes
                 //glinfo.texnpot = 1;// like webgl
+
+				// may be possible:
+				// http://stackoverflow.com/questions/3792027/webgl-and-the-power-of-two-problem
+				// http://www.khronos.org/webgl/wiki/WebGL_and_OpenGL_Differences#Non-Power_of_Two_Texture_Support
             }
             else if (!Bstrcmp((char *)p2, "GL_ARB_fragment_program"))
             {
