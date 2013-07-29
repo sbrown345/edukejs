@@ -158,6 +158,7 @@ function initcache(/*intptr_t */dacachestart: number, dacachesize: number): void
 //#ifdef DEBUG_ALLOCACHE_AS_MALLOC
 function allocache(/*intptr_t **/newhandle, newbytes, newlockptr): void
 {
+      throw "allocate where newhandle was pointing to and remove call to this method";
 //    UNREFERENCED_PARAMETER(newlockptr);
 
 //    *newhandle = (intptr_t)Bmalloc(newbytes);

@@ -1354,7 +1354,7 @@ function drawpoly(dpx: Float64Array, dpy: Float64Array, n:number, method: number
         }
     }
   
-    j = 0; dorot = ((gchang != 1.0) || (gctang != 1.0));
+    j = 0; dorot = ((gchang != 1.0) || (gctang != 1.0)) ? 1 : 0;
     if (dorot)
     {
         todoThrow();

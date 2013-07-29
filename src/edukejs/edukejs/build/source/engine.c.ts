@@ -11065,10 +11065,10 @@ function set_picsiz(picnum: number): void
 
 function tile_exists(picnum: number): number
 {
-    if (waloff[picnum] == 0)
+    if (!waloff[picnum] /*== 0*/)
         loadtile(picnum);
 
-    return (waloff[picnum] != 0 && tilesizx[picnum] > 0 && tilesizy[picnum] > 0) ? 1 : 0;
+    return (waloff[picnum] /*!= 0*/ && tilesizx[picnum] > 0 && tilesizy[picnum] > 0) ? 1 : 0;
 }
 
 //
@@ -11263,10 +11263,10 @@ function loadtile(tilenume: number): void
         //return;
     }
     debugger;
-    if (waloff[tilenume] == 0)
+    if (!waloff[tilenume])
     {
         walock[tilenume] = 199;
-        allocache(waloff[tilenume],dasiz,walock[tilenume]);
+        waloff[tilenume] = new ArrayBuffer(dasiz);//allocache(waloff[tilenume],dasiz,walock[tilenume]);
     }
 
     if (artfilplc != tilefileoffs[tilenume])
@@ -11275,7 +11275,7 @@ function loadtile(tilenume: number): void
         faketimerhandler();
     }
     
-    kread(artfil, new Ptr(new Uint8Array(waloff.buffer), tilenume)/*(char *)waloff[tilenume]*/, dasiz);
+    kread(artfil, new Ptr(new Uint8Array(waloff[tilenume]))/*(char *)waloff[tilenume]*/, dasiz);
     faketimerhandler();
     artfilplc = tilefileoffs[tilenume]+dasiz;
 
