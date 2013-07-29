@@ -934,12 +934,12 @@ function gloadtile_art(dapic: number, dapal: number, dashade: number, dameth: nu
 
         for (y=0; y<ysiz; y++)
         {
-            var wpptr = pic[y*xsiz];
+            var wpptrIdx = y*xsiz, wpptr = pic[wpptrIdx];
             var x: number, y2: number; //int32_t
 
             if (y < tsizy) y2 = y; else y2 = y-tsizy;
 
-            for (x=0; x<xsiz; x++,wpptr++)
+            for (x=0; x<xsiz; x++,wpptr = pic[++wpptrIdx])
             {
                 var dacol: number, x2: number; //int32_t
 
@@ -947,8 +947,8 @@ function gloadtile_art(dapic: number, dapal: number, dashade: number, dameth: nu
                     { wpptr.r = wpptr.g = wpptr.b = wpptr.a = 0; continue; }
                 if (x < tsizx) x2 = x; else x2 = x-tsizx;
 
-                todoThrow("dacol = *(char *)(waloff[dapic]+x2*tsizy+y2);");
-
+                dacol = new Uint8Array(waloff[dapic])[x2*tsizy+y2];//*(char *)(waloff[dapic]+x2*tsizy+y2);
+                assert.run("gloadtile_art dacol", dacol ==129);
                 if (!fullbrightloadingpass)
                 {
                     // regular texture
@@ -973,9 +973,8 @@ function gloadtile_art(dapic: number, dapal: number, dashade: number, dameth: nu
 
                 if (dacol != 255)
                 {
-                    todoThrow();
-                    //char *p = (char *)(palookup[dapal])+(int32_t)(dashade<<8);
-                    //dacol = (uint8_t)p[dacol];
+                    var p = palookup[dapal].subarray(dashade<<8); //char *p = (char *)(palookup[dapal])+(int32_t)(dashade<<8);
+                    dacol = p[dacol];
                 }
                 else
                 {
@@ -983,10 +982,14 @@ function gloadtile_art(dapic: number, dapal: number, dashade: number, dameth: nu
                     hasalpha = 1;
                 }
 
-                todoThrow("bricolor((palette_t *)wpptr, dacol);");
+                bricolor(wpptr, dacol);
+                dlog(DEBUG_LOAD_TILE_ART, "wpptr %i,%i,%i,%i\n", wpptr.r, wpptr.g, wpptr.b, wpptr.a);
             }
         }
     }
+
+    dlog(DEBUG_LOAD_TILE_ART, "wpptr end load\n");
+    dlogFlush();
     debugger;
     todoThrow();
     //if (doalloc) bglGenTextures(1,(GLuint *)&pth.glpic); //# of textures (make OpenGL allocate structure)

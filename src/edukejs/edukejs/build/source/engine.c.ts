@@ -11262,7 +11262,7 @@ function loadtile(tilenume: number): void
         //faketimerhandler();
         //return;
     }
-    debugger;
+    
     if (!waloff[tilenume])
     {
         walock[tilenume] = 199;

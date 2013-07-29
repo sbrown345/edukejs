@@ -960,10 +960,12 @@ int32_t gloadtile_art(int32_t dapic, int32_t dapal, int32_t dashade, int32_t dam
                 }
 
                 bricolor((palette_t *)wpptr, dacol);
+                dlog(DEBUG_LOAD_TILE_ART, "wpptr %i,%i,%i,%i\n", wpptr->r, wpptr->g, wpptr->b, wpptr->a);
             }
         }
     }
 
+    dlog(DEBUG_LOAD_TILE_ART, "wpptr end load\n");
     if (doalloc) bglGenTextures(1,(GLuint *)&pth->glpic); //# of textures (make OpenGL allocate structure)
     bglBindTexture(GL_TEXTURE_2D,pth->glpic);
 

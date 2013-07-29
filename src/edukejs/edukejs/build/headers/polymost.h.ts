@@ -5,7 +5,11 @@
 
 //#include "hightile.h"
 
-class coltype { /*char*/ r: number; g: number; b: number; a: number; public static size = 4; }
+class coltype { /*char*/ r: number; g: number; b: number; a: number; public static size = 4;
+    constructor() {
+        this.r=0;this.g=0;this.b=0;this.a=0;
+    }
+}
 
 //extern int32_t rendmode;
 //extern float gtang;

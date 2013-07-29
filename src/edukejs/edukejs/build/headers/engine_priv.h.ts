@@ -200,20 +200,22 @@ function setgotpic(tilenume:  number): void
 
 //#endif
 
-//static inline void bricolor(palette_t *wpptr, int32_t dacol)
-//{
-//    if (gammabrightness)
-//    {
-//        wpptr->r = curpalette[dacol].r;
-//        wpptr->g = curpalette[dacol].g;
-//        wpptr->b = curpalette[dacol].b;
-//    }
-//    else
-//    {
-//        wpptr->r = britable[curbrightness][ curpalette[dacol].r ];
-//        wpptr->g = britable[curbrightness][ curpalette[dacol].g ];
-//        wpptr->b = britable[curbrightness][ curpalette[dacol].b ];
-//    }
-//}
+function bricolor(wpptr: palette_t, dacol: number): void;
+function bricolor(wpptr: coltype, dacol: number): void;
+function bricolor(wpptr: any, dacol: number): void 
+{
+    if (gammabrightness)
+    {
+        wpptr.r = curpalette[dacol].r;
+        wpptr.g = curpalette[dacol].g;
+        wpptr.b = curpalette[dacol].b;
+    }
+    else
+    {
+        wpptr.r = britable[curbrightness][ curpalette[dacol].r ];
+        wpptr.g = britable[curbrightness][ curpalette[dacol].g ];
+        wpptr.b = britable[curbrightness][ curpalette[dacol].b ];
+    }
+}
 
 //#endif	/* ENGINE_PRIV_H */

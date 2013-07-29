@@ -34,7 +34,7 @@
 //#define REALLOC_OR_FAIL(ptr, size, type) { ptr = (type *)Brealloc(ptr, size); if (!ptr) goto failure; }
 //#define TEXCACHE_FREEBUFS() { Bfree(pic), Bfree(packbuf), Bfree(midbuf); }
 
-//globaltexcache texcache;
+texcache = new globaltexcache();
 
 //char TEXCACHEFILE[BMAX_PATH] = "textures";
 

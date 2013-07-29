@@ -219,6 +219,7 @@ static inline void bricolor(palette_t *wpptr, int32_t dacol)
 
 
 // DEBUGGING STUFF TO HELP COMPARE WITH JS PORT
-#define DEBUG_COMPILE FALSE
-#define DEBUG_PALETTE FALSE
+#define DEBUG_COMPILE 0
+#define DEBUG_COMPILE 0
+#define DEBUG_LOAD_TILE_ART 1
 void dlog(int32_t log, char *format, ...);
