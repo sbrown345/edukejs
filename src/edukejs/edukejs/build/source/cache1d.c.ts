@@ -249,8 +249,8 @@ function allocache(/*intptr_t **/newhandle, newbytes, newlockptr): void
 //}
 //#endif
 
-//void agecache(void)
-//{
+function agecache(): void
+{
 //#ifndef DEBUG_ALLOCACHE_AS_MALLOC
 //    int32_t cnt = (cacnum>>4);
 
@@ -266,7 +266,7 @@ function allocache(/*intptr_t **/newhandle, newbytes, newlockptr): void
 //        if (agecount < 0) agecount = cacnum-1;
 //    }
 //#endif
-//}
+}
 
 //static void reportandexit(const char *errormessage)
 //{

@@ -347,18 +347,21 @@ var g_skillSoundID=-1;//int16_t
 //    return G_EnterText(x, y, t, dalen, c);
 //}
 
-//int32_t menutext_(int32_t x,int32_t y,int32_t s,int32_t p,char *t,int32_t bits)
-//{
-//    vec2_t dim;
-//    int32_t f = TEXT_BIGALPHANUM|TEXT_UPPERCASE|TEXT_LITERALESCAPE;
+function menutext_(x: number, y: number, s: number, p: number,t: string, bits: number): number
+{
+    todo("menutext_");
+    return -1;
 
-//    if (x == 160)
-//        f |= TEXT_XCENTER;
+    //vec2_t dim;
+    //int32_t f = TEXT_BIGALPHANUM|TEXT_UPPERCASE|TEXT_LITERALESCAPE;
 
-//    dim = G_ScreenText(BIGALPHANUM, x, y-12, 65536L, 0, 0, t, s, p, bits, 0, 5, 16, 0, 0, f, 0, 0, xdim-1, ydim-1);
+    //if (x == 160)
+    //    f |= TEXT_XCENTER;
 
-//    return dim.x;
-//}
+    //dim = G_ScreenText(BIGALPHANUM, x, y-12, 65536L, 0, 0, t, s, p, bits, 0, 5, 16, 0, 0, f, 0, 0, xdim-1, ydim-1);
+
+    //return dim.x;
+}
 
 
 //// This function depends on the 'onbar' variable which should be set to the

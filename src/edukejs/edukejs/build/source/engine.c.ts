@@ -74,7 +74,7 @@
 //L_State g_engState;
 //#endif
 
-//#define CACHEAGETIME 16
+var CACHEAGETIME=16;
 //#define CLASSIC_NONPOW2_YSIZE_SPRITES
 
 //#ifdef LUNATIC
@@ -210,11 +210,11 @@ var reciptable = new Int32Array(2048), fpuasm = 0;
 var palookupfog: palette_t[] = newStructArray(palette_t, MAXPALOOKUPS);
 //#endif
 
-var artversion: number;//int32
+var artversion: number = 0;//int32
 var pic: P = NULL;
 var tilefilenum = new Uint8Array(MAXTILES);
 var tilefileoffs = new Int32Array(MAXTILES);
-//static int32_t lastageclock;
+var lastageclock: number = 0;  //static int32_t 
 
 var artsize = 0, cachesize = 0; //cachesize - looks like this is in cache1d.c too;
 
@@ -10962,83 +10962,83 @@ function setgamemode(/*char*/ davidoption: number,  daxdim: number,daydim: numbe
 }
 
 
-////
-//// nextpage
-////
-//void nextpage(void)
-//{
-//    int32_t i;
-//    permfifotype *per;
+//
+// nextpage
+//
+function nextpage(): void
+{
+    var i: number;
+    var per: permfifotype;
 
-//    //char snotbuf[32];
-//    //j = 0; k = 0;
-//    //for(i=0;i<4096;i++)
-//    //   if (waloff[i] != 0)
-//    //   {
-//    //      sprintf(snotbuf,"%d-%d",i,tilesizx[i]*tilesizy[i]);
-//    //      printext256((j>>5)*40+32,(j&31)*6,walock[i]>>3,-1,snotbuf,1);
-//    //      k += tilesizx[i]*tilesizy[i];
-//    //      j++;
-//    //   }
-//    //sprintf(snotbuf,"Total: %d",k);
-//    //printext256((j>>5)*40+32,(j&31)*6,31,-1,snotbuf,1);
+    //char snotbuf[32];
+    //j = 0; k = 0;
+    //for(i=0;i<4096;i++)
+    //   if (waloff[i] != 0)
+    //   {
+    //      sprintf(snotbuf,"%d-%d",i,tilesizx[i]*tilesizy[i]);
+    //      printext256((j>>5)*40+32,(j&31)*6,walock[i]>>3,-1,snotbuf,1);
+    //      k += tilesizx[i]*tilesizy[i];
+    //      j++;
+    //   }
+    //sprintf(snotbuf,"Total: %d",k);
+    //printext256((j>>5)*40+32,(j&31)*6,31,-1,snotbuf,1);
 
-//    switch (qsetmode)
-//    {
-//    case 200:
-//        begindrawing(); //{{{
-//        for (i=permtail; i!=permhead; i=((i+1)&(MAXPERMS-1)))
-//        {
-//            per = &permfifo[i];
-//            if ((per->pagesleft > 0) && (per->pagesleft <= numpages))
-//                dorotatesprite(per->sx,per->sy,per->z,per->a,per->picnum,
-//                               per->dashade,per->dapalnum,per->dastat,per->daalpha,
-//                               per->cx1,per->cy1,per->cx2,per->cy2,per->uniqid);
-//        }
-//        enddrawing();   //}}}
+    switch (qsetmode)
+    {
+    case 200:
+        begindrawing(); //{{{
+        for (i=permtail; i!=permhead; i=((i+1)&(MAXPERMS-1)))
+        {
+            per = permfifo[i];
+            if ((per.pagesleft > 0) && (per.pagesleft <= numpages))
+                dorotatesprite(per.sx,per.sy,per.z,per.a,per.picnum,
+                               per.dashade,per.dapalnum,per.dastat,per.daalpha,
+                               per.cx1,per.cy1,per.cx2,per.cy2,per.uniqid);
+        }
+        enddrawing();   //}}}
 
-//        OSD_Draw();
-//        showframe(0);
+        todo("OSD_Draw();");
+        showframe(0);
 
-//        begindrawing(); //{{{
-//        for (i=permtail; i!=permhead; i=((i+1)&(MAXPERMS-1)))
-//        {
-//            per = &permfifo[i];
-//            if (per->pagesleft >= 130)
-//                dorotatesprite(per->sx,per->sy,per->z,per->a,per->picnum,
-//                               per->dashade,per->dapalnum,per->dastat,per->daalpha,
-//                               per->cx1,per->cy1,per->cx2,per->cy2,per->uniqid);
+        begindrawing(); //{{{
+        for (i=permtail; i!=permhead; i=((i+1)&(MAXPERMS-1)))
+        {
+            per = permfifo[i];
+            if (per.pagesleft >= 130)
+                dorotatesprite(per.sx,per.sy,per.z,per.a,per.picnum,
+                               per.dashade,per.dapalnum,per.dastat,per.daalpha,
+                               per.cx1,per.cy1,per.cx2,per.cy2,per.uniqid);
 
-//            if (per->pagesleft&127) per->pagesleft--;
-//            if (((per->pagesleft&127) == 0) && (i == permtail))
-//                permtail = ((permtail+1)&(MAXPERMS-1));
-//        }
-//        enddrawing();   //}}}
-//        break;
+            if (per.pagesleft&127) per.pagesleft--;
+            if (((per.pagesleft&127) == 0) && (i == permtail))
+                permtail = ((permtail+1)&(MAXPERMS-1));
+        }
+        enddrawing();   //}}}
+        break;
 
-//    case 350:
-//    case 480:
-//        break;
-//    }
-//    faketimerhandler();
+    case 350:
+    case 480:
+        break;
+    }
+    faketimerhandler();
 
-//    if ((totalclock >= lastageclock+CACHEAGETIME) || (totalclock < lastageclock))
-//        { lastageclock = totalclock; agecache(); }
+    if ((totalclock >= lastageclock+CACHEAGETIME) || (totalclock < lastageclock))
+        { lastageclock = totalclock; agecache(); }
 
 //#ifdef USE_OPENGL
-//    omdtims = mdtims; mdtims = getticks();
+    omdtims = mdtims; mdtims = getticks();
 
-//    {
-//        int32_t i;
-//        for (i=0; i<MAXSPRITES; i++)
-//            if ((mdpause&&spriteext[i].mdanimtims)||(spriteext[i].flags & SPREXT_NOMDANIM))
-//                spriteext[i].mdanimtims+=mdtims-omdtims;
-//    }
+    {
+        var i: number;
+        for (i=0; i<MAXSPRITES; i++)
+            if ((mdpause&&spriteext[i].mdanimtims)||(spriteext[i].flags & SPREXT_NOMDANIM))
+                spriteext[i].mdanimtims+=mdtims-omdtims;
+    }
 //#endif
 
-//    beforedrawrooms = 1;
-//    numframes++;
-//}
+    beforedrawrooms = 1;
+    numframes++;
+}
 
 function set_picsiz(picnum: number): void
 {
@@ -14306,64 +14306,64 @@ function rotatesprite_(sx: number, sy: number, z: number, a: number, picnum: num
         dorotatesprite(sx,sy,z,a,picnum,dashade,dapalnum,dastat,daalpha,cx1,cy1,cx2,cy2,guniqhudid);
         enddrawing();   //}}}
     }
- todoThrow();
-//    if ((dastat&64) && (cx1 <= 0) && (cy1 <= 0) && (cx2 >= xdim-1) && (cy2 >= ydim-1) &&
-//            (sx == (160<<16)) && (sy == (100<<16)) && (z == 65536L) && (a == 0) && ((dastat&1) == 0))
-//        permhead = permtail = 0;
+    if ((dastat&64) && (cx1 <= 0) && (cy1 <= 0) && (cx2 >= xdim-1) && (cy2 >= ydim-1) &&
+            (sx == (160<<16)) && (sy == (100<<16)) && (z == 65536) && (a == 0) && ((dastat&1) == 0))
+        permhead = permtail = 0;
 
-//    if ((dastat&128) == 0) return;
-//    if (numpages >= 2)
-//    {
-//        per = &permfifo[permhead];
-//        per.sx = sx; per.sy = sy; per.z = z; per.a = a;
-//        per.picnum = picnum;
-//        per.dashade = dashade; per.dapalnum = dapalnum;
-//        per.dastat = dastat;
-//        per.daalpha = daalpha;
-//        per.pagesleft = numpages+((beforedrawrooms&1)<<7);
-//        per.cx1 = cx1; per.cy1 = cy1; per.cx2 = cx2; per.cy2 = cy2;
-//        per.uniqid = guniqhudid;   //JF extension
+    if ((dastat&128) == 0) return;
+    if (numpages >= 2)
+    {
+        todoThrow();
+        //per = &permfifo[permhead];
+        //per.sx = sx; per.sy = sy; per.z = z; per.a = a;
+        //per.picnum = picnum;
+        //per.dashade = dashade; per.dapalnum = dapalnum;
+        //per.dastat = dastat;
+        //per.daalpha = daalpha;
+        //per.pagesleft = numpages+((beforedrawrooms&1)<<7);
+        //per.cx1 = cx1; per.cy1 = cy1; per.cx2 = cx2; per.cy2 = cy2;
+        //per.uniqid = guniqhudid;   //JF extension
 
-//        //Would be better to optimize out true bounding boxes
-//        if (dastat&64)  //If non-masking write, checking for overlapping cases
-//        {
-//            for (i=permtail; i!=permhead; i=((i+1)&(MAXPERMS-1)))
-//            {
-//                per2 = &permfifo[i];
-//                if ((per2.pagesleft&127) == 0) continue;
-//                if (per2.sx != per.sx) continue;
-//                if (per2.sy != per.sy) continue;
-//                if (per2.z != per.z) continue;
-//                if (per2.a != per.a) continue;
-//                if (tilesizx[per2.picnum] > tilesizx[per.picnum]) continue;
-//                if (tilesizy[per2.picnum] > tilesizy[per.picnum]) continue;
-//                if (per2.cx1 < per.cx1) continue;
-//                if (per2.cy1 < per.cy1) continue;
-//                if (per2.cx2 > per.cx2) continue;
-//                if (per2.cy2 > per.cy2) continue;
-//                per2.pagesleft = 0;
-//            }
-//            if ((per.z == 65536) && (per.a == 0))
-//                for (i=permtail; i!=permhead; i=((i+1)&(MAXPERMS-1)))
-//                {
-//                    per2 = &permfifo[i];
-//                    if ((per2.pagesleft&127) == 0) continue;
-//                    if (per2.z != 65536) continue;
-//                    if (per2.a != 0) continue;
-//                    if (per2.cx1 < per.cx1) continue;
-//                    if (per2.cy1 < per.cy1) continue;
-//                    if (per2.cx2 > per.cx2) continue;
-//                    if (per2.cy2 > per.cy2) continue;
-//                    if ((per2.sx>>16) < (per.sx>>16)) continue;
-//                    if ((per2.sy>>16) < (per.sy>>16)) continue;
-//                    if ((per2.sx>>16)+tilesizx[per2.picnum] > (per.sx>>16)+tilesizx[per.picnum]) continue;
-//                    if ((per2.sy>>16)+tilesizy[per2.picnum] > (per.sy>>16)+tilesizy[per.picnum]) continue;
-//                    per2.pagesleft = 0;
-//                }
-//        }
+        ////Would be better to optimize out true bounding boxes
+        //if (dastat&64)  //If non-masking write, checking for overlapping cases
+        //{
+        //    for (i=permtail; i!=permhead; i=((i+1)&(MAXPERMS-1)))
+        //    {
+        //        per2 = &permfifo[i];
+        //        if ((per2.pagesleft&127) == 0) continue;
+        //        if (per2.sx != per.sx) continue;
+        //        if (per2.sy != per.sy) continue;
+        //        if (per2.z != per.z) continue;
+        //        if (per2.a != per.a) continue;
+        //        if (tilesizx[per2.picnum] > tilesizx[per.picnum]) continue;
+        //        if (tilesizy[per2.picnum] > tilesizy[per.picnum]) continue;
+        //        if (per2.cx1 < per.cx1) continue;
+        //        if (per2.cy1 < per.cy1) continue;
+        //        if (per2.cx2 > per.cx2) continue;
+        //        if (per2.cy2 > per.cy2) continue;
+        //        per2.pagesleft = 0;
+        //    }
+        //    if ((per.z == 65536) && (per.a == 0))
+        //        for (i=permtail; i!=permhead; i=((i+1)&(MAXPERMS-1)))
+        //        {
+        //            per2 = &permfifo[i];
+        //            if ((per2.pagesleft&127) == 0) continue;
+        //            if (per2.z != 65536) continue;
+        //            if (per2.a != 0) continue;
+        //            if (per2.cx1 < per.cx1) continue;
+        //            if (per2.cy1 < per.cy1) continue;
+        //            if (per2.cx2 > per.cx2) continue;
+        //            if (per2.cy2 > per.cy2) continue;
+        //            if ((per2.sx>>16) < (per.sx>>16)) continue;
+        //            if ((per2.sy>>16) < (per.sy>>16)) continue;
+        //            if ((per2.sx>>16)+tilesizx[per2.picnum] > (per.sx>>16)+tilesizx[per.picnum]) continue;
+        //            if ((per2.sy>>16)+tilesizy[per2.picnum] > (per.sy>>16)+tilesizy[per.picnum]) continue;
+        //            per2.pagesleft = 0;
+        //        }
+        //}
 
-//        permhead = ((permhead+1)&(MAXPERMS-1));
-//    }
+        //permhead = ((permhead+1)&(MAXPERMS-1));
+    }
 }
 
 

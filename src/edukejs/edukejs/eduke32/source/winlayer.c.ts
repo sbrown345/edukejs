@@ -2013,25 +2013,25 @@ function enddrawing(): void
 }
 
 
-////
-//// showframe() -- update the display
-////
-//void showframe(int32_t w)
-//{
+//
+// showframe() -- update the display
+//
+function showframe(w: number): void
+{
 //    HRESULT result;
 //    DDSURFACEDESC ddsd;
 //    char *p,*q;
 //    int32_t i,j;
 
 //#ifdef USE_OPENGL
-//    if (bpp > 8)
-//    {
-//        if (palfadedelta)
-//            fullscreen_tint_gl(palfadergb.r, palfadergb.g, palfadergb.b, palfadedelta);
+    if (bpp > 8)
+    {
+        if (palfadedelta)
+            todoThrow("fullscreen_tint_gl(palfadergb.r, palfadergb.g, palfadergb.b, palfadedelta);");
 
-//        bwglSwapBuffers(hDC);
-//        return;
-//    }
+        gl.flush();//bwglSwapBuffers(hDC);
+        return;
+    }
 //#endif
 
 //    //    w = 1;	// wait regardless. ken thinks it's better to do so.
@@ -2105,7 +2105,7 @@ function enddrawing(): void
 //        if (result != DDERR_WASSTILLDRAWING)
 //            initprintf("IDirectDrawSurface_Flip(): %s\n", GetDDrawError(result));
 //    }
-//}
+}
 
 
 //

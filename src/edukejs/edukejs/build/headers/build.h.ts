@@ -604,7 +604,7 @@ function spritesmooth_t() {
 } //spritesmooth_t;
 
 //#define SPREXT_NOTMD 1
-//#define SPREXT_NOMDANIM 2
+var SPREXT_NOMDANIM=2;
 //#define SPREXT_AWAY1 4
 //#define SPREXT_AWAY2 8
 //#define SPREXT_TSPRACCESS 16
@@ -743,7 +743,7 @@ var Numsprites; //EXTERN int32_t
 var numsectors, numwalls; //EXTERN int16_t 
 var display_mirror: number;//EXTERN char 
 /*@type {number}*/ var totalclock;
-//EXTERN int32_t numframes, randomseed;
+var numframes = 0, randomseed = 0; //EXTERN int32_t 
 var sintable = new Int16Array(2048);
 var palette = new Uint8Array(768);
 var numshades;//EXTERN int16_t 

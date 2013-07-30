@@ -25,6 +25,8 @@
 /// <reference path="../../jaudiolib/headers/fx_man.h.ts" />
 /// <reference path="../../jaudiolib/source/fx_man.c.ts" />
 
+/// <reference path="../../jmact/headers/keyboard.h.ts" />
+
 /// <reference path="../../eduke32/headers/_functio.h.ts" />
 /// <reference path="../../eduke32/headers/_rts.h.ts" />
 /// <reference path="../../eduke32/headers/actors.h.ts" />
@@ -424,41 +426,42 @@ function G_DoLoadScreen(statustext: string, percent: number): void
         }
         else
         {
-            throw "todo nextpage();";
+            nextpage();
             return;
         }
 
-//        if (boardfilename[0] != 0 && ud.level_number == 7 && ud.volume_number == 0)
-//        {
-//            menutext(160,90,0,0,"Loading User Map");
-//            gametextpal(160,90+10,boardfilename,14,2);
-//        }
-//        else
-//        {
-//            menutext(160,90,0,0,"Loading");
-//            if (MapInfo[(ud.volume_number*MAXLEVELS) + ud.level_number].name != NULL)
-//                menutext(160,90+16+8,0,0,MapInfo[(ud.volume_number*MAXLEVELS) + ud.level_number].name);
-//        }
+        if (boardfilename[0] != 0 && ud.level_number == 7 && ud.volume_number == 0)
+        {
+            menutext(160,90,0,0,"Loading User Map");
+            gametextpal(160,90+10,boardfilename.toString(),14,2);
+        }
+        else
+        {
+            menutext(160,90,0,0,"Loading");
+            if (MapInfo[(ud.volume_number*MAXLEVELS) + ud.level_number].name != NULL)
+                menutext(160,90+16+8,0,0,MapInfo[(ud.volume_number*MAXLEVELS) + ud.level_number].name);
+        }
+        
+        if (statustext) gametext(160,180,statustext,0,2+8+16);
 
-//        if (statustext) gametext(160,180,statustext,0,2+8+16);
+        if (percent != -1)
+        {
+            todo("percent != -1");
+            //var ii = scale(scale(xdim-1,288,320),percent,100);
+            //rotatesprite(31<<16,145<<16,65536,0,929,15,0,2+8+16,0,0,ii,ydim-1);
+            //rotatesprite(159<<16,145<<16,65536,0,929,15,0,2+8+16,0,0,ii,ydim-1);
+            //rotatesprite(30<<16,144<<16,65536,0,929,0,0,2+8+16,0,0,ii,ydim-1);
+            //rotatesprite(158<<16,144<<16,65536,0,929,0,0,2+8+16,0,0,ii,ydim-1);
+        }
 
-//        if (percent != -1)
-//        {
-//            int32_t ii = scale(scale(xdim-1,288,320),percent,100);
-//            rotatesprite(31<<16,145<<16,65536,0,929,15,0,2+8+16,0,0,ii,ydim-1);
-//            rotatesprite(159<<16,145<<16,65536,0,929,15,0,2+8+16,0,0,ii,ydim-1);
-//            rotatesprite(30<<16,144<<16,65536,0,929,0,0,2+8+16,0,0,ii,ydim-1);
-//            rotatesprite(158<<16,144<<16,65536,0,929,0,0,2+8+16,0,0,ii,ydim-1);
-//        }
+        VM_OnEvent(EVENT_DISPLAYLOADINGSCREEN, g_player[screenpeek].ps.i, screenpeek, -1, 0);
+        nextpage();
 
-//        VM_OnEvent(EVENT_DISPLAYLOADINGSCREEN, g_player[screenpeek].ps->i, screenpeek, -1, 0);
-//        nextpage();
-
-//        if (!statustext)
-//        {
-//            KB_FlushKeyboardQueue();
-//            ud.screen_size = i;
-//        }
+        if (!statustext)
+        {
+            KB_FlushKeyboardQueue();
+            ud.screen_size = i;
+        }
     }
     else
     {

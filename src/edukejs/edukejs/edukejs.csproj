@@ -125,6 +125,7 @@
     <Content Include="eduke32\source\osdfuncs.c.ts" />
     <Content Include="jaudiolib\headers\fx_man.h.ts" />
     <Content Include="jaudiolib\source\fx_man.c.ts" />
+    <Content Include="jmact\headers\keyboard.h.ts" />
     <Content Include="libs\lightgl.js" />
     <Content Include="libs\sprintf.ts" />
     <Content Include="libs\sprintf.d.ts" />
@@ -154,7 +155,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="ExternalDependencies\" />
     <Folder Include="style\" />
   </ItemGroup>
   <PropertyGroup>

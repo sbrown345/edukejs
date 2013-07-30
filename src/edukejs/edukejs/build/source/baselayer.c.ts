@@ -83,11 +83,12 @@ defaultres =
 //    }
 //}
 
-//void bflushchars(void)
-//{
-//    Bmemset(&keyasciififo,0,sizeof(keyasciififo));
-//    keyasciififoplc = keyasciififoend = 0;
-//}
+function bflushchars(): void
+{
+    todo("bflushchars");
+    //Bmemset(&keyasciififo,0,sizeof(keyasciififo));
+    //keyasciififoplc = keyasciififoend = 0;
+}
 
 //const char *getkeyname(int32_t num)
 //{

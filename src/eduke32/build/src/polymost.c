@@ -1714,19 +1714,20 @@ void drawpoly(double *dpx, double *dpy, int32_t n, int32_t method)
             bglEnd();
         }
 
-        while (texunits >= GL_TEXTURE0_ARB)
-        {
-            bglActiveTextureARB(texunits);
-            bglMatrixMode(GL_TEXTURE);
-            bglLoadIdentity();
-            bglMatrixMode(GL_MODELVIEW);
-            if (texunits > GL_TEXTURE0_ARB)
-            {
-                bglTexEnvf(GL_TEXTURE_ENV, GL_RGB_SCALE_ARB, 1.0f);
-                bglDisable(GL_TEXTURE_2D);
-            }
-            texunits--;
-        }
+		// TODO: UNCOMMENT THIS LOOP
+        //while (texunits >= GL_TEXTURE0_ARB)
+        //{
+        //    bglActiveTextureARB(texunits);
+        //    bglMatrixMode(GL_TEXTURE);
+        //    bglLoadIdentity();
+        //    bglMatrixMode(GL_MODELVIEW);
+        //    if (texunits > GL_TEXTURE0_ARB)
+        //    {
+        //        bglTexEnvf(GL_TEXTURE_ENV, GL_RGB_SCALE_ARB, 1.0f);
+        //        bglDisable(GL_TEXTURE_2D);
+        //    }
+        //    texunits--;
+        //}
 
         if (getrendermode() == REND_POLYMOST)
         {

@@ -458,10 +458,10 @@ var g_Shareware: number = 0; //int32_t
 
 //#define minitextshade(x, y, t, s, p, sb) minitext_(x,y,t,s,p,sb)
 //#define minitext(x, y, t, p, sb) minitext_(x,y,t,0,p,sb)
-//#define menutext(x,y,s,p,t) menutext_(x,y,s,p,(char *)OSD_StripColors(menutextbuf,t),10+16)
-//#define gametext(x,y,t,s,dabits) G_PrintGameText(0,STARTALPHANUM, x,y,t,s,0,dabits,0, 0, xdim-1, ydim-1, 65536)
+function menutext(x: number,y: number,s: number,p:number,t: string): number {todo("menutext game.h");return -1;/*menutext_(x,y,s,p,/*(char *)#1#OSD_StripColors(menutextbuf,t),10+16);*/}
+function gametext(x: number,y: number,t:string,s: number,dabits: number): number{todo(" gamtexte");return -1;/*G_PrintGameText(0,STARTALPHANUM, x,y,t,s,0,dabits,0, 0, xdim-1, ydim-1, 65536)*/};
 //#define gametextscaled(x,y,t,s,dabits) G_PrintGameText(1,STARTALPHANUM, x,y,t,s,0,dabits,0, 0, xdim-1, ydim-1, 65536)
-//#define gametextpal(x,y,t,s,p) G_PrintGameText(0,STARTALPHANUM, x,y,t,s,p,26,0, 0, xdim-1, ydim-1, 65536)
+function gametextpal(x: number,y: number,t: string,s: number,p: number): number {todo("");return -1;/*G_PrintGameText(0,STARTALPHANUM, x,y,t,s,p,26,0, 0, xdim-1, ydim-1, 65536);*/}
 //#define gametextpalbits(x,y,t,s,p,dabits) G_PrintGameText(0,STARTALPHANUM, x,y,t,s,p,dabits,0, 0, xdim-1, ydim-1, 65536)
 //#define A_CheckSpriteFlags(iActor, iType) (((g_tile[sprite[iActor].picnum].flags^actor[iActor].flags) & iType) != 0)
 //// (unsigned)iPicnum check: AMC TC Rusty Nails, bayonet MG alt. fire, iPicnum == -1 (via aplWeaponShoots)
