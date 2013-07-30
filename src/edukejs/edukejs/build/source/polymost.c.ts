@@ -1593,189 +1593,189 @@ function drawpoly(dpx: Float64Array, dpy: Float64Array, n:number, method: number
 
             bglColor4f(pc[0],pc[1],pc[2],pc[3]);
         }
-        throw "todo!!!!";
-//        //Hack for walls&masked walls which use textures that are not a power of 2
-//        if ((pow2xsplit) && (tsizx != xx))
-//        {
-//            if (!dorot)
-//            {
-//                ngdx = gdx; ngdy = gdy; ngdo = gdo+(ngdx+ngdy)*.5;
-//                ngux = gux; nguy = guy; nguo = guo+(ngux+nguy)*.5;
-//                ngvx = gvx; ngvy = gvy; ngvo = gvo+(ngvx+ngvy)*.5;
-//            }
-//            else
-//            {
-//                ox = py[1]-py[2]; oy = py[2]-py[0]; oz = py[0]-py[1];
-//                r = 1.0 / (ox*px[0] + oy*px[1] + oz*px[2]);
-//                ngdx = (ox*dd[0] + oy*dd[1] + oz*dd[2])*r;
-//                ngux = (ox*uu[0] + oy*uu[1] + oz*uu[2])*r;
-//                ngvx = (ox*vv[0] + oy*vv[1] + oz*vv[2])*r;
-//                ox = px[2]-px[1]; oy = px[0]-px[2]; oz = px[1]-px[0];
-//                ngdy = (ox*dd[0] + oy*dd[1] + oz*dd[2])*r;
-//                nguy = (ox*uu[0] + oy*uu[1] + oz*uu[2])*r;
-//                ngvy = (ox*vv[0] + oy*vv[1] + oz*vv[2])*r;
-//                ox = px[0]-.5; oy = py[0]-.5; //.5 centers texture nicely
-//                ngdo = dd[0] - ox*ngdx - oy*ngdy;
-//                nguo = uu[0] - ox*ngux - oy*nguy;
-//                ngvo = vv[0] - ox*ngvx - oy*ngvy;
-//            }
-//
-//            ngux *= hackscx; nguy *= hackscx; nguo *= hackscx;
-//            ngvx *= hackscy; ngvy *= hackscy; ngvo *= hackscy;
-//            uoffs = ((double)(xx-tsizx)*.5);
-//            ngux -= ngdx*uoffs;
-//            nguy -= ngdy*uoffs;
-//            nguo -= ngdo*uoffs;
-//
-//            //Find min&max u coordinates (du0...du1)
-//            for (i=0; i<n; i++)
-//            {
-//                ox = px[i]; oy = py[i];
-//                f = (ox*ngux + oy*nguy + nguo) / (ox*ngdx + oy*ngdy + ngdo);
-//                if (!i) { du0 = du1 = f; continue; }
-//                if (f < du0) du0 = f;
-//                else if (f > du1) du1 = f;
-//            }
-//
-//            f = 1.0/(double)tsizx;
-//            ix0 = (int32_t)floor(du0*f);
-//            ix1 = (int32_t)floor(du1*f);
-//            for (; ix0<=ix1; ix0++)
-//            {
-//                du0 = (double)((ix0)*tsizx);   // + uoffs;
-//                du1 = (double)((ix0+1)*tsizx); // + uoffs;
-//
-//                i = 0; nn = 0;
-//                duj = (px[i]*ngux + py[i]*nguy + nguo) / (px[i]*ngdx + py[i]*ngdy + ngdo);
-//                do
-//                {
-//                    j = i+1; if (j == n) j = 0;
-//
-//                    dui = duj; duj = (px[j]*ngux + py[j]*nguy + nguo) / (px[j]*ngdx + py[j]*ngdy + ngdo);
-//
-//                    if ((du0 <= dui) && (dui <= du1)) { uu[nn] = px[i]; vv[nn] = py[i]; nn++; }
-//                    if (duj <= dui)
-//                    {
-//                        if ((du1 < duj) != (du1 < dui))
-//                        {
-//                            //ox*(ngux-ngdx*du1) + oy*(nguy-ngdy*du1) + (nguo-ngdo*du1) = 0
-//                            //(px[j]-px[i])*f + px[i] = ox
-//                            //(py[j]-py[i])*f + py[i] = oy
-//
-//                            ///Solve for f
-//                            //((px[j]-px[i])*f + px[i])*(ngux-ngdx*du1) +
-//                            //((py[j]-py[i])*f + py[i])*(nguy-ngdy*du1) + (nguo-ngdo*du1) = 0
-//
-//                            f = -(px[i] *(ngux-ngdx*du1) +  py[i]       *(nguy-ngdy*du1) + (nguo-ngdo*du1)) /
-//                                ((px[j]-px[i])*(ngux-ngdx*du1) + (py[j]-py[i])*(nguy-ngdy*du1));
-//                            uu[nn] = (px[j]-px[i])*f + px[i];
-//                            vv[nn] = (py[j]-py[i])*f + py[i]; nn++;
-//                        }
-//                        if ((du0 < duj) != (du0 < dui))
-//                        {
-//                            f = -(px[i] *(ngux-ngdx*du0) +        py[i] *(nguy-ngdy*du0) + (nguo-ngdo*du0)) /
-//                                ((px[j]-px[i])*(ngux-ngdx*du0) + (py[j]-py[i])*(nguy-ngdy*du0));
-//                            uu[nn] = (px[j]-px[i])*f + px[i];
-//                            vv[nn] = (py[j]-py[i])*f + py[i]; nn++;
-//                        }
-//                    }
-//                    else
-//                    {
-//                        if ((du0 < duj) != (du0 < dui))
-//                        {
-//                            f = -(px[i] *(ngux-ngdx*du0) +        py[i] *(nguy-ngdy*du0) + (nguo-ngdo*du0)) /
-//                                ((px[j]-px[i])*(ngux-ngdx*du0) + (py[j]-py[i])*(nguy-ngdy*du0));
-//                            uu[nn] = (px[j]-px[i])*f + px[i];
-//                            vv[nn] = (py[j]-py[i])*f + py[i]; nn++;
-//                        }
-//                        if ((du1 < duj) != (du1 < dui))
-//                        {
-//                            f = -(px[i] *(ngux-ngdx*du1) +  py[i]       *(nguy-ngdy*du1) + (nguo-ngdo*du1)) /
-//                                ((px[j]-px[i])*(ngux-ngdx*du1) + (py[j]-py[i])*(nguy-ngdy*du1));
-//                            uu[nn] = (px[j]-px[i])*f + px[i];
-//                            vv[nn] = (py[j]-py[i])*f + py[i]; nn++;
-//                        }
-//                    }
-//                    i = j;
-//                }
-//                while (i);
-//                if (nn < 3) continue;
-//
-//                bglBegin(gl.TRIANGLE_FAN);
-//                for (i=0; i<nn; i++)
-//                {
-//                    ox = uu[i]; oy = vv[i];
-//                    dp = ox*ngdx + oy*ngdy + ngdo;
-//                    up = ox*ngux + oy*nguy + nguo;
-//                    vp = ox*ngvx + oy*ngvy + ngvo;
-//                    r = 1.0/dp;
-//                    if (texunits > gl.TEXTURE0_ARB)
-//                    {
-//                        j = gl.TEXTURE0_ARB;
-//                        while (j <= texunits)
-//                            bglMultiTexCoord2dARB(j++, (up*r-du0+uoffs)*ox2,vp*r*oy2);
-//                    }
-//                    else
-//                        bglTexCoord2d((up*r-du0+uoffs)*ox2,vp*r*oy2);
-//                    bglVertex3d((ox-ghalfx)*r*grhalfxdown10x,(ghoriz-oy)*r*grhalfxdown10,r*(1.0/1024.0));
-//                }
-//                bglEnd();
-//            }
-//        }
-//        else
-//        {
-//            ox2 *= hackscx; oy2 *= hackscy;
-//            bglBegin(gl.TRIANGLE_FAN);
-//            for (i=0; i<n; i++)
-//            {
-//                r = 1.0/dd[i];
-//                if (texunits > gl.TEXTURE0_ARB)
-//                {
-//                    j = gl.TEXTURE0_ARB;
-//                    while (j <= texunits)
-//                        bglMultiTexCoord2dARB(j++, uu[i]*r*ox2,vv[i]*r*oy2);
-//                }
-//                else
-//                    bglTexCoord2d(uu[i]*r*ox2,vv[i]*r*oy2);
-//                bglVertex3d((px[i]-ghalfx)*r*grhalfxdown10x,(ghoriz-py[i])*r*grhalfxdown10,r*(1.0/1024.0));
-//            }
-//            bglEnd();
-//        }
-//
-//        while (texunits >= gl.TEXTURE0_ARB)
-//        {
-//            bglActiveTextureARB(texunits);
-//            bglMatrixMode(gl.TEXTURE);
-//            bglLoadIdentity();
-//            bglMatrixMode(gl.MODELVIEW);
-//            if (texunits > gl.TEXTURE0_ARB)
-//            {
-//                bglTexEnvf(gl.TEXTURE_ENV, gl.RGB_SCALE_ARB, 1.0f);
-//                bglDisable(gl.TEXTURE_2D);
-//            }
-//            texunits--;
-//        }
-//
-//        if (getrendermode() == REND_POLYMOST)
-//        {
-//            if (srepeat)
-//                bglTexParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,glinfo.clamptoedge?gl.CLAMP_TO_EDGE:gl.CLAMP);
-//            if (trepeat)
-//                bglTexParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,glinfo.clamptoedge?gl.CLAMP_TO_EDGE:gl.CLAMP);
-//        }
-//
-//        if (fullbrightdrawingpass == 1) // tile has fullbright colors ?
-//        {
-//            int32_t shadeforfullbrightpass = globalshade; // save the current shade
-//            fullbrightdrawingpass = 2;
-//            globalshade = -128; // fullbright
-//            bglDisable(gl.FOG);
-//            drawpoly(dpx, dpy, n_, method_); // draw them afterwards, then. :)
-//            bglEnable(gl.FOG);
-//            globalshade = shadeforfullbrightpass;
-//            fullbrightdrawingpass = 0;
-//        }
-//        return;
+        
+        //Hack for walls&masked walls which use textures that are not a power of 2
+        if ((pow2xsplit) && (tsizx != xx))
+        {
+            if (!dorot)
+            {
+                ngdx = gdx; ngdy = gdy; ngdo = gdo+(ngdx+ngdy)*.5;
+                ngux = gux; nguy = guy; nguo = guo+(ngux+nguy)*.5;
+                ngvx = gvx; ngvy = gvy; ngvo = gvo+(ngvx+ngvy)*.5;
+            }
+            else
+            {
+                ox = py[1]-py[2]; oy = py[2]-py[0]; oz = py[0]-py[1];
+                r = 1.0 / (ox*px[0] + oy*px[1] + oz*px[2]);
+                ngdx = (ox*dd[0] + oy*dd[1] + oz*dd[2])*r;
+                ngux = (ox*uu[0] + oy*uu[1] + oz*uu[2])*r;
+                ngvx = (ox*vv[0] + oy*vv[1] + oz*vv[2])*r;
+                ox = px[2]-px[1]; oy = px[0]-px[2]; oz = px[1]-px[0];
+                ngdy = (ox*dd[0] + oy*dd[1] + oz*dd[2])*r;
+                nguy = (ox*uu[0] + oy*uu[1] + oz*uu[2])*r;
+                ngvy = (ox*vv[0] + oy*vv[1] + oz*vv[2])*r;
+                ox = px[0]-.5; oy = py[0]-.5; //.5 centers texture nicely
+                ngdo = dd[0] - ox*ngdx - oy*ngdy;
+                nguo = uu[0] - ox*ngux - oy*nguy;
+                ngvo = vv[0] - ox*ngvx - oy*ngvy;
+            }
+
+            ngux *= hackscx; nguy *= hackscx; nguo *= hackscx;
+            ngvx *= hackscy; ngvy *= hackscy; ngvo *= hackscy;
+            uoffs = (/*(double)*/(xx-tsizx)*.5);
+            ngux -= ngdx*uoffs;
+            nguy -= ngdy*uoffs;
+            nguo -= ngdo*uoffs;
+
+            //Find min&max u coordinates (du0...du1)
+            for (i=0; i<n; i++)
+            {
+                ox = px[i]; oy = py[i];
+                f = (ox*ngux + oy*nguy + nguo) / (ox*ngdx + oy*ngdy + ngdo);
+                if (!i) { du0 = du1 = f; continue; }
+                if (f < du0) du0 = f;
+                else if (f > du1) du1 = f;
+            }
+
+            f = 1.0//*(double)*/tsizx;
+            ix0 = /*(int32_t)*/floor(du0*f);
+            ix1 = /*(int32_t)*/floor(du1*f);
+            for (; ix0<=ix1; ix0++)
+            {
+                du0 = /*(double)*/((ix0)*tsizx);   // + uoffs;
+                du1 = /*(double)*/((ix0+1)*tsizx); // + uoffs;
+
+                i = 0; nn = 0;
+                duj = (px[i]*ngux + py[i]*nguy + nguo) / (px[i]*ngdx + py[i]*ngdy + ngdo);
+                do
+                {
+                    j = i+1; if (j == n) j = 0;
+
+                    dui = duj; duj = (px[j]*ngux + py[j]*nguy + nguo) / (px[j]*ngdx + py[j]*ngdy + ngdo);
+
+                    if ((du0 <= dui) && (dui <= du1)) { uu[nn] = px[i]; vv[nn] = py[i]; nn++; }
+                    if (duj <= dui)
+                    {
+                        if ((du1 < duj) != (du1 < dui))
+                        {
+                            //ox*(ngux-ngdx*du1) + oy*(nguy-ngdy*du1) + (nguo-ngdo*du1) = 0
+                            //(px[j]-px[i])*f + px[i] = ox
+                            //(py[j]-py[i])*f + py[i] = oy
+
+                            ///Solve for f
+                            //((px[j]-px[i])*f + px[i])*(ngux-ngdx*du1) +
+                            //((py[j]-py[i])*f + py[i])*(nguy-ngdy*du1) + (nguo-ngdo*du1) = 0
+
+                            f = -(px[i] *(ngux-ngdx*du1) +  py[i]       *(nguy-ngdy*du1) + (nguo-ngdo*du1)) /
+                                ((px[j]-px[i])*(ngux-ngdx*du1) + (py[j]-py[i])*(nguy-ngdy*du1));
+                            uu[nn] = (px[j]-px[i])*f + px[i];
+                            vv[nn] = (py[j]-py[i])*f + py[i]; nn++;
+                        }
+                        if ((du0 < duj) != (du0 < dui))
+                        {
+                            f = -(px[i] *(ngux-ngdx*du0) +        py[i] *(nguy-ngdy*du0) + (nguo-ngdo*du0)) /
+                                ((px[j]-px[i])*(ngux-ngdx*du0) + (py[j]-py[i])*(nguy-ngdy*du0));
+                            uu[nn] = (px[j]-px[i])*f + px[i];
+                            vv[nn] = (py[j]-py[i])*f + py[i]; nn++;
+                        }
+                    }
+                    else
+                    {
+                        if ((du0 < duj) != (du0 < dui))
+                        {
+                            f = -(px[i] *(ngux-ngdx*du0) +        py[i] *(nguy-ngdy*du0) + (nguo-ngdo*du0)) /
+                                ((px[j]-px[i])*(ngux-ngdx*du0) + (py[j]-py[i])*(nguy-ngdy*du0));
+                            uu[nn] = (px[j]-px[i])*f + px[i];
+                            vv[nn] = (py[j]-py[i])*f + py[i]; nn++;
+                        }
+                        if ((du1 < duj) != (du1 < dui))
+                        {
+                            f = -(px[i] *(ngux-ngdx*du1) +  py[i]       *(nguy-ngdy*du1) + (nguo-ngdo*du1)) /
+                                ((px[j]-px[i])*(ngux-ngdx*du1) + (py[j]-py[i])*(nguy-ngdy*du1));
+                            uu[nn] = (px[j]-px[i])*f + px[i];
+                            vv[nn] = (py[j]-py[i])*f + py[i]; nn++;
+                        }
+                    }
+                    i = j;
+                }
+                while (i);
+                if (nn < 3) continue;
+
+                bglBegin(gl.TRIANGLE_FAN);
+                for (i=0; i<nn; i++)
+                {
+                    ox = uu[i]; oy = vv[i];
+                    dp = ox*ngdx + oy*ngdy + ngdo;
+                    up = ox*ngux + oy*nguy + nguo;
+                    vp = ox*ngvx + oy*ngvy + ngvo;
+                    r = 1.0/dp;
+                    if (texunits > GL_TEXTURE0_ARB)
+                    {
+                        j = gl.TEXTURE0_ARB;
+                        while (j <= texunits)
+                            bglMultiTexCoord2dARB(j++, (up*r-du0+uoffs)*ox2,vp*r*oy2);
+                    }
+                    else
+                        bglTexCoord2d((up*r-du0+uoffs)*ox2,vp*r*oy2);
+                    bglVertex3d((ox-ghalfx)*r*grhalfxdown10x,(ghoriz-oy)*r*grhalfxdown10,r*(1.0/1024.0));
+                }
+                bglEnd();
+            }
+        }
+        else
+        {
+            ox2 *= hackscx; oy2 *= hackscy;
+            bglBegin(gl.TRIANGLE_FAN);
+            for (i=0; i<n; i++)
+            {
+                r = 1.0/dd[i];
+                if (texunits > gl.TEXTURE0_ARB)
+                {
+                    j = gl.TEXTURE0_ARB;
+                    while (j <= texunits)
+                        bglMultiTexCoord2dARB(j++, uu[i]*r*ox2,vv[i]*r*oy2);
+                }
+                else
+                    bglTexCoord2d(uu[i]*r*ox2,vv[i]*r*oy2);
+                bglVertex3d((px[i]-ghalfx)*r*grhalfxdown10x,(ghoriz-py[i])*r*grhalfxdown10,r*(1.0/1024.0));
+            }
+            bglEnd();
+        }
+
+        while (texunits >= gl.TEXTURE0_ARB)
+        {
+            bglActiveTextureARB(texunits);
+            bglMatrixMode(gl.TEXTURE);
+            bglLoadIdentity();
+            bglMatrixMode(gl.MODELVIEW);
+            if (texunits > gl.TEXTURE0_ARB)
+            {
+                bglTexEnvf(gl.TEXTURE_ENV, gl.RGB_SCALE_ARB, 1.0f);
+                bglDisable(gl.TEXTURE_2D);
+            }
+            texunits--;
+        }
+
+        if (getrendermode() == REND_POLYMOST)
+        {
+            if (srepeat)
+                bglTexParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,glinfo.clamptoedge?gl.CLAMP_TO_EDGE:gl.CLAMP);
+            if (trepeat)
+                bglTexParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,glinfo.clamptoedge?gl.CLAMP_TO_EDGE:gl.CLAMP);
+        }
+
+        if (fullbrightdrawingpass == 1) // tile has fullbright colors ?
+        {
+            int32_t shadeforfullbrightpass = globalshade; // save the current shade
+            fullbrightdrawingpass = 2;
+            globalshade = -128; // fullbright
+            bglDisable(gl.FOG);
+            drawpoly(dpx, dpy, n_, method_); // draw them afterwards, then. :)
+            bglEnable(gl.FOG);
+            globalshade = shadeforfullbrightpass;
+            fullbrightdrawingpass = 0;
+        }
+        return;
     }
 //#endif
 //
