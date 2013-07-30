@@ -2373,8 +2373,8 @@ var viewingrangerecip: number; //static int32_t
 
 //static char globalxshift, globalyshift;
 //static int32_t globalxpanning, globalypanning;
-var globalshade, globalorientation; //int32_t 
-var globalpicnum; //int16_t 
+var globalshade: number, globalorientation: number; //int32_t 
+var globalpicnum: number; //int16_t 
 //static int16_t globalshiftval;
 //#ifdef HIGH_PRECISION_SPRITE
 //static int64_t globalzd;
@@ -14699,7 +14699,7 @@ function clearallviews(dacol: number): void
                       (p.g)/255.0,
                       (p.b)/255.0,
                       0);
-        bglClear(gl.COLOR_BUFFER_BIT);
+        bglClear(GL_COLOR_BUFFER_BIT);
         return;
     }
 //#endif

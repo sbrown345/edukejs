@@ -91,6 +91,10 @@ interface WebGLRenderingContext
     loadIdentity():void;
     loadMatrix(m: any/*todo: array??*/):void;
     color(r: number, g: number, b: number, a: number):void;
+    begin(mode: number):void;
+    end():void;
+    vertex(args: any[]):void;
+    texCoord(s: number, t: number):void;
 
 
     //ALPHA_TEST: number;  - would like this, but commenting out all mentions of it didn't have any effect on the first level roof bit (maybe it would on windows?)

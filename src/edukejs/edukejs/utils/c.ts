@@ -75,6 +75,7 @@ var max = Math.max;
 var pow = Math.pow;
 var sin = Math.sin;
 var atan = Math.atan;
+var floor = Math.floor;
 
 function memcmp(buf1 : Uint8Array, buf2 : Uint8Array, count : number) : number {
     for (var i = 0; i < count; i++) {

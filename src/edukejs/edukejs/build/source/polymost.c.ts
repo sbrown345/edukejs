@@ -151,23 +151,23 @@ var lastglredbluemode = 0, redblueclearcnt = 0;//static int32_t
 //
 //struct glfiltermodes glfiltermodes[NUMGLFILTERMODES] =
 //{
-//    {"gl.NEAREST",gl.NEAREST,gl.NEAREST},
-//    {"gl.LINEAR",gl.LINEAR,gl.LINEAR},
-//    {"gl.NEAREST_MIPMAP_NEAREST",gl.NEAREST_MIPMAP_NEAREST,gl.NEAREST},
-//    {"gl.LINEAR_MIPMAP_NEAREST",gl.LINEAR_MIPMAP_NEAREST,gl.LINEAR},
-//    {"gl.NEAREST_MIPMAP_LINEAR",gl.NEAREST_MIPMAP_LINEAR,gl.NEAREST},
-//    {"gl.LINEAR_MIPMAP_LINEAR",gl.LINEAR_MIPMAP_LINEAR,gl.LINEAR}
+//    {"GL_NEAREST",GL_NEAREST,GL_NEAREST},
+//    {"GL_LINEAR",GL_LINEAR,GL_LINEAR},
+//    {"GL_NEAREST_MIPMAP_NEAREST",GL_NEAREST_MIPMAP_NEAREST,GL_NEAREST},
+//    {"GL_LINEAR_MIPMAP_NEAREST",GL_LINEAR_MIPMAP_NEAREST,GL_LINEAR},
+//    {"GL_NEAREST_MIPMAP_LINEAR",GL_NEAREST_MIPMAP_LINEAR,GL_NEAREST},
+//    {"GL_LINEAR_MIPMAP_LINEAR",GL_LINEAR_MIPMAP_LINEAR,GL_LINEAR}
 //};
 //
 var glanisotropy = 1;            // 0 = maximum supported by card //int32_t 
 var glusetexcompr = 1;//int32_t 
-var gltexfiltermode = 2; // gl.NEAREST_MIPMAP_NEAREST//int32_t 
+var gltexfiltermode = 2; // GL_NEAREST_MIPMAP_NEAREST//int32_t 
 var glusetexcache = 2, glusememcache = 1; //int32_t 
 //int32_t glmultisample = 0, glnvmultisamplehint = 0;
 //int32_t gltexmaxsize = 0;      // 0 means autodetection on first run
 //int32_t gltexmiplevel = 0;		// discards this many mipmap levels
 //static int32_t lastglpolygonmode = 0; //FUK
-//int32_t glpolygonmode = 0;     // 0:gl.FILL,1:gl.LINE,2:gl.POINT //FUK
+//int32_t glpolygonmode = 0;     // 0:GL_FILL,1:GL_LINE,2:GL_POINT //FUK
 //int32_t glwidescreen = 0;
 //int32_t glprojectionhacks = 1;
 var polymosttext = 0; //static GLuint 
@@ -322,11 +322,11 @@ function gltexinvalidatetype(type: number): void
 //
 //static void bind_2d_texture(GLuint texture)
 //{
-//    bglBindTexture(gl.TEXTURE_2D, texture);
-//    bglTexParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, glfiltermodes[gltexfiltermode].mag);
-//    bglTexParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, glfiltermodes[gltexfiltermode].min);
+//    bglBindTexture(GL_TEXTURE_2D, texture);
+//    bglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, glfiltermodes[gltexfiltermode].mag);
+//    bglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, glfiltermodes[gltexfiltermode].min);
 //    if (glinfo.maxanisotropy > 1.0)
-//        bglTexParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAX_ANISOTROPY_EXT, glanisotropy);
+//        bglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, glanisotropy);
 //}
 //
 //void gltexapplyprops(void)
@@ -385,7 +385,7 @@ function gltexinvalidatetype(type: number): void
 
 var glox1, gloy1, glox2, gloy2;//float 
 
-//Use this for both initialization and uninitialization of OpenGL.
+//Use this for both initialization and uninitialization of OpenGL_
 var gltexcacnum = -1;
 //extern void freevbos(void);
 //
@@ -459,25 +459,25 @@ function polymost_glreset(): void
 //void polymost_glinit()
 //{
 //    if (!Bstrcmp(glinfo.vendor, "NVIDIA Corporation"))
-//        bglHint(gl.FOG_HINT, gl.NICEST);
+//        bglHint(GL_FOG_HINT, GL_NICEST);
 //    else
-//        bglHint(gl.FOG_HINT, gl.DONT_CARE);
+//        bglHint(GL_FOG_HINT, GL_DONT_CARE);
 //
-//    bglFogi(gl.FOG_MODE, gl.EXP2);
+//    bglFogi(GL_FOG_MODE, GL_EXP2);
 //
-//    bglBlendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+//    bglBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 //
-//    bglPixelStorei(gl.PACK_ALIGNMENT, 1);
-//    bglPixelStorei(gl.UNPACK_ALIGNMENT, 1);
+//    bglPixelStorei(GL_PACK_ALIGNMENT, 1);
+//    bglPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 //
-//    //bglHint(gl.LINE_SMOOTH_HINT, gl.NICEST);
-//    //bglEnable(gl.LINE_SMOOTH);
+//    //bglHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
+//    //bglEnable(GL_LINE_SMOOTH);
 //
 //    if (glmultisample > 0 && glinfo.multisample)
 //    {
 //        if (glinfo.nvmultisamplehint)
-//            bglHint(gl.MULTISAMPLE_FILTER_HINT_NV, glnvmultisamplehint ? gl.NICEST:gl.FASTEST);
-//        bglEnable(gl.MULTISAMPLE_ARB);
+//            bglHint(GL_MULTISAMPLE_FILTER_HINT_NV, glnvmultisamplehint ? GL_NICEST:GL_FASTEST);
+//        bglEnable(GL_MULTISAMPLE_ARB);
 //    }
 //
 //    if (r_detailmapping && (!glinfo.multitex || !glinfo.envcombine))
@@ -498,8 +498,8 @@ function polymost_glreset(): void
 //        r_vbos = 0;
 //    }
 //
-//    bglEnableClientState(gl.VERTEX_ARRAY);
-//    bglEnableClientState(gl.TEXTURE_COORD_ARRAY);
+//    bglEnableClientState(GL_VERTEX_ARRAY);
+//    bglEnableClientState(GL_TEXTURE_COORD_ARRAY);
 //
 //    texcache_init();
 //    texcache_loadoffsets();
@@ -517,7 +517,7 @@ function polymost_glreset(): void
 //{
 //    float f;
 //
-//    bglFogi(gl.FOG_MODE, gl.EXP2);
+//    bglFogi(GL_FOG_MODE, GL_EXP2);
 //
 //    if (r_usenewshading==1)
 //    {
@@ -540,7 +540,7 @@ function polymost_glreset(): void
 //    fogresult = f;
 //}
 //
-//// For gl.LINEAR fog:
+//// For GL_LINEAR fog:
 //#define FOGDISTCONST 600
 //#define FULLVIS_BEGIN 2.9e38
 //#define FULLVIS_END 3.0e38
@@ -563,7 +563,7 @@ function polymost_glreset(): void
 //    {
 //        float combvis = (float)globalvisibility * (uint8_t)(vis+16);
 //
-//        bglFogi(gl.FOG_MODE, gl.LINEAR);
+//        bglFogi(GL_FOG_MODE, GL_LINEAR);
 //
 //        if (combvis == 0)
 //        {
@@ -583,16 +583,16 @@ function polymost_glreset(): void
 //        return;
 //
 //    fogcalc(tile, shade, vis, pal);
-//    bglFogfv(gl.FOG_COLOR, fogcol);
+//    bglFogfv(GL_FOG_COLOR, fogcol);
 //
 //    if (r_usenewshading!=2)
 //    {
-//        bglFogf(gl.FOG_DENSITY, fogresult);
+//        bglFogf(GL_FOG_DENSITY, fogresult);
 //        return;
 //    }
 //
-//    bglFogf(gl.FOG_START, fogresult);
-//    bglFogf(gl.FOG_END, fogresult2);
+//    bglFogf(GL_FOG_START, fogresult);
+//    bglFogf(GL_FOG_END, fogresult2);
 //}
 //
 //void calc_and_apply_fog_factor(int32_t tile, int32_t shade, int32_t vis, int32_t pal, float factor)
@@ -601,16 +601,16 @@ function polymost_glreset(): void
 //        return;
 //
 //    fogcalc(tile, shade, vis, pal);
-//    bglFogfv(gl.FOG_COLOR, fogcol);
+//    bglFogfv(GL_FOG_COLOR, fogcol);
 //
 //    if (r_usenewshading!=2)
 //    {
-//        bglFogf(gl.FOG_DENSITY, fogresult*factor);
+//        bglFogf(GL_FOG_DENSITY, fogresult*factor);
 //        return;
 //    }
 //
-//    bglFogf(gl.FOG_START, FULLVIS_BEGIN);
-//    bglFogf(gl.FOG_END, FULLVIS_END);
+//    bglFogf(GL_FOG_START, FULLVIS_BEGIN);
+//    bglFogf(GL_FOG_END, FULLVIS_END);
 //}
 //////////////////////
 //
@@ -661,18 +661,18 @@ function polymost_glreset(): void
 //        {
 //        default:
 //        case 0:
-//            bglPolygonMode(gl.FRONT_AND_BACK,gl.FILL); break;
+//            bglPolygonMode(GL_FRONT_AND_BACK,GL_FILL); break;
 //        case 1:
-//            bglPolygonMode(gl.FRONT_AND_BACK,gl.LINE); break;
+//            bglPolygonMode(GL_FRONT_AND_BACK,GL_LINE); break;
 //        case 2:
-//            bglPolygonMode(gl.FRONT_AND_BACK,gl.POINT); break;
+//            bglPolygonMode(GL_FRONT_AND_BACK,GL_POINT); break;
 //        }
 //    }
 //    if (glpolygonmode) //FUK
 //    {
 //        bglClearColor(1.0,1.0,1.0,0.0);
-//        bglClear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
-//        bglDisable(gl.TEXTURE_2D);
+//        bglClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+//        bglDisable(GL_TEXTURE_2D);
 //    }
 //
 //    if ((glox1 != windowx1) || (gloy1 != windowy1) || (glox2 != windowx2) || (gloy2 != windowy2))
@@ -687,7 +687,7 @@ function polymost_glreset(): void
 //        bglViewport(windowx1-(fovcorrect/2), yres-(windowy2+1),
 //                    ourxdimen+fovcorrect, windowy2-windowy1+1);
 //
-//        bglMatrixMode(gl.PROJECTION);
+//        bglMatrixMode(GL_PROJECTION);
 //        memset(m,0,sizeof(m));
 //        m[0][0] = (float)ydimen / ratio; m[0][2] = 1.0;
 //        m[1][1] = (float)xdimen; m[1][2] = 1.0;
@@ -695,14 +695,14 @@ function polymost_glreset(): void
 //        m[3][2] =-1.0;
 //        bglLoadMatrixf(&m[0][0]);
 //
-//        bglMatrixMode(gl.MODELVIEW);
+//        bglMatrixMode(GL_MODELVIEW);
 //        bglLoadIdentity();
 //
 //#ifdef USE_OPENGL
-//        if (!nofog) bglEnable(gl.FOG);
+//        if (!nofog) bglEnable(GL_FOG);
 //#endif
 //
-//        //bglEnable(gl.TEXTURE_2D);
+//        //bglEnable(GL_TEXTURE_2D);
 //    }
 //}
 //
@@ -765,7 +765,7 @@ function uploadtexture(doalloc: number, xsiz: number, ysiz: number, intexfmt: nu
 //    if (gltexmaxsize <= 0)
 //    {
 //        GLint i = 0;
-//        bglGetIntegerv(gl.MAX_TEXTURE_SIZE, &i);
+//        bglGetIntegerv(GL_MAX_TEXTURE_SIZE, &i);
 //        if (!i) gltexmaxsize = 6;   // 2^6 = 64 == default GL max texture size
 //        else
 //        {
@@ -782,32 +782,32 @@ function uploadtexture(doalloc: number, xsiz: number, ysiz: number, intexfmt: nu
 //
 //    /*
 //    OSD_Printf("Uploading %dx%d %s as %s\n", xsiz,ysiz,
-//            (texfmt==gl.RGBA?"gl.RGBA":
-//             texfmt==gl.RGB?"gl.RGB":
-//             texfmt==gl.BGR?"gl.BGR":
-//             texfmt==gl.BGRA?"gl.BGRA":"other"),
-//            (intexfmt==gl.RGBA?"gl.RGBA":
-//             intexfmt==gl.RGB?"gl.RGB":
-//             intexfmt==gl.COMPRESSED_RGBA_ARB?"gl.COMPRESSED_RGBA_ARB":
-//             intexfmt==gl.COMPRESSED_RGB_ARB?"gl.COMPRESSED_RGB_ARB":"other"));
+//            (texfmt==GL_RGBA?"GL_RGBA":
+//             texfmt==GL_RGB?"GL_RGB":
+//             texfmt==GL_BGR?"GL_BGR":
+//             texfmt==GL_BGRA?"GL_BGRA":"other"),
+//            (intexfmt==GL_RGBA?"GL_RGBA":
+//             intexfmt==GL_RGB?"GL_RGB":
+//             intexfmt==GL_COMPRESSED_RGBA_ARB?"GL_COMPRESSED_RGBA_ARB":
+//             intexfmt==GL_COMPRESSED_RGB_ARB?"GL_COMPRESSED_RGB_ARB":"other"));
 //    */
 //
 //    if (js == 0)
 //    {
 //        if (doalloc&1)
-//            bglTexImage2D(gl.TEXTURE_2D,0,intexfmt,xsiz,ysiz,0,texfmt,gl.UNSIGNED_BYTE,pic); //loading 1st time
+//            bglTexImage2D(GL_TEXTURE_2D,0,intexfmt,xsiz,ysiz,0,texfmt,GL_UNSIGNED_BYTE,pic); //loading 1st time
 //        else
-//            bglTexSubImage2D(gl.TEXTURE_2D,0,0,0,xsiz,ysiz,texfmt,gl.UNSIGNED_BYTE,pic); //overwrite old texture
+//            bglTexSubImage2D(GL_TEXTURE_2D,0,0,0,xsiz,ysiz,texfmt,GL_UNSIGNED_BYTE,pic); //overwrite old texture
 //    }
 //
 //#if 0
-//    gluBuild2DMipmaps(gl.TEXTURE_2D,gl.RGBA8,xsiz,ysiz,texfmt,gl.UNSIGNED_BYTE,pic); //Needs C++ to link?
+//    gluBuild2DMipmaps(GL_TEXTURE_2D,GL_RGBA8,xsiz,ysiz,texfmt,GL_UNSIGNED_BYTE,pic); //Needs C++ to link?
 //#elif 1
 //    x2 = xsiz; y2 = ysiz;
 //    for (j=1; (x2 > 1) || (y2 > 1); j++)
 //    {
 //        //x3 = ((x2+1)>>1); y3 = ((y2+1)>>1);
-//        x3 = max(1, x2 >> 1); y3 = max(1, y2 >> 1);		// this came from the gl.ARB_texture_non_power_of_two spec
+//        x3 = max(1, x2 >> 1); y3 = max(1, y2 >> 1);		// this came from the GL_ARB_texture_non_power_of_two spec
 //        for (y=0; y<y3; y++)
 //        {
 //            wpptr = &pic[y*x3]; rpptr = &pic[(y<<1)*x2];
@@ -842,9 +842,9 @@ function uploadtexture(doalloc: number, xsiz: number, ysiz: number, intexfmt: nu
 //        if (j >= js)
 //        {
 //            if (doalloc&1)
-//                bglTexImage2D(gl.TEXTURE_2D,j-js,intexfmt,x3,y3,0,texfmt,gl.UNSIGNED_BYTE,pic); //loading 1st time
+//                bglTexImage2D(GL_TEXTURE_2D,j-js,intexfmt,x3,y3,0,texfmt,GL_UNSIGNED_BYTE,pic); //loading 1st time
 //            else
-//                bglTexSubImage2D(gl.TEXTURE_2D,j-js,0,0,x3,y3,texfmt,gl.UNSIGNED_BYTE,pic); //overwrite old texture
+//                bglTexSubImage2D(GL_TEXTURE_2D,j-js,0,0,x3,y3,texfmt,GL_UNSIGNED_BYTE,pic); //overwrite old texture
 //        }
 //        x2 = x3; y2 = y3;
 //    }
@@ -865,27 +865,27 @@ function uploadtexture(doalloc: number, xsiz: number, ysiz: number, intexfmt: nu
 function texture_setup(dameth: number): void
 {todo("texture_setup");
 //    gltexfiltermode = clamp(gltexfiltermode, 0, NUMGLFILTERMODES-1);
-//    bglTexParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, glfiltermodes[gltexfiltermode].mag);
-//    bglTexParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, glfiltermodes[gltexfiltermode].min);
+//    bglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, glfiltermodes[gltexfiltermode].mag);
+//    bglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, glfiltermodes[gltexfiltermode].min);
 //
 //    if (glinfo.maxanisotropy > 1.0)
 //    {
 //        if (glanisotropy <= 0 || glanisotropy > glinfo.maxanisotropy)
 //            glanisotropy = (int32_t)glinfo.maxanisotropy;
-//        bglTexParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAX_ANISOTROPY_EXT, glanisotropy);
+//        bglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, glanisotropy);
 //    }
 //
 //    if (!(dameth&4))
 //    {
-//        bglTexParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, !tile_is_sky(dapic) ? gl.REPEAT:
-//                         (glinfo.clamptoedge?gl.CLAMP_TO_EDGE:gl.CLAMP));
-//        bglTexParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
+//        bglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, !tile_is_sky(dapic) ? GL_REPEAT:
+//                         (glinfo.clamptoedge?GL_CLAMP_TO_EDGE:GL_CLAMP));
+//        bglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 //    }
 //    else
 //    {
 //        //For sprite textures, clamping looks better than wrapping
-//        bglTexParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, glinfo.clamptoedge?gl.CLAMP_TO_EDGE:gl.CLAMP);
-//        bglTexParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, glinfo.clamptoedge?gl.CLAMP_TO_EDGE:gl.CLAMP);
+//        bglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, glinfo.clamptoedge?GL_CLAMP_TO_EDGE:GL_CLAMP);
+//        bglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, glinfo.clamptoedge?GL_CLAMP_TO_EDGE:GL_CLAMP);
 //    }
 }
 
@@ -993,11 +993,11 @@ function gloadtile_art(dapic: number, dapal: number, dashade: number, dameth: nu
     //dlogFlush();
 debugger;
     if (doalloc) bglGenTextures(1,/*(GLuint *)& */pth.glpic); //# of textures (make OpenGL allocate structure)
-    bglBindTexture(gl.TEXTURE_2D,pth.glpic);
+    bglBindTexture(GL_TEXTURE_2D,pth.glpic);
     
  
     fixtransparency(dapic, pic,tsizx,tsizy,xsiz,ysiz,dameth);
-    uploadtexture(doalloc,xsiz,ysiz,hasalpha?gl.RGBA:gl.RGB,gl.RGBA,pic,tsizx,tsizy,dameth);
+    uploadtexture(doalloc,xsiz,ysiz,hasalpha?GL_RGBA:GL_RGB,GL_RGBA,pic,tsizx,tsizy,dameth);
    
     texture_setup(dameth);
 
@@ -1034,7 +1034,7 @@ debugger;
 //    int32_t j, x, y, xsiz=0, ysiz=0, tsizx, tsizy;
 //
 //    char *picfil = NULL, *fn, hasalpha = 255;
-//    int32_t picfillen, texfmt = gl.RGBA, intexfmt = gl.RGBA, filh;
+//    int32_t picfillen, texfmt = GL_RGBA, intexfmt = GL_RGBA, filh;
 //
 //    int32_t gotcache;
 //    texcacheheader cachead;
@@ -1215,7 +1215,7 @@ debugger;
 //                swapchar(&pic[j].r, &pic[j].b);
 //            }
 //        }
-//        else texfmt = gl.BGRA;
+//        else texfmt = GL_BGRA;
 //
 //        Bfree(picfil); picfil = 0;
 //
@@ -1223,12 +1223,12 @@ debugger;
 //            hicr.flags |= 17;
 //
 //        if (glinfo.texcompr && glusetexcompr && !(hicr.flags & 1))
-//            intexfmt = (hasalpha == 255) ? gl.COMPRESSED_RGB_ARB : gl.COMPRESSED_RGBA_ARB;
-//        else if (hasalpha == 255) intexfmt = gl.RGB;
+//            intexfmt = (hasalpha == 255) ? GL_COMPRESSED_RGB_ARB : GL_COMPRESSED_RGBA_ARB;
+//        else if (hasalpha == 255) intexfmt = GL_RGB;
 //
 //        if ((doalloc&3)==1)
 //            bglGenTextures(1, &pth.glpic); //# of textures (make OpenGL allocate structure)
-//        bglBindTexture(gl.TEXTURE_2D,pth.glpic);
+//        bglBindTexture(GL_TEXTURE_2D,pth.glpic);
 //
 //        fixtransparency(-1, pic,tsizx,tsizy,xsiz,ysiz,dameth);
 //        uploadtexture(doalloc,xsiz,ysiz,intexfmt,texfmt,pic,-1,tsizy,dameth|8192|(hicr.flags & 16?4096:0));
@@ -1320,7 +1320,7 @@ function drawpoly(dpx: Float64Array, dpy: Float64Array, n:number, method: number
     var xx=0, yy=0, dorot=0; //int32_t
 //#ifdef USE_OPENGL
     var pth: pthtyp, detailpth: pthtyp, glowpth: pthtyp;
-    var texunits = todo("gl.TEXTURE0_ARB"); //int32_t
+    var texunits = GL_TEXTURE0_ARB; //int32_t
 //#endif
     // backup of the n for possible redrawing of fullbright
     var n_ = n, method_ = method; //int32_t
@@ -1436,22 +1436,23 @@ function drawpoly(dpx: Float64Array, dpy: Float64Array, n:number, method: number
         // just submit the geometry and don't mess with textures.
         if (getrendermode() == REND_POLYMOST)
         {
-            bglBindTexture(gl.TEXTURE_2D, pth ? pth.glpic : 0);
+            todoThrow();
+            //bglBindTexture(GL_TEXTURE_2D, pth ? pth.glpic : 0);
 
-            if (srepeat)
-                bglTexParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.REPEAT);
-            if (trepeat)
-                bglTexParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.REPEAT);
+            //if (srepeat)
+            //    bglTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_REPEAT);
+            //if (trepeat)
+            //    bglTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_REPEAT);
         }
 //
         // texture scale by parkar request
         if (pth && pth.hicr && ((pth.hicr.xscale != 1.0) || (pth.hicr.yscale != 1.0)) && !drawingskybox)
         {
             todoThrow();
-            //bglMatrixMode(gl.TEXTURE);
+            //bglMatrixMode(GL_TEXTURE);
             //bglLoadIdentity();
             //bglScalef(pth.hicr.xscale, pth.hicr.yscale, 1.0f);
-            //bglMatrixMode(gl.MODELVIEW);
+            //bglMatrixMode(GL_MODELVIEW);
         }
 
         // detail texture
@@ -1466,7 +1467,7 @@ function drawpoly(dpx: Float64Array, dpy: Float64Array, n:number, method: number
 //
 //            f = detailpth ? detailpth.hicr.xscale : 1.0;
 //
-//            bglMatrixMode(gl.TEXTURE);
+//            bglMatrixMode(GL_TEXTURE);
 //            bglLoadIdentity();
 //
 //            if (pth && pth.hicr && ((pth.hicr.xscale != 1.0f) || (pth.hicr.yscale != 1.0f)))
@@ -1475,7 +1476,7 @@ function drawpoly(dpx: Float64Array, dpy: Float64Array, n:number, method: number
 //            if (detailpth && detailpth.hicr && ((detailpth.hicr.xscale != 1.0f) || (detailpth.hicr.yscale != 1.0f)))
 //                bglScalef(detailpth.hicr.xscale, detailpth.hicr.yscale, 1.0f);
 //
-//            bglMatrixMode(gl.MODELVIEW);
+//            bglMatrixMode(GL_MODELVIEW);
         }
 
         // glow texture
@@ -1517,8 +1518,8 @@ function drawpoly(dpx: Float64Array, dpy: Float64Array, n:number, method: number
 
         if ((!(method&3)) && (!fullbrightdrawingpass))
         {
-            bglDisable(gl.BLEND);
-            todo("bglDisable(gl.ALPHA_TEST);");
+            bglDisable(GL_BLEND);
+            todo("bglDisable(GL_ALPHA_TEST);");
         }
         else
         { todoThrow();
@@ -1527,9 +1528,9 @@ function drawpoly(dpx: Float64Array, dpy: Float64Array, n:number, method: number
 //            if (alphahackarray[globalpicnum])
 //                al=alphahackarray[globalpicnum];
 //            if (!waloff[globalpicnum]) al = 0.0;	// invalid textures ignore the alpha cutoff settings
-//            bglEnable(gl.BLEND);
-//            bglEnable(gl.ALPHA_TEST);
-//            bglAlphaFunc(gl.GREATER,al);
+//            bglEnable(GL_BLEND);
+//            bglEnable(GL_ALPHA_TEST);
+//            bglAlphaFunc(GL_GREATER,al);
         }
 
         if (!dorot)
@@ -1701,7 +1702,7 @@ function drawpoly(dpx: Float64Array, dpy: Float64Array, n:number, method: number
                 while (i);
                 if (nn < 3) continue;
 
-                bglBegin(gl.TRIANGLE_FAN);
+                bglBegin(GL_TRIANGLE_FAN);
                 for (i=0; i<nn; i++)
                 {
                     ox = uu[i]; oy = vv[i];
@@ -1711,9 +1712,9 @@ function drawpoly(dpx: Float64Array, dpy: Float64Array, n:number, method: number
                     r = 1.0/dp;
                     if (texunits > GL_TEXTURE0_ARB)
                     {
-                        j = gl.TEXTURE0_ARB;
+                        j = GL_TEXTURE0_ARB;
                         while (j <= texunits)
-                            bglMultiTexCoord2dARB(j++, (up*r-du0+uoffs)*ox2,vp*r*oy2);
+                            todoThrow("bglMultiTexCoord2dARB(j++, (up*r-du0+uoffs)*ox2,vp*r*oy2);");
                     }
                     else
                         bglTexCoord2d((up*r-du0+uoffs)*ox2,vp*r*oy2);
@@ -1725,15 +1726,15 @@ function drawpoly(dpx: Float64Array, dpy: Float64Array, n:number, method: number
         else
         {
             ox2 *= hackscx; oy2 *= hackscy;
-            bglBegin(gl.TRIANGLE_FAN);
+            bglBegin(GL_TRIANGLE_FAN);
             for (i=0; i<n; i++)
             {
                 r = 1.0/dd[i];
-                if (texunits > gl.TEXTURE0_ARB)
+                if (texunits > GL_TEXTURE0_ARB)
                 {
-                    j = gl.TEXTURE0_ARB;
+                    j = GL_TEXTURE0_ARB;
                     while (j <= texunits)
-                        bglMultiTexCoord2dARB(j++, uu[i]*r*ox2,vv[i]*r*oy2);
+                        todo("bglMultiTexCoord2dARB(j++, uu[i]*r*ox2,vv[i]*r*oy2);");
                 }
                 else
                     bglTexCoord2d(uu[i]*r*ox2,vv[i]*r*oy2);
@@ -1742,36 +1743,38 @@ function drawpoly(dpx: Float64Array, dpy: Float64Array, n:number, method: number
             bglEnd();
         }
 
-        while (texunits >= gl.TEXTURE0_ARB)
+        while (texunits >= GL_TEXTURE0_ARB)
         {
-            bglActiveTextureARB(texunits);
-            bglMatrixMode(gl.TEXTURE);
-            bglLoadIdentity();
-            bglMatrixMode(gl.MODELVIEW);
-            if (texunits > gl.TEXTURE0_ARB)
-            {
-                bglTexEnvf(gl.TEXTURE_ENV, gl.RGB_SCALE_ARB, 1.0f);
-                bglDisable(gl.TEXTURE_2D);
-            }
-            texunits--;
+            todoThrow();
+            //bglActiveTextureARB(texunits);
+            //bglMatrixMode(GL_TEXTURE);
+            //bglLoadIdentity();
+            //bglMatrixMode(GL_MODELVIEW);
+            //if (texunits > GL_TEXTURE0_ARB)
+            //{
+            //    bglTexEnvf(GL_TEXTURE_ENV, GL_RGB_SCALE_ARB, 1.0);
+            //    bglDisable(GL_TEXTURE_2D);
+            //}
+            //texunits--;
         }
 
         if (getrendermode() == REND_POLYMOST)
         {
-            if (srepeat)
-                bglTexParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,glinfo.clamptoedge?gl.CLAMP_TO_EDGE:gl.CLAMP);
-            if (trepeat)
-                bglTexParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,glinfo.clamptoedge?gl.CLAMP_TO_EDGE:gl.CLAMP);
+            todoThrow();
+            //if (srepeat)
+            //    bglTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,glinfo.clamptoedge?GL_CLAMP_TO_EDGE:GL_CLAMP);
+            //if (trepeat)
+            //    bglTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,glinfo.clamptoedge?GL_CLAMP_TO_EDGE:GL_CLAMP);
         }
 
         if (fullbrightdrawingpass == 1) // tile has fullbright colors ?
         {
-            int32_t shadeforfullbrightpass = globalshade; // save the current shade
+            var shadeforfullbrightpass = globalshade; // save the current shade     int32_t
             fullbrightdrawingpass = 2;
             globalshade = -128; // fullbright
-            bglDisable(gl.FOG);
+            bglDisable(GL_FOG);
             drawpoly(dpx, dpy, n_, method_); // draw them afterwards, then. :)
-            bglEnable(gl.FOG);
+            bglEnable(GL_FOG);
             globalshade = shadeforfullbrightpass;
             fullbrightdrawingpass = 0;
         }
@@ -2661,7 +2664,7 @@ function drawpoly(dpx: Float64Array, dpy: Float64Array, n:number, method: number
 //            {
 //                skyclamphack = 0;
 //                if (!nofog)
-//                    bglEnable(gl.FOG);
+//                    bglEnable(GL_FOG);
 //            }
 //#endif
 //        }
@@ -2943,7 +2946,7 @@ function drawpoly(dpx: Float64Array, dpy: Float64Array, n:number, method: number
 //            {
 //                skyclamphack = 0;
 //                if (!nofog)
-//                    bglEnable(gl.FOG);
+//                    bglEnable(GL_FOG);
 //            }
 //#endif
 //        }
@@ -3235,13 +3238,13 @@ function drawpoly(dpx: Float64Array, dpy: Float64Array, n:number, method: number
 //        if (numyaxbunches==0)
 //#endif
 //            if (editstatus)
-//                bglClear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
+//                bglClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 //
-//        bglDisable(gl.BLEND);
-//        bglEnable(gl.TEXTURE_2D);
-//        //bglTexEnvf(gl.TEXTURE_ENV,gl.TEXTURE_ENV_MODE,gl.MODULATE); //default anyway
-//        bglEnable(gl.DEPTH_TEST);
-//        bglDepthFunc(gl.ALWAYS); //NEVER,LESS,(,L)EQUAL,GREATER,(NOT,G)EQUAL,ALWAYS
+//        bglDisable(GL_BLEND);
+//        bglEnable(GL_TEXTURE_2D);
+//        //bglTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE); //default anyway
+//        bglEnable(GL_DEPTH_TEST);
+//        bglDepthFunc(GL_ALWAYS); //NEVER,LESS,(,L)EQUAL,GREATER,(NOT,G)EQUAL,ALWAYS
 //
 //        //bglPolygonOffset(1,1); //Supposed to make sprites pasted on walls or floors not disappear
 //        bglDepthRange(0.00001,1.0); //<- this is more widely supported than glPolygonOffset
@@ -3250,7 +3253,7 @@ function drawpoly(dpx: Float64Array, dpy: Float64Array, n:number, method: number
 //        if (glredbluemode)
 //        {
 //            static int32_t grbfcnt = 0; grbfcnt++;
-//            if (redblueclearcnt < numpages) { redblueclearcnt++; bglColorMask(1,1,1,1); bglClear(gl.COLOR_BUFFER_BIT); }
+//            if (redblueclearcnt < numpages) { redblueclearcnt++; bglColorMask(1,1,1,1); bglClear(GL_COLOR_BUFFER_BIT); }
 //            if (grbfcnt&1)
 //            {
 //                bglViewport(windowx1-16,yres-(windowy2+1),windowx2-(windowx1-16)+1,windowy2-windowy1+1);
@@ -3536,7 +3539,7 @@ function drawpoly(dpx: Float64Array, dpy: Float64Array, n:number, method: number
 //#ifdef USE_OPENGL
 //    if (getrendermode() >= REND_POLYMOST)
 //    {
-//        bglDepthFunc(gl.LEQUAL); //NEVER,LESS,(,L)EQUAL,GREATER,(NOT,G)EQUAL,ALWAYS
+//        bglDepthFunc(GL_LEQUAL); //NEVER,LESS,(,L)EQUAL,GREATER,(NOT,G)EQUAL,ALWAYS
 //
 //        //bglPolygonOffset(0,0);
 //        bglDepthRange(0.0,0.99999); //<- this is more widely supported than glPolygonOffset
@@ -3787,7 +3790,7 @@ function drawpoly(dpx: Float64Array, dpy: Float64Array, n:number, method: number
 //    if (((tspr.cstat&2) || (gltexmayhavealpha(tspr.picnum,tspr.pal))))
 //    {
 //        curpolygonoffset += 0.01f;
-//        bglEnable(gl.POLYGON_OFFSET_FILL);
+//        bglEnable(GL_POLYGON_OFFSET_FILL);
 //        bglPolygonOffset(-curpolygonoffset, -curpolygonoffset);
 //    }
 //#endif
@@ -4305,7 +4308,7 @@ function polymost_dorotatesprite(sx: number, sy, z: number, a: number, picnum: n
 //
 //            if (getrendermode() < REND_POLYMER)
 //            {
-//                bglMatrixMode(gl.PROJECTION);
+//                bglMatrixMode(GL_PROJECTION);
 //                memset(m,0,sizeof(m));
 //                if ((dastat&10) == 2)
 //                {
@@ -4317,26 +4320,26 @@ function polymost_dorotatesprite(sx: number, sy, z: number, a: number, picnum: n
 //                }
 //                else { m[0][0] = m[2][3] = 1.0f; m[1][1] = ((float)xdim)/((float)ydim); m[2][2] = 1.0001f; m[3][2] = 1-m[2][2]; }
 //                bglLoadMatrixf(&m[0][0]);
-//                bglMatrixMode(gl.MODELVIEW);
+//                bglMatrixMode(GL_MODELVIEW);
 //                bglLoadIdentity();
 //            }
 //
 //            if (hudmem[(dastat&4)>>2][picnum].flags&8) //NODEPTH flag
-//                bglDisable(gl.DEPTH_TEST);
+//                bglDisable(GL_DEPTH_TEST);
 //            else
 //            {
-//                bglEnable(gl.DEPTH_TEST);
+//                bglEnable(GL_DEPTH_TEST);
 //                if (onumframes != numframes)
 //                {
 //                    onumframes = numframes;
-//                    bglClear(gl.DEPTH_BUFFER_BIT);
+//                    bglClear(GL_DEPTH_BUFFER_BIT);
 //                }
 //            }
 //
 //#ifdef USE_OPENGL
 //            spriteext[tspr.owner].alpha = daalpha / 255.0f;
 //
-//            if (!nofog) bglDisable(gl.FOG);
+//            if (!nofog) bglDisable(GL_FOG);
 //            if (getrendermode() < REND_POLYMER)
 //                mddraw(&tspr);
 //# ifdef POLYMER
@@ -4346,8 +4349,8 @@ function polymost_dorotatesprite(sx: number, sy, z: number, a: number, picnum: n
 //
 //                tspriteptr[MAXSPRITESONSCREEN] = &tspr;
 //
-//                bglEnable(gl.ALPHA_TEST);
-//                bglEnable(gl.BLEND);
+//                bglEnable(GL_ALPHA_TEST);
+//                bglEnable(GL_BLEND);
 //
 //                spriteext[tspr.owner].roll = a;
 //                spriteext[tspr.owner].zoff = z;
@@ -4371,11 +4374,11 @@ function polymost_dorotatesprite(sx: number, sy, z: number, a: number, picnum: n
 //                spriteext[tspr.owner].zoff = 0;
 //                spriteext[tspr.owner].roll = 0;
 //
-//                bglDisable(gl.BLEND);
-//                bglDisable(gl.ALPHA_TEST);
+//                bglDisable(GL_BLEND);
+//                bglDisable(GL_ALPHA_TEST);
 //            }
 //# endif
-//            if (!nofog) bglEnable(gl.FOG);
+//            if (!nofog) bglEnable(GL_FOG);
 //#else
 //            mddraw(&tspr);
 //
@@ -4413,17 +4416,17 @@ function polymost_dorotatesprite(sx: number, sy, z: number, a: number, picnum: n
     if (getrendermode() >= REND_POLYMOST)
     {  
         bglViewport(0,0,xdim,ydim); glox1 = -1; //Force fullscreen (glox1=-1 forces it to restore)
-        bglMatrixMode(gl.PROJECTION);
+        bglMatrixMode(GL_PROJECTION);
         for (var i = 0; i < m.length; i++) {memset(new P(m[i]),0,sizeof(m[i]));}
         m[0][0] = m[2][3] = 1.0; m[1][1] = (/*(float)*/xdim)/(/*(float)*/ydim); m[2][2] = 1.0001; m[3][2] = 1-m[2][2];
         bglPushMatrix(); bglLoadMatrixf(m/*[0][0]*/);
-        bglMatrixMode(gl.MODELVIEW);
+        bglMatrixMode(GL_MODELVIEW);
         bglPushMatrix();
         bglLoadIdentity();
 
-        bglDisable(gl.DEPTH_TEST);
-        todo("bglDisable(gl.ALPHA_TEST);");
-        bglEnable(gl.TEXTURE_2D);
+        bglDisable(GL_DEPTH_TEST);
+        todo("bglDisable(GL_ALPHA_TEST);");
+        bglEnable(GL_TEXTURE_2D);
 //        
 //# ifdef POLYMER
         if (getrendermode() == REND_POLYMER) {
@@ -4557,10 +4560,10 @@ function polymost_dorotatesprite(sx: number, sy, z: number, a: number, picnum: n
         while (z);
 
 //#ifdef USE_OPENGL
-        if (!nofog) todo("bglDisable(gl.FOG);");
+        if (!nofog) todo("bglDisable(GL_FOG);");
         debugger;
         pow2xsplit = 0; drawpoly(px,py,n,method);
-        if (!nofog) todo("bglEnable(gl.FOG);");
+        if (!nofog) todo("bglEnable(GL_FOG);");
 //#else
 //        pow2xsplit = 0; drawpoly(px,py,n,method);
 //#endif
@@ -4576,8 +4579,8 @@ function polymost_dorotatesprite(sx: number, sy, z: number, a: number, picnum: n
             todoThrow("polymer_postrotatesprite();");
         }
 //# endif
-        todoThrow("bglMatrixMode(gl.PROJECTION); bglPopMatrix();");
-        todoThrow("bglMatrixMode(gl.MODELVIEW); bglPopMatrix();");
+        todoThrow("bglMatrixMode(GL_PROJECTION); bglPopMatrix();");
+        todoThrow("bglMatrixMode(GL_MODELVIEW); bglPopMatrix();");
     }
 //#endif
 
@@ -4608,7 +4611,7 @@ function polymost_dorotatesprite(sx: number, sy, z: number, a: number, picnum: n
 //    else if (x2 == x3) { px[1] = x1; py[1] = y0; px[2] = x3; n = 3; }
 //    else               { px[1] = x1; py[1] = y0; px[2] = x3; px[3] = x2; py[3] = y1; n = 4; }
 //
-//    bglBegin(gl.TRIANGLE_FAN);
+//    bglBegin(GL_TRIANGLE_FAN);
 //    for (i=0; i<n; i++)
 //    {
 //        px[i] = min(max(px[i],trapextx[0]),trapextx[1]);
@@ -4660,7 +4663,7 @@ function polymost_dorotatesprite(sx: number, sy, z: number, a: number, picnum: n
 //    }
 //    if (z != 3) //Simple polygon... early out
 //    {
-//        bglBegin(gl.TRIANGLE_FAN);
+//        bglBegin(GL_TRIANGLE_FAN);
 //        for (i=0; i<npoints; i++)
 //        {
 //            j = slist[i];
@@ -4779,21 +4782,21 @@ function polymost_dorotatesprite(sx: number, sy, z: number, a: number, picnum: n
 //    }
 //
 //    if (gloy1 != -1) setpolymost2dview(); //disables blending, texturing, and depth testing
-//    bglEnable(gl.ALPHA_TEST);
-//    bglEnable(gl.TEXTURE_2D);
+//    bglEnable(GL_ALPHA_TEST);
+//    bglEnable(GL_TEXTURE_2D);
 //    pth = texcache_fetch(globalpicnum,globalpal,getpalookup(globvis>>2, globalshade),0);
-//    bglBindTexture(gl.TEXTURE_2D, pth ? pth.glpic : 0);
+//    bglBindTexture(GL_TEXTURE_2D, pth ? pth.glpic : 0);
 //
 //    f = getshadefactor(globalshade);
 //    switch ((globalorientation>>7)&3)
 //    {
 //    case 0:
 //    case 1:
-//        a = 1.0f; bglDisable(gl.BLEND); break;
+//        a = 1.0f; bglDisable(GL_BLEND); break;
 //    case 2:
-//        a = 0.66f; bglEnable(gl.BLEND); break;
+//        a = 0.66f; bglEnable(GL_BLEND); break;
 //    case 3:
-//        a = 0.33f; bglEnable(gl.BLEND); break;
+//        a = 0.33f; bglEnable(GL_BLEND); break;
 //    }
 //    bglColor4f(f,f,f,a);
 //
@@ -4848,9 +4851,9 @@ function polymost_dorotatesprite(sx: number, sy, z: number, a: number, picnum: n
 //        usehightile = ousehightile;
 //    }
 //
-//    bglBindTexture(gl.TEXTURE_2D, pth ? pth.glpic : 0);
+//    bglBindTexture(GL_TEXTURE_2D, pth ? pth.glpic : 0);
 //
-//    bglDisable(gl.ALPHA_TEST);
+//    bglDisable(GL_ALPHA_TEST);
 //
 //    if (tilezoom)
 //    {
@@ -4860,8 +4863,8 @@ function polymost_dorotatesprite(sx: number, sy, z: number, a: number, picnum: n
 //
 //    if (!pth || (pth.flags & 8))
 //    {
-//        bglDisable(gl.TEXTURE_2D);
-//        bglBegin(gl.TRIANGLE_FAN);
+//        bglDisable(GL_TEXTURE_2D);
+//        bglBegin(GL_TRIANGLE_FAN);
 //        if (gammabrightness)
 //            bglColor4f((float)curpalette[255].r/255.0,
 //                       (float)curpalette[255].g/255.0,
@@ -4880,9 +4883,9 @@ function polymost_dorotatesprite(sx: number, sy, z: number, a: number, picnum: n
 //    }
 //
 //    bglColor4f(1,1,1,1);
-//    bglEnable(gl.TEXTURE_2D);
-//    bglEnable(gl.BLEND);
-//    bglBegin(gl.TRIANGLE_FAN);
+//    bglEnable(GL_TEXTURE_2D);
+//    bglEnable(GL_BLEND);
+//    bglBegin(GL_TRIANGLE_FAN);
 //    bglTexCoord2f(0,              0); bglVertex2f((float)tilex            ,(float)tiley);
 //    bglTexCoord2f(xdimepad,       0); bglVertex2f((float)tilex+(scx*ratio),(float)tiley);
 //    bglTexCoord2f(xdimepad,ydimepad); bglVertex2f((float)tilex+(scx*ratio),(float)tiley+(scy*ratio));
@@ -4941,10 +4944,10 @@ function polymost_dorotatesprite(sx: number, sy, z: number, a: number, picnum: n
 //        }
 //    }
 //
-//    bglBindTexture(gl.TEXTURE_2D, polymosttext);
-//    bglTexImage2D(gl.TEXTURE_2D,0,gl.ALPHA,256,128,0,gl.ALPHA,gl.UNSIGNED_BYTE,(GLvoid *)tbuf);
-//    bglTexParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.NEAREST);
-//    bglTexParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.NEAREST);
+//    bglBindTexture(GL_TEXTURE_2D, polymosttext);
+//    bglTexImage2D(GL_TEXTURE_2D,0,GL_ALPHA,256,128,0,GL_ALPHA,GL_UNSIGNED_BYTE,(GLvoid *)tbuf);
+//    bglTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+//    bglTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
 //    Bfree(tbuf);
 //
 //    return 0;
@@ -4976,25 +4979,25 @@ function polymost_dorotatesprite(sx: number, sy, z: number, a: number, picnum: n
 //    }
 //    else
 //    {
-//        bglBindTexture(gl.TEXTURE_2D, polymosttext);
+//        bglBindTexture(GL_TEXTURE_2D, polymosttext);
 //    }
 //
 //    setpolymost2dview();	// disables blending, texturing, and depth testing
-//    bglDisable(gl.ALPHA_TEST);
-//    bglDepthMask(gl.FALSE);	// disable writing to the z-buffer
+//    bglDisable(GL_ALPHA_TEST);
+//    bglDepthMask(GL_FALSE);	// disable writing to the z-buffer
 //
-//    bglPushAttrib(gl.POLYGON_BIT|gl.ENABLE_BIT);
+//    bglPushAttrib(GL_POLYGON_BIT|GL_ENABLE_BIT);
 //    // XXX: Don't fogify the OSD text in Mapster32 with r_usenewshading=2.
-//    bglDisable(gl.FOG);
+//    bglDisable(GL_FOG);
 //    // We want to have readable text in wireframe mode, too:
-//    bglPolygonMode(gl.FRONT_AND_BACK, gl.FILL);
+//    bglPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 //
 //    if (backcol >= 0)
 //    {
 //        bglColor4ub(b.r,b.g,b.b,255);
 //        c = Bstrlen(name);
 //
-//        bglBegin(gl.QUADS);
+//        bglBegin(GL_QUADS);
 //        bglVertex2i(xpos,ypos);
 //        bglVertex2i(xpos,ypos+(fontsize?6:8));
 //        bglVertex2i(xpos+(c<<(3-fontsize)),ypos+(fontsize?6:8));
@@ -5002,12 +5005,12 @@ function polymost_dorotatesprite(sx: number, sy, z: number, a: number, picnum: n
 //        bglEnd();
 //    }
 //
-//    bglEnable(gl.TEXTURE_2D);
-//    bglEnable(gl.BLEND);
+//    bglEnable(GL_TEXTURE_2D);
+//    bglEnable(GL_BLEND);
 //    bglColor4ub(p.r,p.g,p.b,255);
 //    txc = fontsize ? (4.0/256.0) : (8.0/256.0);
 //    tyc = fontsize ? (6.0/128.0) : (8.0/128.0);
-//    bglBegin(gl.QUADS);
+//    bglBegin(GL_QUADS);
 //    for (c=0; name[c]; c++)
 //    {
 //        if (name[c] == '^' && isdigit(name[c+1]))
@@ -5041,7 +5044,7 @@ function polymost_dorotatesprite(sx: number, sy, z: number, a: number, picnum: n
 //    }
 //    bglEnd();
 //
-//    bglDepthMask(gl.TRUE);	// re-enable writing to the z-buffer
+//    bglDepthMask(GL_TRUE);	// re-enable writing to the z-buffer
 //    bglPopAttrib();
 //
 //    return 0;

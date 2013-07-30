@@ -11,6 +11,18 @@ var gl: WebGLRenderingContext = GL.create({});
 gl.fullscreen({camera: false});
 
 
+var GL_TEXTURE0_ARB = gl.TEXTURE0;
+var GL_COLOR_BUFFER_BIT = gl.COLOR_BUFFER_BIT;
+var GL_TRIANGLE_FAN = gl.TRIANGLE_FAN;
+var GL_TEXTURE_2D = gl.TEXTURE_2D;
+var GL_TEXTURE = gl.TEXTURE;
+var GL_MODELVIEW = gl.MODELVIEW;
+var GL_BLEND = gl.BLEND;
+var GL_RGB = gl.RGB;
+var GL_RGBA = gl.RGBA;
+var GL_PROJECTION = gl.PROJECTION;
+var GL_DEPTH_TEST = gl.DEPTH_TEST;
+var GL_FOG = -99999; //todo!?
 
 //#include "compat.h"
 //#include "glbuild.h"
@@ -96,36 +108,41 @@ var bglLoadMatrixf = function(multiDimMatrix: Float32Array[]) {
 //bglScalefProcPtr bglScalef;
 //bglTranslatefProcPtr bglTranslatef;
 
-//// Drawing
-//bglBeginProcPtr bglBegin;
-//bglEndProcPtr bglEnd;
+// Drawing // http://www.irit.fr/~Rodolphe.Vaillant/?e=8 - c++ class to emulate direct drawing mode
+// http://stackoverflow.com/questions/14765017/opengl-point-funtionality-in-webgl
+var bglBegin = gl.begin.bind(gl);//bglBeginProcPtr bglBegin;
+var bglEnd = gl.end.bind(gl); //bglEndProcPtr 
 //bglVertex2fProcPtr bglVertex2f;
 //bglVertex2iProcPtr bglVertex2i;
-//bglVertex3fProcPtr bglVertex3f;
-//bglVertex3dProcPtr bglVertex3d;
+var bglVertex3f = function(x: number, y: number, z: number) {
+    gl.vertex.call(gl, x, y, z);
+}; //bglVertex3fProcPtr 
+var bglVertex3d = bglVertex3f;//bglVertex3dProcPtr;
 //bglVertex3fvProcPtr bglVertex3fv;
 //bglVertex3dvProcPtr bglVertex3dv;
 //bglRectdProcPtr bglRectd;
 var bglColor4f = gl.color.bind(gl);/*4f*/; //bglColor4fProcPtr 
 //bglColor4ubProcPtr bglColor4ub;
-//bglTexCoord2dProcPtr bglTexCoord2d;
+var bglTexCoord2d = gl.texCoord.bind(gl); //bglTexCoord2dProcPtr 
 //bglTexCoord2fProcPtr bglTexCoord2f;
 //bglTexCoord2iProcPtr bglTexCoord2i;
 //bglNormal3fProcPtr bglNormal3f;
 
-//// Lighting
+// Lighting
 //bglShadeModelProcPtr bglShadeModel;
 //bglLightfvProcPtr bglLightfv;
 
-//// Raster funcs
+// Raster funcs
 //bglReadPixelsProcPtr bglReadPixels;
 //bglRasterPos4iProcPtr bglRasterPos4i;
 //bglDrawPixelsProcPtr bglDrawPixels;
 //bglPixelStoreiProcPtr bglPixelStorei;
 
-//// Texture mapping
+// Texture mapping
+//texture wrap stuff https://code.google.com/p/webglsamples/source/browse/color-adjust/color-adjust.html (linked from http://stackoverflow.com/questions/14150941/webgl-glsl-emulate-texture3d )
 //bglTexEnvfProcPtr bglTexEnvf;
 var bglGenTextures = function(/*GLsizei (int)*/ n: number, /*GLuint **/textures) {
+    todo("use params??");
     gl.createTexture.call(gl);
 };//gl.createTexture;//bglGenTexturesProcPtr// http://www.khronos.org/files/webgl/webgl-reference-card-1_0.pdf Note: Corresponding OpenGL ES function is GenTextures
 //bglDeleteTexturesProcPtr bglDeleteTextures;
@@ -177,7 +194,7 @@ var bglTexParameteri = gl. texParameteri.bind(gl);//bglTexParameteriProcPtr
 //// Multitexturing
 //bglActiveTextureARBProcPtr bglActiveTextureARB;
 //bglClientActiveTextureARBProcPtr bglClientActiveTextureARB;
-//bglMultiTexCoord2dARBProcPtr bglMultiTexCoord2dARB;
+//var bglMultiTexCoord2dARB = gl.multiTexCoord2dARB; //bglMultiTexCoord2dARBProcPtr   //https://groups.google.com/forum/#!topic/webgl-dev-list/jHejip4u-Vo
 //bglMultiTexCoord2fARBProcPtr bglMultiTexCoord2fARB;
 
 //// Frame Buffer Objects
