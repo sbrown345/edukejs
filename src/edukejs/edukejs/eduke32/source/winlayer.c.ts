@@ -2727,6 +2727,9 @@ function setgamma(): number
 //
 function SetupOpenGL(width: number, height: number, bitspp: number): number
 {
+    glinfo.vsync = 1;
+    glinfo.clamptoedge = 1;
+
     todo("May need stuff in SetupOpenGL");
     //todoThrow();
 //    PIXELFORMATDESCRIPTOR pfd =

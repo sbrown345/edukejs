@@ -128,10 +128,10 @@ var usemodels=1, usehightile=1;//int32_t
 //
 var shadescale = 1.0;//float 
 var shadescale_unbounded = 0;
-//
-//int32_t r_usenewshading = 2;
-//int32_t r_usetileshades = 1;
-//
+
+r_usenewshading = 2;
+r_usetileshades = 1;
+
 var gviewxrange=0, ghoriz=0;                                    //static double
 var gyxscale=0, gxyaspect=0, ghalfx=0, grhalfxdown10=0, grhalfxdown10x=0;    //double 
 var gcosang=0, gsinang=0, gcosang2=0, gsinang2=0;                          //double 
@@ -890,7 +890,7 @@ function texture_setup(dameth: number): void
 }
 
 function gloadtile_art(dapic: number, dapal: number, dashade: number, dameth: number, pth:pthtyp, doalloc: number): number
-{debugger;
+{
     var pic: coltype[];
     var xsiz: number, ysiz: number; //int32_t 
     var hasalpha = 0, hasfullbright = 0;//char
@@ -992,6 +992,7 @@ function gloadtile_art(dapic: number, dapal: number, dashade: number, dameth: nu
     dlog(DEBUG_LOAD_TILE_ART, "wpptr end load\n");
     //dlogFlush();
 debugger;
+    todo("some texture gl th ing here????????????????????????") ;//todo
     if (doalloc) bglGenTextures(1,/*(GLuint *)& */pth.glpic); //# of textures (make OpenGL allocate structure)
     bglBindTexture(GL_TEXTURE_2D,pth.glpic);
     
@@ -1436,13 +1437,12 @@ function drawpoly(dpx: Float64Array, dpy: Float64Array, n:number, method: number
         // just submit the geometry and don't mess with textures.
         if (getrendermode() == REND_POLYMOST)
         {
-            todoThrow();
-            //bglBindTexture(GL_TEXTURE_2D, pth ? pth.glpic : 0);
+            bglBindTexture(GL_TEXTURE_2D, pth ? pth.glpic : 0);
 
-            //if (srepeat)
-            //    bglTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_REPEAT);
-            //if (trepeat)
-            //    bglTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_REPEAT);
+            if (srepeat)
+                bglTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_REPEAT);
+            if (trepeat)
+                bglTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_REPEAT);
         }
 //
         // texture scale by parkar request
@@ -1743,28 +1743,27 @@ function drawpoly(dpx: Float64Array, dpy: Float64Array, n:number, method: number
             bglEnd();
         }
 
-        while (texunits >= GL_TEXTURE0_ARB)
-        {
-            todoThrow();
-            //bglActiveTextureARB(texunits);
-            //bglMatrixMode(GL_TEXTURE);
-            //bglLoadIdentity();
-            //bglMatrixMode(GL_MODELVIEW);
-            //if (texunits > GL_TEXTURE0_ARB)
-            //{
-            //    bglTexEnvf(GL_TEXTURE_ENV, GL_RGB_SCALE_ARB, 1.0);
-            //    bglDisable(GL_TEXTURE_2D);
-            //}
-            //texunits--;
-        }
+        todo("texture stuff while (texunits >= GL_TEXTURE0_ARB");
+        //while (texunits >= GL_TEXTURE0_ARB)
+        //{
+        //    bglActiveTextureARB(texunits);
+        //    bglMatrixMode(GL_TEXTURE);
+        //    bglLoadIdentity();
+        //    bglMatrixMode(GL_MODELVIEW);
+        //    if (texunits > GL_TEXTURE0_ARB)
+        //    {
+        //        bglTexEnvf(GL_TEXTURE_ENV, GL_RGB_SCALE_ARB, 1.0);
+        //        bglDisable(GL_TEXTURE_2D);
+        //    }
+        //    texunits--;
+        //}
 
         if (getrendermode() == REND_POLYMOST)
         {
-            todoThrow();
-            //if (srepeat)
-            //    bglTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,glinfo.clamptoedge?GL_CLAMP_TO_EDGE:GL_CLAMP);
-            //if (trepeat)
-            //    bglTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,glinfo.clamptoedge?GL_CLAMP_TO_EDGE:GL_CLAMP);
+            if (srepeat)
+                bglTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,glinfo.clamptoedge?GL_CLAMP_TO_EDGE:GL_CLAMP);
+            if (trepeat)
+                bglTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,glinfo.clamptoedge?GL_CLAMP_TO_EDGE:GL_CLAMP);
         }
 
         if (fullbrightdrawingpass == 1) // tile has fullbright colors ?
@@ -4579,8 +4578,8 @@ function polymost_dorotatesprite(sx: number, sy, z: number, a: number, picnum: n
             todoThrow("polymer_postrotatesprite();");
         }
 //# endif
-        todoThrow("bglMatrixMode(GL_PROJECTION); bglPopMatrix();");
-        todoThrow("bglMatrixMode(GL_MODELVIEW); bglPopMatrix();");
+        bglMatrixMode(GL_PROJECTION); bglPopMatrix();
+        bglMatrixMode(GL_MODELVIEW); bglPopMatrix();
     }
 //#endif
 

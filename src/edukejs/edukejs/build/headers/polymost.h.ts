@@ -53,8 +53,8 @@ var INVALIDATE_ALL=0,
 var shadescale_unboundedL: number;//extern int32_t
 //extern float alphahackarray[MAXTILES];
 
-var r_usenewshading=0;       //extern int32_t 
-var r_usetileshades=0;       //extern int32_t 
+var r_usenewshading: number;       //extern int32_t 
+var r_usetileshades: number;       //extern int32_t 
 
 //extern int16_t globalpicnum;
 //extern int32_t globalpal;
@@ -62,11 +62,11 @@ var r_usetileshades=0;       //extern int32_t
 function getshadefactor(/*int32_t */shade: number): number /*float*/
 {
     var shadebound = (shadescale_unbounded || shade>=numshades) ? numshades : numshades-1;
-    /*float*/var clamped_shade = min(max(shade*shadescale, 0), shadebound);
+    var clamped_shade = min(max(shade*shadescale, 0), shadebound);
     if (getrendermode() == REND_POLYMOST && r_usetileshades &&
         (!usehightile || !hicfindsubst(globalpicnum, globalpal, 0)) &&
         (!usemodels || md_tilehasmodel(globalpicnum, globalpal) < 0)) return 1.0;
-    return (/*(float)*/(numshades-clamped_shade))//*(float)*/numshades;
+    return ((numshades-clamped_shade))/numshades;
 }
 
 class pthtyp

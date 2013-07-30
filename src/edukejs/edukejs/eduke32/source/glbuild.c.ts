@@ -22,6 +22,11 @@ var GL_RGB = gl.RGB;
 var GL_RGBA = gl.RGBA;
 var GL_PROJECTION = gl.PROJECTION;
 var GL_DEPTH_TEST = gl.DEPTH_TEST;
+var GL_TEXTURE_WRAP_S = gl.TEXTURE_WRAP_S;
+var GL_TEXTURE_WRAP_T = gl.TEXTURE_WRAP_T;
+var GL_REPEAT = gl.REPEAT;
+var GL_CLAMP_TO_EDGE = gl.CLAMP_TO_EDGE;
+var GL_CLAMP = null; //off
 var GL_FOG = -99999; //todo!?
 
 //#include "compat.h"
@@ -73,7 +78,7 @@ var bglMatrixMode = gl.matrixMode.bind(gl);//bglMatrixModeProcPtr ;
 //bglFrustumProcPtr bglFrustum;
 var bglViewport = gl.viewport.bind(gl);//bglViewportProcPtr ;
 var bglPushMatrix = gl.pushMatrix.bind(gl);//bglPushMatrixProcPtr ;
-//bglPopMatrixProcPtr bglPopMatrix;
+var bglPopMatrix = gl.popMatrix.bind(gl); //bglPopMatrixProcPtr 
 var bglLoadIdentity = gl.loadIdentity.bind(gl);//bglLoadIdentityProcPtr ;
 var bglLoadMatrixf = function(multiDimMatrix: Float32Array[]) {
     assert.areEqual(4, multiDimMatrix.length);

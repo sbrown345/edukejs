@@ -93,6 +93,7 @@ interface WebGLRenderingContext
     color(r: number, g: number, b: number, a: number):void;
     begin(mode: number):void;
     end():void;
+    popMatrix():void;
     vertex(args: any[]):void;
     texCoord(s: number, t: number):void;
 
