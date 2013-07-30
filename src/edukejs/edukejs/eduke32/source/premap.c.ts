@@ -1954,7 +1954,15 @@ function G_EnterLevel(g: number): number
     i = ud.screen_size;
     ud.screen_size = 0;
 
-    G_DoLoadScreen("Loading map . . .", -1);throw "todo";
+    G_DoLoadScreen("Loading map . . .", -1);debugger;
+    // TODO::::::::::::::::::::::::::::
+    // TODO::::::::::::::::::::::::::::
+    // TODO::::::::::::::::::::::::::::
+    // TODO::::::::::::::::::::::::::::
+    // TODO::::::::::::::::::::::::::::
+    // TODO::::::::::::::::::::::::::::
+    // TODO::::::::::::::::::::::::::::
+    // TODO::::::::::::::::::::::::::::
 //    G_UpdateScreenArea();
 
 //    ud.screen_size = i;
