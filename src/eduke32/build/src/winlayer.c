@@ -96,9 +96,9 @@ extern int32_t curbrightness, gammabrightness;
 // OpenGL stuff
 static HGLRC hGLRC = 0;
 #ifdef DEBUG_GL_SIMPLE_OFF
-char nofog=1;
-#else
 char nofog=0;
+#else
+char nofog=1;
 #endif
 char nogl=0;
 char forcegl=0;

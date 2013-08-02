@@ -974,13 +974,17 @@ int32_t gloadtile_art(int32_t dapic, int32_t dapal, int32_t dashade, int32_t dam
     }
 
     dlog(DEBUG_LOAD_TILE_ART, "wpptr end load\n");
-    if (doalloc) bglGenTextures(1,(GLuint *)&pth->glpic); //# of textures (make OpenGL allocate structure)
+
+#ifdef DEBUG_GL_SIMPLE_OFF
+    if (doalloc) 
+		bglGenTextures(1,(GLuint *)&pth->glpic); //# of textures (make OpenGL allocate structure)
     bglBindTexture(GL_TEXTURE_2D,pth->glpic);
 
     fixtransparency(dapic, pic,tsizx,tsizy,xsiz,ysiz,dameth);
     uploadtexture(doalloc,xsiz,ysiz,hasalpha?GL_RGBA:GL_RGB,GL_RGBA,pic,tsizx,tsizy,dameth);
 
     texture_setup(dameth);
+#endif
 
     Bfree(pic);
 
@@ -1413,8 +1417,9 @@ void drawpoly(double *dpx, double *dpy, int32_t n, int32_t method)
         // just submit the geometry and don't mess with textures.
         if (getrendermode() == REND_POLYMOST)
         {
+#ifdef DEBUG_GL_SIMPLE_OFF
             bglBindTexture(GL_TEXTURE_2D, pth ? pth->glpic : 0);
-
+#endif
             if (srepeat)
                 bglTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_REPEAT);
             if (trepeat)
@@ -4391,7 +4396,9 @@ void polymost_dorotatesprite(int32_t sx, int32_t sy, int32_t z, int16_t a, int16
         bglMatrixMode(GL_PROJECTION);
         memset(m,0,sizeof(m));
         m[0][0] = m[2][3] = 1.0f; m[1][1] = ((float)xdim)/((float)ydim); m[2][2] = 1.0001f; m[3][2] = 1-m[2][2];
-        bglPushMatrix(); bglLoadMatrixf(&m[0][0]);
+        bglPushMatrix(); 
+		bglLoadMatrixf(&m[0][0]);
+#ifdef DEBUG_GL_SIMPLE_OFF
         bglMatrixMode(GL_MODELVIEW);
         bglPushMatrix();
         bglLoadIdentity();
@@ -4399,6 +4406,8 @@ void polymost_dorotatesprite(int32_t sx, int32_t sy, int32_t z, int16_t a, int16
         bglDisable(GL_DEPTH_TEST);
         bglDisable(GL_ALPHA_TEST);
         bglEnable(GL_TEXTURE_2D);
+
+#endif
         
 # ifdef POLYMER
         if (getrendermode() == REND_POLYMER) {

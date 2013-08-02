@@ -1220,8 +1220,9 @@ int32_t G_PrintGameText(int32_t hack, int32_t tile, int32_t x,  int32_t y,  cons
     if (x == (160<<16))
         f |= TEXT_XCENTER;
 
+#ifdef DEBUG_GL_SIMPLE_OFF
     dim = G_ScreenText(tile, x, y, z, 0, 0, t, s, p, orient|ROTATESPRITE_FULL16, 0, (5<<16), (8<<16), (xbetween<<16), 0, f, x1, y1, x2, y2);
-
+#endif
     x += dim.x;
 
     if (!(o & ROTATESPRITE_FULL16))
