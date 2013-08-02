@@ -14464,6 +14464,8 @@ void setbrightness(char dabrightness, uint8_t dapalid, uint8_t flags)
         // simultaneous basepal and tint changes?
         const int32_t doinvalidate = (paldidchange || (palsumdidchange && nohwgamma));
 
+#ifdef DEBUG_GL_SIMPLE_OFF
+
         if (!(flags&2) && doinvalidate)
             gltexinvalidatetype(INVALIDATE_ALL);
         if (!(flags&8) && doinvalidate)
@@ -14471,6 +14473,8 @@ void setbrightness(char dabrightness, uint8_t dapalid, uint8_t flags)
 #ifdef POLYMER
         if ((getrendermode() == REND_POLYMER) && doinvalidate)
             polymer_texinvalidate();
+#endif
+
 #endif
     }
 #endif

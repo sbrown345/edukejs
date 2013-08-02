@@ -95,7 +95,11 @@ extern int32_t curbrightness, gammabrightness;
 #ifdef USE_OPENGL
 // OpenGL stuff
 static HGLRC hGLRC = 0;
+#ifdef DEBUG_GL_SIMPLE_OFF
+char nofog=1;
+#else
 char nofog=0;
+#endif
 char nogl=0;
 char forcegl=0;
 #endif
@@ -1943,6 +1947,7 @@ void showframe(int32_t w)
             fullscreen_tint_gl(palfadergb.r, palfadergb.g, palfadergb.b, palfadedelta);
 
         bwglSwapBuffers(hDC);
+		exit(0);
         return;
     }
 #endif
@@ -2747,6 +2752,7 @@ static int32_t SetupOpenGL(int32_t width, int32_t height, int32_t bitspp)
         }
     }
 
+#ifdef DEBUG_GL_SIMPLE_OFF
     polymost_glreset();
 
     bglEnable(GL_TEXTURE_2D);
@@ -2917,6 +2923,7 @@ static int32_t SetupOpenGL(int32_t width, int32_t height, int32_t bitspp)
         bpp = oldbpp;
     }
 
+	#endif
     return FALSE;
 }
 #endif

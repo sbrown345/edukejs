@@ -371,6 +371,7 @@ extern void freevbos(void);
 
 void polymost_glreset()
 {
+#ifdef DEBUG_GL_SIMPLE_OFF
     int32_t i;
     pthtyp *pth, *next;
 
@@ -429,12 +430,14 @@ void polymost_glreset()
 #ifdef DEBUGGINGAIDS
     OSD_Printf("polymost_glreset()\n");
 #endif
+#endif
 }
 
 
 // one-time initialization of OpenGL for polymost
 void polymost_glinit()
 {
+#ifdef DEBUG_GL_SIMPLE_OFF
     if (!Bstrcmp(glinfo.vendor, "NVIDIA Corporation"))
         bglHint(GL_FOG_HINT, GL_NICEST);
     else
@@ -484,6 +487,7 @@ void polymost_glinit()
     
     texcache_setupmemcache();
     texcache_checkgarbage();
+#endif
 }
 
 ////////// VISIBILITY FOG ROUTINES //////////

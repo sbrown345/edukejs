@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html><body>
+  <script src="../lightgl.js"></script>
+  <script>
+
+      var angle = 0;
+
+
+      
+
+
+
+
+
+
+var gl = GL.create();
+document.body.appendChild(gl.canvas);
+gl.canvas.width = 1024;
+gl.canvas.height = 768;
+
+
+
+
+
+//wglCreateContext(99011184)
+//wglMakeCurrent(99011184, 00010000)
+//glGetString(GL_VENDOR)
+//glGetString(GL_RENDERER)
+//glGetString(GL_VERSION)
+//glGetString(GL_EXTENSIONS)
+glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, 013EDFE4)
+wglSwapIntervalEXT(0)
+glHint(GL_FOG_HINT, GL_DONT_CARE)
+glFogi(GL_FOG_MODE, 2049)
+glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
+glPixelStorei(GL_PACK_ALIGNMENT, 1)
+glPixelStorei(GL_UNPACK_ALIGNMENT, 1)
+glEnableClientState(GL_VERTEX_ARRAY)
+glEnableClientState(GL_TEXTURE_COORD_ARRAY)
+glViewport(0, 0, 1024, 768)
+glClearColor(0.000000, 0.000000, 0.000000, 0.000000)
+glClear(GL_COLOR_BUFFER_BIT)
+glViewport(0, 0, 1024, 768)
+glMatrixMode(GL_PROJECTION)
+glPushMatrix()
+glLoadMatrixf(00EDF154)
+glMatrixMode(GL_MODELVIEW)
+glPushMatrix()
+glLoadIdentity()
+glDisable(GL_DEPTH_TEST)
+glDisable(GL_ALPHA_TEST)
+glEnable(GL_TEXTURE_2D)
+glGenTextures(1, 1B0F83B4)
+glBindTexture(GL_TEXTURE_2D, 1)
+glBindTexture(GL_TEXTURE_2D, 1)
+glDisable(GL_BLEND)
+glDisable(GL_ALPHA_TEST)
+glColor4f(1.000000, 1.000000, 1.000000, 1.000000)
+glBegin(GL_TRIANGLE_FAN)
+//Readback not allowed here
+glTexCoord2d(0.000000, 0.000000)
+glVertex3d(-0.000976, 0.000731, 0.000977)
+glTexCoord2d(0.624698, 0.000000)
+glVertex3d(0.000977, 0.000731, 0.000977)
+glTexCoord2d(0.624698, 0.780743)
+glVertex3d(0.000977, -0.000732, 0.000977)
+glTexCoord2d(0.000000, 0.780743)
+glVertex3d(-0.000976, -0.000732, 0.000977)
+glEnd()
+glMatrixMode(GL_PROJECTION)
+
+
+
+
+  </script>
+</body></html>

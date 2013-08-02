@@ -14556,13 +14556,15 @@ function setbrightness(/*char*/ dabrightness: number, /*uint8_t*/ dapalid: numbe
         // simultaneous basepal and tint changes?
         var doinvalidate = (paldidchange || (palsumdidchange && nohwgamma)); //const int32_t
 
-        if (!(flags&2) && doinvalidate)
-            todo("gltexinvalidatetype(INVALIDATE_ALL);");
-        if (!(flags&8) && doinvalidate)
-            todo("gltexinvalidatetype(INVALIDATE_ART);");
-//#ifdef POLYMER
-        if ((getrendermode() == REND_POLYMER) && doinvalidate)
-            todoThrow("polymer_texinvalidate();");
+
+        todo("Uncomment these textinvalidate stuff if needed (and in original)");
+//        if (!(flags&2) && doinvalidate)
+//            todo("gltexinvalidatetype(INVALIDATE_ALL);");
+//        if (!(flags&8) && doinvalidate)
+//            todo("gltexinvalidatetype(INVALIDATE_ART);");
+////#ifdef POLYMER
+//        if ((getrendermode() == REND_POLYMER) && doinvalidate)
+//            todoThrow("polymer_texinvalidate();");
 //#endif
     }
 //#endif
