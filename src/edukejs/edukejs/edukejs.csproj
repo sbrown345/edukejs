@@ -127,8 +127,11 @@
     <Content Include="jaudiolib\source\fx_man.c.ts" />
     <Content Include="jmact\headers\keyboard.h.ts" />
     <Content Include="libs\lightgl.js" />
+    <Content Include="libs\lightgl\test.html" />
+    <Content Include="libs\lightgl\immediatemode.html" />
     <Content Include="libs\sprintf.ts" />
     <Content Include="libs\sprintf.d.ts" />
+    <Content Include="libs\webgl-debug.js" />
     <Content Include="libs\WebGL.d.ts" />
     <Content Include="log.aspx" />
     <Content Include="tests\assert.tests.js" />

@@ -1437,6 +1437,7 @@ function drawpoly(dpx: Float64Array, dpy: Float64Array, n:number, method: number
         // just submit the geometry and don't mess with textures.
         if (getrendermode() == REND_POLYMOST)
         {
+            debugger;
             bglBindTexture(GL_TEXTURE_2D, pth ? pth.glpic : 0);
 
             if (srepeat)
@@ -4418,6 +4419,7 @@ function polymost_dorotatesprite(sx: number, sy, z: number, a: number, picnum: n
         bglMatrixMode(GL_PROJECTION);
         for (var i = 0; i < m.length; i++) {memset(new P(m[i]),0,sizeof(m[i]));}
         m[0][0] = m[2][3] = 1.0; m[1][1] = (/*(float)*/xdim)/(/*(float)*/ydim); m[2][2] = 1.0001; m[3][2] = 1-m[2][2];
+        alert(" check m values are right");
         bglPushMatrix(); bglLoadMatrixf(m/*[0][0]*/);
         bglMatrixMode(GL_MODELVIEW);
         bglPushMatrix();
@@ -4559,10 +4561,9 @@ function polymost_dorotatesprite(sx: number, sy, z: number, a: number, picnum: n
         while (z);
 
 //#ifdef USE_OPENGL
-        if (!nofog) todo("bglDisable(GL_FOG);");
-        debugger;
+        if (!nofog) bglDisable(GL_FOG);
         pow2xsplit = 0; drawpoly(px,py,n,method);
-        if (!nofog) todo("bglEnable(GL_FOG);");
+        if (!nofog) bglEnable(GL_FOG);
 //#else
 //        pow2xsplit = 0; drawpoly(px,py,n,method);
 //#endif
@@ -4578,8 +4579,8 @@ function polymost_dorotatesprite(sx: number, sy, z: number, a: number, picnum: n
             todoThrow("polymer_postrotatesprite();");
         }
 //# endif
-        bglMatrixMode(GL_PROJECTION); bglPopMatrix();
-        bglMatrixMode(GL_MODELVIEW); bglPopMatrix();
+        todo("bglMatrixMode(GL_PROJECTION); bglPopMatrix();");
+        todo("bglMatrixMode(GL_MODELVIEW); bglPopMatrix();");
     }
 //#endif
 

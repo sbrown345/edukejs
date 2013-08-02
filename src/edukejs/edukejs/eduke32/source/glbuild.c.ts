@@ -7,7 +7,31 @@
 
 /// <reference path="../../build/headers/glbuild.h.ts" />
 
-var gl: WebGLRenderingContext = GL.create({});
+declare module WebGLDebugUtils {
+    function makeDebugContext(ctx: WebGLRenderingContext, nothingInParticular: any, fnForEveryCall: any): WebGLRenderingContext;
+    function glFunctionArgsToString(fn: string, args: any[]): WebGLRenderingContext;
+}
+
+function logGLCall(functionName, args) {   
+   console.error("gl." + functionName + "(" + 
+      WebGLDebugUtils.glFunctionArgsToString(functionName, args) + ")");   
+} 
+
+function validateNoneOfTheArgsAreUndefined(functionName, args) {
+  for (var ii = 0; ii < args.length; ++ii) {
+    if (args[ii] === undefined) {
+      console.error("undefined passed to gl." + functionName + "(" +
+                     WebGLDebugUtils.glFunctionArgsToString(functionName, args) + ")");
+    }
+  }
+} 
+
+function logAndValidate(functionName, args) {
+   logGLCall(functionName, args);
+   validateNoneOfTheArgsAreUndefined (functionName, args);
+}
+
+var gl: WebGLRenderingContext = WebGLDebugUtils.makeDebugContext(GL.create({}), undefined, logAndValidate);
 gl.fullscreen({camera: false});
 
 
@@ -104,6 +128,7 @@ var bglLoadMatrixf = function(multiDimMatrix: Float32Array[]) {
     ];
 
     var mat = new GL.Matrix(flatMatrix);
+    console.log(mat["m"]);
     gl.loadMatrix.call(gl, mat);//bglLoadMatrixfProcPtr ;
 };
 //bglLoadMatrixdProcPtr bglLoadMatrixd;
