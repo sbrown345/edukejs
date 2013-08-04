@@ -201,35 +201,6 @@ var can = <HTMLCanvasElement>document.createElement("canvas"),
     gl.texImage2D.call(gl, target, level, internalformat, width, height, border, format, type, pixels);
 };
 
-//function createTextureFromImage(image) {
-//    var texture = gl.createTexture();
-//    gl.bindTexture(gl.TEXTURE_2D, texture);
-//    if (!isPowerOfTwo(image.width) || !isPowerOfTwo(image.height)) {
-//        // Scale up the texture to the next highest power of two dimensions.
-//        var canvas = document.createElement("canvas");
-//        canvas.width = nextHighestPowerOfTwo(image.width);
-//        canvas.height = nextHighestPowerOfTwo(image.height);
-//        var ctx = canvas.getContext("2d");
-//        ctx.drawImage(image, 0, 0, image.width, image.height);
-//        image = canvas;
-//    }
-//    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
-//    gl.generateMipmap(gl.TEXTURE_2D);
-//    gl.bindTexture(gl.TEXTURE_2D, null);
-//    return texture;
-//}
- 
-//function isPowerOfTwo(x) {
-//    return (x & (x - 1)) == 0;
-//}
- 
-//function nextHighestPowerOfTwo(x) {
-//    --x;
-//    for (var i = 1; i < 32; i <<= 1) {
-//        x = x | x >> i;
-//    }
-//    return x + 1;
-//}
 
 //bglTexImage2DProcPtr 
 //bglTexImage3DProcPtr bglTexImage3D;

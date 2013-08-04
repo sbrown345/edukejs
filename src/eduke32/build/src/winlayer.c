@@ -1947,7 +1947,6 @@ void showframe(int32_t w)
             fullscreen_tint_gl(palfadergb.r, palfadergb.g, palfadergb.b, palfadedelta);
 
         bwglSwapBuffers(hDC);
-		exit(0);
         return;
     }
 #endif
