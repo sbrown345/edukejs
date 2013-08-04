@@ -31,7 +31,8 @@ function logAndValidate(functionName, args) {
    validateNoneOfTheArgsAreUndefined (functionName, args);
 }
 
-var gl: WebGLRenderingContext = WebGLDebugUtils.makeDebugContext(GL.create({}), undefined, logAndValidate);
+//var gl: WebGLRenderingContext = WebGLDebugUtils.makeDebugContext(GL.create({}), undefined, logAndValidate);
+var gl: WebGLRenderingContext= GL.create({});
 gl.fullscreen({camera: false});
 
 
@@ -104,30 +105,28 @@ var bglViewport = gl.viewport.bind(gl);//bglViewportProcPtr ;
 var bglPushMatrix = gl.pushMatrix.bind(gl);//bglPushMatrixProcPtr ;
 var bglPopMatrix = gl.popMatrix.bind(gl); //bglPopMatrixProcPtr 
 var bglLoadIdentity = gl.loadIdentity.bind(gl);//bglLoadIdentityProcPtr ;
+//var bglLoadMatrixf = gl.loadMatrix.bind(gl);
 var bglLoadMatrixf = function(multiDimMatrix: Float32Array[]) {
     assert.areEqual(4, multiDimMatrix.length);
     assert.areEqual(4, multiDimMatrix[0].length);
 
-    var flatMatrix = [
+    var mat = new GL.Matrix(
         multiDimMatrix[0][0],
-        multiDimMatrix[0][1],
-        multiDimMatrix[0][2],
-        multiDimMatrix[0][3],
         multiDimMatrix[1][0],
-        multiDimMatrix[1][1],
-        multiDimMatrix[1][2],
-        multiDimMatrix[1][3],
         multiDimMatrix[2][0],
-        multiDimMatrix[2][1],
-        multiDimMatrix[2][2],
-        multiDimMatrix[2][3],
         multiDimMatrix[3][0],
+        multiDimMatrix[0][1],
+        multiDimMatrix[1][1],
+        multiDimMatrix[2][1],
         multiDimMatrix[3][1],
+        multiDimMatrix[0][2],
+        multiDimMatrix[1][2],
+        multiDimMatrix[2][2],
         multiDimMatrix[3][2],
-        multiDimMatrix[3][3]
-    ];
-
-    var mat = new GL.Matrix(flatMatrix);
+        multiDimMatrix[0][3],
+        multiDimMatrix[1][3],
+        multiDimMatrix[2][3],
+        multiDimMatrix[3][3]);
     console.log(mat["m"]);
     gl.loadMatrix.call(gl, mat);//bglLoadMatrixfProcPtr ;
 };
