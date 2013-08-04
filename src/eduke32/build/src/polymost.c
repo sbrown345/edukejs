@@ -1498,8 +1498,10 @@ void drawpoly(double *dpx, double *dpy, int32_t n, int32_t method)
 
         if ((!(method&3)) && (!fullbrightdrawingpass))
         {
+			#ifdef DEBUG_GL_SIMPLE_OFF
             bglDisable(GL_BLEND);
             bglDisable(GL_ALPHA_TEST);
+			#endif
         }
         else
         {
@@ -1572,7 +1574,11 @@ void drawpoly(double *dpx, double *dpy, int32_t n, int32_t method)
                 }
             }
 
+			#ifdef DEBUG_GL_SIMPLE_OFF
             bglColor4f(pc[0],pc[1],pc[2],pc[3]);
+			#else
+            bglColor4f(1,0,0,1);   // TEST COLOUR
+			#endif
         }
 
         //Hack for walls&masked walls which use textures that are not a power of 2
@@ -1716,8 +1722,10 @@ void drawpoly(double *dpx, double *dpy, int32_t n, int32_t method)
                     while (j <= texunits)
                         bglMultiTexCoord2dARB(j++, uu[i]*r*ox2,vv[i]*r*oy2);
                 }
+				#ifdef DEBUG_GL_SIMPLE_OFF
                 else
                     bglTexCoord2d(uu[i]*r*ox2,vv[i]*r*oy2);
+				#endif
                 bglVertex3d((px[i]-ghalfx)*r*grhalfxdown10x,(ghoriz-py[i])*r*grhalfxdown10,r*(1.0/1024.0));
             }
             bglEnd();
@@ -4392,11 +4400,15 @@ void polymost_dorotatesprite(int32_t sx, int32_t sy, int32_t z, int16_t a, int16
 #ifdef USE_OPENGL
     if (getrendermode() >= REND_POLYMOST)
     {
+		#ifdef DEBUG_GL_SIMPLE_OFF
         bglViewport(0,0,xdim,ydim); glox1 = -1; //Force fullscreen (glox1=-1 forces it to restore)
         bglMatrixMode(GL_PROJECTION);
+		#endif
         memset(m,0,sizeof(m));
         m[0][0] = m[2][3] = 1.0f; m[1][1] = ((float)xdim)/((float)ydim); m[2][2] = 1.0001f; m[3][2] = 1-m[2][2];
+		#ifdef DEBUG_GL_SIMPLE_OFF
         bglPushMatrix(); 
+		#endif
 		bglLoadMatrixf(&m[0][0]);
 #ifdef DEBUG_GL_SIMPLE_OFF
         bglMatrixMode(GL_MODELVIEW);
@@ -4550,8 +4562,10 @@ void polymost_dorotatesprite(int32_t sx, int32_t sy, int32_t z, int16_t a, int16
             polymer_postrotatesprite();
         }
 # endif
+		#ifdef DEBUG_GL_SIMPLE_OFF
         bglMatrixMode(GL_PROJECTION); bglPopMatrix();
         bglMatrixMode(GL_MODELVIEW); bglPopMatrix();
+		#endif
     }
 #endif
 

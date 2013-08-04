@@ -14567,12 +14567,15 @@ void clearview(int32_t dacol)
     if (getrendermode() >= REND_POLYMOST)
     {
         palette_t p = getpal(dacol);
+		#ifdef DEBUG_GL_SIMPLE_OFF
 
         bglClearColor(((float)p.r)/255.0,
                       ((float)p.g)/255.0,
                       ((float)p.b)/255.0,
                       0);
         bglClear(GL_COLOR_BUFFER_BIT);
+
+		#endif
         return;
     }
 #endif
@@ -14606,12 +14609,14 @@ void clearallviews(int32_t dacol)
     {
         palette_t p = getpal(dacol);
 
+		#ifdef DEBUG_GL_SIMPLE_OFF
         bglViewport(0,0,xdim,ydim); glox1 = -1;
         bglClearColor(((float)p.r)/255.0,
                       ((float)p.g)/255.0,
                       ((float)p.b)/255.0,
                       0);
         bglClear(GL_COLOR_BUFFER_BIT);
+		#endif
         return;
     }
 #endif
