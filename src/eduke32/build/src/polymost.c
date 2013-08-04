@@ -691,47 +691,49 @@ static void resizeglcheck(void)
 static void fixtransparency(int32_t dapicnum, coltype *dapic, int32_t daxsiz, int32_t daysiz,
                             int32_t daxsiz2, int32_t daysiz2, int32_t dameth)
 {
-	printf("turn on fixtransparency todo");
-    //coltype *wpptr;
-    //int32_t j, x, y, r, g, b, dox, doy, naxsiz2;
+	
+#ifdef DEBUG_GL_SIMPLE_OFF
+    coltype *wpptr;
+    int32_t j, x, y, r, g, b, dox, doy, naxsiz2;
 
-    //UNREFERENCED_PARAMETER(dapicnum);
+    UNREFERENCED_PARAMETER(dapicnum);
 
-    //dox = daxsiz2-1; doy = daysiz2-1;
-    //if (dameth&4) { dox = min(dox,daxsiz); doy = min(doy,daysiz); }
-    //else { daxsiz = daxsiz2; daysiz = daysiz2; } //Make repeating textures duplicate top/left parts
+    dox = daxsiz2-1; doy = daysiz2-1;
+    if (dameth&4) { dox = min(dox,daxsiz); doy = min(doy,daysiz); }
+    else { daxsiz = daxsiz2; daysiz = daysiz2; } //Make repeating textures duplicate top/left parts
 
-    //daxsiz--; daysiz--; naxsiz2 = -daxsiz2; //Hacks for optimization inside loop
+    daxsiz--; daysiz--; naxsiz2 = -daxsiz2; //Hacks for optimization inside loop
 
-    ////Set transparent pixels to average color of neighboring opaque pixels
-    ////Doing this makes bilinear filtering look much better for masked textures (I.E. sprites)
-    //for (y=doy; y>=0; y--)
-    //{
-    //    wpptr = &dapic[y*daxsiz2+dox];
-    //    for (x=dox; x>=0; x--,wpptr--)
-    //    {
-    //        if (wpptr->a) continue;
+    //Set transparent pixels to average color of neighboring opaque pixels
+    //Doing this makes bilinear filtering look much better for masked textures (I.E. sprites)
+    for (y=doy; y>=0; y--)
+    {
+        wpptr = &dapic[y*daxsiz2+dox];
+        for (x=dox; x>=0; x--,wpptr--)
+        {
+            if (wpptr->a) continue;
 
-    //        r = g = b = j = 0;
-    //        if ((x>     0) && (wpptr[     -1].a)) { r += wpptr[     -1].r; g += wpptr[     -1].g; b += wpptr[     -1].b; j++; }
-    //        if ((x<daxsiz) && (wpptr[     +1].a)) { r += wpptr[     +1].r; g += wpptr[     +1].g; b += wpptr[     +1].b; j++; }
-    //        if ((y>     0) && (wpptr[naxsiz2].a)) { r += wpptr[naxsiz2].r; g += wpptr[naxsiz2].g; b += wpptr[naxsiz2].b; j++; }
-    //        if ((y<daysiz) && (wpptr[daxsiz2].a)) { r += wpptr[daxsiz2].r; g += wpptr[daxsiz2].g; b += wpptr[daxsiz2].b; j++; }
-    //        switch (j)
-    //        {
-    //        case 1:
-    //            wpptr->r =   r            ; wpptr->g =   g            ; wpptr->b =   b            ; break;
-    //        case 2:
-    //            wpptr->r = ((r   +  1)>>1); wpptr->g = ((g   +  1)>>1); wpptr->b = ((b   +  1)>>1); break;
-    //        case 3:
-    //            wpptr->r = ((r*85+128)>>8); wpptr->g = ((g*85+128)>>8); wpptr->b = ((b*85+128)>>8); break;
-    //        case 4:
-    //            wpptr->r = ((r   +  2)>>2); wpptr->g = ((g   +  2)>>2); wpptr->b = ((b   +  2)>>2); break;
-    //        default:
-    //            break;
-    //        }
-    //    }
-    //}
+            r = g = b = j = 0;
+            if ((x>     0) && (wpptr[     -1].a)) { r += wpptr[     -1].r; g += wpptr[     -1].g; b += wpptr[     -1].b; j++; }
+            if ((x<daxsiz) && (wpptr[     +1].a)) { r += wpptr[     +1].r; g += wpptr[     +1].g; b += wpptr[     +1].b; j++; }
+            if ((y>     0) && (wpptr[naxsiz2].a)) { r += wpptr[naxsiz2].r; g += wpptr[naxsiz2].g; b += wpptr[naxsiz2].b; j++; }
+            if ((y<daysiz) && (wpptr[daxsiz2].a)) { r += wpptr[daxsiz2].r; g += wpptr[daxsiz2].g; b += wpptr[daxsiz2].b; j++; }
+            switch (j)
+            {
+            case 1:
+                wpptr->r =   r            ; wpptr->g =   g            ; wpptr->b =   b            ; break;
+            case 2:
+                wpptr->r = ((r   +  1)>>1); wpptr->g = ((g   +  1)>>1); wpptr->b = ((b   +  1)>>1); break;
+            case 3:
+                wpptr->r = ((r*85+128)>>8); wpptr->g = ((g*85+128)>>8); wpptr->b = ((b*85+128)>>8); break;
+            case 4:
+                wpptr->r = ((r   +  2)>>2); wpptr->g = ((g   +  2)>>2); wpptr->b = ((b   +  2)>>2); break;
+            default:
+                break;
+            }
+        }
+    }
+#endif
 }
 
 void uploadtexture(int32_t doalloc, int32_t xsiz, int32_t ysiz, int32_t intexfmt, int32_t texfmt, coltype *pic, int32_t tsizx, int32_t tsizy, int32_t dameth)
@@ -847,30 +849,31 @@ static int32_t tile_is_sky(int32_t tilenum)
 
 static void texture_setup(int32_t dameth)
 {
-	printf("todo texture_setup");
-    //gltexfiltermode = clamp(gltexfiltermode, 0, NUMGLFILTERMODES-1);
-    //bglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, glfiltermodes[gltexfiltermode].mag);
-    //bglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, glfiltermodes[gltexfiltermode].min);
+#ifdef DEBUG_GL_SIMPLE_OFF
+    gltexfiltermode = clamp(gltexfiltermode, 0, NUMGLFILTERMODES-1);
+    bglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, glfiltermodes[gltexfiltermode].mag);
+    bglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, glfiltermodes[gltexfiltermode].min);
 
-    //if (glinfo.maxanisotropy > 1.0)
-    //{
-    //    if (glanisotropy <= 0 || glanisotropy > glinfo.maxanisotropy)
-    //        glanisotropy = (int32_t)glinfo.maxanisotropy;
-    //    bglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, glanisotropy);
-    //}
+    if (glinfo.maxanisotropy > 1.0)
+    {
+        if (glanisotropy <= 0 || glanisotropy > glinfo.maxanisotropy)
+            glanisotropy = (int32_t)glinfo.maxanisotropy;
+        bglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, glanisotropy);
+    }
 
-    //if (!(dameth&4))
-    //{
-    //    bglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, !tile_is_sky(dapic) ? GL_REPEAT:
-    //                     (glinfo.clamptoedge?GL_CLAMP_TO_EDGE:GL_CLAMP));
-    //    bglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    //}
-    //else
-    //{
-    //    //For sprite textures, clamping looks better than wrapping
-    //    bglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, glinfo.clamptoedge?GL_CLAMP_TO_EDGE:GL_CLAMP);
-    //    bglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, glinfo.clamptoedge?GL_CLAMP_TO_EDGE:GL_CLAMP);
-    //}
+    if (!(dameth&4))
+    {
+        bglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, !tile_is_sky(dapic) ? GL_REPEAT:
+                         (glinfo.clamptoedge?GL_CLAMP_TO_EDGE:GL_CLAMP));
+        bglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    }
+    else
+    {
+        //For sprite textures, clamping looks better than wrapping
+        bglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, glinfo.clamptoedge?GL_CLAMP_TO_EDGE:GL_CLAMP);
+        bglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, glinfo.clamptoedge?GL_CLAMP_TO_EDGE:GL_CLAMP);
+    }
+#endif
 }
 
 int32_t gloadtile_art(int32_t dapic, int32_t dapal, int32_t dashade, int32_t dameth, pthtyp *pth, int32_t doalloc)
