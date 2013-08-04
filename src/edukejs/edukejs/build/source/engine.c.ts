@@ -9796,16 +9796,16 @@ function initspritelists(): void
 
 function have_maptext(): number
 {
-    return (mapversion >= 10);
+    return (mapversion >= 10)?1:0;
 }
 
 function prepare_loadboard(fil: number, dapos: vec3_t , daang: R<number>, dacursectnum: R<number>): void
 {
     initspritelists();
 
-    Bmemset(show2dsector, 0, sizeof(show2dsector));
-    Bmemset(show2dsprite, 0, sizeof(show2dsprite));
-    Bmemset(show2dwall, 0, sizeof(show2dwall));
+    Bmemset(new P(show2dsector.buffer), 0, sizeof(show2dsector));
+    Bmemset(new P(show2dsprite.buffer), 0, sizeof(show2dsprite));
+    Bmemset(new P(show2dwall.buffer), 0, sizeof(show2dwall));
 
     if (!have_maptext())
     {
@@ -9894,9 +9894,9 @@ function prepare_loadboard(fil: number, dapos: vec3_t , daang: R<number>, dacurs
 //}
 
 
-//#define MYMAXSECTORS() (MAXSECTORS==MAXSECTORSV7 || mapversion <= 7 ? MAXSECTORSV7 : MAXSECTORSV8)
-//#define MYMAXWALLS()   (MAXSECTORS==MAXSECTORSV7 || mapversion <= 7 ? MAXWALLSV7 : MAXWALLSV8)
-//#define MYMAXSPRITES() (MAXSECTORS==MAXSECTORSV7 || mapversion <= 7 ? MAXSPRITESV7 : MAXSPRITESV8)
+function MYMAXSECTORS(): number {return (MAXSECTORS==MAXSECTORSV7 || mapversion <= 7 ? MAXSECTORSV7 : MAXSECTORSV8);}
+function MYMAXWALLS(): number   {return (MAXSECTORS==MAXSECTORSV7 || mapversion <= 7 ? MAXWALLSV7 : MAXWALLSV8);}
+function MYMAXSPRITES(): number {return (MAXSECTORS==MAXSECTORSV7 || mapversion <= 7 ? MAXSPRITESV7 : MAXSPRITESV8);}
 
 //// Sprite checking
 
@@ -9907,40 +9907,40 @@ function prepare_loadboard(fil: number, dapos: vec3_t , daang: R<number>, dacurs
 //    sprite[i].sectnum = MAXSECTORS;
 //}
 
-//// This is only to be run after reading the sprite array!
-//static void check_sprite(int32_t i)
-//{
-//    if ((unsigned)sprite[i].statnum >= MAXSTATUS)
-//    {
-//        initprintf_nowarn(OSD_ERROR "Map error: sprite #%d (%d,%d) with illegal statnum (%d) REMOVED.\n",
-//                   i, TrackerCast(sprite[i].x), TrackerCast(sprite[i].y), TrackerCast(sprite[i].statnum));
-//        remove_sprite(i);
-//    }
-//    else if ((unsigned)sprite[i].picnum >= MAXTILES)
-//    {
-//        initprintf_nowarn(OSD_ERROR "Map error: sprite #%d (%d,%d) with illegal picnum (%d) REMOVED.\n",
-//                   i, TrackerCast(sprite[i].x), TrackerCast(sprite[i].y), TrackerCast(sprite[i].sectnum));
-//        remove_sprite(i);
-//    }
-//    else if ((unsigned)sprite[i].sectnum >= (unsigned)numsectors)
-//    {
-//        const int32_t osectnum = sprite[i].sectnum;
+// This is only to be run after reading the sprite array!
+function check_sprite(i: number):  void 
+{
+    if (sprite[i].statnum >= MAXSTATUS)
+    {
+        initprintf_nowarn(OSD_ERROR + "Map error: sprite #%d (%d,%d) with illegal statnum (%d) REMOVED.\n",
+                   i, TrackerCast(sprite[i].x), TrackerCast(sprite[i].y), TrackerCast(sprite[i].statnum));
+        remove_sprite(i);
+    }
+    else if ((unsigned)sprite[i].picnum >= MAXTILES)
+    {
+        initprintf_nowarn(OSD_ERROR + "Map error: sprite #%d (%d,%d) with illegal picnum (%d) REMOVED.\n",
+                   i, TrackerCast(sprite[i].x), TrackerCast(sprite[i].y), TrackerCast(sprite[i].sectnum));
+        remove_sprite(i);
+    }
+    else if (sprite[i].sectnum >= numsectors)
+    {
+        var osectnum = sprite[i].sectnum;
+        
+        sprite[i].sectnum = -1;
+        updatesector(sprite[i].x, sprite[i].y, &sprite[i].sectnum);
 
-//        sprite[i].sectnum = -1;
-//        updatesector(sprite[i].x, sprite[i].y, &sprite[i].sectnum);
+        if (sprite[i].sectnum < 0)
+            remove_sprite(i);
 
-//        if (sprite[i].sectnum < 0)
-//            remove_sprite(i);
+        initprintf_nowarn(OSD_ERROR + "Map error: sprite #%d (%d,%d) with illegal sector (%d) ",
+                   i, TrackerCast(sprite[i].x), TrackerCast(sprite[i].y), osectnum);
 
-//        initprintf_nowarn(OSD_ERROR "Map error: sprite #%d (%d,%d) with illegal sector (%d) ",
-//                   i, TrackerCast(sprite[i].x), TrackerCast(sprite[i].y), osectnum);
-
-//        if (sprite[i].statnum != MAXSTATUS)
-//            initprintf_nowarn("changed to sector %d.\n", TrackerCast(sprite[i].sectnum));
-//        else
-//            initprintf_nowarn("REMOVED.\n");
-//    }
-//}
+        if (sprite[i].statnum != MAXSTATUS)
+            initprintf_nowarn("changed to sector %d.\n", TrackerCast(sprite[i].sectnum));
+        else
+            initprintf_nowarn("REMOVED.\n");
+    }
+}
 
 //#ifdef NEW_MAP_FORMAT
 //// Returns the number of sprites, or <0 on error.
@@ -10022,9 +10022,9 @@ function loadboard(filename: string, /*char*/ flags: number, dapos: vec3_t , /*i
 
     ////////// Read sectors //////////
 
-    kread(fil,&numsectors,2); numsectors = B_LITTLE16(numsectors);
-    if ((unsigned)numsectors >= MYMAXSECTORS()+1) { kclose(fil); return -3; }
-
+    numsectors = kread16(fil); numsectors = B_LITTLE16(numsectors);
+    if (numsectors >= MYMAXSECTORS()+1) { kclose(fil); return -3; }
+    debugger;
     kread(fil, sector, sizeof(sectortypev7)*numsectors);
 
     for (i=numsectors-1; i>=0; i--)
@@ -10054,9 +10054,10 @@ function loadboard(filename: string, /*char*/ flags: number, dapos: vec3_t , /*i
 
     ////////// Read walls //////////
 
-    kread(fil,&numwalls,2); numwalls = B_LITTLE16(numwalls);
-    if ((unsigned)numwalls >= MYMAXWALLS()+1) { kclose(fil); return -3; }
+    numwalls  = kread16(fil); numwalls = B_LITTLE16(numwalls);
+    if (numwalls >= MYMAXWALLS()+1) { kclose(fil); return -3; }
 
+    debugger;
     kread(fil, wall, sizeof(walltypev7)*numwalls);
 
     for (i=numwalls-1; i>=0; i--)
@@ -10084,9 +10085,10 @@ function loadboard(filename: string, /*char*/ flags: number, dapos: vec3_t , /*i
 
     ////////// Read sprites //////////
 
-    kread(fil,&numsprites,2); numsprites = B_LITTLE16(numsprites);
-    if ((unsigned)numsprites >= MYMAXSPRITES()+1) { kclose(fil); return -3; }
+    numsprites = kread16(fil); numsprites = B_LITTLE16(numsprites);
+    if (numsprites >= MYMAXSPRITES()+1) { kclose(fil); return -3; }
 
+    debugger;
     kread(fil, sprite, sizeof(spritetype)*numsprites);
 
 //#ifdef NEW_MAP_FORMAT
