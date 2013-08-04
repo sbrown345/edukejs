@@ -2028,7 +2028,7 @@ function showframe(w: number): void
     {
         if (palfadedelta)
             todoThrow("fullscreen_tint_gl(palfadergb.r, palfadergb.g, palfadergb.b, palfadedelta);");
-        todo("gl.flush();????????");//bwglSwapBuffers(hDC);   // http://gamedev.stackexchange.com/questions/14590/disable-v-sync-in-webgl ??
+        gl.flush();//?? //bwglSwapBuffers(hDC);   // http://gamedev.stackexchange.com/questions/14590/disable-v-sync-in-webgl ??
         return;
     }
 //#endif

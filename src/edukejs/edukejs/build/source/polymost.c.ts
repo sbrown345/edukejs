@@ -164,8 +164,8 @@ var glusetexcompr = 1;//int32_t
 var gltexfiltermode = 2; // GL_NEAREST_MIPMAP_NEAREST//int32_t 
 var glusetexcache = 2, glusememcache = 1; //int32_t 
 //int32_t glmultisample = 0, glnvmultisamplehint = 0;
-//int32_t gltexmaxsize = 0;      // 0 means autodetection on first run
-//int32_t gltexmiplevel = 0;		// discards this many mipmap levels
+var gltexmaxsize = 0;      // 0 means autodetection on first run
+var gltexmiplevel = 0;		// discards this many mipmap levels
 //static int32_t lastglpolygonmode = 0; //FUK
 //int32_t glpolygonmode = 0;     // 0:GL_FILL,1:GL_LINE,2:GL_POINT //FUK
 //int32_t glwidescreen = 0;
@@ -198,9 +198,9 @@ var r_glowmapping = 1; //int32_t
 // fullbright cvar
 var r_fullbrights = 1;
 
-//// texture downsizing
-//int32_t r_downsize = 0;
-//int32_t r_downsizevar = -1;
+// texture downsizing
+var r_downsize = 0;          //int32_t
+var r_downsizevar = -1;      //int32_t
 //
 // used for fogcalc
 var fogresult = 0.0, fogresult2 = 0.0, fogcol = new Float32Array(4), fogtable = new Float32Array(4*MAXPALOOKUPS); //float 
@@ -755,99 +755,99 @@ function fixtransparency(dapicnum: number, dapic: coltype[], daxsiz: number, day
 //
 function uploadtexture(doalloc: number, xsiz: number, ysiz: number, intexfmt: number, texfmt: number, pic: coltype[], tsizx: number, tsizy: number, dameth: number): void 
 {
-//    coltype *wpptr, *rpptr;
-//    int32_t x2, y2, j, js=0, x3, y3, y, x, r, g, b, a, k;
-//    int32_t hi = (dameth&8192)?1:0;
-//    int32_t nocompress = (dameth&4096)?1:0;
-//
-//    dameth &= ~(8192|4096);
-//
-//    if (gltexmaxsize <= 0)
-//    {
-//        GLint i = 0;
-//        bglGetIntegerv(GL_MAX_TEXTURE_SIZE, &i);
-//        if (!i) gltexmaxsize = 6;   // 2^6 = 64 == default GL max texture size
-//        else
-//        {
-//            gltexmaxsize = 0;
-//            for (; i>1; i>>=1) gltexmaxsize++;
-//        }
-//    }
-//
-//    js = max(0,min(gltexmaxsize-1,gltexmiplevel));
-//    gltexmiplevel = js;
-//    while ((xsiz>>js) > (1<<gltexmaxsize) || (ysiz>>js) > (1<<gltexmaxsize)) js++;
-//
-//    if (hi && !nocompress) js = r_downsize;
-//
-//    /*
-//    OSD_Printf("Uploading %dx%d %s as %s\n", xsiz,ysiz,
-//            (texfmt==GL_RGBA?"GL_RGBA":
-//             texfmt==GL_RGB?"GL_RGB":
-//             texfmt==GL_BGR?"GL_BGR":
-//             texfmt==GL_BGRA?"GL_BGRA":"other"),
-//            (intexfmt==GL_RGBA?"GL_RGBA":
-//             intexfmt==GL_RGB?"GL_RGB":
-//             intexfmt==GL_COMPRESSED_RGBA_ARB?"GL_COMPRESSED_RGBA_ARB":
-//             intexfmt==GL_COMPRESSED_RGB_ARB?"GL_COMPRESSED_RGB_ARB":"other"));
-//    */
-//
-//    if (js == 0)
-//    {
-//        if (doalloc&1)
-//            bglTexImage2D(GL_TEXTURE_2D,0,intexfmt,xsiz,ysiz,0,texfmt,GL_UNSIGNED_BYTE,pic); //loading 1st time
-//        else
-//            bglTexSubImage2D(GL_TEXTURE_2D,0,0,0,xsiz,ysiz,texfmt,GL_UNSIGNED_BYTE,pic); //overwrite old texture
-//    }
-//
+    var wpptrIdx: number, rpptrIdx: number;
+    var x2:number, y2:number, j:number, js=0, x3:number, y3:number, y:number, x:number, r:number, g:number, b:number, a:number, k: number;//int32_t
+    var hi = (dameth&8192)?1:0;                      //int32_t
+    var nocompress = (dameth&4096)?1:0;              //int32_t
+
+    dameth &= ~(8192|4096);
+
+    if (gltexmaxsize <= 0)
+    {
+        var i = 0;
+        i = bglGetIntegerv(GL_MAX_TEXTURE_SIZE);
+        if (!i) gltexmaxsize = 6;   // 2^6 = 64 == default GL max texture size
+        else
+        {
+            gltexmaxsize = 0;
+            for (; i>1; i>>=1) gltexmaxsize++;
+        }
+    }
+
+    js = max(0,min(gltexmaxsize-1,gltexmiplevel));
+    gltexmiplevel = js;
+    while ((xsiz>>js) > (1<<gltexmaxsize) || (ysiz>>js) > (1<<gltexmaxsize)) js++;
+
+    if (hi && !nocompress) js = r_downsize;
+
+    
+    OSD_Printf("Uploading %dx%d %s as %s\n", xsiz,ysiz,
+            (texfmt==GL_RGBA?"GL_RGBA":
+             texfmt==GL_RGB?"GL_RGB" : "other" /*:
+            texfmt==GL_BGR?"GL_BGR":
+             texfmt==GL_BGRA?"GL_BGRA":"other"*/),
+            (intexfmt==GL_RGBA?"GL_RGBA":
+             intexfmt==GL_RGB?"GL_RGB":"other" /*:
+             intexfmt==GL_COMPRESSED_RGBA_ARB?"GL_COMPRESSED_RGBA_ARB":
+             intexfmt==GL_COMPRESSED_RGB_ARB?"GL_COMPRESSED_RGB_ARB":"other")*/));
+    
+
+    if (js == 0)
+    {
+        if (doalloc&1)
+            bglTexImage2D(GL_TEXTURE_2D,0,intexfmt,xsiz,ysiz,0,texfmt,GL_UNSIGNED_BYTE,coltypeArrayToBuffer(pic)); //loading 1st time
+        else
+            bglTexSubImage2D(GL_TEXTURE_2D,0,0,0,xsiz,ysiz,texfmt,GL_UNSIGNED_BYTE,coltypeArrayToBuffer(pic)); //overwrite old texture
+    }
+
 //#if 0
 //    gluBuild2DMipmaps(GL_TEXTURE_2D,GL_RGBA8,xsiz,ysiz,texfmt,GL_UNSIGNED_BYTE,pic); //Needs C++ to link?
 //#elif 1
-//    x2 = xsiz; y2 = ysiz;
-//    for (j=1; (x2 > 1) || (y2 > 1); j++)
-//    {
-//        //x3 = ((x2+1)>>1); y3 = ((y2+1)>>1);
-//        x3 = max(1, x2 >> 1); y3 = max(1, y2 >> 1);		// this came from the GL_ARB_texture_non_power_of_two spec
-//        for (y=0; y<y3; y++)
-//        {
-//            wpptr = &pic[y*x3]; rpptr = &pic[(y<<1)*x2];
-//            for (x=0; x<x3; x++,wpptr++,rpptr+=2)
-//            {
-//                r = g = b = a = k = 0;
-//                if (rpptr[0].a)                  { r += rpptr[0].r; g += rpptr[0].g; b += rpptr[0].b; a += rpptr[0].a; k++; }
-//                if ((x+x+1 < x2) && (rpptr[1].a)) { r += rpptr[1].r; g += rpptr[1].g; b += rpptr[1].b; a += rpptr[1].a; k++; }
-//                if (y+y+1 < y2)
-//                {
-//                    if ((rpptr[x2].a)) { r += rpptr[x2  ].r; g += rpptr[x2  ].g; b += rpptr[x2  ].b; a += rpptr[x2  ].a; k++; }
-//                    if ((x+x+1 < x2) && (rpptr[x2+1].a)) { r += rpptr[x2+1].r; g += rpptr[x2+1].g; b += rpptr[x2+1].b; a += rpptr[x2+1].a; k++; }
-//                }
-//                switch (k)
-//                {
-//                case 0:
-//                case 1:
-//                    wpptr.r = r; wpptr.g = g; wpptr.b = b; wpptr.a = a; break;
-//                case 2:
-//                    wpptr.r = ((r+1)>>1); wpptr.g = ((g+1)>>1); wpptr.b = ((b+1)>>1); wpptr.a = ((a+1)>>1); break;
-//                case 3:
-//                    wpptr.r = ((r*85+128)>>8); wpptr.g = ((g*85+128)>>8); wpptr.b = ((b*85+128)>>8); wpptr.a = ((a*85+128)>>8); break;
-//                case 4:
-//                    wpptr.r = ((r+2)>>2); wpptr.g = ((g+2)>>2); wpptr.b = ((b+2)>>2); wpptr.a = ((a+2)>>2); break;
-//                default:
-//                    break;
-//                }
-//                //if (wpptr.a) wpptr.a = 255;
-//            }
-//        }
-//        if (tsizx >= 0) fixtransparency(-1, pic,(tsizx+(1<<j)-1)>>j,(tsizy+(1<<j)-1)>>j,x3,y3,dameth);
-//        if (j >= js)
-//        {
-//            if (doalloc&1)
-//                bglTexImage2D(GL_TEXTURE_2D,j-js,intexfmt,x3,y3,0,texfmt,GL_UNSIGNED_BYTE,pic); //loading 1st time
-//            else
-//                bglTexSubImage2D(GL_TEXTURE_2D,j-js,0,0,x3,y3,texfmt,GL_UNSIGNED_BYTE,pic); //overwrite old texture
-//        }
-//        x2 = x3; y2 = y3;
-//    }
+    x2 = xsiz; y2 = ysiz;
+    for (j=1; (x2 > 1) || (y2 > 1); j++)
+    {
+        //x3 = ((x2+1)>>1); y3 = ((y2+1)>>1);
+        x3 = max(1, x2 >> 1); y3 = max(1, y2 >> 1);		// this came from the GL_ARB_texture_non_power_of_two spec
+        for (y=0; y<y3; y++)
+        {
+            wpptrIdx = y*x3; rpptrIdx = (y<<1)*x2;
+            for (x=0; x<x3; x++,wpptrIdx++,rpptrIdx+=2)
+            {
+                r = g = b = a = k = 0;
+                if (pic[rpptrIdx+0].a)                  { r += pic[rpptrIdx+0].r; g += pic[rpptrIdx+0].g; b += pic[rpptrIdx+0].b; a += pic[rpptrIdx+0].a; k++; }
+                if ((x+x+1 < x2) && (pic[rpptrIdx+1].a)) { r += pic[rpptrIdx+1].r; g += pic[rpptrIdx+1].g; b += pic[rpptrIdx+1].b; a += pic[rpptrIdx+1].a; k++; }
+                if (y+y+1 < y2)
+                {
+                    if ((pic[rpptrIdx+x2].a)) { r += pic[rpptrIdx+x2  ].r; g += pic[rpptrIdx+x2  ].g; b += pic[rpptrIdx+x2  ].b; a += pic[rpptrIdx+x2  ].a; k++; }
+                    if ((x+x+1 < x2) && (pic[rpptrIdx+x2+1].a)) { r += pic[rpptrIdx+x2+1].r; g += pic[rpptrIdx+x2+1].g; b += pic[rpptrIdx+x2+1].b; a += pic[rpptrIdx+x2+1].a; k++; }
+                }
+                switch (k)
+                {
+                case 0:
+                case 1:
+                    pic[wpptrIdx].r = r; pic[wpptrIdx].g = g; pic[wpptrIdx].b = b; pic[wpptrIdx].a = a; break;
+                case 2:
+                    pic[wpptrIdx].r = ((r+1)>>1); pic[wpptrIdx].g = ((g+1)>>1); pic[wpptrIdx].b = ((b+1)>>1); pic[wpptrIdx].a = ((a+1)>>1); break;
+                case 3:
+                    pic[wpptrIdx].r = ((r*85+128)>>8); pic[wpptrIdx].g = ((g*85+128)>>8); pic[wpptrIdx].b = ((b*85+128)>>8); pic[wpptrIdx].a = ((a*85+128)>>8); break;
+                case 4:
+                    pic[wpptrIdx].r = ((r+2)>>2); pic[wpptrIdx].g = ((g+2)>>2); pic[wpptrIdx].b = ((b+2)>>2); pic[wpptrIdx].a = ((a+2)>>2); break;
+                default:
+                    break;
+                }
+                //if (pic[wpptrIdx].a) pic[wpptrIdx].a = 255;
+            }
+        }
+        if (tsizx >= 0) fixtransparency(-1, pic,(tsizx+(1<<j)-1)>>j,(tsizy+(1<<j)-1)>>j,x3,y3,dameth);
+        if (j >= js)
+        {
+            if (doalloc&1)
+                bglTexImage2D(GL_TEXTURE_2D,j-js,intexfmt,x3,y3,0,texfmt,GL_UNSIGNED_BYTE,coltypeArrayToBuffer(pic)); //loading 1st time
+            else
+                bglTexSubImage2D(GL_TEXTURE_2D,j-js,0,0,x3,y3,texfmt,GL_UNSIGNED_BYTE,coltypeArrayToBuffer(pic)); //overwrite old texture
+        }
+        x2 = x3; y2 = y3;
+    }
 //#endif
 }
 
@@ -991,13 +991,14 @@ function gloadtile_art(dapic: number, dapal: number, dashade: number, dameth: nu
 
     dlog(DEBUG_LOAD_TILE_ART, "wpptr end load\n");
     //dlogFlush();
-debugger;
-    todo("some texture gl th ing here????????????????????????") ;//todo
-    if (doalloc) bglGenTextures(1,/*(GLuint *)& */pth.glpic); //# of textures (make OpenGL allocate structure)
+    todo("some texture gl th ing here???????????????????????? bglGenTextures, bglBindTexture") ;//todo
+    //if (doalloc) bglGenTextures(1,/*(GLuint *)& */pth.glpic); //# of textures (make OpenGL allocate structure)
+    if(doalloc) pth.glpic = gl.createTexture();
     bglBindTexture(GL_TEXTURE_2D,pth.glpic);
     
  
     fixtransparency(dapic, pic,tsizx,tsizy,xsiz,ysiz,dameth);
+    todo("remove hasalpha 'fix'");hasalpha = 1;
     uploadtexture(doalloc,xsiz,ysiz,hasalpha?GL_RGBA:GL_RGB,GL_RGBA,pic,tsizx,tsizy,dameth);
    
     texture_setup(dameth);

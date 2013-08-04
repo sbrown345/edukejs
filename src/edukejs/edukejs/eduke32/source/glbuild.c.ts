@@ -31,8 +31,8 @@ function logAndValidate(functionName, args) {
    validateNoneOfTheArgsAreUndefined (functionName, args);
 }
 
-//var gl: WebGLRenderingContext = WebGLDebugUtils.makeDebugContext(GL.create({}), undefined, logAndValidate);
-var gl: WebGLRenderingContext= GL.create({});
+var gl: WebGLRenderingContext = WebGLDebugUtils.makeDebugContext(GL.create({}), undefined, logAndValidate);
+//var gl: WebGLRenderingContext= GL.create({});
 document.body.appendChild(gl.canvas);
 gl.canvas.width = 1024;
 gl.canvas.height = 768;
@@ -55,7 +55,8 @@ var GL_REPEAT = gl.REPEAT;
 var GL_CLAMP_TO_EDGE = gl.CLAMP_TO_EDGE;
 var GL_CLAMP = null; //off
 var GL_FOG = -99999; //todo!?
-
+var GL_UNSIGNED_BYTE = gl.UNSIGNED_BYTE;
+var GL_MAX_TEXTURE_SIZE = gl.MAX_TEXTURE_SIZE;
 //#include "compat.h"
 //#include "glbuild.h"
 //#include "baselayer.h"
@@ -83,7 +84,7 @@ var bglEnable = gl.enable.bind(gl);//bglEnableProcPtr bglEnable;
 var bglDisable = gl.disable.bind(gl);//bglDisableProcPtr ;
 //bglGetDoublevProcPtr bglGetDoublev;
 //bglGetFloatvProcPtr bglGetFloatv;
-//bglGetIntegervProcPtr bglGetIntegerv;
+var bglGetIntegerv = gl.getParameter.bind(gl); //bglGetIntegervProcPtr 
 //bglPushAttribProcPtr bglPushAttrib;
 //bglPopAttribProcPtr bglPopAttrib;
 //bglGetErrorProcPtr bglGetError;
@@ -178,11 +179,63 @@ var bglGenTextures = function(/*GLsizei (int)*/ n: number, /*GLuint **/textures)
 };//gl.createTexture;//bglGenTexturesProcPtr// http://www.khronos.org/files/webgl/webgl-reference-card-1_0.pdf Note: Corresponding OpenGL ES function is GenTextures
 //bglDeleteTexturesProcPtr bglDeleteTextures;
 var bglBindTexture =  gl.bindTexture.bind(gl);//bglBindTextureProcPtr 
-//bglTexImage2DProcPtr bglTexImage2D;
+var bglTexImage2D = function(target: number, level: number, internalformat: number, width: number, height: number, border: number, format: number, type: number, pixels: ArrayBufferView) {
+var can = <HTMLCanvasElement>document.createElement("canvas"),
+	  ctx = can.getContext('2d');
+      can.height = width;
+      can.width = height;  
+    var img = ctx.createImageData(width, height);
+    for (var i=0; i<img.data.length; i++) {
+        img.data[i] = pixels[i];
+    }
+    ctx.putImageData(img, 0, 0);
+    document.body.appendChild(can);
+
+    //http://stackoverflow.com/questions/3792027/webgl-and-the-power-of-two-problem
+    //resize: http://www.khronos.org/webgl/wiki/WebGL_and_OpenGL_Differences#Non-Power_of_Two_Texture_Support
+
+    if(internalformat != format) {
+        todoThrow("internalformat must === format");
+    }
+
+    gl.texImage2D.call(gl, target, level, internalformat, width, height, border, format, type, pixels);
+};
+
+//function createTextureFromImage(image) {
+//    var texture = gl.createTexture();
+//    gl.bindTexture(gl.TEXTURE_2D, texture);
+//    if (!isPowerOfTwo(image.width) || !isPowerOfTwo(image.height)) {
+//        // Scale up the texture to the next highest power of two dimensions.
+//        var canvas = document.createElement("canvas");
+//        canvas.width = nextHighestPowerOfTwo(image.width);
+//        canvas.height = nextHighestPowerOfTwo(image.height);
+//        var ctx = canvas.getContext("2d");
+//        ctx.drawImage(image, 0, 0, image.width, image.height);
+//        image = canvas;
+//    }
+//    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+//    gl.generateMipmap(gl.TEXTURE_2D);
+//    gl.bindTexture(gl.TEXTURE_2D, null);
+//    return texture;
+//}
+ 
+//function isPowerOfTwo(x) {
+//    return (x & (x - 1)) == 0;
+//}
+ 
+//function nextHighestPowerOfTwo(x) {
+//    --x;
+//    for (var i = 1; i < 32; i <<= 1) {
+//        x = x | x >> i;
+//    }
+//    return x + 1;
+//}
+
+//bglTexImage2DProcPtr 
 //bglTexImage3DProcPtr bglTexImage3D;
 //bglCopyTexImage2DProcPtr bglCopyTexImage2D;
 //bglCopyTexSubImage2DProcPtr bglCopyTexSubImage2D;
-//bglTexSubImage2DProcPtr bglTexSubImage2D;
+var bglTexSubImage2D = gl.texSubImage2D.bind(gl);//bglTexSubImage2DProcPtr 
 //bglTexParameterfProcPtr bglTexParameterf;
 var bglTexParameteri = gl. texParameteri.bind(gl);//bglTexParameteriProcPtr 
 //bglGetTexParameterivProcPtr bglGetTexParameteriv;

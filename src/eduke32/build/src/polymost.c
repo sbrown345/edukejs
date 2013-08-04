@@ -975,12 +975,18 @@ int32_t gloadtile_art(int32_t dapic, int32_t dapal, int32_t dashade, int32_t dam
     }
 
     dlog(DEBUG_LOAD_TILE_ART, "wpptr end load\n");
-
+	#ifdef DEBUG_GL_SIMPLE_OFF
     if (doalloc) 
 		bglGenTextures(1,(GLuint *)&pth->glpic); //# of textures (make OpenGL allocate structure)
     bglBindTexture(GL_TEXTURE_2D,pth->glpic);
 
     fixtransparency(dapic, pic,tsizx,tsizy,xsiz,ysiz,dameth);
+	#endif
+
+	#ifdef DEBUG_GL_SIMPLE_OFF
+	hasalpha = 1; // so intformat and format is the same
+	#endif
+
     uploadtexture(doalloc,xsiz,ysiz,hasalpha?GL_RGBA:GL_RGB,GL_RGBA,pic,tsizx,tsizy,dameth);
 
     texture_setup(dameth);
@@ -4403,7 +4409,9 @@ void polymost_dorotatesprite(int32_t sx, int32_t sy, int32_t z, int16_t a, int16
         bglLoadIdentity();
 
         bglDisable(GL_DEPTH_TEST);
+		#ifdef DEBUG_GL_SIMPLE_OFF
         bglDisable(GL_ALPHA_TEST);
+		#endif
         bglEnable(GL_TEXTURE_2D);
         
 # ifdef POLYMER

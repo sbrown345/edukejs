@@ -11,6 +11,18 @@ class coltype { /*char*/ r: number; g: number; b: number; a: number; public stat
     }
 }
 
+function coltypeArrayToBuffer(coltypeArray: coltype[]) : ArrayBufferView {
+    var arr = new Uint8Array(coltypeArray.length * coltype.size);
+    for (var i = 0; i < coltypeArray.length; i++) {
+        arr[i*4+0] = coltypeArray[i].r;
+        arr[i*4+1] = coltypeArray[i].g;
+        arr[i*4+2] = coltypeArray[i].b;
+        arr[i*4+3] = coltypeArray[i].a;
+    }
+
+    return arr;
+}
+
 //extern int32_t rendmode;
 //extern float gtang;
 //extern float glox1, gloy1;
@@ -72,7 +84,7 @@ function getshadefactor(/*int32_t */shade: number): number /*float*/
 class pthtyp
 {
     next: pthtyp;
-    glpic: number;
+    glpic: WebGLTexture; //number
     picnum: number;
     palnum: number;     //char
     shade: number;      //char
