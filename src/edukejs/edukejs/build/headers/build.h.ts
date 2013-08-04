@@ -724,7 +724,7 @@ class validmode_t {
         this.extra = 0;
     }
 };
-var validmode = newStructArray(validmode_t, MAXVALIDMODES);
+var validmode: validmode_t[] = newStructArray(validmode_t, MAXVALIDMODES);
 
 //EXTERN int32_t numyaxbunches;
 //#ifdef YAX_ENABLE
@@ -739,10 +739,10 @@ var validmode = newStructArray(validmode_t, MAXVALIDMODES);
 //EXTERN int16_t headsectbunch[2][YAX_MAXBUNCHES], nextsectbunch[2][MAXSECTORS];
 //#endif
 
-var Numsprites; //EXTERN int32_t
-var numsectors, numwalls; //EXTERN int16_t 
+var Numsprites: number; //EXTERN int32_t
+var numsectors: number, numwalls: number; //EXTERN int16_t 
 var display_mirror: number;//EXTERN char 
-/*@type {number}*/ var totalclock;
+/*@type {number}*/ var totalclock: number;
 var numframes = 0, randomseed = 0; //EXTERN int32_t 
 var sintable = new Int16Array(2048);
 var palette = new Uint8Array(768);
@@ -770,9 +770,9 @@ var pskynummultis: number; //int16_t
 //// (or -1 if freelist is empty):
 //EXTERN int16_t tailspritefree;
 
-//EXTERN int16_t headspritesect[MAXSECTORS+1], headspritestat[MAXSTATUS+1];
-//EXTERN int16_t prevspritesect[MAXSPRITES], prevspritestat[MAXSPRITES];
-//EXTERN int16_t nextspritesect[MAXSPRITES], nextspritestat[MAXSPRITES];
+var headspritesect= new Int16Array(MAXSECTORS+1), headspritestat= new Int16Array(MAXSTATUS+1);       //EXTERN int16_t 
+var prevspritesect= new Int16Array(MAXSPRITES), prevspritestat= new Int16Array(MAXSPRITES);          //EXTERN int16_t 
+var nextspritesect= new Int16Array(MAXSPRITES), nextspritestat= new Int16Array(MAXSPRITES);          //EXTERN int16_t 
 
 var tilesizx = new Int16Array(MAXTILES), tilesizy = new Int16Array(MAXTILES);
 var picsiz = new Uint8Array(MAXTILES);
@@ -843,9 +843,9 @@ var waloff: ArrayBuffer[] = new Array(MAXTILES);  // stores pointers to cache  -
 //    //   spritenum = 54;
 //    //   show2dsprite[spritenum>>3] &= ~(1<<(spritenum&7));
 
-//EXTERN char show2dsector[(MAXSECTORS+7)>>3];
-//EXTERN char show2dwall[(MAXWALLS+7)>>3];
-//EXTERN char show2dsprite[(MAXSPRITES+7)>>3];
+ var show2dsector = new Uint8Array((MAXSECTORS+7)>>3);      //EXTERN char
+ var show2dwall = new Uint8Array((MAXWALLS+7)>>3);          //EXTERN char
+ var show2dsprite = new Uint8Array((MAXSPRITES+7)>>3);      //EXTERN char
 
 //// In the editor, gotpic is only referenced from inline assembly;
 //// the compiler needs that hint or building with LTO will discard it.
@@ -874,8 +874,8 @@ var faketilesiz = new Int32Array(MAXTILES);
 class palette_t {
     private _values: Uint8Array;
 
-    constructor() {
-        this._values = new Uint8Array(4);
+    constructor(r: number = 0, g: number = 0, b: number = 0, f: number = 0) {
+        this._values = new Uint8Array([r, g, b, f]);
     }
 
     public get r() {return this._values[0];}

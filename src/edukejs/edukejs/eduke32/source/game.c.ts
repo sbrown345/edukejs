@@ -3289,7 +3289,7 @@ function G_GameExit(/*const char **/msg : string) : void
 
 //#define CROSSHAIR_PAL (MAXPALOOKUPS-RESERVEDPALS-1)
 
-//palette_t CrosshairColors = { 255, 255, 255, 0 };
+var CrosshairColors = new palette_t(255, 255, 255, 0);
 //palette_t DefaultCrosshairColors = { 0, 0, 0, 0 };
 //int32_t g_crosshairSum = 0;
 
@@ -3330,8 +3330,9 @@ function G_GetCrosshairColor(): void
 //    DefaultCrosshairColors.f = 1; // this flag signifies that the color has been detected
 }
 
-//void G_SetCrosshairColor(int32_t r, int32_t g, int32_t b)
-//{
+function G_SetCrosshairColor(r: number, g: number, b: number): void
+{
+    todo("G_SetCrosshairColor");
 //    char *ptr = (char *)waloff[CROSSHAIR];
 //    int32_t i, ii;
 
@@ -3371,7 +3372,7 @@ function G_GetCrosshairColor(): void
 //    hictinting[CROSSHAIR_PAL].f = 9;
 //#endif
 //    invalidatetile(CROSSHAIR, -1, -1);
-//}
+}
 
 //#define SCORESHEETOFFSET -20
 //static void G_ShowScores(void)
@@ -11771,7 +11772,7 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
     if (g_networkMode != NET_DEDICATED_SERVER)
     {
         G_GetCrosshairColor();
-        // todo G_SetCrosshairColor(CrosshairColors.r, CrosshairColors.g, CrosshairColors.b)
+        G_SetCrosshairColor(CrosshairColors.r, CrosshairColors.g, CrosshairColors.b)
     }
     
     if (ud.warp_on == 0)

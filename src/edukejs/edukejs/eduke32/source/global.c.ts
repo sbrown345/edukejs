@@ -104,14 +104,25 @@ SkillNames/*[MAXSKILLS][33]*/ = [ "Piece Of Cake", "Let's Rock", "Come Get Some"
 
 //char GametypeNames[MAXGAMETYPES][33] = { "DukeMatch (Spawn)", "Cooperative Play", "DukeMatch (No Spawn)", "Team DM (Spawn)", "Team DM (No Spawn)" };
 
-//int32_t GametypeFlags[MAXGAMETYPES] =
-//{
-//    /*4+*/8+16+1024+2048+16384,
-//    1+2+32+64+128+256+512+4096+8192+32768,
-//    2+/*4+*/8+16+16384,
-//    /*4+*/8+16+1024+2048+16384+65536+131072,
-//    2+/*4+*/8+16+16384+65536+131072
-//};
+ GametypeFlags /*[MAXGAMETYPES]*/ = new Int32Array(
+[
+    /*4+*/8+16+1024+2048+16384,
+    1+2+32+64+128+256+512+4096+8192+32768,
+    2+/*4+*/8+16+16384,
+    /*4+*/8+16+1024+2048+16384+65536+131072,
+    2+/*4+*/8+16+16384+65536+131072,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+]);
 var g_numGametypes = 5;//char
 
 var g_numVolumes = 3;//char

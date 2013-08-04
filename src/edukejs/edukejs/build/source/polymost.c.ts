@@ -1438,7 +1438,6 @@ function drawpoly(dpx: Float64Array, dpy: Float64Array, n:number, method: number
         // just submit the geometry and don't mess with textures.
         if (getrendermode() == REND_POLYMOST)
         {
-            debugger;
             bglBindTexture(GL_TEXTURE_2D, pth ? pth.glpic : 0);
 
             if (srepeat)

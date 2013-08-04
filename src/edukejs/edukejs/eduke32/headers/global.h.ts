@@ -75,7 +75,7 @@ var EnvMusicFilename: string[] = new Array<string>(MAXVOLUMES+1);//[MAXVOLUMES+1
 var g_loadFromGroupOnly : number;//char
 var g_numSkills : number; // char
 //G_EXTERN char myjumpingtoggle,myonground,myhardlanding,myreturntocenter;
-//G_EXTERN char pus,pub;
+var pus: number,pub: number;//G_EXTERN char 
 var ready2send: number;//G_EXTERN char 
 var szPlayerName: string; //G_EXTERN char [32]
 //// XXX: menutextbuf overflow possible?
@@ -153,7 +153,7 @@ var EpisodeNames: string[];// [MAXVOLUMES][33];//G_EXTERN char
 var SkillNamesLength = 33;
 var SkillNames: string[]; // [MAXSKILLS][33];
 //G_EXTERN char GametypeNames[MAXGAMETYPES][33];
-//G_EXTERN int32_t GametypeFlags[MAXGAMETYPES];
+var GametypeFlags: Int32Array;//[MAXGAMETYPES];
 //G_EXTERN char g_numGametypes;
 //G_EXTERN char g_numVolumes;
 var g_timerTicsPerSecond: number;      //G_EXTERN int32_t

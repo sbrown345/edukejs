@@ -283,3 +283,7 @@ function isdigit(c: string) : number  {
 }
 
 var uint8_t = {size:1};
+
+function wm_setapptitle(title: string) {
+    window.document.title = title;
+}

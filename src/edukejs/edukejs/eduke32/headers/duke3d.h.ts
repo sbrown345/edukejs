@@ -76,7 +76,7 @@ interface Window {
 //#define BYTEVERSION_15      117
 //#define BYTEVERSION         (BYTEVERSION_JF+(PLUTOPAK?1:(VOLUMEONE<<1)))
 
-//#define NUMPAGES            1
+var NUMPAGES            =1;
 
 //#define RECSYNCBUFSIZ       2520   //2520 is the (LCM of 1-8)*3
 //#define MOVEFIFOSIZ         2

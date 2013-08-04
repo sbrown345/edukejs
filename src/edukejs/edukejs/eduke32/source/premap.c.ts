@@ -39,6 +39,7 @@
 /// <reference path="../../eduke32/headers/global.h.ts" />
 /// <reference path="../../eduke32/headers/grpscan.h.ts" />
 /// <reference path="../../eduke32/headers/player.h.ts" />
+/// <reference path="../../eduke32/headers/premap.h.ts" />
 /// <reference path="../../eduke32/headers/quotes.h.ts" />
 
 /// <reference path="../../eduke32/source/astub.c.ts" />
@@ -106,8 +107,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //# include "lunatic_game.h"
 //#endif
 
-//halfdimen_t g_halfScreen;
-//int32_t g_halveScreenArea = 0;
+var g_halfScreen: halfdimen_t = new halfdimen_t();
+var g_halveScreenArea = 0;//int32_t
 
 //static int32_t g_whichPalForPlayer = 9;
 
@@ -645,65 +646,65 @@ function G_DoLoadScreen(statustext: string, percent: number): void
 //    invalidatetile(wn,-1,255);
 //}
 
-//void G_UpdateScreenArea(void)
-//{
-//    if (!in3dmode())
-//        return;
+function G_UpdateScreenArea(): void 
+{
+    if (!in3dmode())
+        return;
 
-//    ud.screen_size = clamp(ud.screen_size, 0, 64);
-//    if (ud.screen_size == 0)
-//        flushperms();
+    ud.screen_size = clamp(ud.screen_size, 0, 64);
+    if (ud.screen_size == 0)
+        flushperms();
 
-//    {
-//        const int32_t ss = max(ud.screen_size-8,0);
+    {
+        var ss = max(ud.screen_size-8,0); //const int32_t
 
-//        const int32_t x1 = scale(ss,xdim,160);
-//        int32_t x2 = xdim-x1;
+        var x1 = scale(ss,xdim,160);
+        var x2 = xdim-x1;
 
-//        int32_t y1 = ss;
-//        int32_t y2 = 200;
+        var y1 = ss;
+        var y2 = 200;
 
-//        if (ud.screen_size > 0 && (GametypeFlags[ud.coop]&GAMETYPE_FRAGBAR) && (g_netServer || ud.multimode > 1))
-//        {
-//            int32_t i, j = 0;
+        if (ud.screen_size > 0 && (GametypeFlags[ud.coop]&GAMETYPE_FRAGBAR) && (g_netServer || ud.multimode > 1))
+        {
+            var i: number, j = 0;
 
-//            for (TRAVERSE_CONNECT(i))
-//                if (i > j) j = i;
+            for (i = 0; i != -1; i = connectpoint2[i])
+                if (i > j) j = i;
 
-//            if (j >= 1) y1 += 8;
-//            if (j >= 4) y1 += 8;
-//            if (j >= 8) y1 += 8;
-//            if (j >= 12) y1 += 8;
-//        }
+            if (j >= 1) y1 += 8;
+            if (j >= 4) y1 += 8;
+            if (j >= 8) y1 += 8;
+            if (j >= 12) y1 += 8;
+        }
+        
+        if (ud.screen_size >= 8 && ud.statusbarmode==0)
+            y2 -= (ss+scale(tilesizy[BOTTOMSTATUSBAR],ud.statusbarscale,100));
 
-//        if (ud.screen_size >= 8 && ud.statusbarmode==0)
-//            y2 -= (ss+scale(tilesizy[BOTTOMSTATUSBAR],ud.statusbarscale,100));
+        y1 = scale(y1,ydim,200);
+        y2 = scale(y2,ydim,200)+((getrendermode() != REND_CLASSIC)?1:0);
 
-//        y1 = scale(y1,ydim,200);
-//        y2 = scale(y2,ydim,200)+(getrendermode() != REND_CLASSIC);
+        if (g_halveScreenArea)
+        {
+            var ourxdimen=x2-x1, ourydimen=y2-y1;
 
-//        if (g_halveScreenArea)
-//        {
-//            int32_t ourxdimen=x2-x1, ourydimen=y2-y1;
+            g_halfScreen.x1 = x1;
+            g_halfScreen.y1 = y1;
+            g_halfScreen.xdimen = (ourxdimen>>1);
+            g_halfScreen.ydimen = (ourydimen>>1);
 
-//            g_halfScreen.x1 = x1;
-//            g_halfScreen.y1 = y1;
-//            g_halfScreen.xdimen = (ourxdimen>>1);
-//            g_halfScreen.ydimen = (ourydimen>>1);
+            x2 = x1 + (ourxdimen>>1);
+            y2 = y1 + (ourydimen>>1);
+        }
 
-//            x2 = x1 + (ourxdimen>>1);
-//            y2 = y1 + (ourydimen>>1);
-//        }
+        setview(x1,y1,x2-1,y2-1);
+    }
 
-//        setview(x1,y1,x2-1,y2-1);
-//    }
+    G_GetCrosshairColor();
+    G_SetCrosshairColor(CrosshairColors.r, CrosshairColors.g, CrosshairColors.b);
 
-//    G_GetCrosshairColor();
-//    G_SetCrosshairColor(CrosshairColors.r, CrosshairColors.g, CrosshairColors.b);
-
-//    pub = NUMPAGES;
-//    pus = NUMPAGES;
-//}
+    pub = NUMPAGES;
+    pus = NUMPAGES;
+}
 
 //void P_RandomSpawnPoint(int32_t snum)
 //{
@@ -1954,69 +1955,64 @@ function G_EnterLevel(g: number): number
     i = ud.screen_size;
     ud.screen_size = 0;
 
-    G_DoLoadScreen("Loading map . . .", -1);debugger;
-    // TODO::::::::::::::::::::::::::::
-    // TODO::::::::::::::::::::::::::::
-    // TODO::::::::::::::::::::::::::::
-    // TODO::::::::::::::::::::::::::::
-    // TODO::::::::::::::::::::::::::::
-    // TODO::::::::::::::::::::::::::::
-    // TODO::::::::::::::::::::::::::::
-    // TODO::::::::::::::::::::::::::::
-//    G_UpdateScreenArea();
+    G_DoLoadScreen("Loading map . . .", -1);
+    G_UpdateScreenArea();
+debugger;
+    ud.screen_size = i;
 
-//    ud.screen_size = i;
+    if (boardfilename[0] != 0 && ud.m_level_number == 7 && ud.m_volume_number == 0)
+    {
+        levname = boardfilename.toString();
+        Bsprintf(apptitle,"%s - %s - " + APPNAME,levname,g_gameNamePtr);
+    }
+    else Bsprintf(apptitle,"%s - %s - " + APPNAME,MapInfo[mii].name,g_gameNamePtr);
 
-//    if (boardfilename[0] != 0 && ud.m_level_number == 7 && ud.m_volume_number == 0)
-//    {
-//        Bstrcpy(levname, boardfilename);
-//        Bsprintf(apptitle,"%s - %s - " APPNAME,levname,g_gameNamePtr);
-//    }
-//    else Bsprintf(apptitle,"%s - %s - " APPNAME,MapInfo[mii].name,g_gameNamePtr);
+    Bstrcpy(tempbuf,apptitle);
+    wm_setapptitle(tempbuf);
 
-//    Bstrcpy(tempbuf,apptitle);
-//    wm_setapptitle(tempbuf);
+debugger;
+    if (!window.VOLUMEONE)
+    {
+        if (boardfilename[0] != 0 && ud.m_level_number == 7 && ud.m_volume_number == 0)
+        {
+            todoThrow();
+            //if (loadboard(boardfilename, 0, &g_player[0].ps.pos, &g_player[0].ps.ang,
+            //              &g_player[0].ps.cursectnum) < 0)
+            //{
+            //    OSD_Printf(OSD_ERROR "Map \"%s\" not found or invalid map version!\n",boardfilename);
 
-//    if (!VOLUMEONE)
-//    {
-//        if (boardfilename[0] != 0 && ud.m_level_number == 7 && ud.m_volume_number == 0)
-//        {
-//            if (loadboard(boardfilename, 0, &g_player[0].ps->pos, &g_player[0].ps->ang,
-//                          &g_player[0].ps->cursectnum) < 0)
-//            {
-//                OSD_Printf(OSD_ERROR "Map \"%s\" not found or invalid map version!\n",boardfilename);
+            //    //G_GameExit(tempbuf);
+            //    return 1;
+            //}
 
-//                //G_GameExit(tempbuf);
-//                return 1;
-//            }
+            //G_LoadMapHack(levname, boardfilename);
 
-//            G_LoadMapHack(levname, boardfilename);
+            //G_SetupFilenameBasedMusic(levname, boardfilename, ud.m_level_number);
+        }
+        else if (loadboard(MapInfo[mii].filename,0, g_player[0].ps.pos, g_player[0].ps.ang,
+                           g_player[0].ps.cursectnum) < 0)
+        {
+            OSD_Printf(OSD_ERROR + "Map \"%s\" not found or invalid map version!\n",
+                       MapInfo[mii].filename);
 
-//            G_SetupFilenameBasedMusic(levname, boardfilename, ud.m_level_number);
-//        }
-//        else if (loadboard(MapInfo[mii].filename,0, &g_player[0].ps->pos, &g_player[0].ps->ang,
-//                           &g_player[0].ps->cursectnum) < 0)
-//        {
-//            OSD_Printf(OSD_ERROR "Map \"%s\" not found or invalid map version!\n",
-//                       MapInfo[mii].filename);
-
-//            //G_GameExit(tempbuf);
-//            return 1;
-//        }
-//        else
-//        {
-//            G_LoadMapHack(levname, MapInfo[mii].filename);
-//        }
-//    }
-//    else
-//    {
+            //G_GameExit(tempbuf);
+            return 1;
+        }
+        else
+        {
+            todoThrow("G_LoadMapHack(levname, MapInfo[mii].filename);");
+        }
+    }
+    else
+    {
+        todoThrow();
 //        i = Bstrlen(MapInfo[mii].filename);
 //        Bmemcpy(levname, MapInfo[mii].filename, i);
 //        levname[i] = 255;  // leads to flags=1 for kopen4load
 //        levname[i+1] = 0;
 
-//        if (loadboard(levname,1, &g_player[0].ps->pos, &g_player[0].ps->ang,
-//                      &g_player[0].ps->cursectnum) < 0)
+//        if (loadboard(levname,1, &g_player[0].ps.pos, &g_player[0].ps.ang,
+//                      &g_player[0].ps.cursectnum) < 0)
 //        {
 //            OSD_Printf(OSD_ERROR "Map \"%s\" not found or invalid map version!\n",
 //                       MapInfo[mii].filename);
@@ -2028,7 +2024,7 @@ function G_EnterLevel(g: number): number
 //        {
 //            G_LoadMapHack(levname, NULL);
 //        }
-//    }
+    }
 
 //    g_precacheCount = 0;
 //    Bmemset(gotpic, 0, sizeof(gotpic));

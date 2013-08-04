@@ -104,8 +104,8 @@ var CACHEAGETIME=16;
 //float debug1, debug2;
 //#endif
 
-//int32_t mapversion=7; // JBF 20040211: default mapversion to 7
-//int32_t g_loadedMapVersion = -1;  // -1: none (e.g. started new)
+var mapversion=7; // JBF 20040211: default mapversion to 7      //int32_t 
+g_loadedMapVersion = -1;  // -1: none (e.g. started new)    //int32_t 
 
 //static int32_t get_mapversion(void);
 
@@ -2487,7 +2487,7 @@ var artfil = -1, artfilnum: number, artfilplc: number;//static int32_t
 
 //int32_t totalclocklock;
 
-//char apptitle[256] = "Build Engine";
+var apptitle = new Uint8Array(256);Bstrcpy(apptitle, "Build Engine");
 
 var basepalreset=1;//static uint8_t 
 var basepalcount: number; //uint8_t 
@@ -8827,53 +8827,53 @@ function initengine(): number
 //}
 
 
-////
-//// initspritelists
-////
-//void initspritelists(void)
-//{
-//    int32_t i;
+//
+// initspritelists
+//
+function initspritelists(): void
+{
+    var i: number;
 
-//    // initial list state for statnum lists:
-//    //
-//    //  statnum 0: nil
-//    //  statnum 1: nil
-//    //     . . .
-//    //  statnum MAXSTATUS-1: nil
-//    //  "statnum MAXSTATUS": nil <- 0 <-> 1 <-> 2 <-> ... <-> MAXSPRITES-1 -> nil
-//    //
-//    // That is, the dummy MAXSTATUS statnum has all sprites.
+    // initial list state for statnum lists:
+    //
+    //  statnum 0: nil
+    //  statnum 1: nil
+    //     . . .
+    //  statnum MAXSTATUS-1: nil
+    //  "statnum MAXSTATUS": nil <- 0 <-> 1 <-> 2 <-> ... <-> MAXSPRITES-1 -> nil
+    //
+    // That is, the dummy MAXSTATUS statnum has all sprites.
 
-//    for (i=0; i<MAXSECTORS; i++)   //Init doubly-linked sprite sector lists
-//        headspritesect[i] = -1;
-//    headspritesect[MAXSECTORS] = 0;
+    for (i=0; i<MAXSECTORS; i++)   //Init doubly-linked sprite sector lists
+        headspritesect[i] = -1;
+    headspritesect[MAXSECTORS] = 0;
 
-//    for (i=0; i<MAXSPRITES; i++)
-//    {
-//        prevspritesect[i] = i-1;
-//        nextspritesect[i] = i+1;
-//        sprite[i].sectnum = MAXSECTORS;
-//    }
-//    prevspritesect[0] = -1;
-//    nextspritesect[MAXSPRITES-1] = -1;
+    for (i=0; i<MAXSPRITES; i++)
+    {
+        prevspritesect[i] = i-1;
+        nextspritesect[i] = i+1;
+        sprite[i].sectnum = MAXSECTORS;
+    }
+    prevspritesect[0] = -1;
+    nextspritesect[MAXSPRITES-1] = -1;
 
 
-//    for (i=0; i<MAXSTATUS; i++)   //Init doubly-linked sprite status lists
-//        headspritestat[i] = -1;
-//    headspritestat[MAXSTATUS] = 0;
+    for (i=0; i<MAXSTATUS; i++)   //Init doubly-linked sprite status lists
+        headspritestat[i] = -1;
+    headspritestat[MAXSTATUS] = 0;
 
-//    for (i=0; i<MAXSPRITES; i++)
-//    {
-//        prevspritestat[i] = i-1;
-//        nextspritestat[i] = i+1;
-//        sprite[i].statnum = MAXSTATUS;
-//    }
-//    prevspritestat[0] = -1;
-//    nextspritestat[MAXSPRITES-1] = -1;
+    for (i=0; i<MAXSPRITES; i++)
+    {
+        prevspritestat[i] = i-1;
+        nextspritestat[i] = i+1;
+        sprite[i].statnum = MAXSTATUS;
+    }
+    prevspritestat[0] = -1;
+    nextspritestat[MAXSPRITES-1] = -1;
 
-//    tailspritefree = MAXSPRITES-1;
-//    Numsprites = 0;
-//}
+    tailspritefree = MAXSPRITES-1;
+    Numsprites = 0;
+}
 
 
 //void set_globalang(int16_t ang)
@@ -9792,30 +9792,30 @@ function initengine(): number
 //}
 
 
-////////////////////// LOADING AND SAVING ROUTINES ////////////////////
+//////////////////// LOADING AND SAVING ROUTINES ////////////////////
 
-//static inline int32_t have_maptext(void)
-//{
-//    return (mapversion >= 10);
-//}
+function have_maptext(): number
+{
+    return (mapversion >= 10);
+}
 
-//static void prepare_loadboard(int32_t fil, vec3_t *dapos, int16_t *daang, int16_t *dacursectnum)
-//{
-//    initspritelists();
+function prepare_loadboard(fil: number, dapos: vec3_t , daang: R<number>, dacursectnum: R<number>): void
+{
+    initspritelists();
 
-//    Bmemset(show2dsector, 0, sizeof(show2dsector));
-//    Bmemset(show2dsprite, 0, sizeof(show2dsprite));
-//    Bmemset(show2dwall, 0, sizeof(show2dwall));
+    Bmemset(show2dsector, 0, sizeof(show2dsector));
+    Bmemset(show2dsprite, 0, sizeof(show2dsprite));
+    Bmemset(show2dwall, 0, sizeof(show2dwall));
 
-//    if (!have_maptext())
-//    {
-//        kread(fil,&dapos->x,4); dapos->x = B_LITTLE32(dapos->x);
-//        kread(fil,&dapos->y,4); dapos->y = B_LITTLE32(dapos->y);
-//        kread(fil,&dapos->z,4); dapos->z = B_LITTLE32(dapos->z);
-//        kread(fil,daang,2);  *daang  = B_LITTLE16(*daang) & 2047;
-//        kread(fil,dacursectnum,2); *dacursectnum = B_LITTLE16(*dacursectnum);
-//    }
-//}
+    if (!have_maptext())
+    {
+        dapos.x = kread32(fil); dapos.x = B_LITTLE32(dapos.x);
+        dapos.y = kread32(fil); dapos.y = B_LITTLE32(dapos.y);
+        dapos.z = kread32(fil); dapos.z = B_LITTLE32(dapos.z);
+        daang.$ = kread16(fil);  daang.$  = B_LITTLE16(daang) & 2047;
+        dacursectnum.$ = kread16(fil); dacursectnum.$ = B_LITTLE16(dacursectnum.$);
+    }
+}
 
 //static int32_t finish_loadboard(const vec3_t *dapos, int16_t *dacursectnum, int16_t numsprites, char myflags)
 //{
@@ -9947,28 +9947,28 @@ function initengine(): number
 //LUNATIC_CB int32_t (*loadboard_maptext)(int32_t fil, vec3_t *dapos, int16_t *daang, int16_t *dacursectnum);
 //#endif
 
-//// flags: 1, 2: former parameter "fromwhere"
-////           4: don't call polymer_loadboard
-//// returns: -1: file not found
-////          -2: invalid version
-////          -3: invalid number of sectors, walls or sprites
-////       <= -4: map-text error
-//int32_t loadboard(const char *filename, char flags, vec3_t *dapos, int16_t *daang, int16_t *dacursectnum)
-//{
-//    int32_t fil, i;
-//    int16_t numsprites;
-//    const char myflags = flags&(~3);
+// flags: 1, 2: former parameter "fromwhere"
+//           4: don't call polymer_loadboard
+// returns: -1: file not found
+//          -2: invalid version
+//          -3: invalid number of sectors, walls or sprites
+//       <= -4: map-text error
+function loadboard(filename: string, /*char*/ flags: number, dapos: vec3_t , /*int16_t*/ daang: R<number>, /*int16_t * */dacursectnum: R<number>): number
+{
+    var fil: number, i: number;
+    var numsprites: number;
+    var myflags = flags&(~3);
 
-//    flags &= 3;
+    flags &= 3;
 
-//    if ((fil = kopen4load(filename,flags)) == -1)
-//        { mapversion = 7; return -1; }
+    if ((fil = kopen4load(filename,flags)) == -1)
+        { mapversion = 7; return -1; }
 
-//    if (kread(fil, &mapversion, 4) != 4)
-//        return -2;
+    if (mapversion = (kread32(fil) != 4?1:0))
+        return -2;
 
-//    {
-//        int32_t ok = 0;
+    {
+        var ok = 0;
 
 //#ifdef NEW_MAP_FORMAT
 //        // Check for map-text first.
@@ -9979,27 +9979,27 @@ function initengine(): number
 //        }
 //        else
 //#endif
-//        {
-//            // Not map-text. We expect a little-endian version int now.
-//            mapversion = B_LITTLE32(mapversion);
+        {
+            // Not map-text. We expect a little-endian version int now.
+            mapversion = B_LITTLE32(mapversion);
 //#ifdef YAX_ENABLE
-//            ok |= (mapversion==9);
+            ok |= (mapversion==9?1:0);
 //#endif
 //#if MAXSECTORS==MAXSECTORSV8
-//            // v8 engine
-//            ok |= (mapversion==8);
+            // v8 engine
+            ok |= (mapversion==8?1:0);
 //#endif
-//            ok |= (mapversion==7);
-//        }
+            ok |= (mapversion==7?1:0);
+        }
 
-//        if (!ok)
-//        {
-//            kclose(fil);
-//            return -2;
-//        }
-//    }
+        if (!ok)
+        {
+            kclose(fil);
+            return -2;
+        }
+    }
 
-//    prepare_loadboard(fil, dapos, daang, dacursectnum);
+    prepare_loadboard(fil, dapos, daang, dacursectnum);
 
 //#ifdef NEW_MAP_FORMAT
 //    if (have_maptext())
@@ -10020,124 +10020,124 @@ function initengine(): number
 //    }
 //#endif
 
-//    ////////// Read sectors //////////
+    ////////// Read sectors //////////
 
-//    kread(fil,&numsectors,2); numsectors = B_LITTLE16(numsectors);
-//    if ((unsigned)numsectors >= MYMAXSECTORS()+1) { kclose(fil); return -3; }
+    kread(fil,&numsectors,2); numsectors = B_LITTLE16(numsectors);
+    if ((unsigned)numsectors >= MYMAXSECTORS()+1) { kclose(fil); return -3; }
 
-//    kread(fil, sector, sizeof(sectortypev7)*numsectors);
+    kread(fil, sector, sizeof(sectortypev7)*numsectors);
 
-//    for (i=numsectors-1; i>=0; i--)
-//    {
+    for (i=numsectors-1; i>=0; i--)
+    {
 //#ifdef NEW_MAP_FORMAT
 //        Bmemmove(&sector[i], &(((sectortypev7 *)sector)[i]), sizeof(sectortypevx));
 //        inplace_vx_from_v7_sector(&sector[i]);
 //#endif
-//        sector[i].wallptr       = B_LITTLE16(sector[i].wallptr);
-//        sector[i].wallnum       = B_LITTLE16(sector[i].wallnum);
-//        sector[i].ceilingz      = B_LITTLE32(sector[i].ceilingz);
-//        sector[i].floorz        = B_LITTLE32(sector[i].floorz);
-//        sector[i].ceilingstat   = B_LITTLE16(sector[i].ceilingstat);
-//        sector[i].floorstat     = B_LITTLE16(sector[i].floorstat);
-//        sector[i].ceilingpicnum = B_LITTLE16(sector[i].ceilingpicnum);
-//        sector[i].ceilingheinum = B_LITTLE16(sector[i].ceilingheinum);
-//        sector[i].floorpicnum   = B_LITTLE16(sector[i].floorpicnum);
-//        sector[i].floorheinum   = B_LITTLE16(sector[i].floorheinum);
-//        sector[i].lotag         = B_LITTLE16(sector[i].lotag);
-//        sector[i].hitag         = B_LITTLE16(sector[i].hitag);
-//        sector[i].extra         = B_LITTLE16(sector[i].extra);
+        sector[i].wallptr       = B_LITTLE16(sector[i].wallptr);
+        sector[i].wallnum       = B_LITTLE16(sector[i].wallnum);
+        sector[i].ceilingz      = B_LITTLE32(sector[i].ceilingz);
+        sector[i].floorz        = B_LITTLE32(sector[i].floorz);
+        sector[i].ceilingstat   = B_LITTLE16(sector[i].ceilingstat);
+        sector[i].floorstat     = B_LITTLE16(sector[i].floorstat);
+        sector[i].ceilingpicnum = B_LITTLE16(sector[i].ceilingpicnum);
+        sector[i].ceilingheinum = B_LITTLE16(sector[i].ceilingheinum);
+        sector[i].floorpicnum   = B_LITTLE16(sector[i].floorpicnum);
+        sector[i].floorheinum   = B_LITTLE16(sector[i].floorheinum);
+        sector[i].lotag         = B_LITTLE16(sector[i].lotag);
+        sector[i].hitag         = B_LITTLE16(sector[i].hitag);
+        sector[i].extra         = B_LITTLE16(sector[i].extra);
 //#ifdef NEW_MAP_FORMAT
 //        inplace_vx_tweak_sector(&sector[i], mapversion==9);
 //#endif
-//    }
+    }
 
 
-//    ////////// Read walls //////////
+    ////////// Read walls //////////
 
-//    kread(fil,&numwalls,2); numwalls = B_LITTLE16(numwalls);
-//    if ((unsigned)numwalls >= MYMAXWALLS()+1) { kclose(fil); return -3; }
+    kread(fil,&numwalls,2); numwalls = B_LITTLE16(numwalls);
+    if ((unsigned)numwalls >= MYMAXWALLS()+1) { kclose(fil); return -3; }
 
-//    kread(fil, wall, sizeof(walltypev7)*numwalls);
+    kread(fil, wall, sizeof(walltypev7)*numwalls);
 
-//    for (i=numwalls-1; i>=0; i--)
-//    {
+    for (i=numwalls-1; i>=0; i--)
+    {
 //#ifdef NEW_MAP_FORMAT
 //        Bmemmove(&wall[i], &(((walltypev7 *)wall)[i]), sizeof(walltypevx));
 //        inplace_vx_from_v7_wall(&wall[i]);
 //#endif
-//        wall[i].x          = B_LITTLE32(wall[i].x);
-//        wall[i].y          = B_LITTLE32(wall[i].y);
-//        wall[i].point2     = B_LITTLE16(wall[i].point2);
-//        wall[i].nextwall   = B_LITTLE16(wall[i].nextwall);
-//        wall[i].nextsector = B_LITTLE16(wall[i].nextsector);
-//        wall[i].cstat      = B_LITTLE16(wall[i].cstat);
-//        wall[i].picnum     = B_LITTLE16(wall[i].picnum);
-//        wall[i].overpicnum = B_LITTLE16(wall[i].overpicnum);
-//        wall[i].lotag      = B_LITTLE16(wall[i].lotag);
-//        wall[i].hitag      = B_LITTLE16(wall[i].hitag);
-//        wall[i].extra      = B_LITTLE16(wall[i].extra);
+        wall[i].x          = B_LITTLE32(wall[i].x);
+        wall[i].y          = B_LITTLE32(wall[i].y);
+        wall[i].point2     = B_LITTLE16(wall[i].point2);
+        wall[i].nextwall   = B_LITTLE16(wall[i].nextwall);
+        wall[i].nextsector = B_LITTLE16(wall[i].nextsector);
+        wall[i].cstat      = B_LITTLE16(wall[i].cstat);
+        wall[i].picnum     = B_LITTLE16(wall[i].picnum);
+        wall[i].overpicnum = B_LITTLE16(wall[i].overpicnum);
+        wall[i].lotag      = B_LITTLE16(wall[i].lotag);
+        wall[i].hitag      = B_LITTLE16(wall[i].hitag);
+        wall[i].extra      = B_LITTLE16(wall[i].extra);
 //#ifdef NEW_MAP_FORMAT
 //        inplace_vx_tweak_wall(&wall[i], mapversion==9);
 //#endif
-//    }
+    }
 
 
-//    ////////// Read sprites //////////
+    ////////// Read sprites //////////
 
-//    kread(fil,&numsprites,2); numsprites = B_LITTLE16(numsprites);
-//    if ((unsigned)numsprites >= MYMAXSPRITES()+1) { kclose(fil); return -3; }
+    kread(fil,&numsprites,2); numsprites = B_LITTLE16(numsprites);
+    if ((unsigned)numsprites >= MYMAXSPRITES()+1) { kclose(fil); return -3; }
 
-//    kread(fil, sprite, sizeof(spritetype)*numsprites);
+    kread(fil, sprite, sizeof(spritetype)*numsprites);
 
 //#ifdef NEW_MAP_FORMAT
 //skip_reading_mapbin:
 //#endif
-//    kclose(fil);
-//    // Done reading file.
+    kclose(fil);
+    // Done reading file.
 
-//    for (i=numsprites-1; i>=0; i--)
-//    {
-//        if (!have_maptext())
-//        {
-//            sprite[i].x       = B_LITTLE32(sprite[i].x);
-//            sprite[i].y       = B_LITTLE32(sprite[i].y);
-//            sprite[i].z       = B_LITTLE32(sprite[i].z);
-//            sprite[i].cstat   = B_LITTLE16(sprite[i].cstat);
-//            sprite[i].picnum  = B_LITTLE16(sprite[i].picnum);
-//            sprite[i].sectnum = B_LITTLE16(sprite[i].sectnum);
-//            sprite[i].statnum = B_LITTLE16(sprite[i].statnum);
-//            sprite[i].ang     = B_LITTLE16(sprite[i].ang);
-//            sprite[i].owner   = B_LITTLE16(sprite[i].owner);
-//            sprite[i].xvel    = B_LITTLE16(sprite[i].xvel);
-//            sprite[i].yvel    = B_LITTLE16(sprite[i].yvel);
-//            sprite[i].zvel    = B_LITTLE16(sprite[i].zvel);
-//            sprite[i].lotag   = B_LITTLE16(sprite[i].lotag);
-//            sprite[i].hitag   = B_LITTLE16(sprite[i].hitag);
-//            sprite[i].extra   = B_LITTLE16(sprite[i].extra);
-//        }
+    for (i=numsprites-1; i>=0; i--)
+    {
+        if (!have_maptext())
+        {
+            sprite[i].x       = B_LITTLE32(sprite[i].x);
+            sprite[i].y       = B_LITTLE32(sprite[i].y);
+            sprite[i].z       = B_LITTLE32(sprite[i].z);
+            sprite[i].cstat   = B_LITTLE16(sprite[i].cstat);
+            sprite[i].picnum  = B_LITTLE16(sprite[i].picnum);
+            sprite[i].sectnum = B_LITTLE16(sprite[i].sectnum);
+            sprite[i].statnum = B_LITTLE16(sprite[i].statnum);
+            sprite[i].ang     = B_LITTLE16(sprite[i].ang);
+            sprite[i].owner   = B_LITTLE16(sprite[i].owner);
+            sprite[i].xvel    = B_LITTLE16(sprite[i].xvel);
+            sprite[i].yvel    = B_LITTLE16(sprite[i].yvel);
+            sprite[i].zvel    = B_LITTLE16(sprite[i].zvel);
+            sprite[i].lotag   = B_LITTLE16(sprite[i].lotag);
+            sprite[i].hitag   = B_LITTLE16(sprite[i].hitag);
+            sprite[i].extra   = B_LITTLE16(sprite[i].extra);
+        }
 
-//        check_sprite(i);
-//    }
+        check_sprite(i);
+    }
 
-//    // Back up the map version of the *loaded* map. Must be before yax_update().
-//    g_loadedMapVersion = mapversion;
+    // Back up the map version of the *loaded* map. Must be before yax_update().
+    g_loadedMapVersion = mapversion;
 //#ifdef YAX_ENABLE
-//    yax_update(mapversion<9);
-//    if (editstatus)
-//        yax_updategrays(dapos->z);
+    yax_update(mapversion<9);
+    if (editstatus)
+        yax_updategrays(dapos.z);
 //#endif
 
-//    {
-//        char fn[BMAX_PATH];
+    {
+        var fn = new Uint8Array(BMAX_PATH);
 
-//        Bstrcpy(fn, filename);
-//        append_ext_UNSAFE(fn, ".cfg");
+        Bstrcpy(fn, filename);
+        append_ext_UNSAFE(fn, ".cfg");
 
-//        OSD_Exec(fn);
-//    }
+        OSD_Exec(fn);
+    }
 
-//    return finish_loadboard(dapos, dacursectnum, numsprites, myflags);
-//}
+    return finish_loadboard(dapos, dacursectnum, numsprites, myflags);
+}
 
 
 ////
@@ -14266,13 +14266,13 @@ function setaspect(daxrange: number, daaspect: number): void
 }
 
 
-////
-//// flushperms
-////
-//void flushperms(void)
-//{
-//    permhead = permtail = 0;
-//}
+//
+// flushperms
+//
+function flushperms(): void 
+{
+    permhead = permtail = 0;
+}
 
 
 //
