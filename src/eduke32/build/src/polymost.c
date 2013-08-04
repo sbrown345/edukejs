@@ -738,8 +738,6 @@ static void fixtransparency(int32_t dapicnum, coltype *dapic, int32_t daxsiz, in
 
 void uploadtexture(int32_t doalloc, int32_t xsiz, int32_t ysiz, int32_t intexfmt, int32_t texfmt, coltype *pic, int32_t tsizx, int32_t tsizy, int32_t dameth)
 {
-
-#ifdef DEBUG_GL_SIMPLE_OFF
     coltype *wpptr, *rpptr;
     int32_t x2, y2, j, js=0, x3, y3, y, x, r, g, b, a, k;
     int32_t hi = (dameth&8192)?1:0;
@@ -833,7 +831,6 @@ void uploadtexture(int32_t doalloc, int32_t xsiz, int32_t ysiz, int32_t intexfmt
         }
         x2 = x3; y2 = y3;
     }
-#endif
 #endif
 }
 
@@ -979,7 +976,6 @@ int32_t gloadtile_art(int32_t dapic, int32_t dapal, int32_t dashade, int32_t dam
 
     dlog(DEBUG_LOAD_TILE_ART, "wpptr end load\n");
 
-#ifdef DEBUG_GL_SIMPLE_OFF
     if (doalloc) 
 		bglGenTextures(1,(GLuint *)&pth->glpic); //# of textures (make OpenGL allocate structure)
     bglBindTexture(GL_TEXTURE_2D,pth->glpic);
@@ -988,7 +984,6 @@ int32_t gloadtile_art(int32_t dapic, int32_t dapal, int32_t dashade, int32_t dam
     uploadtexture(doalloc,xsiz,ysiz,hasalpha?GL_RGBA:GL_RGB,GL_RGBA,pic,tsizx,tsizy,dameth);
 
     texture_setup(dameth);
-#endif
 
     Bfree(pic);
 
@@ -1578,11 +1573,7 @@ void drawpoly(double *dpx, double *dpy, int32_t n, int32_t method)
                 }
             }
 
-			#ifdef DEBUG_GL_SIMPLE_OFF
             bglColor4f(pc[0],pc[1],pc[2],pc[3]);
-			#else
-            bglColor4f(1,0,0,1);   // TEST COLOUR
-			#endif
         }
 
         //Hack for walls&masked walls which use textures that are not a power of 2
@@ -1725,11 +1716,8 @@ void drawpoly(double *dpx, double *dpy, int32_t n, int32_t method)
                     j = GL_TEXTURE0_ARB;
                     while (j <= texunits)
                         bglMultiTexCoord2dARB(j++, uu[i]*r*ox2,vv[i]*r*oy2);
-                }
-				#ifdef DEBUG_GL_SIMPLE_OFF
-                else
-                    bglTexCoord2d(uu[i]*r*ox2,vv[i]*r*oy2);
-				#endif
+                } else
+					bglTexCoord2d(uu[i]*r*ox2,vv[i]*r*oy2);
                 bglVertex3d((px[i]-ghalfx)*r*grhalfxdown10x,(ghoriz-py[i])*r*grhalfxdown10,r*(1.0/1024.0));
             }
             bglEnd();
@@ -4405,17 +4393,11 @@ void polymost_dorotatesprite(int32_t sx, int32_t sy, int32_t z, int16_t a, int16
 #ifdef USE_OPENGL
     if (getrendermode() >= REND_POLYMOST)
     {
-		#ifdef DEBUG_GL_SIMPLE_OFF
         bglViewport(0,0,xdim,ydim); glox1 = -1; //Force fullscreen (glox1=-1 forces it to restore)
         bglMatrixMode(GL_PROJECTION);
-		#endif
         memset(m,0,sizeof(m));
         m[0][0] = m[2][3] = 1.0f; m[1][1] = ((float)xdim)/((float)ydim); m[2][2] = 1.0001f; m[3][2] = 1-m[2][2];
-		#ifdef DEBUG_GL_SIMPLE_OFF
-        bglPushMatrix(); 
-		#endif
-		bglLoadMatrixf(&m[0][0]);
-#ifdef DEBUG_GL_SIMPLE_OFF
+        bglPushMatrix(); bglLoadMatrixf(&m[0][0]);
         bglMatrixMode(GL_MODELVIEW);
         bglPushMatrix();
         bglLoadIdentity();
@@ -4423,8 +4405,6 @@ void polymost_dorotatesprite(int32_t sx, int32_t sy, int32_t z, int16_t a, int16
         bglDisable(GL_DEPTH_TEST);
         bglDisable(GL_ALPHA_TEST);
         bglEnable(GL_TEXTURE_2D);
-
-#endif
         
 # ifdef POLYMER
         if (getrendermode() == REND_POLYMER) {
