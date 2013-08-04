@@ -1504,12 +1504,12 @@ function drawpoly(dpx: Float64Array, dpy: Float64Array, n:number, method: number
             {
                 /* do nothing */
             }
-            ox2 = /*(double)*/1.0/ /*(double)*/xx;
+            ox2 = /*(double)*/1.0/ xx;
             for (yy=1; yy<tsizy; yy+=yy)
             {
                 /* do nothing */
             }
-            oy2 = /*(double)*/1.0//*(double)*/yy;
+            oy2 = /*(double)*/1.0/ yy;
         }
         else
         {
@@ -1639,7 +1639,7 @@ function drawpoly(dpx: Float64Array, dpy: Float64Array, n:number, method: number
                 else if (f > du1) du1 = f;
             }
 
-            f = 1.0//*(double)*/tsizx;
+            f = 1.0/ tsizx;/*(double)*/
             ix0 = /*(int32_t)*/floor(du0*f);
             ix1 = /*(int32_t)*/floor(du1*f);
             for (; ix0<=ix1; ix0++)
@@ -4418,7 +4418,7 @@ function polymost_dorotatesprite(sx: number, sy, z: number, a: number, picnum: n
         bglViewport(0,0,xdim,ydim); glox1 = -1; //Force fullscreen (glox1=-1 forces it to restore)
         bglMatrixMode(GL_PROJECTION);
         for (var i = 0; i < m.length; i++) {memset(new P(m[i]),0,sizeof(m[i]));}
-        m[0][0] = m[2][3] = 1.0; m[1][1] = (/*(float)*/xdim)/(/*(float)*/ydim); m[2][2] = 1.0001; m[3][2] = 1-m[2][2];
+        m[0][0] = m[2][3] = 1.0; m[1][1] = (xdim)/(ydim); m[2][2] = 1.0001; m[3][2] = 1-m[2][2];
         bglPushMatrix(); 
         bglLoadMatrixf(m);
         bglMatrixMode(GL_MODELVIEW);
