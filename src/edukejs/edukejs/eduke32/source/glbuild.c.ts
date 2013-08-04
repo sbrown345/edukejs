@@ -33,7 +33,9 @@ function logAndValidate(functionName, args) {
 
 //var gl: WebGLRenderingContext = WebGLDebugUtils.makeDebugContext(GL.create({}), undefined, logAndValidate);
 var gl: WebGLRenderingContext= GL.create({});
-gl.fullscreen({camera: false});
+document.body.appendChild(gl.canvas);
+gl.canvas.width = 1024;
+gl.canvas.height = 768;
 
 
 var GL_TEXTURE0_ARB = gl.TEXTURE0;
