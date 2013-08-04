@@ -975,11 +975,11 @@ int32_t gloadtile_art(int32_t dapic, int32_t dapal, int32_t dashade, int32_t dam
     }
 
     dlog(DEBUG_LOAD_TILE_ART, "wpptr end load\n");
-	#ifdef DEBUG_GL_SIMPLE_OFF
     if (doalloc) 
 		bglGenTextures(1,(GLuint *)&pth->glpic); //# of textures (make OpenGL allocate structure)
     bglBindTexture(GL_TEXTURE_2D,pth->glpic);
 
+	#ifdef DEBUG_GL_SIMPLE_OFF
     fixtransparency(dapic, pic,tsizx,tsizy,xsiz,ysiz,dameth);
 	#endif
 
@@ -1729,7 +1729,7 @@ void drawpoly(double *dpx, double *dpy, int32_t n, int32_t method)
             bglEnd();
         }
 
-		#ifdef DEBUG_GL_SIMPLE_OFF
+		#ifdef DEBUG_GL_SIMPLE_OFF	
         while (texunits >= GL_TEXTURE0_ARB)
         {
             bglActiveTextureARB(texunits);
@@ -4555,10 +4555,8 @@ void polymost_dorotatesprite(int32_t sx, int32_t sy, int32_t z, int16_t a, int16
             polymer_postrotatesprite();
         }
 # endif
-		#ifdef DEBUG_GL_SIMPLE_OFF
         bglMatrixMode(GL_PROJECTION); bglPopMatrix();
         bglMatrixMode(GL_MODELVIEW); bglPopMatrix();
-		#endif
     }
 #endif
 

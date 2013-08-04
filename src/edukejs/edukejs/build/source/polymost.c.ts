@@ -4580,8 +4580,8 @@ function polymost_dorotatesprite(sx: number, sy, z: number, a: number, picnum: n
             todoThrow("polymer_postrotatesprite();");
         }
 //# endif
-        todo("bglMatrixMode(GL_PROJECTION); bglPopMatrix();");
-        todo("bglMatrixMode(GL_MODELVIEW); bglPopMatrix();");
+        bglMatrixMode(GL_PROJECTION); bglPopMatrix();
+        bglMatrixMode(GL_MODELVIEW); bglPopMatrix();
     }
 //#endif
 
