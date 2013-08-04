@@ -74,7 +74,7 @@ declare module GL
     }
 
     var Matrix: {
-        new(m: number[]): Matrix;
+        new(...args: any[]): Matrix;
     };
 }
 
