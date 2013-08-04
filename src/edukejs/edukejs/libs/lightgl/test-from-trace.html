@@ -1,60 +1,172 @@
 <!DOCTYPE html>
 <html><body>
-  <script src="../lightgl.js"></script>
-  <script>
+          <script src="../lightgl.js"></script>
+    
+    <script src="../webgl-debug.js"></script>
+    <script>
+        function validateNoneOfTheArgsAreUndefined(functionName, args) {
+            for (var ii = 0; ii < args.length; ++ii) {
+                if (args[ii] === undefined) {
+                    console.error("undefined passed to gl." + functionName + "(" +
+                        WebGLDebugUtils.glFunctionArgsToString(functionName, args) + ")");
+                }
+            }
+        } 
 
-      var angle = 0;
+        function logGLCall(functionName, args) {
+            console.error("gl." + functionName + "(" +
+               WebGLDebugUtils.glFunctionArgsToString(functionName, args) + ")");
+        }
 
+        function logAndValidate(functionName, args) {
+            logGLCall(functionName, args);
+            validateNoneOfTheArgsAreUndefined (functionName, args);
+        }
 
-      
+    </script>
+    
 
-
-
-
-
-
-var gl = GL.create();
-document.body.appendChild(gl.canvas);
-gl.canvas.width = 1024;
-gl.canvas.height = 768;
-
-gl.viewport(0, 0, 1024, 768)
-gl.clearColor(0.000000, 0.000000, 0.000000, 0.000000)
-gl.clear(GL_COLOR_BUFFER_BIT)
-gl.viewport(0, 0, 1024, 768)
-gl.matrixMode(GL_PROJECTION)
-gl.pushMatrix()
-gl.loadMatrixf(0034F068)
-gl.matrixMode(GL_MODELVIEW)
-gl.pushMatrix()
-gl.LoadIdentity()
-gl.disable(GL_DEPTH_TEST)
-gl.disable(GL_ALPHA_TEST)
-gl.enable(GL_TEXTURE_2D)
-gl.disable(GL_FOG)
-gl.GenTextures(1, 1B970DFC)
-gl.BindTexture(GL_TEXTURE_2D, 1)
-gl.BindTexture(GL_TEXTURE_2D, 1)
-gl.disable(GL_BLEND)
-gl.disable(GL_ALPHA_TEST)
-gl.color4f(1.000000, 1.000000, 1.000000, 1.000000)
-gl.begin(GL_TRIANGLE_FAN)
-gl.texCoord2d(0.000000, 0.000000)
-gl.vertex3d(-0.000976, 0.000731, 0.000977)
-gl.texCoord2d(0.624698, 0.000000)
-gl.vertex3d(0.000977, 0.000731, 0.000977)
-gl.texCoord2d(0.624698, 0.780743)
-gl.vertex3d(0.000977, -0.000732, 0.000977)
-gl.texCoord2d(0.000000, 0.780743)
-gl.vertex3d(-0.000976, -0.000732, 0.000977)
-gl.end()
-gl.enable(GL_FOG)
-gl.matrixMode(GL_PROJECTION)
-gl.PopMatrix()
-gl.matrixMode(GL_MODELVIEW)
-gl.popMatrix()
+    <script>
+        var gl = GL.create({});
+        gl.loadMatrixf = gl.loadMatrix.bind(gl);
+        gl.color4f = gl.color.bind(gl);
+        gl.texCoord2d = gl.texCoord.bind(gl);
+        gl.vertex3d = function (x, y, z) {
+            gl.vertex.call(gl, x, y, z);
+        };
 
 
 
-  </script>
+
+        //var mat = new GL.Matrix(
+        //    1.00000000 ,
+        //    0.000000000	,
+        //    0.000000000	,
+        //    0.000000000	,
+
+        //    0.000000000	 ,
+        //    1.33333337	 ,
+        //    0.000000000	 ,
+        //    0.000000000	 ,
+
+        //    0.000000000	  ,
+        //    0.000000000	  ,
+        //    1.00010002	  ,
+        //    1.00000000	  ,
+
+        //    0.000000000 ,
+        //    0.000000000	 ,
+        //    -0.000100016594,
+        //    0.000000000
+        //);
+
+        //flip
+        var mat = new GL.Matrix(
+        1.00000000,              // 1   
+        0.000000000,            // 5   
+        0.000000000,           // 9   
+         0.000000000,            // 13  
+                                  //
+        0.000000000,             // 2   
+        1.33333337,            // 6   
+         0.000000000,       // 10  
+         0.000000000,        // 14  
+                                  //
+        0.000000000,             // 3   
+        0.000000000,            // 7   
+         1.00010002,           // 11  
+         -0.000100016594,         // 15  
+                                  //
+        0.000000000,             // 4   
+        0.000000000,            // 8   
+         1.00000000,           // 12  
+        0.000000000               // 16  
+
+        );
+
+
+        //var mat = new GL.Matrix(
+        //        0,
+        //        0,
+        //        0,
+        //        0,
+
+        //        0,
+        //        0,
+        //        0,
+        //        0,
+
+        //        0,
+        //        0,
+        //        0,
+        //        0,
+
+        //        0,
+        //        0,
+        //        0,
+        //        0
+        //    );
+
+        ////////////////////////////////////////////////////////////////////////////////////
+
+
+
+        //gl = WebGLDebugUtils.makeDebugContext(gl, undefined, logAndValidate); 
+
+
+        document.body.appendChild(gl.canvas);
+        gl.canvas.width = 1024;
+        gl.canvas.height = 768;
+        gl.ondraw = fn;
+
+        var isDuke = 1;
+        if (!isDuke) {
+            //custom from 
+            //gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+            //gl.matrixMode(gl.PROJECTION);
+            //gl.loadIdentity();
+            gl.perspective(45, 1024 / 768, 0.1, 1E3);
+            //gl.matrixMode(gl.MODELVIEW);
+            //gl.ondraw();
+        }
+
+        if (!isDuke) {
+            gl.translate(0, 0, -5);
+        }
+        if (isDuke) {
+            //gl.perspective(45, 1024 / 768, 0.1, 1E3);
+            gl.loadMatrixf(mat);
+        }
+
+
+        function fn() {
+
+
+            gl.color4f(1.000000, 1.000000, 0, 1.000000);
+            gl.begin(gl.TRIANGLE_FAN);
+
+            if (isDuke) {
+                //d3d
+                gl.vertex3d(-0.000976, 0.000731, 0.000977);
+                gl.vertex3d(0.000977, 0.000731, 0.000977);
+                gl.vertex3d(0.000977, -0.000732, 0.000977);
+            } else if (1) {
+                //[-1,1,1,1,1,-1,-1,1,1,-1,-1,-1]
+                gl.vertex3d(-0.000976, 0.000731, 0.000977);
+                gl.vertex3d(0.000977, 1, 0.000977);
+                gl.vertex3d(1, -0.000732, 0.000977);
+            } else {
+                //[1,1,0,1,2,2,2,2,1]
+                gl.vertex3d(1, 1, 0);
+                gl.vertex3d(1, 2, 2);
+                gl.vertex3d(2, 2, 1);
+            }
+
+            gl.end();
+            gl.flush();
+        }
+
+        gl.animate();
+
+    </script>
 </body></html>

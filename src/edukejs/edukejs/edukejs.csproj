@@ -127,6 +127,8 @@
     <Content Include="jaudiolib\source\fx_man.c.ts" />
     <Content Include="jmact\headers\keyboard.h.ts" />
     <Content Include="libs\lightgl.js" />
+    <Content Include="libs\lightgl\convert-to-js.html" />
+    <Content Include="libs\lightgl\Copy of test-from-trace.html" />
     <Content Include="libs\lightgl\test-from-trace.html" />
     <Content Include="libs\lightgl\test.html" />
     <Content Include="libs\lightgl\immediatemode.html" />
