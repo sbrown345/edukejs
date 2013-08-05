@@ -292,7 +292,7 @@ function TrackerCast(x: number): number{return x;}
 ////////////////////// Version 7 map format ////////////////////
 
 //40 bytes
-class sectortypev7
+class sectortypev7 implements ITypeInfo
 {
     wallptr : number; wallnum: number;                                      //Tracker(Sector, int16_t) 
     ceilingz : number; floorz: number;                                               //Tracker(Sector, int32_t) 
