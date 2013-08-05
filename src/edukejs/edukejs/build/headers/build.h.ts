@@ -247,7 +247,7 @@ var ROTATESPRITE_FULL16 = 2048,
 //#undef __TRACKER_GLOBAL_HOOK
 
 //#define Tracker(Container, Type) Container##Tracker<Type>
-function TrackerCast(x: number): number{return x.cast();}
+function TrackerCast(x: number): number{return x;}
 
 //#else
 
@@ -837,7 +837,7 @@ var pskynummultis: number; //int16_t
 //// last sprite in the freelist, that is the spritenum for which
 ////   .statnum==MAXSTATUS && nextspritestat[spritenum]==-1
 //// (or -1 if freelist is empty):
-//EXTERN int16_t tailspritefree;
+var tailspritefree = 0;//EXTERN int16_t 
 
 var headspritesect= new Int16Array(MAXSECTORS+1), headspritestat= new Int16Array(MAXSTATUS+1);       //EXTERN int16_t 
 var prevspritesect= new Int16Array(MAXSPRITES), prevspritestat= new Int16Array(MAXSPRITES);          //EXTERN int16_t 

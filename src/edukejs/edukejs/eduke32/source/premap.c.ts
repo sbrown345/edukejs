@@ -1967,8 +1967,8 @@ debugger;
     }
     else Bsprintf(apptitle,"%s - %s - " + APPNAME,MapInfo[mii].name,g_gameNamePtr);
 
-    Bstrcpy(tempbuf,apptitle);
-    wm_setapptitle(tempbuf);
+    Bstrcpy(tempbuf,apptitle.toString());
+    wm_setapptitle(tempbuf.toString());
 
 debugger;
     if (!window.VOLUMEONE)

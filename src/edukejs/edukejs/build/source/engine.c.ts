@@ -406,17 +406,21 @@ var yax_nextwall: Int16Array[] = multiDimArray(Int16Array, MAXWALLS, 2);
 //#define YAX_PTRBUNCHNUM(Ptr, Sect, Cf) (*(&Ptr[Sect].ceilingxpanning + 8*Cf))
 //#define YAX_BUNCHNUM(Sect, Cf) YAX_PTRBUNCHNUM(sector, Sect, Cf)
 
-////// bunch getters/setters
-//int16_t yax_getbunch(int16_t i, int16_t cf)
-//{
-//    if (editstatus==0)
-//        return yax_bunchnum[i][cf];
+// bunch getters/setters
+function yax_getbunch(/*int16_t*/ i: number, /*int16_t*/ cf: number): number
+{
+    if (editstatus==0)
+        return yax_bunchnum[i][cf];
+    todoThrow();
+    //if (((*(&sector[i].ceilingstat + cf))&YAX_BIT)==0)
+    //    return -1;
 
-//    if (((*(&sector[i].ceilingstat + cf))&YAX_BIT)==0)
-//        return -1;
+    //return YAX_BUNCHNUM(i, cf);
 
-//    return YAX_BUNCHNUM(i, cf);
-//}
+
+
+    return 9999999999999999999999999999;
+}
 
 function yax_getbunches(/*int16_t*/ i: number, /*int16_t **/cb: R<number>, /*int16_t **/fb: R<number>): void
 {
@@ -580,7 +584,7 @@ function yax_update(/*int32_t*/ resetstat: number): void
 
 //#if !defined NEW_MAP_FORMAT
     // Read bunchnums directly from the sector struct in yax_[gs]etbunch{es}!
-    editstatus = (resetstat==0);
+    editstatus = (resetstat==0)?1:0;
     // NOTE: Use oeditstatus to check for in-gamedness from here on!
 //#endif
 
@@ -9821,10 +9825,10 @@ function prepare_loadboard(fil: number, dapos: vec3_t , daang: R<number>, dacurs
     }
 }
 
-//static int32_t finish_loadboard(const vec3_t *dapos, int16_t *dacursectnum, int16_t numsprites, char myflags)
-//{
-//    int32_t i, realnumsprites=numsprites, numremoved;
-
+function finish_loadboard(/*const vec3_t **/dapos: vec3_t, /*int16_t **/dacursectnum: R<number>, /*int16_t*/ numsprites: number, /*char*/ myflags: number): number
+{
+    var i: number, realnumsprites=numsprites, numremoved: number;
+    debugger; throw "todo";
 //#if !defined USE_OPENGL || !defined POLYMER
 //    UNREFERENCED_PARAMETER(myflags);
 //#endif
@@ -9894,8 +9898,8 @@ function prepare_loadboard(fil: number, dapos: vec3_t , daang: R<number>, dacurs
 
 //    guniqhudid = 0;
 
-//    return numremoved;
-//}
+    return numremoved;
+}
 
 
 function MYMAXSECTORS(): number {return (MAXSECTORS==MAXSECTORSV7 || mapversion <= 7 ? MAXSECTORSV7 : MAXSECTORSV8);}
@@ -10128,7 +10132,7 @@ function loadboard(filename: string, /*char*/ flags: number, dapos: vec3_t , /*i
     // Back up the map version of the *loaded* map. Must be before yax_update().
     g_loadedMapVersion = mapversion;
 //#ifdef YAX_ENABLE
-    yax_update(mapversion<9);
+    yax_update(mapversion<9?1:0);
     if (editstatus)
         todoThrow("yax_updategrays(dapos.z)");
 //#endif
@@ -10142,7 +10146,8 @@ function loadboard(filename: string, /*char*/ flags: number, dapos: vec3_t , /*i
         todoThrow("OSD_Exec(fn);");
     }
     debugger;
-    return todoThrow("finish_loadboard(dapos, dacursectnum, numsprites, myflags);");
+    todoThrow();
+    return finish_loadboard(dapos, dacursectnum, numsprites, myflags);
 }
 
 
