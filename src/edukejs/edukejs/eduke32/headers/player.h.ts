@@ -160,11 +160,18 @@ var pstanding                   = 0x00000001,
 //    char inven_icon, jetpack_on, heat_on;
 //} DukeStatus_t;
 
-function input_t() {
-    this.bits = 0; // 4b uint32_t
-    this.fvel = 0, this.svel = 0; // 4b int16_t
-    this.avel = 0, this.horz = 0; // 2b int8_t
-    this.extbits = 0, this.filler = 0; // 2b int8_t
+class input_t {
+    bits: number; // 4b uint32_t
+    fvel: number; svel: number; // 4b int16_t
+    avel: number; horz: number; // 2b int8_t
+    extbits: number; filler: number; // 2b int8_t
+
+    constructor() {
+        this.bits = 0; // 4b uint32_t
+        this.fvel = 0, this.svel = 0; // 4b int16_t
+        this.avel = 0, this.horz = 0; // 2b int8_t
+        this.extbits = 0, this.filler = 0; // 2b int8_t
+    }
 } //input_t;
 
 //#pragma pack(push,1)
@@ -177,20 +184,14 @@ function input_t() {
 //// KEEPINSYNC lunatic/defs.ilua
 class DukePlayer_t {
     pos: vec3_t; opos: vec3_t; vel:vec3_t; npos:vec3_t;        
-    bobposx:number; bobposy;                                  //int32_t
-    truefz:number; truecz:number; player_par;                        //int32_t
-    randomflamex:number; exitx:number; exity;                        //int32_t
-    runspeed:number; max_player_health:number; max_shield_amount;    //int32_t
-    autostep:number; autostep_sbw;                            //int32_t
+    bobposx:number; bobposy:number;                                  //int32_t
+    truefz:number; truecz:number; player_par:number;                        //int32_t
+    randomflamex:number; exitx:number; exity:number;                        //int32_t
+    runspeed:number; max_player_health:number; max_shield_amount:number;    //int32_t
+    autostep:number; autostep_sbw:number;                            //int32_t
 
     interface_toggle_flag:number;   //uint32_t
-//#ifdef LUNATIC
-//    int32_t pipebombControl, pipebombLifetime, pipebombLifetimeVar;
-//    int32_t tripbombControl, tripbombLifetime, tripbombLifetimeVar;
-//
-//    int32_t zrange;
-//    int16_t angrange, autoaimang;
-//#endif
+
     max_actors_killed:number; actors_killed:number;                                                 //uint16_t
     gotweapon:number; zoom:number;                                                                  //uint16_t
 
@@ -215,7 +216,7 @@ class DukePlayer_t {
     holoduke_on:number; pycount:number;                                                         //int16_t
     transporter_hold:number;                                                             //int16_t
 
-    max_secret_rooms:number; secret_rooms;                             //uint8_t 
+    max_secret_rooms:number; secret_rooms:number;                             //uint8_t 
     // XXX: 255 values for frag(gedself) seems too small.
     frag:number; fraggedself:number; quick_kick:number; last_quick_kick:number;             //uint8_t 
     return_to_center:number; reloading:number; weapreccnt:number;                    //uint8_t 
@@ -251,28 +252,95 @@ class DukePlayer_t {
 //    int8_t padding_;
 
     constructor() {
-        this.loogiex = new Uint16Array(64);
-        this.loogiey = new Uint16Array(64);
-        this.max_ammo_amount = new Int16Array(MAX_WEAPONS);
-        this.ammo_amount = new Int16Array(MAX_WEAPONS);
-        this.inv_amount = new Int16Array(GET_MAX);
-        this.weaprecs = new Int16Array(MAX_WEAPONS);
+        this.pos= new vec3_t(); this.opos= new vec3_t(); this.vel = new vec3_t(); this.npos = new vec3_t();        
+        this.bobposx=0; this.bobposy=0;                                  //int32_t
+        this.truefz=0; this.truecz=0; this.player_par=0;                        //int32_t
+        this.randomflamex=0; this.exitx=0;this. exity=0;                        //int32_t
+        this.runspeed=0; this.max_player_health=0; this.max_shield_amount=0;    //int32_t
+        this.autostep=0; this.autostep_sbw=0;                            //int32_t
+
+        this.interface_toggle_flag=0;   //uint32_t
+
+        this.ang=0; this.oang=0; this.angvel=0; this.cursectnum=0; this.look_ang=0; this.last_extra=0; this.subweapon=0;                   //int16_t
+        this.max_actors_killed=0; this.actors_killed=0;                                                 //uint16_t
+        this.gotweapon=0; this.zoom=0;     
+        
+        this.loogiex = new Uint16Array(64);this.loogiey = new Uint16Array(64);this.sound_pitch=0;
+
+        this.max_ammo_amount = new Int16Array(MAX_WEAPONS);this.ammo_amount = new Int16Array(MAX_WEAPONS);this.inv_amount = new Int16Array(GET_MAX);
+        
+        this.wackedbyactor=0;this. pyoff=0;this. opyoff=0;                                                     //int16_t
+
+        this.horiz=0;this. horizoff=0;this. ohoriz=0;this. ohorizoff=0;                                             //int16_t
+        this.newowner=0;this. jumping_counter=0;this. airleft=0;                                             //int16_t
+        this.fta=0;this. ftq=0;this. access_wallnum=0;this. access_spritenum=0;                                     //int16_t
+        this.got_access=0;this. weapon_ang=0;this. visibility=0;                                             //int16_t
+        this.somethingonplayer=0;this. on_crane=0;this. i=0;this. one_parallax_sectnum=0;                           //int16_t
+        this.random_club_frame=0;this. one_eighty_count=0;                                            //int16_t
+        this.dummyplayersprite=0;this. extra_extra8=0;                                                //int16_t
+        this.actorsqu=0;this. timebeforeexit=0;this. customexitsound=0;this. last_pissed_time=0;     
+
+        this.weaprecs = new Int16Array(MAX_WEAPONS);this.weapon_sway=0; this.crack_time=0; this.bobcounter=0;                     //int16_t
+
+        this.orotscrnang =0; this.rotscrnang =0; this.dead_flag =0;   // JBF 20031220: added orotscrnang      //int16_t
+        this.holoduke_on =0; this.pycount =0;                                                        //int16_t
+        this.transporter_hold =0;                                                             //int16_t
+
+        this.max_secret_rooms =0; this.secret_rooms =0;                            //uint8_t 
+        // XXX: 255 values for frag(gedself) seems too small.
+        this.frag =0; this.fraggedself =0; this.quick_kick =0; this.last_quick_kick =0;             //uint8_t 
+        this.return_to_center =0; this.reloading =0; this.weapreccnt =0;                   //uint8_t 
+        this.aim_mode =0; this.auto_aim =0; this.weaponswitch =0; this.movement_lock =0; this.team =0;      //uint8_t 
+        this.tipincs =0; this.hbomb_hold_delay =0; this.frag_ps =0; this.kickback_pic =0;           //uint8_t 
+
+        this.gm =0; this.on_warping_sector =0; this.footprintcount =0; this.hurt_delay =0;                   //uint8_t 
+        this.hbomb_on =0; this.jumping_toggle =0; this.rapid_fire_hold =0; this.on_ground =0;                //uint8_t 
+        this.inven_icon =0; this.buttonpalette =0; this.over_shoulder_on =0; this.show_empty_weapon =0;      //uint8_t 
+
+        this.jetpack_on =0; this.spritebridge =0; this.lastrandomspot =0;                //uint8_t 
+        this.scuba_on =0; this.footprintpal =0; this.heat_on =0; this.invdisptime =0;            //uint8_t 
+
+        this.holster_weapon =0; this.falling_counter =0; this.footprintshade =0;         //uint8_t 
+        this.refresh_inventory =0; this.last_full_weapon =0;                     //uint8_t 
+
+        this.toggle_key_flag =0; this.knuckle_incs =0; this.knee_incs =0; this.access_incs =0;   //uint8_t 
+        this.walking_snd_toggle =0; this.palookup =0; this.hard_landing =0; this.fist_incs =0;   //uint8_t 
+
+        this.numloogs =0; this.loogcnt =0; this.scream_voice =0;                                     //int8_t 
+        this.last_weapon =0; this.cheat_phase =0; this.weapon_pos =0; this.wantweaponfire =0; this.curr_weapon =0;      //int8_t 
+
+        this.palette =0; //uint8_t 
+        this.pals = new palette_t();
     }
 } //DukePlayer_t;
 
 //// KEEPINSYNC lunatic/defs.ilua
-function playerdata_t() {
-    this.ps = new DukePlayer_t();
-    this.sync = new input_t();                                         //input_t
+class playerdata_t {
+    ps: DukePlayer_t;
+    sync: input_t;                                         //input_t
 
-    this.netsynctime = 0;                                  //int32_t
-    this.ping = 0, this.filler = 0;                                 //int16_t
-    this.pcolor = 0, this.pteam = 0;                                //int32_t
-    this.frags = new Uint8Array(MAXPLAYERS), this. wchoice = new Uint8Array(MAX_WEAPONS);  
+    netsynctime: number;                                  //int32_t
+    ping: number; filler: number;                                 //int16_t
+    pcolor: number; pteam: number;                                //int32_t
+    frags:Uint8Array;  wchoice: Uint8Array;  
 
-    this.vote = 0, this.gotvote = 0, this.pingcnt = 0, this.playerquitflag = 0, this.ready=0;     //char
-    this.user_name = "";//[32];                                     //char
-    this.revision = 0 ; //uint32_t
+    vote: number; gotvote: number; pingcnt: number; playerquitflag: number; ready=0;     //char
+    user_name = "";//[32];                                     //char
+    revision = 0 ; //uint32_t
+
+    constructor() {
+        this.ps = new DukePlayer_t();
+        this.sync = new input_t();                                         //input_t
+
+        this.netsynctime = 0;                                  //int32_t
+        this.ping = 0, this.filler = 0;                                 //int16_t
+        this.pcolor = 0, this.pteam = 0;                                //int32_t
+        this.frags = new Uint8Array(MAXPLAYERS), this. wchoice = new Uint8Array(MAX_WEAPONS);  
+
+        this.vote = 0, this.gotvote = 0, this.pingcnt = 0, this.playerquitflag = 0, this.ready=0;     //char
+        this.user_name = "";//[32];                                     //char
+        this.revision = 0 ; //uint32_t
+    }
 }
 //#pragma pack(pop)
 
@@ -341,7 +409,7 @@ function weapondata_t(wl : number = 0,cl : number = 0,rl : number = 0,fd : numbe
 
 //extern input_t          inputfifo[MOVEFIFOSIZ][MAXPLAYERS];
 //extern playerspawn_t    g_playerSpawnPoints[MAXPLAYERS];
-var g_player = newStructArray(playerdata_t, MAXPLAYERS);
+var g_player: playerdata_t[] = newStructArray(playerdata_t, MAXPLAYERS);
 ////extern char             dashow2dsector[(MAXSECTORS+7)>>3];
 ////extern int16_t          searchsect[MAXSECTORS],searchparent[MAXSECTORS];
 //extern int16_t          WeaponPickupSprites[MAX_WEAPONS];

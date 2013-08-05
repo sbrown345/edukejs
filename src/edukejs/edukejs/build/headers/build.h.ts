@@ -307,6 +307,22 @@ class sectortypev7
     lotag : number; hitag: number;                                                  //Tracker(Sector, uint16_t)
     extra: number;                                                                 //Tracker(Sector, int16_t) 
 
+    public static size = 40;
+    public static typeInfo = [
+        ["wallptr", "int16_t"], ["wallnum", "int16_t"],
+        ["ceilingz", "int32_t"], ["floorz", "int32_t"],
+        ["ceilingstat", "uint16_t"], ["floorstat", "uint16_t"],
+        ["ceilingpicnum", "int16_t"], ["ceilingheinum", "int16_t"],
+        ["ceilingshade", "int8_t"], 
+        ["ceilingpal", "uint8_t"], ["ceilingxpanning", "uint8_t"], ["ceilingypanning", "uint8_t"], 
+        ["floorpicnum", "int16_t"], ["floorheinum", "int16_t"],
+        ["floorshade", "uint8_t"],
+        ["floorpal", "uint8_t"], ["floorxpanning", "uint8_t"], ["floorxpanning", "uint8_t"],
+        ["visibility", "uint8_t"], ["filler", "uint8_t"],
+        ["lotag", "uint16_t"], ["hitag", "uint16_t"],
+        ["extra", "int16_t"]
+    ];
+
     constructor () {
         this.init();
     }

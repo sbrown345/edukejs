@@ -9820,7 +9820,7 @@ function prepare_loadboard(fil: number, dapos: vec3_t , daang: R<number>, dacurs
         dapos.x = kread32(fil); dapos.x = B_LITTLE32(dapos.x);
         dapos.y = kread32(fil); dapos.y = B_LITTLE32(dapos.y);
         dapos.z = kread32(fil); dapos.z = B_LITTLE32(dapos.z);
-        daang.$ = kread16(fil);  daang.$  = B_LITTLE16(daang) & 2047;
+        daang.$ = kread16(fil);  daang.$  = B_LITTLE16(daang.$) & 2047;
         dacursectnum.$ = kread16(fil); dacursectnum.$ = B_LITTLE16(dacursectnum.$);
     }
 }
@@ -9968,12 +9968,11 @@ function loadboard(filename: string, /*char*/ flags: number, dapos: vec3_t , /*i
     var myflags = flags&(~3);
 
     flags &= 3;
-
+    debugger;
     if ((fil = kopen4load(filename,flags)) == -1)
         { mapversion = 7; return -1; }
 
-    if (mapversion = (kread32(fil) != 4?1:0))
-        return -2;
+    mapversion = kread32(fil);
 
     {
         var ok = 0;
@@ -10033,6 +10032,8 @@ function loadboard(filename: string, /*char*/ flags: number, dapos: vec3_t , /*i
     numsectors = kread16(fil); numsectors = B_LITTLE16(numsectors);
     if (numsectors >= MYMAXSECTORS()+1) { kclose(fil); return -3; }
     debugger;
+
+    throw    "use ITypeInfo to read the sectors"; 
     kread(fil, sector, sizeof(sectortypev7)*numsectors);
 
     for (i=numsectors-1; i>=0; i--)

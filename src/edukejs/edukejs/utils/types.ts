@@ -1,4 +1,8 @@
-﻿
+﻿interface ITypeInfo {
+    typeInfo: string[][];
+}
+
+
 var int8ConvertArray = new Int8Array(1);
 var int8 = function (v: number): number {
    int8ConvertArray[0] = v;

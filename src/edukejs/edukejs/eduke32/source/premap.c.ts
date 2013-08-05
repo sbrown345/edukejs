@@ -1957,7 +1957,7 @@ function G_EnterLevel(g: number): number
 
     G_DoLoadScreen("Loading map . . .", -1);
     G_UpdateScreenArea();
-debugger;
+
     ud.screen_size = i;
 
     if (boardfilename[0] != 0 && ud.m_level_number == 7 && ud.m_volume_number == 0)
@@ -1970,14 +1970,15 @@ debugger;
     Bstrcpy(tempbuf,apptitle.toString());
     wm_setapptitle(tempbuf.toString());
 
-debugger;
     if (!window.VOLUMEONE)
     {
+        var $ang = new R(g_player[0].ps.ang);
+        var $cursectnum = new R(g_player[0].ps.cursectnum);
         if (boardfilename[0] != 0 && ud.m_level_number == 7 && ud.m_volume_number == 0)
         {
             todoThrow();
-            //if (loadboard(boardfilename, 0, &g_player[0].ps.pos, &g_player[0].ps.ang,
-            //              &g_player[0].ps.cursectnum) < 0)
+            //if (loadboard(boardfilename, 0, g_player[0].ps.pos, $ang,
+            //              $cursectnum) < 0)
             //{
             //    OSD_Printf(OSD_ERROR "Map \"%s\" not found or invalid map version!\n",boardfilename);
 
@@ -1985,12 +1986,14 @@ debugger;
             //    return 1;
             //}
 
+            //g_player[0].ps.ang = $ang.$;
+            //g_player[0].ps.cursectnum = $cursectnum.$;
             //G_LoadMapHack(levname, boardfilename);
 
             //G_SetupFilenameBasedMusic(levname, boardfilename, ud.m_level_number);
         }
-        else if (loadboard(MapInfo[mii].filename,0, g_player[0].ps.pos, g_player[0].ps.ang,
-                           g_player[0].ps.cursectnum) < 0)
+        else if (loadboard(MapInfo[mii].filename,0, g_player[0].ps.pos, $ang,
+                           $cursectnum) < 0)
         {
             OSD_Printf(OSD_ERROR + "Map \"%s\" not found or invalid map version!\n",
                        MapInfo[mii].filename);
@@ -2000,6 +2003,8 @@ debugger;
         }
         else
         {
+            g_player[0].ps.ang = $ang.$;
+            g_player[0].ps.cursectnum = $cursectnum.$;
             todoThrow("G_LoadMapHack(levname, MapInfo[mii].filename);");
         }
     }

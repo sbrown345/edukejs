@@ -812,9 +812,9 @@ function initgroupfile(filename : string) : number
 
 function kopen4load(filename: string, /*char*/ searchfirst: number) : number
 {
-    var j, k, fil, newhandle = MAXOPENFILES-1;
-    var bad, gfileptr;
-    var i;
+    var j: number, k: number, fil: number, newhandle = MAXOPENFILES-1;
+    var bad: number, gfileptr: DataView;
+    var i: number;
 
 //#ifdef FILENAME_CASE_CHECK
 //    const int32_t do_case_check = check_filename_casing_fn && check_filename_casing_fn();

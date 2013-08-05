@@ -369,11 +369,11 @@
 //#endif
 
 //#if B_LITTLE_ENDIAN == 1
-var B_LITTLE64 = function (x) { return x; };
+var B_LITTLE64 = function (x: number): number { return x; };
 //# define B_BIG64(x)    B_SWAP64(x)
-var B_LITTLE32 = function (x) {return x;};
+var B_LITTLE32 = function (x: number): number {return x;};
 //# define B_BIG32(x)    B_SWAP32(x)
-var B_LITTLE16 = function (x) { return x; };
+var B_LITTLE16 = function (x: number): number { return x; };
 //# define B_BIG16(x)    B_SWAP16(x)
 //////#elif B_BIG_ENDIAN == 1
 //////# define B_LITTLE64(x) B_SWAP64(x)
