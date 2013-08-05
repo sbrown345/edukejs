@@ -190,9 +190,12 @@ function strncmp(str1: string, str2: string, num: number) : number {
 function strcpy(destination: Uint8Array, source: string) : Uint8Array {
     assert.isType(Uint8Array, destination).isString(source);
 
-    for (var i = 0; i < source.length; i++) {
+    var i: number;
+    for (i = 0; i < source.length && source.charCodeAt(i); i++) {
         destination[i] = source.charCodeAt(i);
     }
+
+    destination[i] = 0; // because the js string doesn't have a final 0
 
     return destination;
 }
