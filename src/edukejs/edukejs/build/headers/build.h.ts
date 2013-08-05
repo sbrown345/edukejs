@@ -124,8 +124,8 @@ var NORMALPAL  =(MAXPALOOKUPS - 4);
 //////////// yax defs //////////
 //#define SECTORFLD(Sect,Fld, Cf) (*((Cf) ? (&sector[Sect].floor##Fld) : (&sector[Sect].ceiling##Fld)))
 
-//#define YAX_CEILING 0  // don't change!
-//#define YAX_FLOOR 1  // don't change!
+var YAX_CEILING = 0;  // don't change!
+var YAX_FLOOR = 1;  // don't change!
 
 //# ifdef NEW_MAP_FORMAT
 //#  define YAX_MAXBUNCHES 512
@@ -133,8 +133,8 @@ var NORMALPAL  =(MAXPALOOKUPS - 4);
 //#  define YAX_NEXTWALLBIT__COMPAT(Cf) (1<<(10+Cf))
 //#  define YAX_NEXTWALLBITS__COMPAT (YAX_NEXTWALLBIT__COMPAT(0)|YAX_NEXTWALLBIT__COMPAT(1))
 //# else
-//#  define YAX_MAXBUNCHES 256
-//#  define YAX_BIT 1024
+var YAX_MAXBUNCHES = 256;
+var YAX_BIT = 1024;
 //   // "has next wall when constrained"-bit (1<<10: ceiling, 1<<11: floor)
 //#  define YAX_NEXTWALLBIT(Cf) (1<<(10+Cf))
 //#  define YAX_NEXTWALLBITS (YAX_NEXTWALLBIT(0)|YAX_NEXTWALLBIT(1))
@@ -150,13 +150,13 @@ var NORMALPAL  =(MAXPALOOKUPS - 4);
 //#  define YAX_NEXTWALLDEFAULT(Cf) (-1)
 //# else
 //   // More user tag hijacking: lotag/extra. :/
-//#  define YAX_PTRNEXTWALL(Ptr, Wall, Cf) (*(int16_t *)(&Ptr[Wall].lotag + 2*Cf))
+function YAX_PTRNEXTWALL(Ptr, Wall: number, Cf: number): number {return (Ptr[Wall].lotag + 2*Cf);}
 //#  define YAX_NEXTWALLDEFAULT(Cf) (((Cf)==YAX_CEILING) ? 0 : -1)
 //   extern int16_t yax_bunchnum[MAXSECTORS][2];
 //   extern int16_t yax_nextwall[MAXWALLS][2];
 //# endif
 
-//# define YAX_NEXTWALL(Wall, Cf) YAX_PTRNEXTWALL(wall, Wall, Cf)
+function YAX_NEXTWALL(Wall: number, Cf: number): number{return YAX_PTRNEXTWALL(wall, Wall, Cf);};
 
 //# define YAX_ITER_WALLS(Wal, Itervar, Cfvar) Cfvar=0, Itervar=(Wal); Itervar!=-1; \
 //    Itervar=yax_getnextwall(Itervar, Cfvar), \
@@ -247,7 +247,7 @@ var ROTATESPRITE_FULL16 = 2048,
 //#undef __TRACKER_GLOBAL_HOOK
 
 //#define Tracker(Container, Type) Container##Tracker<Type>
-//#define TrackerCast(x) x.cast()
+function TrackerCast(x: number): number{return x.cast();}
 
 //#else
 
@@ -292,20 +292,39 @@ var ROTATESPRITE_FULL16 = 2048,
 ////////////////////// Version 7 map format ////////////////////
 
 //40 bytes
-function sectortypev7()
+class sectortypev7
 {
-    this.wallptr = 0, this.wallnum = 0;                                      //Tracker(Sector, int16_t) 
-    this.ceilingz = 0, this.floorz = 0;                                               //Tracker(Sector, int32_t) 
-    this.ceilingstat = 0, this.floorstat = 0;                                        //Tracker(Sector, uint16_t)
-    this.ceilingpicnum = 0, this.ceilingheinum = 0;                                   //Tracker(Sector, int16_t) 
-    this.ceilingshade = 0;                                                          //Tracker(Sector, int8_t)  
-    this.ceilingpal = 0, /*CM_FLOORZ:*/ this.ceilingxpanning = 0, this.ceilingypanning = 0;    //Tracker(Sector, uint8_t) 
-    this.floorpicnum = 0, this.floorheinum = 0;                                       //Tracker(Sector, int16_t) 
-    this.floorshade = 0;                                                            //Tracker(Sector, int8_t)  
-    this.floorpal = 0, this.floorxpanning = 0, this.floorypanning = 0;                         //Tracker(Sector, uint8_t) 
-    /*CM_CEILINGZ:*/ this.visibility = 0, this.filler = 0;                           //Tracker(Sector, uint8_t) 
-    this.lotag = 0, this.hitag = 0;                                                  //Tracker(Sector, uint16_t)
-    this.extra = 0;                                                                 //Tracker(Sector, int16_t) 
+    wallptr : number; wallnum: number;                                      //Tracker(Sector, int16_t) 
+    ceilingz : number; floorz: number;                                               //Tracker(Sector, int32_t) 
+    ceilingstat : number; floorstat: number;                                        //Tracker(Sector, uint16_t)
+    ceilingpicnum : number; ceilingheinum: number;                                   //Tracker(Sector, int16_t) 
+    ceilingshade: number;                                                          //Tracker(Sector, int8_t)  
+    ceilingpal : number; /*CM_FLOORZ:*/ ceilingxpanning : number; ceilingypanning: number;    //Tracker(Sector, uint8_t) 
+    floorpicnum : number; floorheinum: number;                                       //Tracker(Sector, int16_t) 
+    floorshade: number;                                                            //Tracker(Sector, int8_t)  
+    floorpal : number; floorxpanning : number; floorypanning: number;                         //Tracker(Sector, uint8_t) 
+    /*CM_CEILINGZ:*/ visibility : number; filler: number;                           //Tracker(Sector, uint8_t) 
+    lotag : number; hitag: number;                                                  //Tracker(Sector, uint16_t)
+    extra: number;                                                                 //Tracker(Sector, int16_t) 
+
+    constructor () {
+        this.init();
+    }
+
+    public init() {
+        this.wallptr = 0, this.wallnum = 0;                                      //Tracker(Sector, int16_t) 
+        this.ceilingz = 0, this.floorz = 0;                                               //Tracker(Sector, int32_t) 
+        this.ceilingstat = 0, this.floorstat = 0;                                        //Tracker(Sector, uint16_t)
+        this.ceilingpicnum = 0, this.ceilingheinum = 0;                                   //Tracker(Sector, int16_t) 
+        this.ceilingshade = 0;                                                          //Tracker(Sector, int8_t)  
+        this.ceilingpal = 0, /*CM_FLOORZ:*/ this.ceilingxpanning = 0, this.ceilingypanning = 0;    //Tracker(Sector, uint8_t) 
+        this.floorpicnum = 0, this.floorheinum = 0;                                       //Tracker(Sector, int16_t) 
+        this.floorshade = 0;                                                            //Tracker(Sector, int8_t)  
+        this.floorpal = 0, this.floorxpanning = 0, this.floorypanning = 0;                         //Tracker(Sector, uint8_t) 
+        /*CM_CEILINGZ:*/ this.visibility = 0, this.filler = 0;                           //Tracker(Sector, uint8_t) 
+        this.lotag = 0, this.hitag = 0;                                                  //Tracker(Sector, uint16_t)
+        this.extra = 0; 
+    }
 }// sectortypev7;
 
 ////cstat:
@@ -323,16 +342,31 @@ function sectortypev7()
 ////   bits 12-15: reserved  (14: temp use by editor)
 
 //32 bytes
-function walltypev7() 
+class walltypev7
 {
-    this.x = 0, this.y = 0;                                        //Tracker(Wall, int32_t)  
-    this.point2 = 0, this.nextwall = 0, this.nextsector = 0;                //Tracker(Wall, int16_t)  
-    this.cstat = 0;                                       //Tracker(Wall, uint16_t) 
-    this.picnum = 0, this.overpicnum = 0;                          //Tracker(Wall, int16_t)  
-    this.shade = 0;                                       //Tracker(Wall, int8_t)   
-    this.pal = 0, this.xrepeat = 0, this.yrepeat = 0, this.xpanning = 0, this.ypanning = 0;   //Tracker(Wall, uint8_t)  
-    this.lotag = 0, this.hitag = 0;                                //Tracker(Wall, uint16_t) 
-    this.extra = 0;                                       //Tracker(Wall, int16_t)  
+    x : number; y : number;                                        //Tracker(Wall, int32_t)  
+    point2 : number; nextwall : number; nextsector : number;                //Tracker(Wall, int16_t)  
+    cstat : number;                                       //Tracker(Wall, uint16_t) 
+    picnum : number; overpicnum : number;                          //Tracker(Wall, int16_t)  
+    shade : number;                                       //Tracker(Wall, int8_t)   
+    pal : number; xrepeat : number; yrepeat : number; xpanning : number; ypanning : number;   //Tracker(Wall, uint8_t)  
+    lotag : number; hitag : number;                                //Tracker(Wall, uint16_t) 
+    extra : number;                                       //Tracker(Wall, int16_t)  
+
+    constructor() {
+        this.init();
+    }
+
+    public init() {
+         this.x = 0, this.y = 0;                                        //Tracker(Wall, int32_t)  
+        this.point2 = 0, this.nextwall = 0, this.nextsector = 0;                //Tracker(Wall, int16_t)  
+        this.cstat = 0;                                       //Tracker(Wall, uint16_t) 
+        this.picnum = 0, this.overpicnum = 0;                          //Tracker(Wall, int16_t)  
+        this.shade = 0;                                       //Tracker(Wall, int8_t)   
+        this.pal = 0, this.xrepeat = 0, this.yrepeat = 0, this.xpanning = 0, this.ypanning = 0;   //Tracker(Wall, uint8_t)  
+        this.lotag = 0, this.hitag = 0;                                //Tracker(Wall, uint16_t) 
+        this.extra = 0;                                       //Tracker(Wall, int16_t)  
+    }
 } //walltypev7;
 
 
@@ -365,21 +399,40 @@ function walltypev7()
 ////   bit 15: 1 = Invisible sprite, 0 = not invisible
 
 //44 bytes
-function spritetype()
+class spritetype
 {
-    this.x = 0, this.y = 0, this.z = 0;         //Tracker(Sprite, int32_t)  
-    this.cstat = 0;                             //Tracker(Sprite, uint16_t) 
-    this.picnum = 0;                            //Tracker(Sprite, int16_t)  
-    this.shade = 0;                             //Tracker(Sprite, int8_t)   
-    this.pal = 0, this.clipdist = 0, this.filler = 0;   //Tracker(Sprite, uint8_t)  
-    this.xrepeat = 0, this.yrepeat = 0;                  //Tracker(Sprite, uint8_t)  
-    this.xoffset = 0, this.yoffset = 0;                  //Tracker(Sprite, int8_t)   
-    this.sectnum = 0, this.statnum = 0;                  //Tracker(Sprite, int16_t)  
-    this.ang = 0, this.owner = 0, this.xvel = 0, this.yvel = 0, this.zvel = 0;      //Tracker(Sprite, int16_t)  
-    this.lotag = 0, this.hitag = 0;                      //Tracker(Sprite, uint16_t) 
-    this.extra = 0;                             //Tracker(Sprite, int16_t)  
+    x:number; y:number; z:number;         //Tracker(Sprite, int32_t)  
+    cstat:number;                             //Tracker(Sprite, uint16_t) 
+    picnum:number;                            //Tracker(Sprite, int16_t)  
+    shade:number;                             //Tracker(Sprite, int8_t)   
+    pal:number; clipdist:number; filler:number;   //Tracker(Sprite, uint8_t)  
+    xrepeat:number; yrepeat:number;                  //Tracker(Sprite, uint8_t)  
+    xoffset:number; yoffset:number;                  //Tracker(Sprite, int8_t)   
+    sectnum:number; statnum:number;                  //Tracker(Sprite, int16_t)  
+    ang:number; owner:number; xvel:number; yvel:number; zvel:number;      //Tracker(Sprite, int16_t)  
+    lotag:number; hitag:number;                      //Tracker(Sprite, uint16_t) 
+    extra:number;                             //Tracker(Sprite, int16_t)  
+
+    public static size = 44;
+
+    constructor() {
+        this.init();
+    }
+
+    init(): void {
+        this.x = 0, this.y = 0, this.z = 0;         //Tracker(Sprite, int32_t)  
+        this.cstat = 0;                             //Tracker(Sprite, uint16_t) 
+        this.picnum = 0;                            //Tracker(Sprite, int16_t)  
+        this.shade = 0;                             //Tracker(Sprite, int8_t)   
+        this.pal = 0, this.clipdist = 0, this.filler = 0;   //Tracker(Sprite, uint8_t)  
+        this.xrepeat = 0, this.yrepeat = 0;                  //Tracker(Sprite, uint8_t)  
+        this.xoffset = 0, this.yoffset = 0;                  //Tracker(Sprite, int8_t)   
+        this.sectnum = 0, this.statnum = 0;                  //Tracker(Sprite, int16_t)  
+        this.ang = 0, this.owner = 0, this.xvel = 0, this.yvel = 0, this.zvel = 0;      //Tracker(Sprite, int16_t)  
+        this.lotag = 0, this.hitag = 0;                      //Tracker(Sprite, uint16_t) 
+        this.extra = 0;                             //Tracker(Sprite, int16_t)  
+    }
 } //spritetype;
-spritetype["size"] = 44;
 ////////////////////// END Version 7 map format ////////////////
 
 //#ifdef NEW_MAP_FORMAT
@@ -572,19 +625,35 @@ spritetype["size"] = 44;
 //typedef walltypevx walltype;
 ////////////////////// END Lunatic new-generation map format ////////////////
 //#else
-var sectortype = sectortypev7;
-var walltype = walltypev7;
+class sectortype extends sectortypev7 {}
+class walltype extends walltypev7 {}
 //#endif
 
-function spriteext_t (){
-    this.mdanimtims = 0;                       //    uint32_t
-    this.mdanimcur = 0;                         //    int16_t 
-    this.angoff = 0, this.pitch = 0, this.roll = 0;               //    int16_t 
-    this.xoff = 0, this.yoff = 0, this.zoff = 0;                  //    int32_t 
-    this.flags = 0;                             //    uint8_t 
-    this.xpanning = 0, this.ypanning = 0;                //    uint8_t 
-    this.filler = 0;                            //    uint8_t 
-    this.alpha = 0.0;//    float 
+class spriteext_t {
+    mdanimtims: number;                       //    uint32_t
+    mdanimcur: number;                         //    int16_t 
+    angoff: number; pitch: number; roll: number;               //    int16_t 
+    xoff: number; yoff: number; zoff: number;                  //    int32_t 
+    flags: number;                             //    uint8_t 
+    xpanning: number; ypanning: number;                //    uint8_t 
+    filler: number;                            //    uint8_t 
+    alpha = 0.0;//    float 
+
+    constructor() {
+        this.init();
+    }
+
+    public init() {
+        this.mdanimtims = 0;                       //    uint32_t
+        this.mdanimcur = 0;                         //    int16_t 
+        this.angoff = 0, this.pitch = 0, this.roll = 0;               //    int16_t 
+        this.xoff = 0, this.yoff = 0, this.zoff = 0;                  //    int32_t 
+        this.flags = 0;                             //    uint8_t 
+        this.xpanning = 0, this.ypanning = 0;                //    uint8_t 
+        this.filler = 0;                            //    uint8_t 
+        this.alpha = 0.0;//    float 
+    }
+
 //    // NOTE: keep 'tspr' on an 8-byte boundary:
 //    spritetype *tspr;
 //#if !defined UINTPTR_MAX
@@ -726,7 +795,7 @@ class validmode_t {
 };
 var validmode: validmode_t[] = newStructArray(validmode_t, MAXVALIDMODES);
 
-//EXTERN int32_t numyaxbunches;
+var numyaxbunches: number;//EXTERN int32_t 
 //#ifdef YAX_ENABLE
 //// Singly-linked list of sectnums grouped by bunches and ceiling (0)/floor (1)
 //// Usage e.g.:
@@ -736,7 +805,7 @@ var validmode: validmode_t[] = newStructArray(validmode_t, MAXVALIDMODES);
 ////   for (i=headsectbunch[1][bunchnum]; i!=-1; i=nextsectbunch[1][i])
 ////       <do stuff with sector i...>
 
-//EXTERN int16_t headsectbunch[2][YAX_MAXBUNCHES], nextsectbunch[2][MAXSECTORS];
+var headsectbunch = multiDimArray(Int16Array, 2, YAX_MAXBUNCHES), nextsectbunch = multiDimArray(Int16Array, 2, MAXSECTORS);
 //#endif
 
 var Numsprites: number; //EXTERN int32_t

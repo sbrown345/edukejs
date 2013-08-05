@@ -774,7 +774,7 @@ function Bstrncpyz(dst: Uint8Array, src: string, n: number): Uint8Array
 //#define OSD_Printf_nowarn(fmt, ...) NOWARN(OSD_Printf, fmt, ## __VA_ARGS__)
 //#define Bsprintf_nowarn(fmt, ...) NOWARN(Bsprintf, fmt, ## __VA_ARGS__)
 //#define Bsprintf_nowarn_return(x, fmt, ...) NOWARN_RETURN(Bsprintf, x, fmt, ## __VA_ARGS__)
-//#define initprintf_nowarn(fmt, ...) NOWARN(initprintf, fmt, ## __VA_ARGS__)
+var initprintf_nowarn = console.log.bind(console);
 //#define message_nowarn(fmt, ...) NOWARN(message, fmt, ## __VA_ARGS__)
 
 ///* Static assertions, based on source found in LuaJIT's src/lj_def.h. */

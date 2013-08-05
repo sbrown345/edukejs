@@ -284,7 +284,7 @@ var whitecol: number;//int32
 //static void scansector(int16_t sectnum);
 //static void draw_rainbow_background(void);
 
-//int16_t editstatus = 0;
+var editstatus = 0;//int16_t 
 //static int32_t global100horiz;  // (-100..300)-scale horiz (the one passed to drawrooms)
 
 
@@ -395,8 +395,8 @@ var yax_globalbunch = -1;                                                       
 
 //# if !defined NEW_MAP_FORMAT
 //// Game-time YAX data structures, V7-V9 map formats.
-//int16_t yax_bunchnum[MAXSECTORS][2];
-//int16_t yax_nextwall[MAXWALLS][2];
+var yax_bunchnum: Int16Array[] = multiDimArray(Int16Array, MAXSECTORS, 2);
+var yax_nextwall: Int16Array[] = multiDimArray(Int16Array, MAXWALLS, 2);
 
 //static int32_t yax_islockededge(int32_t line, int32_t cf)
 //{
@@ -418,11 +418,11 @@ var yax_globalbunch = -1;                                                       
 //    return YAX_BUNCHNUM(i, cf);
 //}
 
-//void yax_getbunches(int16_t i, int16_t *cb, int16_t *fb)
-//{
-//    *cb = yax_getbunch(i, YAX_CEILING);
-//    *fb = yax_getbunch(i, YAX_FLOOR);
-//}
+function yax_getbunches(/*int16_t*/ i: number, /*int16_t **/cb: R<number>, /*int16_t **/fb: R<number>): void
+{
+    cb.$ = yax_getbunch(i, YAX_CEILING);
+    fb.$ = yax_getbunch(i, YAX_FLOOR);
+}
 //# else
 //#  define YAX_PTRBUNCHNUM(Ptr, Sect, Cf) (*((Cf) ? &(Ptr)[Sect].floorbunch : &(Ptr)[Sect].ceilingbunch))
 //#  define YAX_BUNCHNUM(Sect, Cf) YAX_PTRBUNCHNUM(sector, Sect, Cf)
@@ -435,61 +435,63 @@ var yax_globalbunch = -1;                                                       
 //#  endif
 //# endif
 
-//// bunchnum: -1: also clear yax-nextwalls (forward and reverse)
-////           -2: don't clear reverse yax-nextwalls
-////           -3: don't clear either forward or reverse yax-nextwalls
-//void yax_setbunch(int16_t i, int16_t cf, int16_t bunchnum)
-//{
-//    if (editstatus==0)
-//    {
+// bunchnum: -1: also clear yax-nextwalls (forward and reverse)
+//           -2: don't clear reverse yax-nextwalls
+//           -3: don't clear either forward or reverse yax-nextwalls
+function yax_setbunch(/*int16_t*/ i: number, /*int16_t*/ cf: number, /*int16_t*/ bunchnum: number): void
+{
+    if (editstatus==0)
+    {
 //#ifdef NEW_MAP_FORMAT
 //        YAX_BUNCHNUM(i, cf) = bunchnum;
 //#else
-//        yax_bunchnum[i][cf] = bunchnum;
+        yax_bunchnum[i][cf] = bunchnum;
 //#endif
-//        return;
-//    }
+        return;
+    }
 
-//    if (bunchnum < 0)
-//    {
-//        int32_t j;
-//        int16_t ynw;
+    if (bunchnum < 0)
+    {
+        var j: number;//int32_t
+        var ynw: number;//int16_t
 
-//        if (bunchnum > -3)
-//        {
-//            // TODO: for in-game too?
-//            for (j=sector[i].wallptr; j<sector[i].wallptr+sector[i].wallnum; j++)
-//            {
-//                ynw = yax_getnextwall(j, cf);
-//                if (ynw >= 0)
-//                {
-//                    if (bunchnum > -2)
-//                        yax_setnextwall(ynw, !cf, -1);
-//                    yax_setnextwall(j, cf, -1);
-//                }
-//            }
-//        }
+        if (bunchnum > -3)
+        {
+            // TODO: for in-game too?
+            for (j=sector[i].wallptr; j<sector[i].wallptr+sector[i].wallnum; j++)
+            {
+                todoThrow();
+                //ynw = yax_getnextwall(j, cf);
+                //if (ynw >= 0)
+                //{
+                //    if (bunchnum > -2)
+                //        yax_setnextwall(ynw, !cf, -1);
+                //    yax_setnextwall(j, cf, -1);
+                //}
+            }
+        }
 
 //#if !defined NEW_MAP_FORMAT
-//        *(&sector[i].ceilingstat + cf) &= ~YAX_BIT;
-//        YAX_BUNCHNUM(i, cf) = 0;
+       
+        todoThrow(" *(&sector[i].ceilingstat + cf) &= ~YAX_BIT;  ");
+        todoThrow(" YAX_BUNCHNUM(i, cf) = 0;                     ");
 //#else
 //        YAX_BUNCHNUM(i, cf) = -1;
 //#endif
-//        return;
-//    }
+        return;
+    }
 
 //#if !defined NEW_MAP_FORMAT
 //    *(&sector[i].ceilingstat + cf) |= YAX_BIT;
 //#endif
 //    YAX_BUNCHNUM(i, cf) = bunchnum;
-//}
+}
 
-//void yax_setbunches(int16_t i, int16_t cb, int16_t fb)
-//{
-//    yax_setbunch(i, YAX_CEILING, cb);
-//    yax_setbunch(i, YAX_FLOOR, fb);
-//}
+function yax_setbunches(/*int16_t*/ i: number, /*int16_t*/ cb: number, /*int16_t*/ fb: number): void
+{
+    yax_setbunch(i, YAX_CEILING, cb);
+    yax_setbunch(i, YAX_FLOOR, fb);
+}
 
 //# if !defined NEW_MAP_FORMAT
 ////// nextwall getters/setters
@@ -539,162 +541,164 @@ var yax_globalbunch = -1;                                                       
 //}
 
 
-////// in-struct --> array transfer (only resetstat==0); list construction
-//// resetstat:  0: reset and read data from structs and construct linked lists etc.
-////             1: only reset
-////             2: read data from game-time arrays and construct linked lists etc.
-//void yax_update(int32_t resetstat)
-//{
-//    int32_t i;
+//// in-struct --> array transfer (only resetstat==0); list construction
+// resetstat:  0: reset and read data from structs and construct linked lists etc.
+//             1: only reset
+//             2: read data from game-time arrays and construct linked lists etc.
+function yax_update(/*int32_t*/ resetstat: number): void
+{
+    var i: number;
 //#if !defined NEW_MAP_FORMAT
-//    int32_t j;
-//    const int32_t oeditstatus=editstatus;
+    var j: number;
+    var oeditstatus: number=editstatus;
 //#endif
-//    int16_t cb, fb;
+    var cb: R<number>, fb: R<number>; //int16_t
 
-//    if (resetstat != 2)
-//        numyaxbunches = 0;
+    if (resetstat != 2)
+        numyaxbunches = 0;
 
-//    for (i=0; i<MAXSECTORS; i++)
-//    {
+    for (i=0; i<MAXSECTORS; i++)
+    {
 //#if !defined NEW_MAP_FORMAT
-//        if (resetstat != 2 || i>=numsectors)
-//            yax_bunchnum[i][0] = yax_bunchnum[i][1] = -1;
+        if (resetstat != 2 || i>=numsectors)
+            yax_bunchnum[i][0] = yax_bunchnum[i][1] = -1;
 //#endif
-//        nextsectbunch[0][i] = nextsectbunch[1][i] = -1;
-//    }
-//    for (i=0; i<YAX_MAXBUNCHES; i++)
-//        headsectbunch[0][i] = headsectbunch[1][i] = -1;
+        nextsectbunch[0][i] = nextsectbunch[1][i] = -1;
+    }
+    for (i=0; i<YAX_MAXBUNCHES; i++)
+        headsectbunch[0][i] = headsectbunch[1][i] = -1;
 //#if !defined NEW_MAP_FORMAT
-//    for (i=0; i<MAXWALLS; i++)
-//        if (resetstat != 2 || i>=numwalls)
-//            yax_nextwall[i][0] = yax_nextwall[i][1] = -1;
-//#endif
-
-//    if (resetstat==1)
-//        return;
-
-//    // Constuct singly linked list of sectors-of-bunch.
-
-//#if !defined NEW_MAP_FORMAT
-//    // Read bunchnums directly from the sector struct in yax_[gs]etbunch{es}!
-//    editstatus = (resetstat==0);
-//    // NOTE: Use oeditstatus to check for in-gamedness from here on!
+    for (i=0; i<MAXWALLS; i++)
+        if (resetstat != 2 || i>=numwalls)
+            yax_nextwall[i][0] = yax_nextwall[i][1] = -1;
 //#endif
 
-//    if (resetstat==0)
-//    {
-//        // make bunchnums consecutive
-//        uint8_t *const havebunch = (uint8_t *)tempbuf;
-//        uint8_t *const bunchmap = havebunch + (YAX_MAXBUNCHES>>3);
-//        int32_t dasub = 0;
+    if (resetstat==1)
+        return;
 
-//        Bmemset(havebunch, 0, YAX_MAXBUNCHES>>3);
-//        for (i=0; i<numsectors; i++)
-//        {
-//            yax_getbunches(i, &cb, &fb);
-//            if (cb>=0)
-//                havebunch[cb>>3] |= (1<<(cb&7));
-//            if (fb>=0)
-//                havebunch[fb>>3] |= (1<<(fb&7));
-//        }
+    // Constuct singly linked list of sectors-of-bunch.
 
-//        for (i=0; i<YAX_MAXBUNCHES; i++)
-//        {
-//            if ((havebunch[i>>3]&(1<<(i&7)))==0)
-//            {
-//                bunchmap[i] = 255;
-//                dasub++;
-//                continue;
-//            }
-
-//            bunchmap[i] = i-dasub;
-//        }
-
-//        for (i=0; i<numsectors; i++)
-//        {
-//            yax_getbunches(i, &cb, &fb);
-//            if (cb>=0)
-//                yax_setbunch(i, YAX_CEILING, bunchmap[cb]);
-//            if (fb>=0)
-//                yax_setbunch(i, YAX_FLOOR, bunchmap[fb]);
-//        }
-//    }
-
-//    // In-struct --> array transfer (resetstat==0 and !defined NEW_MAP_FORMAT)
-//    // and list construction.
-//    for (i=numsectors-1; i>=0; i--)
-//    {
-//        yax_getbunches(i, &cb, &fb);
 //#if !defined NEW_MAP_FORMAT
-//        if (resetstat==0)
-//        {
-//            yax_bunchnum[i][0] = cb;
-//            yax_bunchnum[i][1] = fb;
-//        }
+    // Read bunchnums directly from the sector struct in yax_[gs]etbunch{es}!
+    editstatus = (resetstat==0);
+    // NOTE: Use oeditstatus to check for in-gamedness from here on!
 //#endif
 
-//        if (cb >= 0)
-//        {
-//#if !defined NEW_MAP_FORMAT
-//            if (resetstat==0)
-//                for (j=sector[i].wallptr; j<sector[i].wallptr+sector[i].wallnum; j++)
-//                {
-//                    if (yax_islockededge(j,YAX_CEILING))
-//                    {
-//                        yax_nextwall[j][0] = YAX_NEXTWALL(j,0);
-//                        if (oeditstatus==0)
-//                            YAX_NEXTWALL(j,0) = 0;  // reset lotag!
-//                    }
-//                }
-//#endif
-//            if (headsectbunch[0][cb] == -1)
-//            {
-//                headsectbunch[0][cb] = i;
-//                // not duplicated in floors, since every extended ceiling
-//                // must have a corresponding floor:
-//                if (resetstat==0)
-//                    numyaxbunches++;
-//            }
-//            else
-//            {
-//                int32_t tmpsect = headsectbunch[0][cb];
-//                headsectbunch[0][cb] = i;
-//                nextsectbunch[0][i] = tmpsect;
-//            }
-//        }
+    if (resetstat==0)
+    {
+        // make bunchnums consecutive
+        var havebunch = tempbuf;
+        var bunchmap = havebunch.subarray(YAX_MAXBUNCHES>>3);
+        var dasub = 0;
 
-//        if (fb >= 0)
-//        {
+        Bmemset(new P(havebunch.buffer), 0, YAX_MAXBUNCHES>>3);
+        for (i=0; i<numsectors; i++)
+        {
+            yax_getbunches(i, cb, fb);
+            if (cb.$>=0)
+                havebunch[cb.$>>3] |= (1<<(cb.$&7));
+            if (fb.$>=0)
+                havebunch[fb.$>>3] |= (1<<(fb.$&7));
+        }
+
+        for (i=0; i<YAX_MAXBUNCHES; i++)
+        {
+            if ((havebunch[i>>3]&(1<<(i&7)))==0)
+            {
+                bunchmap[i] = 255;
+                dasub++;
+                continue;
+            }
+
+            bunchmap[i] = i-dasub;
+        }
+
+        for (i=0; i<numsectors; i++)
+        {
+            yax_getbunches(i, cb, fb);
+            if (cb.$>=0)
+                yax_setbunch(i, YAX_CEILING, bunchmap[cb.$]);
+            if (fb.$>=0)
+                yax_setbunch(i, YAX_FLOOR, bunchmap[fb.$]);
+        }
+    }
+
+    // In-struct --> array transfer (resetstat==0 and !defined NEW_MAP_FORMAT)
+    // and list construction.
+    for (i=numsectors-1; i>=0; i--)
+    {
+        yax_getbunches(i, cb, fb);
 //#if !defined NEW_MAP_FORMAT
-//            if (resetstat==0)
-//                for (j=sector[i].wallptr; j<sector[i].wallptr+sector[i].wallnum; j++)
-//                {
-//                    if (yax_islockededge(j,YAX_FLOOR))
-//                    {
-//                        yax_nextwall[j][1] = YAX_NEXTWALL(j,1);
-//                        if (oeditstatus==0)
-//                            YAX_NEXTWALL(j,1) = -1;  // reset extra!
-//                    }
-//                }
+        if (resetstat==0)
+        {
+            yax_bunchnum[i][0] = cb.$;
+            yax_bunchnum[i][1] = fb.$;
+        }
 //#endif
-//            if (headsectbunch[1][fb] == -1)
-//                headsectbunch[1][fb] = i;
-//            else
-//            {
-//                int32_t tmpsect = headsectbunch[1][fb];
-//                headsectbunch[1][fb] = i;
-//                nextsectbunch[1][i] = tmpsect;
-//            }
-//        }
-//    }
+
+        if (cb.$ >= 0)
+        {
+//#if !defined NEW_MAP_FORMAT
+            if (resetstat==0)
+                for (j=sector[i].wallptr; j<sector[i].wallptr+sector[i].wallnum; j++)
+                {
+                    todoThrow("careful with YAX_NEXTWALL macro stuff");
+                    //if (yax_islockededge(j,YAX_CEILING))
+                    //{
+                    //    yax_nextwall[j][0] = YAX_NEXTWALL(j,0);
+                    //    if (oeditstatus==0)
+                    //        YAX_NEXTWALL(j,0) = 0;  // reset lotag!
+                    //}
+                }
+//#endif
+            if (headsectbunch[0][cb] == -1)
+            {
+                headsectbunch[0][cb] = i;
+                // not duplicated in floors, since every extended ceiling
+                // must have a corresponding floor:
+                if (resetstat==0)
+                    numyaxbunches++;
+            }
+            else
+            {
+                var tmpsect = headsectbunch[0][cb];
+                headsectbunch[0][cb] = i;
+                nextsectbunch[0][i] = tmpsect;
+            }
+        }
+
+        if (fb.$ >= 0)
+        {
+//#if !defined NEW_MAP_FORMAT
+            if (resetstat==0)
+                for (j=sector[i].wallptr; j<sector[i].wallptr+sector[i].wallnum; j++)
+                {
+                    todoThrow("careful with YAX_NEXTWALL macro stuff");
+                    //if (yax_islockededge(j,YAX_FLOOR))
+                    //{
+                    //    yax_nextwall[j][1] = YAX_NEXTWALL(j,1);
+                    //    if (oeditstatus==0)
+                    //        YAX_NEXTWALL(j,1) = -1;  // reset extra!
+                    //}
+                }
+//#endif
+            if (headsectbunch[1][fb.$] == -1)
+                headsectbunch[1][fb.$] = i;
+            else
+            {
+                var tmpsect = headsectbunch[1][fb.$];
+                headsectbunch[1][fb.$] = i;
+                nextsectbunch[1][i] = tmpsect;
+            }
+        }
+    }
 
 //#if !defined NEW_MAP_FORMAT
-//    editstatus = oeditstatus;
+    editstatus = oeditstatus;
 //#else
 //    mapversion = (numyaxbunches>0) ? 10 : get_mapversion();
 //#endif
-//}
+}
 
 //int32_t yax_getneighborsect(int32_t x, int32_t y, int32_t sectnum, int32_t cf)
 //{
@@ -9898,14 +9902,14 @@ function MYMAXSECTORS(): number {return (MAXSECTORS==MAXSECTORSV7 || mapversion 
 function MYMAXWALLS(): number   {return (MAXSECTORS==MAXSECTORSV7 || mapversion <= 7 ? MAXWALLSV7 : MAXWALLSV8);}
 function MYMAXSPRITES(): number {return (MAXSECTORS==MAXSECTORSV7 || mapversion <= 7 ? MAXSPRITESV7 : MAXSPRITESV8);}
 
-//// Sprite checking
+// Sprite checking
 
-//static void remove_sprite(int32_t i)
-//{
-//    Bmemset(&sprite[i], 0, sizeof(spritetype));
-//    sprite[i].statnum = MAXSTATUS;
-//    sprite[i].sectnum = MAXSECTORS;
-//}
+function remove_sprite(/*int32_t*/ i: number): void
+{
+    sprite[i].init();
+    sprite[i].statnum = MAXSTATUS;
+    sprite[i].sectnum = MAXSECTORS;
+}
 
 // This is only to be run after reading the sprite array!
 function check_sprite(i: number):  void 
@@ -9916,7 +9920,7 @@ function check_sprite(i: number):  void
                    i, TrackerCast(sprite[i].x), TrackerCast(sprite[i].y), TrackerCast(sprite[i].statnum));
         remove_sprite(i);
     }
-    else if ((unsigned)sprite[i].picnum >= MAXTILES)
+    else if (sprite[i].picnum >= MAXTILES)
     {
         initprintf_nowarn(OSD_ERROR + "Map error: sprite #%d (%d,%d) with illegal picnum (%d) REMOVED.\n",
                    i, TrackerCast(sprite[i].x), TrackerCast(sprite[i].y), TrackerCast(sprite[i].sectnum));
@@ -9927,7 +9931,7 @@ function check_sprite(i: number):  void
         var osectnum = sprite[i].sectnum;
         
         sprite[i].sectnum = -1;
-        updatesector(sprite[i].x, sprite[i].y, &sprite[i].sectnum);
+        updatesector(sprite[i].x, sprite[i].y, sprite[i].sectnum);
 
         if (sprite[i].sectnum < 0)
             remove_sprite(i);
@@ -10126,19 +10130,19 @@ function loadboard(filename: string, /*char*/ flags: number, dapos: vec3_t , /*i
 //#ifdef YAX_ENABLE
     yax_update(mapversion<9);
     if (editstatus)
-        yax_updategrays(dapos.z);
+        todoThrow("yax_updategrays(dapos.z)");
 //#endif
 
     {
         var fn = new Uint8Array(BMAX_PATH);
 
         Bstrcpy(fn, filename);
-        append_ext_UNSAFE(fn, ".cfg");
+        todoThrow('append_ext_UNSAFE(fn, ".cfg");');
 
-        OSD_Exec(fn);
+        todoThrow("OSD_Exec(fn);");
     }
-
-    return finish_loadboard(dapos, dacursectnum, numsprites, myflags);
+    debugger;
+    return todoThrow("finish_loadboard(dapos, dacursectnum, numsprites, myflags);");
 }
 
 
@@ -13511,38 +13515,39 @@ function loadtile(tilenume: number): void
 //} while (0)
 
 
-////
-//// updatesector[z]
-////
-//void updatesector(int32_t x, int32_t y, int16_t *sectnum)
-//{
-//    int32_t i;
+//
+// updatesector[z]
+//
+function updatesector(/*int32_t*/ x: number, /*int32_t */y: number, /*int16_t **/sectnum: R<number>): void
+{
+    todoThrow();
+    //int32_t i;
 
-//    if (inside_p(x,y,*sectnum))
-//        return;
+    //if (inside_p(x,y,*sectnum))
+    //    return;
 
-//    if (*sectnum >= 0 && *sectnum < numsectors)
-//    {
-//        const walltype *wal = &wall[sector[*sectnum].wallptr];
-//        int32_t j = sector[*sectnum].wallnum;
+    //if (*sectnum >= 0 && *sectnum < numsectors)
+    //{
+    //    const walltype *wal = &wall[sector[*sectnum].wallptr];
+    //    int32_t j = sector[*sectnum].wallnum;
 
-//        do
-//        {
-//            i = wal->nextsector;
-//            if (inside_p(x, y, i))
-//                SET_AND_RETURN(*sectnum, i);
+    //    do
+    //    {
+    //        i = wal->nextsector;
+    //        if (inside_p(x, y, i))
+    //            SET_AND_RETURN(*sectnum, i);
 
-//            wal++; j--;
-//        }
-//        while (j != 0);
-//    }
+    //        wal++; j--;
+    //    }
+    //    while (j != 0);
+    //}
 
-//    for (i=numsectors-1; i>=0; i--)
-//        if (inside_p(x, y, i))
-//            SET_AND_RETURN(*sectnum, i);
+    //for (i=numsectors-1; i>=0; i--)
+    //    if (inside_p(x, y, i))
+    //        SET_AND_RETURN(*sectnum, i);
 
-//    *sectnum = -1;
-//}
+    //*sectnum = -1;
+}
 
 //void updatesectorbreadth(int32_t x, int32_t y, int16_t *sectnum)
 //{
