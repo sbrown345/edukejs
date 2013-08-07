@@ -158,8 +158,8 @@ var MAXXSIZ = 256;
 var MAXYSIZ = 256;
 var MAXZSIZ = 255;
 var MAXVOXMIPS = 5;
-var voxoff: Int32Array[] = multiDimArray(Int32Array, MAXVOXELS, MAXVOXMIPS);
-var voxlock: Uint8Array[] = multiDimArray(Uint8Array, MAXVOXELS, MAXVOXMIPS);
+var voxoff: Int32Array[] = multiDimArray<Int32Array>(Int32Array, MAXVOXELS, MAXVOXMIPS);
+var voxlock: Uint8Array[] = multiDimArray<Uint8Array>(Uint8Array, MAXVOXELS, MAXVOXMIPS);
 var voxscale = new Int32Array(MAXVOXELS);
 
 //static int32_t ggxinc[MAXXSIZ+1], ggyinc[MAXXSIZ+1];
@@ -395,8 +395,8 @@ var yax_globalbunch = -1;                                                       
 
 //# if !defined NEW_MAP_FORMAT
 //// Game-time YAX data structures, V7-V9 map formats.
-var yax_bunchnum: Int16Array[] = multiDimArray(Int16Array, MAXSECTORS, 2);
-var yax_nextwall: Int16Array[] = multiDimArray(Int16Array, MAXWALLS, 2);
+var yax_bunchnum: Int16Array[] = multiDimArray<Int16Array>(Int16Array, MAXSECTORS, 2);
+var yax_nextwall: Int16Array[] = multiDimArray<Int16Array>(Int16Array, MAXWALLS, 2);
 
 //static int32_t yax_islockededge(int32_t line, int32_t cf)
 //{
@@ -1334,7 +1334,7 @@ function mapinfo_t()
 //}
 
 var origmapinfo = new mapinfo_t(), clipmapinfo = new mapinfo_t();//static mapinfo_t 
-//static int32_t quickloadboard=0;
+var quickloadboard=0;
 
 
 //#define CM_MAX 256  // must be a power of 2
@@ -11478,73 +11478,75 @@ function loadtile(tilenume: number): void
 //}
 
 
-////
-//// inside
-////
-//// See http://fabiensanglard.net/duke3d/build_engine_internals.php,
-//// "Inside details" for the idea behind the algorithm.
-//int32_t inside(int32_t x, int32_t y, int16_t sectnum)
-//{
-//    if (sectnum >= 0 && sectnum < numsectors)
-//    {
-//        uint32_t cnt1 = 0, cnt2 = 0;
-//        walltype *wal = &wall[sector[sectnum].wallptr];
-//        int32_t i = sector[sectnum].wallnum;
+//
+// inside
+//
+// See http://fabiensanglard.net/duke3d/build_engine_internals.php,
+// "Inside details" for the idea behind the algorithm.
+function inside(/*int32_t*/ x: number, /*int32_t*/ y: number, /*int16_t*/ sectnum: number): number
+{
+    if (sectnum >= 0 && sectnum < numsectors)
+    {
+        var cnt1 = 0, cnt2 = 0;
+        var walIdx = sector[sectnum].wallptr, wal: walltype;
+        var i = sector[sectnum].wallnum;
 
-//        do
-//        {
-//            // Get the x and y components of the [tested point]-->[wall
-//            // point{1,2}] vectors.
-//            int32_t x1 = wal->x-x, x2 = wall[wal->point2].x-x;
-//            int32_t y1 = wal->y-y, y2 = wall[wal->point2].y-y;
+        do
+        {
+            wal = wall[walIdx];
 
-//            // First, test if the point is EXACTLY_ON_WALL_POINT.
-//            if ((x1|y1) == 0 || (x2|y2)==0)
-//                return 1;
+            // Get the x and y components of the [tested point]-.[wall
+            // point{1,2}] vectors.
+            var x1 = wal.x-x, x2 = wall[wal.point2].x-x;
+            var y1 = wal.y-y, y2 = wall[wal.point2].y-y;
 
-//            // If their signs differ[*], ...
-//            //
-//            // [*] where '-' corresponds to <0 and '+' corresponds to >=0.
-//            // Equivalently, the branch is taken iff
-//            //   y1 != y2 AND y_m <= y < y_M,
-//            // where y_m := min(y1, y2) and y_M := max(y1, y2).
-//            if ((y1^y2) < 0)
-//            {
-//                if ((x1^x2) >= 0)
-//                    cnt1 ^= x1;
-//                else
-//                    cnt1 ^= (x1*y2-x2*y1)^y2;
-//            }
+            // First, test if the point is EXACTLY_ON_WALL_POINT.
+            if ((x1|y1) == 0 || (x2|y2)==0)
+                return 1;
 
-//            y1--;
-//            y2--;
+            // If their signs differ[*], ...
+            //
+            // [*] where '-' corresponds to <0 and '+' corresponds to >=0.
+            // Equivalently, the branch is taken iff
+            //   y1 != y2 AND y_m <= y < y_M,
+            // where y_m := min(y1, y2) and y_M := max(y1, y2).
+            if ((y1^y2) < 0)
+            {
+                if ((x1^x2) >= 0)
+                    cnt1 ^= x1;
+                else
+                    cnt1 ^= (x1*y2-x2*y1)^y2;
+            }
 
-//            // Now, do the same comparisons, but with the interval half-open on
-//            // the other side! That is, take the branch iff
-//            //   y1 != y2 AND y_m < y <= y_M,
-//            // For a rectangular sector, without EXACTLY_ON_WALL_POINT, this
-//            // would still leave the lower left and upper right points
-//            // "outside" the sector.
-//            if ((y1^y2) < 0)
-//            {
-//                x1--;
-//                x2--;
+            y1--;
+            y2--;
 
-//                if ((x1^x2) >= 0)
-//                    cnt2 ^= x1;
-//                else
-//                    cnt2 ^= (x1*y2-x2*y1)^y2;
-//            }
+            // Now, do the same comparisons, but with the interval half-open on
+            // the other side! That is, take the branch iff
+            //   y1 != y2 AND y_m < y <= y_M,
+            // For a rectangular sector, without EXACTLY_ON_WALL_POINT, this
+            // would still leave the lower left and upper right points
+            // "outside" the sector.
+            if ((y1^y2) < 0)
+            {
+                x1--;
+                x2--;
 
-//            wal++; i--;
-//        }
-//        while (i);
+                if ((x1^x2) >= 0)
+                    cnt2 ^= x1;
+                else
+                    cnt2 ^= (x1*y2-x2*y1)^y2;
+            }
 
-//        return (cnt1|cnt2)>>31;
-//    }
+            walIdx++; i--;
+        }
+        while (i);
 
-//    return -1;
-//}
+        return (cnt1|cnt2)>>31;
+    }
+
+    return -1;
+}
 
 //int32_t __fastcall getangle(int32_t xvect, int32_t yvect)
 //{
@@ -13488,15 +13490,15 @@ function loadtile(tilenume: number): void
 //    }
 //}
 
-//////////// UPDATESECTOR* FAMILY OF FUNCTIONS //////////
+////////// UPDATESECTOR* FAMILY OF FUNCTIONS //////////
 
-///* Different "is inside" predicates.
-// * NOTE: The redundant bound checks are expected to be optimized away in the
-// * inlined code. */
-//static inline int32_t inside_p(int32_t x, int32_t y, int16_t sectnum)
-//{
-//    return (sectnum>=0 && inside(x, y, sectnum) == 1);
-//}
+/* Different "is inside" predicates.
+ * NOTE: The redundant bound checks are expected to be optimized away in the
+ * inlined code. */
+function /*int32_t */inside_p(/*int32_t */x: number, /*int32_t */y: number, /*int16_t */sectnum: number)
+{
+    return (sectnum>=0 && inside(x, y, sectnum) == 1);
+}
 
 //static inline int32_t inside_exclude_p(int32_t x, int32_t y, int16_t i, const uint8_t *excludesectbitmap)
 //{
@@ -13525,7 +13527,7 @@ function updatesector(/*int32_t*/ x: number, /*int32_t */y: number, /*int16_t **
 {
     var i: number;
 
-    if (inside_p(x,y,sectnum$))
+    if (inside_p(x,y,sectnum.$))
         return;
 
     if (sectnum.$ >= 0 && sectnum.$ < numsectors)
@@ -13538,16 +13540,16 @@ function updatesector(/*int32_t*/ x: number, /*int32_t */y: number, /*int16_t **
         {
             i = wal.nextsector;
             if (inside_p(x, y, i))
-                SET_AND_RETURN(sectnum.$, i);
+                {sectnum.$ = i; return;}
 
-            walIdx++; j--;
+            wal=wall[++walIdx]; j--;
         }
         while (j != 0);
     }
 
     for (i=numsectors-1; i>=0; i--)
         if (inside_p(x, y, i))
-            SET_AND_RETURN(sectnum.$, i);
+            {sectnum.$ = i; return;}
 
     sectnum.$ = -1;
 }
@@ -13566,7 +13568,7 @@ function updatesector(/*int32_t*/ x: number, /*int32_t */y: number, /*int16_t **
 //    for (sectcnt=0; sectcnt<nsecs; sectcnt++)
 //    {
 //        if (inside_p(x,y, sectlist[sectcnt]))
-//            SET_AND_RETURN(*sectnum, sectlist[sectcnt]);
+//            {sectnum.$ = sectlist[sectcnt]; return;}
 
 //        {
 //            const sectortype *sec = &sector[sectlist[sectcnt]];
@@ -13598,7 +13600,7 @@ function updatesector(/*int32_t*/ x: number, /*int32_t */y: number, /*int16_t **
 //        {
 //            i = wal->nextsector;
 //            if (inside_exclude_p(x, y, i, excludesectbitmap))
-//                SET_AND_RETURN(*sectnum, i);
+//                {sectnum.$ = i; return;}
 
 //            wal++; j--;
 //        }
@@ -13607,7 +13609,7 @@ function updatesector(/*int32_t*/ x: number, /*int32_t */y: number, /*int16_t **
 
 //    for (i=numsectors-1; i>=0; i--)
 //        if (inside_exclude_p(x, y, i, excludesectbitmap))
-//            SET_AND_RETURN(*sectnum, i);
+//            {sectnum.$ = i; return;}
 
 //    *sectnum = -1;
 //}
@@ -13640,14 +13642,14 @@ function updatesector(/*int32_t*/ x: number, /*int32_t */y: number, /*int16_t **
 //        {
 //            i = yax_getneighborsect(x, y, *sectnum, YAX_CEILING);
 //            if (i >= 0 && z >= getceilzofslope(i, x, y))
-//                SET_AND_RETURN(*sectnum, i);
+//                {sectnum.$ = i; return;}
 //        }
 
 //        if (z > fz)
 //        {
 //            i = yax_getneighborsect(x, y, *sectnum, YAX_FLOOR);
 //            if (i >= 0 && z <= getflorzofslope(i, x, y))
-//                SET_AND_RETURN(*sectnum, i);
+//                {sectnum.$ = i; return;}
 //        }
 //#endif
 //        if (nofirstzcheck || (z >= cz && z <= fz))
@@ -13661,7 +13663,7 @@ function updatesector(/*int32_t*/ x: number, /*int32_t */y: number, /*int16_t **
 //            // YAX: TODO: check neighboring sectors here too?
 //            i = wal->nextsector;
 //            if (i>=0 && inside_z_p(x,y,z, i))
-//                SET_AND_RETURN(*sectnum, i);
+//                {sectnum.$ = i; return;}
 
 //            wal++; j--;
 //        }
@@ -13670,7 +13672,7 @@ function updatesector(/*int32_t*/ x: number, /*int32_t */y: number, /*int16_t **
 
 //    for (i=numsectors-1; i>=0; i--)
 //        if (inside_z_p(x,y,z, i))
-//            SET_AND_RETURN(*sectnum, i);
+//            {sectnum.$ = i; return;}
 
 //    *sectnum = -1;
 //}

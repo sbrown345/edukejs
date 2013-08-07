@@ -110,13 +110,13 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 var g_halfScreen: halfdimen_t = new halfdimen_t();
 var g_halveScreenArea = 0;//int32_t
 
-//static int32_t g_whichPalForPlayer = 9;
+var g_whichPalForPlayer = 9;//static int32_t 
 
-//static uint8_t precachehightile[2][MAXTILES>>3];
-//static int32_t  g_precacheCount;
+var precachehightile: Uint8Array = multiDimArray<Uint8Array>(Uint8Array, 2, MAXTILES>>3); //static uint8_t 
+var g_precacheCount = 0; //static int32_t  
 
-//extern int32_t g_levelTextTime;
-
+var g_levelTextTime = 0; //extern int32_t 
+ 
 //static void flag_precache(int32_t tile, int32_t type)
 //{
 //    if (!(gotpic[tile>>3] & pow2char[tile&7]))
@@ -407,7 +407,7 @@ function G_DoLoadScreen(statustext: string, percent: number): void
     {
         j = VM_OnEvent(EVENT_GETLOADTILE, -1, myconnectindex, -1, LOADSCREEN);
 
-        //g_player[myconnectindex].ps->palette = palette;
+        //g_player[myconnectindex].ps.palette = palette;
         P_SetGamePalette(g_player[myconnectindex].ps, BASEPAL, 1);    // JBF 20040308
 
         if (!statustext)
@@ -470,7 +470,7 @@ function G_DoLoadScreen(statustext: string, percent: number): void
 //        if (!statustext)
 //        {
 //            clearallviews(0);
-//            //g_player[myconnectindex].ps->palette = palette;
+//            //g_player[myconnectindex].ps.palette = palette;
 //            //G_FadePalette(0,0,0,0);
 //            P_SetGamePalette(g_player[myconnectindex].ps, BASEPAL, 0);    // JBF 20040308
 //        }
@@ -491,7 +491,7 @@ function G_DoLoadScreen(statustext: string, percent: number): void
 
 //        menutext(160,105,0,0,"Loading...");
 //        if (statustext) gametext(160,180,statustext,0,2+8+16);
-//        VM_OnEvent(EVENT_DISPLAYLOADINGSCREEN, g_player[screenpeek].ps->i, screenpeek, -1, 0);
+//        VM_OnEvent(EVENT_DISPLAYLOADINGSCREEN, g_player[screenpeek].ps.i, screenpeek, -1, 0);
 //        nextpage();
     }
 }
@@ -719,11 +719,11 @@ function G_UpdateScreenArea(): void
 //        {
 //            for (j=0; j<ud.multimode; j++)
 //            {
-//                if (j != snum && g_player[j].ps->team == p->team && sprite[g_player[j].ps->i].extra > 0)
+//                if (j != snum && g_player[j].ps.team == p.team && sprite[g_player[j].ps.i].extra > 0)
 //                {
 //                    for (k=0; k<g_numPlayerSprites; k++)
 //                    {
-//                        dist = FindDistance2D(g_player[j].ps->pos.x-g_playerSpawnPoints[k].ox,g_player[j].ps->pos.y-g_playerSpawnPoints[k].oy);
+//                        dist = FindDistance2D(g_player[j].ps.pos.x-g_playerSpawnPoints[k].ox,g_player[j].ps.pos.y-g_playerSpawnPoints[k].oy);
 //                        if (dist < pdist)
 //                            i = k, pdist = dist;
 //                    }
@@ -733,89 +733,89 @@ function G_UpdateScreenArea(): void
 //        }
 //    }
 
-//    p->bobposx = p->opos.x = p->pos.x = g_playerSpawnPoints[i].ox;
-//    p->bobposy = p->opos.y = p->pos.y = g_playerSpawnPoints[i].oy;
-//    p->opos.z = p->pos.z = g_playerSpawnPoints[i].oz;
-//    p->ang = g_playerSpawnPoints[i].oa;
-//    p->cursectnum = g_playerSpawnPoints[i].os;
-//    sprite[p->i].cstat = 1+256;
+//    p.bobposx = p.opos.x = p.pos.x = g_playerSpawnPoints[i].ox;
+//    p.bobposy = p.opos.y = p.pos.y = g_playerSpawnPoints[i].oy;
+//    p.opos.z = p.pos.z = g_playerSpawnPoints[i].oz;
+//    p.ang = g_playerSpawnPoints[i].oa;
+//    p.cursectnum = g_playerSpawnPoints[i].os;
+//    sprite[p.i].cstat = 1+256;
 //}
 
-//static inline void P_ResetTintFade(DukePlayer_t *ps)
-//{
-//    ps->pals.f = 0;
+function P_ResetTintFade(ps: DukePlayer_t): void
+{
+    ps.pals.f = 0;
 //#ifdef LUNATIC
-//    ps->palsfadeprio = 0;
+    //ps.palsfadeprio = 0;
 //#endif
-//}
+}
 
 //void P_ResetPlayer(int32_t snum)
 //{
 //    vec3_t tmpvect;
 //    DukePlayer_t *const pl = g_player[snum].ps;
-//    spritetype *const sp = &sprite[pl->i];
+//    spritetype *const sp = &sprite[pl.i];
 
-//    tmpvect.x = pl->pos.x;
-//    tmpvect.y = pl->pos.y;
-//    tmpvect.z = pl->pos.z+PHEIGHT;
+//    tmpvect.x = pl.pos.x;
+//    tmpvect.y = pl.pos.y;
+//    tmpvect.z = pl.pos.z+PHEIGHT;
 //    P_RandomSpawnPoint(snum);
-//    sp->x = actor[pl->i].bpos.x = pl->bobposx = pl->opos.x = pl->pos.x;
-//    sp->y = actor[pl->i].bpos.y = pl->bobposy = pl->opos.y = pl->pos.y;
-//    sp->z = actor[pl->i].bpos.y = pl->opos.z =pl->pos.z;
-//    updatesector(pl->pos.x,pl->pos.y,&pl->cursectnum);
-//    setsprite(pl->i,&tmpvect);
-//    sp->cstat = 257;
+//    sp.x = actor[pl.i].bpos.x = pl.bobposx = pl.opos.x = pl.pos.x;
+//    sp.y = actor[pl.i].bpos.y = pl.bobposy = pl.opos.y = pl.pos.y;
+//    sp.z = actor[pl.i].bpos.y = pl.opos.z =pl.pos.z;
+//    updatesector(pl.pos.x,pl.pos.y,&pl.cursectnum);
+//    setsprite(pl.i,&tmpvect);
+//    sp.cstat = 257;
 
-//    sp->shade = -12;
-//    sp->clipdist = 64;
-//    sp->xrepeat = 42;
-//    sp->yrepeat = 36;
-//    sp->owner = pl->i;
-//    sp->xoffset = 0;
-//    sp->pal = pl->palookup;
+//    sp.shade = -12;
+//    sp.clipdist = 64;
+//    sp.xrepeat = 42;
+//    sp.yrepeat = 36;
+//    sp.owner = pl.i;
+//    sp.xoffset = 0;
+//    sp.pal = pl.palookup;
 
-//    pl->last_extra = sp->extra = pl->max_player_health;
-//    pl->wantweaponfire = -1;
-//    pl->horiz = 100;
-//    pl->on_crane = -1;
-//    pl->frag_ps = snum;
-//    pl->horizoff = 0;
-//    pl->opyoff = 0;
-//    pl->wackedbyactor = -1;
-//    pl->inv_amount[GET_SHIELD] = g_startArmorAmount;
-//    pl->dead_flag = 0;
-//    pl->footprintcount = 0;
-//    pl->weapreccnt = 0;
-//    pl->fta = 0;
-//    pl->ftq = 0;
-//    pl->vel.x = pl->vel.y = 0;
-//    pl->rotscrnang = 0;
-//    pl->runspeed = g_playerFriction;
-//    pl->falling_counter = 0;
+//    pl.last_extra = sp.extra = pl.max_player_health;
+//    pl.wantweaponfire = -1;
+//    pl.horiz = 100;
+//    pl.on_crane = -1;
+//    pl.frag_ps = snum;
+//    pl.horizoff = 0;
+//    pl.opyoff = 0;
+//    pl.wackedbyactor = -1;
+//    pl.inv_amount[GET_SHIELD] = g_startArmorAmount;
+//    pl.dead_flag = 0;
+//    pl.footprintcount = 0;
+//    pl.weapreccnt = 0;
+//    pl.fta = 0;
+//    pl.ftq = 0;
+//    pl.vel.x = pl.vel.y = 0;
+//    pl.rotscrnang = 0;
+//    pl.runspeed = g_playerFriction;
+//    pl.falling_counter = 0;
 
 //    P_ResetTintFade(pl);
 
-//    actor[pl->i].extra = -1;
-//    actor[pl->i].owner = pl->i;
+//    actor[pl.i].extra = -1;
+//    actor[pl.i].owner = pl.i;
 
-//    actor[pl->i].cgg = 0;
-//    actor[pl->i].movflag = 0;
-//    actor[pl->i].tempang = 0;
-//    actor[pl->i].actorstayput = -1;
-//    actor[pl->i].dispicnum = 0;
-//    actor[pl->i].owner = pl->i;
+//    actor[pl.i].cgg = 0;
+//    actor[pl.i].movflag = 0;
+//    actor[pl.i].tempang = 0;
+//    actor[pl.i].actorstayput = -1;
+//    actor[pl.i].dispicnum = 0;
+//    actor[pl.i].owner = pl.i;
 
-//    actor[pl->i].t_data[4] = 0;
+//    actor[pl.i].t_data[4] = 0;
 
 //    P_ResetInventory(snum);
 //    P_ResetWeapons(snum);
 
-//    pl->reloading = 0;
+//    pl.reloading = 0;
 
-//    pl->movement_lock = 0;
+//    pl.movement_lock = 0;
 
 //    if (G_HaveEvent(EVENT_RESETPLAYER))
-//        VM_OnEvent(EVENT_RESETPLAYER, pl->i, snum, -1, 0);
+//        VM_OnEvent(EVENT_RESETPLAYER, pl.i, snum, -1, 0);
 //}
 
 //void P_ResetStatus(int32_t snum)
@@ -824,213 +824,213 @@ function G_UpdateScreenArea(): void
 
 //    ud.show_help        = 0;
 //    ud.showallmap       = 0;
-//    p->dead_flag        = 0;
-//    p->wackedbyactor    = -1;
-//    p->falling_counter  = 0;
-//    p->quick_kick       = 0;
-//    p->subweapon        = 0;
-//    p->last_full_weapon = 0;
-//    p->ftq              = 0;
-//    p->fta              = 0;
-//    p->tipincs          = 0;
-//    p->buttonpalette    = 0;
-//    p->actorsqu         =-1;
-//    p->invdisptime      = 0;
-//    p->refresh_inventory= 0;
-//    p->last_pissed_time = 0;
-//    p->holster_weapon   = 0;
-//    p->pycount          = 0;
-//    p->pyoff            = 0;
-//    p->opyoff           = 0;
-//    p->loogcnt          = 0;
-//    p->angvel           = 0;
-//    p->weapon_sway      = 0;
-//    //    p->select_dir       = 0;
-//    p->extra_extra8     = 0;
-//    p->show_empty_weapon= 0;
-//    p->dummyplayersprite=-1;
-//    p->crack_time       = 0;
-//    p->hbomb_hold_delay = 0;
-//    p->transporter_hold = 0;
-//    p->wantweaponfire  = -1;
-//    p->hurt_delay       = 0;
-//    p->footprintcount   = 0;
-//    p->footprintpal     = 0;
-//    p->footprintshade   = 0;
-//    p->jumping_toggle   = 0;
-//    p->ohoriz = p->horiz= 140;
-//    p->horizoff         = 0;
-//    p->bobcounter       = 0;
-//    p->on_ground        = 0;
-//    p->player_par       = 0;
-//    p->return_to_center = 9;
-//    p->airleft          = 15*GAMETICSPERSEC;
-//    p->rapid_fire_hold  = 0;
-//    p->toggle_key_flag  = 0;
-//    p->access_spritenum = -1;
+//    p.dead_flag        = 0;
+//    p.wackedbyactor    = -1;
+//    p.falling_counter  = 0;
+//    p.quick_kick       = 0;
+//    p.subweapon        = 0;
+//    p.last_full_weapon = 0;
+//    p.ftq              = 0;
+//    p.fta              = 0;
+//    p.tipincs          = 0;
+//    p.buttonpalette    = 0;
+//    p.actorsqu         =-1;
+//    p.invdisptime      = 0;
+//    p.refresh_inventory= 0;
+//    p.last_pissed_time = 0;
+//    p.holster_weapon   = 0;
+//    p.pycount          = 0;
+//    p.pyoff            = 0;
+//    p.opyoff           = 0;
+//    p.loogcnt          = 0;
+//    p.angvel           = 0;
+//    p.weapon_sway      = 0;
+//    //    p.select_dir       = 0;
+//    p.extra_extra8     = 0;
+//    p.show_empty_weapon= 0;
+//    p.dummyplayersprite=-1;
+//    p.crack_time       = 0;
+//    p.hbomb_hold_delay = 0;
+//    p.transporter_hold = 0;
+//    p.wantweaponfire  = -1;
+//    p.hurt_delay       = 0;
+//    p.footprintcount   = 0;
+//    p.footprintpal     = 0;
+//    p.footprintshade   = 0;
+//    p.jumping_toggle   = 0;
+//    p.ohoriz = p.horiz= 140;
+//    p.horizoff         = 0;
+//    p.bobcounter       = 0;
+//    p.on_ground        = 0;
+//    p.player_par       = 0;
+//    p.return_to_center = 9;
+//    p.airleft          = 15*GAMETICSPERSEC;
+//    p.rapid_fire_hold  = 0;
+//    p.toggle_key_flag  = 0;
+//    p.access_spritenum = -1;
 //    if ((g_netServer || ud.multimode > 1) && (GametypeFlags[ud.coop] & GAMETYPE_ACCESSATSTART))
-//        p->got_access = 7;
-//    else p->got_access      = 0;
-//    p->random_club_frame= 0;
+//        p.got_access = 7;
+//    else p.got_access      = 0;
+//    p.random_club_frame= 0;
 //    pus = 1;
-//    p->on_warping_sector = 0;
-//    p->spritebridge      = 0;
-//    p->sbs          = 0;
-//    p->palette = BASEPAL;
+//    p.on_warping_sector = 0;
+//    p.spritebridge      = 0;
+//    p.sbs          = 0;
+//    p.palette = BASEPAL;
 
-//    if (p->inv_amount[GET_STEROIDS] < 400)
+//    if (p.inv_amount[GET_STEROIDS] < 400)
 //    {
-//        p->inv_amount[GET_STEROIDS] = 0;
-//        p->inven_icon = ICON_NONE;
+//        p.inv_amount[GET_STEROIDS] = 0;
+//        p.inven_icon = ICON_NONE;
 //    }
-//    p->heat_on =            0;
-//    p->jetpack_on =         0;
-//    p->holoduke_on =       -1;
+//    p.heat_on =            0;
+//    p.jetpack_on =         0;
+//    p.holoduke_on =       -1;
 
-//    p->look_ang          = 512 - ((ud.level_number&1)<<10);
+//    p.look_ang          = 512 - ((ud.level_number&1)<<10);
 
-//    p->rotscrnang        = 0;
-//    p->orotscrnang       = 1;   // JBF 20031220
-//    p->newowner          =-1;
-//    p->jumping_counter   = 0;
-//    p->hard_landing      = 0;
-//    p->vel.x             = 0;
-//    p->vel.y             = 0;
-//    p->vel.z             = 0;
+//    p.rotscrnang        = 0;
+//    p.orotscrnang       = 1;   // JBF 20031220
+//    p.newowner          =-1;
+//    p.jumping_counter   = 0;
+//    p.hard_landing      = 0;
+//    p.vel.x             = 0;
+//    p.vel.y             = 0;
+//    p.vel.z             = 0;
 //    fricxv            = 0;
 //    fricyv            = 0;
-//    p->somethingonplayer =-1;
-//    p->one_eighty_count  = 0;
-//    p->cheat_phase       = 0;
+//    p.somethingonplayer =-1;
+//    p.one_eighty_count  = 0;
+//    p.cheat_phase       = 0;
 
-//    p->on_crane          = -1;
+//    p.on_crane          = -1;
 
-//    if ((PWEAPON(snum, p->curr_weapon, WorksLike) == PISTOL_WEAPON) &&
-//            (PWEAPON(snum, p->curr_weapon, Reload) > PWEAPON(snum, p->curr_weapon, TotalTime)))
-//        p->kickback_pic  = PWEAPON(snum, p->curr_weapon, TotalTime);
-//    else p->kickback_pic = 0;
+//    if ((PWEAPON(snum, p.curr_weapon, WorksLike) == PISTOL_WEAPON) &&
+//            (PWEAPON(snum, p.curr_weapon, Reload) > PWEAPON(snum, p.curr_weapon, TotalTime)))
+//        p.kickback_pic  = PWEAPON(snum, p.curr_weapon, TotalTime);
+//    else p.kickback_pic = 0;
 
-//    p->weapon_pos        = WEAPON_POS_START;
-//    p->walking_snd_toggle= 0;
-//    p->weapon_ang        = 0;
+//    p.weapon_pos        = WEAPON_POS_START;
+//    p.walking_snd_toggle= 0;
+//    p.weapon_ang        = 0;
 
-//    p->knuckle_incs      = 1;
-//    p->fist_incs = 0;
-//    p->knee_incs         = 0;
-//    p->jetpack_on        = 0;
-//    p->reloading        = 0;
+//    p.knuckle_incs      = 1;
+//    p.fist_incs = 0;
+//    p.knee_incs         = 0;
+//    p.jetpack_on        = 0;
+//    p.reloading        = 0;
 
-//    p->movement_lock     = 0;
+//    p.movement_lock     = 0;
 
-//    p->frag_ps          = snum;
+//    p.frag_ps          = snum;
 
 //    P_UpdateScreenPal(p);
-//    VM_OnEvent(EVENT_RESETPLAYER, p->i, snum, -1, 0);
+//    VM_OnEvent(EVENT_RESETPLAYER, p.i, snum, -1, 0);
 //}
 
-//void P_ResetWeapons(int32_t snum)
-//{
-//    int32_t weapon;
-//    DukePlayer_t *p = g_player[snum].ps;
+function P_ResetWeapons(/*int32_t*/ snum: number): void
+{
+    var weapon: number;
+    var p = g_player[snum].ps;
 
-//    for (weapon = PISTOL_WEAPON; weapon < MAX_WEAPONS; weapon++)
-//        p->ammo_amount[weapon] = 0;
+    for (weapon = PISTOL_WEAPON; weapon < MAX_WEAPONS; weapon++)
+        p.ammo_amount[weapon] = 0;
 
-//    p->weapon_pos = WEAPON_POS_START;
-//    p->curr_weapon = PISTOL_WEAPON;
-//    p->kickback_pic = PWEAPON(snum, p->curr_weapon, TotalTime);
-//    p->gotweapon = ((1<<PISTOL_WEAPON) | (1<<KNEE_WEAPON) | (1<<HANDREMOTE_WEAPON));
-//    p->ammo_amount[PISTOL_WEAPON] = min(p->max_ammo_amount[PISTOL_WEAPON], 48);
-//    p->last_weapon = -1;
+    p.weapon_pos = WEAPON_POS_START;
+    p.curr_weapon = PISTOL_WEAPON;
+    p.kickback_pic = PWEAPON(snum, p.curr_weapon, TotalTime);
+    p.gotweapon = ((1<<PISTOL_WEAPON) | (1<<KNEE_WEAPON) | (1<<HANDREMOTE_WEAPON));
+    p.ammo_amount[PISTOL_WEAPON] = min(p.max_ammo_amount[PISTOL_WEAPON], 48);
+    p.last_weapon = -1;
 
-//    p->show_empty_weapon= 0;
-//    p->last_pissed_time = 0;
-//    p->holster_weapon = 0;
-//    VM_OnEvent(EVENT_RESETWEAPONS, p->i, snum, -1, 0);
-//}
+    p.show_empty_weapon= 0;
+    p.last_pissed_time = 0;
+    p.holster_weapon = 0;
+    VM_OnEvent(EVENT_RESETWEAPONS, p.i, snum, -1, 0);
+}
 
-//void P_ResetInventory(int32_t snum)
-//{
-//    DukePlayer_t *p = g_player[snum].ps;
+function P_ResetInventory(/*int32_t*/ snum: number): void
+{
+    var p = g_player[snum].ps;
 
-//    Bmemset(p->inv_amount, 0, sizeof(p->inv_amount));
+    Bmemset(new P(p.inv_amount), 0, sizeof(p.inv_amount));
 
-//    p->scuba_on =           0;
-//    p->heat_on = 0;
-//    p->jetpack_on =         0;
-//    p->holoduke_on = -1;
-//    p->inv_amount[GET_SHIELD] =      g_startArmorAmount;
-//    p->inven_icon = ICON_NONE;
-//    VM_OnEvent(EVENT_RESETINVENTORY, p->i, snum, -1, 0);
-//}
+    p.scuba_on =           0;
+    p.heat_on = 0;
+    p.jetpack_on =         0;
+    p.holoduke_on = -1;
+    p.inv_amount[GET_SHIELD] =      g_startArmorAmount;
+    p.inven_icon = ICON_NONE;
+    VM_OnEvent(EVENT_RESETINVENTORY, p.i, snum, -1, 0);
+}
 
-//static void resetprestat(int32_t snum,int32_t g)
-//{
-//    DukePlayer_t *p = g_player[snum].ps;
-//    int32_t i;
+function resetprestat(/*int32_t*/ snum: number,/*int32_t */g: number): void
+{
+    var p = g_player[snum].ps;
+    var i: number;
 
-//    g_spriteDeleteQueuePos = 0;
-//    for (i=0; i<g_spriteDeleteQueueSize; i++) SpriteDeletionQueue[i] = -1;
+    g_spriteDeleteQueuePos = 0;
+    for (i=0; i<g_spriteDeleteQueueSize; i++) SpriteDeletionQueue[i] = -1;
 
-//    p->hbomb_on          = 0;
-//    p->cheat_phase       = 0;
-//    p->toggle_key_flag   = 0;
-//    p->secret_rooms      = 0;
-//    p->max_secret_rooms  = 0;
-//    p->actors_killed     = 0;
-//    p->max_actors_killed = 0;
-//    p->lastrandomspot    = 0;
-//    p->weapon_pos = WEAPON_POS_START;
+    p.hbomb_on          = 0;
+    p.cheat_phase       = 0;
+    p.toggle_key_flag   = 0;
+    p.secret_rooms      = 0;
+    p.max_secret_rooms  = 0;
+    p.actors_killed     = 0;
+    p.max_actors_killed = 0;
+    p.lastrandomspot    = 0;
+    p.weapon_pos = WEAPON_POS_START;
 
-//    P_ResetTintFade(p);
+    P_ResetTintFade(p);
 
-//    if ((PWEAPON(snum, p->curr_weapon, WorksLike) == PISTOL_WEAPON) &&
-//            (PWEAPON(snum, p->curr_weapon, Reload) > PWEAPON(snum, p->curr_weapon, TotalTime)))
-//        p->kickback_pic  = PWEAPON(snum, p->curr_weapon, TotalTime);
-//    else p->kickback_pic = 0;
+    if ((PWEAPON(snum, p.curr_weapon, WorksLike) == PISTOL_WEAPON) &&
+            (PWEAPON(snum, p.curr_weapon, Reload) > PWEAPON(snum, p.curr_weapon, TotalTime)))
+        p.kickback_pic  = PWEAPON(snum, p.curr_weapon, TotalTime);
+    else p.kickback_pic = 0;
 
-//    p->last_weapon = -1;
-//    p->weapreccnt = 0;
-//    p->interface_toggle_flag = 0;
-//    p->show_empty_weapon= 0;
-//    p->holster_weapon = 0;
-//    p->last_pissed_time = 0;
+    p.last_weapon = -1;
+    p.weapreccnt = 0;
+    p.interface_toggle_flag = 0;
+    p.show_empty_weapon= 0;
+    p.holster_weapon = 0;
+    p.last_pissed_time = 0;
 
-//    p->one_parallax_sectnum = -1;
-//    p->visibility = ud.const_visibility;
+    p.one_parallax_sectnum = -1;
+    p.visibility = ud.const_visibility;
 
-//    screenpeek              = myconnectindex;
-//    g_numAnimWalls            = 0;
-//    g_numCyclers              = 0;
-//    g_animateCount              = 0;
-//    parallaxtype            = 0;
-//    randomseed              = 1996;
-//    ud.pause_on             = 0;
-//    ud.camerasprite         =-1;
-//    ud.eog                  = 0;
-//    tempwallptr             = 0;
-//    camsprite               =-1;
-//    g_earthquakeTime          = 0;
+    screenpeek              = myconnectindex;
+    g_numAnimWalls            = 0;
+    g_numCyclers              = 0;
+    g_animateCount              = 0;
+    parallaxtype            = 0;
+    randomseed              = 1996;
+    ud.pause_on             = 0;
+    ud.camerasprite         =-1;
+    ud.eog                  = 0;
+    tempwallptr             = 0;
+    camsprite               =-1;
+    g_earthquakeTime          = 0;
 
-//    g_numInterpolations = 0;
-//    startofdynamicinterpolations = 0;
+    g_numInterpolations = 0;
+    startofdynamicinterpolations = 0;
 
-//    if (((g&MODE_EOL) != MODE_EOL && numplayers < 2 && !g_netServer) ||
-//            (!(GametypeFlags[ud.coop]&GAMETYPE_PRESERVEINVENTORYDEATH) && numplayers > 1))
-//    {
-//        P_ResetWeapons(snum);
-//        P_ResetInventory(snum);
-//    }
-//    else if (p->curr_weapon == HANDREMOTE_WEAPON)
-//    {
-//        p->ammo_amount[HANDBOMB_WEAPON]++;
-//        p->curr_weapon = HANDBOMB_WEAPON;
-//    }
+    if (((g&MODE_EOL) != MODE_EOL && numplayers < 2 && !g_netServer) ||
+            (!(GametypeFlags[ud.coop]&GAMETYPE_PRESERVEINVENTORYDEATH) && numplayers > 1))
+    {
+        P_ResetWeapons(snum);
+        P_ResetInventory(snum);
+    }
+    else if (p.curr_weapon == HANDREMOTE_WEAPON)
+    {
+        p.ammo_amount[HANDBOMB_WEAPON]++;
+        p.curr_weapon = HANDBOMB_WEAPON;
+    }
 
-//    p->timebeforeexit   = 0;
-//    p->customexitsound  = 0;
+    p.timebeforeexit   = 0;
+    p.customexitsound  = 0;
 
-//}
+}
 
 //static inline void G_SetupBackdrop(int16_t sky)
 //{
@@ -1135,344 +1135,344 @@ function G_UpdateScreenArea(): void
 //    }
 //}
 
-//static inline void prelevel(char g)
-//{
-//    int32_t i, nexti, j, startwall, endwall;
-//    int32_t switchpicnum;
-//    uint8_t *tagbitmap = (uint8_t *)Bcalloc(65536>>3, 1);
+function prelevel(/*char*/ g: number): void
+{
+   var i, nexti, j, startwall, endwall;                 // int32_t 
+   var switchpicnum;                                    // int32_t 
+   var tagbitmap = new Uint8Array(65536>>3);// /(uint8_t *)Bcalloc(65536>>3, 1);    // uint8_t 
 
-//    if (tagbitmap==NULL)
-//        G_GameExit("OUT OF MEMORY in prelevel()");
+    if (tagbitmap==NULL)
+        G_GameExit("OUT OF MEMORY in prelevel()");
 
-//    Bmemset(show2dsector, 0, sizeof(show2dsector));
+    Bmemset(new P(show2dsector), 0, sizeof(show2dsector));
 
-//    Bmemset(ror_protectedsectors, 0, MAXSECTORS);
+    Bmemset(new P(ror_protectedsectors), 0, MAXSECTORS);
 
-//    resetprestat(0,g);
-//    g_numClouds = 0;
+    resetprestat(0,g);
+    g_numClouds = 0;
 
-//    for (i=0; i<numsectors; i++)
-//    {
-//        sector[i].extra = 256;
+    for (i=0; i<numsectors; i++)
+    {
+        sector[i].extra = 256;
 
-//        switch (sector[i].lotag)
-//        {
-//        case ST_20_CEILING_DOOR:
-//        case ST_22_SPLITTING_DOOR:
-//            if (sector[i].floorz > sector[i].ceilingz)
-//                sector[i].lotag |= 32768;
-//            continue;
-//        }
+        switch (sector[i].lotag)
+        {
+        case ST_20_CEILING_DOOR:
+        case ST_22_SPLITTING_DOOR:
+            if (sector[i].floorz > sector[i].ceilingz)
+                sector[i].lotag |= 32768;
+            continue;
+        }
 
-//        if (sector[i].ceilingstat&1)
-//        {
-//            if (waloff[sector[i].ceilingpicnum] == 0)
-//            {
-//                if (sector[i].ceilingpicnum == LA)
-//                    for (j=0; j<5; j++)
-//                        tloadtile(sector[i].ceilingpicnum+j, 0);
-//            }
-//            G_SetupBackdrop(sector[i].ceilingpicnum);
+        if (sector[i].ceilingstat&1)
+        {
+            if (waloff[sector[i].ceilingpicnum] == 0)
+            {
+                if (sector[i].ceilingpicnum == LA)
+                    for (j=0; j<5; j++)
+                        todoThrow("tloadtile(sector[i].ceilingpicnum+j, 0);");
+            }
+            todoThrow(" G_SetupBackdrop(sector[i].ceilingpicnum);");
 
-//            if (sector[i].ceilingpicnum == CLOUDYSKIES && g_numClouds < 127)
-//                clouds[g_numClouds++] = i;
+            if (sector[i].ceilingpicnum == CLOUDYSKIES && g_numClouds < 127)
+                clouds[g_numClouds++] = i;
 
-//            if (g_player[0].ps->one_parallax_sectnum == -1)
-//                g_player[0].ps->one_parallax_sectnum = i;
-//        }
+            if (g_player[0].ps.one_parallax_sectnum == -1)
+                g_player[0].ps.one_parallax_sectnum = i;
+        }
 
-//        if (sector[i].lotag == 32767) //Found a secret room
-//        {
-//            g_player[0].ps->max_secret_rooms++;
-//            continue;
-//        }
+        if (sector[i].lotag == 32767) //Found a secret room
+        {
+            g_player[0].ps.max_secret_rooms++;
+            continue;
+        }
 
-//        if (sector[i].lotag == UINT16_MAX)
-//        {
-//            g_player[0].ps->exitx = wall[sector[i].wallptr].x;
-//            g_player[0].ps->exity = wall[sector[i].wallptr].y;
-//            continue;
-//        }
-//    }
+        if (sector[i].lotag == UINT16_MAX)
+        {
+            g_player[0].ps.exitx = wall[sector[i].wallptr].x;
+            g_player[0].ps.exity = wall[sector[i].wallptr].y;
+            continue;
+        }
+    }
 
 //#ifdef LUNATIC
 //    El_CreateGameState();
 //    G_PostCreateGameState();
 //#endif
 
-//    i = headspritestat[STAT_DEFAULT];
-//    while (i >= 0)
-//    {
-//        nexti = nextspritestat[i];
+    i = headspritestat[STAT_DEFAULT];
+    while (i >= 0)
+    {
+        nexti = nextspritestat[i];
 //#if !defined LUNATIC
-//        A_ResetVars(i);
-//        A_LoadActor(i);
+        A_ResetVars(i);
+        A_LoadActor(i);
 //#endif
-//        VM_OnEvent(EVENT_LOADACTOR, i, -1, -1, 0);
-//        if (sprite[i].lotag == UINT16_MAX && (sprite[i].cstat&16))
-//        {
-//            g_player[0].ps->exitx = SX;
-//            g_player[0].ps->exity = SY;
-//        }
-//        else switch (DYNAMICTILEMAP(PN))
-//            {
-//            case GPSPEED__STATIC:
-//                sector[SECT].extra = SLT;
-//                A_DeleteSprite(i);
-//                break;
+        VM_OnEvent(EVENT_LOADACTOR, i, -1, -1, 0);
+        if (sprite[i].lotag == UINT16_MAX && (sprite[i].cstat&16))
+        {
+            g_player[0].ps.exitx = SX;
+            g_player[0].ps.exity = SY;
+        }
+        else switch (DYNAMICTILEMAP(PN))
+            {
+            case GPSPEED__STATIC:
+                sector[SECT].extra = SLT;
+                A_DeleteSprite(i);
+                break;
 
-//            case CYCLER__STATIC:
-//                if (g_numCyclers >= MAXCYCLERS)
-//                {
-//                    Bsprintf(tempbuf,"\nToo many cycling sectors (%d max).",MAXCYCLERS);
-//                    G_GameExit(tempbuf);
-//                }
-//                cyclers[g_numCyclers][0] = SECT;
-//                cyclers[g_numCyclers][1] = SLT;
-//                cyclers[g_numCyclers][2] = SS;
-//                cyclers[g_numCyclers][3] = sector[SECT].floorshade;
-//                cyclers[g_numCyclers][4] = SHT;
-//                cyclers[g_numCyclers][5] = (SA == 1536);
-//                g_numCyclers++;
-//                A_DeleteSprite(i);
-//                break;
+            case CYCLER__STATIC:
+                if (g_numCyclers >= MAXCYCLERS)
+                {
+                    Bsprintf(tempbuf,"\nToo many cycling sectors (%d max).",MAXCYCLERS);
+                    G_GameExit(tempbuf);
+                }
+                cyclers[g_numCyclers][0] = SECT;
+                cyclers[g_numCyclers][1] = SLT;
+                cyclers[g_numCyclers][2] = SS;
+                cyclers[g_numCyclers][3] = sector[SECT].floorshade;
+                cyclers[g_numCyclers][4] = SHT;
+                cyclers[g_numCyclers][5] = (SA == 1536);
+                g_numCyclers++;
+                A_DeleteSprite(i);
+                break;
 
-//            case SECTOREFFECTOR__STATIC:
-//            case ACTIVATOR__STATIC:
-//            case TOUCHPLATE__STATIC:
-//            case ACTIVATORLOCKED__STATIC:
-//            case MUSICANDSFX__STATIC:
-//            case LOCATORS__STATIC:
-//            case MASTERSWITCH__STATIC:
-//            case RESPAWN__STATIC:
-//                sprite[i].cstat &= ~(1|256);
-//                break;
-//            }
-//        i = nexti;
-//    }
+            case SECTOREFFECTOR__STATIC:
+            case ACTIVATOR__STATIC:
+            case TOUCHPLATE__STATIC:
+            case ACTIVATORLOCKED__STATIC:
+            case MUSICANDSFX__STATIC:
+            case LOCATORS__STATIC:
+            case MASTERSWITCH__STATIC:
+            case RESPAWN__STATIC:
+                sprite[i].cstat &= ~(1|256);
+                break;
+            }
+        i = nexti;
+    }
 
-//    for (i=0; i < MAXSPRITES; i++)
-//    {
-//        if (sprite[i].statnum < MAXSTATUS)
-//        {
-//            if (PN == SECTOREFFECTOR && SLT == SE_14_SUBWAY_CAR)
-//                continue;
-//            A_Spawn(-1,i);
-//        }
-//    }
+    for (i=0; i < MAXSPRITES; i++)
+    {
+        if (sprite[i].statnum < MAXSTATUS)
+        {
+            if (PN == SECTOREFFECTOR && SLT == SE_14_SUBWAY_CAR)
+                continue;
+            A_Spawn(-1,i);
+        }
+    }
 
-//    for (i=0; i < MAXSPRITES; i++)
-//        if (sprite[i].statnum < MAXSTATUS)
-//        {
-//            if (PN == SECTOREFFECTOR && SLT == SE_14_SUBWAY_CAR)
-//                A_Spawn(-1,i);
-//        }
+    for (i=0; i < MAXSPRITES; i++)
+        if (sprite[i].statnum < MAXSTATUS)
+        {
+            if (PN == SECTOREFFECTOR && SLT == SE_14_SUBWAY_CAR)
+                A_Spawn(-1,i);
+        }
 
-//    G_SetupRotfixedSprites();
+    G_SetupRotfixedSprites();
 
-//    for (i=headspritestat[STAT_DEFAULT]; i>=0; i=nextspritestat[i])
-//    {
-//        int32_t ii;
+    for (i=headspritestat[STAT_DEFAULT]; i>=0; i=nextspritestat[i])
+    {
+        int32_t ii;
 
-//        if (PN <= 0)  // oob safety for switch below
-//            continue;
+        if (PN <= 0)  // oob safety for switch below
+            continue;
 
-//        for (ii=0; ii<2; ii++)
-//            switch (DYNAMICTILEMAP(PN-1+ii))
-//            {
-//            case DIPSWITCH__STATIC:
-//            case DIPSWITCH2__STATIC:
-//            case PULLSWITCH__STATIC:
-//            case HANDSWITCH__STATIC:
-//            case SLOTDOOR__STATIC:
-//            case LIGHTSWITCH__STATIC:
-//            case SPACELIGHTSWITCH__STATIC:
-//            case SPACEDOORSWITCH__STATIC:
-//            case FRANKENSTINESWITCH__STATIC:
-//            case LIGHTSWITCH2__STATIC:
-//            case POWERSWITCH1__STATIC:
-//            case LOCKSWITCH1__STATIC:
-//            case POWERSWITCH2__STATIC:
-//                // the lower code only for the 'on' state (*)
-//                if (ii==0)
-//                {
-//                    j = sprite[i].lotag;
-//                    tagbitmap[j>>3] |= 1<<(j&7);
-//                }
+        for (ii=0; ii<2; ii++)
+            switch (DYNAMICTILEMAP(PN-1+ii))
+            {
+            case DIPSWITCH__STATIC:
+            case DIPSWITCH2__STATIC:
+            case PULLSWITCH__STATIC:
+            case HANDSWITCH__STATIC:
+            case SLOTDOOR__STATIC:
+            case LIGHTSWITCH__STATIC:
+            case SPACELIGHTSWITCH__STATIC:
+            case SPACEDOORSWITCH__STATIC:
+            case FRANKENSTINESWITCH__STATIC:
+            case LIGHTSWITCH2__STATIC:
+            case POWERSWITCH1__STATIC:
+            case LOCKSWITCH1__STATIC:
+            case POWERSWITCH2__STATIC:
+                // the lower code only for the 'on' state (*)
+                if (ii==0)
+                {
+                    j = sprite[i].lotag;
+                    tagbitmap[j>>3] |= 1<<(j&7);
+                }
 
-//                break;
-//            }
-//    }
+                break;
+            }
+    }
 
-//    // initially 'on' SE 12 light (*)
-//    for (j=headspritestat[STAT_EFFECTOR]; j>=0; j=nextspritestat[j])
-//    {
-//        int32_t t = sprite[j].hitag;
+    // initially 'on' SE 12 light (*)
+    for (j=headspritestat[STAT_EFFECTOR]; j>=0; j=nextspritestat[j])
+    {
+        int32_t t = sprite[j].hitag;
 
-//        if (sprite[j].lotag == SE_12_LIGHT_SWITCH && tagbitmap[t>>3]&(1<<(t&7)))
-//            actor[j].t_data[0] = 1;
-//    }
+        if (sprite[j].lotag == SE_12_LIGHT_SWITCH && tagbitmap[t>>3]&(1<<(t&7)))
+            actor[j].t_data[0] = 1;
+    }
 
-//    Bfree(tagbitmap);
+    Bfree(tagbitmap);
 
-//    g_mirrorCount = 0;
+    g_mirrorCount = 0;
 
-//    for (i = 0; i < numwalls; i++)
-//    {
-//        walltype *wal;
-//        wal = &wall[i];
+    for (i = 0; i < numwalls; i++)
+    {
+        walltype *wal;
+        wal = &wall[i];
 
-//        if (wal->overpicnum == MIRROR && (wal->cstat&32) != 0)
-//        {
-//            j = wal->nextsector;
+        if (wal.overpicnum == MIRROR && (wal.cstat&32) != 0)
+        {
+            j = wal.nextsector;
 
-//            if ((j >= 0) && sector[j].ceilingpicnum != MIRROR)
-//            {
-//                if (g_mirrorCount > 63)
-//                    G_GameExit("\nToo many mirrors (64 max.)");
+            if ((j >= 0) && sector[j].ceilingpicnum != MIRROR)
+            {
+                if (g_mirrorCount > 63)
+                    G_GameExit("\nToo many mirrors (64 max.)");
 
-//                sector[j].ceilingpicnum = MIRROR;
-//                sector[j].floorpicnum = MIRROR;
-//                g_mirrorWall[g_mirrorCount] = i;
-//                g_mirrorSector[g_mirrorCount] = j;
-//                g_mirrorCount++;
-//                continue;
-//            }
-//        }
+                sector[j].ceilingpicnum = MIRROR;
+                sector[j].floorpicnum = MIRROR;
+                g_mirrorWall[g_mirrorCount] = i;
+                g_mirrorSector[g_mirrorCount] = j;
+                g_mirrorCount++;
+                continue;
+            }
+        }
 
-//        if (g_numAnimWalls >= MAXANIMWALLS)
-//        {
-//            Bsprintf(tempbuf,"\nToo many 'anim' walls (%d max).",MAXANIMWALLS);
-//            G_GameExit(tempbuf);
-//        }
+        if (g_numAnimWalls >= MAXANIMWALLS)
+        {
+            Bsprintf(tempbuf,"\nToo many 'anim' walls (%d max).",MAXANIMWALLS);
+            G_GameExit(tempbuf);
+        }
 
-//        animwall[g_numAnimWalls].tag = 0;
-//        animwall[g_numAnimWalls].wallnum = 0;
+        animwall[g_numAnimWalls].tag = 0;
+        animwall[g_numAnimWalls].wallnum = 0;
 
-//        switchpicnum = wal->overpicnum;
-//        if (wal->overpicnum > W_FORCEFIELD && wal->overpicnum <= W_FORCEFIELD+2)
-//        {
-//            switchpicnum = W_FORCEFIELD;
-//        }
+        switchpicnum = wal.overpicnum;
+        if (wal.overpicnum > W_FORCEFIELD && wal.overpicnum <= W_FORCEFIELD+2)
+        {
+            switchpicnum = W_FORCEFIELD;
+        }
 
-//        if (switchpicnum >= 0)
-//        {
-//            switch (DYNAMICTILEMAP(switchpicnum))
-//            {
-//            case FANSHADOW__STATIC:
-//            case FANSPRITE__STATIC:
-//                wall->cstat |= 65;
-//                animwall[g_numAnimWalls].wallnum = i;
-//                g_numAnimWalls++;
-//                break;
+        if (switchpicnum >= 0)
+        {
+            switch (DYNAMICTILEMAP(switchpicnum))
+            {
+            case FANSHADOW__STATIC:
+            case FANSPRITE__STATIC:
+                wall.cstat |= 65;
+                animwall[g_numAnimWalls].wallnum = i;
+                g_numAnimWalls++;
+                break;
 
-//            case W_FORCEFIELD__STATIC:
-//                if (wal->overpicnum==W_FORCEFIELD__STATIC)
-//                    for (j=0; j<3; j++)
-//                        tloadtile(W_FORCEFIELD+j, 0);
-//                if (wal->shade > 31)
-//                    wal->cstat = 0;
-//                else wal->cstat |= 85+256;
+            case W_FORCEFIELD__STATIC:
+                if (wal.overpicnum==W_FORCEFIELD__STATIC)
+                    for (j=0; j<3; j++)
+                        tloadtile(W_FORCEFIELD+j, 0);
+                if (wal.shade > 31)
+                    wal.cstat = 0;
+                else wal.cstat |= 85+256;
 
 
-//                if (wal->lotag && wal->nextwall >= 0)
-//                    wall[wal->nextwall].lotag =
-//                        wal->lotag;
+                if (wal.lotag && wal.nextwall >= 0)
+                    wall[wal.nextwall].lotag =
+                        wal.lotag;
 
-//            case BIGFORCE__STATIC:
-//                animwall[g_numAnimWalls].wallnum = i;
-//                g_numAnimWalls++;
+            case BIGFORCE__STATIC:
+                animwall[g_numAnimWalls].wallnum = i;
+                g_numAnimWalls++;
 
-//                continue;
-//            }
-//        }
+                continue;
+            }
+        }
 
-//        wal->extra = -1;
+        wal.extra = -1;
 
-//        switch (DYNAMICTILEMAP(wal->picnum))
-//        {
-//        case WATERTILE2__STATIC:
-//            for (j=0; j<3; j++)
-//                tloadtile(wal->picnum+j, 0);
-//            break;
+        switch (DYNAMICTILEMAP(wal.picnum))
+        {
+        case WATERTILE2__STATIC:
+            for (j=0; j<3; j++)
+                tloadtile(wal.picnum+j, 0);
+            break;
 
-//        case TECHLIGHT2__STATIC:
-//        case TECHLIGHT4__STATIC:
-//            tloadtile(wal->picnum, 0);
-//            break;
-//        case W_TECHWALL1__STATIC:
-//        case W_TECHWALL2__STATIC:
-//        case W_TECHWALL3__STATIC:
-//        case W_TECHWALL4__STATIC:
-//            animwall[g_numAnimWalls].wallnum = i;
-//            //                animwall[g_numAnimWalls].tag = -1;
-//            g_numAnimWalls++;
-//            break;
-//        case SCREENBREAK6__STATIC:
-//        case SCREENBREAK7__STATIC:
-//        case SCREENBREAK8__STATIC:
-//            for (j=SCREENBREAK6; j<SCREENBREAK9; j++)
-//                tloadtile(j, 0);
-//            animwall[g_numAnimWalls].wallnum = i;
-//            animwall[g_numAnimWalls].tag = -1;
-//            g_numAnimWalls++;
-//            break;
+        case TECHLIGHT2__STATIC:
+        case TECHLIGHT4__STATIC:
+            tloadtile(wal.picnum, 0);
+            break;
+        case W_TECHWALL1__STATIC:
+        case W_TECHWALL2__STATIC:
+        case W_TECHWALL3__STATIC:
+        case W_TECHWALL4__STATIC:
+            animwall[g_numAnimWalls].wallnum = i;
+            //                animwall[g_numAnimWalls].tag = -1;
+            g_numAnimWalls++;
+            break;
+        case SCREENBREAK6__STATIC:
+        case SCREENBREAK7__STATIC:
+        case SCREENBREAK8__STATIC:
+            for (j=SCREENBREAK6; j<SCREENBREAK9; j++)
+                tloadtile(j, 0);
+            animwall[g_numAnimWalls].wallnum = i;
+            animwall[g_numAnimWalls].tag = -1;
+            g_numAnimWalls++;
+            break;
 
-//        case FEMPIC1__STATIC:
-//        case FEMPIC2__STATIC:
-//        case FEMPIC3__STATIC:
-//            wal->extra = wal->picnum;
-//            animwall[g_numAnimWalls].tag = -1;
-//            if (ud.lockout)
-//            {
-//                if (wal->picnum == FEMPIC1)
-//                    wal->picnum = BLANKSCREEN;
-//                else wal->picnum = SCREENBREAK6;
-//            }
+        case FEMPIC1__STATIC:
+        case FEMPIC2__STATIC:
+        case FEMPIC3__STATIC:
+            wal.extra = wal.picnum;
+            animwall[g_numAnimWalls].tag = -1;
+            if (ud.lockout)
+            {
+                if (wal.picnum == FEMPIC1)
+                    wal.picnum = BLANKSCREEN;
+                else wal.picnum = SCREENBREAK6;
+            }
 
-//            animwall[g_numAnimWalls].wallnum = i;
-//            animwall[g_numAnimWalls].tag = wal->picnum;
-//            g_numAnimWalls++;
-//            break;
+            animwall[g_numAnimWalls].wallnum = i;
+            animwall[g_numAnimWalls].tag = wal.picnum;
+            g_numAnimWalls++;
+            break;
 
-//        case SCREENBREAK1__STATIC:
-//        case SCREENBREAK2__STATIC:
-//        case SCREENBREAK3__STATIC:
-//        case SCREENBREAK4__STATIC:
-//        case SCREENBREAK5__STATIC:
-//            //
-//        case SCREENBREAK9__STATIC:
-//        case SCREENBREAK10__STATIC:
-//        case SCREENBREAK11__STATIC:
-//        case SCREENBREAK12__STATIC:
-//        case SCREENBREAK13__STATIC:
-//        case SCREENBREAK14__STATIC:
-//        case SCREENBREAK15__STATIC:
-//        case SCREENBREAK16__STATIC:
-//        case SCREENBREAK17__STATIC:
-//        case SCREENBREAK18__STATIC:
-//        case SCREENBREAK19__STATIC:
-//            animwall[g_numAnimWalls].wallnum = i;
-//            animwall[g_numAnimWalls].tag = wal->picnum;
-//            g_numAnimWalls++;
-//            break;
-//        }
-//    }
+        case SCREENBREAK1__STATIC:
+        case SCREENBREAK2__STATIC:
+        case SCREENBREAK3__STATIC:
+        case SCREENBREAK4__STATIC:
+        case SCREENBREAK5__STATIC:
+            //
+        case SCREENBREAK9__STATIC:
+        case SCREENBREAK10__STATIC:
+        case SCREENBREAK11__STATIC:
+        case SCREENBREAK12__STATIC:
+        case SCREENBREAK13__STATIC:
+        case SCREENBREAK14__STATIC:
+        case SCREENBREAK15__STATIC:
+        case SCREENBREAK16__STATIC:
+        case SCREENBREAK17__STATIC:
+        case SCREENBREAK18__STATIC:
+        case SCREENBREAK19__STATIC:
+            animwall[g_numAnimWalls].wallnum = i;
+            animwall[g_numAnimWalls].tag = wal.picnum;
+            g_numAnimWalls++;
+            break;
+        }
+    }
 
-//    //Invalidate textures in sector behind mirror
-//    for (i=0; i<g_mirrorCount; i++)
-//    {
-//        startwall = sector[g_mirrorSector[i]].wallptr;
-//        endwall = startwall + sector[g_mirrorSector[i]].wallnum;
-//        for (j=startwall; j<endwall; j++)
-//        {
-//            wall[j].picnum = MIRROR;
-//            wall[j].overpicnum = MIRROR;
-//            if (wall[g_mirrorWall[i]].pal == 4)
-//                wall[j].pal = 4;
-//        }
-//    }
-//}
+    //Invalidate textures in sector behind mirror
+    for (i=0; i<g_mirrorCount; i++)
+    {
+        startwall = sector[g_mirrorSector[i]].wallptr;
+        endwall = startwall + sector[g_mirrorSector[i]].wallnum;
+        for (j=startwall; j<endwall; j++)
+        {
+            wall[j].picnum = MIRROR;
+            wall[j].overpicnum = MIRROR;
+            if (wall[g_mirrorWall[i]].pal == 4)
+                wall[j].pal = 4;
+        }
+    }
+}
 
 
 function G_NewGame(vn: number,ln: number,sk: number): void
@@ -1582,27 +1582,27 @@ function G_NewGame(vn: number,ln: number,sk: number): void
 //    uint8_t aimmode[MAXPLAYERS],autoaim[MAXPLAYERS],weaponswitch[MAXPLAYERS];
 //    DukeStatus_t tsbar[MAXPLAYERS];
 
-//    if (g_player[0].ps->cursectnum >= 0)  // < 0 may happen if we start a map in void space (e.g. testing it)
+//    if (g_player[0].ps.cursectnum >= 0)  // < 0 may happen if we start a map in void space (e.g. testing it)
 //    {
-//        A_InsertSprite(g_player[0].ps->cursectnum,g_player[0].ps->pos.x,g_player[0].ps->pos.y,g_player[0].ps->pos.z,
-//                       APLAYER,0,0,0,g_player[0].ps->ang,0,0,0,10);
+//        A_InsertSprite(g_player[0].ps.cursectnum,g_player[0].ps.pos.x,g_player[0].ps.pos.y,g_player[0].ps.pos.z,
+//                       APLAYER,0,0,0,g_player[0].ps.ang,0,0,0,10);
 //    }
 
 //    if (ud.recstat != 2)
 //        for (TRAVERSE_CONNECT(i))
 //        {
-//            aimmode[i] = g_player[i].ps->aim_mode;
-//            autoaim[i] = g_player[i].ps->auto_aim;
-//            weaponswitch[i] = g_player[i].ps->weaponswitch;
+//            aimmode[i] = g_player[i].ps.aim_mode;
+//            autoaim[i] = g_player[i].ps.auto_aim;
+//            weaponswitch[i] = g_player[i].ps.weaponswitch;
 //            if ((g_netServer || ud.multimode > 1) && (GametypeFlags[ud.coop]&GAMETYPE_PRESERVEINVENTORYDEATH) && ud.last_level >= 0)
 //            {
 //                for (j=0; j<MAX_WEAPONS; j++)
-//                    tsbar[i].ammo_amount[j] = g_player[i].ps->ammo_amount[j];
+//                    tsbar[i].ammo_amount[j] = g_player[i].ps.ammo_amount[j];
 
-//                tsbar[i].gotweapon = g_player[i].ps->gotweapon;
-//                Bmemcpy(tsbar[i].inv_amount, g_player[i].ps->inv_amount, sizeof(tsbar[i].inv_amount));
-//                tsbar[i].curr_weapon = g_player[i].ps->curr_weapon;
-//                tsbar[i].inven_icon = g_player[i].ps->inven_icon;
+//                tsbar[i].gotweapon = g_player[i].ps.gotweapon;
+//                Bmemcpy(tsbar[i].inv_amount, g_player[i].ps.inv_amount, sizeof(tsbar[i].inv_amount));
+//                tsbar[i].curr_weapon = g_player[i].ps.curr_weapon;
+//                tsbar[i].inven_icon = g_player[i].ps.inven_icon;
 //            }
 //        }
 
@@ -1614,18 +1614,18 @@ function G_NewGame(vn: number,ln: number,sk: number): void
 //    if (ud.recstat != 2)
 //        for (TRAVERSE_CONNECT(i))
 //        {
-//            g_player[i].ps->aim_mode = aimmode[i];
-//            g_player[i].ps->auto_aim = autoaim[i];
-//            g_player[i].ps->weaponswitch = weaponswitch[i];
+//            g_player[i].ps.aim_mode = aimmode[i];
+//            g_player[i].ps.auto_aim = autoaim[i];
+//            g_player[i].ps.weaponswitch = weaponswitch[i];
 //            if ((g_netServer || ud.multimode > 1) && (GametypeFlags[ud.coop]&GAMETYPE_PRESERVEINVENTORYDEATH) && ud.last_level >= 0)
 //            {
 //                for (j=0; j<MAX_WEAPONS; j++)
-//                    g_player[i].ps->ammo_amount[j] = tsbar[i].ammo_amount[j];
+//                    g_player[i].ps.ammo_amount[j] = tsbar[i].ammo_amount[j];
 
-//                g_player[i].ps->gotweapon = tsbar[i].gotweapon;
-//                g_player[i].ps->curr_weapon = tsbar[i].curr_weapon;
-//                g_player[i].ps->inven_icon = tsbar[i].inven_icon;
-//                Bmemcpy(g_player[i].ps->inv_amount, tsbar[i].inv_amount, sizeof(tsbar[i].inv_amount));
+//                g_player[i].ps.gotweapon = tsbar[i].gotweapon;
+//                g_player[i].ps.curr_weapon = tsbar[i].curr_weapon;
+//                g_player[i].ps.inven_icon = tsbar[i].inven_icon;
+//                Bmemcpy(g_player[i].ps.inv_amount, tsbar[i].inv_amount, sizeof(tsbar[i].inv_amount));
 //            }
 //        }
 
@@ -1643,48 +1643,48 @@ function G_NewGame(vn: number,ln: number,sk: number): void
 //        if (g_numPlayerSprites == MAXPLAYERS)
 //            G_GameExit("\nToo many player sprites (max 16.)");
 
-//        g_playerSpawnPoints[g_numPlayerSprites].ox = s->x;
-//        g_playerSpawnPoints[g_numPlayerSprites].oy = s->y;
-//        g_playerSpawnPoints[g_numPlayerSprites].oz = s->z;
-//        g_playerSpawnPoints[g_numPlayerSprites].oa = s->ang;
-//        g_playerSpawnPoints[g_numPlayerSprites].os = s->sectnum;
+//        g_playerSpawnPoints[g_numPlayerSprites].ox = s.x;
+//        g_playerSpawnPoints[g_numPlayerSprites].oy = s.y;
+//        g_playerSpawnPoints[g_numPlayerSprites].oz = s.z;
+//        g_playerSpawnPoints[g_numPlayerSprites].oa = s.ang;
+//        g_playerSpawnPoints[g_numPlayerSprites].os = s.sectnum;
 
 //        g_numPlayerSprites++;
 
 //        if (j < MAXPLAYERS)
 //        {
-//            s->owner = i;
-//            s->shade = 0;
-//            s->xrepeat = 42;
-//            s->yrepeat = 36;
+//            s.owner = i;
+//            s.shade = 0;
+//            s.xrepeat = 42;
+//            s.yrepeat = 36;
 //            if (!g_fakeMultiMode)
-//                s->cstat = j < numplayers ? 1+256 : 32768;
+//                s.cstat = j < numplayers ? 1+256 : 32768;
 //            else
-//                s->cstat = j < ud.multimode ? 1+256 : 32768;
-//            s->xoffset = 0;
-//            s->clipdist = 64;
+//                s.cstat = j < ud.multimode ? 1+256 : 32768;
+//            s.xoffset = 0;
+//            s.clipdist = 64;
 
 ////            if (j < playerswhenstarted)
 //            {
-//                if ((g&MODE_EOL) != MODE_EOL || g_player[j].ps->last_extra == 0)
+//                if ((g&MODE_EOL) != MODE_EOL || g_player[j].ps.last_extra == 0)
 //                {
-//                    g_player[j].ps->last_extra = g_player[j].ps->max_player_health;
-//                    s->extra = g_player[j].ps->max_player_health;
-//                    g_player[j].ps->runspeed = g_playerFriction;
+//                    g_player[j].ps.last_extra = g_player[j].ps.max_player_health;
+//                    s.extra = g_player[j].ps.max_player_health;
+//                    g_player[j].ps.runspeed = g_playerFriction;
 //                }
-//                else s->extra = g_player[j].ps->last_extra;
+//                else s.extra = g_player[j].ps.last_extra;
 
-//                s->yvel = j;
+//                s.yvel = j;
 
 //                if (!g_player[j].pcolor && (g_netServer || ud.multimode > 1) && !(GametypeFlags[ud.coop] & GAMETYPE_TDM))
 //                {
-//                    if (s->pal == 0)
+//                    if (s.pal == 0)
 //                    {
 //                        int32_t k = 0;
 
 //                        for (; k<ud.multimode; k++)
 //                        {
-//                            if (g_whichPalForPlayer == g_player[k].ps->palookup)
+//                            if (g_whichPalForPlayer == g_player[k].ps.palookup)
 //                            {
 //                                g_whichPalForPlayer++;
 //                                if (g_whichPalForPlayer >= 17)
@@ -1692,11 +1692,11 @@ function G_NewGame(vn: number,ln: number,sk: number): void
 //                                k=0;
 //                            }
 //                        }
-//                        g_player[j].pcolor = s->pal = g_player[j].ps->palookup = g_whichPalForPlayer++;
+//                        g_player[j].pcolor = s.pal = g_player[j].ps.palookup = g_whichPalForPlayer++;
 //                        if (g_whichPalForPlayer >= 17)
 //                            g_whichPalForPlayer = 9;
 //                    }
-//                    else g_player[j].pcolor = g_player[j].ps->palookup = s->pal;
+//                    else g_player[j].pcolor = g_player[j].ps.palookup = s.pal;
 //                }
 //                else
 //                {
@@ -1705,24 +1705,24 @@ function G_NewGame(vn: number,ln: number,sk: number): void
 //                    if (GametypeFlags[ud.coop] & GAMETYPE_TDM)
 //                    {
 //                        k = G_GetTeamPalette(g_player[j].pteam);
-//                        g_player[j].ps->team = g_player[j].pteam;
+//                        g_player[j].ps.team = g_player[j].pteam;
 //                    }
-//                    s->pal = g_player[j].ps->palookup = k;
+//                    s.pal = g_player[j].ps.palookup = k;
 //                }
 
-//                g_player[j].ps->i = i;
-//                g_player[j].ps->frag_ps = j;
+//                g_player[j].ps.i = i;
+//                g_player[j].ps.frag_ps = j;
 //                actor[i].owner = i;
 
-//                g_player[j].ps->autostep = (20L<<8);
-//                g_player[j].ps->autostep_sbw = (4L<<8);
+//                g_player[j].ps.autostep = (20L<<8);
+//                g_player[j].ps.autostep_sbw = (4L<<8);
 
-//                actor[i].bpos.x = g_player[j].ps->bobposx = g_player[j].ps->opos.x = g_player[j].ps->pos.x =        s->x;
-//                actor[i].bpos.y = g_player[j].ps->bobposy = g_player[j].ps->opos.y = g_player[j].ps->pos.y =        s->y;
-//                actor[i].bpos.z = g_player[j].ps->opos.z = g_player[j].ps->pos.z =        s->z;
-//                g_player[j].ps->oang  = g_player[j].ps->ang  =        s->ang;
+//                actor[i].bpos.x = g_player[j].ps.bobposx = g_player[j].ps.opos.x = g_player[j].ps.pos.x =        s.x;
+//                actor[i].bpos.y = g_player[j].ps.bobposy = g_player[j].ps.opos.y = g_player[j].ps.pos.y =        s.y;
+//                actor[i].bpos.z = g_player[j].ps.opos.z = g_player[j].ps.pos.z =        s.z;
+//                g_player[j].ps.oang  = g_player[j].ps.ang  =        s.ang;
 
-//                updatesector(s->x,s->y,&g_player[j].ps->cursectnum);
+//                updatesector(s.x,s.y,&g_player[j].ps.cursectnum);
 //            }
 
 //            j++;
@@ -1741,8 +1741,8 @@ function G_NewGame(vn: number,ln: number,sk: number): void
 //    {
 //        playerdata_t *p = &g_player[i];
 
-//        p->ps->frag = p->ps->fraggedself = 0;
-//        Bmemset(p->frags, 0, sizeof(p->frags));
+//        p.ps.frag = p.ps.fraggedself = 0;
+//        Bmemset(p.frags, 0, sizeof(p.frags));
 //    }
 //}
 
@@ -2005,7 +2005,7 @@ function G_EnterLevel(g: number): number
         {
             g_player[0].ps.ang = $ang.$;
             g_player[0].ps.cursectnum = $cursectnum.$;
-            todoThrow("G_LoadMapHack(levname, MapInfo[mii].filename);");
+            todoUnimportant("G_LoadMapHack(levname, MapInfo[mii].filename);");
         }
     }
     else
@@ -2031,14 +2031,14 @@ function G_EnterLevel(g: number): number
 //        }
     }
 
-//    g_precacheCount = 0;
-//    Bmemset(gotpic, 0, sizeof(gotpic));
-//    Bmemset(precachehightile, 0, sizeof(precachehightile));
+    g_precacheCount = 0;
+    Bmemset(new P(gotpic), 0, sizeof(gotpic));
+    Bmemset(precachehightile, 0, sizeof(precachehightile));
 
-//    //clearbufbyte(Actor,sizeof(Actor),0l); // JBF 20040531: yes? no?
+    //clearbufbyte(Actor,sizeof(Actor),0l); // JBF 20040531: yes? no?
 
-//    prelevel(g);
-
+    prelevel(g);
+    debugger;
 //    G_AlignWarpElevators();
 //    resetpspritevars(g);
 
@@ -2056,13 +2056,13 @@ function G_EnterLevel(g: number): number
 //    if (g & (MODE_GAME|MODE_EOL))
 //    {
 //        for (TRAVERSE_CONNECT(i))
-//            g_player[i].ps->gm = MODE_GAME;
+//            g_player[i].ps.gm = MODE_GAME;
 //    }
 //    else if (g & MODE_RESTART)
 //    {
 //        if (ud.recstat == 2)
-//            g_player[myconnectindex].ps->gm = MODE_DEMO;
-//        else g_player[myconnectindex].ps->gm = MODE_GAME;
+//            g_player[myconnectindex].ps.gm = MODE_DEMO;
+//        else g_player[myconnectindex].ps.gm = MODE_GAME;
 //    }
 
 //    if ((ud.recstat == 1) && (g&MODE_RESTART) != MODE_RESTART)
@@ -2072,17 +2072,17 @@ function G_EnterLevel(g: number): number
 //        P_DoQuote(QUOTE_F1HELP,g_player[myconnectindex].ps);
 
 //    for (TRAVERSE_CONNECT(i))
-//        switch (DYNAMICTILEMAP(sector[sprite[g_player[i].ps->i].sectnum].floorpicnum))
+//        switch (DYNAMICTILEMAP(sector[sprite[g_player[i].ps.i].sectnum].floorpicnum))
 //        {
 //        case HURTRAIL__STATIC:
 //        case FLOORSLIME__STATIC:
 //        case FLOORPLASMA__STATIC:
 //            P_ResetWeapons(i);
 //            P_ResetInventory(i);
-//            g_player[i].ps->gotweapon &= ~(1<<PISTOL_WEAPON);
-//            g_player[i].ps->ammo_amount[PISTOL_WEAPON] = 0;
-//            g_player[i].ps->curr_weapon = KNEE_WEAPON;
-//            g_player[i].ps->kickback_pic = 0;
+//            g_player[i].ps.gotweapon &= ~(1<<PISTOL_WEAPON);
+//            g_player[i].ps.ammo_amount[PISTOL_WEAPON] = 0;
+//            g_player[i].ps.curr_weapon = KNEE_WEAPON;
+//            g_player[i].ps.kickback_pic = 0;
 //            break;
 //        }
 
@@ -2091,7 +2091,7 @@ function G_EnterLevel(g: number): number
 //    Net_NotifyNewGame();
 //    Net_ResetPrediction();
 
-//    //g_player[myconnectindex].ps->palette = palette;
+//    //g_player[myconnectindex].ps.palette = palette;
 //    //G_FadePalette(0,0,0,0);
 //    P_SetGamePalette(g_player[myconnectindex].ps, BASEPAL, 0);    // JBF 20040308
 
@@ -2117,7 +2117,7 @@ function G_EnterLevel(g: number): number
 //    G_DrawBackground();
 //    G_DrawRooms(myconnectindex,65536);
 
-//    g_player[myconnectindex].ps->over_shoulder_on = 0;
+//    g_player[myconnectindex].ps.over_shoulder_on = 0;
 
 //    clearfrags();
 
@@ -2142,7 +2142,7 @@ function G_EnterLevel(g: number): number
 //#if !defined LUNATIC
 //    int32_t j;
 //#endif
-//    if (mapinfo->savedstate == NULL)
+//    if (mapinfo.savedstate == NULL)
 //        return;
 
 //#if !defined LUNATIC
@@ -2151,11 +2151,11 @@ function G_EnterLevel(g: number): number
 //        if (aGameVars[j].dwFlags & GAMEVAR_NORESET) continue;
 //        if (aGameVars[j].dwFlags & (GAMEVAR_PERPLAYER|GAMEVAR_PERACTOR))
 //        {
-//            if (mapinfo->savedstate->vars[j])
-//                Bfree(mapinfo->savedstate->vars[j]);
+//            if (mapinfo.savedstate.vars[j])
+//                Bfree(mapinfo.savedstate.vars[j]);
 //        }
 //    }
 //#endif
-//    Bfree(mapinfo->savedstate);
-//    mapinfo->savedstate = NULL;
+//    Bfree(mapinfo.savedstate);
+//    mapinfo.savedstate = NULL;
 //}

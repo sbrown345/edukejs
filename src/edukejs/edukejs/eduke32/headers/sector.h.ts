@@ -28,9 +28,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //#include "player.h"  // playerspawn_t
 
 
-//#define MAXCYCLERS      1024
-//#define MAXANIMATES     256
-//#define MAXANIMWALLS    512
+var MAXCYCLERS     = 1024;
+var MAXANIMATES    = 256;
+var MAXANIMWALLS   = 512;
 
 //typedef struct {
 //    int16_t wallnum, tag;

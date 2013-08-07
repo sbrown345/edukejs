@@ -50,7 +50,7 @@ function clearStructArray($class, array : Array) : void {
     }
 }
 
-function multiDimArray(arrayClass, num, arrLength) {
+function multiDimArray <T>(arrayClass, num, arrLength): T[] {
     var multiDimArray = new Array(num);
     for (var i = 0; i < num; i++) {
         multiDimArray[i] = new arrayClass(arrLength);

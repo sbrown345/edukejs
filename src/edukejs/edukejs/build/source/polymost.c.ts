@@ -4180,7 +4180,7 @@ function polymost_dorotatesprite(sx: number, sy, z: number, a: number, picnum: n
     var ogchang: number, ogshang: number, ogctang: number, ogstang: number, oghalfx: number, oghoriz: number; //double
     var ogrhalfxdown10: number, ogrhalfxdown10x; //double
     var d: number, cosang: number, sinang: number, cosang2: number, sinang2: number, px = new Float64Array(8), py = new Float64Array(8), px2 = new Float64Array(8), py2 = new Float64Array(8);  //double
-    var m = multiDimArray(Float32Array, 4, 4); //float
+    var m = multiDimArray<Float32Array>(Float32Array, 4, 4); //float
 
     var ourxyaspect: number; //int32_t
 

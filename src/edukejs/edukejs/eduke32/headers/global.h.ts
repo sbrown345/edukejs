@@ -49,8 +49,8 @@ var MAXSKILLS=7;
 //#include "compat.h"
 //#include "build.h"
 
-//G_EXTERN int32_t g_numInterpolations;
-//G_EXTERN int32_t g_interpolationLock;
+var g_numInterpolations: number;   //G_EXTERN int32_t 
+var g_interpolationLock: number;   //G_EXTERN int32_t 
 //G_EXTERN int32_t oldipos[MAXINTERPOLATIONS];
 //G_EXTERN int32_t *curipos[MAXINTERPOLATIONS];
 //G_EXTERN int32_t bakipos[MAXINTERPOLATIONS];
@@ -70,8 +70,8 @@ var myconnectindex: number = 0, numplayers: number;
 var ScriptQuotes: Uint8Array[] = new Array<Uint8Array>(MAXQUOTES),ScriptQuoteRedefinitions: Uint8Array[] = new Array<Uint8Array>(MAXQUOTES); ////G_EXTERN char *
 var label : Uint8Array;//G_EXTERN char *label;
 var EnvMusicFilename: string[] = new Array<string>(MAXVOLUMES+1);//[MAXVOLUMES+1][BMAX_PATH];
-//G_EXTERN char g_RTSPlaying;
-//G_EXTERN int32_t g_musicIndex;
+//G_EXTERN char g_RTSPlaying: number;
+//G_EXTERN int32_t g_musicIndex: number;
 var g_loadFromGroupOnly : number;//char
 var g_numSkills : number; // char
 //G_EXTERN char myjumpingtoggle,myonground,myhardlanding,myreturntocenter;
@@ -81,23 +81,23 @@ var szPlayerName: string; //G_EXTERN char [32]
 //// XXX: menutextbuf overflow possible?
 var tempbuf = new Uint8Array(MAXSECTORS<<1),packbuf = new Uint8Array(PACKBUF_SIZE),menutextbuf = new Uint8Array(128),buf = new Uint8Array(1024);
 //G_EXTERN char typebuflen,typebuf[141];
-//G_EXTERN input_t avg;
-//G_EXTERN input_t loc;
+var avg: input_t;
+var loc: input_t;
 //G_EXTERN input_t recsync[RECSYNCBUFSIZ];
-//G_EXTERN int16_t SpriteDeletionQueue[1024],g_spriteDeleteQueuePos;
+var SpriteDeletionQueue = new Int16Array(1024),g_spriteDeleteQueuePos: number; //G_EXTERN int16_t 
 //G_EXTERN int16_t animatesect[MAXANIMATES];
-//G_EXTERN int16_t camsprite;
-//G_EXTERN int16_t cyclers[MAXCYCLERS][6],g_numCyclers;
-//G_EXTERN int16_t g_globalRandom;
-//G_EXTERN int16_t g_mirrorWall[64],g_mirrorSector[64],g_mirrorCount;
-//G_EXTERN int16_t g_numAnimWalls;
-//G_EXTERN int16_t g_numClouds,clouds[128],cloudx[128],cloudy[128];
-//G_EXTERN int16_t myang,omyang,mycursectnum,myjumpingcounter;
-//G_EXTERN int16_t myhoriz,omyhoriz,myhorizoff,omyhorizoff;
-//G_EXTERN int16_t neartagsector,neartagwall,neartagsprite;
+var camsprite: number;//G_EXTERN int16_t
+var cyclers = multiDimArray(Int16Array, MAXCYCLERS, 6),g_numCyclers: number; //G_EXTERN int16_t 
+var g_globalRandom: number;//G_EXTERN int16_t 
+//G_EXTERN int16_t g_mirrorWall[64],g_mirrorSector[64],g_mirrorCount: number;
+var g_numAnimWalls: number; //G_EXTERN int16_t 
+var g_numClouds: number,clouds = new Int16Array(128),cloudx = new Int16Array(128),cloudy = new Int16Array(128); //G_EXTERN int16_t 
+var myang: number,omyang: number,mycursectnum: number,myjumpingcounter: number;  //G_EXTERN int16_t 
+var myhoriz: number,omyhoriz: number,myhorizoff: number,omyhorizoff: number;     //G_EXTERN int16_t 
+var neartagsector: number,neartagwall: number,neartagsprite: number;             //G_EXTERN int16_t 
 //G_EXTERN int32_t *animateptr[MAXANIMATES];
-//G_EXTERN int32_t animategoal[MAXANIMATES],animatevel[MAXANIMATES],g_animateCount;
-//G_EXTERN int32_t cloudtotalclock:number;
+var animategoa = new Int32Array(MAXANIMATES),animatevel = new Int32Array(MAXANIMATES),g_animateCount: number; //G_EXTERN int32_t 
+var cloudtotalclock:number;//G_EXTERN int32_t 
 var fricxv:number,fricyv:number;                             //G_EXTERN int32_t 
 var g_currentFrameRate:number;                               //G_EXTERN int32_t 
 var g_currentMenu:number;                                    //G_EXTERN int32_t 
@@ -139,9 +139,9 @@ var MapInfo: map_t[] = newStructArray(map_t, (MAXVOLUMES+1)*MAXLEVELS);  // +1 v
 //G_EXTERN uint32_t g_moveThingsCount;
 //G_EXTERN vec3_t my,omy,myvel;
 //G_EXTERN volatile char g_soundlocks[MAXSOUNDS];
-//G_EXTERN int32_t g_restorePalette;
-//G_EXTERN int32_t g_screenCapture;
-//G_EXTERN int32_t g_noEnemies;
+var  g_restorePalette=0;  //G_EXTERN int32_t
+var  g_screenCapture=0;   //G_EXTERN int32_t
+var  g_noEnemies=0;       //G_EXTERN int32_t
 
 //#ifndef __global_c__
 var s_buildRev = "rXXXX"; //from rev.h

@@ -47,9 +47,9 @@ var NAM_GRENADE_LIFETIME_VAR   = 30;
 //#define PIPEBOMB_REMOTE         0x00000001
 //#define PIPEBOMB_TIMER          0x00000002
 
-//#define WEAPON_POS_LOWER            -9
-//#define WEAPON_POS_RAISE            10
-//#define WEAPON_POS_START             6
+var WEAPON_POS_LOWER =           -9;
+var WEAPON_POS_RAISE =           10;
+var WEAPON_POS_START =            6;
 
 //enum dukeinv_t {
 var GET_STEROIDS=0,  // 0

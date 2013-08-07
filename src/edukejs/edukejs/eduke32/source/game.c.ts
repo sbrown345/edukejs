@@ -227,11 +227,11 @@ var MAXCACHE1DSIZE = (24*1048576);
 //static int32_t MAXCACHE1DSIZE = (8*1048576);
 //#endif
 
-//int32_t tempwallptr;
+var tempwallptr: number;//int32_t 
 
-//static int32_t nonsharedtimer;
+var nonsharedtimer: number; //int32_t 
 
-//int32_t ticrandomseed;
+var ticrandomseed: number;//int32_t 
 
 //static void G_DrawCameraText(int16_t i);
 //GAME_STATIC GAME_INLINE int32_t G_MoveLoop(void);
@@ -4097,7 +4097,7 @@ function G_SetCrosshairColor(r: number, g: number, b: number): void
 
 //extern float r_ambientlight;
 
-//char ror_protectedsectors[MAXSECTORS];
+var ror_protectedsectors = new Uint8Array(MAXSECTORS);
 //static int32_t drawing_ror = 0;
 
 //static void G_SE40(int32_t smoothratio)

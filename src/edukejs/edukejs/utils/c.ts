@@ -5,6 +5,7 @@ var NULL = null; // ""==null = false,  ""==0 = true           (todo: would be wi
 var TRUE:number = 1;
 var FALSE:number = 0;
 
+var UINT16_MAX = 0xffff;
 var INT32_MIN = -2147483648;
 var INT32_MAX = 2147483647;
 var UINT32_MAX = 4294967295;
