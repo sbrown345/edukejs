@@ -10,6 +10,9 @@ function todo(reason?) {
     console.log("todo", reason);
 }
 
+function todoUnimportant(reason?) {
+}
+
 function todoThrow(message : string = "") {
     debugger;
     console.error("todo \n" + message);

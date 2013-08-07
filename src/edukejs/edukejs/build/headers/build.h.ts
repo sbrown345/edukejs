@@ -429,17 +429,37 @@ class walltypev7 implements ITypeInfo
 //44 bytes
 class spritetype implements ITypeInfo
 {
+
     x:number; y:number; z:number;         //Tracker(Sprite, int32_t)  
-    cstat:number;                             //Tracker(Sprite, uint16_t) 
+
+    private _cstat: Uint16Array;
     picnum:number;                            //Tracker(Sprite, int16_t)  
     shade:number;                             //Tracker(Sprite, int8_t)   
     pal:number; clipdist:number; filler:number;   //Tracker(Sprite, uint8_t)  
     xrepeat:number; yrepeat:number;                  //Tracker(Sprite, uint8_t)  
     xoffset:number; yoffset:number;                  //Tracker(Sprite, int8_t)   
     sectnum:number; statnum:number;                  //Tracker(Sprite, int16_t)  
-    ang:number; owner:number; xvel:number; yvel:number; zvel:number;      //Tracker(Sprite, int16_t)  
-    lotag:number; hitag:number;                      //Tracker(Sprite, uint16_t) 
-    extra:number;                             //Tracker(Sprite, int16_t)  
+    ang:number; owner:number; private _xvel:Int16Array; private _yvel:Int16Array; private _zvel:Int16Array;      //Tracker(Sprite, int16_t)  
+    private _lotag:Uint16Array;private _hitag:Uint16Array;                      //Tracker(Sprite, uint16_t) 
+    private _extra:Int16Array;                             //Tracker(Sprite, int16_t)  
+
+
+    
+    get cstat(): number  {return this._cstat[0];}
+    set cstat(val: number) {this._cstat[0] = val;} //Tracker(Sprite, uint16_t)
+
+    get xvel(): number  {return this._xvel[0];}
+    set xvel(val: number) {this._xvel[0] = val; }
+    get yvel(): number  {return this._yvel[0];}
+    set yvel(val: number) {this._yvel[0] = val; }
+    get zvel(): number  {return this._zvel[0];}
+    set zvel(val: number) {this._zvel[0] = val; }
+    get lotag(): number  {return this._lotag[0];}
+    set lotag(val: number) {this._lotag[0] = val; }
+    get hitag(): number  {return this._hitag[0];}
+    set hitag(val: number) {this._hitag[0] = val; }
+    get extra(): number  {return this._extra[0];}
+    set extra(val: number) {this._extra[0] = val; }
 
     public static size = 44;
     public static typeInfo = [
@@ -462,16 +482,16 @@ class spritetype implements ITypeInfo
 
     init(): void {
         this.x = 0, this.y = 0, this.z = 0;         //Tracker(Sprite, int32_t)  
-        this.cstat = 0;                             //Tracker(Sprite, uint16_t) //todo: force this to be u16??????
+        this._cstat = new Uint16Array(1);            //Tracker(Sprite, uint16_t) //todo: force this to be u16??????
         this.picnum = 0;                            //Tracker(Sprite, int16_t)  
         this.shade = 0;                             //Tracker(Sprite, int8_t)   
         this.pal = 0, this.clipdist = 0, this.filler = 0;   //Tracker(Sprite, uint8_t)  
         this.xrepeat = 0, this.yrepeat = 0;                  //Tracker(Sprite, uint8_t)  
         this.xoffset = 0, this.yoffset = 0;                  //Tracker(Sprite, int8_t)   
         this.sectnum = 0, this.statnum = 0;                  //Tracker(Sprite, int16_t)  
-        this.ang = 0, this.owner = 0, this.xvel = 0, this.yvel = 0, this.zvel = 0;      //Tracker(Sprite, int16_t)  
-        this.lotag = 0, this.hitag = 0;                      //Tracker(Sprite, uint16_t) 
-        this.extra = 0;                             //Tracker(Sprite, int16_t)  
+        this.ang = 0, this.owner = 0, this._xvel = new Int16Array(1), this._yvel = new Int16Array(1), this._zvel = new Int16Array(1);      //Tracker(Sprite, int16_t)  
+        this._lotag = new Uint16Array(1), this._hitag = new Uint16Array(1);                     //Tracker(Sprite, uint16_t) 
+        this._extra = new Int16Array(1);                             //Tracker(Sprite, int16_t)  
     }
 } //spritetype;
 ////////////////////// END Version 7 map format ////////////////

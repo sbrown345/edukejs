@@ -8219,182 +8219,182 @@ function getclosestcol(/*int32_t*/ r: number, /*int32_t*/ g: number, /*int32_t*/
 }
 
 
-//////////// SPRITE LIST MANIPULATION FUNCTIONS //////////
+////////// SPRITE LIST MANIPULATION FUNCTIONS //////////
 
-/////// sector lists of sprites /////
+///// sector lists of sprites /////
 
-//// insert sprite at the head of sector list, change .sectnum
-//void do_insertsprite_at_headofsect(int16_t spritenum, int16_t sectnum)
-//{
-//    int16_t ohead = headspritesect[sectnum];
+// insert sprite at the head of sector list, change .sectnum
+function do_insertsprite_at_headofsect(/*int16_t*/ spritenum: number, /*int16_t */sectnum: number): void
+{
+    var ohead = headspritesect[sectnum];
 
-//    prevspritesect[spritenum] = -1;
-//    nextspritesect[spritenum] = ohead;
-//    if (ohead >= 0)
-//        prevspritesect[ohead] = spritenum;
-//    headspritesect[sectnum] = spritenum;
+    prevspritesect[spritenum] = -1;
+    nextspritesect[spritenum] = ohead;
+    if (ohead >= 0)
+        prevspritesect[ohead] = spritenum;
+    headspritesect[sectnum] = spritenum;
 
-//    sprite[spritenum].sectnum = sectnum;
-//}
+    sprite[spritenum].sectnum = sectnum;
+}
 
-//// remove sprite 'deleteme' from its sector list
-//void do_deletespritesect(int16_t deleteme)
-//{
-//    int32_t sectnum = sprite[deleteme].sectnum;
-//    int32_t prev = prevspritesect[deleteme], next = nextspritesect[deleteme];
+// remove sprite 'deleteme' from its sector list
+function do_deletespritesect(/*int16_t*/ deleteme: number): void
+{
+    var sectnum = sprite[deleteme].sectnum;
+    var prev = prevspritesect[deleteme], next = nextspritesect[deleteme];
 
-//    if (headspritesect[sectnum] == deleteme)
-//        headspritesect[sectnum] = next;
-//    if (prev >= 0)
-//        nextspritesect[prev] = next;
-//    if (next >= 0)
-//        prevspritesect[next] = prev;
-//}
+    if (headspritesect[sectnum] == deleteme)
+        headspritesect[sectnum] = next;
+    if (prev >= 0)
+        nextspritesect[prev] = next;
+    if (next >= 0)
+        prevspritesect[next] = prev;
+}
 
-/////// now, status lists /////
+/// now, status lists /////
 
-//// insert sprite at head of status list, change .statnum
-//void do_insertsprite_at_headofstat(int16_t spritenum, int16_t statnum)
-//{
-//    int16_t ohead = headspritestat[statnum];
+// insert sprite at head of status list, change .statnum
+function do_insertsprite_at_headofstat(/*int16_t*/ spritenum: number, /*int16_t*/ statnum: number): void
+{
+    var ohead = headspritestat[statnum];
 
-//    prevspritestat[spritenum] = -1;
-//    nextspritestat[spritenum] = ohead;
-//    if (ohead >= 0)
-//        prevspritestat[ohead] = spritenum;
-//    headspritestat[statnum] = spritenum;
+    prevspritestat[spritenum] = -1;
+    nextspritestat[spritenum] = ohead;
+    if (ohead >= 0)
+        prevspritestat[ohead] = spritenum;
+    headspritestat[statnum] = spritenum;
 
-//    sprite[spritenum].statnum = statnum;
-//}
+    sprite[spritenum].statnum = statnum;
+}
 
-//// insertspritestat (internal)
-//int32_t insertspritestat(int16_t statnum)
-//{
-//    int16_t blanktouse;
+// insertspritestat (internal)
+function insertspritestat(/*int16_t*/ statnum: number): number
+{
+    var blanktouse: number;
 
-//    if ((statnum >= MAXSTATUS) || (headspritestat[MAXSTATUS] == -1))
-//        return(-1);  //list full
+    if ((statnum >= MAXSTATUS) || (headspritestat[MAXSTATUS] == -1))
+        return(-1);  //list full
 
-//    // remove one sprite from the statnum-freelist
-//    blanktouse = headspritestat[MAXSTATUS];
-//    headspritestat[MAXSTATUS] = nextspritestat[blanktouse];
+    // remove one sprite from the statnum-freelist
+    blanktouse = headspritestat[MAXSTATUS];
+    headspritestat[MAXSTATUS] = nextspritestat[blanktouse];
 
-//    // make back-link of the new freelist head point to nil
-//    if (headspritestat[MAXSTATUS] >= 0)
-//        prevspritestat[headspritestat[MAXSTATUS]] = -1;
-//    else
-//        tailspritefree = -1;
+    // make back-link of the new freelist head point to nil
+    if (headspritestat[MAXSTATUS] >= 0)
+        prevspritestat[headspritestat[MAXSTATUS]] = -1;
+    else
+        tailspritefree = -1;
 
-//    do_insertsprite_at_headofstat(blanktouse, statnum);
+    do_insertsprite_at_headofstat(blanktouse, statnum);
 
-//    return(blanktouse);
-//}
+    return(blanktouse);
+}
 
-//// remove sprite 'deleteme' from its status list
-//static void do_deletespritestat(int16_t deleteme)
-//{
-//    int32_t sectnum = sprite[deleteme].statnum;
-//    int32_t prev = prevspritestat[deleteme], next = nextspritestat[deleteme];
+// remove sprite 'deleteme' from its status list
+function do_deletespritestat(/*int16_t*/ deleteme: number): void
+{
+    var sectnum = sprite[deleteme].statnum;
+    var prev = prevspritestat[deleteme], next = nextspritestat[deleteme];
 
-//    if (headspritestat[sectnum] == deleteme)
-//        headspritestat[sectnum] = next;
-//    if (prev >= 0)
-//        nextspritestat[prev] = next;
-//    if (next >= 0)
-//        prevspritestat[next] = prev;
-//}
+    if (headspritestat[sectnum] == deleteme)
+        headspritestat[sectnum] = next;
+    if (prev >= 0)
+        nextspritestat[prev] = next;
+    if (next >= 0)
+        prevspritestat[next] = prev;
+}
 
 
-////
-//// insertsprite
-////
-//int32_t insertsprite(int16_t sectnum, int16_t statnum)
-//{
-//    // TODO: guard against bad sectnum?
-//    int32_t newspritenum = insertspritestat(statnum);
+//
+// insertsprite
+//
+function insertsprite(/*int16_t*/ sectnum: number, /*int16_t */statnum: number): number
+{
+    // TODO: guard against bad sectnum?
+    var newspritenum = insertspritestat(statnum);
 
-//    if (newspritenum >= 0)
-//    {
-//        Bassert((unsigned)sectnum < MAXSECTORS);
+    if (newspritenum >= 0)
+    {
+        Bassert(sectnum < MAXSECTORS);
 
-//        do_insertsprite_at_headofsect(newspritenum, sectnum);
-//        Numsprites++;
-//    }
+        do_insertsprite_at_headofsect(newspritenum, sectnum);
+        Numsprites++;
+    }
 
-//    return newspritenum;
+    return newspritenum;
 
-//}
+}
 
-////
-//// deletesprite
-////
-//int32_t deletesprite(int16_t spritenum)
-//{
-//    Bassert((sprite[spritenum].statnum == MAXSTATUS)
-//            == (sprite[spritenum].sectnum == MAXSECTORS));
+//
+// deletesprite
+//
+function deletesprite(/*int16_t */spritenum: number): number
+{
+    Bassert((sprite[spritenum].statnum == MAXSTATUS)
+            == (sprite[spritenum].sectnum == MAXSECTORS));
 
-//    if (sprite[spritenum].statnum == MAXSTATUS)
-//        return(-1);  // already not in the world
+    if (sprite[spritenum].statnum == MAXSTATUS)
+        return(-1);  // already not in the world
 
-//    do_deletespritestat(spritenum);
-//    do_deletespritesect(spritenum);
+    do_deletespritestat(spritenum);
+    do_deletespritesect(spritenum);
 
-//    // (dummy) insert at tail of sector freelist, compat
-//    // for code that checks .sectnum==MAXSECTOR
-//    sprite[spritenum].sectnum = MAXSECTORS;
+    // (dummy) insert at tail of sector freelist, compat
+    // for code that checks .sectnum==MAXSECTOR
+    sprite[spritenum].sectnum = MAXSECTORS;
 
-//    // insert at tail of status freelist
-//    prevspritestat[spritenum] = tailspritefree;
-//    nextspritestat[spritenum] = -1;
-//    if (tailspritefree >= 0)
-//        nextspritestat[tailspritefree] = spritenum;
-//    else
-//        headspritestat[MAXSTATUS] = spritenum;
-//    sprite[spritenum].statnum = MAXSTATUS;
+    // insert at tail of status freelist
+    prevspritestat[spritenum] = tailspritefree;
+    nextspritestat[spritenum] = -1;
+    if (tailspritefree >= 0)
+        nextspritestat[tailspritefree] = spritenum;
+    else
+        headspritestat[MAXSTATUS] = spritenum;
+    sprite[spritenum].statnum = MAXSTATUS;
 
-//    tailspritefree = spritenum;
-//    Numsprites--;
+    tailspritefree = spritenum;
+    Numsprites--;
 
-//    return 0;
-//}
+    return 0;
+}
 
-////
-//// changespritesect
-////
-//int32_t changespritesect(int16_t spritenum, int16_t newsectnum)
-//{
-//    // XXX: NOTE: MAXSECTORS is allowed
-//    if (newsectnum < 0 || newsectnum > MAXSECTORS)
-//        return(-1);
-//    if (sprite[spritenum].sectnum == MAXSECTORS)
-//        return(-1);
-//    if (sprite[spritenum].sectnum == newsectnum)
-//        return(0);
+//
+// changespritesect
+//
+function changespritesect(/*int16_t*/ spritenum: number, /*int16_t*/ newsectnum: number): number
+{
+    // XXX: NOTE: MAXSECTORS is allowed
+    if (newsectnum < 0 || newsectnum > MAXSECTORS)
+        return(-1);
+    if (sprite[spritenum].sectnum == MAXSECTORS)
+        return(-1);
+    if (sprite[spritenum].sectnum == newsectnum)
+        return(0);
 
-//    do_deletespritesect(spritenum);
-//    do_insertsprite_at_headofsect(spritenum, newsectnum);
+    do_deletespritesect(spritenum);
+    do_insertsprite_at_headofsect(spritenum, newsectnum);
 
-//    return(0);
-//}
+    return(0);
+}
 
-////
-//// changespritestat
-////
-//int32_t changespritestat(int16_t spritenum, int16_t newstatnum)
-//{
-//    // XXX: NOTE: MAXSTATUS is allowed
-//    if (newstatnum < 0 || newstatnum > MAXSTATUS)
-//        return(-1);
-//    if (sprite[spritenum].statnum == MAXSTATUS)
-//        return(-1);  // can't set the statnum of a sprite not in the world
-//    if (sprite[spritenum].statnum == newstatnum)
-//        return(0);  // sprite already has desired statnum
+//
+// changespritestat
+//
+function changespritestat(/*int16_t*/ spritenum: number, /*int16_t*/ newstatnum: number): number
+{
+    // XXX: NOTE: MAXSTATUS is allowed
+    if (newstatnum < 0 || newstatnum > MAXSTATUS)
+        return(-1);
+    if (sprite[spritenum].statnum == MAXSTATUS)
+        return(-1);  // can't set the statnum of a sprite not in the world
+    if (sprite[spritenum].statnum == newstatnum)
+        return(0);  // sprite already has desired statnum
 
-//    do_deletespritestat(spritenum);
-//    do_insertsprite_at_headofstat(spritenum, newstatnum);
+    do_deletespritestat(spritenum);
+    do_insertsprite_at_headofstat(spritenum, newstatnum);
 
-//    return(0);
-//}
+    return(0);
+}
 
 
 ////
@@ -9828,54 +9828,54 @@ function prepare_loadboard(fil: number, dapos: vec3_t , daang: R<number>, dacurs
 function finish_loadboard(/*const vec3_t **/dapos: vec3_t, /*int16_t **/dacursectnum: R<number>, /*int16_t*/ numsprites: number, /*char*/ myflags: number): number
 {
     var i: number, realnumsprites=numsprites, numremoved: number;
-    debugger; throw "todo";
+    debugger; 
 //#if !defined USE_OPENGL || !defined POLYMER
 //    UNREFERENCED_PARAMETER(myflags);
 //#endif
 
-//    for (i=0; i<numsprites; i++)
-//    {
-//        int32_t removeit = 0;
+    for (i=0; i<numsprites; i++)
+    {
+        var removeit = 0;
 
-//        if ((sprite[i].cstat & 48) == 48)
-//            sprite[i].cstat &= ~48;
+        if ((sprite[i].cstat & 48) == 48)
+            sprite[i].cstat &= ~48;
 
-//        if (sprite[i].statnum == MAXSTATUS)
-//        {
-//            // Sprite was removed in loadboard() -> check_sprite(). Insert it
-//            // for now, because we must maintain the sprite numbering.
-//            sprite[i].statnum = sprite[i].sectnum = 0;
-//            removeit = 1;
-//        }
+        if (sprite[i].statnum == MAXSTATUS)
+        {
+            // Sprite was removed in loadboard() . check_sprite(). Insert it
+            // for now, because we must maintain the sprite numbering.
+            sprite[i].statnum = sprite[i].sectnum = 0;
+            removeit = 1;
+        }
 
-//        insertsprite(sprite[i].sectnum, sprite[i].statnum);
+        insertsprite(sprite[i].sectnum, sprite[i].statnum);
 
-//        if (removeit)
-//        {
-//            // Flag .statnum==MAXSTATUS, temporarily creating an inconsistency
-//            // with sprite list.
-//            sprite[i].statnum = MAXSTATUS;
-//            realnumsprites--;
-//        }
-//    }
+        if (removeit)
+        {
+            // Flag .statnum==MAXSTATUS, temporarily creating an inconsistency
+            // with sprite list.
+            sprite[i].statnum = MAXSTATUS;
+            realnumsprites--;
+        }
+    }
 
-//    if (numsprites != realnumsprites)
-//    { 
-//        for (i=0; i<numsprites; i++)
-//            if (sprite[i].statnum == MAXSTATUS)
-//            {
-//                // Now remove it for real!
-//                sprite[i].statnum = 0;
-//                deletesprite(i);
-//            }
-//    }
+    if (numsprites != realnumsprites)
+    { 
+        for (i=0; i<numsprites; i++)
+            if (sprite[i].statnum == MAXSTATUS)
+            {
+                // Now remove it for real!
+                sprite[i].statnum = 0;
+                deletesprite(i);
+            }
+    }
 
-//    numremoved = (numsprites-realnumsprites);
-//    numsprites = realnumsprites;
-//    Bassert(numsprites == Numsprites);
+    numremoved = (numsprites-realnumsprites);
+    numsprites = realnumsprites;
+    Bassert(numsprites == Numsprites);
 
-//    //Must be after loading sectors, etc!
-//    updatesector(dapos->x, dapos->y, dacursectnum);
+    //Must be after loading sectors, etc!
+    updatesector(dapos.x, dapos.y, dacursectnum);
 
 //#ifdef HAVE_CLIPSHAPE_FEATURE
 //    if (!quickloadboard)
@@ -10033,7 +10033,6 @@ function loadboard(filename: string, /*char*/ flags: number, dapos: vec3_t , /*i
 
     numsectors = kread16(fil); numsectors = B_LITTLE16(numsectors);
     if (numsectors >= MYMAXSECTORS()+1) { kclose(fil); return -3; }
-    debugger;
 
     //kread(fil, sector, sizeof(sectortypev7)*numsectors);
     kreadStructs(fil, sector, numsectors, sectortypev7.typeInfo);
@@ -10068,7 +10067,6 @@ function loadboard(filename: string, /*char*/ flags: number, dapos: vec3_t , /*i
     numwalls  = kread16(fil); numwalls = B_LITTLE16(numwalls);
     if (numwalls >= MYMAXWALLS()+1) { kclose(fil); return -3; }
 
-    debugger;
     kreadStructs(fil, wall, numwalls, walltypev7.typeInfo);
 
     //for (i=numwalls-1; i>=0; i--)
@@ -10099,7 +10097,6 @@ function loadboard(filename: string, /*char*/ flags: number, dapos: vec3_t , /*i
     numsprites = kread16(fil); numsprites = B_LITTLE16(numsprites);
     if (numsprites >= MYMAXSPRITES()+1) { kclose(fil); return -3; }
 
-    debugger;
     kreadStructs(fil, sprite, numsprites, spritetype.typeInfo);
 
 //#ifdef NEW_MAP_FORMAT
@@ -10144,12 +10141,10 @@ function loadboard(filename: string, /*char*/ flags: number, dapos: vec3_t , /*i
         var fn = new Uint8Array(BMAX_PATH);
 
         Bstrcpy(fn, filename);
-        todoThrow('append_ext_UNSAFE(fn, ".cfg");');
-
-        todoThrow("OSD_Exec(fn);");
+        todoUnimportant('append_ext_UNSAFE(fn, ".cfg");');
+        todoUnimportant("OSD_Exec(fn);");
     }
-    debugger;
-    todoThrow();
+
     return finish_loadboard(dapos, dacursectnum, numsprites, myflags);
 }
 
@@ -13528,33 +13523,33 @@ function loadtile(tilenume: number): void
 //
 function updatesector(/*int32_t*/ x: number, /*int32_t */y: number, /*int16_t **/sectnum: R<number>): void
 {
-    todoThrow();
-    //int32_t i;
+    var i: number;
 
-    //if (inside_p(x,y,*sectnum))
-    //    return;
+    if (inside_p(x,y,sectnum$))
+        return;
 
-    //if (*sectnum >= 0 && *sectnum < numsectors)
-    //{
-    //    const walltype *wal = &wall[sector[*sectnum].wallptr];
-    //    int32_t j = sector[*sectnum].wallnum;
+    if (sectnum.$ >= 0 && sectnum.$ < numsectors)
+    {
+        var walIdx = sector[sectnum.$].wallptr;
+        var wal = wall[walIdx];
+        var j = sector[sectnum.$].wallnum;
 
-    //    do
-    //    {
-    //        i = wal->nextsector;
-    //        if (inside_p(x, y, i))
-    //            SET_AND_RETURN(*sectnum, i);
+        do
+        {
+            i = wal.nextsector;
+            if (inside_p(x, y, i))
+                SET_AND_RETURN(sectnum.$, i);
 
-    //        wal++; j--;
-    //    }
-    //    while (j != 0);
-    //}
+            walIdx++; j--;
+        }
+        while (j != 0);
+    }
 
-    //for (i=numsectors-1; i>=0; i--)
-    //    if (inside_p(x, y, i))
-    //        SET_AND_RETURN(*sectnum, i);
+    for (i=numsectors-1; i>=0; i--)
+        if (inside_p(x, y, i))
+            SET_AND_RETURN(sectnum.$, i);
 
-    //*sectnum = -1;
+    sectnum.$ = -1;
 }
 
 //void updatesectorbreadth(int32_t x, int32_t y, int16_t *sectnum)
