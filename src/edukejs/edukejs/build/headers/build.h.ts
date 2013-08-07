@@ -317,7 +317,7 @@ class sectortypev7 implements ITypeInfo
         ["ceilingpal", "uint8_t"], ["ceilingxpanning", "uint8_t"], ["ceilingypanning", "uint8_t"], 
         ["floorpicnum", "int16_t"], ["floorheinum", "int16_t"],
         ["floorshade", "uint8_t"],
-        ["floorpal", "uint8_t"], ["floorxpanning", "uint8_t"], ["floorxpanning", "uint8_t"],
+        ["floorpal", "uint8_t"], ["floorxpanning", "uint8_t"], ["floorypanning", "uint8_t"],
         ["visibility", "uint8_t"], ["filler", "uint8_t"],
         ["lotag", "uint16_t"], ["hitag", "uint16_t"],
         ["extra", "int16_t"]
@@ -358,7 +358,7 @@ class sectortypev7 implements ITypeInfo
 ////   bits 12-15: reserved  (14: temp use by editor)
 
 //32 bytes
-class walltypev7
+class walltypev7 implements ITypeInfo
 {
     x : number; y : number;                                        //Tracker(Wall, int32_t)  
     point2 : number; nextwall : number; nextsector : number;                //Tracker(Wall, int16_t)  
@@ -368,6 +368,18 @@ class walltypev7
     pal : number; xrepeat : number; yrepeat : number; xpanning : number; ypanning : number;   //Tracker(Wall, uint8_t)  
     lotag : number; hitag : number;                                //Tracker(Wall, uint16_t) 
     extra : number;                                       //Tracker(Wall, int16_t)  
+
+    public static size = 32;
+    public static typeInfo = [
+        ["x", "int32_t"], ["y", "int32_t"],
+        ["point2", "int16_t"], ["nextwall", "int16_t"], ["nextsector", "int16_t"],
+        ["cstat", "uint16_t"],
+        ["picnum", "int16_t"], ["overpicnum", "int16_t"],
+        ["shade", "int8_t"],
+        ["pal", "uint8_t"], ["xrepeat", "uint8_t"], ["yrepeat", "uint8_t"], ["xpanning", "uint8_t"], ["ypanning", "uint8_t"],
+        ["lotag", "uint16_t"], ["hitag", "uint16_t"],
+        ["extra", "int16_t"]
+    ];
 
     constructor() {
         this.init();
@@ -415,7 +427,7 @@ class walltypev7
 ////   bit 15: 1 = Invisible sprite, 0 = not invisible
 
 //44 bytes
-class spritetype
+class spritetype implements ITypeInfo
 {
     x:number; y:number; z:number;         //Tracker(Sprite, int32_t)  
     cstat:number;                             //Tracker(Sprite, uint16_t) 
@@ -430,14 +442,27 @@ class spritetype
     extra:number;                             //Tracker(Sprite, int16_t)  
 
     public static size = 44;
-
+    public static typeInfo = [
+        ["x", "int32_t"], ["y", "int32_t"],["z", "int32_t"],
+        ["cstat", "uint16_t"],
+        ["picnum", "int16_t"],
+        ["shade", "int8_t"],
+        ["pal", "uint8_t"], ["clipdist", "uint8_t"],["filler", "uint8_t"],
+        ["xrepeat", "uint8_t"], ["yrepeat", "uint8_t"],
+        ["xoffset", "int8_t"], ["yoffset", "int8_t"],
+        ["sectnum", "int16_t"], ["statnum", "int16_t"],
+        ["ang", "int16_t"], ["owner", "int16_t"],["xvel", "int16_t"],["yvel", "int16_t"],["zvel", "int16_t"],
+        ["lotag", "uint16_t"], ["hitag", "uint16_t"],
+        ["extra", "int16_t"]
+    ];
+        
     constructor() {
         this.init();
     }
 
     init(): void {
         this.x = 0, this.y = 0, this.z = 0;         //Tracker(Sprite, int32_t)  
-        this.cstat = 0;                             //Tracker(Sprite, uint16_t) 
+        this.cstat = 0;                             //Tracker(Sprite, uint16_t) //todo: force this to be u16??????
         this.picnum = 0;                            //Tracker(Sprite, int16_t)  
         this.shade = 0;                             //Tracker(Sprite, int8_t)   
         this.pal = 0, this.clipdist = 0, this.filler = 0;   //Tracker(Sprite, uint8_t)  
@@ -705,10 +730,10 @@ var g_loadedMapVersion: number = 0;    //extern int32_t
 //EXTERN spriteext_t *spriteext;
 //EXTERN spritesmooth_t *spritesmooth;
 
-var sector;//EXTERN sectortype *sector;
-var wall;//EXTERN walltype *wall;
-var sprite;//EXTERN spritetype *sprite;
-var tsprite;//EXTERN spritetype *tsprite;
+var sector: sectortypev7[];//EXTERN sectortype *sector;
+var wall: walltype[];//EXTERN walltype *wall;
+var sprite: spritetype[];//EXTERN spritetype *sprite;
+var tsprite: spritetype[];//EXTERN spritetype *tsprite;
 //#else
 var spriteext;//EXTERN spriteext_t spriteext[MAXSPRITES+MAXUNIQHUDID];
 var spritesmooth;//EXTERN spritesmooth_t spritesmooth[MAXSPRITES+MAXUNIQHUDID];

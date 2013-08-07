@@ -1,5 +1,14 @@
 ﻿interface ITypeInfo {
     typeInfo: string[][];
+    size: number;
+}
+
+function ITypeInfoLogger(v: ITypeInfo, typeInfo: string[][]) {
+    for (var j = 0; j < typeInfo.length; j++) {
+        var name = typeInfo[j][0];   
+        var type = typeInfo[j][1];   
+        console.log(name + ": " + v[name] + "\t\t(" + type + ")");
+    }
 }
 
 
@@ -63,12 +72,37 @@ class Ptr {
         return this.view.getUint8(this.idx); // same as getValue!!
     }
 
+    getInt8() {
+        if (!this.view) {
+            this.view = new DataView(this.array.buffer); // this breaks if a subarray is passed in
+        }
+
+        return this.view.getInt8(this.idx); // same as getValue!!
+    }
+
+    getUint16() {
+        if (!this.view) {
+            this.view = new DataView(this.array.buffer);// this breaks if a subarray is passed in
+        }
+
+        return this.view.getUint16(this.idx, true);
+    }
+
+
     getInt16() {
         if (!this.view) {
             this.view = new DataView(this.array.buffer);// this breaks if a subarray is passed in
         }
 
         return this.view.getInt16(this.idx, true);
+    }
+
+    getUint32() {
+        if (!this.view) {
+            this.view = new DataView(this.array.buffer);// this breaks if a subarray is passed in
+        }
+
+        return this.view.getUint32(this.idx, true);
     }
 
     getInt32() {

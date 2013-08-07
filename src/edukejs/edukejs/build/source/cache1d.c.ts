@@ -939,7 +939,7 @@ function kopen4load(filename: string, /*char*/ searchfirst: number) : number
 
 function kread(handle: number, buffer: Ptr, leng : number) : number
 {
-    var i;
+    var i: number;
     var filenum = filehan[handle];
     var groupnum = filegrp[handle];
 
@@ -976,14 +976,11 @@ function kread(handle: number, buffer: Ptr, leng : number) : number
     return(0);
 }
 
-function kreadu8(handle: number) : number
+function kreadStructs(handle: number, array:  ITypeInfo[], count : number, typeInfo: string[][]) : number
 {
-    var i;
+    var i: number;
     var filenum = filehan[handle];
     var groupnum = filegrp[handle];
-    
-    var leng = 1;
-    var buffer = new Ptr(new Uint8Array(leng));
 
     if (groupnum == 255) todoThrow("return(Bread(filenum,buffer,leng));");
 //#ifdef WITHKPLIB
@@ -1008,82 +1005,95 @@ function kreadu8(handle: number) : number
             Blseek(groupfil[groupnum],i+((gnumfiles[groupnum]+1)<<4),BSEEK_SET);
             groupfilpos[groupnum] = i;
         }
-        leng = min(leng,(gfileoffs[groupnum][filenum+1]-gfileoffs[groupnum][filenum])-filepos[handle]);
-        leng = Bread(groupfil[groupnum],buffer,leng);
-        filepos[handle] += leng;
-        groupfilpos[groupnum] += leng;
-
-        return buffer.getUint8();
-    }
-
-    todoThrow("return(0)");
-}
-function kread16(handle: number) : number
-{
-    var i;
-    var filenum = filehan[handle];
-    var groupnum = filegrp[handle];
-    
-    var leng = 2;
-    var buffer = new Ptr(new Uint8Array(leng));
-
-    if (groupnum == 255) todoThrow("return(Bread(filenum,buffer,leng));");
-//#ifdef WITHKPLIB
-//    else if (groupnum == 254)
-//    {
-//        if (kzcurhand != handle)
-//        {
-//            if (kztell() >= 0) { filepos[kzcurhand] = kztell(); kzclose(); }
-//            kzcurhand = handle;
-//            kzipopen(filenamsav[handle]);
-//            kzseek(filepos[handle],SEEK_SET);
-//        }
-//        return(kzread(buffer,leng));
-//    }
-//#endif
-
-    if (groupfil[groupnum] != -1)
-    {
-        i = gfileoffs[groupnum][filenum]+filepos[handle];
-        if (i != groupfilpos[groupnum])
-        {
-            Blseek(groupfil[groupnum],i+((gnumfiles[groupnum]+1)<<4),BSEEK_SET);
-            groupfilpos[groupnum] = i;
+        //leng = min(leng,(gfileoffs[groupnum][filenum+1]-gfileoffs[groupnum][filenum])-filepos[handle]);
+        
+        if(array.length == 0) {
+            throw "array must have elements";
         }
-        leng = min(leng,(gfileoffs[groupnum][filenum+1]-gfileoffs[groupnum][filenum])-filepos[handle]);
-        leng = Bread(groupfil[groupnum],buffer,leng);
-        filepos[handle] += leng;
-        groupfilpos[groupnum] += leng;
 
-        return buffer.getInt16();
+        for (var k = 0; k < count; k++) {
+            var item = array[k];
+
+            for (var j = 0; j < typeInfo.length; j++) {
+                var name = typeInfo[j][0];   
+                var type = typeInfo[j][1];   
+    
+                switch(type) {
+                    case "uint8_t":
+                        item[name] = kreadu8(handle);
+                    break;
+
+                    case "int8_t":
+                        item[name] = kread8(handle);
+                        break;
+
+                    case "uint16_t":
+                        item[name] = kreadu16(handle);
+                    break;
+
+                    case "int16_t":
+                        item[name] = kread16(handle);
+                        break;
+
+                    case "uint32_t":
+                        item[name] = kreadu32(handle);
+                    break;
+
+                    case "int32_t":
+                        item[name] = kread32(handle);
+                        break;
+
+                    default:
+                        throw "unknown type: " + type;
+                }
+            }
+        }
+
+        return(count*array[0].size);
     }
 
     return(0);
 }
 
+function kreadu8(handle: number) : number
+{
+   return kreadCustom(handle, 1, "getUint8");
+}
+
+function kread8(handle: number) : number
+{
+   return kreadCustom(handle, 1, "getInt8");
+}
+
+function kreadu16(handle: number) : number
+{
+   return kreadCustom(handle, 2, "getUint16");
+}
+
+function kread16(handle: number) : number
+{
+   return kreadCustom(handle, 2, "getInt16");
+}
+
+function kreadu32(handle: number) : number
+{
+   return kreadCustom(handle, 4, "getUint32");
+}
+
 function kread32(handle: number) : number
 {
-    var i;
+   return kreadCustom(handle, 4, "getInt32");
+}
+
+function kreadCustom(handle: number, leng: number, bufferMethod: string) : number
+{
+    var i: number;
     var filenum = filehan[handle];
     var groupnum = filegrp[handle];
     
-    var leng = 4;
     var buffer = new Ptr(new Uint8Array(leng));
 
     if (groupnum == 255) todoThrow("return(Bread(filenum,buffer,leng));");
-//#ifdef WITHKPLIB
-//    else if (groupnum == 254)
-//    {
-//        if (kzcurhand != handle)
-//        {
-//            if (kztell() >= 0) { filepos[kzcurhand] = kztell(); kzclose(); }
-//            kzcurhand = handle;
-//            kzipopen(filenamsav[handle]);
-//            kzseek(filepos[handle],SEEK_SET);
-//        }
-//        return(kzread(buffer,leng));
-//    }
-//#endif
 
     if (groupfil[groupnum] != -1)
     {
@@ -1097,8 +1107,8 @@ function kread32(handle: number) : number
         leng = Bread(groupfil[groupnum],buffer,leng);
         filepos[handle] += leng;
         groupfilpos[groupnum] += leng;
-
-        return buffer.getInt32();
+        var value = buffer[bufferMethod]();
+        return value;
     }
 
     todoThrow("return(0)");
@@ -1147,7 +1157,7 @@ function kfilelength(handle : number) : number
 {
     assert.int32(handle);
 
-    var i, groupnum;
+    var i: number, groupnum: number;
 
     groupnum = filegrp[handle];
     if (groupnum == 255)
