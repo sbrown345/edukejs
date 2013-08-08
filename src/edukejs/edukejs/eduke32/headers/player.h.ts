@@ -377,7 +377,7 @@ function weapondata_t(wl : number = 0,cl : number = 0,rl : number = 0,fd : numbe
 //# define PWEAPON(Player, Weapon, Wmember) (g_playerWeapon[Player][Weapon].Wmember)
 //extern weapondata_t g_playerWeapon[MAXPLAYERS][MAX_WEAPONS];
 //#else
-function PWEAPON(Player: number, Weapon: number, Wmember: string): number {return window["aplWeapon" + Wmember][Weapon][Player]:Int32Array[];}
+function PWEAPON(Player: number, Weapon: number, Wmember: string): number {return window["aplWeapon" + Wmember][Weapon][Player];}
 var aplWeaponClip:Int32Array[];/*[MAX_WEAPONS]:Int32Array[];*/            // number of items in clip                                           //extern intptr_t         *
 var aplWeaponReload:Int32Array[];/*[MAX_WEAPONS]:Int32Array[];*/          // delay to reload (include fire)                                    //extern intptr_t         *
 var aplWeaponFireDelay:Int32Array[];/*[MAX_WEAPONS]:Int32Array[];*/       // delay to fire                                                     //extern intptr_t         *

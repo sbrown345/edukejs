@@ -57,9 +57,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //vmstate_t vm;
 
 //#if !defined LUNATIC
-//int32_t g_tw;
-//int32_t g_errorLineNum;
-//int32_t g_currentEventExec = -1;
+var g_tw: number;
+var g_errorLineNum: number;
+var g_currentEventExec = -1;
 
 //GAMEEXEC_STATIC void VM_Execute(int32_t loop);
 

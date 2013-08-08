@@ -154,7 +154,7 @@ var EVENT_INIT=0,
 //void VM_ScriptInfo(void);
 
 function CON_ERRPRINTF(Text: string, ...args: any[]) {
-    OSD_Printf_nowarn("Line %d, %s: " + Text, g_errorLineNum, keyw[g_tw],  args__); 
+    OSD_Printf_nowarn("Line %d, %s: " + Text, g_errorLineNum, keyw[g_tw],  args); 
 }
 
 //#endif

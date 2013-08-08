@@ -115,21 +115,55 @@ var STAT_NETALLOC      = MAXSTATUS-1;
 //#pragma pack(pop)
 //#endif
 
-//typedef struct {
-//    int32_t workslike, cstat; // 8b
-//    int32_t hitradius, range, flashcolor; // 12b
-//    int16_t spawns, sound, isound, vel; // 8b
-//    int16_t decal, trail, tnum, drop; // 8b
-//    int16_t offset, bounces, bsound; // 6b
-//    int16_t toffset; // 2b
-//    int16_t extra, extra_rand; // 4b
-//    int8_t sxrepeat, syrepeat, txrepeat, tyrepeat; // 4b
-//    int8_t shade, xrepeat, yrepeat, pal; // 4b
-//    int8_t movecnt; // 1b
-//    uint8_t clipdist; // 1b
-//    int8_t filler[2]; // 2b
-//    int32_t userdata; // 4b
-//} projectile_t;
+class projectile_t {
+    public static size = 64;
+
+    workslike:number; cstat:number; // 8b                      //    int32_t    
+    hitradius:number; range:number; flashcolor:number; // 12b         //    int32_t    
+    spawns:number; sound:number; isound:number; vel:number; // 8b            //    int16_t    
+    decal:number; trail:number; tnum:number; drop:number; // 8b              //    int16_t    
+    offset:number; bounces:number; bsound:number; // 6b               //    int16_t    
+    toffset:number; // 2b                               //    int16_t    
+    extra:number; extra_rand:number; // 4b                     //    int16_t    
+    sxrepeat:number; syrepeat:number; txrepeat:number; tyrepeat:number; // 4b//    int8_t     
+    shade:number; xrepeat:number; yrepeat:number; pal:number; // 4b          //    int8_t     
+    movecnt:number; // 1b                               //    int8_t     
+    clipdist:number; // 1b                              //    uint8_t    
+    filler:Int8Array; // 2b                             //    int8_t     
+    userdata:number; // 4b                              //    int32_t    
+
+    constructor() {
+        this.workslike=0;this. cstat=0; // 8b                      //    int32_t    
+        this.hitradius=0;this. range=0;this. flashcolor=0; // 12b         //    int32_t    
+        this.spawns=0;this. sound=0;this. isound=0;this. vel=0; // 8b            //    int16_t    
+        this.decal=0;this. trail=0;this. tnum=0;this. drop=0; // 8b              //    int16_t    
+        this.offset=0;this. bounces=0;this. bsound=0; // 6b               //    int16_t    
+        this.toffset=0; // 2b                               //    int16_t    
+        this.extra=0;this. extra_rand=0; // 4b                     //    int16_t    
+        this.sxrepeat=0;this. syrepeat=0;this. txrepeat=0;this. tyrepeat=0; // 4b//    int8_t     
+        this.shade=0;this. xrepeat=0;this. yrepeat=0;this. pal=0; // 4b          //    int8_t     
+        this.movecnt=0; // 1b                               //    int8_t     
+        this.clipdist=0; // 1b                              //    uint8_t    
+        this.filler = new Int8Array(2); // 2b                             //    int8_t     
+        this.userdata = 0; // 4b                              //    int32_t    
+    }
+
+    public copyTo(p: projectile_t): void {
+        p.workslike=this.workslike; p.cstat=this.cstat; // 8b                      //    int32_t    
+        p.hitradius=this.hitradius; p.range=this.range; p.flashcolor=this.flashcolor; // 12b         //    int32_t    
+        p.spawns=this.spawns;p. sound=this.sound;p. isound=this.isound;p.vel=this.vel; // 8b            //    int16_t    
+        p.decal=this.decal;p. trail=this.trail;p. tnum=this.tnum;p. drop=this.drop; // 8b              //    int16_t    
+        p.offset=this.offset;p. bounces=this.bounces;p. bsound=this.bsound; // 6b               //    int16_t    
+        p.toffset=this.toffset; // 2b                               //    int16_t    
+        p.extra=this.extra;p. extra_rand=this.extra_rand; // 4b                     //    int16_t    
+        p.sxrepeat=this.sxrepeat;p.syrepeat=this.syrepeat;p.txrepeat=this.txrepeat;p.tyrepeat=this.tyrepeat; // 4b//    int8_t     
+        p.shade=this.shade;p. xrepeat=this.xrepeat;p. yrepeat=this.yrepeat;p. pal=this.pal; // 4b          //    int8_t     
+        p.movecnt=this.movecnt; // 1b                               //    int8_t     
+        p.clipdist=this.clipdist; // 1b                              //    uint8_t    
+        p.filler = new Int8Array([this.filler[0], this.filler[1]]); // 2b                             //    int8_t     
+        p.userdata = this.userdata; // 4b                              //    int32_t    
+    }
+}
 
 //// Select an actor's actiontics and movflags locations depending on
 //// whether we compile the Lunatic build.
@@ -245,7 +279,16 @@ class tiledata_t {
     cacherange: number;//    int32_t ; // formerly SpriteCache
 
 //    // todo: make this a pointer and allocate at runtime
-//    projectile_t defproj;
+    defproj:projectile_t;
+
+
+    constructor() {
+        this.execPtr=0;
+        this.loadPtr=0;
+        this.flags=0;
+        this.cacherange=0;
+        this.defproj=new projectile_t();
+    }
 } //tiledata_t;
 
 //// KEEPINSYNC lunatic/con_lang.lua

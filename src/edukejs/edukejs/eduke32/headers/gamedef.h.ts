@@ -80,7 +80,7 @@ var MAXCHEATLEN =   20;
 //extern const char *EventNames[];  // MAXEVENTS
 
 //#if !defined LUNATIC
-var g_scriptPtr: number; //extern intptr_t *
+//var g_scriptPtr: number; //extern intptr_t *
 
 class memberlabel_t 
 {
@@ -124,7 +124,7 @@ class memberlabel_t
 //void C_ReportError(int32_t iError);
 //void C_Compile(const char *filenam);
 
-var g_errorLineNum: number;//extern int32_t 
+//var g_errorLineNum: number;//extern int32_t 
 //extern int32_t g_tw;
 //extern const char *keyw[];
 
