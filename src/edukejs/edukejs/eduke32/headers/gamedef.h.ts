@@ -124,7 +124,7 @@ class memberlabel_t
 //void C_ReportError(int32_t iError);
 //void C_Compile(const char *filenam);
 
-//extern int32_t g_errorLineNum;
+var g_errorLineNum: number;//extern int32_t 
 //extern int32_t g_tw;
 //extern const char *keyw[];
 

@@ -230,21 +230,21 @@ var g_numQuoteRedefinitions = 0; //int32_t
 //intptr_t *aplWeaponFlashColor[MAX_WEAPONS];     // Muzzle flash color
 //#endif
 
-//int32_t g_iReturnVarID=-1;      // var ID of "RETURN"
-//int32_t g_iWeaponVarID=-1;      // var ID of "WEAPON"
-//int32_t g_iWorksLikeVarID=-1;   // var ID of "WORKSLIKE"
-//int32_t g_iZRangeVarID=-1;      // var ID of "ZRANGE"
-//int32_t g_iAngRangeVarID=-1;    // var ID of "ANGRANGE"
-//int32_t g_iAimAngleVarID=-1;    // var ID of "AUTOAIMANGLE"
-//int32_t g_iLoTagID=-1;          // var ID of "LOTAG"
-//int32_t g_iHiTagID=-1;          // var ID of "HITAG"
-//int32_t g_iTextureID=-1;        // var ID of "TEXTURE"
-//int32_t g_iThisActorID=-1;      // var ID of "THISACTOR"
-//int32_t g_iSpriteVarID=-1;
-//int32_t g_iSectorVarID=-1;
-//int32_t g_iWallVarID=-1;
-//int32_t g_iPlayerVarID=-1;
-//int32_t g_iActorVarID=-1;
+var g_iReturnVarID=-1;      // var ID of "RETURN"      //int32_t 
+var g_iWeaponVarID=-1;      // var ID of "WEAPON"      //int32_t 
+var g_iWorksLikeVarID=-1;   // var ID of "WORKSLIKE"   //int32_t 
+var g_iZRangeVarID=-1;      // var ID of "ZRANGE"      //int32_t 
+var g_iAngRangeVarID=-1;    // var ID of "ANGRANGE"    //int32_t 
+var g_iAimAngleVarID=-1;    // var ID of "AUTOAIMANGLE"//int32_t 
+var g_iLoTagID=-1;          // var ID of "LOTAG"       //int32_t 
+var g_iHiTagID=-1;          // var ID of "HITAG"       //int32_t 
+var g_iTextureID=-1;        // var ID of "TEXTURE"     //int32_t 
+var g_iThisActorID=-1;      // var ID of "THISACTOR"   //int32_t 
+var g_iSpriteVarID=-1;                                 //int32_t 
+var g_iSectorVarID=-1;                                 //int32_t 
+var g_iWallVarID=-1;                                   //int32_t 
+var g_iPlayerVarID=-1;                                 //int32_t 
+var g_iActorVarID=-1;                                  //int32_t 
 
 var apScriptGameEvent: Int32Array = new Int32Array(MAXGAMEEVENTS);
 

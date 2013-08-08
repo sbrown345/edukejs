@@ -1,3 +1,5 @@
+/// <reference path="../../build/headers/compat.h.ts" />
+
 //-------------------------------------------------------------------------
 /*
 Copyright (C) 2010 EDuke32 developers and contributors
@@ -151,8 +153,8 @@ var EVENT_INIT=0,
 //int32_t VM_OnEvent(int32_t iEventID,int32_t iActor,int32_t iPlayer,int32_t lDist, int32_t iReturn);
 //void VM_ScriptInfo(void);
 
-//#define CON_ERRPRINTF(Text, ...) do { \
-//    OSD_Printf_nowarn("Line %d, %s: " Text, g_errorLineNum, keyw[g_tw], ## __VA_ARGS__); \
-//} while (0)
+function CON_ERRPRINTF(Text: string, ...args: any[]) {
+    OSD_Printf_nowarn("Line %d, %s: " + Text, g_errorLineNum, keyw[g_tw],  args__); 
+}
 
 //#endif

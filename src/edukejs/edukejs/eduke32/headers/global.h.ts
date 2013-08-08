@@ -121,7 +121,7 @@ var screenpeek: number;
 var startofdynamicinterpolations: number;         //G_EXTERN int32_t 
 var vel: number,svel: number,angvel: number,horiz: number,ototalclock: number;    //G_EXTERN int32_t 
 //G_EXTERN intptr_t *g_parsingActorPtr;
-//G_EXTERN intptr_t *g_scriptPtr,*insptr;
+var g_scriptPtr = 0, insptr = 0;// - pointers to script G_EXTERN intptr_t 
 var labelcode: Int32Array, labeltype: Int32Array;//G_EXTERN int32_t *labelcode,*labeltype;
 var labelcodeIdx : number, labeltypeIdx : number;
 var script:  Uint32Array;//G_EXTERN intptr_t *script;

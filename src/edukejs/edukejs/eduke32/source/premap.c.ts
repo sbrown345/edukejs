@@ -1138,6 +1138,7 @@ function G_SetupRotfixedSprites(): void
 
 function prelevel(/*char*/ g: number): void
 {
+    debugger;
    var i, nexti, j, startwall, endwall;                 // int32_t 
    var switchpicnum;                                    // int32_t 
    var tagbitmap = new Uint8Array(65536>>3);// /(uint8_t *)Bcalloc(65536>>3, 1);    // uint8_t 
@@ -1314,7 +1315,7 @@ function prelevel(/*char*/ g: number): void
             actor[j].t_data[0] = 1;
     }
 
-    //Bfree(tagbitmap);
+    tagbitmap = null;
 
     g_mirrorCount = 0;
 
@@ -2035,7 +2036,7 @@ function G_EnterLevel(g: number): number
     g_precacheCount = 0;
     Bmemset(new P(gotpic), 0, sizeof(gotpic));
     for (var j = 0; j < precachehightile.length; j++) {
-        Bmemset(new P(precachehightile[i]), 0, sizeof(precachehightile[i]));
+        Bmemset(new P(precachehightile[j]), 0, sizeof(precachehightile[j]));
     }
 
     //clearbufbyte(Actor,sizeof(Actor),0l); // JBF 20040531: yes? no?
