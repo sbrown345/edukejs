@@ -1511,7 +1511,7 @@ var RESERVEDSLOT12__STATIC = 6143
 //extern int32_t RESERVEDSLOT11;
 //extern int32_t RESERVEDSLOT12;
 
-//#define DYNAMICTILEMAP(Tilenum) (DynamicTileMap[Tilenum])
+function DYNAMICTILEMAP(Tilenum: number): number {return DynamicTileMap[Tilenum];}
 
 //#else  /* if !defined DYNTILEREMAP_ENABLE */
 

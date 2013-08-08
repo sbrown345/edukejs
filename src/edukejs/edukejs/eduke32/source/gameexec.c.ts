@@ -97,7 +97,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //    }
 
 //    if (vm.g_i)
-//        initprintf_nowarn("current actor: %d (%d)\n",vm.g_i,TrackerCast(vm.g_sp->picnum));
+//        initprintf_nowarn("current actor: %d (%d)\n",vm.g_i,TrackerCast(vm.g_sp.picnum));
 
 //    initprintf("g_errorLineNum: %d, g_tw: %d\n",g_errorLineNum,g_tw);
 //#endif
@@ -108,14 +108,14 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //    if (iActor >= 0)
 //    {
 //        // if player was set to squish, first stop that...
-//        if (iPlayer >= 0 && g_player[iPlayer].ps->actorsqu == iActor)
-//            g_player[iPlayer].ps->actorsqu = -1;
+//        if (iPlayer >= 0 && g_player[iPlayer].ps.actorsqu == iActor)
+//            g_player[iPlayer].ps.actorsqu = -1;
 
 //        A_DeleteSprite(iActor);
 //    }
 //}
 
-// May recurse, e.g. through EVENT_XXX -> ... -> EVENT_KILLIT
+// May recurse, e.g. through EVENT_XXX . ... . EVENT_KILLIT
 function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: number, iReturn: number): number
 {
     todo("VM_OnEvent");
@@ -170,25 +170,25 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 
 //static inline int32_t VM_CheckSquished(void)
 //{
-//    const sectortype *sc = &sector[vm.g_sp->sectnum];
+//    const sectortype *sc = &sector[vm.g_sp.sectnum];
 
-//    if ((vm.g_sp->picnum == APLAYER && ud.noclip) || sc->lotag == ST_23_SWINGING_DOOR)
+//    if ((vm.g_sp.picnum == APLAYER && ud.noclip) || sc.lotag == ST_23_SWINGING_DOOR)
 //        return 0;
 
 //    {
-//        int32_t fz=sc->floorz, cz=sc->ceilingz;
+//        int32_t fz=sc.floorz, cz=sc.ceilingz;
 //#ifdef YAX_ENABLE
 //        int16_t cb, fb;
 
-//        yax_getbunches(vm.g_sp->sectnum, &cb, &fb);
-//        if (cb >= 0 && (sc->ceilingstat&512)==0)  // if ceiling non-blocking...
+//        yax_getbunches(vm.g_sp.sectnum, &cb, &fb);
+//        if (cb >= 0 && (sc.ceilingstat&512)==0)  // if ceiling non-blocking...
 //            cz -= (32<<8);  // unconditionally don't squish... yax_getneighborsect is slowish :/
-//        if (fb >= 0 && (sc->floorstat&512)==0)
+//        if (fb >= 0 && (sc.floorstat&512)==0)
 //            fz += (32<<8);
 //#endif
 
-//        if (vm.g_sp->pal == 1 ?
-//            (fz - cz >= (32<<8) || (sc->lotag&32768)) :
+//        if (vm.g_sp.pal == 1 ?
+//            (fz - cz >= (32<<8) || (sc.lotag&32768)) :
 //            (fz - cz >= (12<<8)))
 //        return 0;
 //    }
@@ -196,9 +196,9 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //    P_DoQuote(QUOTE_SQUISHED, g_player[vm.g_p].ps);
 
 //    if (A_CheckEnemySprite(vm.g_sp))
-//        vm.g_sp->xvel = 0;
+//        vm.g_sp.xvel = 0;
 
-//    if (vm.g_sp->pal == 1) // frozen
+//    if (vm.g_sp.pal == 1) // frozen
 //    {
 //        actor[vm.g_i].picnum = SHOTSPARK1;
 //        actor[vm.g_i].extra = 1;
@@ -212,19 +212,19 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //{
 //    int32_t n = 128-(krand()&255);
 
-//    p->horiz += 64;
-//    p->return_to_center = 9;
-//    p->look_ang = p->rotscrnang = n>>1;
+//    p.horiz += 64;
+//    p.return_to_center = 9;
+//    p.look_ang = p.rotscrnang = n>>1;
 //}
 
 //int32_t A_Dodge(spritetype *s)
 //{
 //    int32_t bx,by,bxvect,byvect,i;
-//    int32_t mx = s->x, my = s->y;
-//    int32_t mxvect = sintable[(s->ang+512)&2047];
-//    int32_t myvect = sintable[s->ang&2047];
+//    int32_t mx = s.x, my = s.y;
+//    int32_t mxvect = sintable[(s.ang+512)&2047];
+//    int32_t myvect = sintable[s.ang&2047];
 
-//    if (A_CheckEnemySprite(s) && s->extra <= 0) // hack
+//    if (A_CheckEnemySprite(s) && s.extra <= 0) // hack
 //        return 0;
 
 //    for (i=headspritestat[STAT_PROJECTILE]; i>=0; i=nextspritestat[i]) //weapons list
@@ -241,7 +241,7 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //        {
 //            if (klabs((bxvect * by) - (byvect * bx)) < 65536<<6)
 //            {
-//                s->ang -= 512+(krand()&1024);
+//                s.ang -= 512+(krand()&1024);
 //                return 1;
 //            }
 //        }
@@ -253,8 +253,8 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //{
 //    spritetype *s = &sprite[iActor];
 
-//    if (s->picnum != APLAYER && (AC_COUNT(actor[iActor].t_data)&63) > 2)
-//        return s->ang + 1024;
+//    if (s.picnum != APLAYER && (AC_COUNT(actor[iActor].t_data)&63) > 2)
+//        return s.ang + 1024;
 
 //    {
 //        int32_t furthest_angle=0;
@@ -263,15 +263,15 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //        int32_t angincs=2048/angs;
 //        hitdata_t hit;
 
-//        for (j=s->ang; j<(2048+s->ang); j+=angincs)
+//        for (j=s.ang; j<(2048+s.ang); j+=angincs)
 //        {
-//            s->z -= (8<<8);
-//            hitscan((const vec3_t *)s, s->sectnum,
+//            s.z -= (8<<8);
+//            hitscan((const vec3_t *)s, s.sectnum,
 //                    sintable[(j+512)&2047],
 //                    sintable[j&2047],0,
 //                    &hit,CLIPMASK1);
-//            s->z += (8<<8);
-//            d = klabs(hit.pos.x-s->x) + klabs(hit.pos.y-s->y);
+//            s.z += (8<<8);
+//            d = klabs(hit.pos.x-s.x) + klabs(hit.pos.y-s.y);
 
 //            if (d > greatestd)
 //            {
@@ -299,22 +299,22 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //            angincs = 2048/2;
 //        else angincs = 2048/(1+(krand()&1));
 
-//        for (j=ts->ang; j<(2048+ts->ang); j+=(angincs-(krand()&511)))
+//        for (j=ts.ang; j<(2048+ts.ang); j+=(angincs-(krand()&511)))
 //        {
-//            ts->z -= (16<<8);
-//            hitscan((const vec3_t *)ts, ts->sectnum,
+//            ts.z -= (16<<8);
+//            hitscan((const vec3_t *)ts, ts.sectnum,
 //                    sintable[(j+512)&2047],
 //                    sintable[j&2047],16384-(krand()&32767),
 //                    &hit,CLIPMASK1);
 
-//            ts->z += (16<<8);
+//            ts.z += (16<<8);
 
-//            d = klabs(hit.pos.x-ts->x)+klabs(hit.pos.y-ts->y);
-//            da = klabs(hit.pos.x-s->x)+klabs(hit.pos.y-s->y);
+//            d = klabs(hit.pos.x-ts.x)+klabs(hit.pos.y-ts.y);
+//            da = klabs(hit.pos.x-s.x)+klabs(hit.pos.y-s.y);
 
 //            if (d < da && hit.sect > -1)
 //                if (cansee(hit.pos.x,hit.pos.y,hit.pos.z,
-//                           hit.sect,s->x,s->y,s->z-(16<<8),s->sectnum))
+//                           hit.sect,s.x,s.y,s.z-(16<<8),s.sectnum))
 //                {
 //                    *dax = hit.pos.x;
 //                    *day = hit.pos.y;
@@ -329,21 +329,21 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //{
 //    spritetype *s = &sprite[iActor];
 
-////    if (s->statnum == STAT_PLAYER || s->statnum == STAT_STANDABLE || s->statnum == STAT_ZOMBIEACTOR || s->statnum == STAT_ACTOR || s->statnum == STAT_PROJECTILE)
+////    if (s.statnum == STAT_PLAYER || s.statnum == STAT_STANDABLE || s.statnum == STAT_ZOMBIEACTOR || s.statnum == STAT_ACTOR || s.statnum == STAT_PROJECTILE)
 //    {
 //        int32_t hz,lz,zr = 127;
-//        int32_t cstat = s->cstat;
+//        int32_t cstat = s.cstat;
 
-//        s->cstat = 0;
+//        s.cstat = 0;
 
-//        if (s->statnum == STAT_PROJECTILE)
+//        if (s.statnum == STAT_PROJECTILE)
 //            zr = 4;
 
-//        s->z -= ZOFFSET;
-//        getzrange((vec3_t *)s,s->sectnum,&actor[iActor].ceilingz,&hz,&actor[iActor].floorz,&lz,zr,CLIPMASK0);
-//        s->z += ZOFFSET;
+//        s.z -= ZOFFSET;
+//        getzrange((vec3_t *)s,s.sectnum,&actor[iActor].ceilingz,&hz,&actor[iActor].floorz,&lz,zr,CLIPMASK0);
+//        s.z += ZOFFSET;
 
-//        s->cstat = cstat;
+//        s.cstat = cstat;
 
 //        actor[iActor].flags &= ~SPRITE_NOFLOORSHADOW;
 
@@ -353,25 +353,25 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 
 //            lz &= (MAXSPRITES-1);
 
-//            if ((A_CheckEnemySprite(hitspr) && hitspr->pal != 1 && s->statnum != STAT_PROJECTILE)
-//                    || (hitspr->picnum == APLAYER && A_CheckEnemySprite(s)))
+//            if ((A_CheckEnemySprite(hitspr) && hitspr.pal != 1 && s.statnum != STAT_PROJECTILE)
+//                    || (hitspr.picnum == APLAYER && A_CheckEnemySprite(s)))
 //            {
 //                actor[iActor].flags |= SPRITE_NOFLOORSHADOW;  // No shadows on actors
-//                s->xvel = -256;
+//                s.xvel = -256;
 //                A_SetSprite(iActor,CLIPMASK0);
 //            }
-//            else if (s->statnum == STAT_PROJECTILE && hitspr->picnum == APLAYER && s->owner==lz)
+//            else if (s.statnum == STAT_PROJECTILE && hitspr.picnum == APLAYER && s.owner==lz)
 //            {
-//                actor[iActor].ceilingz = sector[s->sectnum].ceilingz;
-//                actor[iActor].floorz   = sector[s->sectnum].floorz;
+//                actor[iActor].ceilingz = sector[s.sectnum].ceilingz;
+//                actor[iActor].floorz   = sector[s.sectnum].floorz;
 //            }
 //        }
 //    }
 //    /*
 //        else
 //        {
-//            actor[iActor].ceilingz = sector[s->sectnum].ceilingz;
-//            actor[iActor].floorz   = sector[s->sectnum].floorz;
+//            actor[iActor].ceilingz = sector[s.sectnum].ceilingz;
+//            actor[iActor].floorz   = sector[s.sectnum].floorz;
 //        }
 //    */
 //}
@@ -383,45 +383,45 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //#ifdef YAX_ENABLE
 //    int16_t fbunch;
 //#endif
-//    if (G_CheckForSpaceFloor(s->sectnum))
+//    if (G_CheckForSpaceFloor(s.sectnum))
 //        c = 0;
 //    else
 //    {
-//        if (G_CheckForSpaceCeiling(s->sectnum) || sector[s->sectnum].lotag == ST_2_UNDERWATER)
+//        if (G_CheckForSpaceCeiling(s.sectnum) || sector[s.sectnum].lotag == ST_2_UNDERWATER)
 //            c = g_spriteGravity/6;
 //    }
 
-//    if (s->statnum == STAT_ACTOR || s->statnum == STAT_PLAYER || s->statnum == STAT_ZOMBIEACTOR || s->statnum == STAT_STANDABLE)
+//    if (s.statnum == STAT_ACTOR || s.statnum == STAT_PLAYER || s.statnum == STAT_ZOMBIEACTOR || s.statnum == STAT_STANDABLE)
 //    {
-//        int32_t cstat = s->cstat;
-//        s->cstat = 0;
-//        s->z -= ZOFFSET;
-//        getzrange((vec3_t *)s,s->sectnum,&actor[iActor].ceilingz,&hz,&actor[iActor].floorz,&lz,127L,CLIPMASK0);
-//        s->z += ZOFFSET;
-//        s->cstat = cstat;
+//        int32_t cstat = s.cstat;
+//        s.cstat = 0;
+//        s.z -= ZOFFSET;
+//        getzrange((vec3_t *)s,s.sectnum,&actor[iActor].ceilingz,&hz,&actor[iActor].floorz,&lz,127L,CLIPMASK0);
+//        s.z += ZOFFSET;
+//        s.cstat = cstat;
 //    }
 //    else
 //    {
-//        actor[iActor].ceilingz = sector[s->sectnum].ceilingz;
-//        actor[iActor].floorz   = sector[s->sectnum].floorz;
+//        actor[iActor].ceilingz = sector[s.sectnum].ceilingz;
+//        actor[iActor].floorz   = sector[s.sectnum].floorz;
 //    }
 
 //#ifdef YAX_ENABLE
-//    if (sector[s->sectnum].floorstat&512)
+//    if (sector[s.sectnum].floorstat&512)
 //        fbunch = -1;
 //    else
-//        fbunch = yax_getbunch(s->sectnum, YAX_FLOOR);
+//        fbunch = yax_getbunch(s.sectnum, YAX_FLOOR);
 //#endif
 
-//    if (s->z < actor[iActor].floorz-ZOFFSET
+//    if (s.z < actor[iActor].floorz-ZOFFSET
 //#ifdef YAX_ENABLE
 //            || fbunch >= 0
 //#endif
 //       )
 //    {
-//        if (sector[s->sectnum].lotag == ST_2_UNDERWATER && s->zvel > 3122)
-//            s->zvel = 3144;
-//        s->z += s->zvel = min(6144, s->zvel+c);
+//        if (sector[s.sectnum].lotag == ST_2_UNDERWATER && s.zvel > 3122)
+//            s.zvel = 3144;
+//        s.z += s.zvel = min(6144, s.zvel+c);
 //    }
 
 //#ifdef YAX_ENABLE
@@ -429,10 +429,10 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //        setspritez(iActor, (vec3_t *)s);
 //    else
 //#endif
-//        if (s->z >= actor[iActor].floorz-ZOFFSET)
+//        if (s.z >= actor[iActor].floorz-ZOFFSET)
 //        {
-//            s->z = actor[iActor].floorz-ZOFFSET;
-//            s->zvel = 0;
+//            s.z = actor[iActor].floorz-ZOFFSET;
+//            s.zvel = 0;
 //        }
 //}
 
@@ -464,41 +464,41 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 
 //    {
 //        AC_MOVE_ID(vm.g_t) = 0;
-//        OSD_Printf_nowarn(OSD_ERROR "bad moveptr for actor %d (%d)!\n", vm.g_i, TrackerCast(vm.g_sp->picnum));
+//        OSD_Printf_nowarn(OSD_ERROR "bad moveptr for actor %d (%d)!\n", vm.g_i, TrackerCast(vm.g_sp.picnum));
 //        return;
 //    }
 
 //    moveptr = script + AC_MOVE_ID(vm.g_t);
 
-//    vm.g_sp->xvel += (*moveptr - vm.g_sp->xvel)/5;
-//    if (vm.g_sp->zvel < 648)
-//        vm.g_sp->zvel += ((*(moveptr+1)<<4) - vm.g_sp->zvel)/5;
+//    vm.g_sp.xvel += (*moveptr - vm.g_sp.xvel)/5;
+//    if (vm.g_sp.zvel < 648)
+//        vm.g_sp.zvel += ((*(moveptr+1)<<4) - vm.g_sp.zvel)/5;
 //#else
-//    vm.g_sp->xvel += (actor[vm.g_i].mv.hvel - vm.g_sp->xvel)/5;
-//    if (vm.g_sp->zvel < 648)
-//        vm.g_sp->zvel += ((actor[vm.g_i].mv.vvel<<4) - vm.g_sp->zvel)/5;
+//    vm.g_sp.xvel += (actor[vm.g_i].mv.hvel - vm.g_sp.xvel)/5;
+//    if (vm.g_sp.zvel < 648)
+//        vm.g_sp.zvel += ((actor[vm.g_i].mv.vvel<<4) - vm.g_sp.zvel)/5;
 //#endif
 
-//    if (A_CheckEnemySprite(vm.g_sp) && vm.g_sp->extra <= 0) // hack
+//    if (A_CheckEnemySprite(vm.g_sp) && vm.g_sp.extra <= 0) // hack
 //        return;
 
 //    if (movflags&seekplayer)
 //    {
-//        int32_t aang = vm.g_sp->ang, angdif, goalang;
-//        int32_t j = g_player[vm.g_p].ps->holoduke_on;
+//        int32_t aang = vm.g_sp.ang, angdif, goalang;
+//        int32_t j = g_player[vm.g_p].ps.holoduke_on;
 
 //        // NOTE: looks like 'owner' is set to target sprite ID...
 
-//        if (j >= 0 && cansee(sprite[j].x,sprite[j].y,sprite[j].z,sprite[j].sectnum,vm.g_sp->x,vm.g_sp->y,vm.g_sp->z,vm.g_sp->sectnum))
-//            vm.g_sp->owner = j;
-//        else vm.g_sp->owner = g_player[vm.g_p].ps->i;
+//        if (j >= 0 && cansee(sprite[j].x,sprite[j].y,sprite[j].z,sprite[j].sectnum,vm.g_sp.x,vm.g_sp.y,vm.g_sp.z,vm.g_sp.sectnum))
+//            vm.g_sp.owner = j;
+//        else vm.g_sp.owner = g_player[vm.g_p].ps.i;
 
-//        if (sprite[vm.g_sp->owner].picnum == APLAYER)
-//            goalang = getangle(actor[vm.g_i].lastvx-vm.g_sp->x,actor[vm.g_i].lastvy-vm.g_sp->y);
+//        if (sprite[vm.g_sp.owner].picnum == APLAYER)
+//            goalang = getangle(actor[vm.g_i].lastvx-vm.g_sp.x,actor[vm.g_i].lastvy-vm.g_sp.y);
 //        else
-//            goalang = getangle(sprite[vm.g_sp->owner].x-vm.g_sp->x,sprite[vm.g_sp->owner].y-vm.g_sp->y);
+//            goalang = getangle(sprite[vm.g_sp.owner].x-vm.g_sp.x,sprite[vm.g_sp.owner].y-vm.g_sp.y);
 
-//        if (vm.g_sp->xvel && vm.g_sp->picnum != DRONE)
+//        if (vm.g_sp.xvel && vm.g_sp.picnum != DRONE)
 //        {
 //            angdif = G_GetAngleDelta(aang,goalang);
 
@@ -507,41 +507,41 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //                if (klabs(angdif) < 256)
 //                {
 //                    j = 128-(krand()&256);
-//                    vm.g_sp->ang += j;
+//                    vm.g_sp.ang += j;
 //                    if (A_GetHitscanRange(vm.g_i) < 844)
-//                        vm.g_sp->ang -= j;
+//                        vm.g_sp.ang -= j;
 //                }
 //            }
 //            else if (ticselapsed > 18 && ticselapsed < GAMETICSPERSEC) // choose
 //            {
-//                if (klabs(angdif>>2) < 128) vm.g_sp->ang = goalang;
-//                else vm.g_sp->ang += angdif>>2;
+//                if (klabs(angdif>>2) < 128) vm.g_sp.ang = goalang;
+//                else vm.g_sp.ang += angdif>>2;
 //            }
 //        }
-//        else vm.g_sp->ang = goalang;
+//        else vm.g_sp.ang = goalang;
 //    }
 
 //    if (ticselapsed < 1)
 //    {
 //        if (movflags&furthestdir)
 //        {
-//            vm.g_sp->ang = A_GetFurthestAngle(vm.g_i, 2);
-//            vm.g_sp->owner = g_player[vm.g_p].ps->i;
+//            vm.g_sp.ang = A_GetFurthestAngle(vm.g_i, 2);
+//            vm.g_sp.owner = g_player[vm.g_p].ps.i;
 //        }
 
 //        if (movflags&fleeenemy)
-//            vm.g_sp->ang = A_GetFurthestAngle(vm.g_i, 2);
+//            vm.g_sp.ang = A_GetFurthestAngle(vm.g_i, 2);
 //    }
 //}
 
 //static void VM_AddAngle(int32_t shr, int32_t goalang)
 //{
-//    int32_t angdif = G_GetAngleDelta(vm.g_sp->ang,goalang)>>shr;
+//    int32_t angdif = G_GetAngleDelta(vm.g_sp.ang,goalang)>>shr;
 
 //    if ((angdif > -8 && angdif < 0) || (angdif < 8 && angdif > 0))
 //        angdif *= 2;
 
-//    vm.g_sp->ang += angdif;
+//    vm.g_sp.ang += angdif;
 //}
 
 //static void VM_FacePlayer(int32_t shr)
@@ -549,10 +549,10 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //    int32_t goalang;
 //    const DukePlayer_t *const ps = g_player[vm.g_p].ps;
 
-//    if (g_player[vm.g_p].ps->newowner >= 0)
-//        goalang = getangle(ps->opos.x-vm.g_sp->x, ps->opos.y-vm.g_sp->y);
+//    if (g_player[vm.g_p].ps.newowner >= 0)
+//        goalang = getangle(ps.opos.x-vm.g_sp.x, ps.opos.y-vm.g_sp.y);
 //    else
-//        goalang = getangle(ps->pos.x-vm.g_sp->x, ps->pos.y-vm.g_sp->y);
+//        goalang = getangle(ps.pos.x-vm.g_sp.x, ps.pos.y-vm.g_sp.y);
 
 //    VM_AddAngle(shr, goalang);
 //}
@@ -597,7 +597,7 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //    // XXX: Does it break anything? Where are movflags with all bits set created?
 //    const uint16_t *movflagsptr = &AC_MOVFLAGS(vm.g_sp, &actor[vm.g_i]);
 //    const int32_t movflags = /*(*movflagsptr==-1) ? 0 :*/ *movflagsptr;
-//    const int32_t deadflag = (A_CheckEnemySprite(vm.g_sp) && vm.g_sp->extra <= 0);
+//    const int32_t deadflag = (A_CheckEnemySprite(vm.g_sp) && vm.g_sp.extra <= 0);
 //    int32_t badguyp, angdif;
 
 //    AC_COUNT(vm.g_t)++;
@@ -605,10 +605,10 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //    // If the move ID is zero, or the movflags are 0
 //    if (AC_MOVE_ID(vm.g_t) == 0 || movflags == 0)
 //    {
-//        if (deadflag || (actor[vm.g_i].bpos.x != vm.g_sp->x) || (actor[vm.g_i].bpos.y != vm.g_sp->y))
+//        if (deadflag || (actor[vm.g_i].bpos.x != vm.g_sp.x) || (actor[vm.g_i].bpos.y != vm.g_sp.y))
 //        {
-//            actor[vm.g_i].bpos.x = vm.g_sp->x;
-//            actor[vm.g_i].bpos.y = vm.g_sp->y;
+//            actor[vm.g_i].bpos.x = vm.g_sp.x;
+//            actor[vm.g_i].bpos.y = vm.g_sp.y;
 //            setsprite(vm.g_i, (vec3_t *)vm.g_sp);
 //        }
 //        return;
@@ -621,7 +621,7 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //        VM_FacePlayer(2);
 
 //    if (movflags&spin)
-//        vm.g_sp->ang += sintable[((AC_COUNT(vm.g_t)<<3)&2047)]>>6;
+//        vm.g_sp.ang += sintable[((AC_COUNT(vm.g_t)<<3)&2047)]>>6;
 
 //    if (movflags&face_player_slow)
 //        VM_FacePlayer(4);
@@ -629,16 +629,16 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //    if ((movflags&jumptoplayer) == jumptoplayer)
 //    {
 //        if (AC_COUNT(vm.g_t) < 16)
-//            vm.g_sp->zvel -= (sintable[(512+(AC_COUNT(vm.g_t)<<4))&2047]>>5);
+//            vm.g_sp.zvel -= (sintable[(512+(AC_COUNT(vm.g_t)<<4))&2047]>>5);
 //    }
 
 //    if (movflags&face_player_smart)
 //    {
 //        DukePlayer_t *const ps = g_player[vm.g_p].ps;
-//        int32_t newx = ps->pos.x + (ps->vel.x/768);
-//        int32_t newy = ps->pos.y + (ps->vel.y/768);
+//        int32_t newx = ps.pos.x + (ps.vel.x/768);
+//        int32_t newy = ps.pos.y + (ps.vel.y/768);
 
-//        int32_t goalang = getangle(newx-vm.g_sp->x,newy-vm.g_sp->y);
+//        int32_t goalang = getangle(newx-vm.g_sp.x,newy-vm.g_sp.y);
 //        VM_AddAngle(2, goalang);
 //    }
 
@@ -647,126 +647,126 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //    if ((unsigned)AC_MOVE_ID(vm.g_t) >= (unsigned)g_scriptSize-1)
 //    {
 //        AC_MOVE_ID(vm.g_t) = 0;
-//        OSD_Printf_nowarn(OSD_ERROR "clearing bad moveptr for actor %d (%d)\n", vm.g_i, TrackerCast(vm.g_sp->picnum));
+//        OSD_Printf_nowarn(OSD_ERROR "clearing bad moveptr for actor %d (%d)\n", vm.g_i, TrackerCast(vm.g_sp.picnum));
 //        return;
 //    }
 
 //    moveptr = script + AC_MOVE_ID(vm.g_t);
 
-//    if (movflags&geth) vm.g_sp->xvel += ((*moveptr)-vm.g_sp->xvel)>>1;
-//    if (movflags&getv) vm.g_sp->zvel += ((*(moveptr+1)<<4)-vm.g_sp->zvel)>>1;
+//    if (movflags&geth) vm.g_sp.xvel += ((*moveptr)-vm.g_sp.xvel)>>1;
+//    if (movflags&getv) vm.g_sp.zvel += ((*(moveptr+1)<<4)-vm.g_sp.zvel)>>1;
 //#else
-//    if (movflags&geth) vm.g_sp->xvel += (actor[vm.g_i].mv.hvel - vm.g_sp->xvel)>>1;
-//    if (movflags&getv) vm.g_sp->zvel += (16*actor[vm.g_i].mv.vvel - vm.g_sp->zvel)>>1;
+//    if (movflags&geth) vm.g_sp.xvel += (actor[vm.g_i].mv.hvel - vm.g_sp.xvel)>>1;
+//    if (movflags&getv) vm.g_sp.zvel += (16*actor[vm.g_i].mv.vvel - vm.g_sp.zvel)>>1;
 //#endif
 
 //    if (movflags&dodgebullet && !deadflag)
 //        A_Dodge(vm.g_sp);
 
-//    if (vm.g_sp->picnum != APLAYER)
+//    if (vm.g_sp.picnum != APLAYER)
 //        VM_AlterAng(movflags);
 
-//    if (vm.g_sp->xvel > -6 && vm.g_sp->xvel < 6)
-//        vm.g_sp->xvel = 0;
+//    if (vm.g_sp.xvel > -6 && vm.g_sp.xvel < 6)
+//        vm.g_sp.xvel = 0;
 
 //    badguyp = A_CheckEnemySprite(vm.g_sp);
 
-//    if (vm.g_sp->xvel || vm.g_sp->zvel)
+//    if (vm.g_sp.xvel || vm.g_sp.zvel)
 //    {
 //        int32_t daxvel;
 
-//        if (badguyp && vm.g_sp->picnum != ROTATEGUN)
+//        if (badguyp && vm.g_sp.picnum != ROTATEGUN)
 //        {
-//            if ((vm.g_sp->picnum == DRONE || vm.g_sp->picnum == COMMANDER) && vm.g_sp->extra > 0)
+//            if ((vm.g_sp.picnum == DRONE || vm.g_sp.picnum == COMMANDER) && vm.g_sp.extra > 0)
 //            {
-//                if (vm.g_sp->picnum == COMMANDER)
+//                if (vm.g_sp.picnum == COMMANDER)
 //                {
 //                    int32_t l;
 //                    // NOTE: COMMANDER updates both actor[].floorz and
 //                    // .ceilingz regardless of its zvel.
-//                    actor[vm.g_i].floorz = l = yax_getflorzofslope(vm.g_sp->sectnum,vm.g_sp->x,vm.g_sp->y);
-//                    if (vm.g_sp->z > l-(8<<8))
+//                    actor[vm.g_i].floorz = l = yax_getflorzofslope(vm.g_sp.sectnum,vm.g_sp.x,vm.g_sp.y);
+//                    if (vm.g_sp.z > l-(8<<8))
 //                    {
-//                        vm.g_sp->z = l-(8<<8);
-//                        vm.g_sp->zvel = 0;
+//                        vm.g_sp.z = l-(8<<8);
+//                        vm.g_sp.zvel = 0;
 //                    }
 
-//                    actor[vm.g_i].ceilingz = l = yax_getceilzofslope(vm.g_sp->sectnum,vm.g_sp->x,vm.g_sp->y);
-//                    if (vm.g_sp->z < l+(80<<8))
+//                    actor[vm.g_i].ceilingz = l = yax_getceilzofslope(vm.g_sp.sectnum,vm.g_sp.x,vm.g_sp.y);
+//                    if (vm.g_sp.z < l+(80<<8))
 //                    {
-//                        vm.g_sp->z = l+(80<<8);
-//                        vm.g_sp->zvel = 0;
+//                        vm.g_sp.z = l+(80<<8);
+//                        vm.g_sp.zvel = 0;
 //                    }
 //                }
 //                else
 //                {
 //                    int32_t l;
 //                    // The DRONE updates either .floorz or .ceilingz, not both.
-//                    if (vm.g_sp->zvel > 0)
+//                    if (vm.g_sp.zvel > 0)
 //                    {
-//                        actor[vm.g_i].floorz = l = yax_getflorzofslope(vm.g_sp->sectnum,vm.g_sp->x,vm.g_sp->y);
-//                        if (vm.g_sp->z > l-(30<<8))
-//                            vm.g_sp->z = l-(30<<8);
+//                        actor[vm.g_i].floorz = l = yax_getflorzofslope(vm.g_sp.sectnum,vm.g_sp.x,vm.g_sp.y);
+//                        if (vm.g_sp.z > l-(30<<8))
+//                            vm.g_sp.z = l-(30<<8);
 //                    }
 //                    else
 //                    {
-//                        actor[vm.g_i].ceilingz = l = yax_getceilzofslope(vm.g_sp->sectnum,vm.g_sp->x,vm.g_sp->y);
-//                        if (vm.g_sp->z < l+(50<<8))
+//                        actor[vm.g_i].ceilingz = l = yax_getceilzofslope(vm.g_sp.sectnum,vm.g_sp.x,vm.g_sp.y);
+//                        if (vm.g_sp.z < l+(50<<8))
 //                        {
-//                            vm.g_sp->z = l+(50<<8);
-//                            vm.g_sp->zvel = 0;
+//                            vm.g_sp.z = l+(50<<8);
+//                            vm.g_sp.zvel = 0;
 //                        }
 //                    }
 //                }
 //            }
-//            else if (vm.g_sp->picnum != ORGANTIC)
+//            else if (vm.g_sp.picnum != ORGANTIC)
 //            {
 //                // All other actors besides ORGANTIC don't update .floorz or
 //                // .ceilingz here.
-//                if (vm.g_sp->zvel > 0 && actor[vm.g_i].floorz < vm.g_sp->z)
-//                    vm.g_sp->z = actor[vm.g_i].floorz;
-//                if (vm.g_sp->zvel < 0)
+//                if (vm.g_sp.zvel > 0 && actor[vm.g_i].floorz < vm.g_sp.z)
+//                    vm.g_sp.z = actor[vm.g_i].floorz;
+//                if (vm.g_sp.zvel < 0)
 //                {
-//                    const int32_t l = yax_getceilzofslope(vm.g_sp->sectnum,vm.g_sp->x,vm.g_sp->y);
+//                    const int32_t l = yax_getceilzofslope(vm.g_sp.sectnum,vm.g_sp.x,vm.g_sp.y);
 
-//                    if (vm.g_sp->z < l+(66<<8))
+//                    if (vm.g_sp.z < l+(66<<8))
 //                    {
-//                        vm.g_sp->z = l+(66<<8);
-//                        vm.g_sp->zvel >>= 1;
+//                        vm.g_sp.z = l+(66<<8);
+//                        vm.g_sp.zvel >>= 1;
 //                    }
 //                }
 //            }
 //        }
-//        else if (vm.g_sp->picnum == APLAYER)
-//            if (vm.g_sp->z < actor[vm.g_i].ceilingz+(32<<8))
-//                vm.g_sp->z = actor[vm.g_i].ceilingz+(32<<8);
+//        else if (vm.g_sp.picnum == APLAYER)
+//            if (vm.g_sp.z < actor[vm.g_i].ceilingz+(32<<8))
+//                vm.g_sp.z = actor[vm.g_i].ceilingz+(32<<8);
 
-//        daxvel = vm.g_sp->xvel;
-//        angdif = vm.g_sp->ang;
+//        daxvel = vm.g_sp.xvel;
+//        angdif = vm.g_sp.ang;
 
-//        if (badguyp && vm.g_sp->picnum != ROTATEGUN)
+//        if (badguyp && vm.g_sp.picnum != ROTATEGUN)
 //        {
 //            DukePlayer_t *const ps = g_player[vm.g_p].ps;
 
-//            if (vm.g_x < 960 && vm.g_sp->xrepeat > 16)
+//            if (vm.g_x < 960 && vm.g_sp.xrepeat > 16)
 //            {
 //                daxvel = -(1024-vm.g_x);
-//                angdif = getangle(ps->pos.x-vm.g_sp->x, ps->pos.y-vm.g_sp->y);
+//                angdif = getangle(ps.pos.x-vm.g_sp.x, ps.pos.y-vm.g_sp.y);
 
 //                if (vm.g_x < 512)
 //                {
-//                    ps->vel.x = 0;
-//                    ps->vel.y = 0;
+//                    ps.vel.x = 0;
+//                    ps.vel.y = 0;
 //                }
 //                else
 //                {
-//                    ps->vel.x = mulscale16(ps->vel.x, ps->runspeed-0x2000);
-//                    ps->vel.y = mulscale16(ps->vel.y, ps->runspeed-0x2000);
+//                    ps.vel.x = mulscale16(ps.vel.x, ps.runspeed-0x2000);
+//                    ps.vel.y = mulscale16(ps.vel.y, ps.runspeed-0x2000);
 //                }
 //            }
-//            else if (vm.g_sp->picnum != DRONE && vm.g_sp->picnum != SHARK && vm.g_sp->picnum != COMMANDER)
+//            else if (vm.g_sp.picnum != DRONE && vm.g_sp.picnum != SHARK && vm.g_sp.picnum != COMMANDER)
 //            {
-//                if (ps->actorsqu == vm.g_i)
+//                if (ps.actorsqu == vm.g_i)
 //                    return;
 
 //                if (!A_CheckSpriteFlags(vm.g_i, SPRITE_SMOOTHMOVE))
@@ -781,7 +781,7 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //        {
 //            vec3_t tmpvect = { (daxvel*(sintable[(angdif+512)&2047]))>>14,
 //                               (daxvel*(sintable[angdif&2047]))>>14,
-//                               vm.g_sp->zvel
+//                               vm.g_sp.zvel
 //                             };
 
 //            actor[vm.g_i].movflag = A_MoveSprite(
@@ -792,16 +792,16 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //    if (!badguyp)
 //        return;
 
-//    if (sector[vm.g_sp->sectnum].ceilingstat&1)
-//        vm.g_sp->shade += (sector[vm.g_sp->sectnum].ceilingshade-vm.g_sp->shade)>>1;
-//    else vm.g_sp->shade += (sector[vm.g_sp->sectnum].floorshade-vm.g_sp->shade)>>1;
+//    if (sector[vm.g_sp.sectnum].ceilingstat&1)
+//        vm.g_sp.shade += (sector[vm.g_sp.sectnum].ceilingshade-vm.g_sp.shade)>>1;
+//    else vm.g_sp.shade += (sector[vm.g_sp.sectnum].floorshade-vm.g_sp.shade)>>1;
 //}
 
 //static void P_AddWeaponMaybeSwitch(DukePlayer_t *ps, int32_t weap)
 //{
-//    if ((ps->weaponswitch & 1) && (ps->weaponswitch & 4))
+//    if ((ps.weaponswitch & 1) && (ps.weaponswitch & 4))
 //    {
-//        int32_t snum = sprite[ps->i].yvel;
+//        int32_t snum = sprite[ps.i].yvel;
 //        int32_t i, w, new_wchoice = -1, curr_wchoice = -1;
 
 //        for (i=0; i<10 && (new_wchoice < 0 || curr_wchoice < 0); i++)
@@ -811,7 +811,7 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //            if (w == 0) w = 9;
 //            else w--;
 
-//            if (w == ps->curr_weapon)
+//            if (w == ps.curr_weapon)
 //                curr_wchoice = i;
 //            if (w == weap)
 //                new_wchoice = i;
@@ -822,7 +822,7 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //        else
 //            P_AddWeaponNoSwitch(ps, weap);
 //    }
-//    else if (ps->weaponswitch & 1)
+//    else if (ps.weaponswitch & 1)
 //        P_AddWeapon(ps, weap);
 //    else
 //        P_AddWeaponNoSwitch(ps, weap);
@@ -838,7 +838,7 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //{
 //    P_AddAmmo(weap, ps, amount);
 
-//    if (ps->curr_weapon == KNEE_WEAPON && (ps->gotweapon & (1 << weap)))
+//    if (ps.curr_weapon == KNEE_WEAPON && (ps.gotweapon & (1 << weap)))
 //        P_AddWeaponMaybeSwitch(ps, weap);
 //}
 
@@ -850,11 +850,11 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //        return 1;
 //    }
 
-//    if ((ps->gotweapon & (1 << weap)) == 0)
+//    if ((ps.gotweapon & (1 << weap)) == 0)
 //    {
 //        P_AddWeaponMaybeSwitch(ps, weap);
 //    }
-//    else if (ps->ammo_amount[weap] >= ps->max_ammo_amount[weap])
+//    else if (ps.ammo_amount[weap] >= ps.max_ammo_amount[weap])
 //    {
 //        vm.g_flags |= VM_NOEXECUTE;
 //        return 2;
@@ -870,45 +870,45 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //{
 //    int32_t grav = g_spriteGravity;
 
-//    g_sp->xoffset = g_sp->yoffset = 0;
+//    g_sp.xoffset = g_sp.yoffset = 0;
 
-//    if (G_CheckForSpaceCeiling(g_sp->sectnum) || sector[g_sp->sectnum].lotag == ST_2_UNDERWATER)
+//    if (G_CheckForSpaceCeiling(g_sp.sectnum) || sector[g_sp.sectnum].lotag == ST_2_UNDERWATER)
 //        grav = g_spriteGravity/6;
-//    else if (G_CheckForSpaceFloor(g_sp->sectnum))
+//    else if (G_CheckForSpaceFloor(g_sp.sectnum))
 //        grav = 0;
 
-//    if (!actor[g_i].cgg-- || (sector[g_sp->sectnum].floorstat&2))
+//    if (!actor[g_i].cgg-- || (sector[g_sp.sectnum].floorstat&2))
 //    {
 //        A_GetZLimits(g_i);
 //        actor[g_i].cgg = 3;
 //    }
 
-//    if (g_sp->z < actor[g_i].floorz-ZOFFSET)
+//    if (g_sp.z < actor[g_i].floorz-ZOFFSET)
 //    {
 //        // Free fall.
-//        g_sp->zvel = min(g_sp->zvel+grav, ACTOR_MAXFALLINGZVEL);
-//        g_sp->z += g_sp->zvel;
+//        g_sp.zvel = min(g_sp.zvel+grav, ACTOR_MAXFALLINGZVEL);
+//        g_sp.z += g_sp.zvel;
 //#ifdef YAX_ENABLE
-//        if (yax_getbunch(g_sp->sectnum, YAX_FLOOR) >= 0 &&
-//                (sector[g_sp->sectnum].floorstat&512)==0)
+//        if (yax_getbunch(g_sp.sectnum, YAX_FLOOR) >= 0 &&
+//                (sector[g_sp.sectnum].floorstat&512)==0)
 //            setspritez(g_i, (vec3_t *)g_sp);
 //        else
 //#endif
-//            if (g_sp->z > actor[g_i].floorz - ZOFFSET)
-//                g_sp->z = actor[g_i].floorz - ZOFFSET;
+//            if (g_sp.z > actor[g_i].floorz - ZOFFSET)
+//                g_sp.z = actor[g_i].floorz - ZOFFSET;
 //        return;
 //    }
 
 //    // SET_SPRITE_Z
-//    g_sp->z = actor[g_i].floorz - ZOFFSET;
+//    g_sp.z = actor[g_i].floorz - ZOFFSET;
 
-//    if (A_CheckEnemySprite(g_sp) || (g_sp->picnum == APLAYER && g_sp->owner >= 0))
+//    if (A_CheckEnemySprite(g_sp) || (g_sp.picnum == APLAYER && g_sp.owner >= 0))
 //    {
-//        if (g_sp->zvel > 3084 && g_sp->extra <= 1)
+//        if (g_sp.zvel > 3084 && g_sp.extra <= 1)
 //        {
 //            // I'm guessing this DRONE check is from a beta version of the game
 //            // where they crashed into the ground when killed
-//            if (!(g_sp->picnum == APLAYER && g_sp->extra > 0) && g_sp->pal != 1 && g_sp->picnum != DRONE)
+//            if (!(g_sp.picnum == APLAYER && g_sp.extra > 0) && g_sp.pal != 1 && g_sp.picnum != DRONE)
 //            {
 //                A_DoGuts(g_i,JIBS6,15);
 //                A_PlaySound(SQUISHED,g_i);
@@ -917,11 +917,11 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 
 //            actor[g_i].picnum = SHOTSPARK1;
 //            actor[g_i].extra = 1;
-//            g_sp->zvel = 0;
+//            g_sp.zvel = 0;
 //        }
-//        else if (g_sp->zvel > 2048 && sector[g_sp->sectnum].lotag != ST_1_ABOVE_WATER)
+//        else if (g_sp.zvel > 2048 && sector[g_sp.sectnum].lotag != ST_1_ABOVE_WATER)
 //        {
-//            int16_t newsect = g_sp->sectnum;
+//            int16_t newsect = g_sp.sectnum;
 
 //            pushmove((vec3_t *)g_sp, &newsect, 128, 4<<8, 4<<8, CLIPMASK0);
 //            if ((unsigned)newsect < MAXSECTORS)
@@ -932,19 +932,19 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //    }
 
 //#if 0
-//    if (g_sp->z > actor[g_i].floorz - ZOFFSET)
+//    if (g_sp.z > actor[g_i].floorz - ZOFFSET)
 //    {
 //        // Unreachable because of SET_SPRITE_Z.
 //        A_GetZLimits(g_i);
-//        if (actor[g_i].floorz != sector[g_sp->sectnum].floorz)
-//            g_sp->z = (actor[g_i].floorz - ZOFFSET);
+//        if (actor[g_i].floorz != sector[g_sp.sectnum].floorz)
+//            g_sp.z = (actor[g_i].floorz - ZOFFSET);
 //        return;
 //    }
 //#endif
 
-//    if (sector[g_sp->sectnum].lotag == ST_1_ABOVE_WATER)
+//    if (sector[g_sp.sectnum].lotag == ST_1_ABOVE_WATER)
 //    {
-//        switch (DYNAMICTILEMAP(g_sp->picnum))
+//        switch (DYNAMICTILEMAP(g_sp.picnum))
 //        {
 //        case OCTABRAIN__STATIC:
 //        case COMMANDER__STATIC:
@@ -957,8 +957,8 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //            int32_t moveScriptOfs = AC_MOVE_ID(vm.g_t);
 //#endif
 //            // fix for flying/jumping monsters getting stuck in water
-//            if ((g_sp->hitag & jumptoplayer) ||
-//                (G_HaveActor(g_sp->picnum) &&
+//            if ((g_sp.hitag & jumptoplayer) ||
+//                (G_HaveActor(g_sp.picnum) &&
 //#if !defined LUNATIC
 //                 (unsigned)moveScriptOfs < (unsigned)g_scriptSize-1 && script[moveScriptOfs + 1]
 //#else
@@ -970,8 +970,8 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //                break;
 //            }
 
-////            OSD_Printf("hitag: %d\n",g_sp->hitag);
-//            g_sp->z += ACTOR_ONWATER_ADDZ;
+////            OSD_Printf("hitag: %d\n",g_sp.hitag);
+//            g_sp.z += ACTOR_ONWATER_ADDZ;
 //            break;
 //        }
 //        }
@@ -979,7 +979,7 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //        return;
 //    }
 
-//    g_sp->zvel = 0;
+//    g_sp.zvel = 0;
 //}
 
 //static int32_t VM_ResetPlayer(int32_t g_p, int32_t g_flags)
@@ -989,11 +989,11 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //    {
 //        if (g_lastSaveSlot >= 0 && ud.recstat != 2)
 //        {
-//            g_player[g_p].ps->gm |= MODE_MENU;
+//            g_player[g_p].ps.gm |= MODE_MENU;
 //            KB_ClearKeyDown(sc_Space);
 //            M_ChangeMenu(15000);
 //        }
-//        else g_player[g_p].ps->gm = MODE_RESTART;
+//        else g_player[g_p].ps.gm = MODE_RESTART;
 
 //        g_flags |= VM_NOEXECUTE;
 //    }
@@ -1017,7 +1017,7 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //            packbuf[jj++] = PACKET_PLAYER_SPAWN;
 //            packbuf[jj++] = g_p;
 
-//            Bmemcpy(&packbuf[jj], &g_player[g_p].ps->pos.x, sizeof(vec3_t) * 2);
+//            Bmemcpy(&packbuf[jj], &g_player[g_p].ps.pos.x, sizeof(vec3_t) * 2);
 //            jj += sizeof(vec3_t) * 2;
 
 //            packbuf[jj++] = 0;
@@ -1043,14 +1043,14 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //    ti=localtime(&rawtime);
 //    // initprintf("Time&date: %s\n",asctime (ti));
 
-//    vals[0] = ti->tm_sec;
-//    vals[1] = ti->tm_min;
-//    vals[2] = ti->tm_hour;
-//    vals[3] = ti->tm_mday;
-//    vals[4] = ti->tm_mon;
-//    vals[5] = ti->tm_year+1900;
-//    vals[6] = ti->tm_wday;
-//    vals[7] = ti->tm_yday;
+//    vals[0] = ti.tm_sec;
+//    vals[1] = ti.tm_min;
+//    vals[2] = ti.tm_hour;
+//    vals[3] = ti.tm_mday;
+//    vals[4] = ti.tm_mon;
+//    vals[5] = ti.tm_year+1900;
+//    vals[6] = ti.tm_wday;
+//    vals[7] = ti.tm_yday;
 //}
 
 //int32_t G_StartTrack(int32_t level)
@@ -1221,7 +1221,7 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //                {
 //                    int32_t sclip = 768, angdif = 16;
 
-//                    if (A_CheckEnemySprite(vm.g_sp) && vm.g_sp->xrepeat > 56)
+//                    if (A_CheckEnemySprite(vm.g_sp) && vm.g_sp.xrepeat > 56)
 //                    {
 //                        sclip = 3084;
 //                        angdif = 48;
@@ -1229,31 +1229,31 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 
 //                    if (j > sclip)
 //                    {
-//                        if (temphit >= 0 && sprite[temphit].picnum == vm.g_sp->picnum)
+//                        if (temphit >= 0 && sprite[temphit].picnum == vm.g_sp.picnum)
 //                        {
 //                            VM_CONDITIONAL(0);
 //                            continue;
 //                        }
 
-//                        vm.g_sp->ang += angdif;
+//                        vm.g_sp.ang += angdif;
 //                        j = A_CheckHitSprite(vm.g_i,&temphit);
-//                        vm.g_sp->ang -= angdif;
+//                        vm.g_sp.ang -= angdif;
 
 //                        if (j > sclip)
 //                        {
-//                            if (temphit >= 0 && sprite[temphit].picnum == vm.g_sp->picnum)
+//                            if (temphit >= 0 && sprite[temphit].picnum == vm.g_sp.picnum)
 //                            {
 //                                VM_CONDITIONAL(0);
 //                                continue;
 //                            }
 
-//                            vm.g_sp->ang -= angdif;
+//                            vm.g_sp.ang -= angdif;
 //                            j = A_CheckHitSprite(vm.g_i,&temphit);
-//                            vm.g_sp->ang += angdif;
+//                            vm.g_sp.ang += angdif;
 
 //                            if (j > 768)
 //                            {
-//                                if (temphit >= 0 && sprite[temphit].picnum == vm.g_sp->picnum)
+//                                if (temphit >= 0 && sprite[temphit].picnum == vm.g_sp.picnum)
 //                                {
 //                                    VM_CONDITIONAL(0);
 //                                    continue;
@@ -1273,9 +1273,9 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //        case CON_IFCANSEETARGET:
 //        {
 //            DukePlayer_t *const ps = g_player[vm.g_p].ps;
-//            int32_t j = cansee(vm.g_sp->x, vm.g_sp->y, vm.g_sp->z-((krand()&41)<<8),
-//                               vm.g_sp->sectnum, ps->pos.x, ps->pos.y,
-//                               ps->pos.z/*-((krand()&41)<<8)*/, sprite[ps->i].sectnum);
+//            int32_t j = cansee(vm.g_sp.x, vm.g_sp.y, vm.g_sp.z-((krand()&41)<<8),
+//                               vm.g_sp.sectnum, ps.pos.x, ps.pos.y,
+//                               ps.pos.z/*-((krand()&41)<<8)*/, sprite[ps.i].sectnum);
 //            VM_CONDITIONAL(j);
 //            if (j) actor[vm.g_i].timetosleep = SLEEPTIME;
 //        }
@@ -1288,29 +1288,29 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //        case CON_IFCANSEE:
 //        {
 //            DukePlayer_t *const ps = g_player[vm.g_p].ps;
-//            spritetype *s = &sprite[ps->i];
+//            spritetype *s = &sprite[ps.i];
 //            int32_t j;
 
 //            // select sprite for monster to target
 //            // if holoduke is on, let them target holoduke first.
 //            //
-//            if (ps->holoduke_on >= 0)
+//            if (ps.holoduke_on >= 0)
 //            {
-//                s = &sprite[ps->holoduke_on];
-//                j = cansee(vm.g_sp->x,vm.g_sp->y,vm.g_sp->z-(krand()&((32<<8)-1)),vm.g_sp->sectnum,
-//                           s->x,s->y,s->z,s->sectnum);
+//                s = &sprite[ps.holoduke_on];
+//                j = cansee(vm.g_sp.x,vm.g_sp.y,vm.g_sp.z-(krand()&((32<<8)-1)),vm.g_sp.sectnum,
+//                           s.x,s.y,s.z,s.sectnum);
 
 //                if (j == 0)
 //                {
 //                    // they can't see player's holoduke
 //                    // check for player...
-//                    s = &sprite[ps->i];
+//                    s = &sprite[ps.i];
 //                }
 //            }
 
 //            // can they see player, (or player's holoduke)
-//            j = cansee(vm.g_sp->x,vm.g_sp->y,vm.g_sp->z-(krand()&((47<<8))),vm.g_sp->sectnum,
-//                       s->x,s->y,s->z-(24<<8),s->sectnum);
+//            j = cansee(vm.g_sp.x,vm.g_sp.y,vm.g_sp.z-(krand()&((47<<8))),vm.g_sp.sectnum,
+//                       s.x,s.y,s.z-(24<<8),s.sectnum);
 
 //            if (j == 0)
 //            {
@@ -1326,11 +1326,11 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //            {
 //                // else, they did see it.
 //                // save where we were looking...
-//                actor[vm.g_i].lastvx = s->x;
-//                actor[vm.g_i].lastvy = s->y;
+//                actor[vm.g_i].lastvx = s.x;
+//                actor[vm.g_i].lastvy = s.y;
 //            }
 
-//            if (j && (vm.g_sp->statnum == STAT_ACTOR || vm.g_sp->statnum == STAT_STANDABLE))
+//            if (j && (vm.g_sp.statnum == STAT_ACTOR || vm.g_sp.statnum == STAT_STANDABLE))
 //                actor[vm.g_i].timetosleep = SLEEPTIME;
 
 //            VM_CONDITIONAL(j);
@@ -1346,10 +1346,10 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //            continue;
 
 //        case CON_IFDEAD:
-//            //        j = vm.g_sp->extra;
-//            //        if (vm.g_sp->picnum == APLAYER)
+//            //        j = vm.g_sp.extra;
+//            //        if (vm.g_sp.picnum == APLAYER)
 //            //            j--;
-//            VM_CONDITIONAL(vm.g_sp->extra <= 0);
+//            VM_CONDITIONAL(vm.g_sp.extra <= 0);
 //            continue;
 
 //        case CON_AI:
@@ -1363,13 +1363,13 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //            if (AC_AI_ID(vm.g_t))
 //                AC_MOVE_ID(vm.g_t) = *(script + AC_AI_ID(vm.g_t) + 1);  // move
 
-//            vm.g_sp->hitag = *(script + AC_AI_ID(vm.g_t) + 2);  // move flags
+//            vm.g_sp.hitag = *(script + AC_AI_ID(vm.g_t) + 2);  // move flags
 
 //            AC_COUNT(vm.g_t) = AC_ACTION_COUNT(vm.g_t) = AC_CURFRAME(vm.g_t) = 0;
 
-//            if (!A_CheckEnemySprite(vm.g_sp) || vm.g_sp->extra > 0) // hack
-//                if (vm.g_sp->hitag&random_angle)
-//                    vm.g_sp->ang = krand()&2047;
+//            if (!A_CheckEnemySprite(vm.g_sp) || vm.g_sp.extra > 0) // hack
+//                if (vm.g_sp.hitag&random_angle)
+//                    vm.g_sp.ang = krand()&2047;
 //            continue;
 
 //        case CON_ACTION:
@@ -1400,12 +1400,12 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 
 //        case CON_ADDSTRENGTH:
 //            insptr++;
-//            vm.g_sp->extra += *insptr++;
+//            vm.g_sp.extra += *insptr++;
 //            continue;
 
 //        case CON_STRENGTH:
 //            insptr++;
-//            vm.g_sp->extra = *insptr++;
+//            vm.g_sp.extra = *insptr++;
 //            continue;
 
 //        case CON_IFGOTWEAPONCE:
@@ -1418,17 +1418,17 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //                if (*insptr == 0)
 //                {
 //                    int32_t j = 0;
-//                    for (; j < ps->weapreccnt; j++)
-//                        if (ps->weaprecs[j] == vm.g_sp->picnum)
+//                    for (; j < ps.weapreccnt; j++)
+//                        if (ps.weaprecs[j] == vm.g_sp.picnum)
 //                            break;
 
-//                    VM_CONDITIONAL(j < ps->weapreccnt && vm.g_sp->owner == vm.g_i);
+//                    VM_CONDITIONAL(j < ps.weapreccnt && vm.g_sp.owner == vm.g_i);
 //                    continue;
 //                }
-//                else if (ps->weapreccnt < MAX_WEAPONS)
+//                else if (ps.weapreccnt < MAX_WEAPONS)
 //                {
-//                    ps->weaprecs[ps->weapreccnt++] = vm.g_sp->picnum;
-//                    VM_CONDITIONAL(vm.g_sp->owner == vm.g_i);
+//                    ps.weaprecs[ps.weapreccnt++] = vm.g_sp.picnum;
+//                    VM_CONDITIONAL(vm.g_sp.owner == vm.g_i);
 //                    continue;
 //                }
 //            }
@@ -1437,20 +1437,20 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 
 //        case CON_GETLASTPAL:
 //            insptr++;
-//            if (vm.g_sp->picnum == APLAYER)
-//                vm.g_sp->pal = g_player[vm.g_sp->yvel].ps->palookup;
+//            if (vm.g_sp.picnum == APLAYER)
+//                vm.g_sp.pal = g_player[vm.g_sp.yvel].ps.palookup;
 //            else
 //            {
-//                if (vm.g_sp->pal == 1 && vm.g_sp->extra == 0) // hack for frozen
-//                    vm.g_sp->extra++;
-//                vm.g_sp->pal = actor[vm.g_i].tempang;
+//                if (vm.g_sp.pal == 1 && vm.g_sp.extra == 0) // hack for frozen
+//                    vm.g_sp.extra++;
+//                vm.g_sp.pal = actor[vm.g_i].tempang;
 //            }
 //            actor[vm.g_i].tempang = 0;
 //            continue;
 
 //        case CON_TOSSWEAPON:
 //            insptr++;
-//            P_DropWeapon(g_player[vm.g_sp->yvel].ps);
+//            P_DropWeapon(g_player[vm.g_sp.yvel].ps);
 //            continue;
 
 //        case CON_NULLOP:
@@ -1459,40 +1459,40 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 
 //        case CON_MIKESND:
 //            insptr++;
-//            if (((unsigned)vm.g_sp->yvel >= MAXSOUNDS))
+//            if (((unsigned)vm.g_sp.yvel >= MAXSOUNDS))
 //            {
-//                CON_ERRPRINTF("Invalid sound %d\n", TrackerCast(vm.g_sp->yvel));
+//                CON_ERRPRINTF("Invalid sound %d\n", TrackerCast(vm.g_sp.yvel));
 //                insptr++;
 //                continue;
 //            }
-//            if (!S_CheckSoundPlaying(vm.g_i,vm.g_sp->yvel))
-//                A_PlaySound(vm.g_sp->yvel,vm.g_i);
+//            if (!S_CheckSoundPlaying(vm.g_i,vm.g_sp.yvel))
+//                A_PlaySound(vm.g_sp.yvel,vm.g_i);
 //            continue;
 
 //        case CON_PKICK:
 //            insptr++;
 
-//            if ((g_netServer || ud.multimode > 1) && vm.g_sp->picnum == APLAYER)
+//            if ((g_netServer || ud.multimode > 1) && vm.g_sp.picnum == APLAYER)
 //            {
-//                if (g_player[otherp].ps->quick_kick == 0)
-//                    g_player[otherp].ps->quick_kick = 14;
+//                if (g_player[otherp].ps.quick_kick == 0)
+//                    g_player[otherp].ps.quick_kick = 14;
 //            }
-//            else if (vm.g_sp->picnum != APLAYER && g_player[vm.g_p].ps->quick_kick == 0)
-//                g_player[vm.g_p].ps->quick_kick = 14;
+//            else if (vm.g_sp.picnum != APLAYER && g_player[vm.g_p].ps.quick_kick == 0)
+//                g_player[vm.g_p].ps.quick_kick = 14;
 //            continue;
 
 //        case CON_SIZETO:
 //            insptr++;
 
 //            {
-//                int32_t j = (*insptr++ - vm.g_sp->xrepeat)<<1;
-//                vm.g_sp->xrepeat += ksgn(j);
+//                int32_t j = (*insptr++ - vm.g_sp.xrepeat)<<1;
+//                vm.g_sp.xrepeat += ksgn(j);
 
-//                if ((vm.g_sp->picnum == APLAYER && vm.g_sp->yrepeat < 36) || *insptr < vm.g_sp->yrepeat ||
-//                        ((vm.g_sp->yrepeat*(tilesizy[vm.g_sp->picnum]+8))<<2) < (actor[vm.g_i].floorz - actor[vm.g_i].ceilingz))
+//                if ((vm.g_sp.picnum == APLAYER && vm.g_sp.yrepeat < 36) || *insptr < vm.g_sp.yrepeat ||
+//                        ((vm.g_sp.yrepeat*(tilesizy[vm.g_sp.picnum]+8))<<2) < (actor[vm.g_i].floorz - actor[vm.g_i].ceilingz))
 //                {
-//                    j = ((*insptr)-vm.g_sp->yrepeat)<<1;
-//                    if (klabs(j)) vm.g_sp->yrepeat += ksgn(j);
+//                    j = ((*insptr)-vm.g_sp.yrepeat)<<1;
+//                    if (klabs(j)) vm.g_sp.yrepeat += ksgn(j);
 //                }
 //            }
 //            insptr++;
@@ -1501,8 +1501,8 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 
 //        case CON_SIZEAT:
 //            insptr++;
-//            vm.g_sp->xrepeat = (uint8_t) *insptr++;
-//            vm.g_sp->yrepeat = (uint8_t) *insptr++;
+//            vm.g_sp.xrepeat = (uint8_t) *insptr++;
+//            vm.g_sp.yrepeat = (uint8_t) *insptr++;
 //            continue;
 
 //        case CON_SHOOT:
@@ -1602,7 +1602,7 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //            if (vm.g_p == screenpeek || (GametypeFlags[ud.coop]&GAMETYPE_COOPSOUND)
 //                || (g_fakeMultiMode==2)
 //                )
-//                A_PlaySound(*insptr,g_player[screenpeek].ps->i);
+//                A_PlaySound(*insptr,g_player[screenpeek].ps.i);
 //            insptr++;
 //            continue;
 
@@ -1618,7 +1618,7 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 
 //        case CON_TIP:
 //            insptr++;
-//            g_player[vm.g_p].ps->tipincs = GAMETICSPERSEC;
+//            g_player[vm.g_p].ps.tipincs = GAMETICSPERSEC;
 //            continue;
 
 //        case CON_FALL:
@@ -1648,7 +1648,7 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //                    break;
 //                }
 
-//                if (ps->ammo_amount[weap] >= ps->max_ammo_amount[weap])
+//                if (ps.ammo_amount[weap] >= ps.max_ammo_amount[weap])
 //                {
 //                    vm.g_flags |= VM_NOEXECUTE;
 //                    break;
@@ -1681,7 +1681,7 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 
 //        case CON_ADDKILLS:
 //            insptr++;
-//            g_player[vm.g_p].ps->actors_killed += *insptr++;
+//            g_player[vm.g_p].ps.actors_killed += *insptr++;
 //            actor[vm.g_i].actorstayput = -1;
 //            continue;
 
@@ -1712,8 +1712,8 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //        case CON_ENDOFGAME:
 //        case CON_ENDOFLEVEL:
 //            insptr++;
-//            g_player[vm.g_p].ps->timebeforeexit = *insptr++;
-//            g_player[vm.g_p].ps->customexitsound = -1;
+//            g_player[vm.g_p].ps.timebeforeexit = *insptr++;
+//            g_player[vm.g_p].ps.customexitsound = -1;
 //            ud.eog = 1;
 //            continue;
 
@@ -1724,14 +1724,14 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //                int32_t j;
 //                DukePlayer_t *const ps = g_player[vm.g_p].ps;
 
-//                if (ps->newowner >= 0)
+//                if (ps.newowner >= 0)
 //                    G_ClearCameraView(ps);
 
-//                j = sprite[ps->i].extra;
+//                j = sprite[ps.i].extra;
 
-//                if (vm.g_sp->picnum != ATOMICHEALTH)
+//                if (vm.g_sp.picnum != ATOMICHEALTH)
 //                {
-//                    if (j > ps->max_player_health && *insptr > 0)
+//                    if (j > ps.max_player_health && *insptr > 0)
 //                    {
 //                        insptr++;
 //                        continue;
@@ -1740,16 +1740,16 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //                    {
 //                        if (j > 0)
 //                            j += *insptr;
-//                        if (j > ps->max_player_health && *insptr > 0)
-//                            j = ps->max_player_health;
+//                        if (j > ps.max_player_health && *insptr > 0)
+//                            j = ps.max_player_health;
 //                    }
 //                }
 //                else
 //                {
 //                    if (j > 0)
 //                        j += *insptr;
-//                    if (j > (ps->max_player_health<<1))
-//                        j = (ps->max_player_health<<1);
+//                    if (j > (ps.max_player_health<<1))
+//                        j = (ps.max_player_health<<1);
 //                }
 
 //                if (j < 0) j = 0;
@@ -1758,14 +1758,14 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //                {
 //                    if (*insptr > 0)
 //                    {
-//                        if ((j - *insptr) < (ps->max_player_health>>2) &&
-//                                j >= (ps->max_player_health>>2))
-//                            A_PlaySound(DUKE_GOTHEALTHATLOW,ps->i);
+//                        if ((j - *insptr) < (ps.max_player_health>>2) &&
+//                                j >= (ps.max_player_health>>2))
+//                            A_PlaySound(DUKE_GOTHEALTHATLOW,ps.i);
 
-//                        ps->last_extra = j;
+//                        ps.last_extra = j;
 //                    }
 
-//                    sprite[ps->i].extra = j;
+//                    sprite[ps.i].extra = j;
 //                }
 //            }
 
@@ -1791,11 +1791,11 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //            insptr++;
 //            AC_COUNT(vm.g_t) = 0;
 //            AC_MOVE_ID(vm.g_t) = *insptr++;
-//            vm.g_sp->hitag = *insptr++;
-//            if (A_CheckEnemySprite(vm.g_sp) && vm.g_sp->extra <= 0) // hack
+//            vm.g_sp.hitag = *insptr++;
+//            if (A_CheckEnemySprite(vm.g_sp) && vm.g_sp.extra <= 0) // hack
 //                continue;
-//            if (vm.g_sp->hitag&random_angle)
-//                vm.g_sp->ang = krand()&2047;
+//            if (vm.g_sp.hitag&random_angle)
+//                vm.g_sp.ang = krand()&2047;
 //            continue;
 
 //        case CON_ADDWEAPONVAR:
@@ -2221,23 +2221,23 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //                {
 //                    actor_t *a = &actor[i];
 
-//                    a->lastvx = 0;
-//                    a->lastvy = 0;
-//                    a->timetosleep = 0;
-//                    a->cgg = 0;
-//                    a->movflag = 0;
-//                    a->tempang = 0;
-//                    a->dispicnum = 0;
+//                    a.lastvx = 0;
+//                    a.lastvy = 0;
+//                    a.timetosleep = 0;
+//                    a.cgg = 0;
+//                    a.movflag = 0;
+//                    a.tempang = 0;
+//                    a.dispicnum = 0;
 //                    T1=T2=T3=T4=T5=T6=T7=T8=T9=0;
-//                    a->flags = 0;
+//                    a.flags = 0;
 //                    sprite[i].hitag = 0;
 
 //                    if (G_HaveActor(sprite[i].picnum))
 //                    {
 //                        const intptr_t *actorptr = g_tile[sprite[i].picnum].execPtr;
 //                        // offsets
-//                        AC_ACTION_ID(a->t_data) = actorptr[1];
-//                        AC_MOVE_ID(a->t_data) = actorptr[2];
+//                        AC_ACTION_ID(a.t_data) = actorptr[1];
+//                        AC_MOVE_ID(a.t_data) = actorptr[2];
 //                        AC_MOVFLAGS(&sprite[i], &actor[i]) = actorptr[3];  // ai bits (movflags)
 //                    }
 //                }
@@ -2270,7 +2270,7 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //                //    Net_NewGame(volnume,levnume);
 //                //else
 //                {
-//                    g_player[myconnectindex].ps->gm |= MODE_EOL;
+//                    g_player[myconnectindex].ps.gm |= MODE_EOL;
 //                    ud.display_bonus_screen = 0;
 //                } // MODE_RESTART;
 
@@ -2481,9 +2481,9 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //            {
 //                int32_t lIn=Gv_GetVarX(*insptr++);
 //                int32_t j;
-//                if ((unsigned)vm.g_sp->sectnum >= (unsigned)numsectors)
+//                if ((unsigned)vm.g_sp.sectnum >= (unsigned)numsectors)
 //                {
-//                    CON_ERRPRINTF("Invalid sector %d\n", TrackerCast(vm.g_sp->sectnum));
+//                    CON_ERRPRINTF("Invalid sector %d\n", TrackerCast(vm.g_sp.sectnum));
 //                    continue;
 //                }
 //                j = A_Spawn(vm.g_i, lIn);
@@ -2511,9 +2511,9 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //            {
 //                int32_t j;
 
-//                if ((unsigned)vm.g_sp->sectnum >= (unsigned)numsectors)
+//                if ((unsigned)vm.g_sp.sectnum >= (unsigned)numsectors)
 //                {
-//                    CON_ERRPRINTF("Invalid sector %d\n", TrackerCast(vm.g_sp->sectnum));
+//                    CON_ERRPRINTF("Invalid sector %d\n", TrackerCast(vm.g_sp.sectnum));
 //                    insptr++;
 //                    continue;
 //                }
@@ -2547,9 +2547,9 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //                const int32_t zvel = (tw == CON_ESHOOT) ?
 //                    SHOOT_HARDCODED_ZVEL : (int16_t)Gv_GetVarX(*insptr++);
 
-//                if ((unsigned)vm.g_sp->sectnum >= (unsigned)numsectors)
+//                if ((unsigned)vm.g_sp.sectnum >= (unsigned)numsectors)
 //                {
-//                    CON_ERRPRINTF("Invalid sector %d\n", TrackerCast(vm.g_sp->sectnum));
+//                    CON_ERRPRINTF("Invalid sector %d\n", TrackerCast(vm.g_sp.sectnum));
 //                    insptr++;
 //                    continue;
 //                }
@@ -2567,9 +2567,9 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //            {
 //                int32_t j=Gv_GetVarX(*insptr++);
 
-//                if ((unsigned)vm.g_sp->sectnum >= (unsigned)numsectors)
+//                if ((unsigned)vm.g_sp.sectnum >= (unsigned)numsectors)
 //                {
-//                    CON_ERRPRINTF("Invalid sector %d\n", TrackerCast(vm.g_sp->sectnum));
+//                    CON_ERRPRINTF("Invalid sector %d\n", TrackerCast(vm.g_sp.sectnum));
 //                    continue;
 //                }
 
@@ -2586,9 +2586,9 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //                const int32_t zvel = (int16_t)Gv_GetVarX(*insptr++);
 //                int32_t j=Gv_GetVarX(*insptr++);
 
-//                if ((unsigned)vm.g_sp->sectnum >= (unsigned)numsectors)
+//                if ((unsigned)vm.g_sp.sectnum >= (unsigned)numsectors)
 //                {
-//                    CON_ERRPRINTF("Invalid sector %d\n", TrackerCast(vm.g_sp->sectnum));
+//                    CON_ERRPRINTF("Invalid sector %d\n", TrackerCast(vm.g_sp.sectnum));
 //                    continue;
 //                }
 
@@ -2625,7 +2625,7 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //                        A_PlaySound((int16_t)j,vm.g_i);
 //                    continue;
 //                case CON_GLOBALSOUNDVAR:
-//                    A_PlaySound((int16_t)j,g_player[screenpeek].ps->i);
+//                    A_PlaySound((int16_t)j,g_player[screenpeek].ps.i);
 //                    continue;
 //                case CON_STOPSOUNDVAR:
 //                    if (S_CheckSoundPlaying(vm.g_i,j))
@@ -3175,7 +3175,7 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 
 //        case CON_SPAWN:
 //            insptr++;
-//            if ((unsigned)vm.g_sp->sectnum >= MAXSECTORS)
+//            if ((unsigned)vm.g_sp.sectnum >= MAXSECTORS)
 //            {
 //                insptr++;
 //                continue;
@@ -3214,22 +3214,22 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //                int32_t dnum = *insptr++;
 //                int32_t s, l, j;
 
-//                if ((unsigned)vm.g_sp->sectnum < MAXSECTORS)
+//                if ((unsigned)vm.g_sp.sectnum < MAXSECTORS)
 //                    for (j=(*insptr)-1; j>=0; j--)
 //                    {
-//                        if (vm.g_sp->picnum == BLIMP && dnum == SCRAP1)
+//                        if (vm.g_sp.picnum == BLIMP && dnum == SCRAP1)
 //                            s = 0;
 //                        else s = (krand()%3);
 
-//                        l = A_InsertSprite(vm.g_sp->sectnum,
-//                                           vm.g_sp->x+(krand()&255)-128,vm.g_sp->y+(krand()&255)-128,vm.g_sp->z-(8<<8)-(krand()&8191),
-//                                           dnum+s,vm.g_sp->shade,32+(krand()&15),32+(krand()&15),
+//                        l = A_InsertSprite(vm.g_sp.sectnum,
+//                                           vm.g_sp.x+(krand()&255)-128,vm.g_sp.y+(krand()&255)-128,vm.g_sp.z-(8<<8)-(krand()&8191),
+//                                           dnum+s,vm.g_sp.shade,32+(krand()&15),32+(krand()&15),
 //                                           krand()&2047,(krand()&127)+32,
 //                                           -(krand()&2047),vm.g_i,5);
-//                        if (vm.g_sp->picnum == BLIMP && dnum == SCRAP1)
+//                        if (vm.g_sp.picnum == BLIMP && dnum == SCRAP1)
 //                            sprite[l].yvel = BlimpSpawnSprites[j%14];
 //                        else sprite[l].yvel = -1;
-//                        sprite[l].pal = vm.g_sp->pal;
+//                        sprite[l].pal = vm.g_sp.pal;
 //                    }
 //                insptr++;
 //            }
@@ -3242,17 +3242,17 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 
 //        case CON_CSTATOR:
 //            insptr++;
-//            vm.g_sp->cstat |= (int16_t) *insptr++;
+//            vm.g_sp.cstat |= (int16_t) *insptr++;
 //            continue;
 
 //        case CON_CLIPDIST:
 //            insptr++;
-//            vm.g_sp->clipdist = (int16_t) *insptr++;
+//            vm.g_sp.clipdist = (int16_t) *insptr++;
 //            continue;
 
 //        case CON_CSTAT:
 //            insptr++;
-//            vm.g_sp->cstat = (int16_t) *insptr++;
+//            vm.g_sp.cstat = (int16_t) *insptr++;
 //            continue;
 
 //        case CON_SAVENN:
@@ -3293,7 +3293,7 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //        case CON_QUAKE:
 //            insptr++;
 //            g_earthquakeTime = Gv_GetVarX(*insptr++);
-//            A_PlaySound(EARTHQUAKE,g_player[screenpeek].ps->i);
+//            A_PlaySound(EARTHQUAKE,g_player[screenpeek].ps.i);
 //            continue;
 
 //        case CON_IFMOVE:
@@ -3309,11 +3309,11 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //        continue;
 
 //        case CON_IFONWATER:
-//            VM_CONDITIONAL(sector[vm.g_sp->sectnum].lotag == ST_1_ABOVE_WATER && klabs(vm.g_sp->z-sector[vm.g_sp->sectnum].floorz) < (32<<8));
+//            VM_CONDITIONAL(sector[vm.g_sp.sectnum].lotag == ST_1_ABOVE_WATER && klabs(vm.g_sp.z-sector[vm.g_sp.sectnum].floorz) < (32<<8));
 //            continue;
 
 //        case CON_IFINWATER:
-//            VM_CONDITIONAL(sector[vm.g_sp->sectnum].lotag == ST_2_UNDERWATER);
+//            VM_CONDITIONAL(sector[vm.g_sp.sectnum].lotag == ST_2_UNDERWATER);
 //            continue;
 
 //        case CON_IFCOUNT:
@@ -3323,7 +3323,7 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 
 //        case CON_IFACTOR:
 //            insptr++;
-//            VM_CONDITIONAL(vm.g_sp->picnum == *insptr);
+//            VM_CONDITIONAL(vm.g_sp.picnum == *insptr);
 //            continue;
 
 //        case CON_RESETCOUNT:
@@ -3339,59 +3339,59 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //            switch (*(insptr-1))
 //            {
 //            case GET_STEROIDS:
-//                ps->inv_amount[GET_STEROIDS] = *insptr;
-//                ps->inven_icon = ICON_STEROIDS;
+//                ps.inv_amount[GET_STEROIDS] = *insptr;
+//                ps.inven_icon = ICON_STEROIDS;
 //                break;
 
 //            case GET_SHIELD:
-//                ps->inv_amount[GET_SHIELD] += *insptr;// 100;
-//                if (ps->inv_amount[GET_SHIELD] > ps->max_shield_amount)
-//                    ps->inv_amount[GET_SHIELD] = ps->max_shield_amount;
+//                ps.inv_amount[GET_SHIELD] += *insptr;// 100;
+//                if (ps.inv_amount[GET_SHIELD] > ps.max_shield_amount)
+//                    ps.inv_amount[GET_SHIELD] = ps.max_shield_amount;
 //                break;
 
 //            case GET_SCUBA:
-//                ps->inv_amount[GET_SCUBA] = *insptr;// 1600;
-//                ps->inven_icon = ICON_SCUBA;
+//                ps.inv_amount[GET_SCUBA] = *insptr;// 1600;
+//                ps.inven_icon = ICON_SCUBA;
 //                break;
 
 //            case GET_HOLODUKE:
-//                ps->inv_amount[GET_HOLODUKE] = *insptr;// 1600;
-//                ps->inven_icon = ICON_HOLODUKE;
+//                ps.inv_amount[GET_HOLODUKE] = *insptr;// 1600;
+//                ps.inven_icon = ICON_HOLODUKE;
 //                break;
 
 //            case GET_JETPACK:
-//                ps->inv_amount[GET_JETPACK] = *insptr;// 1600;
-//                ps->inven_icon = ICON_JETPACK;
+//                ps.inv_amount[GET_JETPACK] = *insptr;// 1600;
+//                ps.inven_icon = ICON_JETPACK;
 //                break;
 
 //            case GET_ACCESS:
-//                switch (vm.g_sp->pal)
+//                switch (vm.g_sp.pal)
 //                {
 //                case  0:
-//                    ps->got_access |= 1;
+//                    ps.got_access |= 1;
 //                    break;
 //                case 21:
-//                    ps->got_access |= 2;
+//                    ps.got_access |= 2;
 //                    break;
 //                case 23:
-//                    ps->got_access |= 4;
+//                    ps.got_access |= 4;
 //                    break;
 //                }
 //                break;
 
 //            case GET_HEATS:
-//                ps->inv_amount[GET_HEATS] = *insptr;
-//                ps->inven_icon = ICON_HEATS;
+//                ps.inv_amount[GET_HEATS] = *insptr;
+//                ps.inven_icon = ICON_HEATS;
 //                break;
 
 //            case GET_FIRSTAID:
-//                ps->inven_icon = ICON_FIRSTAID;
-//                ps->inv_amount[GET_FIRSTAID] = *insptr;
+//                ps.inven_icon = ICON_FIRSTAID;
+//                ps.inv_amount[GET_FIRSTAID] = *insptr;
 //                break;
 
 //            case GET_BOOTS:
-//                ps->inven_icon = ICON_BOOTS;
-//                ps->inv_amount[GET_BOOTS] = *insptr;
+//                ps.inven_icon = ICON_BOOTS;
+//                ps.inv_amount[GET_BOOTS] = *insptr;
 //                break;
 //            default:
 //                CON_ERRPRINTF("Invalid inventory ID %d\n", (int32_t)*(insptr-1));
@@ -3420,47 +3420,47 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //            int32_t l = *(++insptr);
 //            int32_t j = 0;
 //            DukePlayer_t *const ps = g_player[vm.g_p].ps;
-//            int32_t s = sprite[ps->i].xvel;
+//            int32_t s = sprite[ps.i].xvel;
 
-//            if ((l&8) && ps->on_ground && TEST_SYNC_KEY(g_player[vm.g_p].sync->bits, SK_CROUCH))
+//            if ((l&8) && ps.on_ground && TEST_SYNC_KEY(g_player[vm.g_p].sync.bits, SK_CROUCH))
 //                j = 1;
-//            else if ((l&16) && ps->jumping_counter == 0 && !ps->on_ground &&
-//                     ps->vel.z > 2048)
+//            else if ((l&16) && ps.jumping_counter == 0 && !ps.on_ground &&
+//                     ps.vel.z > 2048)
 //                j = 1;
-//            else if ((l&32) && ps->jumping_counter > 348)
+//            else if ((l&32) && ps.jumping_counter > 348)
 //                j = 1;
 //            else if ((l&1) && s >= 0 && s < 8)
 //                j = 1;
-//            else if ((l&2) && s >= 8 && !TEST_SYNC_KEY(g_player[vm.g_p].sync->bits, SK_RUN))
+//            else if ((l&2) && s >= 8 && !TEST_SYNC_KEY(g_player[vm.g_p].sync.bits, SK_RUN))
 //                j = 1;
-//            else if ((l&4) && s >= 8 && TEST_SYNC_KEY(g_player[vm.g_p].sync->bits, SK_RUN))
+//            else if ((l&4) && s >= 8 && TEST_SYNC_KEY(g_player[vm.g_p].sync.bits, SK_RUN))
 //                j = 1;
-//            else if ((l&64) && ps->pos.z < (vm.g_sp->z-(48<<8)))
+//            else if ((l&64) && ps.pos.z < (vm.g_sp.z-(48<<8)))
 //                j = 1;
-//            else if ((l&128) && s <= -8 && !TEST_SYNC_KEY(g_player[vm.g_p].sync->bits, SK_RUN))
+//            else if ((l&128) && s <= -8 && !TEST_SYNC_KEY(g_player[vm.g_p].sync.bits, SK_RUN))
 //                j = 1;
-//            else if ((l&256) && s <= -8 && TEST_SYNC_KEY(g_player[vm.g_p].sync->bits, SK_RUN))
+//            else if ((l&256) && s <= -8 && TEST_SYNC_KEY(g_player[vm.g_p].sync.bits, SK_RUN))
 //                j = 1;
-//            else if ((l&512) && (ps->quick_kick > 0 || (ps->curr_weapon == KNEE_WEAPON && ps->kickback_pic > 0)))
+//            else if ((l&512) && (ps.quick_kick > 0 || (ps.curr_weapon == KNEE_WEAPON && ps.kickback_pic > 0)))
 //                j = 1;
-//            else if ((l&1024) && sprite[ps->i].xrepeat < 32)
+//            else if ((l&1024) && sprite[ps.i].xrepeat < 32)
 //                j = 1;
-//            else if ((l&2048) && ps->jetpack_on)
+//            else if ((l&2048) && ps.jetpack_on)
 //                j = 1;
-//            else if ((l&4096) && ps->inv_amount[GET_STEROIDS] > 0 && ps->inv_amount[GET_STEROIDS] < 400)
+//            else if ((l&4096) && ps.inv_amount[GET_STEROIDS] > 0 && ps.inv_amount[GET_STEROIDS] < 400)
 //                j = 1;
-//            else if ((l&8192) && ps->on_ground)
+//            else if ((l&8192) && ps.on_ground)
 //                j = 1;
-//            else if ((l&16384) && sprite[ps->i].xrepeat > 32 && sprite[ps->i].extra > 0 && ps->timebeforeexit == 0)
+//            else if ((l&16384) && sprite[ps.i].xrepeat > 32 && sprite[ps.i].extra > 0 && ps.timebeforeexit == 0)
 //                j = 1;
-//            else if ((l&32768) && sprite[ps->i].extra <= 0)
+//            else if ((l&32768) && sprite[ps.i].extra <= 0)
 //                j = 1;
 //            else if ((l&65536L))
 //            {
-//                if (vm.g_sp->picnum == APLAYER && (g_netServer || ud.multimode > 1))
-//                    j = G_GetAngleDelta(g_player[otherp].ps->ang,getangle(ps->pos.x-g_player[otherp].ps->pos.x,ps->pos.y-g_player[otherp].ps->pos.y));
+//                if (vm.g_sp.picnum == APLAYER && (g_netServer || ud.multimode > 1))
+//                    j = G_GetAngleDelta(g_player[otherp].ps.ang,getangle(ps.pos.x-g_player[otherp].ps.pos.x,ps.pos.y-g_player[otherp].ps.pos.y));
 //                else
-//                    j = G_GetAngleDelta(ps->ang,getangle(vm.g_sp->x-ps->pos.x,vm.g_sp->y-ps->pos.y));
+//                    j = G_GetAngleDelta(ps.ang,getangle(vm.g_sp.x-ps.pos.x,vm.g_sp.y-ps.pos.y));
 
 //                if (j > -128 && j < 128)
 //                    j = 1;
@@ -3473,7 +3473,7 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 
 //        case CON_IFSTRENGTH:
 //            insptr++;
-//            VM_CONDITIONAL(vm.g_sp->extra <= *insptr);
+//            VM_CONDITIONAL(vm.g_sp.extra <= *insptr);
 //            continue;
 
 //        case CON_GUTS:
@@ -3494,7 +3494,7 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //        case CON_FLASH:
 //            insptr++;
 //            sprite[vm.g_i].shade = -127;
-//            g_player[vm.g_p].ps->visibility = -127;
+//            g_player[vm.g_p].ps.visibility = -127;
 //            lastvisinc = totalclock+32;
 //            continue;
 
@@ -3534,11 +3534,11 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //            continue;
 
 //        case CON_IFHITSPACE:
-//            VM_CONDITIONAL(TEST_SYNC_KEY(g_player[vm.g_p].sync->bits, SK_OPEN));
+//            VM_CONDITIONAL(TEST_SYNC_KEY(g_player[vm.g_p].sync.bits, SK_OPEN));
 //            continue;
 
 //        case CON_IFOUTSIDE:
-//            VM_CONDITIONAL(sector[vm.g_sp->sectnum].ceilingstat&1);
+//            VM_CONDITIONAL(sector[vm.g_sp.sectnum].ceilingstat&1);
 //            continue;
 
 //        case CON_IFMULTIPLAYER:
@@ -3555,9 +3555,9 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 
 //        case CON_OPERATE:
 //            insptr++;
-//            if (sector[vm.g_sp->sectnum].lotag == 0)
+//            if (sector[vm.g_sp.sectnum].lotag == 0)
 //            {
-//                neartag(vm.g_sp->x,vm.g_sp->y,vm.g_sp->z-(32<<8),vm.g_sp->sectnum,vm.g_sp->ang,
+//                neartag(vm.g_sp.x,vm.g_sp.y,vm.g_sp.z-(32<<8),vm.g_sp.sectnum,vm.g_sp.ang,
 //                        &neartagsector,&neartagwall,&neartagsprite,&neartaghitdist, 768, 4+1, NULL);
 
 //                if (neartagsector >= 0 && isanearoperator(sector[neartagsector].lotag))
@@ -3579,19 +3579,19 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //            continue;
 
 //        case CON_IFINSPACE:
-//            VM_CONDITIONAL(G_CheckForSpaceCeiling(vm.g_sp->sectnum));
+//            VM_CONDITIONAL(G_CheckForSpaceCeiling(vm.g_sp.sectnum));
 //            continue;
 
 //        case CON_SPRITEPAL:
 //            insptr++;
-//            if (vm.g_sp->picnum != APLAYER)
-//                actor[vm.g_i].tempang = vm.g_sp->pal;
-//            vm.g_sp->pal = *insptr++;
+//            if (vm.g_sp.picnum != APLAYER)
+//                actor[vm.g_i].tempang = vm.g_sp.pal;
+//            vm.g_sp.pal = *insptr++;
 //            continue;
 
 //        case CON_CACTOR:
 //            insptr++;
-//            vm.g_sp->picnum = *insptr++;
+//            vm.g_sp.picnum = *insptr++;
 //            continue;
 
 //        case CON_IFBULLETNEAR:
@@ -3606,12 +3606,12 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 
 //        case CON_IFFLOORDISTL:
 //            insptr++;
-//            VM_CONDITIONAL((actor[vm.g_i].floorz - vm.g_sp->z) <= ((*insptr)<<8));
+//            VM_CONDITIONAL((actor[vm.g_i].floorz - vm.g_sp.z) <= ((*insptr)<<8));
 //            continue;
 
 //        case CON_IFCEILINGDISTL:
 //            insptr++;
-//            VM_CONDITIONAL((vm.g_sp->z - actor[vm.g_i].ceilingz) <= ((*insptr)<<8));
+//            VM_CONDITIONAL((vm.g_sp.z - actor[vm.g_i].ceilingz) <= ((*insptr)<<8));
 //            continue;
 
 //        case CON_PALFROM:
@@ -4284,7 +4284,7 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //        case CON_GETANGLETOTARGET:
 //            insptr++;
 //            // Actor[vm.g_i].lastvx and lastvy are last known location of target.
-//            Gv_SetVarX(*insptr++, getangle(actor[vm.g_i].lastvx-vm.g_sp->x,actor[vm.g_i].lastvy-vm.g_sp->y));
+//            Gv_SetVarX(*insptr++, getangle(actor[vm.g_i].lastvx-vm.g_sp.x,actor[vm.g_i].lastvy-vm.g_sp.y));
 //            continue;
 
 //        case CON_ANGOFFVAR:
@@ -4294,7 +4294,7 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 
 //        case CON_LOCKPLAYER:
 //            insptr++;
-//            g_player[vm.g_p].ps->transporter_hold=Gv_GetVarX(*insptr++);
+//            g_player[vm.g_p].ps.transporter_hold=Gv_GetVarX(*insptr++);
 //            continue;
 
 //        case CON_CHECKAVAILWEAPON:
@@ -4322,24 +4322,24 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 
 //        case CON_GETPLAYERANGLE:
 //            insptr++;
-//            Gv_SetVarX(*insptr++, g_player[vm.g_p].ps->ang);
+//            Gv_SetVarX(*insptr++, g_player[vm.g_p].ps.ang);
 //            continue;
 
 //        case CON_SETPLAYERANGLE:
 //            insptr++;
-//            g_player[vm.g_p].ps->ang=Gv_GetVarX(*insptr++);
-//            g_player[vm.g_p].ps->ang &= 2047;
+//            g_player[vm.g_p].ps.ang=Gv_GetVarX(*insptr++);
+//            g_player[vm.g_p].ps.ang &= 2047;
 //            continue;
 
 //        case CON_GETACTORANGLE:
 //            insptr++;
-//            Gv_SetVarX(*insptr++, vm.g_sp->ang);
+//            Gv_SetVarX(*insptr++, vm.g_sp.ang);
 //            continue;
 
 //        case CON_SETACTORANGLE:
 //            insptr++;
-//            vm.g_sp->ang=Gv_GetVarX(*insptr++);
-//            vm.g_sp->ang &= 2047;
+//            vm.g_sp.ang=Gv_GetVarX(*insptr++);
+//            vm.g_sp.ang &= 2047;
 //            continue;
 
 //        case CON_SETVAR:
@@ -4637,7 +4637,7 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //                    insptr++;
 //                    continue;
 //                }
-//                Gv_SetVarX(*insptr++, g_player[vm.g_p].ps->max_ammo_amount[j]);
+//                Gv_SetVarX(*insptr++, g_player[vm.g_p].ps.max_ammo_amount[j]);
 //            }
 //            continue;
 
@@ -4651,7 +4651,7 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //                    insptr++;
 //                    continue;
 //                }
-//                g_player[vm.g_p].ps->max_ammo_amount[j]=Gv_GetVarX(*insptr++);
+//                g_player[vm.g_p].ps.max_ammo_amount[j]=Gv_GetVarX(*insptr++);
 //            }
 //            continue;
 
@@ -4787,27 +4787,27 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 
 //        case CON_SPGETLOTAG:
 //            insptr++;
-//            aGameVars[g_iLoTagID].val.lValue = vm.g_sp->lotag;
+//            aGameVars[g_iLoTagID].val.lValue = vm.g_sp.lotag;
 //            continue;
 
 //        case CON_SPGETHITAG:
 //            insptr++;
-//            aGameVars[g_iHiTagID].val.lValue = vm.g_sp->hitag;
+//            aGameVars[g_iHiTagID].val.lValue = vm.g_sp.hitag;
 //            continue;
 
 //        case CON_SECTGETLOTAG:
 //            insptr++;
-//            aGameVars[g_iLoTagID].val.lValue = sector[vm.g_sp->sectnum].lotag;
+//            aGameVars[g_iLoTagID].val.lValue = sector[vm.g_sp.sectnum].lotag;
 //            continue;
 
 //        case CON_SECTGETHITAG:
 //            insptr++;
-//            aGameVars[g_iHiTagID].val.lValue = sector[vm.g_sp->sectnum].hitag;
+//            aGameVars[g_iHiTagID].val.lValue = sector[vm.g_sp.sectnum].hitag;
 //            continue;
 
 //        case CON_GETTEXTUREFLOOR:
 //            insptr++;
-//            aGameVars[g_iTextureID].val.lValue = sector[vm.g_sp->sectnum].floorpicnum;
+//            aGameVars[g_iTextureID].val.lValue = sector[vm.g_sp.sectnum].floorpicnum;
 //            continue;
 
 //        case CON_STARTTRACK:
@@ -4827,7 +4827,7 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //            insptr++;
 //            {
 //                int32_t j=Gv_GetVarX(*(insptr++));
-//                if (numplayers != 1 || !(g_player[myconnectindex].ps->gm & MODE_GAME))
+//                if (numplayers != 1 || !(g_player[myconnectindex].ps.gm & MODE_GAME))
 //                {
 //                    CON_ERRPRINTF("not in a single-player game.\n");
 //                    continue;
@@ -4843,7 +4843,7 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 
 //        case CON_GETTEXTURECEILING:
 //            insptr++;
-//            aGameVars[g_iTextureID].val.lValue = sector[vm.g_sp->sectnum].ceilingpicnum;
+//            aGameVars[g_iTextureID].val.lValue = sector[vm.g_sp.sectnum].ceilingpicnum;
 //            continue;
 
 //        case CON_IFVARVARAND:
@@ -5022,7 +5022,7 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 
 //        case CON_IFPHEALTHL:
 //            insptr++;
-//            VM_CONDITIONAL(sprite[g_player[vm.g_p].ps->i].extra < *insptr);
+//            VM_CONDITIONAL(sprite[g_player[vm.g_p].ps.i].extra < *insptr);
 //            continue;
 
 //        case CON_IFPINVENTORY:
@@ -5034,44 +5034,44 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //                switch (*insptr++)
 //                {
 //                case GET_STEROIDS:
-//                    if (ps->inv_amount[GET_STEROIDS] != *insptr)
+//                    if (ps.inv_amount[GET_STEROIDS] != *insptr)
 //                        j = 1;
 //                    break;
 //                case GET_SHIELD:
-//                    if (ps->inv_amount[GET_SHIELD] != ps->max_shield_amount)
+//                    if (ps.inv_amount[GET_SHIELD] != ps.max_shield_amount)
 //                        j = 1;
 //                    break;
 //                case GET_SCUBA:
-//                    if (ps->inv_amount[GET_SCUBA] != *insptr) j = 1;
+//                    if (ps.inv_amount[GET_SCUBA] != *insptr) j = 1;
 //                    break;
 //                case GET_HOLODUKE:
-//                    if (ps->inv_amount[GET_HOLODUKE] != *insptr) j = 1;
+//                    if (ps.inv_amount[GET_HOLODUKE] != *insptr) j = 1;
 //                    break;
 //                case GET_JETPACK:
-//                    if (ps->inv_amount[GET_JETPACK] != *insptr) j = 1;
+//                    if (ps.inv_amount[GET_JETPACK] != *insptr) j = 1;
 //                    break;
 //                case GET_ACCESS:
-//                    switch (vm.g_sp->pal)
+//                    switch (vm.g_sp.pal)
 //                    {
 //                    case  0:
-//                        if (ps->got_access&1) j = 1;
+//                        if (ps.got_access&1) j = 1;
 //                        break;
 //                    case 21:
-//                        if (ps->got_access&2) j = 1;
+//                        if (ps.got_access&2) j = 1;
 //                        break;
 //                    case 23:
-//                        if (ps->got_access&4) j = 1;
+//                        if (ps.got_access&4) j = 1;
 //                        break;
 //                    }
 //                    break;
 //                case GET_HEATS:
-//                    if (ps->inv_amount[GET_HEATS] != *insptr) j = 1;
+//                    if (ps.inv_amount[GET_HEATS] != *insptr) j = 1;
 //                    break;
 //                case GET_FIRSTAID:
-//                    if (ps->inv_amount[GET_FIRSTAID] != *insptr) j = 1;
+//                    if (ps.inv_amount[GET_FIRSTAID] != *insptr) j = 1;
 //                    break;
 //                case GET_BOOTS:
-//                    if (ps->inv_amount[GET_BOOTS] != *insptr) j = 1;
+//                    if (ps.inv_amount[GET_BOOTS] != *insptr) j = 1;
 //                    break;
 //                default:
 //                    CON_ERRPRINTF("invalid inventory ID: %d\n", (int32_t)*(insptr-1));
@@ -5086,24 +5086,24 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //            {
 //                DukePlayer_t *const ps = g_player[vm.g_p].ps;
 
-//                if (ps->knee_incs == 0 && sprite[ps->i].xrepeat >= 40)
-//                    if (cansee(vm.g_sp->x,vm.g_sp->y,vm.g_sp->z-(4<<8),vm.g_sp->sectnum,ps->pos.x,
-//                               ps->pos.y,ps->pos.z+(16<<8),sprite[ps->i].sectnum))
+//                if (ps.knee_incs == 0 && sprite[ps.i].xrepeat >= 40)
+//                    if (cansee(vm.g_sp.x,vm.g_sp.y,vm.g_sp.z-(4<<8),vm.g_sp.sectnum,ps.pos.x,
+//                               ps.pos.y,ps.pos.z+(16<<8),sprite[ps.i].sectnum))
 //                    {
 //                        int32_t j = playerswhenstarted-1;
 
 //                        for (; j>=0; j--)
 //                        {
-//                            if (g_player[j].ps->actorsqu == vm.g_i)
+//                            if (g_player[j].ps.actorsqu == vm.g_i)
 //                                break;
 //                        }
 
 //                        if (j == -1)
 //                        {
-//                            ps->knee_incs = 1;
-//                            if (ps->weapon_pos == 0)
-//                                ps->weapon_pos = -1;
-//                            ps->actorsqu = vm.g_i;
+//                            ps.knee_incs = 1;
+//                            if (ps.weapon_pos == 0)
+//                                ps.weapon_pos = -1;
+//                            ps.actorsqu = vm.g_i;
 //                        }
 //                    }
 
@@ -5112,20 +5112,20 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 
 //        case CON_IFAWAYFROMWALL:
 //        {
-//            int16_t s1=vm.g_sp->sectnum;
+//            int16_t s1=vm.g_sp.sectnum;
 //            int32_t j = 0;
 
-//            updatesector(vm.g_sp->x+108,vm.g_sp->y+108,&s1);
-//            if (s1 == vm.g_sp->sectnum)
+//            updatesector(vm.g_sp.x+108,vm.g_sp.y+108,&s1);
+//            if (s1 == vm.g_sp.sectnum)
 //            {
-//                updatesector(vm.g_sp->x-108,vm.g_sp->y-108,&s1);
-//                if (s1 == vm.g_sp->sectnum)
+//                updatesector(vm.g_sp.x-108,vm.g_sp.y-108,&s1);
+//                if (s1 == vm.g_sp.sectnum)
 //                {
-//                    updatesector(vm.g_sp->x+108,vm.g_sp->y-108,&s1);
-//                    if (s1 == vm.g_sp->sectnum)
+//                    updatesector(vm.g_sp.x+108,vm.g_sp.y-108,&s1);
+//                    if (s1 == vm.g_sp.sectnum)
 //                    {
-//                        updatesector(vm.g_sp->x-108,vm.g_sp->y+108,&s1);
-//                        if (s1 == vm.g_sp->sectnum)
+//                        updatesector(vm.g_sp.x-108,vm.g_sp.y+108,&s1);
+//                        if (s1 == vm.g_sp.sectnum)
 //                            j = 1;
 //                    }
 //                }
@@ -5204,7 +5204,7 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //            continue;
 
 //        case CON_IFINOUTERSPACE:
-//            VM_CONDITIONAL(G_CheckForSpaceFloor(vm.g_sp->sectnum));
+//            VM_CONDITIONAL(G_CheckForSpaceFloor(vm.g_sp.sectnum));
 //            continue;
 
 //        case CON_IFNOTMOVING:
@@ -5213,7 +5213,7 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 
 //        case CON_RESPAWNHITAG:
 //            insptr++;
-//            switch (DYNAMICTILEMAP(vm.g_sp->picnum))
+//            switch (DYNAMICTILEMAP(vm.g_sp.picnum))
 //            {
 //            case FEM1__STATIC:
 //            case FEM2__STATIC:
@@ -5228,24 +5228,24 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //            case PODFEM1__STATIC:
 //            case NAKED1__STATIC:
 //            case STATUE__STATIC:
-//                if (vm.g_sp->yvel) G_OperateRespawns(vm.g_sp->yvel);
+//                if (vm.g_sp.yvel) G_OperateRespawns(vm.g_sp.yvel);
 //                break;
 //            default:
-////                if (vm.g_sp->hitag >= 0)
-//                    G_OperateRespawns(vm.g_sp->hitag);
+////                if (vm.g_sp.hitag >= 0)
+//                    G_OperateRespawns(vm.g_sp.hitag);
 //                break;
 //            }
 //            continue;
 
 //        case CON_IFSPRITEPAL:
 //            insptr++;
-//            VM_CONDITIONAL(vm.g_sp->pal == *insptr);
+//            VM_CONDITIONAL(vm.g_sp.pal == *insptr);
 //            continue;
 
 //        case CON_IFANGDIFFL:
 //            insptr++;
 //            {
-//                int32_t j = klabs(G_GetAngleDelta(g_player[vm.g_p].ps->ang,vm.g_sp->ang));
+//                int32_t j = klabs(G_GetAngleDelta(g_player[vm.g_p].ps.ang,vm.g_sp.ang));
 //                VM_CONDITIONAL(j <= *insptr);
 //            }
 //            continue;
@@ -5297,36 +5297,37 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //    }
 //}
 
-//// NORECURSE
-//void A_LoadActor(int32_t iActor)
-//{
-//    vm.g_i = iActor;    // Sprite ID
-//    vm.g_p = -1; // iPlayer;    // Player ID
-//    vm.g_x = -1; // lDist;    // ?
-//    vm.g_sp = &sprite[vm.g_i];    // Pointer to sprite structure
-//    vm.g_t = &actor[vm.g_i].t_data[0];   // Sprite's 'extra' data
+// NORECURSE
+function A_LoadActor(iActor: number):void
+{
+    todoThrow();
+    //vm.g_i = iActor;    // Sprite ID
+    //vm.g_p = -1; // iPlayer;    // Player ID
+    //vm.g_x = -1; // lDist;    // ?
+    //vm.g_sp = &sprite[vm.g_i];    // Pointer to sprite structure
+    //vm.g_t = &actor[vm.g_i].t_data[0];   // Sprite's 'extra' data
 
-//    if (g_tile[vm.g_sp->picnum].loadPtr == NULL)
-//        return;
+    //if (g_tile[vm.g_sp.picnum].loadPtr == NULL)
+    //    return;
 
-//    vm.g_flags &= ~(VM_RETURN|VM_KILL|VM_NOEXECUTE);
+    //vm.g_flags &= ~(VM_RETURN|VM_KILL|VM_NOEXECUTE);
 
-//    if ((unsigned)vm.g_sp->sectnum >= MAXSECTORS)
-//    {
-//        //      if(A_CheckEnemySprite(vm.g_sp))
-//        //          g_player[vm.g_p].ps->actors_killed++;
-//        A_DeleteSprite(vm.g_i);
-//        return;
-//    }
+    //if ((unsigned)vm.g_sp.sectnum >= MAXSECTORS)
+    //{
+    //    //      if(A_CheckEnemySprite(vm.g_sp))
+    //    //          g_player[vm.g_p].ps.actors_killed++;
+    //    A_DeleteSprite(vm.g_i);
+    //    return;
+    //}
 
-//    insptr = g_tile[vm.g_sp->picnum].loadPtr;
-//    VM_Execute(1);
-//    insptr = NULL;
+    //insptr = g_tile[vm.g_sp.picnum].loadPtr;
+    //VM_Execute(1);
+    //insptr = NULL;
 
-//    if (vm.g_flags & VM_KILL)
-//        A_DeleteSprite(vm.g_i);
+    //if (vm.g_flags & VM_KILL)
+    //    A_DeleteSprite(vm.g_i);
 
-//}
+}
 //#endif
 
 //// NORECURSE
@@ -5354,10 +5355,10 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 
 //    Bmemcpy(&vm, &tempvm, sizeof(vmstate_t));
 
-//    if ((unsigned)vm.g_sp->sectnum >= MAXSECTORS)
+//    if ((unsigned)vm.g_sp.sectnum >= MAXSECTORS)
 //    {
 //        if (A_CheckEnemySprite(vm.g_sp))
-//            g_player[vm.g_p].ps->actors_killed++;
+//            g_player[vm.g_p].ps.actors_killed++;
 //        A_DeleteSprite(vm.g_i);
 //        return;
 //    }
@@ -5401,7 +5402,7 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //#ifdef LUNATIC
 //    {
 //        double t = gethitickms();
-//        const int32_t picnum = vm.g_sp->picnum;
+//        const int32_t picnum = vm.g_sp.picnum;
 
 //        if (L_IsInitialized(&g_ElState) && El_HaveActor(picnum))
 //            killit = (El_CallActor(&g_ElState, picnum, iActor, iPlayer, lDist)==1);
@@ -5413,7 +5414,7 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //        g_actorCalls[picnum]++;
 //    }
 //#else
-//    insptr = 4 + (g_tile[vm.g_sp->picnum].execPtr);
+//    insptr = 4 + (g_tile[vm.g_sp.picnum].execPtr);
 //    VM_Execute(1);
 //    insptr = NULL;
 //#endif
@@ -5430,8 +5431,8 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 
 //    VM_Move();
 
-//    if (vm.g_sp->statnum == STAT_STANDABLE)
-//        switch (DYNAMICTILEMAP(vm.g_sp->picnum))
+//    if (vm.g_sp.statnum == STAT_STANDABLE)
+//        switch (DYNAMICTILEMAP(vm.g_sp.picnum))
 //        {
 //        case RUBBERCAN__STATIC:
 //        case EXPLODINGBARREL__STATIC:
@@ -5452,17 +5453,17 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //            return;
 //        }
 
-//    if (vm.g_sp->statnum != STAT_ACTOR)
+//    if (vm.g_sp.statnum != STAT_ACTOR)
 //        return;
 
 //    if (A_CheckEnemySprite(vm.g_sp))
 //    {
-//        if (vm.g_sp->xrepeat > 60) return;
-//        if (ud.respawn_monsters == 1 && vm.g_sp->extra <= 0) return;
+//        if (vm.g_sp.xrepeat > 60) return;
+//        if (ud.respawn_monsters == 1 && vm.g_sp.extra <= 0) return;
 //    }
-//    else if (ud.respawn_items == 1 && (vm.g_sp->cstat&32768)) return;
+//    else if (ud.respawn_items == 1 && (vm.g_sp.cstat&32768)) return;
 
-//    if (A_CheckSpriteFlags(vm.g_i, SPRITE_USEACTIVATOR) && sector[vm.g_sp->sectnum].lotag & 16384)
+//    if (A_CheckSpriteFlags(vm.g_i, SPRITE_USEACTIVATOR) && sector[vm.g_sp.sectnum].lotag & 16384)
 //        changespritestat(vm.g_i, STAT_ZOMBIEACTOR);
 //    else if (actor[vm.g_i].timetosleep > 1)
 //        actor[vm.g_i].timetosleep--;
@@ -5475,94 +5476,94 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //    map_t *mapinfo = &MapInfo[ud.volume_number*MAXLEVELS+ud.level_number];
 //    mapstate_t *save;
 
-//    if (mapinfo->savedstate == NULL)
-//        mapinfo->savedstate = (mapstate_t *)Bcalloc(1,sizeof(mapstate_t));
-//    save = mapinfo->savedstate;
+//    if (mapinfo.savedstate == NULL)
+//        mapinfo.savedstate = (mapstate_t *)Bcalloc(1,sizeof(mapstate_t));
+//    save = mapinfo.savedstate;
 
 //    if (save != NULL)
 //    {
 //        int32_t i;
 
-//        Bmemcpy(&save->numwalls,&numwalls,sizeof(numwalls));
-//        Bmemcpy(&save->wall[0],&wall[0],sizeof(walltype)*MAXWALLS);
-//        Bmemcpy(&save->numsectors,&numsectors,sizeof(numsectors));
-//        Bmemcpy(&save->sector[0],&sector[0],sizeof(sectortype)*MAXSECTORS);
-//        Bmemcpy(&save->sprite[0],&sprite[0],sizeof(spritetype)*MAXSPRITES);
+//        Bmemcpy(&save.numwalls,&numwalls,sizeof(numwalls));
+//        Bmemcpy(&save.wall[0],&wall[0],sizeof(walltype)*MAXWALLS);
+//        Bmemcpy(&save.numsectors,&numsectors,sizeof(numsectors));
+//        Bmemcpy(&save.sector[0],&sector[0],sizeof(sectortype)*MAXSECTORS);
+//        Bmemcpy(&save.sprite[0],&sprite[0],sizeof(spritetype)*MAXSPRITES);
 
 //        // If we're in EVENT_ANIMATESPRITES, we'll be saving pointer values to disk :-/
 //#if !defined LUNATIC
 //        if (g_currentEventExec == EVENT_ANIMATESPRITES)
 //            initprintf("Line %d: savemapstate called from EVENT_ANIMATESPRITES. WHY?\n", g_errorLineNum);
 //#endif
-//        Bmemcpy(&save->spriteext[0],&spriteext[0],sizeof(spriteext_t)*MAXSPRITES);
+//        Bmemcpy(&save.spriteext[0],&spriteext[0],sizeof(spriteext_t)*MAXSPRITES);
 
-//        save->numsprites = Numsprites;
-//        save->tailspritefree = tailspritefree;
-//        Bmemcpy(&save->headspritesect[0],&headspritesect[0],sizeof(headspritesect));
-//        Bmemcpy(&save->prevspritesect[0],&prevspritesect[0],sizeof(prevspritesect));
-//        Bmemcpy(&save->nextspritesect[0],&nextspritesect[0],sizeof(nextspritesect));
-//        Bmemcpy(&save->headspritestat[0],&headspritestat[0],sizeof(headspritestat));
-//        Bmemcpy(&save->prevspritestat[0],&prevspritestat[0],sizeof(prevspritestat));
-//        Bmemcpy(&save->nextspritestat[0],&nextspritestat[0],sizeof(nextspritestat));
+//        save.numsprites = Numsprites;
+//        save.tailspritefree = tailspritefree;
+//        Bmemcpy(&save.headspritesect[0],&headspritesect[0],sizeof(headspritesect));
+//        Bmemcpy(&save.prevspritesect[0],&prevspritesect[0],sizeof(prevspritesect));
+//        Bmemcpy(&save.nextspritesect[0],&nextspritesect[0],sizeof(nextspritesect));
+//        Bmemcpy(&save.headspritestat[0],&headspritestat[0],sizeof(headspritestat));
+//        Bmemcpy(&save.prevspritestat[0],&prevspritestat[0],sizeof(prevspritestat));
+//        Bmemcpy(&save.nextspritestat[0],&nextspritestat[0],sizeof(nextspritestat));
 //#ifdef YAX_ENABLE
-//        Bmemcpy(&save->numyaxbunches, &numyaxbunches, sizeof(numyaxbunches));
+//        Bmemcpy(&save.numyaxbunches, &numyaxbunches, sizeof(numyaxbunches));
 //# if !defined NEW_MAP_FORMAT
-//        Bmemcpy(save->yax_bunchnum, yax_bunchnum, sizeof(yax_bunchnum));
-//        Bmemcpy(save->yax_nextwall, yax_nextwall, sizeof(yax_nextwall));
+//        Bmemcpy(save.yax_bunchnum, yax_bunchnum, sizeof(yax_bunchnum));
+//        Bmemcpy(save.yax_nextwall, yax_nextwall, sizeof(yax_nextwall));
 //# endif
 //#endif
-//        Bmemcpy(&save->actor[0],&actor[0],sizeof(actor_t)*MAXSPRITES);
+//        Bmemcpy(&save.actor[0],&actor[0],sizeof(actor_t)*MAXSPRITES);
 
-//        Bmemcpy(&save->g_numCyclers,&g_numCyclers,sizeof(g_numCyclers));
-//        Bmemcpy(&save->cyclers[0][0],&cyclers[0][0],sizeof(cyclers));
-//        Bmemcpy(&save->g_playerSpawnPoints[0],&g_playerSpawnPoints[0],sizeof(g_playerSpawnPoints));
-//        Bmemcpy(&save->g_numAnimWalls,&g_numAnimWalls,sizeof(g_numAnimWalls));
-//        Bmemcpy(&save->SpriteDeletionQueue[0],&SpriteDeletionQueue[0],sizeof(SpriteDeletionQueue));
-//        Bmemcpy(&save->g_spriteDeleteQueuePos,&g_spriteDeleteQueuePos,sizeof(g_spriteDeleteQueuePos));
-//        Bmemcpy(&save->animwall[0],&animwall[0],sizeof(animwall));
-//        Bmemcpy(&save->msx[0],&msx[0],sizeof(msx));
-//        Bmemcpy(&save->msy[0],&msy[0],sizeof(msy));
-//        Bmemcpy(&save->g_mirrorWall[0],&g_mirrorWall[0],sizeof(g_mirrorWall));
-//        Bmemcpy(&save->g_mirrorSector[0],&g_mirrorSector[0],sizeof(g_mirrorSector));
-//        Bmemcpy(&save->g_mirrorCount,&g_mirrorCount,sizeof(g_mirrorCount));
-//        Bmemcpy(&save->show2dsector[0],&show2dsector[0],sizeof(show2dsector));
-//        Bmemcpy(&save->g_numClouds,&g_numClouds,sizeof(g_numClouds));
-//        Bmemcpy(&save->clouds[0],&clouds[0],sizeof(clouds));
-//        Bmemcpy(&save->cloudx[0],&cloudx[0],sizeof(cloudx));
-//        Bmemcpy(&save->cloudy[0],&cloudy[0],sizeof(cloudy));
-//        Bmemcpy(&save->pskyoff[0],&pskyoff[0],sizeof(pskyoff));
-//        Bmemcpy(&save->pskybits,&pskybits,sizeof(pskybits));
-//        Bmemcpy(&save->animategoal[0],&animategoal[0],sizeof(animategoal));
-//        Bmemcpy(&save->animatevel[0],&animatevel[0],sizeof(animatevel));
-//        Bmemcpy(&save->g_animateCount,&g_animateCount,sizeof(g_animateCount));
-//        Bmemcpy(&save->animatesect[0],&animatesect[0],sizeof(animatesect));
+//        Bmemcpy(&save.g_numCyclers,&g_numCyclers,sizeof(g_numCyclers));
+//        Bmemcpy(&save.cyclers[0][0],&cyclers[0][0],sizeof(cyclers));
+//        Bmemcpy(&save.g_playerSpawnPoints[0],&g_playerSpawnPoints[0],sizeof(g_playerSpawnPoints));
+//        Bmemcpy(&save.g_numAnimWalls,&g_numAnimWalls,sizeof(g_numAnimWalls));
+//        Bmemcpy(&save.SpriteDeletionQueue[0],&SpriteDeletionQueue[0],sizeof(SpriteDeletionQueue));
+//        Bmemcpy(&save.g_spriteDeleteQueuePos,&g_spriteDeleteQueuePos,sizeof(g_spriteDeleteQueuePos));
+//        Bmemcpy(&save.animwall[0],&animwall[0],sizeof(animwall));
+//        Bmemcpy(&save.msx[0],&msx[0],sizeof(msx));
+//        Bmemcpy(&save.msy[0],&msy[0],sizeof(msy));
+//        Bmemcpy(&save.g_mirrorWall[0],&g_mirrorWall[0],sizeof(g_mirrorWall));
+//        Bmemcpy(&save.g_mirrorSector[0],&g_mirrorSector[0],sizeof(g_mirrorSector));
+//        Bmemcpy(&save.g_mirrorCount,&g_mirrorCount,sizeof(g_mirrorCount));
+//        Bmemcpy(&save.show2dsector[0],&show2dsector[0],sizeof(show2dsector));
+//        Bmemcpy(&save.g_numClouds,&g_numClouds,sizeof(g_numClouds));
+//        Bmemcpy(&save.clouds[0],&clouds[0],sizeof(clouds));
+//        Bmemcpy(&save.cloudx[0],&cloudx[0],sizeof(cloudx));
+//        Bmemcpy(&save.cloudy[0],&cloudy[0],sizeof(cloudy));
+//        Bmemcpy(&save.pskyoff[0],&pskyoff[0],sizeof(pskyoff));
+//        Bmemcpy(&save.pskybits,&pskybits,sizeof(pskybits));
+//        Bmemcpy(&save.animategoal[0],&animategoal[0],sizeof(animategoal));
+//        Bmemcpy(&save.animatevel[0],&animatevel[0],sizeof(animatevel));
+//        Bmemcpy(&save.g_animateCount,&g_animateCount,sizeof(g_animateCount));
+//        Bmemcpy(&save.animatesect[0],&animatesect[0],sizeof(animatesect));
 
 //        G_Util_PtrToIdx(animateptr, g_animateCount, sector, P2I_FWD);
-//        Bmemcpy(&save->animateptr[0],&animateptr[0],sizeof(animateptr));
+//        Bmemcpy(&save.animateptr[0],&animateptr[0],sizeof(animateptr));
 //        G_Util_PtrToIdx(animateptr, g_animateCount, sector, P2I_BACK);
 
-//        Bmemcpy(&save->g_numPlayerSprites,&g_numPlayerSprites,sizeof(g_numPlayerSprites));
-//        Bmemcpy(&save->g_earthquakeTime,&g_earthquakeTime,sizeof(g_earthquakeTime));
-//        Bmemcpy(&save->lockclock,&lockclock,sizeof(lockclock));
-//        Bmemcpy(&save->randomseed,&randomseed,sizeof(randomseed));
-//        Bmemcpy(&save->g_globalRandom,&g_globalRandom,sizeof(g_globalRandom));
+//        Bmemcpy(&save.g_numPlayerSprites,&g_numPlayerSprites,sizeof(g_numPlayerSprites));
+//        Bmemcpy(&save.g_earthquakeTime,&g_earthquakeTime,sizeof(g_earthquakeTime));
+//        Bmemcpy(&save.lockclock,&lockclock,sizeof(lockclock));
+//        Bmemcpy(&save.randomseed,&randomseed,sizeof(randomseed));
+//        Bmemcpy(&save.g_globalRandom,&g_globalRandom,sizeof(g_globalRandom));
 //#if !defined LUNATIC
 //        for (i=g_gameVarCount-1; i>=0; i--)
 //        {
 //            if (aGameVars[i].dwFlags & GAMEVAR_NORESET) continue;
 //            if (aGameVars[i].dwFlags & GAMEVAR_PERPLAYER)
 //            {
-//                if (!save->vars[i])
-//                    save->vars[i] = (intptr_t *)Bcalloc(MAXPLAYERS,sizeof(intptr_t));
-//                Bmemcpy(&save->vars[i][0],&aGameVars[i].val.plValues[0],sizeof(intptr_t) * MAXPLAYERS);
+//                if (!save.vars[i])
+//                    save.vars[i] = (intptr_t *)Bcalloc(MAXPLAYERS,sizeof(intptr_t));
+//                Bmemcpy(&save.vars[i][0],&aGameVars[i].val.plValues[0],sizeof(intptr_t) * MAXPLAYERS);
 //            }
 //            else if (aGameVars[i].dwFlags & GAMEVAR_PERACTOR)
 //            {
-//                if (!save->vars[i])
-//                    save->vars[i] = (intptr_t *)Bcalloc(MAXSPRITES,sizeof(intptr_t));
-//                Bmemcpy(&save->vars[i][0],&aGameVars[i].val.plValues[0],sizeof(intptr_t) * MAXSPRITES);
+//                if (!save.vars[i])
+//                    save.vars[i] = (intptr_t *)Bcalloc(MAXSPRITES,sizeof(intptr_t));
+//                Bmemcpy(&save.vars[i][0],&aGameVars[i].val.plValues[0],sizeof(intptr_t) * MAXSPRITES);
 //            }
-//            else save->vars[i] = (intptr_t *)aGameVars[i].val.lValue;
+//            else save.vars[i] = (intptr_t *)aGameVars[i].val.lValue;
 //        }
 //#endif
 //        ototalclock = totalclock;
@@ -5579,18 +5580,18 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //        char phealth[MAXPLAYERS];
 
 //        for (i=0; i<playerswhenstarted; i++)
-//            phealth[i] = sprite[g_player[i].ps->i].extra;
+//            phealth[i] = sprite[g_player[i].ps.i].extra;
 
 //        pub = NUMPAGES;
 //        pus = NUMPAGES;
 //        G_UpdateScreenArea();
 
-//        Bmemcpy(&numwalls,&save->numwalls,sizeof(numwalls));
-//        Bmemcpy(&wall[0],&save->wall[0],sizeof(walltype)*MAXWALLS);
-//        Bmemcpy(&numsectors,&save->numsectors,sizeof(numsectors));
-//        Bmemcpy(&sector[0],&save->sector[0],sizeof(sectortype)*MAXSECTORS);
-//        Bmemcpy(&sprite[0],&save->sprite[0],sizeof(spritetype)*MAXSPRITES);
-//        Bmemcpy(&spriteext[0],&save->spriteext[0],sizeof(spriteext_t)*MAXSPRITES);
+//        Bmemcpy(&numwalls,&save.numwalls,sizeof(numwalls));
+//        Bmemcpy(&wall[0],&save.wall[0],sizeof(walltype)*MAXWALLS);
+//        Bmemcpy(&numsectors,&save.numsectors,sizeof(numsectors));
+//        Bmemcpy(&sector[0],&save.sector[0],sizeof(sectortype)*MAXSECTORS);
+//        Bmemcpy(&sprite[0],&save.sprite[0],sizeof(spritetype)*MAXSPRITES);
+//        Bmemcpy(&spriteext[0],&save.spriteext[0],sizeof(spriteext_t)*MAXSPRITES);
 
 //        // If we're restoring from EVENT_ANIMATESPRITES, all spriteext[].tspr
 //        // will be overwritten, so NULL them.
@@ -5602,82 +5603,82 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //                spriteext[i].tspr = NULL;
 //        }
 //#endif
-//        Numsprites = save->numsprites;
-//        tailspritefree = save->tailspritefree;
-//        Bmemcpy(&headspritesect[0],&save->headspritesect[0],sizeof(headspritesect));
-//        Bmemcpy(&prevspritesect[0],&save->prevspritesect[0],sizeof(prevspritesect));
-//        Bmemcpy(&nextspritesect[0],&save->nextspritesect[0],sizeof(nextspritesect));
-//        Bmemcpy(&headspritestat[0],&save->headspritestat[0],sizeof(headspritestat));
-//        Bmemcpy(&prevspritestat[0],&save->prevspritestat[0],sizeof(prevspritestat));
-//        Bmemcpy(&nextspritestat[0],&save->nextspritestat[0],sizeof(nextspritestat));
+//        Numsprites = save.numsprites;
+//        tailspritefree = save.tailspritefree;
+//        Bmemcpy(&headspritesect[0],&save.headspritesect[0],sizeof(headspritesect));
+//        Bmemcpy(&prevspritesect[0],&save.prevspritesect[0],sizeof(prevspritesect));
+//        Bmemcpy(&nextspritesect[0],&save.nextspritesect[0],sizeof(nextspritesect));
+//        Bmemcpy(&headspritestat[0],&save.headspritestat[0],sizeof(headspritestat));
+//        Bmemcpy(&prevspritestat[0],&save.prevspritestat[0],sizeof(prevspritestat));
+//        Bmemcpy(&nextspritestat[0],&save.nextspritestat[0],sizeof(nextspritestat));
 //#ifdef YAX_ENABLE
-//        Bmemcpy(&numyaxbunches, &save->numyaxbunches, sizeof(numyaxbunches));
+//        Bmemcpy(&numyaxbunches, &save.numyaxbunches, sizeof(numyaxbunches));
 //# if !defined NEW_MAP_FORMAT
-//        Bmemcpy(yax_bunchnum, save->yax_bunchnum, sizeof(yax_bunchnum));
-//        Bmemcpy(yax_nextwall, save->yax_nextwall, sizeof(yax_nextwall));
+//        Bmemcpy(yax_bunchnum, save.yax_bunchnum, sizeof(yax_bunchnum));
+//        Bmemcpy(yax_nextwall, save.yax_nextwall, sizeof(yax_nextwall));
 //# endif
 //#endif
-//        Bmemcpy(&actor[0],&save->actor[0],sizeof(actor_t)*MAXSPRITES);
+//        Bmemcpy(&actor[0],&save.actor[0],sizeof(actor_t)*MAXSPRITES);
 
-//        Bmemcpy(&g_numCyclers,&save->g_numCyclers,sizeof(g_numCyclers));
-//        Bmemcpy(&cyclers[0][0],&save->cyclers[0][0],sizeof(cyclers));
-//        Bmemcpy(&g_playerSpawnPoints[0],&save->g_playerSpawnPoints[0],sizeof(g_playerSpawnPoints));
-//        Bmemcpy(&g_numAnimWalls,&save->g_numAnimWalls,sizeof(g_numAnimWalls));
-//        Bmemcpy(&SpriteDeletionQueue[0],&save->SpriteDeletionQueue[0],sizeof(SpriteDeletionQueue));
-//        Bmemcpy(&g_spriteDeleteQueuePos,&save->g_spriteDeleteQueuePos,sizeof(g_spriteDeleteQueuePos));
-//        Bmemcpy(&animwall[0],&save->animwall[0],sizeof(animwall));
-//        Bmemcpy(&msx[0],&save->msx[0],sizeof(msx));
-//        Bmemcpy(&msy[0],&save->msy[0],sizeof(msy));
-//        Bmemcpy(&g_mirrorWall[0],&save->g_mirrorWall[0],sizeof(g_mirrorWall));
-//        Bmemcpy(&g_mirrorSector[0],&save->g_mirrorSector[0],sizeof(g_mirrorSector));
-//        Bmemcpy(&g_mirrorCount,&save->g_mirrorCount,sizeof(g_mirrorCount));
-//        Bmemcpy(&show2dsector[0],&save->show2dsector[0],sizeof(show2dsector));
-//        Bmemcpy(&g_numClouds,&save->g_numClouds,sizeof(g_numClouds));
-//        Bmemcpy(&clouds[0],&save->clouds[0],sizeof(clouds));
-//        Bmemcpy(&cloudx[0],&save->cloudx[0],sizeof(cloudx));
-//        Bmemcpy(&cloudy[0],&save->cloudy[0],sizeof(cloudy));
-//        Bmemcpy(&pskyoff[0],&save->pskyoff[0],sizeof(pskyoff));
-//        Bmemcpy(&pskybits,&save->pskybits,sizeof(pskybits));
-//        Bmemcpy(&animategoal[0],&save->animategoal[0],sizeof(animategoal));
-//        Bmemcpy(&animatevel[0],&save->animatevel[0],sizeof(animatevel));
-//        Bmemcpy(&g_animateCount,&save->g_animateCount,sizeof(g_animateCount));
-//        Bmemcpy(&animatesect[0],&save->animatesect[0],sizeof(animatesect));
+//        Bmemcpy(&g_numCyclers,&save.g_numCyclers,sizeof(g_numCyclers));
+//        Bmemcpy(&cyclers[0][0],&save.cyclers[0][0],sizeof(cyclers));
+//        Bmemcpy(&g_playerSpawnPoints[0],&save.g_playerSpawnPoints[0],sizeof(g_playerSpawnPoints));
+//        Bmemcpy(&g_numAnimWalls,&save.g_numAnimWalls,sizeof(g_numAnimWalls));
+//        Bmemcpy(&SpriteDeletionQueue[0],&save.SpriteDeletionQueue[0],sizeof(SpriteDeletionQueue));
+//        Bmemcpy(&g_spriteDeleteQueuePos,&save.g_spriteDeleteQueuePos,sizeof(g_spriteDeleteQueuePos));
+//        Bmemcpy(&animwall[0],&save.animwall[0],sizeof(animwall));
+//        Bmemcpy(&msx[0],&save.msx[0],sizeof(msx));
+//        Bmemcpy(&msy[0],&save.msy[0],sizeof(msy));
+//        Bmemcpy(&g_mirrorWall[0],&save.g_mirrorWall[0],sizeof(g_mirrorWall));
+//        Bmemcpy(&g_mirrorSector[0],&save.g_mirrorSector[0],sizeof(g_mirrorSector));
+//        Bmemcpy(&g_mirrorCount,&save.g_mirrorCount,sizeof(g_mirrorCount));
+//        Bmemcpy(&show2dsector[0],&save.show2dsector[0],sizeof(show2dsector));
+//        Bmemcpy(&g_numClouds,&save.g_numClouds,sizeof(g_numClouds));
+//        Bmemcpy(&clouds[0],&save.clouds[0],sizeof(clouds));
+//        Bmemcpy(&cloudx[0],&save.cloudx[0],sizeof(cloudx));
+//        Bmemcpy(&cloudy[0],&save.cloudy[0],sizeof(cloudy));
+//        Bmemcpy(&pskyoff[0],&save.pskyoff[0],sizeof(pskyoff));
+//        Bmemcpy(&pskybits,&save.pskybits,sizeof(pskybits));
+//        Bmemcpy(&animategoal[0],&save.animategoal[0],sizeof(animategoal));
+//        Bmemcpy(&animatevel[0],&save.animatevel[0],sizeof(animatevel));
+//        Bmemcpy(&g_animateCount,&save.g_animateCount,sizeof(g_animateCount));
+//        Bmemcpy(&animatesect[0],&save.animatesect[0],sizeof(animatesect));
 
-//        Bmemcpy(&animateptr[0],&save->animateptr[0],sizeof(animateptr));
+//        Bmemcpy(&animateptr[0],&save.animateptr[0],sizeof(animateptr));
 //        G_Util_PtrToIdx(animateptr, g_animateCount, sector, P2I_BACK);
 
-//        Bmemcpy(&g_numPlayerSprites,&save->g_numPlayerSprites,sizeof(g_numPlayerSprites));
-//        Bmemcpy(&g_earthquakeTime,&save->g_earthquakeTime,sizeof(g_earthquakeTime));
-//        Bmemcpy(&lockclock,&save->lockclock,sizeof(lockclock));
-//        Bmemcpy(&randomseed,&save->randomseed,sizeof(randomseed));
-//        Bmemcpy(&g_globalRandom,&save->g_globalRandom,sizeof(g_globalRandom));
+//        Bmemcpy(&g_numPlayerSprites,&save.g_numPlayerSprites,sizeof(g_numPlayerSprites));
+//        Bmemcpy(&g_earthquakeTime,&save.g_earthquakeTime,sizeof(g_earthquakeTime));
+//        Bmemcpy(&lockclock,&save.lockclock,sizeof(lockclock));
+//        Bmemcpy(&randomseed,&save.randomseed,sizeof(randomseed));
+//        Bmemcpy(&g_globalRandom,&save.g_globalRandom,sizeof(g_globalRandom));
 //#if !defined LUNATIC
 //        for (i=g_gameVarCount-1; i>=0; i--)
 //        {
 //            if (aGameVars[i].dwFlags & GAMEVAR_NORESET) continue;
 //            if (aGameVars[i].dwFlags & GAMEVAR_PERPLAYER)
 //            {
-//                if (!save->vars[i]) continue;
-//                Bmemcpy(&aGameVars[i].val.plValues[0],&save->vars[i][0],sizeof(intptr_t) * MAXPLAYERS);
+//                if (!save.vars[i]) continue;
+//                Bmemcpy(&aGameVars[i].val.plValues[0],&save.vars[i][0],sizeof(intptr_t) * MAXPLAYERS);
 //            }
 //            else if (aGameVars[i].dwFlags & GAMEVAR_PERACTOR)
 //            {
-//                if (!save->vars[i]) continue;
-//                Bmemcpy(&aGameVars[i].val.plValues[0],&save->vars[i][0],sizeof(intptr_t) * MAXSPRITES);
+//                if (!save.vars[i]) continue;
+//                Bmemcpy(&aGameVars[i].val.plValues[0],&save.vars[i][0],sizeof(intptr_t) * MAXSPRITES);
 //            }
-//            else aGameVars[i].val.lValue = (intptr_t)save->vars[i];
+//            else aGameVars[i].val.lValue = (intptr_t)save.vars[i];
 //        }
 
 //        Gv_RefreshPointers();
 //#endif
 //        for (i=0; i<playerswhenstarted; i++)
-//            sprite[g_player[i].ps->i].extra = phealth[i];
+//            sprite[g_player[i].ps.i].extra = phealth[i];
 
-//        if (g_player[myconnectindex].ps->over_shoulder_on != 0)
+//        if (g_player[myconnectindex].ps.over_shoulder_on != 0)
 //        {
 //            CAMERADIST = 0;
 //            CAMERACLOCK = 0;
-//            g_player[myconnectindex].ps->over_shoulder_on = 1;
+//            g_player[myconnectindex].ps.over_shoulder_on = 1;
 //        }
 
 //        screenpeek = myconnectindex;

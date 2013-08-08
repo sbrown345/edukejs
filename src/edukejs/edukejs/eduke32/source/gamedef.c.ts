@@ -45,6 +45,7 @@
 /// <reference path="../../eduke32/headers/sounds.h.ts" />
 /// <reference path="../../eduke32/headers/soundsdyn.h.ts" />
 
+/// <reference path="../../eduke32/source/actors.c.ts" />
 /// <reference path="../../eduke32/source/astub.c.ts" />
 /// <reference path="../../eduke32/source/common.c.ts" />
 /// <reference path="../../eduke32/source/config.c.ts" />

@@ -42,6 +42,7 @@
 /// <reference path="../../eduke32/headers/premap.h.ts" />
 /// <reference path="../../eduke32/headers/quotes.h.ts" />
 
+/// <reference path="../../eduke32/source/actors.c.ts" />
 /// <reference path="../../eduke32/source/astub.c.ts" />
 /// <reference path="../../eduke32/source/common.c.ts" />
 /// <reference path="../../eduke32/source/config.c.ts" />
@@ -112,37 +113,37 @@ var g_halveScreenArea = 0;//int32_t
 
 var g_whichPalForPlayer = 9;//static int32_t 
 
-var precachehightile: Uint8Array = multiDimArray<Uint8Array>(Uint8Array, 2, MAXTILES>>3); //static uint8_t 
+var precachehightile: Uint8Array[] = multiDimArray<Uint8Array>(Uint8Array, 2, MAXTILES>>3); //static uint8_t 
 var g_precacheCount = 0; //static int32_t  
 
 var g_levelTextTime = 0; //extern int32_t 
  
-//static void flag_precache(int32_t tile, int32_t type)
-//{
-//    if (!(gotpic[tile>>3] & pow2char[tile&7]))
-//        g_precacheCount++;
-//    gotpic[tile>>3] |= pow2char[tile&7];
-//    precachehightile[type][tile>>3] |= pow2char[tile&7];
-//}
+function flag_precache(/*int32_t*/ tile: number, /*int32_t*/ type: number): void
+{
+    if (!(gotpic[tile>>3] & pow2char[tile&7]))
+        g_precacheCount++;
+    gotpic[tile>>3] |= pow2char[tile&7];
+    precachehightile[type][tile>>3] |= pow2char[tile&7];
+}
 
-//static void tloadtile(int32_t tilenume, int32_t type)
-//{
-//    int32_t i,j;
+function tloadtile(/*int32_t */tilenume: number, /*int32_t */type: number): void
+{
+    var i: number,j: number;
 
-//    if ((picanm[tilenume].sf&PICANM_ANIMTYPE_MASK)==PICANM_ANIMTYPE_BACK)
-//    {
-//        i = tilenume - picanm[tilenume].num;
-//        j = tilenume;
-//    }
-//    else
-//    {
-//        i = tilenume;
-//        j = tilenume + picanm[tilenume].num;
-//    }
+    if ((picanm[tilenume].sf&PICANM_ANIMTYPE_MASK)==PICANM_ANIMTYPE_BACK)
+    {
+        i = tilenume - picanm[tilenume].num;
+        j = tilenume;
+    }
+    else
+    {
+        i = tilenume;
+        j = tilenume + picanm[tilenume].num;
+    }
 
-//    for (; i<=j; i++)
-//        flag_precache(i, type);
-//}
+    for (; i<=j; i++)
+        flag_precache(i, type);
+}
 
 //static void G_CacheSpriteNum(int32_t i)
 //{
@@ -153,11 +154,11 @@ var g_levelTextTime = 0; //extern int32_t
 
 //    maxc = 1;
 
-//    if (g_tile[PN].cacherange >= PN)
-//        for (j = PN; j <= g_tile[PN].cacherange; j++)
+//    if (g_tile[sprite[i].picnum].cacherange >= sprite[i].picnum)
+//        for (j = sprite[i].picnum; j <= g_tile[sprite[i].picnum].cacherange; j++)
 //            tloadtile(j,1);
 
-//    switch (DYNAMICTILEMAP(PN))
+//    switch (DYNAMICTILEMAP(sprite[i].picnum))
 //    {
 //    case HYDRENT__STATIC:
 //        tloadtile(BROKEFIREHYDRENT,1);
@@ -280,7 +281,7 @@ var g_levelTextTime = 0; //extern int32_t
 
 //    }
 
-//    for (j = PN; j < (PN+maxc); j++) tloadtile(j,1);
+//    for (j = sprite[i].picnum; j < (sprite[i].picnum+maxc); j++) tloadtile(j,1);
 //}
 
 //static void G_PrecacheSprites(void)
@@ -633,11 +634,11 @@ function G_DoLoadScreen(statustext: string, percent: number): void
 //    setviewtotile(wn,tilesizy[wn],tilesizx[wn]);
 
 //    yax_preparedrawrooms();
-//    drawrooms(SX,SY,SZ,SA,100+sprite[i].shade,SECT);
-//    yax_drawrooms(G_DoSpriteAnimations, SECT, 0, 65536);
+//    drawrooms(sprite[i].x,sprite[i].y,SZ,sprite[i].ang,100+sprite[i].shade,sprite[i].sectnum);
+//    yax_drawrooms(G_DoSpriteAnimations, sprite[i].sectnum, 0, 65536);
 
 //    display_mirror = 1;
-//    G_DoSpriteAnimations(SX,SY,SA,65536);
+//    G_DoSpriteAnimations(sprite[i].x,sprite[i].y,sprite[i].ang,65536);
 //    display_mirror = 0;
 //    drawmasks();
 
@@ -938,7 +939,7 @@ function P_ResetWeapons(/*int32_t*/ snum: number): void
 
     p.weapon_pos = WEAPON_POS_START;
     p.curr_weapon = PISTOL_WEAPON;
-    p.kickback_pic = PWEAPON(snum, p.curr_weapon, TotalTime);
+    p.kickback_pic = PWEAPON(snum, p.curr_weapon, "TotalTime");
     p.gotweapon = ((1<<PISTOL_WEAPON) | (1<<KNEE_WEAPON) | (1<<HANDREMOTE_WEAPON));
     p.ammo_amount[PISTOL_WEAPON] = min(p.max_ammo_amount[PISTOL_WEAPON], 48);
     p.last_weapon = -1;
@@ -984,9 +985,9 @@ function resetprestat(/*int32_t*/ snum: number,/*int32_t */g: number): void
 
     P_ResetTintFade(p);
 
-    if ((PWEAPON(snum, p.curr_weapon, WorksLike) == PISTOL_WEAPON) &&
-            (PWEAPON(snum, p.curr_weapon, Reload) > PWEAPON(snum, p.curr_weapon, TotalTime)))
-        p.kickback_pic  = PWEAPON(snum, p.curr_weapon, TotalTime);
+    if ((PWEAPON(snum, p.curr_weapon, "WorksLike") == PISTOL_WEAPON) &&
+            (PWEAPON(snum, p.curr_weapon, "Reload") > PWEAPON(snum, p.curr_weapon, "TotalTime")))
+        p.kickback_pic  = PWEAPON(snum, p.curr_weapon, "TotalTime");
     else p.kickback_pic = 0;
 
     p.last_weapon = -1;
@@ -1083,11 +1084,11 @@ function resetprestat(/*int32_t*/ snum: number,/*int32_t */g: number): void
 //// tweak moving sectors with these SE lotags
 //#define FIXSPR_SELOTAGP(k) ((k==0) || (k==6) || (k==14))
 
-//// Set up sprites in moving sectors that are to be fixed wrt a certain pivot
-//// position and should not diverge from it due to roundoff error in the future.
-//// Has to be after the spawning stuff.
-//static void G_SetupRotfixedSprites(void)
-//{
+// Set up sprites in moving sectors that are to be fixed wrt a certain pivot
+// position and should not diverge from it due to roundoff error in the future.
+// Has to be after the spawning stuff.
+function G_SetupRotfixedSprites(): void
+{todoThrow();
 //    int32_t i;
 
 //    for (i=headspritestat[STAT_EFFECTOR]; i>=0; i=nextspritestat[i])
@@ -1133,7 +1134,7 @@ function resetprestat(/*int32_t*/ snum: number,/*int32_t */g: number): void
 //            }
 //        }
 //    }
-//}
+}
 
 function prelevel(/*char*/ g: number): void
 {
@@ -1211,13 +1212,13 @@ function prelevel(/*char*/ g: number): void
         VM_OnEvent(EVENT_LOADACTOR, i, -1, -1, 0);
         if (sprite[i].lotag == UINT16_MAX && (sprite[i].cstat&16))
         {
-            g_player[0].ps.exitx = SX;
-            g_player[0].ps.exity = SY;
+            g_player[0].ps.exitx = sprite[i].x;
+            g_player[0].ps.exity = sprite[i].y;
         }
-        else switch (DYNAMICTILEMAP(PN))
+        else switch (DYNAMICTILEMAP(sprite[i].picnum))
             {
             case GPSPEED__STATIC:
-                sector[SECT].extra = SLT;
+                sector[sprite[i].sectnum].extra = sprite[i].lotag;
                 A_DeleteSprite(i);
                 break;
 
@@ -1225,14 +1226,14 @@ function prelevel(/*char*/ g: number): void
                 if (g_numCyclers >= MAXCYCLERS)
                 {
                     Bsprintf(tempbuf,"\nToo many cycling sectors (%d max).",MAXCYCLERS);
-                    G_GameExit(tempbuf);
+                    G_GameExit(tempbuf.toString());
                 }
-                cyclers[g_numCyclers][0] = SECT;
-                cyclers[g_numCyclers][1] = SLT;
-                cyclers[g_numCyclers][2] = SS;
-                cyclers[g_numCyclers][3] = sector[SECT].floorshade;
-                cyclers[g_numCyclers][4] = SHT;
-                cyclers[g_numCyclers][5] = (SA == 1536);
+                cyclers[g_numCyclers][0] = sprite[i].sectnum;
+                cyclers[g_numCyclers][1] = sprite[i].lotag;
+                cyclers[g_numCyclers][2] = sprite[i].shade;
+                cyclers[g_numCyclers][3] = sector[sprite[i].sectnum].floorshade;
+                cyclers[g_numCyclers][4] = sprite[i].hitag;
+                cyclers[g_numCyclers][5] = (sprite[i].ang == 1536);
                 g_numCyclers++;
                 A_DeleteSprite(i);
                 break;
@@ -1255,7 +1256,7 @@ function prelevel(/*char*/ g: number): void
     {
         if (sprite[i].statnum < MAXSTATUS)
         {
-            if (PN == SECTOREFFECTOR && SLT == SE_14_SUBWAY_CAR)
+            if (sprite[i].picnum == SECTOREFFECTOR && sprite[i].lotag == SE_14_SUBWAY_CAR)
                 continue;
             A_Spawn(-1,i);
         }
@@ -1264,7 +1265,7 @@ function prelevel(/*char*/ g: number): void
     for (i=0; i < MAXSPRITES; i++)
         if (sprite[i].statnum < MAXSTATUS)
         {
-            if (PN == SECTOREFFECTOR && SLT == SE_14_SUBWAY_CAR)
+            if (sprite[i].picnum == SECTOREFFECTOR && sprite[i].lotag == SE_14_SUBWAY_CAR)
                 A_Spawn(-1,i);
         }
 
@@ -1272,13 +1273,13 @@ function prelevel(/*char*/ g: number): void
 
     for (i=headspritestat[STAT_DEFAULT]; i>=0; i=nextspritestat[i])
     {
-        int32_t ii;
+        var ii: number;
 
-        if (PN <= 0)  // oob safety for switch below
+        if (sprite[i].picnum <= 0)  // oob safety for switch below
             continue;
 
         for (ii=0; ii<2; ii++)
-            switch (DYNAMICTILEMAP(PN-1+ii))
+            switch (DYNAMICTILEMAP(sprite[i].picnum-1+ii))
             {
             case DIPSWITCH__STATIC:
             case DIPSWITCH2__STATIC:
@@ -1307,20 +1308,20 @@ function prelevel(/*char*/ g: number): void
     // initially 'on' SE 12 light (*)
     for (j=headspritestat[STAT_EFFECTOR]; j>=0; j=nextspritestat[j])
     {
-        int32_t t = sprite[j].hitag;
-
+        var t: number = sprite[j].hitag;
+        
         if (sprite[j].lotag == SE_12_LIGHT_SWITCH && tagbitmap[t>>3]&(1<<(t&7)))
             actor[j].t_data[0] = 1;
     }
 
-    Bfree(tagbitmap);
+    //Bfree(tagbitmap);
 
     g_mirrorCount = 0;
 
     for (i = 0; i < numwalls; i++)
     {
-        walltype *wal;
-        wal = &wall[i];
+        var wal;
+        wal = wall[i];
 
         if (wal.overpicnum == MIRROR && (wal.cstat&32) != 0)
         {
@@ -1343,7 +1344,7 @@ function prelevel(/*char*/ g: number): void
         if (g_numAnimWalls >= MAXANIMWALLS)
         {
             Bsprintf(tempbuf,"\nToo many 'anim' walls (%d max).",MAXANIMWALLS);
-            G_GameExit(tempbuf);
+            G_GameExit(tempbuf.toString());
         }
 
         animwall[g_numAnimWalls].tag = 0;
@@ -1361,7 +1362,7 @@ function prelevel(/*char*/ g: number): void
             {
             case FANSHADOW__STATIC:
             case FANSPRITE__STATIC:
-                wall.cstat |= 65;
+                wall[0].cstat |= 65;
                 animwall[g_numAnimWalls].wallnum = i;
                 g_numAnimWalls++;
                 break;
@@ -2033,7 +2034,9 @@ function G_EnterLevel(g: number): number
 
     g_precacheCount = 0;
     Bmemset(new P(gotpic), 0, sizeof(gotpic));
-    Bmemset(precachehightile, 0, sizeof(precachehightile));
+    for (var j = 0; j < precachehightile.length; j++) {
+        Bmemset(new P(precachehightile[i]), 0, sizeof(precachehightile[i]));
+    }
 
     //clearbufbyte(Actor,sizeof(Actor),0l); // JBF 20040531: yes? no?
 

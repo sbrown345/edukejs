@@ -486,49 +486,49 @@ function G_HandleAsync()
 
 //// sector effector lotags
 //enum {
-//    SE_0_ROTATING_SECTOR = 0,
-//    SE_1_PIVOT = 1,
-//    SE_2_EARTHQUAKE = 2,
-//    SE_3_RANDOM_LIGHTS_AFTER_SHOT_OUT = 3,
-//    SE_4_RANDOM_LIGHTS = 4,
-//    SE_5 = 5,
-//    SE_6_SUBWAY = 6,
-//    // ^^ potentially incomplete substitution in code
-//    // vv almost surely complete substitution
-//    SE_7_TELEPORT = 7,
-//    SE_8_UP_OPEN_DOOR_LIGHTS = 8,
-//    SE_9_DOWN_OPEN_DOOR_LIGHTS = 9,
-//    SE_10_DOOR_AUTO_CLOSE = 10,
-//    SE_11_SWINGING_DOOR = 11,
-//    SE_12_LIGHT_SWITCH = 12,
-//    SE_13_EXPLOSIVE = 13,
-//    SE_14_SUBWAY_CAR = 14,
-//    SE_15_SLIDING_DOOR = 15,
-//    SE_16_REACTOR = 16,
-//    SE_17_WARP_ELEVATOR = 17,
-//    SE_18_INCREMENTAL_SECTOR_RISE_FALL = 18,
-//    SE_19_EXPLOSION_LOWERS_CEILING = 19,
-//    SE_20_STRETCH_BRIDGE = 20,
-//    SE_21_DROP_FLOOR = 21,
-//    SE_22_TEETH_DOOR = 22,
-//    SE_23_ONE_WAY_TELEPORT = 23,
-//    SE_24_CONVEYOR = 24,
-//    SE_25_PISTON = 25,
-//    SE_26 = 26,
-//    SE_27_DEMO_CAM = 27,
-//    SE_28_LIGHTNING = 28,
-//    SE_29_WAVES = 29,
-//    SE_30_TWO_WAY_TRAIN = 30,
-//    SE_31_FLOOR_RISE_FALL = 31,
-//    SE_32_CEILING_RISE_FALL = 32,
-//    SE_33_QUAKE_DEBRIS = 33,
-//    SE_34 = 34,  // XXX
-//    SE_35 = 35,  // XXX
-//    SE_36_PROJ_SHOOTER = 36,
-//    SE_49_POINT_LIGHT = 49,
-//    SE_50_SPOT_LIGHT = 50,
-//    SE_130 = 130,
-//    SE_131 = 131,
+var SE_0_ROTATING_SECTOR = 0,
+    SE_1_PIVOT = 1,
+    SE_2_EARTHQUAKE = 2,
+    SE_3_RANDOM_LIGHTS_AFTER_SHOT_OUT = 3,
+    SE_4_RANDOM_LIGHTS = 4,
+    SE_5 = 5,
+    SE_6_SUBWAY = 6,
+    // ^^ potentially incomplete substitution in code
+    // vv almost surely complete substitution
+    SE_7_TELEPORT = 7,
+    SE_8_UP_OPEN_DOOR_LIGHTS = 8,
+    SE_9_DOWN_OPEN_DOOR_LIGHTS = 9,
+    SE_10_DOOR_AUTO_CLOSE = 10,
+    SE_11_SWINGING_DOOR = 11,
+    SE_12_LIGHT_SWITCH = 12,
+    SE_13_EXPLOSIVE = 13,
+    SE_14_SUBWAY_CAR = 14,
+    SE_15_SLIDING_DOOR = 15,
+    SE_16_REACTOR = 16,
+    SE_17_WARP_ELEVATOR = 17,
+    SE_18_INCREMENTAL_SECTOR_RISE_FALL = 18,
+    SE_19_EXPLOSION_LOWERS_CEILING = 19,
+    SE_20_STRETCH_BRIDGE = 20,
+    SE_21_DROP_FLOOR = 21,
+    SE_22_TEETH_DOOR = 22,
+    SE_23_ONE_WAY_TELEPORT = 23,
+    SE_24_CONVEYOR = 24,
+    SE_25_PISTON = 25,
+    SE_26 = 26,
+    SE_27_DEMO_CAM = 27,
+    SE_28_LIGHTNING = 28,
+    SE_29_WAVES = 29,
+    SE_30_TWO_WAY_TRAIN = 30,
+    SE_31_FLOOR_RISE_FALL = 31,
+    SE_32_CEILING_RISE_FALL = 32,
+    SE_33_QUAKE_DEBRIS = 33,
+    SE_34 = 34,  // XXX
+    SE_35 = 35,  // XXX
+    SE_36_PROJ_SHOOTER = 36,
+    SE_49_POINT_LIGHT = 49,
+    SE_50_SPOT_LIGHT = 50,
+    SE_130 = 130,
+    SE_131 = 131;
 //};
 
 //// sector lotags
@@ -561,33 +561,33 @@ var ST_1_ABOVE_WATER = 1,
 //// KEEPINSYNC game.c: char CheatStrings[][]
 //enum cheatindex_t
 //{
-//    CHEAT_CORNHOLIO,  // 0
-//    CHEAT_STUFF,
-//    CHEAT_SCOTTY,
-//    CHEAT_COORDS,
-//    CHEAT_VIEW,
-//    CHEAT_TIME,  // 5
-//    CHEAT_UNLOCK,
-//    CHEAT_CASHMAN,
-//    CHEAT_ITEMS,
-//    CHEAT_RATE,
-//    CHEAT_SKILL,  // 10
-//    CHEAT_BETA,
-//    CHEAT_HYPER,
-//    CHEAT_MONSTERS,
-//    CHEAT_RESERVED,
-//    CHEAT_RESERVED2,  // 15
-//    CHEAT_TODD,
-//    CHEAT_SHOWMAP,
-//    CHEAT_KROZ,
-//    CHEAT_ALLEN,
-//    CHEAT_CLIP,  // 20
-//    CHEAT_WEAPONS,
-//    CHEAT_INVENTORY,
-//    CHEAT_KEYS,
-//    CHEAT_DEBUG,
-//    CHEAT_RESERVED3,  // 25
-//    CHEAT_COMEGETSOME,
+var CHEAT_CORNHOLIO=0,  // 0
+    CHEAT_STUFF=1,
+    CHEAT_SCOTTY=2,
+    CHEAT_COORDS=3,
+    CHEAT_VIEW=4,
+    CHEAT_TIME=5,  // 5
+    CHEAT_UNLOCK=6,
+    CHEAT_CASHMAN=7,
+    CHEAT_ITEMS=8,
+    CHEAT_RATE=9,
+    CHEAT_SKILL=10,  // 10
+    CHEAT_BETA=11,
+    CHEAT_HYPER=12,
+    CHEAT_MONSTERS=13,
+    CHEAT_RESERVED=14,
+    CHEAT_RESERVED2=15,  // 15
+    CHEAT_TODD=16,
+    CHEAT_SHOWMAP=17,
+    CHEAT_KROZ=18,
+    CHEAT_ALLEN=19,
+    CHEAT_CLIP=20,  // 20
+    CHEAT_WEAPONS=21,
+    CHEAT_INVENTORY=22,
+    CHEAT_KEYS=23,
+    CHEAT_DEBUG=24,
+    CHEAT_RESERVED3=25,  // 25
+    CHEAT_COMEGETSOME=26;
 //};
 
 

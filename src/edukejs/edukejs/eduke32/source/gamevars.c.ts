@@ -39,6 +39,7 @@
 /// <reference path="../../eduke32/headers/quotes.h.ts" />
 /// <reference path="../../eduke32/headers/soundsdyn.h.ts" />
 
+/// <reference path="../../eduke32/source/actors.c.ts" />
 /// <reference path="../../eduke32/source/astub.c.ts" />
 /// <reference path="../../eduke32/source/common.c.ts" />
 /// <reference path="../../eduke32/source/config.c.ts" />
@@ -596,16 +597,17 @@ function Gv_NewVar(/*const char **/pszLabel : string, /*intptr_t*/ lValue : numb
     return 1;
 }
 
-//void __fastcall A_ResetVars(register int32_t iActor)
-//{
-//    register int32_t i=(MAXGAMEVARS-1);
-//    do
-//    {
-//        if ((aGameVars[i].dwFlags & (GAMEVAR_PERACTOR|GAMEVAR_NODEFAULT)) == GAMEVAR_PERACTOR)
-//            aGameVars[i].val.plValues[iActor]=aGameVars[i].lDefault;
-//    }
-//    while (i--);
-//}
+function A_ResetVars(/*register int32_t */iActor: number): void
+{
+    todoThrow();
+    //register int32_t i=(MAXGAMEVARS-1);
+    //do
+    //{
+    //    if ((aGameVars[i].dwFlags & (GAMEVAR_PERACTOR|GAMEVAR_NODEFAULT)) == GAMEVAR_PERACTOR)
+    //        aGameVars[i].val.plValues[iActor]=aGameVars[i].lDefault;
+    //}
+    //while (i--);
+}
 
 //static int32_t Gv_GetVarIndex(const char *szGameLabel)
 //{

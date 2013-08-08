@@ -66,7 +66,7 @@ var myconnectindex: number = 0, numplayers: number;
 //G_EXTERN actor_t actor[MAXSPRITES];
 //// g_tile: tile-specific data THAT DOES NOT CHANGE during the course of a game
 //G_EXTERN tiledata_t g_tile[MAXTILES];
-//G_EXTERN animwalltype animwall[MAXANIMWALLS];
+var animwall: animwalltype[] = newStructArray<animwalltype>(animwalltype, MAXANIMWALLS);//G_EXTERN [MAXANIMWALLS]
 var ScriptQuotes: Uint8Array[] = new Array<Uint8Array>(MAXQUOTES),ScriptQuoteRedefinitions: Uint8Array[] = new Array<Uint8Array>(MAXQUOTES); ////G_EXTERN char *
 var label : Uint8Array;//G_EXTERN char *label;
 var EnvMusicFilename: string[] = new Array<string>(MAXVOLUMES+1);//[MAXVOLUMES+1][BMAX_PATH];
@@ -89,7 +89,7 @@ var SpriteDeletionQueue = new Int16Array(1024),g_spriteDeleteQueuePos: number; /
 var camsprite: number;//G_EXTERN int16_t
 var cyclers = multiDimArray(Int16Array, MAXCYCLERS, 6),g_numCyclers: number; //G_EXTERN int16_t 
 var g_globalRandom: number;//G_EXTERN int16_t 
-//G_EXTERN int16_t g_mirrorWall[64],g_mirrorSector[64],g_mirrorCount: number;
+var g_mirrorWall = new Int16Array(64),g_mirrorSector= new Int16Array(64),g_mirrorCount: number; //G_EXTERN int16_t 
 var g_numAnimWalls: number; //G_EXTERN int16_t 
 var g_numClouds: number,clouds = new Int16Array(128),cloudx = new Int16Array(128),cloudy = new Int16Array(128); //G_EXTERN int16_t 
 var myang: number,omyang: number,mycursectnum: number,myjumpingcounter: number;  //G_EXTERN int16_t 
@@ -118,8 +118,8 @@ var g_tripbombLaserMode:number;////G_EXTERN int32_t
 var neartaghitdist:number,lockclock:number,g_startArmorAmount:number;//G_EXTERN int32_t
 var playerswhenstarted : number; ////G_EXTERN int32_t
 var screenpeek: number;
-//G_EXTERN int32_t startofdynamicinterpolations;
-//G_EXTERN int32_t vel,svel,angvel,horiz,ototalclock;
+var startofdynamicinterpolations: number;         //G_EXTERN int32_t 
+var vel: number,svel: number,angvel: number,horiz: number,ototalclock: number;    //G_EXTERN int32_t 
 //G_EXTERN intptr_t *g_parsingActorPtr;
 //G_EXTERN intptr_t *g_scriptPtr,*insptr;
 var labelcode: Int32Array, labeltype: Int32Array;//G_EXTERN int32_t *labelcode,*labeltype;
@@ -135,8 +135,8 @@ var MapInfo: map_t[] = newStructArray(map_t, (MAXVOLUMES+1)*MAXLEVELS);  // +1 v
 //G_EXTERN projectile_t ProjectileData[MAXTILES];
 //G_EXTERN projectile_t SpriteProjectile[MAXSPRITES];
 //G_EXTERN sound_t g_sounds[MAXSOUNDS];
-//G_EXTERN uint32_t everyothertime;
-//G_EXTERN uint32_t g_moveThingsCount;
+var everyothertime: number;   ////G_EXTERN uint32_t
+var g_moveThingsCount: number;////G_EXTERN uint32_t
 //G_EXTERN vec3_t my,omy,myvel;
 //G_EXTERN volatile char g_soundlocks[MAXSOUNDS];
 var  g_restorePalette=0;  //G_EXTERN int32_t

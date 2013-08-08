@@ -32,9 +32,9 @@ var MAXCYCLERS     = 1024;
 var MAXANIMATES    = 256;
 var MAXANIMWALLS   = 512;
 
-//typedef struct {
-//    int16_t wallnum, tag;
-//} animwalltype;
+class animwalltype {
+    wallnum: number; tag: number; //int16_t
+}
 
 class mapstate_t {
 //    // this needs to have a copy of everything related to the map/actor state

@@ -866,7 +866,7 @@ var numyaxbunches: number;//EXTERN int32_t
 ////   for (i=headsectbunch[1][bunchnum]; i!=-1; i=nextsectbunch[1][i])
 ////       <do stuff with sector i...>
 
-var headsectbunch = multiDimArray<Int16Array>(Int16Array, 2, YAX_MAXBUNCHES), nextsectbunch = multiDimArray<Int16Array>(Int16Array, 2, MAXSECTORS);
+var headsectbunch: Int16Array[] = multiDimArray<Int16Array>(Int16Array, 2, YAX_MAXBUNCHES), nextsectbunch: Int16Array[] = multiDimArray<Int16Array>(Int16Array, 2, MAXSECTORS);
 //#endif
 
 var Numsprites: number; //EXTERN int32_t

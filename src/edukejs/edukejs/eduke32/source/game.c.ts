@@ -36,6 +36,7 @@
 /// <reference path="../../eduke32/headers/player.h.ts" />
 /// <reference path="../../eduke32/headers/quotes.h.ts" />
 
+/// <reference path="../../eduke32/source/actors.c.ts" />
 /// <reference path="../../eduke32/source/astub.c.ts" />
 /// <reference path="../../eduke32/source/common.c.ts" />
 /// <reference path="../../eduke32/source/config.c.ts" />
@@ -5015,12 +5016,12 @@ var ror_protectedsectors = new Uint8Array(MAXSECTORS);
 //# define Yax_SetBunchInterpolation(sectnum, cf)
 //#endif
 
-//// A_Spawn has two forms with arguments having different meaning:
-////
-//// 1. j>=0: Spawn from parent sprite <j> with picnum <pn>
-//// 2. j<0: Spawn from already *existing* sprite <pn>
-//int32_t A_Spawn(int32_t j, int32_t pn)
-//{
+// A_Spawn has two forms with arguments having different meaning:
+//
+// 1. j>=0: Spawn from parent sprite <j> with picnum <pn>
+// 2. j<0: Spawn from already *existing* sprite <pn>
+function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
+{todoThrow();return 999999999999999999999999999999999999999999999;
 //    int32_t i, s, startwall, endwall, sect;
 //    spritetype *sp;
 
@@ -6990,7 +6991,7 @@ var ror_protectedsectors = new Uint8Array(MAXSECTORS);
 //    }
 
 //    return i;
-//}
+}
 
 //static int32_t G_MaybeTakeOnFloorPal(spritetype *datspr, int32_t sect)
 //{

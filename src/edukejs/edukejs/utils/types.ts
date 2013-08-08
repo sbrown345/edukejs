@@ -25,7 +25,7 @@ var uint8 = function (v: number): number {
 };
 
 var int32 = function (v: number): number {
-    return v | 0;
+    return v | 0;   
 };
 
 var uint32 = function (v: number): number {
@@ -34,7 +34,7 @@ var uint32 = function (v: number): number {
 
 var unsigned = uint32;
 
-function newStructArray($class: any, count: number) {
+function newStructArray<T>($class: any, count: number): T[] {
     var array = new Array(count);
     for (var i = 0; i < count; i++) {
         array[i] = new $class();

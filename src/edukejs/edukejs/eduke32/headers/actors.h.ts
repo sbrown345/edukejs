@@ -145,7 +145,7 @@ var STAT_NETALLOC      = MAXSTATUS-1;
 
 //#pragma pack(push,1)
 //// (+ 40 16 16 4 8 6 8 6 4 20)
-//typedef struct {
+class actor_t {
 //    int32_t t_data[10];  // 40b sometimes used to hold offsets to con code
 
 //#ifdef LUNATIC
@@ -200,7 +200,7 @@ var STAT_NETALLOC      = MAXSTATUS-1;
 //    /* no padding */
 //#endif
 //#endif
-//} actor_t;
+}
 
 //// this struct needs to match the beginning of actor_t above
 //typedef struct {
@@ -234,20 +234,19 @@ var STAT_NETALLOC      = MAXSTATUS-1;
 //} netactor_t;
 //#pragma pack(pop)
 
-function tiledata_t () {
+class tiledata_t {
+    public static size = 80;
 //#if !defined LUNATIC
-//    intptr_t *execPtr; // pointer to CON script for this tile, formerly actorscrptr
-//    intptr_t *loadPtr; // pointer to load time CON script, formerly actorLoadEventScrPtr or something
+    execPtr: number; //    intptr_t *// pointer to CON script for this tile, formerly actorscrptr
+    loadPtr: number; //    intptr_t *// pointer to load time CON script, formerly actorLoadEventScrPtr or something
 //#endif
-//    uint32_t flags;    // formerly SpriteFlags, ActorType
+    flags: number;//    uint32_t     // formerly SpriteFlags, ActorType
 
-//    int32_t cacherange; // formerly SpriteCache
+    cacherange: number;//    int32_t ; // formerly SpriteCache
 
 //    // todo: make this a pointer and allocate at runtime
 //    projectile_t defproj;
 } //tiledata_t;
-
-tiledata_t.prototype.size = 80;
 
 //// KEEPINSYNC lunatic/con_lang.lua
 //enum sflags_t {
@@ -301,8 +300,8 @@ var SPRITE_SHADOW           = 0x00000001,
 //    PROJECTILE_ACCURATE            = 0x00100000,
 //};
 
-var g_tile = newStructArray(tiledata_t, MAXTILES);
-//extern actor_t          actor[MAXSPRITES];
+var g_tile: tiledata_t[] = newStructArray(tiledata_t, MAXTILES);
+var actor: actor_t[] = newStructArray<actor_t>(actor_t, MAXSPRITES);//extern actor_t          
 //extern int32_t          block_deletesprite;
 //extern int32_t          g_noEnemies;
 //extern int32_t          otherp;

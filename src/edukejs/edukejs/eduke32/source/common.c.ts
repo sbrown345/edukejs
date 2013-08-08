@@ -35,6 +35,7 @@
 /// <reference path="../../eduke32/headers/player.h.ts" />
 /// <reference path="../../eduke32/headers/quotes.h.ts" />
 
+/// <reference path="../../eduke32/source/actors.c.ts" />
 /// <reference path="../../eduke32/source/astub.c.ts" />
 /// <reference path="../../eduke32/source/config.c.ts" />
 /// <reference path="../../eduke32/source/game.c.ts" />

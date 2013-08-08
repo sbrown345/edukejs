@@ -639,7 +639,7 @@ function yax_update(/*int32_t*/ resetstat: number): void
             yax_bunchnum[i][1] = fb.$;
         }
 //#endif
-
+        
         if (cb.$ >= 0)
         {
 //#if !defined NEW_MAP_FORMAT
@@ -655,9 +655,9 @@ function yax_update(/*int32_t*/ resetstat: number): void
                     //}
                 }
 //#endif
-            if (headsectbunch[0][cb] == -1)
+            if (headsectbunch[0][cb.$] == -1)
             {
-                headsectbunch[0][cb] = i;
+                headsectbunch[0][cb.$] = i;
                 // not duplicated in floors, since every extended ceiling
                 // must have a corresponding floor:
                 if (resetstat==0)
@@ -665,8 +665,8 @@ function yax_update(/*int32_t*/ resetstat: number): void
             }
             else
             {
-                var tmpsect = headsectbunch[0][cb];
-                headsectbunch[0][cb] = i;
+                var tmpsect = headsectbunch[0][cb.$];
+                headsectbunch[0][cb.$] = i;
                 nextsectbunch[0][i] = tmpsect;
             }
         }
