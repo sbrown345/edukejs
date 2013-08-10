@@ -5,7 +5,7 @@
 
 /// <reference path="../../build/headers/baselayer.h.ts" />
 /// <reference path="../../build/headers/build.h.ts" />
-/// <reference path="../../build/headers/cache1d.h.ts" />
+/// <reference path="../../build/healse switch (DYNAMICTders/cache1d.h.ts" />
 /// <reference path="../../build/headers/compat.h.ts" />
 /// <reference path="../../build/headers/engine_priv.h.ts" />
 /// <reference path="../../build/headers/hightile.h.ts" />
@@ -51,6 +51,7 @@
 /// <reference path="../../eduke32/source/player.c.ts" />
 /// <reference path="../../eduke32/source/premap.c.ts" />
 /// <reference path="../../eduke32/source/rts.c.ts" />
+/// <reference path="../../eduke32/source/sector.c.ts" />
 /// <reference path="../../eduke32/source/osdfuncs.c.ts" />
 /// <reference path="../../eduke32/source/soundsdyn.c.ts" />
 /// <reference path="../../eduke32/source/winbits.c.ts" />
@@ -817,8 +818,8 @@ function P_SetGamePalette(player: DukePlayer_t, palid: number, $set: number): vo
 
 //void G_AddCoordsFromRotation(vec2_t *coords, const vec2_t *unitDirection, const int32_t magnitude)
 //{
-//    coords->x += scale(magnitude, unitDirection->x, 16384);
-//    coords->y += scale(magnitude, unitDirection->y, 16384);
+//    coords.x += scale(magnitude, unitDirection.x, 16384);
+//    coords.y += scale(magnitude, unitDirection.y, 16384);
 //}
 
 //// screentext
@@ -1382,7 +1383,7 @@ var minitext_lowercase = 0;         //static int32_t
 //void G_HandleSpecialKeys(void)
 //{
 //    // we need CONTROL_GetInput in order to pick up joystick button presses
-//    if (CONTROL_Started && !(g_player[myconnectindex].ps->gm & MODE_GAME))
+//    if (CONTROL_Started && !(g_player[myconnectindex].ps.gm & MODE_GAME))
 //    {
 //        ControlInfo noshareinfo;
 //        CONTROL_GetInput(&noshareinfo);
@@ -1415,7 +1416,7 @@ var minitext_lowercase = 0;         //static int32_t
 //    }
 
 //    // only dispatch commands here when not in a game
-//    if (!(g_player[myconnectindex].ps->gm & MODE_GAME))
+//    if (!(g_player[myconnectindex].ps.gm & MODE_GAME))
 //        OSD_DispatchQueued();
 
 //    if (g_quickExit == 0 && KB_KeyPressed(sc_LeftControl) && KB_KeyPressed(sc_LeftAlt) && (KB_KeyPressed(sc_Delete)||KB_KeyPressed(sc_End)))
@@ -1506,7 +1507,7 @@ var minitext_lowercase = 0;         //static int32_t
 
 //int32_t A_CheckInventorySprite(spritetype *s)
 //{
-//    switch (DYNAMICTILEMAP(s->picnum))
+//    switch (DYNAMICTILEMAP(s.picnum))
 //    {
 //    case FIRSTAID__STATIC:
 //    case STEROIDS__STATIC:
@@ -1545,7 +1546,7 @@ var minitext_lowercase = 0;         //static int32_t
 //void G_DrawTile(int32_t x, int32_t y, int32_t tilenum, int32_t shade, int32_t orientation)
 //{
 //    DukePlayer_t *ps = g_player[screenpeek].ps;
-//    int32_t p = ps->cursectnum >= 0 ? sector[ps->cursectnum].floorpal : 0;
+//    int32_t p = ps.cursectnum >= 0 ? sector[ps.cursectnum].floorpal : 0;
 
 //    G_DrawTileGeneric(x,y,65536, tilenum,shade,orientation, p);
 //}
@@ -1558,7 +1559,7 @@ var minitext_lowercase = 0;         //static int32_t
 //void G_DrawTileSmall(int32_t x, int32_t y, int32_t tilenum, int32_t shade, int32_t orientation)
 //{
 //    DukePlayer_t *ps = g_player[screenpeek].ps;
-//    int32_t p = ps->cursectnum >= 0 ? sector[ps->cursectnum].floorpal : 0;
+//    int32_t p = ps.cursectnum >= 0 ? sector[ps.cursectnum].floorpal : 0;
 
 //    G_DrawTileGeneric(x,y,32768, tilenum,shade,orientation, p);
 //}
@@ -1700,60 +1701,60 @@ var minitext_lowercase = 0;         //static int32_t
 
 //static void G_DrawWeapAmounts(const DukePlayer_t *p,int32_t x,int32_t y,int32_t u)
 //{
-//    int32_t cw = p->curr_weapon;
+//    int32_t cw = p.curr_weapon;
 
 //    if (u&4)
 //    {
 //        if (u != -1) G_PatchStatusBar(88,178,88+37,178+6); //original code: (96,178,96+12,178+6);
 //        G_DrawWeapNum2(PISTOL_WEAPON,x,y,
-//                       p->ammo_amount[PISTOL_WEAPON],p->max_ammo_amount[PISTOL_WEAPON],
+//                       p.ammo_amount[PISTOL_WEAPON],p.max_ammo_amount[PISTOL_WEAPON],
 //                       12-20*(cw == PISTOL_WEAPON));
 //    }
 //    if (u&8)
 //    {
 //        if (u != -1) G_PatchStatusBar(88,184,88+37,184+6); //original code: (96,184,96+12,184+6);
 //        G_DrawWeapNum2(SHOTGUN_WEAPON,x,y+6,
-//                       p->ammo_amount[SHOTGUN_WEAPON],p->max_ammo_amount[SHOTGUN_WEAPON],
-//                       (((p->gotweapon & (1<<SHOTGUN_WEAPON)) == 0)*9)+12-18*
+//                       p.ammo_amount[SHOTGUN_WEAPON],p.max_ammo_amount[SHOTGUN_WEAPON],
+//                       (((p.gotweapon & (1<<SHOTGUN_WEAPON)) == 0)*9)+12-18*
 //                       (cw == SHOTGUN_WEAPON));
 //    }
 //    if (u&16)
 //    {
 //        if (u != -1) G_PatchStatusBar(88,190,88+37,190+6); //original code: (96,190,96+12,190+6);
 //        G_DrawWeapNum2(CHAINGUN_WEAPON,x,y+12,
-//                       p->ammo_amount[CHAINGUN_WEAPON],p->max_ammo_amount[CHAINGUN_WEAPON],
-//                       (((p->gotweapon & (1<<CHAINGUN_WEAPON)) == 0)*9)+12-18*
+//                       p.ammo_amount[CHAINGUN_WEAPON],p.max_ammo_amount[CHAINGUN_WEAPON],
+//                       (((p.gotweapon & (1<<CHAINGUN_WEAPON)) == 0)*9)+12-18*
 //                       (cw == CHAINGUN_WEAPON));
 //    }
 //    if (u&32)
 //    {
 //        if (u != -1) G_PatchStatusBar(127,178,127+29,178+6); //original code: (135,178,135+8,178+6);
 //        G_DrawWeapNum(RPG_WEAPON,x+39,y,
-//                      p->ammo_amount[RPG_WEAPON],p->max_ammo_amount[RPG_WEAPON],
-//                      (((p->gotweapon & (1<<RPG_WEAPON)) == 0)*9)+12-19*
+//                      p.ammo_amount[RPG_WEAPON],p.max_ammo_amount[RPG_WEAPON],
+//                      (((p.gotweapon & (1<<RPG_WEAPON)) == 0)*9)+12-19*
 //                      (cw == RPG_WEAPON));
 //    }
 //    if (u&64)
 //    {
 //        if (u != -1) G_PatchStatusBar(127,184,127+29,184+6); //original code: (135,184,135+8,184+6);
 //        G_DrawWeapNum(HANDBOMB_WEAPON,x+39,y+6,
-//                      p->ammo_amount[HANDBOMB_WEAPON],p->max_ammo_amount[HANDBOMB_WEAPON],
-//                      (((!p->ammo_amount[HANDBOMB_WEAPON])|((p->gotweapon & (1<<HANDBOMB_WEAPON)) == 0))*9)+12-19*
+//                      p.ammo_amount[HANDBOMB_WEAPON],p.max_ammo_amount[HANDBOMB_WEAPON],
+//                      (((!p.ammo_amount[HANDBOMB_WEAPON])|((p.gotweapon & (1<<HANDBOMB_WEAPON)) == 0))*9)+12-19*
 //                      ((cw == HANDBOMB_WEAPON) || (cw == HANDREMOTE_WEAPON)));
 //    }
 //    if (u&128)
 //    {
 //        if (u != -1) G_PatchStatusBar(127,190,127+29,190+6); //original code: (135,190,135+8,190+6);
 
-//        if (p->subweapon&(1<<GROW_WEAPON))
+//        if (p.subweapon&(1<<GROW_WEAPON))
 //            G_DrawWeapNum(SHRINKER_WEAPON,x+39,y+12,
-//                          p->ammo_amount[GROW_WEAPON],p->max_ammo_amount[GROW_WEAPON],
-//                          (((p->gotweapon & (1<<GROW_WEAPON)) == 0)*9)+12-18*
+//                          p.ammo_amount[GROW_WEAPON],p.max_ammo_amount[GROW_WEAPON],
+//                          (((p.gotweapon & (1<<GROW_WEAPON)) == 0)*9)+12-18*
 //                          (cw == GROW_WEAPON));
 //        else
 //            G_DrawWeapNum(SHRINKER_WEAPON,x+39,y+12,
-//                          p->ammo_amount[SHRINKER_WEAPON],p->max_ammo_amount[SHRINKER_WEAPON],
-//                          (((p->gotweapon & (1<<SHRINKER_WEAPON)) == 0)*9)+12-18*
+//                          p.ammo_amount[SHRINKER_WEAPON],p.max_ammo_amount[SHRINKER_WEAPON],
+//                          (((p.gotweapon & (1<<SHRINKER_WEAPON)) == 0)*9)+12-18*
 //                          (cw == SHRINKER_WEAPON));
 //    }
 //    if (u&256)
@@ -1761,8 +1762,8 @@ var minitext_lowercase = 0;         //static int32_t
 //        if (u != -1) G_PatchStatusBar(158,178,162+29,178+6); //original code: (166,178,166+8,178+6);
 
 //        G_DrawWeapNum(DEVISTATOR_WEAPON,x+70,y,
-//                      p->ammo_amount[DEVISTATOR_WEAPON],p->max_ammo_amount[DEVISTATOR_WEAPON],
-//                      (((p->gotweapon & (1<<DEVISTATOR_WEAPON)) == 0)*9)+12-18*
+//                      p.ammo_amount[DEVISTATOR_WEAPON],p.max_ammo_amount[DEVISTATOR_WEAPON],
+//                      (((p.gotweapon & (1<<DEVISTATOR_WEAPON)) == 0)*9)+12-18*
 //                      (cw == DEVISTATOR_WEAPON));
 //    }
 //    if (u&512)
@@ -1770,8 +1771,8 @@ var minitext_lowercase = 0;         //static int32_t
 //        if (u != -1) G_PatchStatusBar(158,184,162+29,184+6); //original code: (166,184,166+8,184+6);
 
 //        G_DrawWeapNum(TRIPBOMB_WEAPON,x+70,y+6,
-//                      p->ammo_amount[TRIPBOMB_WEAPON],p->max_ammo_amount[TRIPBOMB_WEAPON],
-//                      (((p->gotweapon & (1<<TRIPBOMB_WEAPON)) == 0)*9)+12-18*
+//                      p.ammo_amount[TRIPBOMB_WEAPON],p.max_ammo_amount[TRIPBOMB_WEAPON],
+//                      (((p.gotweapon & (1<<TRIPBOMB_WEAPON)) == 0)*9)+12-18*
 //                      (cw == TRIPBOMB_WEAPON));
 //    }
 
@@ -1780,8 +1781,8 @@ var minitext_lowercase = 0;         //static int32_t
 //        if (u != -1) G_PatchStatusBar(158,190,162+29,190+6); //original code: (166,190,166+8,190+6);
 
 //        G_DrawWeapNum(-1,x+70,y+12,
-//                      p->ammo_amount[FREEZE_WEAPON],p->max_ammo_amount[FREEZE_WEAPON],
-//                      (((p->gotweapon & (1<<FREEZE_WEAPON)) == 0)*9)+12-18*
+//                      p.ammo_amount[FREEZE_WEAPON],p.max_ammo_amount[FREEZE_WEAPON],
+//                      (((p.gotweapon & (1<<FREEZE_WEAPON)) == 0)*9)+12-18*
 //                      (cw == FREEZE_WEAPON));
 //    }
 //}
@@ -1872,19 +1873,19 @@ var minitext_lowercase = 0;         //static int32_t
 //{
 //    int32_t n, j = 0, x = 0, y;
 
-//    n = (p->inv_amount[GET_JETPACK] > 0)<<3;
+//    n = (p.inv_amount[GET_JETPACK] > 0)<<3;
 //    if (n&8) j++;
-//    n |= (p->inv_amount[GET_SCUBA] > 0)<<5;
+//    n |= (p.inv_amount[GET_SCUBA] > 0)<<5;
 //    if (n&32) j++;
-//    n |= (p->inv_amount[GET_STEROIDS] > 0)<<1;
+//    n |= (p.inv_amount[GET_STEROIDS] > 0)<<1;
 //    if (n&2) j++;
-//    n |= (p->inv_amount[GET_HOLODUKE] > 0)<<2;
+//    n |= (p.inv_amount[GET_HOLODUKE] > 0)<<2;
 //    if (n&4) j++;
-//    n |= (p->inv_amount[GET_FIRSTAID] > 0);
+//    n |= (p.inv_amount[GET_FIRSTAID] > 0);
 //    if (n&1) j++;
-//    n |= (p->inv_amount[GET_HEATS] > 0)<<4;
+//    n |= (p.inv_amount[GET_HEATS] > 0)<<4;
 //    if (n&16) j++;
-//    n |= (p->inv_amount[GET_BOOTS] > 0)<<6;
+//    n |= (p.inv_amount[GET_BOOTS] > 0)<<6;
 //    if (n&64) j++;
 
 //    x = (160-(j*11))<<16; // nearly center
@@ -1940,7 +1941,7 @@ var minitext_lowercase = 0;         //static int32_t
 
 //            x += 22<<16;
 
-//            if (p->inven_icon == j+1)
+//            if (p.inven_icon == j+1)
 //                rotatesprite_win(x-(2<<16),y+(19<<16),65536L,1024,ARROW,-32,0,2+16);
 //        }
 
@@ -1963,30 +1964,30 @@ var minitext_lowercase = 0;         //static int32_t
 //    for (TRAVERSE_CONNECT(i))
 //    {
 //        const DukePlayer_t *ps = g_player[i].ps;
-//        minitext(21+(73*(i&3)), 2+((i&28)<<1), g_player[i].user_name, ps->palookup, 2+8+16);
-//        Bsprintf(tempbuf, "%d", ps->frag-ps->fraggedself);
-//        minitext(17+50+(73*(i&3)), 2+((i&28)<<1), tempbuf, ps->palookup, 2+8+16);
+//        minitext(21+(73*(i&3)), 2+((i&28)<<1), g_player[i].user_name, ps.palookup, 2+8+16);
+//        Bsprintf(tempbuf, "%d", ps.frag-ps.fraggedself);
+//        minitext(17+50+(73*(i&3)), 2+((i&28)<<1), tempbuf, ps.palookup, 2+8+16);
 //    }
 //}
 
 //static int32_t G_GetInvAmount(const DukePlayer_t *p)
 //{
-//    switch (p->inven_icon)
+//    switch (p.inven_icon)
 //    {
 //    case ICON_FIRSTAID:
-//        return p->inv_amount[GET_FIRSTAID];
+//        return p.inv_amount[GET_FIRSTAID];
 //    case ICON_STEROIDS:
-//        return ((p->inv_amount[GET_STEROIDS]+3)>>2);
+//        return ((p.inv_amount[GET_STEROIDS]+3)>>2);
 //    case ICON_HOLODUKE:
-//        return ((p->inv_amount[GET_HOLODUKE]+15)/24);
+//        return ((p.inv_amount[GET_HOLODUKE]+15)/24);
 //    case ICON_JETPACK:
-//        return ((p->inv_amount[GET_JETPACK]+15)>>4);
+//        return ((p.inv_amount[GET_JETPACK]+15)>>4);
 //    case ICON_HEATS:
-//        return p->inv_amount[GET_HEATS]/12;
+//        return p.inv_amount[GET_HEATS]/12;
 //    case ICON_SCUBA:
-//        return ((p->inv_amount[GET_SCUBA]+63)>>6);
+//        return ((p.inv_amount[GET_SCUBA]+63)>>6);
 //    case ICON_BOOTS:
-//        return (p->inv_amount[GET_BOOTS]>>1);
+//        return (p.inv_amount[GET_BOOTS]>>1);
 //    }
 
 //    return -1;
@@ -1994,14 +1995,14 @@ var minitext_lowercase = 0;         //static int32_t
 
 //static int32_t G_GetInvOn(const DukePlayer_t *p)
 //{
-//    switch (p->inven_icon)
+//    switch (p.inven_icon)
 //    {
 //    case ICON_HOLODUKE:
-//        return p->holoduke_on;
+//        return p.holoduke_on;
 //    case ICON_JETPACK:
-//        return p->jetpack_on;
+//        return p.jetpack_on;
 //    case ICON_HEATS:
-//        return p->heat_on;
+//        return p.heat_on;
 //    }
 
 //    return 0x80000000;
@@ -2053,7 +2054,7 @@ var minitext_lowercase = 0;         //static int32_t
 //        else
 //        {
 //            for (TRAVERSE_CONNECT(i))
-//                if (g_player[i].ps->frag != sbar.frag[i])
+//                if (g_player[i].ps.frag != sbar.frag[i])
 //                {
 //                    G_DrawFrags();
 //                    break;
@@ -2062,7 +2063,7 @@ var minitext_lowercase = 0;         //static int32_t
 //        }
 //        for (TRAVERSE_CONNECT(i))
 //            if (i != myconnectindex)
-//                sbar.frag[i] = g_player[i].ps->frag;
+//                sbar.frag[i] = g_player[i].ps.frag;
 //    }
 
 //    if (ss == 4)   //DRAW MINI STATUS BAR:
@@ -2093,14 +2094,14 @@ var minitext_lowercase = 0;         //static int32_t
 //                rotatesprite_fs(sbarx(2+1),sbary(200-21+1),sb15h,0,COLA,127,4,10+16+256+POLYMOSTTRANS2);
 //            rotatesprite_fs(sbarx(2),sbary(200-21),sb15h,0,COLA,0,0,10+16+256);
 
-//            if (sprite[p->i].pal == 1 && p->last_extra < 2)
+//            if (sprite[p.i].pal == 1 && p.last_extra < 2)
 //                G_DrawAltDigiNum(40,-(200-22),1,-16,10+16+256);
-//            else if (!althud_flashing || p->last_extra > (p->max_player_health>>2) || totalclock&32)
+//            else if (!althud_flashing || p.last_extra > (p.max_player_health>>2) || totalclock&32)
 //            {
 //                int32_t s = -8;
-//                if (althud_flashing && p->last_extra > p->max_player_health)
+//                if (althud_flashing && p.last_extra > p.max_player_health)
 //                    s += (sintable[(totalclock<<5)&2047]>>10);
-//                G_DrawAltDigiNum(40,-(200-22),p->last_extra,s,10+16+256);
+//                G_DrawAltDigiNum(40,-(200-22),p.last_extra,s,10+16+256);
 //            }
 
 //            if (getrendermode() >= REND_POLYMOST && althud_shadows)
@@ -2108,44 +2109,44 @@ var minitext_lowercase = 0;         //static int32_t
 //            rotatesprite_fs(sbarx(62),sbary(200-25),sb15h,0,SHIELD,0,0,10+16+256);
 
 //            {
-//                int32_t lAmount = G_GetMorale(p->i, snum);
+//                int32_t lAmount = G_GetMorale(p.i, snum);
 //                if (lAmount == -1)
-//                    lAmount = p->inv_amount[GET_SHIELD];
+//                    lAmount = p.inv_amount[GET_SHIELD];
 //                G_DrawAltDigiNum(105,-(200-22),lAmount,-16,10+16+256);
 //            }
 
 //            if (getrendermode() >= REND_POLYMOST && althud_shadows)
 //            {
-//                if (p->got_access&1) rotatesprite_fs(sbarxr(39-1),sbary(200-43+1),sb15,0,ACCESSCARD,127,4,10+16+POLYMOSTTRANS2+512);
-//                if (p->got_access&4) rotatesprite_fs(sbarxr(34-1),sbary(200-41+1),sb15,0,ACCESSCARD,127,4,10+16+POLYMOSTTRANS2+512);
-//                if (p->got_access&2) rotatesprite_fs(sbarxr(29-1),sbary(200-39+1),sb15,0,ACCESSCARD,127,4,10+16+POLYMOSTTRANS2+512);
+//                if (p.got_access&1) rotatesprite_fs(sbarxr(39-1),sbary(200-43+1),sb15,0,ACCESSCARD,127,4,10+16+POLYMOSTTRANS2+512);
+//                if (p.got_access&4) rotatesprite_fs(sbarxr(34-1),sbary(200-41+1),sb15,0,ACCESSCARD,127,4,10+16+POLYMOSTTRANS2+512);
+//                if (p.got_access&2) rotatesprite_fs(sbarxr(29-1),sbary(200-39+1),sb15,0,ACCESSCARD,127,4,10+16+POLYMOSTTRANS2+512);
 //            }
 
-//            if (p->got_access&1) rotatesprite_fs(sbarxr(39),sbary(200-43),sb15,0,ACCESSCARD,0,0,10+16+512);
-//            if (p->got_access&4) rotatesprite_fs(sbarxr(34),sbary(200-41),sb15,0,ACCESSCARD,0,23,10+16+512);
-//            if (p->got_access&2) rotatesprite_fs(sbarxr(29),sbary(200-39),sb15,0,ACCESSCARD,0,21,10+16+512);
+//            if (p.got_access&1) rotatesprite_fs(sbarxr(39),sbary(200-43),sb15,0,ACCESSCARD,0,0,10+16+512);
+//            if (p.got_access&4) rotatesprite_fs(sbarxr(34),sbary(200-41),sb15,0,ACCESSCARD,0,23,10+16+512);
+//            if (p.got_access&2) rotatesprite_fs(sbarxr(29),sbary(200-39),sb15,0,ACCESSCARD,0,21,10+16+512);
 
-//            i = (p->curr_weapon == PISTOL_WEAPON) ? 16384 : 32768;
+//            i = (p.curr_weapon == PISTOL_WEAPON) ? 16384 : 32768;
 
 //            if (getrendermode() >= REND_POLYMOST && althud_shadows)
-//                rotatesprite_fs(sbarxr(57-1),sbary(200-15+1),sbarsc(i),0,ammo_sprites[p->curr_weapon],127,4,10+POLYMOSTTRANS2+512);
-//            rotatesprite_fs(sbarxr(57),sbary(200-15),sbarsc(i),0,ammo_sprites[p->curr_weapon],0,0,10+512);
+//                rotatesprite_fs(sbarxr(57-1),sbary(200-15+1),sbarsc(i),0,ammo_sprites[p.curr_weapon],127,4,10+POLYMOSTTRANS2+512);
+//            rotatesprite_fs(sbarxr(57),sbary(200-15),sbarsc(i),0,ammo_sprites[p.curr_weapon],0,0,10+512);
 
-//            if (p->curr_weapon == HANDREMOTE_WEAPON) i = HANDBOMB_WEAPON;
-//            else i = p->curr_weapon;
+//            if (p.curr_weapon == HANDREMOTE_WEAPON) i = HANDBOMB_WEAPON;
+//            else i = p.curr_weapon;
 
-//            if (p->curr_weapon != KNEE_WEAPON &&
-//                    (!althud_flashing || totalclock&32 || p->ammo_amount[i] > (p->max_ammo_amount[i]/10)))
-//                G_DrawAltDigiNum(-20,-(200-22),p->ammo_amount[i],-16,10+16+512);
+//            if (p.curr_weapon != KNEE_WEAPON &&
+//                    (!althud_flashing || totalclock&32 || p.ammo_amount[i] > (p.max_ammo_amount[i]/10)))
+//                G_DrawAltDigiNum(-20,-(200-22),p.ammo_amount[i],-16,10+16+512);
 
 //            o = 102;
 //            permbit = 0;
 
-//            if (p->inven_icon)
+//            if (p.inven_icon)
 //            {
 //                const int32_t orient = 10+16+permbit+256;
 
-//                i = ((unsigned)p->inven_icon < ICON_MAX) ? item_icons[p->inven_icon] : -1;
+//                i = ((unsigned)p.inven_icon < ICON_MAX) ? item_icons[p.inven_icon] : -1;
 //                if (i >= 0)
 //                {
 //                    if (getrendermode() >= REND_POLYMOST && althud_shadows)
@@ -2175,7 +2176,7 @@ var minitext_lowercase = 0;         //static int32_t
 //                    minitext(284-30-o,180-3,"Off",2, orient+ROTATESPRITE_MAX);
 //                }
 
-//                if (p->inven_icon >= ICON_SCUBA)
+//                if (p.inven_icon >= ICON_SCUBA)
 //                {
 //                    if (getrendermode() >= REND_POLYMOST && althud_shadows)
 //                        minitextshade(284-35-o+1,180-3+1,"Auto",127,4, POLYMOSTTRANS+orient+ROTATESPRITE_MAX);
@@ -2204,30 +2205,30 @@ var minitext_lowercase = 0;         //static int32_t
 //            }
 
 //            rotatesprite_fs(sbarx(5), yofssh+sbary(200-28), sb16, 0, HEALTHBOX, 0, 21, orient);
-//            if (p->inven_icon)
+//            if (p.inven_icon)
 //                rotatesprite_fs(sbarx(69), yofssh+sbary(200-30), sb16, 0, INVENTORYBOX, 0, 21, orient);
 
 //            // health
 //            {
-//                int32_t health = (sprite[p->i].pal == 1 && p->last_extra < 2) ? 1 : p->last_extra;
+//                int32_t health = (sprite[p.i].pal == 1 && p.last_extra < 2) ? 1 : p.last_extra;
 //                G_DrawDigiNum_(20, yofssh, 200-17, health, -16, orient);
 //            }
 
 //            rotatesprite_fs(sbarx(37), yofssh+sbary(200-28), sb16, 0, AMMOBOX, 0, 21, orient);
 
-//            if (p->curr_weapon == HANDREMOTE_WEAPON)
+//            if (p.curr_weapon == HANDREMOTE_WEAPON)
 //                i = HANDBOMB_WEAPON;
 //            else
-//                i = p->curr_weapon;
-//            G_DrawDigiNum_(53, yofssh, 200-17, p->ammo_amount[i], -16, orient);
+//                i = p.curr_weapon;
+//            G_DrawDigiNum_(53, yofssh, 200-17, p.ammo_amount[i], -16, orient);
 
 //            o = 158;
 //            permbit = 0;
-//            if (p->inven_icon)
+//            if (p.inven_icon)
 //            {
 ////                orient |= permbit;
 
-//                i = ((unsigned)p->inven_icon < ICON_MAX) ? item_icons[p->inven_icon] : -1;
+//                i = ((unsigned)p.inven_icon < ICON_MAX) ? item_icons[p.inven_icon] : -1;
 //                if (i >= 0)
 //                    rotatesprite_fs(sbarx(231-o), yofssh+sbary(200-21), sb16, 0, i, 0, 0, orient);
 
@@ -2247,7 +2248,7 @@ var minitext_lowercase = 0;         //static int32_t
 //                else if ((uint32_t)j != 0x80000000)
 //                    minitext(284-30-o, 180, "Off", 2, orient);
 
-//                if (p->inven_icon >= ICON_SCUBA)
+//                if (p.inven_icon >= ICON_SCUBA)
 //                    minitext(284-35-o, 180, "Auto", 2, orient);
 
 //                minitext_yofs = 0;
@@ -2266,27 +2267,27 @@ var minitext_lowercase = 0;         //static int32_t
 //    }
 //    else u = 0;
 
-//    if (sbar.frag[myconnectindex] != p->frag)
+//    if (sbar.frag[myconnectindex] != p.frag)
 //    {
-//        sbar.frag[myconnectindex] = p->frag;
+//        sbar.frag[myconnectindex] = p.frag;
 //        u |= 32768;
 //    }
-//    if (sbar.got_access != p->got_access)
+//    if (sbar.got_access != p.got_access)
 //    {
-//        sbar.got_access = p->got_access;
+//        sbar.got_access = p.got_access;
 //        u |= 16384;
 //    }
 
-//    if (sbar.last_extra != p->last_extra)
+//    if (sbar.last_extra != p.last_extra)
 //    {
-//        sbar.last_extra = p->last_extra;
+//        sbar.last_extra = p.last_extra;
 //        u |= 1;
 //    }
 
 //    {
-//        int32_t lAmount = G_GetMorale(p->i, snum);
+//        int32_t lAmount = G_GetMorale(p.i, snum);
 //        if (lAmount == -1)
-//            lAmount = p->inv_amount[GET_SHIELD];
+//            lAmount = p.inv_amount[GET_SHIELD];
 //        if (sbar.inv_amount[GET_SHIELD] != lAmount)
 //        {
 //            sbar.inv_amount[GET_SHIELD] = lAmount;
@@ -2294,25 +2295,25 @@ var minitext_lowercase = 0;         //static int32_t
 //        }
 //    }
 
-//    if (sbar.curr_weapon != p->curr_weapon)
+//    if (sbar.curr_weapon != p.curr_weapon)
 //    {
-//        sbar.curr_weapon = p->curr_weapon;
+//        sbar.curr_weapon = p.curr_weapon;
 //        u |= (4+8+16+32+64+128+256+512+1024+65536L);
 //    }
 
 //    for (i=1; i<MAX_WEAPONS; i++)
 //    {
-//        if (sbar.ammo_amount[i] != p->ammo_amount[i])
+//        if (sbar.ammo_amount[i] != p.ammo_amount[i])
 //        {
-//            sbar.ammo_amount[i] = p->ammo_amount[i];
+//            sbar.ammo_amount[i] = p.ammo_amount[i];
 //            if (i < 9)
 //                u |= ((2<<i)+1024);
 //            else u |= 65536L+1024;
 //        }
 
-//        if ((sbar.gotweapon & (1<<i)) != (p->gotweapon & (1<<i)))
+//        if ((sbar.gotweapon & (1<<i)) != (p.gotweapon & (1<<i)))
 //        {
-//            if (p->gotweapon & (1<<i))
+//            if (p.gotweapon & (1<<i))
 //                sbar.gotweapon |= 1<<i;
 //            else sbar.gotweapon &= ~(1<<i);
 
@@ -2322,24 +2323,24 @@ var minitext_lowercase = 0;         //static int32_t
 //        }
 //    }
 
-//    if (sbar.inven_icon != p->inven_icon)
+//    if (sbar.inven_icon != p.inven_icon)
 //    {
-//        sbar.inven_icon = p->inven_icon;
+//        sbar.inven_icon = p.inven_icon;
 //        u |= (2048+4096+8192);
 //    }
-//    if (sbar.holoduke_on != p->holoduke_on)
+//    if (sbar.holoduke_on != p.holoduke_on)
 //    {
-//        sbar.holoduke_on = p->holoduke_on;
+//        sbar.holoduke_on = p.holoduke_on;
 //        u |= (4096+8192);
 //    }
-//    if (sbar.jetpack_on != p->jetpack_on)
+//    if (sbar.jetpack_on != p.jetpack_on)
 //    {
-//        sbar.jetpack_on = p->jetpack_on;
+//        sbar.jetpack_on = p.jetpack_on;
 //        u |= (4096+8192);
 //    }
-//    if (sbar.heat_on != p->heat_on)
+//    if (sbar.heat_on != p.heat_on)
 //    {
-//        sbar.heat_on = p->heat_on;
+//        sbar.heat_on = p.heat_on;
 //        u |= (4096+8192);
 //    }
 
@@ -2353,9 +2354,9 @@ var minitext_lowercase = 0;         //static int32_t
 //        {
 //            int32_t item = check_items[i];
 
-//            if (sbar.inv_amount[item] != p->inv_amount[item])
+//            if (sbar.inv_amount[item] != p.inv_amount[item])
 //            {
-//                sbar.inv_amount[item] = p->inv_amount[item];
+//                sbar.inv_amount[item] = p.inv_amount[item];
 //                u |= 8192;
 //            }
 //        }
@@ -2399,7 +2400,7 @@ var minitext_lowercase = 0;         //static int32_t
 //        if (u&32768)
 //        {
 //            if (u != -1) G_PatchStatusBar(276,SBY+17,299,SBY+17+10);
-//            G_DrawDigiNum(287,SBY+17,max(p->frag-p->fraggedself,0),-16,10+16);
+//            G_DrawDigiNum(287,SBY+17,max(p.frag-p.fraggedself,0),-16,10+16);
 //        }
 //    }
 //    else
@@ -2407,9 +2408,9 @@ var minitext_lowercase = 0;         //static int32_t
 //        if (u&16384)
 //        {
 //            if (u != -1) G_PatchStatusBar(275,SBY+18,299,SBY+18+12);
-//            if (p->got_access&4) rotatesprite_fs(sbarx(275),sbary(SBY+16),sb16,0,ACCESS_ICON,0,23,10+16);
-//            if (p->got_access&2) rotatesprite_fs(sbarx(288),sbary(SBY+16),sb16,0,ACCESS_ICON,0,21,10+16);
-//            if (p->got_access&1) rotatesprite_fs(sbarx(281),sbary(SBY+23),sb16,0,ACCESS_ICON,0,0,10+16);
+//            if (p.got_access&4) rotatesprite_fs(sbarx(275),sbary(SBY+16),sb16,0,ACCESS_ICON,0,23,10+16);
+//            if (p.got_access&2) rotatesprite_fs(sbarx(288),sbary(SBY+16),sb16,0,ACCESS_ICON,0,21,10+16);
+//            if (p.got_access&1) rotatesprite_fs(sbarx(281),sbary(SBY+23),sb16,0,ACCESS_ICON,0,0,10+16);
 //        }
 //    }
 
@@ -2419,19 +2420,19 @@ var minitext_lowercase = 0;         //static int32_t
 //    if (u&1)
 //    {
 //        if (u != -1) G_PatchStatusBar(20,SBY+17,43,SBY+17+11);
-//        if (sprite[p->i].pal == 1 && p->last_extra < 2)
+//        if (sprite[p.i].pal == 1 && p.last_extra < 2)
 //            G_DrawDigiNum(32,SBY+17,1,-16,10+16);
-//        else G_DrawDigiNum(32,SBY+17,p->last_extra,-16,10+16);
+//        else G_DrawDigiNum(32,SBY+17,p.last_extra,-16,10+16);
 //    }
 //    if (u&2)
 //    {
-//        int32_t lAmount = G_GetMorale(p->i, snum);
+//        int32_t lAmount = G_GetMorale(p.i, snum);
 
 //        if (u != -1)
 //            G_PatchStatusBar(52,SBY+17,75,SBY+17+11);
 
 //        if (lAmount == -1)
-//            G_DrawDigiNum(64,SBY+17,p->inv_amount[GET_SHIELD],-16,10+16);
+//            G_DrawDigiNum(64,SBY+17,p.inv_amount[GET_SHIELD],-16,10+16);
 //        else
 //            G_DrawDigiNum(64,SBY+17,lAmount,-16,10+16);
 //    }
@@ -2439,11 +2440,11 @@ var minitext_lowercase = 0;         //static int32_t
 //    if (u&1024)
 //    {
 //        if (u != -1) G_PatchStatusBar(196,SBY+17,219,SBY+17+11);
-//        if (p->curr_weapon != KNEE_WEAPON)
+//        if (p.curr_weapon != KNEE_WEAPON)
 //        {
-//            if (p->curr_weapon == HANDREMOTE_WEAPON) i = HANDBOMB_WEAPON;
-//            else i = p->curr_weapon;
-//            G_DrawDigiNum(230-22,SBY+17,p->ammo_amount[i],-16,10+16);
+//            if (p.curr_weapon == HANDREMOTE_WEAPON) i = HANDBOMB_WEAPON;
+//            else i = p.curr_weapon;
+//            G_DrawDigiNum(230-22,SBY+17,p.ammo_amount[i],-16,10+16);
 //        }
 //    }
 
@@ -2457,18 +2458,18 @@ var minitext_lowercase = 0;         //static int32_t
 //                G_PatchStatusBar(250,SBY+24,261,SBY+24+6);
 //        }
 
-//        if (p->inven_icon)
+//        if (p.inven_icon)
 //        {
 //            o = 0;
 ////            permbit = 128;
 
 //            if (u&(2048+4096))
 //            {
-//                i = ((unsigned)p->inven_icon < ICON_MAX) ? item_icons[p->inven_icon] : -1;
+//                i = ((unsigned)p.inven_icon < ICON_MAX) ? item_icons[p.inven_icon] : -1;
 //                // XXX: i < 0?
 //                rotatesprite_fs(sbarx(231-o),sbary(SBY+13),sb16,0,i,0,0,10+16+permbit);
 //                minitext(292-30-o,SBY+24,"%",6,10+16+permbit + ROTATESPRITE_MAX);
-//                if (p->inven_icon >= ICON_SCUBA) minitext(284-35-o,SBY+14,"Auto",2,10+16+permbit + ROTATESPRITE_MAX);
+//                if (p.inven_icon >= ICON_SCUBA) minitext(284-35-o,SBY+14,"Auto",2,10+16+permbit + ROTATESPRITE_MAX);
 //            }
 
 //            if (u&(2048+4096))
@@ -2518,11 +2519,11 @@ var minitext_lowercase = 0;         //static int32_t
 //            // lag meter
 //            if (g_netClientPeer)
 //            {
-//                chars = Bsprintf(tempbuf, "%d +- %d ms", (g_netClientPeer->lastRoundTripTime + g_netClientPeer->roundTripTime)/2,
-//                                 (g_netClientPeer->lastRoundTripTimeVariance + g_netClientPeer->roundTripTimeVariance)/2);
+//                chars = Bsprintf(tempbuf, "%d +- %d ms", (g_netClientPeer.lastRoundTripTime + g_netClientPeer.roundTripTime)/2,
+//                                 (g_netClientPeer.lastRoundTripTimeVariance + g_netClientPeer.roundTripTimeVariance)/2);
 
 //                printext256(windowx2-(chars<<(3-x))+1,windowy1+10+2,0,-1,tempbuf,x);
-//                printext256(windowx2-(chars<<(3-x)),windowy1+10+1,g_netClientPeer->lastRoundTripTime > 200 ? COLOR_RED : COLOR_WHITE,-1,tempbuf,x);
+//                printext256(windowx2-(chars<<(3-x)),windowy1+10+1,g_netClientPeer.lastRoundTripTime > 200 ? COLOR_RED : COLOR_WHITE,-1,tempbuf,x);
 //            }
 //        }
 
@@ -2554,7 +2555,7 @@ var minitext_lowercase = 0;         //static int32_t
 //    int32_t y = 16;
 
 //    const DukePlayer_t *ps = g_player[snum].ps;
-//    const int32_t sectnum = ps->cursectnum;
+//    const int32_t sectnum = ps.cursectnum;
 
 //    if ((GametypeFlags[ud.coop] & GAMETYPE_FRAGBAR))
 //    {
@@ -2563,25 +2564,25 @@ var minitext_lowercase = 0;         //static int32_t
 //        else if (g_netServer || ud.multimode > 1)
 //            y = 24;
 //    }
-//    Bsprintf(tempbuf,"XYZ= (%d,%d,%d)",ps->pos.x,ps->pos.y,ps->pos.z);
+//    Bsprintf(tempbuf,"XYZ= (%d,%d,%d)",ps.pos.x,ps.pos.y,ps.pos.z);
 //    printext256(x,y,31,-1,tempbuf,0);
-//    Bsprintf(tempbuf,"A/H/HO= %d,%d,%d",ps->ang,ps->horiz,ps->horizoff);
+//    Bsprintf(tempbuf,"A/H/HO= %d,%d,%d",ps.ang,ps.horiz,ps.horizoff);
 //    printext256(x,y+9,31,-1,tempbuf,0);
-//    Bsprintf(tempbuf,"ZV= %d",ps->vel.z);
+//    Bsprintf(tempbuf,"ZV= %d",ps.vel.z);
 //    printext256(x,y+18,31,-1,tempbuf,0);
-//    Bsprintf(tempbuf,"OG= %d  SBRIDGE=%d SBS=%d",ps->on_ground, ps->spritebridge, ps->sbs);
+//    Bsprintf(tempbuf,"OG= %d  SBRIDGE=%d SBS=%d",ps.on_ground, ps.spritebridge, ps.sbs);
 //    printext256(x,y+27,31,-1,tempbuf,0);
 //    if (sectnum >= 0)
-//        Bsprintf_nowarn(tempbuf,"SECT= %d (LO=%d EX=%d)",sectnum,TrackerCast(sector[sectnum].lotag),TrackerCast(sector[sectnum].extra));
+//        Bsprintf_nowarn(tempbuf,"sprite[i].sectnum= %d (LO=%d EX=%d)",sectnum,TrackerCast(sector[sectnum].lotag),TrackerCast(sector[sectnum].extra));
 //    else
-//        Bsprintf(tempbuf,"SECT= %d", sectnum);
+//        Bsprintf(tempbuf,"sprite[i].sectnum= %d", sectnum);
 //    printext256(x,y+36,31,-1,tempbuf,0);
 ////    Bsprintf(tempbuf,"SEED= %d",randomseed);
 ////    printext256(x,y+45,31,-1,tempbuf,0);
 //    y -= 9;
 
 //    y += 7;
-//    Bsprintf(tempbuf,"THOLD= %d", ps->transporter_hold);
+//    Bsprintf(tempbuf,"THOLD= %d", ps.transporter_hold);
 //    printext256(x,y+54,31,-1,tempbuf,0);
 //    Bsprintf(tempbuf,"GAMETIC= %d",g_moveThingsCount);
 //    printext256(x,y+63,31,-1,tempbuf,0);
@@ -2643,14 +2644,14 @@ var minitext_lowercase = 0;         //static int32_t
 //    int32_t i, j, k;
 
 //    const DukePlayer_t *const ps = g_player[snum].ps;
-//    const int32_t reserved_quote = (ps->ftq >= QUOTE_RESERVED && ps->ftq <= QUOTE_RESERVED3);
+//    const int32_t reserved_quote = (ps.ftq >= QUOTE_RESERVED && ps.ftq <= QUOTE_RESERVED3);
 //    // NOTE: QUOTE_RESERVED4 is not included.
 
 //    k = calc_ybase(1);
 
-//    if (ps->fta > 1 && !reserved_quote)
+//    if (ps.fta > 1 && !reserved_quote)
 //    {
-//        k += min(7, ps->fta);
+//        k += min(7, ps.fta);
 //    }
 
 //    j = scale(k, ydim, 200);
@@ -2682,12 +2683,12 @@ var minitext_lowercase = 0;         //static int32_t
 //    else
 //        quotebot = quotebotgoal;
 
-//    if (ps->fta <= 1)
+//    if (ps.fta <= 1)
 //        return;
 
-//    if (ScriptQuotes[ps->ftq] == NULL)
+//    if (ScriptQuotes[ps.ftq] == NULL)
 //    {
-//        OSD_Printf(OSD_ERROR "%s %d null quote %d\n",__FILE__,__LINE__,ps->ftq);
+//        OSD_Printf(OSD_ERROR "%s %d null quote %d\n",__FILE__,__LINE__,ps.ftq);
 //        return;
 //    }
 
@@ -2732,9 +2733,9 @@ var minitext_lowercase = 0;         //static int32_t
 //            }
 //        }
 
-//        gametextpalbits(160, k, ScriptQuotes[ps->ftq],
+//        gametextpalbits(160, k, ScriptQuotes[ps.ftq],
 //                        hud_glowingquotes ? quotepulseshade : 0,
-//                        pal, texto(ps->fta));
+//                        pal, texto(ps.fta));
 //    }
 //}
 
@@ -2757,12 +2758,12 @@ var minitext_lowercase = 0;         //static int32_t
 //        return;
 //    }
 
-//    if (p->fta > 0 && q != QUOTE_RESERVED && q != QUOTE_RESERVED2)
-//        if (p->ftq == QUOTE_RESERVED || p->ftq == QUOTE_RESERVED2) return;
+//    if (p.fta > 0 && q != QUOTE_RESERVED && q != QUOTE_RESERVED2)
+//        if (p.ftq == QUOTE_RESERVED || p.ftq == QUOTE_RESERVED2) return;
 
-//    p->fta = 100;
+//    p.fta = 100;
 
-//    if (p->ftq != q)
+//    if (p.ftq != q)
 //    {
 //        if (p == g_player[screenpeek].ps
 //            && Bstrcmp(ScriptQuotes[q],"")) // avoid printing blank quotes
@@ -2771,7 +2772,7 @@ var minitext_lowercase = 0;         //static int32_t
 //            else OSD_Printf("%s\n",ScriptQuotes[q]);
 //        }
 
-//        p->ftq = q;
+//        p.ftq = q;
 //    }
 //    pub = NUMPAGES;
 //    pus = NUMPAGES;
@@ -2889,7 +2890,7 @@ var minitext_lowercase = 0;         //static int32_t
 //    {
 //        setview(0,0,xdim-1,ydim-1);
 //        flushperms();
-//        //g_player[myconnectindex].ps->palette = palette;
+//        //g_player[myconnectindex].ps.palette = palette;
 //        P_SetGamePalette(g_player[myconnectindex].ps, BASEPAL, 1);    // JBF 20040308
 //        fadepal(0,0,0, 0,63,7);
 //        I_ClearAllInput();
@@ -2910,7 +2911,7 @@ var minitext_lowercase = 0;         //static int32_t
 //    {
 //        setview(0,0,xdim-1,ydim-1);
 //        flushperms();
-//        //g_player[myconnectindex].ps->palette = palette;
+//        //g_player[myconnectindex].ps.palette = palette;
 //        P_SetGamePalette(g_player[myconnectindex].ps, BASEPAL, 1);    // JBF 20040308
 //        fadepal(0,0,0, 0,63,7);
 //        I_ClearAllInput();
@@ -2933,7 +2934,7 @@ function G_GameExit(/*const char **/msg : string) : void
 //#ifdef LUNATIC
 //    El_PrintTimes();
 //#endif
-//    if (*msg != 0) g_player[myconnectindex].ps->palette = BASEPAL;
+//    if (*msg != 0) g_player[myconnectindex].ps.palette = BASEPAL;
 
 //    if (ud.recstat == 1)
 //        G_CloseDemoWrite();
@@ -2944,7 +2945,7 @@ function G_GameExit(/*const char **/msg : string) : void
 
 //    if (!g_quickExit)
 //    {
-//        if (playerswhenstarted > 1 && g_player[myconnectindex].ps->gm&MODE_GAME && GTFLAGS(GAMETYPE_SCORESHEET) && *msg == ' ')
+//        if (playerswhenstarted > 1 && g_player[myconnectindex].ps.gm&MODE_GAME && GTFLAGS(GAMETYPE_SCORESHEET) && *msg == ' ')
 //        {
 //            G_BonusScreen(1);
 //            setgamemode(ud.config.ScreenMode,ud.config.ScreenWidth,ud.config.ScreenHeight,ud.config.ScreenBPP);
@@ -2988,8 +2989,8 @@ function G_GameExit(/*const char **/msg : string) : void
 
 //    for (i=g_numClouds-1; i>=0; i--)
 //    {
-//        cloudx[i] += (sintable[(g_player[screenpeek].ps->ang+512)&2047]>>9);
-//        cloudy[i] += (sintable[g_player[screenpeek].ps->ang&2047]>>9);
+//        cloudx[i] += (sintable[(g_player[screenpeek].ps.ang+512)&2047]>>9);
+//        cloudy[i] += (sintable[g_player[screenpeek].ps.ang&2047]>>9);
 
 //        sector[clouds[i]].ceilingxpanning = cloudx[i]>>6;
 //        sector[clouds[i]].ceilingypanning = cloudy[i]>>6;
@@ -3031,28 +3032,28 @@ function G_GameExit(/*const char **/msg : string) : void
 
 //        for (j=startwall,wal=&wall[startwall]; j<endwall; j++,wal++)
 //        {
-//            k = wal->nextwall;
+//            k = wal.nextwall;
 //            if (k < 0) continue;
 
-//            if (sector[wal->nextsector].ceilingz == z1)
-//                if (sector[wal->nextsector].floorz == z2)
-//                    if (((wal->cstat|wall[wal->nextwall].cstat)&(16+32)) == 0) continue;
+//            if (sector[wal.nextsector].ceilingz == z1)
+//                if (sector[wal.nextsector].floorz == z2)
+//                    if (((wal.cstat|wall[wal.nextwall].cstat)&(16+32)) == 0) continue;
 
 //            col = 139; //red
-//            if ((wal->cstat|wall[wal->nextwall].cstat)&1) col = 234; //magenta
+//            if ((wal.cstat|wall[wal.nextwall].cstat)&1) col = 234; //magenta
 
-//            if (!(show2dsector[wal->nextsector>>3]&(1<<(wal->nextsector&7))))
+//            if (!(show2dsector[wal.nextsector>>3]&(1<<(wal.nextsector&7))))
 //                col = 24;
 //            else continue;
 
-//            ox = wal->x-cposx;
-//            oy = wal->y-cposy;
+//            ox = wal.x-cposx;
+//            oy = wal.y-cposy;
 //            x1 = dmulscale16(ox,xvect,-oy,yvect)+(xdim<<11);
 //            y1 = dmulscale16(oy,xvect2,ox,yvect2)+(ydim<<11);
 
-//            wal2 = &wall[wal->point2];
-//            ox = wal2->x-cposx;
-//            oy = wal2->y-cposy;
+//            wal2 = &wall[wal.point2];
+//            ox = wal2.x-cposx;
+//            oy = wal2.y-cposy;
 //            x2 = dmulscale16(ox,xvect,-oy,yvect)+(xdim<<11);
 //            y2 = dmulscale16(oy,xvect2,ox,yvect2)+(ydim<<11);
 
@@ -3063,7 +3064,7 @@ function G_GameExit(/*const char **/msg : string) : void
 //    pop_nofog();
 
 //    //Draw sprites
-//    k = g_player[screenpeek].ps->i;
+//    k = g_player[screenpeek].ps.i;
 //    for (i=numsectors-1; i>=0; i--)
 //    {
 //        if (!(show2dsector[i>>3]&(1<<(i&7)))) continue;
@@ -3071,15 +3072,15 @@ function G_GameExit(/*const char **/msg : string) : void
 //        {
 //            spr = &sprite[j];
 
-//            if (j == k || (spr->cstat&0x8000) || spr->cstat == 257 || spr->xrepeat == 0) continue;
+//            if (j == k || (spr.cstat&0x8000) || spr.cstat == 257 || spr.xrepeat == 0) continue;
 
 //            col = 71; //cyan
-//            if (spr->cstat&1) col = 234; //magenta
+//            if (spr.cstat&1) col = 234; //magenta
 
-//            sprx = spr->x;
-//            spry = spr->y;
+//            sprx = spr.x;
+//            spry = spr.y;
 
-//            if ((spr->cstat&257) != 0) switch (spr->cstat&48)
+//            if ((spr.cstat&257) != 0) switch (spr.cstat&48)
 //                {
 //                case 0:
 ////                    break;
@@ -3089,8 +3090,8 @@ function G_GameExit(/*const char **/msg : string) : void
 //                    x1 = dmulscale16(ox,xvect,-oy,yvect);
 //                    y1 = dmulscale16(oy,xvect2,ox,yvect2);
 
-//                    ox = (sintable[(spr->ang+512)&2047]>>7);
-//                    oy = (sintable[(spr->ang)&2047]>>7);
+//                    ox = (sintable[(spr.ang+512)&2047]>>7);
+//                    oy = (sintable[(spr.ang)&2047]>>7);
 //                    x2 = dmulscale16(ox,xvect,-oy,yvect);
 //                    y2 = dmulscale16(oy,xvect,ox,yvect);
 
@@ -3106,15 +3107,15 @@ function G_GameExit(/*const char **/msg : string) : void
 //                    break;
 
 //                case 16:
-//                    if (spr->picnum == LASERLINE)
+//                    if (spr.picnum == LASERLINE)
 //                    {
 //                        x1 = sprx;
 //                        y1 = spry;
-//                        tilenum = spr->picnum;
-//                        xoff = picanm[tilenum].xofs + spr->xoffset;
-//                        if ((spr->cstat&4) > 0) xoff = -xoff;
-//                        k = spr->ang;
-//                        l = spr->xrepeat;
+//                        tilenum = spr.picnum;
+//                        xoff = picanm[tilenum].xofs + spr.xoffset;
+//                        if ((spr.cstat&4) > 0) xoff = -xoff;
+//                        k = spr.ang;
+//                        l = spr.xrepeat;
 //                        dax = sintable[k&2047]*l;
 //                        day = sintable[(k+1536)&2047]*l;
 //                        l = tilesizx[tilenum];
@@ -3141,19 +3142,19 @@ function G_GameExit(/*const char **/msg : string) : void
 //                    break;
 
 //                case 32:
-//                    tilenum = spr->picnum;
-//                    xoff = picanm[tilenum].xofs + spr->xoffset;
-//                    yoff = picanm[tilenum].yofs + spr->yoffset;
-//                    if ((spr->cstat&4) > 0) xoff = -xoff;
-//                    if ((spr->cstat&8) > 0) yoff = -yoff;
+//                    tilenum = spr.picnum;
+//                    xoff = picanm[tilenum].xofs + spr.xoffset;
+//                    yoff = picanm[tilenum].yofs + spr.yoffset;
+//                    if ((spr.cstat&4) > 0) xoff = -xoff;
+//                    if ((spr.cstat&8) > 0) yoff = -yoff;
 
-//                    k = spr->ang;
+//                    k = spr.ang;
 //                    cosang = sintable[(k+512)&2047];
 //                    sinang = sintable[k&2047];
 //                    xspan = tilesizx[tilenum];
-//                    xrepeat = spr->xrepeat;
+//                    xrepeat = spr.xrepeat;
 //                    yspan = tilesizy[tilenum];
-//                    yrepeat = spr->yrepeat;
+//                    yrepeat = spr.yrepeat;
 
 //                    dax = ((xspan>>1)+xoff)*xrepeat;
 //                    day = ((yspan>>1)+yoff)*yrepeat;
@@ -3220,10 +3221,10 @@ function G_GameExit(/*const char **/msg : string) : void
 //        k = -1;
 //        for (j=startwall,wal=&wall[startwall]; j<endwall; j++,wal++)
 //        {
-//            if (wal->nextwall >= 0) continue;
+//            if (wal.nextwall >= 0) continue;
 
-//            if (tilesizx[wal->picnum] == 0) continue;
-//            if (tilesizy[wal->picnum] == 0) continue;
+//            if (tilesizx[wal.picnum] == 0) continue;
+//            if (tilesizy[wal.picnum] == 0) continue;
 
 //            if (j == k)
 //            {
@@ -3232,16 +3233,16 @@ function G_GameExit(/*const char **/msg : string) : void
 //            }
 //            else
 //            {
-//                ox = wal->x-cposx;
-//                oy = wal->y-cposy;
+//                ox = wal.x-cposx;
+//                oy = wal.y-cposy;
 //                x1 = dmulscale16(ox,xvect,-oy,yvect)+(xdim<<11);
 //                y1 = dmulscale16(oy,xvect2,ox,yvect2)+(ydim<<11);
 //            }
 
-//            k = wal->point2;
+//            k = wal.point2;
 //            wal2 = &wall[k];
-//            ox = wal2->x-cposx;
-//            oy = wal2->y-cposy;
+//            ox = wal2.x-cposx;
+//            oy = wal2.y-cposy;
 //            x2 = dmulscale16(ox,xvect,-oy,yvect)+(xdim<<11);
 //            y2 = dmulscale16(oy,xvect2,ox,yvect2)+(ydim<<11);
 
@@ -3257,9 +3258,9 @@ function G_GameExit(/*const char **/msg : string) : void
 //    {
 //        if (ud.scrollmode && p == screenpeek) continue;
 
-//        ox = sprite[g_player[p].ps->i].x-cposx;
-//        oy = sprite[g_player[p].ps->i].y-cposy;
-//        daang = (sprite[g_player[p].ps->i].ang-cang)&2047;
+//        ox = sprite[g_player[p].ps.i].x-cposx;
+//        oy = sprite[g_player[p].ps.i].y-cposy;
+//        daang = (sprite[g_player[p].ps.i].ang-cang)&2047;
 //        if (p == screenpeek)
 //        {
 //            ox = 0;
@@ -3271,19 +3272,19 @@ function G_GameExit(/*const char **/msg : string) : void
 
 //        if (p == screenpeek || GTFLAGS(GAMETYPE_OTHERPLAYERSINMAP))
 //        {
-//            if (sprite[g_player[p].ps->i].xvel > 16 && g_player[p].ps->on_ground)
+//            if (sprite[g_player[p].ps.i].xvel > 16 && g_player[p].ps.on_ground)
 //                i = APLAYERTOP+((totalclock>>4)&3);
 //            else
 //                i = APLAYERTOP;
 
-//            j = klabs(g_player[p].ps->truefz-g_player[p].ps->pos.z)>>8;
-//            j = mulscale(czoom*(sprite[g_player[p].ps->i].yrepeat+j),yxaspect,16);
+//            j = klabs(g_player[p].ps.truefz-g_player[p].ps.pos.z)>>8;
+//            j = mulscale(czoom*(sprite[g_player[p].ps.i].yrepeat+j),yxaspect,16);
 
 //            if (j < 22000) j = 22000;
 //            else if (j > (65536<<1)) j = (65536<<1);
 
-//            rotatesprite_win((x1<<4)+(xdim<<15),(y1<<4)+(ydim<<15),j,daang,i,sprite[g_player[p].ps->i].shade,
-//                             (g_player[p].ps->cursectnum > -1)?sector[g_player[p].ps->cursectnum].floorpal:0, 0);
+//            rotatesprite_win((x1<<4)+(xdim<<15),(y1<<4)+(ydim<<15),j,daang,i,sprite[g_player[p].ps.i].shade,
+//                             (g_player[p].ps.cursectnum > -1)?sector[g_player[p].ps.cursectnum].floorpal:0, 0);
 //        }
 //    }
 //}
@@ -3396,12 +3397,12 @@ function G_SetCrosshairColor(r: number, g: number, b: number): void
 //            if (!g_player[i].playerquitflag)
 //                continue;
 
-//            minitext(70,SCORESHEETOFFSET+90+t,g_player[i].user_name,g_player[i].ps->palookup,2+8+16+ROTATESPRITE_MAX);
+//            minitext(70,SCORESHEETOFFSET+90+t,g_player[i].user_name,g_player[i].ps.palookup,2+8+16+ROTATESPRITE_MAX);
 
-//            Bsprintf(tempbuf,"%-4d",g_player[i].ps->frag);
+//            Bsprintf(tempbuf,"%-4d",g_player[i].ps.frag);
 //            minitext(170,SCORESHEETOFFSET+90+t,tempbuf,2,2+8+16+ROTATESPRITE_MAX);
 
-//            Bsprintf(tempbuf,"%-4d", g_player[i].frags[i] + g_player[i].ps->fraggedself);
+//            Bsprintf(tempbuf,"%-4d", g_player[i].frags[i] + g_player[i].ps.fraggedself);
 //            minitext(200,SCORESHEETOFFSET+90+t,tempbuf,2,2+8+16+ROTATESPRITE_MAX);
 
 //            Bsprintf(tempbuf,"%-4d",g_player[i].ping);
@@ -3465,18 +3466,18 @@ function G_SetCrosshairColor(r: number, g: number, b: number): void
 //    if (f == 0)
 //        return;
 
-//    pa->maxf = max(pa->maxf, f);
-//    pa->sumf += f;
+//    pa.maxf = max(pa.maxf, f);
+//    pa.sumf += f;
 
 //    // TODO: we need to do away with this 0-63 scale weirdness someday.
-//    pa->r += f*clamp(pal->r, 0, 63);
-//    pa->g += f*clamp(pal->g, 0, 63);
-//    pa->b += f*clamp(pal->b, 0, 63);
+//    pa.r += f*clamp(pal.r, 0, 63);
+//    pa.g += f*clamp(pal.g, 0, 63);
+//    pa.b += f*clamp(pal.b, 0, 63);
 //}
 
 //static void G_FadePalaccum(const palaccum_t *pa)
 //{
-//    setpalettefade(pa->r/pa->sumf, pa->g/pa->sumf, pa->b/pa->sumf, pa->maxf);
+//    setpalettefade(pa.r/pa.sumf, pa.g/pa.sumf, pa.b/pa.sumf, pa.maxf);
 //}
 
 
@@ -3495,12 +3496,12 @@ function G_SetCrosshairColor(r: number, g: number, b: number): void
 //    // this takes care of fullscreen tint for OpenGL
 //    if (getrendermode() >= REND_POLYMOST)
 //    {
-//        if (pp->palette == WATERPAL)
+//        if (pp.palette == WATERPAL)
 //        {
 //            static const palette_t wp = { 224, 192, 255, 0 };
 //            Bmemcpy(&hictinting[MAXPALOOKUPS-1], &wp, sizeof(palette_t));
 //        }
-//        else if (pp->palette == SLIMEPAL)
+//        else if (pp.palette == SLIMEPAL)
 //        {
 //            static const palette_t sp = { 208, 255, 192, 0 };
 //            Bmemcpy(&hictinting[MAXPALOOKUPS-1], &sp, sizeof(palette_t));
@@ -3514,15 +3515,15 @@ function G_SetCrosshairColor(r: number, g: number, b: number): void
 //    }
 //#endif  // USE_OPENGL
 
-//    palaccum_add(&tint, &pp->pals, pp->pals.f);
+//    palaccum_add(&tint, &pp.pals, pp.pals.f);
 //    if (pp2)
-//        palaccum_add(&tint, &pp2->pals, pp2->pals.f);
+//        palaccum_add(&tint, &pp2.pals, pp2.pals.f);
 //    {
 //        static const palette_t loogiepal = { 0, 63, 0, 0 };
 
-//        palaccum_add(&tint, &loogiepal, pp->loogcnt>>1);
+//        palaccum_add(&tint, &loogiepal, pp.loogcnt>>1);
 //        if (pp2)
-//            palaccum_add(&tint, &loogiepal, pp2->loogcnt>>1);
+//            palaccum_add(&tint, &loogiepal, pp2.loogcnt>>1);
 //    }
 
 //    if (g_restorePalette)
@@ -3532,17 +3533,17 @@ function G_SetCrosshairColor(r: number, g: number, b: number): void
 
 //        if (g_restorePalette < 2 || omovethingscnt+1 == g_moveThingsCount)
 //        {
-//            int32_t pal = pp->palette;
+//            int32_t pal = pp.palette;
 //            const int32_t opal = pal;
 
 //            if (pp2)  // splitscreen HACK: BASEPAL trumps all, then it's arbitrary.
-//                pal = min(pal, pp2->palette);
+//                pal = min(pal, pp2.palette);
 
 //            // g_restorePalette < 0: reset tinting, too (e.g. when loading new game)
 //            P_SetGamePalette(pp, pal, 2 + (g_restorePalette>0)*16);
 
 //            if (pp2)  // keep first player's pal as its member!
-//                pp->palette = opal;
+//                pp.palette = opal;
 
 //            g_restorePalette = 0;
 //        }
@@ -3580,7 +3581,7 @@ function G_SetCrosshairColor(r: number, g: number, b: number): void
 //        return;
 //    }
 
-//    i = pp->cursectnum;
+//    i = pp.cursectnum;
 //    if (i > -1)
 //    {
 //        const walltype *wal = &wall[sector[i].wallptr];
@@ -3588,10 +3589,10 @@ function G_SetCrosshairColor(r: number, g: number, b: number): void
 //        show2dsector[i>>3] |= (1<<(i&7));
 //        for (j=sector[i].wallnum; j>0; j--,wal++)
 //        {
-//            i = wal->nextsector;
+//            i = wal.nextsector;
 //            if (i < 0) continue;
-//            if (wal->cstat&0x0071) continue;
-//            if (wall[wal->nextwall].cstat&0x0071) continue;
+//            if (wal.cstat&0x0071) continue;
+//            if (wall[wal.nextwall].cstat&0x0071) continue;
 //            if (sector[i].lotag == 32767) continue;
 //            if (sector[i].ceilingz >= sector[i].floorz) continue;
 //            show2dsector[i>>3] |= (1<<(i&7));
@@ -3602,17 +3603,17 @@ function G_SetCrosshairColor(r: number, g: number, b: number): void
 //    {
 //        if (ud.overhead_on != 2)
 //        {
-//            if (pp->newowner >= 0)
-//                G_DrawCameraText(pp->newowner);
+//            if (pp.newowner >= 0)
+//                G_DrawCameraText(pp.newowner);
 //            else
 //            {
 //                P_DisplayWeapon(screenpeek);
 //                if (pp2)  // HACK
 //                    P_DisplayWeapon(1);
 
-//                if (pp->over_shoulder_on == 0)
+//                if (pp.over_shoulder_on == 0)
 //                    P_DisplayScuba(screenpeek);
-//                if (pp2 && pp2->over_shoulder_on == 0)  // HACK
+//                if (pp2 && pp2.over_shoulder_on == 0)  // HACK
 //                    P_DisplayScuba(1);
 //            }
 //            G_MoveClouds();
@@ -3626,17 +3627,17 @@ function G_SetCrosshairColor(r: number, g: number, b: number): void
 
 //            if (ud.scrollmode == 0)
 //            {
-//                if (pp->newowner == -1 && !ud.pause_on)
+//                if (pp.newowner == -1 && !ud.pause_on)
 //                {
-//                    cposx = pp->opos.x + mulscale16(pp->pos.x-pp->opos.x, smoothratio);
-//                    cposy = pp->opos.y + mulscale16(pp->pos.y-pp->opos.y, smoothratio);
-//                    cang = pp->oang + mulscale16(((pp->ang+1024-pp->oang)&2047)-1024, smoothratio);
+//                    cposx = pp.opos.x + mulscale16(pp.pos.x-pp.opos.x, smoothratio);
+//                    cposy = pp.opos.y + mulscale16(pp.pos.y-pp.opos.y, smoothratio);
+//                    cang = pp.oang + mulscale16(((pp.ang+1024-pp.oang)&2047)-1024, smoothratio);
 //                }
 //                else
 //                {
-//                    cposx = pp->opos.x;
-//                    cposy = pp->opos.y;
-//                    cang = pp->oang;
+//                    cposx = pp.opos.x;
+//                    cposy = pp.opos.y;
+//                    cang = pp.oang;
 //                }
 //            }
 //            else
@@ -3655,9 +3656,9 @@ function G_SetCrosshairColor(r: number, g: number, b: number): void
 //            if (ud.overhead_on == 2)
 //            {
 //                clearview(0L);
-//                drawmapview(cposx,cposy,pp->zoom,cang);
+//                drawmapview(cposx,cposy,pp.zoom,cang);
 //            }
-//            G_DrawOverheadMap(cposx,cposy,pp->zoom,cang);
+//            G_DrawOverheadMap(cposx,cposy,pp.zoom,cang);
 
 //            G_RestoreInterpolations();
 
@@ -3670,9 +3671,9 @@ function G_SetCrosshairColor(r: number, g: number, b: number): void
 //        }
 //    }
 
-//    if (pp->invdisptime > 0) G_DrawInventory(pp);
+//    if (pp.invdisptime > 0) G_DrawInventory(pp);
 
-//    if (VM_OnEvent(EVENT_DISPLAYSBAR, g_player[screenpeek].ps->i, screenpeek, -1, 0) == 0)
+//    if (VM_OnEvent(EVENT_DISPLAYSBAR, g_player[screenpeek].ps.i, screenpeek, -1, 0) == 0)
 //        G_DrawStatusBar(screenpeek);
 
 //    // HACK
@@ -3703,13 +3704,13 @@ function G_SetCrosshairColor(r: number, g: number, b: number): void
 
 //    if (I_EscapeTrigger() && ud.overhead_on == 0
 //            && ud.show_help == 0
-//            && g_player[myconnectindex].ps->newowner == -1)
+//            && g_player[myconnectindex].ps.newowner == -1)
 //    {
-//        if ((g_player[myconnectindex].ps->gm&MODE_MENU) == MODE_MENU && g_currentMenu < 51)
+//        if ((g_player[myconnectindex].ps.gm&MODE_MENU) == MODE_MENU && g_currentMenu < 51)
 //        {
 //            I_EscapeTriggerClear();
 //            S_PlaySound(EXITMENUSOUND);
-//            g_player[myconnectindex].ps->gm &= ~MODE_MENU;
+//            g_player[myconnectindex].ps.gm &= ~MODE_MENU;
 //            if ((!g_netServer && ud.multimode < 2) && ud.recstat != 2)
 //            {
 //                ready2send = 1;
@@ -3720,9 +3721,9 @@ function G_SetCrosshairColor(r: number, g: number, b: number): void
 //            walock[TILE_SAVESHOT] = 199;
 //            G_UpdateScreenArea();
 //        }
-//        else if ((g_player[myconnectindex].ps->gm&MODE_MENU) != MODE_MENU &&
-//                 g_player[myconnectindex].ps->newowner == -1 &&
-//                 (g_player[myconnectindex].ps->gm&MODE_TYPE) != MODE_TYPE)
+//        else if ((g_player[myconnectindex].ps.gm&MODE_MENU) != MODE_MENU &&
+//                 g_player[myconnectindex].ps.newowner == -1 &&
+//                 (g_player[myconnectindex].ps.gm&MODE_TYPE) != MODE_TYPE)
 //        {
 //            I_EscapeTriggerClear();
 //            FX_StopAllSounds();
@@ -3730,11 +3731,11 @@ function G_SetCrosshairColor(r: number, g: number, b: number): void
 
 //            S_MenuSound();
 
-//            g_player[myconnectindex].ps->gm |= MODE_MENU;
+//            g_player[myconnectindex].ps.gm |= MODE_MENU;
 
 //            if ((!g_netServer && ud.multimode < 2) && ud.recstat != 2) ready2send = 0;
 
-//            if (g_player[myconnectindex].ps->gm&MODE_GAME) M_ChangeMenu(50);
+//            if (g_player[myconnectindex].ps.gm&MODE_GAME) M_ChangeMenu(50);
 //            else M_ChangeMenu(MENU_MAIN);
 //            screenpeek = myconnectindex;
 //        }
@@ -3743,13 +3744,13 @@ function G_SetCrosshairColor(r: number, g: number, b: number): void
 //    if (G_HaveEvent(EVENT_DISPLAYREST))
 //    {
 //        int32_t vr=viewingrange, asp=yxaspect;
-//        VM_OnEvent(EVENT_DISPLAYREST, g_player[screenpeek].ps->i, screenpeek, -1, 0);
+//        VM_OnEvent(EVENT_DISPLAYREST, g_player[screenpeek].ps.i, screenpeek, -1, 0);
 //        setaspect(vr, asp);
 //    }
 
-//    if (g_player[myconnectindex].ps->newowner == -1 && ud.overhead_on == 0 && ud.crosshair && ud.camerasprite == -1)
+//    if (g_player[myconnectindex].ps.newowner == -1 && ud.overhead_on == 0 && ud.crosshair && ud.camerasprite == -1)
 //    {
-//        int32_t a = VM_OnEvent(EVENT_DISPLAYCROSSHAIR, g_player[screenpeek].ps->i, screenpeek, -1, 0);
+//        int32_t a = VM_OnEvent(EVENT_DISPLAYCROSSHAIR, g_player[screenpeek].ps.i, screenpeek, -1, 0);
 
 //        if (a == 0 || a > 1)
 //        {
@@ -3772,7 +3773,7 @@ function G_SetCrosshairColor(r: number, g: number, b: number): void
 //                y = 100;
 //            }
 
-//            rotatesprite_win((x-(g_player[myconnectindex].ps->look_ang>>1))<<16,y<<16,scale(65536,ud.crosshairscale,100),
+//            rotatesprite_win((x-(g_player[myconnectindex].ps.look_ang>>1))<<16,y<<16,scale(65536,ud.crosshairscale,100),
 //                             0,a,0,CROSSHAIR_PAL,2+1);
 //        }
 //    }
@@ -3781,17 +3782,17 @@ function G_SetCrosshairColor(r: number, g: number, b: number): void
 //    {
 //        for (i=0; i<ud.multimode; i++)
 //        {
-//            if (g_player[i].ps->team == g_player[myconnectindex].ps->team)
+//            if (g_player[i].ps.team == g_player[myconnectindex].ps.team)
 //            {
-//                j = min(max((G_GetAngleDelta(getangle(g_player[i].ps->pos.x-g_player[myconnectindex].ps->pos.x,
-//                                                      g_player[i].ps->pos.y-g_player[myconnectindex].ps->pos.y),g_player[myconnectindex].ps->ang))>>1,-160),160);
+//                j = min(max((G_GetAngleDelta(getangle(g_player[i].ps.pos.x-g_player[myconnectindex].ps.pos.x,
+//                                                      g_player[i].ps.pos.y-g_player[myconnectindex].ps.pos.y),g_player[myconnectindex].ps.ang))>>1,-160),160);
 //                rotatesprite_win((160-j)<<16,100L<<16,65536L,0,DUKEICON,0,0,2+1);
 //            }
 //        }
 //    }
 //#endif
 
-//    if (ud.pause_on==1 && (g_player[myconnectindex].ps->gm&MODE_MENU) == 0)
+//    if (ud.pause_on==1 && (g_player[myconnectindex].ps.gm&MODE_MENU) == 0)
 //        menutext(160,100,0,0,"Game Paused");
 
 //    if (ud.coords)
@@ -3806,7 +3807,7 @@ function G_SetCrosshairColor(r: number, g: number, b: number): void
 //        extern int32_t mdpause;
 
 //        mdpause = 0;
-//        if (ud.pause_on || (ud.recstat==2 && (g_demo_paused && g_demo_goalCnt==0)) || (g_player[myconnectindex].ps->gm&MODE_MENU && numplayers < 2))
+//        if (ud.pause_on || (ud.recstat==2 && (g_demo_paused && g_demo_goalCnt==0)) || (g_player[myconnectindex].ps.gm&MODE_MENU && numplayers < 2))
 //            mdpause = 1;
 //    }
 //#endif
@@ -3814,7 +3815,7 @@ function G_SetCrosshairColor(r: number, g: number, b: number): void
 //    G_PrintFPS();
 
 //    // JBF 20040124: display level stats in screen corner
-//    if ((ud.overhead_on != 2 && ud.levelstats) && (g_player[myconnectindex].ps->gm&MODE_MENU) == 0)
+//    if ((ud.overhead_on != 2 && ud.levelstats) && (g_player[myconnectindex].ps.gm&MODE_MENU) == 0)
 //    {
 //        const DukePlayer_t *myps = g_player[myconnectindex].ps;
 
@@ -3829,34 +3830,34 @@ function G_SetCrosshairColor(r: number, g: number, b: number): void
 
 
 //        Bsprintf(tempbuf,"T:^15%d:%02d.%02d",
-//                 (myps->player_par/(REALGAMETICSPERSEC*60)),
-//                 (myps->player_par/REALGAMETICSPERSEC)%60,
-//                 ((myps->player_par%REALGAMETICSPERSEC)*33)/10
+//                 (myps.player_par/(REALGAMETICSPERSEC*60)),
+//                 (myps.player_par/REALGAMETICSPERSEC)%60,
+//                 ((myps.player_par%REALGAMETICSPERSEC)*33)/10
 //                );
 //        G_PrintGameText(8+4+1,STARTALPHANUM, j,scale(200-i,ud.config.ScreenHeight,200)-textsc(21),
 //                        tempbuf,0,10,26,0, 0, xdim-1, ydim-1, 65536);
 
 //        if (ud.player_skill > 3 || ((g_netServer || ud.multimode > 1) && !GTFLAGS(GAMETYPE_PLAYERSFRIENDLY)))
 //            Bsprintf(tempbuf,"K:^15%d",(ud.multimode>1 &&!GTFLAGS(GAMETYPE_PLAYERSFRIENDLY))?
-//                     myps->frag-myps->fraggedself:myps->actors_killed);
+//                     myps.frag-myps.fraggedself:myps.actors_killed);
 //        else
 //        {
-//            if (myps->actors_killed >= myps->max_actors_killed)
-//                Bsprintf(tempbuf,"K:%d/%d",myps->actors_killed,
-//                         myps->max_actors_killed>myps->actors_killed?
-//                         myps->max_actors_killed:myps->actors_killed);
+//            if (myps.actors_killed >= myps.max_actors_killed)
+//                Bsprintf(tempbuf,"K:%d/%d",myps.actors_killed,
+//                         myps.max_actors_killed>myps.actors_killed?
+//                         myps.max_actors_killed:myps.actors_killed);
 //            else
-//                Bsprintf(tempbuf,"K:^15%d/%d",myps->actors_killed,
-//                         myps->max_actors_killed>myps->actors_killed?
-//                         myps->max_actors_killed:myps->actors_killed);
+//                Bsprintf(tempbuf,"K:^15%d/%d",myps.actors_killed,
+//                         myps.max_actors_killed>myps.actors_killed?
+//                         myps.max_actors_killed:myps.actors_killed);
 //        }
 
 //        G_PrintGameText(8+4+1,STARTALPHANUM, j,scale(200-i,ud.config.ScreenHeight,200)-textsc(14),
 //                        tempbuf,0,10,26,0, 0, xdim-1, ydim-1, 65536);
 
-//        if (myps->secret_rooms == myps->max_secret_rooms)
-//            Bsprintf(tempbuf,"S:%d/%d", myps->secret_rooms, myps->max_secret_rooms);
-//        else Bsprintf(tempbuf,"S:^15%d/%d", myps->secret_rooms, myps->max_secret_rooms);
+//        if (myps.secret_rooms == myps.max_secret_rooms)
+//            Bsprintf(tempbuf,"S:%d/%d", myps.secret_rooms, myps.max_secret_rooms);
+//        else Bsprintf(tempbuf,"S:^15%d/%d", myps.secret_rooms, myps.max_secret_rooms);
 
 //        G_PrintGameText(8+4+1,STARTALPHANUM, j,scale(200-i,ud.config.ScreenHeight,200)-textsc(7),
 //                        tempbuf,0,10,26,0, 0, xdim-1, ydim-1, 65536);
@@ -3883,13 +3884,13 @@ function G_SetCrosshairColor(r: number, g: number, b: number): void
 
 //    if (VOLUMEONE)
 //    {
-//        if (ud.show_help == 0 && g_showShareware > 0 && (g_player[myconnectindex].ps->gm&MODE_MENU) == 0)
+//        if (ud.show_help == 0 && g_showShareware > 0 && (g_player[myconnectindex].ps.gm&MODE_MENU) == 0)
 //            rotatesprite_fs((320-50)<<16,9<<16,65536L,0,BETAVERSION,0,0,2+8+16+128);
 //    }
 
 //    if (!Demo_IsProfiling())
 //    {
-//        if (g_player[myconnectindex].ps->gm&MODE_TYPE)
+//        if (g_player[myconnectindex].ps.gm&MODE_TYPE)
 //            Net_SendMessage();
 //        else
 //            M_DisplayMenus();
@@ -3914,29 +3915,29 @@ function G_SetCrosshairColor(r: number, g: number, b: number): void
 
 //static void G_DoThirdPerson(const DukePlayer_t *pp, vec3_t *vect, int16_t *vsectnum, int32_t ang, int32_t horiz)
 //{
-//    spritetype *sp = &sprite[pp->i];
+//    spritetype *sp = &sprite[pp.i];
 //    int32_t i, hx, hy;
 //    int32_t daang;
-//    int32_t bakcstat = sp->cstat;
+//    int32_t bakcstat = sp.cstat;
 //    hitdata_t hit;
 //    vec3_t n = { (sintable[(ang+1536)&2047]>>4),
 //                 (sintable[(ang+1024)&2047]>>4),
 //                 (horiz-100)*128
 //               };
 
-//    sp->cstat &= (int16_t)~0x101;
+//    sp.cstat &= (int16_t)~0x101;
 
-//    updatesectorz(vect->x,vect->y,vect->z,vsectnum);
+//    updatesectorz(vect.x,vect.y,vect.z,vsectnum);
 //    hitscan((const vec3_t *)vect,*vsectnum,n.x,n.y,n.z,&hit,CLIPMASK1);
 
 //    if (*vsectnum < 0)
 //    {
-//        sp->cstat = bakcstat;
+//        sp.cstat = bakcstat;
 //        return;
 //    }
 
-//    hx = hit.pos.x-(vect->x);
-//    hy = hit.pos.y-(vect->y);
+//    hx = hit.pos.x-(vect.x);
+//    hy = hit.pos.y-(vect.y);
 //    if (klabs(n.x)+klabs(n.y) > klabs(hx)+klabs(hy))
 //    {
 //        *vsectnum = hit.sect;
@@ -3958,16 +3959,16 @@ function G_SetCrosshairColor(r: number, g: number, b: number): void
 //        else i = divscale16(hy,n.y);
 //        if (i < CAMERADIST) CAMERADIST = i;
 //    }
-//    vect->x += mulscale16(n.x,CAMERADIST);
-//    vect->y += mulscale16(n.y,CAMERADIST);
-//    vect->z += mulscale16(n.z,CAMERADIST);
+//    vect.x += mulscale16(n.x,CAMERADIST);
+//    vect.y += mulscale16(n.y,CAMERADIST);
+//    vect.z += mulscale16(n.z,CAMERADIST);
 
 //    CAMERADIST = min(CAMERADIST+((totalclock-CAMERACLOCK)<<10),65536);
 //    CAMERACLOCK = totalclock;
 
-//    updatesectorz(vect->x,vect->y,vect->z,vsectnum);
+//    updatesectorz(vect.x,vect.y,vect.z,vsectnum);
 
-//    sp->cstat = bakcstat;
+//    sp.cstat = bakcstat;
 //}
 
 ////REPLACE FULLY
@@ -3986,7 +3987,7 @@ function G_SetCrosshairColor(r: number, g: number, b: number): void
 
 //    y1 = 0;
 //    y2 = ydim;
-//    if ((g_player[myconnectindex].ps->gm&MODE_GAME) || ud.recstat == 2)
+//    if ((g_player[myconnectindex].ps.gm&MODE_GAME) || ud.recstat == 2)
 //    {
 //        if (GametypeFlags[ud.coop] & GAMETYPE_FRAGBAR)
 //        {
@@ -4109,14 +4110,14 @@ var ror_protectedsectors = new Uint8Array(MAXSECTORS);
 //        int16_t sect;
 //        int32_t level = 0;
 //        spritetype *sp = &sprite[ror_sprite];
-//        int32_t sprite2 = sp->yvel;
+//        int32_t sprite2 = sp.yvel;
 
-//        if (klabs(sector[sp->sectnum].floorz - sp->z) < klabs(sector[sprite[sprite2].sectnum].floorz - sprite[sprite2].z))
+//        if (klabs(sector[sp.sectnum].floorz - sp.z) < klabs(sector[sprite[sprite2].sectnum].floorz - sprite[sprite2].z))
 //            level = 1;
 
-//        x = CAMERA(pos.x) - sp->x;
-//        y = CAMERA(pos.y) - sp->y;
-//        z = CAMERA(pos.z) - (level ? sector[sp->sectnum].floorz : sector[sp->sectnum].ceilingz);
+//        x = CAMERA(pos.x) - sp.x;
+//        y = CAMERA(pos.y) - sp.y;
+//        z = CAMERA(pos.z) - (level ? sector[sp.sectnum].floorz : sector[sp.sectnum].ceilingz);
 
 //        sect = sprite[sprite2].sectnum;
 //        updatesector(sprite[sprite2].x + x, sprite[sprite2].y + y, &sect);
@@ -4145,7 +4146,7 @@ var ror_protectedsectors = new Uint8Array(MAXSECTORS);
 //                {
 //                    backupstat[i] = sector[i].ceilingstat;
 //                    backupz[i] = sector[i].ceilingz;
-//                    if (!ror_protectedsectors[i] || (ror_protectedsectors[i] && sp->lotag == 41))
+//                    if (!ror_protectedsectors[i] || (ror_protectedsectors[i] && sp.lotag == 41))
 //                    {
 //                        sector[i].ceilingstat = 1;
 //                        sector[i].ceilingz += newz;
@@ -4167,7 +4168,7 @@ var ror_protectedsectors = new Uint8Array(MAXSECTORS);
 //                {
 //                    backupstat[i] = sector[i].floorstat;
 //                    backupz[i] = sector[i].floorz;
-//                    if (!ror_protectedsectors[i] || (ror_protectedsectors[i] && sp->lotag == 41))
+//                    if (!ror_protectedsectors[i] || (ror_protectedsectors[i] && sp.lotag == 41))
 //                    {
 //                        sector[i].floorstat = 1;
 //                        sector[i].floorz = +newz;
@@ -4188,18 +4189,18 @@ var ror_protectedsectors = new Uint8Array(MAXSECTORS);
 
 //            if (drawing_ror == 2) // viewing from top
 //            {
-//                int32_t k = headspritesect[sp->sectnum];
+//                int32_t k = headspritesect[sp.sectnum];
 
 //                while (k != -1)
 //                {
-//                    if (sprite[k].picnum != SECTOREFFECTOR && (sprite[k].z >= sp->z))
+//                    if (sprite[k].picnum != SECTOREFFECTOR && (sprite[k].z >= sp.z))
 //                    {
 //                        Bmemcpy((spritetype *)&tsprite[spritesortcnt],(spritetype *)&sprite[k],sizeof(spritetype));
 
-//                        tsprite[spritesortcnt].x += (sprite[sp->yvel].x-sp->x);
-//                        tsprite[spritesortcnt].y += (sprite[sp->yvel].y-sp->y);
-//                        tsprite[spritesortcnt].z = tsprite[spritesortcnt].z - sp->z + actor[sp->yvel].ceilingz;
-//                        tsprite[spritesortcnt].sectnum = sprite[sp->yvel].sectnum;
+//                        tsprite[spritesortcnt].x += (sprite[sp.yvel].x-sp.x);
+//                        tsprite[spritesortcnt].y += (sprite[sp.yvel].y-sp.y);
+//                        tsprite[spritesortcnt].z = tsprite[spritesortcnt].z - sp.z + actor[sp.yvel].ceilingz;
+//                        tsprite[spritesortcnt].sectnum = sprite[sp.yvel].sectnum;
 //                        tsprite[spritesortcnt].owner = k;
 
 //                        //OSD_Printf("duped sprite of pic %d at %d %d %d\n",tsprite[spritesortcnt].picnum,tsprite[spritesortcnt].x,tsprite[spritesortcnt].y,tsprite[spritesortcnt].z);
@@ -4339,16 +4340,16 @@ var ror_protectedsectors = new Uint8Array(MAXSECTORS);
 //        {
 //            int32_t k;
 
-//            for (k=headspritesect[sp->sectnum]; k != -1; k=nextspritesect[k])
+//            for (k=headspritesect[sp.sectnum]; k != -1; k=nextspritesect[k])
 //            {
-//                if (sprite[k].picnum != SECTOREFFECTOR && (sprite[k].z >= sp->z))
+//                if (sprite[k].picnum != SECTOREFFECTOR && (sprite[k].z >= sp.z))
 //                {
 //                    Bmemcpy(&tsprite[spritesortcnt], &sprite[k], sizeof(spritetype));
 
-//                    tsprite[spritesortcnt].x += (sprite[sp->yvel].x-sp->x);
-//                    tsprite[spritesortcnt].y += (sprite[sp->yvel].y-sp->y);
-//                    tsprite[spritesortcnt].z = tsprite[spritesortcnt].z - sp->z + actor[sp->yvel].ceilingz;
-//                    tsprite[spritesortcnt].sectnum = sprite[sp->yvel].sectnum;
+//                    tsprite[spritesortcnt].x += (sprite[sp.yvel].x-sp.x);
+//                    tsprite[spritesortcnt].y += (sprite[sp.yvel].y-sp.y);
+//                    tsprite[spritesortcnt].z = tsprite[spritesortcnt].z - sp.z + actor[sp.yvel].ceilingz;
+//                    tsprite[spritesortcnt].sectnum = sprite[sp.yvel].sectnum;
 //                    tsprite[spritesortcnt].owner = k;
 
 //                    //OSD_Printf("duped sprite of pic %d at %d %d %d\n",tsprite[spritesortcnt].picnum,tsprite[spritesortcnt].x,tsprite[spritesortcnt].y,tsprite[spritesortcnt].z);
@@ -4388,7 +4389,7 @@ var ror_protectedsectors = new Uint8Array(MAXSECTORS);
 //                for (x=0; x<320; x++)
 //                {
 //                    const palette_t *pix = &frame[base + mulscale16(x, xf)];
-//                    pic[320*y + x] = getclosestcol(pix->r>>2, pix->g>>2, pix->b>>2);
+//                    pic[320*y + x] = getclosestcol(pix.r>>2, pix.g>>2, pix.b>>2);
 //                }
 //            }
 
@@ -4415,7 +4416,7 @@ var ror_protectedsectors = new Uint8Array(MAXSECTORS);
 //        pub = 0;
 //    }
 
-//    if (ud.overhead_on == 2 || ud.show_help || (p->cursectnum == -1 && getrendermode() != REND_CLASSIC))
+//    if (ud.overhead_on == 2 || ud.show_help || (p.cursectnum == -1 && getrendermode() != REND_CLASSIC))
 //        return;
 
 //    if (r_usenewaspect)
@@ -4424,14 +4425,14 @@ var ror_protectedsectors = new Uint8Array(MAXSECTORS);
 //        setaspect_new();
 //    }
 
-//    if (ud.pause_on || g_player[snum].ps->on_crane > -1)
+//    if (ud.pause_on || g_player[snum].ps.on_crane > -1)
 //        smoothratio = 65536;
 //    else
 //        smoothratio = calc_smoothratio(totalclock, ototalclock);
 
-//    g_visibility = (int32_t)(p->visibility * (numplayers > 1 ? 1.f : r_ambientlightrecip));
+//    g_visibility = (int32_t)(p.visibility * (numplayers > 1 ? 1.f : r_ambientlightrecip));
 
-//    CAMERA(sect) = p->cursectnum;
+//    CAMERA(sect) = p.cursectnum;
 
 //    G_DoInterpolations(smoothratio);
 //    G_AnimateCamSprite();
@@ -4441,22 +4442,22 @@ var ror_protectedsectors = new Uint8Array(MAXSECTORS);
 //        spritetype *const s = &sprite[ud.camerasprite];
 
 //        // XXX: what?
-//        if (s->yvel < 0) s->yvel = -100;
-//        else if (s->yvel > 199) s->yvel = 300;
+//        if (s.yvel < 0) s.yvel = -100;
+//        else if (s.yvel > 199) s.yvel = 300;
 
 //        CAMERA(ang) = actor[ud.camerasprite].tempang +
-//            mulscale16(((s->ang+1024-actor[ud.camerasprite].tempang)&2047)-1024, smoothratio);
+//            mulscale16(((s.ang+1024-actor[ud.camerasprite].tempang)&2047)-1024, smoothratio);
 
 //        G_SE40(smoothratio);
 
 //#ifdef POLYMER
 //        if (getrendermode() == REND_POLYMER)
-//            polymer_setanimatesprites(G_DoSpriteAnimations, s->x, s->y, CAMERA(ang), smoothratio);
+//            polymer_setanimatesprites(G_DoSpriteAnimations, s.x, s.y, CAMERA(ang), smoothratio);
 //#endif
 //        yax_preparedrawrooms();
-//        drawrooms(s->x,s->y,s->z-(4<<8),CAMERA(ang),s->yvel,s->sectnum);
-//        yax_drawrooms(G_DoSpriteAnimations, s->sectnum, 0, smoothratio);
-//        G_DoSpriteAnimations(s->x,s->y,CAMERA(ang),smoothratio);
+//        drawrooms(s.x,s.y,s.z-(4<<8),CAMERA(ang),s.yvel,s.sectnum);
+//        yax_drawrooms(G_DoSpriteAnimations, s.sectnum, 0, smoothratio);
+//        G_DoSpriteAnimations(s.x,s.y,CAMERA(ang),smoothratio);
 //        drawmasks();
 //    }
 //    else
@@ -4464,9 +4465,9 @@ var ror_protectedsectors = new Uint8Array(MAXSECTORS);
 //        int32_t j,fz,cz;
 //        int32_t tiltcx, tiltcy, tiltcs=0;    // JBF 20030807
 
-//        const int32_t vr = divscale22(1,sprite[p->i].yrepeat+28);
+//        const int32_t vr = divscale22(1,sprite[p.i].yrepeat+28);
 //        const int32_t software_screen_tilting =
-//            (getrendermode() == REND_CLASSIC && ((ud.screen_tilting && p->rotscrnang && !g_fakeMultiMode)));
+//            (getrendermode() == REND_CLASSIC && ((ud.screen_tilting && p.rotscrnang && !g_fakeMultiMode)));
 //        int32_t pixelDoubling = 0;
 
 //        if (!r_usenewaspect)
@@ -4493,7 +4494,7 @@ var ror_protectedsectors = new Uint8Array(MAXSECTORS);
 //        else if (software_screen_tilting)
 //        {
 //            int32_t oviewingrange = viewingrange;  // save it from setaspect()
-//            const int16_t tang = (ud.screen_tilting) ? p->rotscrnang : 0;
+//            const int16_t tang = (ud.screen_tilting) ? p.rotscrnang : 0;
 
 //            // To render a tilted screen in high quality, we need at least
 //            // 640 pixels of *Y* dimension.
@@ -4554,9 +4555,9 @@ var ror_protectedsectors = new Uint8Array(MAXSECTORS);
 //        else if (getrendermode() >= REND_POLYMOST && (ud.screen_tilting && !g_fakeMultiMode))
 //        {
 //#ifdef USE_OPENGL
-//            setrollangle(p->orotscrnang + mulscale16(((p->rotscrnang - p->orotscrnang + 1024)&2047)-1024, smoothratio));
+//            setrollangle(p.orotscrnang + mulscale16(((p.rotscrnang - p.orotscrnang + 1024)&2047)-1024, smoothratio));
 //#endif
-//            p->orotscrnang = p->rotscrnang; // JBF: save it for next time
+//            p.orotscrnang = p.rotscrnang; // JBF: save it for next time
 //        }
 //        else if (!ud.detail && getrendermode()==REND_CLASSIC)
 //        {
@@ -4565,29 +4566,29 @@ var ror_protectedsectors = new Uint8Array(MAXSECTORS);
 //            G_UpdateScreenArea();
 //        }
 
-//        if (p->newowner < 0)
+//        if (p.newowner < 0)
 //        {
-//            vec3_t cam = { p->opos.x+mulscale16(p->pos.x-p->opos.x, smoothratio),
-//                           p->opos.y+mulscale16(p->pos.y-p->opos.y, smoothratio),
-//                           p->opos.z+mulscale16(p->pos.z-p->opos.z, smoothratio)
+//            vec3_t cam = { p.opos.x+mulscale16(p.pos.x-p.opos.x, smoothratio),
+//                           p.opos.y+mulscale16(p.pos.y-p.opos.y, smoothratio),
+//                           p.opos.z+mulscale16(p.pos.z-p.opos.z, smoothratio)
 //                         };
 
 //            Bmemcpy(&CAMERA(pos), &cam, sizeof(vec3_t));
-//            CAMERA(ang) = p->oang + mulscale16(((p->ang+1024-p->oang)&2047)-1024, smoothratio);
-//            CAMERA(ang) += p->look_ang;
-//            CAMERA(horiz) = p->ohoriz+p->ohorizoff
-//                + mulscale16((p->horiz+p->horizoff-p->ohoriz-p->ohorizoff), smoothratio);
+//            CAMERA(ang) = p.oang + mulscale16(((p.ang+1024-p.oang)&2047)-1024, smoothratio);
+//            CAMERA(ang) += p.look_ang;
+//            CAMERA(horiz) = p.ohoriz+p.ohorizoff
+//                + mulscale16((p.horiz+p.horizoff-p.ohoriz-p.ohorizoff), smoothratio);
 
 //            if (ud.viewbob)
 //            {
-//                int32_t addz = (p->opyoff + mulscale16(p->pyoff-p->opyoff, smoothratio));
-//                if (p->over_shoulder_on)
+//                int32_t addz = (p.opyoff + mulscale16(p.pyoff-p.opyoff, smoothratio));
+//                if (p.over_shoulder_on)
 //                    addz >>= 3;
 
 //                CAMERA(pos.z) += addz;
 //            }
 
-//            if (p->over_shoulder_on)
+//            if (p.over_shoulder_on)
 //            {
 //                CAMERA(pos.z) -= 3072;
 //                G_DoThirdPerson(p,&CAMERA(pos),&CAMERA(sect),CAMERA(ang),CAMERA(horiz));
@@ -4596,33 +4597,33 @@ var ror_protectedsectors = new Uint8Array(MAXSECTORS);
 //        else
 //        {
 //            // looking through viewscreen
-//            Bmemcpy(&CAMERA(pos), &p->pos, sizeof(vec3_t));
-//            CAMERA(ang) = p->ang + p->look_ang;
-//            CAMERA(horiz) = 100+sprite[p->newowner].shade;
-//            CAMERA(sect) = sprite[p->newowner].sectnum;
+//            Bmemcpy(&CAMERA(pos), &p.pos, sizeof(vec3_t));
+//            CAMERA(ang) = p.ang + p.look_ang;
+//            CAMERA(horiz) = 100+sprite[p.newowner].shade;
+//            CAMERA(sect) = sprite[p.newowner].sectnum;
 //            smoothratio = 65536;
 //        }
 
-//        cz = actor[p->i].ceilingz;
-//        fz = actor[p->i].floorz;
+//        cz = actor[p.i].ceilingz;
+//        fz = actor[p.i].floorz;
 
-//        if (g_earthquakeTime > 0 && p->on_ground == 1)
+//        if (g_earthquakeTime > 0 && p.on_ground == 1)
 //        {
 //            CAMERA(pos.z) += 256-(((g_earthquakeTime)&1)<<9);
 //            CAMERA(ang) += (2-((g_earthquakeTime)&2))<<2;
 //        }
 
-//        if (sprite[p->i].pal == 1)
+//        if (sprite[p.i].pal == 1)
 //            CAMERA(pos.z) -= (18<<8);
 
-//        if (p->newowner < 0 && p->spritebridge == 0)
+//        if (p.newowner < 0 && p.spritebridge == 0)
 //        {
-//            // NOTE: when shrunk, p->pos.z can be below the floor.  This puts the
+//            // NOTE: when shrunk, p.pos.z can be below the floor.  This puts the
 //            // camera into the sector again then.
 
-//            if (CAMERA(pos.z) < (p->truecz + (4<<8)))
+//            if (CAMERA(pos.z) < (p.truecz + (4<<8)))
 //                CAMERA(pos.z) = cz + (4<<8);
-//            else if (CAMERA(pos.z) > (p->truefz - (4<<8)))
+//            else if (CAMERA(pos.z) > (p.truefz - (4<<8)))
 //                CAMERA(pos.z) = fz - (4<<8);
 //        }
 
@@ -4663,7 +4664,7 @@ var ror_protectedsectors = new Uint8Array(MAXSECTORS);
 //        // NOTE: might be rendering off-screen here, so CON commands that draw stuff
 //        //  like showview must cope with that situation or bail out!
 //        if (G_HaveEvent(EVENT_DISPLAYROOMS))
-//            dont_draw = VM_OnEvent(EVENT_DISPLAYROOMS, g_player[screenpeek].ps->i, screenpeek, -1, 0);
+//            dont_draw = VM_OnEvent(EVENT_DISPLAYROOMS, g_player[screenpeek].ps.i, screenpeek, -1, 0);
 
 //        CAMERA(horiz) = clamp(CAMERA(horiz), HORIZ_MIN, HORIZ_MAX);
 
@@ -4716,7 +4717,7 @@ var ror_protectedsectors = new Uint8Array(MAXSECTORS);
 //        }
 //        else if (software_screen_tilting)
 //        {
-//            const int16_t tang = (ud.screen_tilting) ? p->rotscrnang : 0;
+//            const int16_t tang = (ud.screen_tilting) ? p.rotscrnang : 0;
 
 //            setviewback();
 //            picanm[TILE_TILT].xofs = picanm[TILE_TILT].yofs = 0;
@@ -4769,10 +4770,10 @@ var ror_protectedsectors = new Uint8Array(MAXSECTORS);
 
 //    if (totalclock < lastvisinc)
 //    {
-//        if (klabs(p->visibility-ud.const_visibility) > 8)
-//            p->visibility += (ud.const_visibility-p->visibility)>>2;
+//        if (klabs(p.visibility-ud.const_visibility) > 8)
+//            p.visibility += (ud.const_visibility-p.visibility)>>2;
 //    }
-//    else p->visibility = ud.const_visibility;
+//    else p.visibility = ud.const_visibility;
 
 //    if (r_usenewaspect)
 //    {
@@ -4855,8 +4856,8 @@ var ror_protectedsectors = new Uint8Array(MAXSECTORS);
 //    Gv_DumpValues();
 ////    fclose(fp);
 //#endif
-//    saveboard("debug.map", &g_player[myconnectindex].ps->pos, g_player[myconnectindex].ps->ang,
-//              g_player[myconnectindex].ps->cursectnum);
+//    saveboard("debug.map", &g_player[myconnectindex].ps.pos, g_player[myconnectindex].ps.ang,
+//              g_player[myconnectindex].ps.cursectnum);
 //}
 
 //// if <set_movflag_uncond> is true, set the moveflag unconditionally,
@@ -4866,12 +4867,12 @@ var ror_protectedsectors = new Uint8Array(MAXSECTORS);
 //#if !defined LUNATIC
 //    if (g_tile[tilenum].execPtr)
 //    {
-//        SH = *(g_tile[tilenum].execPtr);
+//        sprite[i].extra = *(g_tile[tilenum].execPtr);
 //        AC_ACTION_ID(actor[i].t_data) = *(g_tile[tilenum].execPtr+1);
 //        AC_MOVE_ID(actor[i].t_data) = *(g_tile[tilenum].execPtr+2);
 
-//        if (set_movflag_uncond || SHT == 0)  // AC_MOVFLAGS
-//            SHT = *(g_tile[tilenum].execPtr+3);
+//        if (set_movflag_uncond || sprite[i].hitag == 0)  // AC_MOVFLAGS
+//            sprite[i].hitag = *(g_tile[tilenum].execPtr+3);
 
 //        return 1;
 //    }
@@ -4882,14 +4883,14 @@ var ror_protectedsectors = new Uint8Array(MAXSECTORS);
 //        const el_actor_t *a = &g_elActors[tilenum];
 //        uint16_t *movflagsptr = &AC_MOVFLAGS(&sprite[i], &actor[i]);
 
-//        SH = a->strength;
-//        AC_ACTION_ID(actor[i].t_data) = a->act.id;
-//        AC_MOVE_ID(actor[i].t_data) = a->mov.id;
-//        Bmemcpy(&actor[i].ac, &a->act.ac, sizeof(struct action));
-//        Bmemcpy(&actor[i].mv, &a->mov.mv, sizeof(struct move));
+//        sprite[i].extra = a.strength;
+//        AC_ACTION_ID(actor[i].t_data) = a.act.id;
+//        AC_MOVE_ID(actor[i].t_data) = a.mov.id;
+//        Bmemcpy(&actor[i].ac, &a.act.ac, sizeof(struct action));
+//        Bmemcpy(&actor[i].mv, &a.mov.mv, sizeof(struct move));
 
 //        if (set_movflag_uncond || *movflagsptr == 0)
-//            *movflagsptr = a->movflags;
+//            *movflagsptr = a.movflags;
 
 //        return 1;
 //    }
@@ -5021,146 +5022,148 @@ var ror_protectedsectors = new Uint8Array(MAXSECTORS);
 // 1. j>=0: Spawn from parent sprite <j> with picnum <pn>
 // 2. j<0: Spawn from already *existing* sprite <pn>
 function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
-{todoThrow();return 999999999999999999999999999999999999999999999;
-//    int32_t i, s, startwall, endwall, sect;
-//    spritetype *sp;
+{
+    var i: number, s: number, startwall: number, endwall: number, sect: number;
+    var sp: spritetype; //spritetype *
 
-//    if (j >= 0)
-//    {
-//        // spawn from parent sprite <j>
-//        i = A_InsertSprite(sprite[j].sectnum,sprite[j].x,sprite[j].y,sprite[j].z,
-//                           pn,0,0,0,0,0,0,j,0);
-//        actor[i].picnum = sprite[j].picnum;
-//    }
-//    else
-//    {
-//        // spawn from already existing sprite <pn>
-//        i = pn;
+    if (j >= 0)
+    {
+        // spawn from parent sprite <j>
+        i = A_InsertSprite(sprite[j].sectnum,sprite[j].x,sprite[j].y,sprite[j].z,
+                           pn,0,0,0,0,0,0,j,0);
+        actor[i].picnum = sprite[j].picnum;
+    }
+    else
+    {
+        // spawn from already existing sprite <pn>
+        i = pn;
 
-//        Bmemset(&actor[i], 0, sizeof(actor_t));
-//        Bmemcpy(&actor[i].bpos.x, &sprite[i], sizeof(vec3_t));
+        actor[i].init();//Bmemset(&actor[i], 0, sizeof(actor_t));
+        actor[i].bpos.x  = sprite[i].x; //Bmemcpy(&actor[i].bpos.x, &sprite[i], sizeof(vec3_t));
+        actor[i].bpos.y  = sprite[i].y;
+        actor[i].bpos.z  = sprite[i].z;
 
-//        actor[i].picnum = PN;
+        actor[i].picnum = sprite[i].picnum;
 
-//        if (PN == SECTOREFFECTOR && SLT == 50)
-//            actor[i].picnum = OW;
+        if (sprite[i].picnum == SECTOREFFECTOR && sprite[i].lotag == 50)
+            actor[i].picnum = sprite[i].owner;
 
-//        OW = actor[i].owner = i;
+        sprite[i].owner = actor[i].owner = i;
 
-//        actor[i].floorz = sector[SECT].floorz;
-//        actor[i].ceilingz = sector[SECT].ceilingz;
+        actor[i].floorz = sector[sprite[i].sectnum].floorz;
+        actor[i].ceilingz = sector[sprite[i].sectnum].ceilingz;
 
-//        actor[i].actorstayput = actor[i].lightId = actor[i].extra = -1;
+        actor[i].actorstayput = actor[i].lightId = actor[i].extra = -1;
 
-//        if (PN != SPEAKER && PN != LETTER && PN != DUCK && PN != TARGET && PN != TRIPBOMB && PN != VIEWSCREEN && PN != VIEWSCREEN2 && (CS&48))
-//            if (!(PN >= CRACK1 && PN <= CRACK4))
-//            {
-//                if (SS == 127) goto SPAWN_END;
-//                if (A_CheckSwitchTile(i) == 1 && (CS&16))
-//                {
-//                    if (PN != ACCESSSWITCH && PN != ACCESSSWITCH2 && sprite[i].pal)
-//                    {
-//                        if (((!g_netServer && ud.multimode < 2)) || ((g_netServer || ud.multimode > 1) && !GTFLAGS(GAMETYPE_DMSWITCHES)))
-//                        {
-//                            sprite[i].xrepeat = sprite[i].yrepeat = 0;
-//                            SLT = SHT = 0;
-//                            sprite[i].cstat = 32768;
-//                            goto SPAWN_END;
-//                        }
-//                    }
-//                    CS |= 257;
-//                    if (sprite[i].pal && PN != ACCESSSWITCH && PN != ACCESSSWITCH2)
-//                        sprite[i].pal = 0;
-//                    goto SPAWN_END;
-//                }
+        if (sprite[i].picnum != SPEAKER && sprite[i].picnum != LETTER && sprite[i].picnum != DUCK && sprite[i].picnum != TARGET && sprite[i].picnum != TRIPBOMB && sprite[i].picnum != VIEWSCREEN && sprite[i].picnum != VIEWSCREEN2 && (sprite[i].cstat&48))
+            if (!(sprite[i].picnum >= CRACK1 && sprite[i].picnum <= CRACK4))
+            {
+                if (sprite[i].shade == 127) return SPAWN_END();
+                if (A_CheckSwitchTile(i) == 1 && (sprite[i].cstat&16))
+                {
+                    if (sprite[i].picnum != ACCESSSWITCH && sprite[i].picnum != ACCESSSWITCH2 && sprite[i].pal)
+                    {
+                        if (((!g_netServer && ud.multimode < 2)) || ((g_netServer || ud.multimode > 1) && !GTFLAGS(GAMETYPE_DMSWITCHES)))
+                        {
+                            sprite[i].xrepeat = sprite[i].yrepeat = 0;
+                            sprite[i].lotag = sprite[i].hitag = 0;
+                            sprite[i].cstat = 32768;
+                            return SPAWN_END();
+                        }
+                    }
+                    sprite[i].cstat |= 257;
+                    if (sprite[i].pal && sprite[i].picnum != ACCESSSWITCH && sprite[i].picnum != ACCESSSWITCH2)
+                        sprite[i].pal = 0;
+                    return SPAWN_END();
+                }
 
-//                if (SHT)
-//                {
-//                    changespritestat(i, STAT_FALLER);
-//                    CS |=  257;
-//                    SH = g_impactDamage;
-//                    goto SPAWN_END;
-//                }
-//            }
+                if (sprite[i].hitag)
+                {
+                    changespritestat(i, STAT_FALLER);
+                    sprite[i].cstat |=  257;
+                    sprite[i].extra = g_impactDamage;
+                    return SPAWN_END();
+                }
+            }
 
-//        s = PN;
+        s = sprite[i].picnum;
 
-//        if (CS&1)
-//            CS |= 256;
+        if (sprite[i].cstat&1)
+            sprite[i].cstat |= 256;
 
-//        if (!G_InitActor(i, s, 0))
-//            T2 = T5 = 0;  // AC_MOVE_ID, AC_ACTION_ID
-//    }
+        if (!G_InitActor(i, s, 0))
+            actor[i].t_data[1] = actor[i].t_data[4] = 0;  // AC_MOVE_ID, AC_ACTION_ID
+    }
 
-//    sp = &sprite[i];
-//    sect = sp->sectnum;
+    sp = sprite[i];
+    sect = sp.sectnum;
 
-//    //some special cases that can't be handled through the dynamictostatic system.
-//    if ((sp->picnum >= BOLT1 && sp->picnum <= BOLT1+3) ||
-//            (sp->picnum >= SIDEBOLT1 && sp->picnum <= SIDEBOLT1+3))
-//    {
-//        T1 = sp->xrepeat;
-//        T2 = sp->yrepeat;
-//        sp->yvel = 0;
-//        changespritestat(i, STAT_STANDABLE);
-//    }
-//    else if ((sp->picnum >= CAMERA1 && sp->picnum <= CAMERA1+4) ||
-//                 sp->picnum==CAMERAPOLE || sp->picnum==GENERICPOLE)
-//    {
-//        if (sp->picnum != GENERICPOLE)
-//        {
-//            sp->extra = 1;
+    //some special cases that can't be handled through the dynamictostatic system.
+    if ((sp.picnum >= BOLT1 && sp.picnum <= BOLT1+3) ||
+            (sp.picnum >= SIDEBOLT1 && sp.picnum <= SIDEBOLT1+3))
+    {
+        actor[i].t_data[0] = sp.xrepeat;
+        actor[i].t_data[1] = sp.yrepeat;
+        sp.yvel = 0;
+        changespritestat(i, STAT_STANDABLE);
+    }
+    else if ((sp.picnum >= CAMERA1 && sp.picnum <= CAMERA1+4) ||
+                 sp.picnum==CAMERAPOLE || sp.picnum==GENERICPOLE)
+    {
+        if (sp.picnum != GENERICPOLE)
+        {
+            sp.extra = 1;
 
-//            sp->cstat &= 32768;
-//            if (g_damageCameras) sp->cstat |= 257;
-//        }
-//        if ((!g_netServer && ud.multimode < 2) && sp->pal != 0)
-//        {
-//            sp->xrepeat = sp->yrepeat = 0;
-//            changespritestat(i, STAT_MISC);
-//        }
-//        else
-//        {
-//            sp->pal = 0;
-//            if (!(sp->picnum == CAMERAPOLE || sp->picnum == GENERICPOLE))
-//            {
-//                sp->picnum = CAMERA1;
-//                changespritestat(i, STAT_ACTOR);
-//            }
-//        }
-//    }
-//    else switch (DYNAMICTILEMAP(sp->picnum))
-//        {
+            sp.cstat &= 32768;
+            if (g_damageCameras) sp.cstat |= 257;
+        }
+        if ((!g_netServer && ud.multimode < 2) && sp.pal != 0)
+        {
+            sp.xrepeat = sp.yrepeat = 0;
+            changespritestat(i, STAT_MISC);
+        }
+        else
+        {
+            sp.pal = 0;
+            if (!(sp.picnum == CAMERAPOLE || sp.picnum == GENERICPOLE))
+            {
+                sp.picnum = CAMERA1;
+                changespritestat(i, STAT_ACTOR);
+            }
+        }
+    }
+    else switch (DYNAMICTILEMAP(sp.picnum))
+        {
 //        default:
-//            if (G_HaveActor(sp->picnum))
+//            if (G_HaveActor(sp.picnum))
 //            {
-//                if (j == -1 && sp->lotag > ud.player_skill)
+//                if (j == -1 && sp.lotag > ud.player_skill)
 //                {
-//                    sp->xrepeat=sp->yrepeat=0;
+//                    sp.xrepeat=sp.yrepeat=0;
 //                    changespritestat(i, STAT_MISC);
 //                    break;
 //                }
 
 //                //  Init the size
-//                if (sp->xrepeat == 0 || sp->yrepeat == 0)
-//                    sp->xrepeat = sp->yrepeat = 1;
+//                if (sp.xrepeat == 0 || sp.yrepeat == 0)
+//                    sp.xrepeat = sp.yrepeat = 1;
 
-//                if (A_CheckSpriteTileFlags(sp->picnum, SPRITE_BADGUY))
+//                if (A_CheckSpriteTileFlags(sp.picnum, SPRITE_BADGUY))
 //                {
 //                    if (ud.monsters_off == 1)
 //                    {
-//                        sp->xrepeat=sp->yrepeat=0;
+//                        sp.xrepeat=sp.yrepeat=0;
 //                        changespritestat(i, STAT_MISC);
 //                        break;
 //                    }
 
 //                    A_Fall(i);
 
-//                    if (A_CheckSpriteTileFlags(sp->picnum, SPRITE_BADGUYSTAYPUT))
-//                        actor[i].actorstayput = sp->sectnum;
+//                    if (A_CheckSpriteTileFlags(sp.picnum, SPRITE_BADGUYSTAYPUT))
+//                        actor[i].actorstayput = sp.sectnum;
 
-//                    g_player[myconnectindex].ps->max_actors_killed++;
-//                    sp->clipdist = 80;
+//                    g_player[myconnectindex].ps.max_actors_killed++;
+//                    sp.clipdist = 80;
 //                    if (j >= 0)
 //                    {
 //                        if (sprite[j].picnum == RESPAWN)
@@ -5171,56 +5174,56 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //                }
 //                else
 //                {
-//                    sp->clipdist = 40;
-//                    sp->owner = i;
+//                    sp.clipdist = 40;
+//                    sp.owner = i;
 //                    changespritestat(i, STAT_ACTOR);
 //                }
 
 //                actor[i].timetosleep = 0;
 
 //                if (j >= 0)
-//                    sp->ang = sprite[j].ang;
+//                    sp.ang = sprite[j].ang;
 //            }
 //            break;
 //        case FOF__STATIC:
-//            sp->xrepeat = sp->yrepeat = 0;
+//            sp.xrepeat = sp.yrepeat = 0;
 //            changespritestat(i, STAT_MISC);
 //            break;
 //        case WATERSPLASH2__STATIC:
 //            if (j >= 0)
 //            {
 //                setsprite(i,(vec3_t *)&sprite[j]);
-//                sp->xrepeat = sp->yrepeat = 8+(krand()&7);
+//                sp.xrepeat = sp.yrepeat = 8+(krand()&7);
 //            }
-//            else sp->xrepeat = sp->yrepeat = 16+(krand()&15);
+//            else sp.xrepeat = sp.yrepeat = 16+(krand()&15);
 
-//            sp->shade = -16;
-//            sp->cstat |= 128;
+//            sp.shade = -16;
+//            sp.cstat |= 128;
 //            if (j >= 0)
 //            {
 //                if (sector[sprite[j].sectnum].lotag == ST_2_UNDERWATER)
 //                {
-//                    sp->z = getceilzofslope(SECT,SX,SY)+(16<<8);
-//                    sp->cstat |= 8;
+//                    sp.z = getceilzofslope(sprite[i].sectnum,SX,SY)+(16<<8);
+//                    sp.cstat |= 8;
 //                }
 //                else if (sector[sprite[j].sectnum].lotag == ST_1_ABOVE_WATER)
-//                    sp->z = getflorzofslope(SECT,SX,SY);
+//                    sp.z = getflorzofslope(sprite[i].sectnum,SX,SY);
 //            }
 
 //            if (sector[sect].floorpicnum == FLOORSLIME ||
 //                    sector[sect].ceilingpicnum == FLOORSLIME)
-//                sp->pal = 7;
+//                sp.pal = 7;
 //        case DOMELITE__STATIC:
-//            if (sp->picnum == DOMELITE)
-//                sp->cstat |= 257;
+//            if (sp.picnum == DOMELITE)
+//                sp.cstat |= 257;
 //        case NEON1__STATIC:
 //        case NEON2__STATIC:
 //        case NEON3__STATIC:
 //        case NEON4__STATIC:
 //        case NEON5__STATIC:
 //        case NEON6__STATIC:
-//            if (sp->picnum != WATERSPLASH2)
-//                sp->cstat |= 257;
+//            if (sp.picnum != WATERSPLASH2)
+//                sp.cstat |= 257;
 //        case NUKEBUTTON__STATIC:
 //        case JIBS1__STATIC:
 //        case JIBS2__STATIC:
@@ -5241,43 +5244,43 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //            break;
 //        case TONGUE__STATIC:
 //            if (j >= 0)
-//                sp->ang = sprite[j].ang;
-//            sp->z -= 38<<8;
-//            sp->zvel = 256-(krand()&511);
-//            sp->xvel = 64-(krand()&127);
+//                sp.ang = sprite[j].ang;
+//            sp.z -= 38<<8;
+//            sp.zvel = 256-(krand()&511);
+//            sp.xvel = 64-(krand()&127);
 //            changespritestat(i, STAT_PROJECTILE);
 //            break;
 //        case NATURALLIGHTNING__STATIC:
-//            sp->cstat &= ~257;
-//            sp->cstat |= 32768;
+//            sp.cstat &= ~257;
+//            sp.cstat |= 32768;
 //            break;
 //        case TRANSPORTERSTAR__STATIC:
 //        case TRANSPORTERBEAM__STATIC:
 //            if (j == -1) break;
-//            if (sp->picnum == TRANSPORTERBEAM)
+//            if (sp.picnum == TRANSPORTERBEAM)
 //            {
-//                sp->xrepeat = 31;
-//                sp->yrepeat = 1;
-//                sp->z = sector[sprite[j].sectnum].floorz-PHEIGHT;
+//                sp.xrepeat = 31;
+//                sp.yrepeat = 1;
+//                sp.z = sector[sprite[j].sectnum].floorz-PHEIGHT;
 //            }
 //            else
 //            {
 //                if (sprite[j].statnum == STAT_PROJECTILE)
-//                    sp->xrepeat = sp->yrepeat = 8;
+//                    sp.xrepeat = sp.yrepeat = 8;
 //                else
 //                {
-//                    sp->xrepeat = 48;
-//                    sp->yrepeat = 64;
+//                    sp.xrepeat = 48;
+//                    sp.yrepeat = 64;
 //                    if (sprite[j].statnum == STAT_PLAYER || A_CheckEnemySprite(&sprite[j]))
-//                        sp->z -= (32<<8);
+//                        sp.z -= (32<<8);
 //                }
 //            }
 
-//            sp->shade = -127;
-//            sp->cstat = 128|2;
-//            sp->ang = sprite[j].ang;
+//            sp.shade = -127;
+//            sp.cstat = 128|2;
+//            sp.ang = sprite[j].ang;
 
-//            sp->xvel = 128;
+//            sp.xvel = 128;
 //            changespritestat(i, STAT_MISC);
 //            A_SetSprite(i,CLIPMASK0);
 //            setsprite(i,(vec3_t *)sp);
@@ -5288,73 +5291,73 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //        case FRAMEEFFECT1__STATIC:
 //            if (j >= 0)
 //            {
-//                sp->xrepeat = sprite[j].xrepeat;
-//                sp->yrepeat = sprite[j].yrepeat;
-//                T2 = sprite[j].picnum;
+//                sp.xrepeat = sprite[j].xrepeat;
+//                sp.yrepeat = sprite[j].yrepeat;
+//                actor[i].t_data[1] = sprite[j].picnum;
 //            }
-//            else sp->xrepeat = sp->yrepeat = 0;
+//            else sp.xrepeat = sp.yrepeat = 0;
 
 //            changespritestat(i, STAT_MISC);
 
 //            break;
 
 //        case LASERLINE__STATIC:
-//            sp->yrepeat = 6;
-//            sp->xrepeat = 32;
+//            sp.yrepeat = 6;
+//            sp.xrepeat = 32;
 
 //            if (g_tripbombLaserMode == 1)
-//                sp->cstat = 16 + 2;
+//                sp.cstat = 16 + 2;
 //            else if (g_tripbombLaserMode == 0 || g_tripbombLaserMode == 2)
-//                sp->cstat = 16;
+//                sp.cstat = 16;
 //            else
 //            {
-//                sp->xrepeat = 0;
-//                sp->yrepeat = 0;
+//                sp.xrepeat = 0;
+//                sp.yrepeat = 0;
 //            }
 
-//            if (j >= 0) sp->ang = actor[j].t_data[5]+512;
+//            if (j >= 0) sp.ang = actor[j].t_data[5]+512;
 //            changespritestat(i, STAT_MISC);
 //            break;
 
 //        case FORCESPHERE__STATIC:
 //            if (j == -1)
 //            {
-//                sp->cstat = 32768;
+//                sp.cstat = 32768;
 //                changespritestat(i, STAT_ZOMBIEACTOR);
 //            }
 //            else
 //            {
-//                sp->xrepeat = sp->yrepeat = 1;
+//                sp.xrepeat = sp.yrepeat = 1;
 //                changespritestat(i, STAT_MISC);
 //            }
 //            break;
 
 //        case BLOOD__STATIC:
-//            sp->xrepeat = sp->yrepeat = 16;
-//            sp->z -= (26<<8);
+//            sp.xrepeat = sp.yrepeat = 16;
+//            sp.z -= (26<<8);
 //            if (j >= 0 && sprite[j].pal == 6)
-//                sp->pal = 6;
+//                sp.pal = 6;
 //            changespritestat(i, STAT_MISC);
 //            break;
 //        case BLOODPOOL__STATIC:
 //        case PUKE__STATIC:
 //        {
 //            int16_t s1;
-//            s1 = sp->sectnum;
+//            s1 = sp.sectnum;
 
-//            updatesector(sp->x+108,sp->y+108,&s1);
-//            if (s1 >= 0 && sector[s1].floorz == sector[sp->sectnum].floorz)
+//            updatesector(sp.x+108,sp.y+108,&s1);
+//            if (s1 >= 0 && sector[s1].floorz == sector[sp.sectnum].floorz)
 //            {
-//                updatesector(sp->x-108,sp->y-108,&s1);
-//                if (s1 >= 0 && sector[s1].floorz == sector[sp->sectnum].floorz)
+//                updatesector(sp.x-108,sp.y-108,&s1);
+//                if (s1 >= 0 && sector[s1].floorz == sector[sp.sectnum].floorz)
 //                {
-//                    updatesector(sp->x+108,sp->y-108,&s1);
-//                    if (s1 >= 0 && sector[s1].floorz == sector[sp->sectnum].floorz)
+//                    updatesector(sp.x+108,sp.y-108,&s1);
+//                    if (s1 >= 0 && sector[s1].floorz == sector[sp.sectnum].floorz)
 //                    {
-//                        updatesector(sp->x-108,sp->y+108,&s1);
-//                        if (s1 >= 0 && sector[s1].floorz != sector[sp->sectnum].floorz)
+//                        updatesector(sp.x-108,sp.y+108,&s1);
+//                        if (s1 >= 0 && sector[s1].floorz != sector[sp.sectnum].floorz)
 //                        {
-//                            sp->xrepeat = sp->yrepeat = 0;
+//                            sp.xrepeat = sp.yrepeat = 0;
 //                            changespritestat(i, STAT_MISC);
 //                            break;
 //                        }
@@ -5362,7 +5365,7 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //                    }
 //                    else
 //                    {
-//                        sp->xrepeat = sp->yrepeat = 0;
+//                        sp.xrepeat = sp.yrepeat = 0;
 //                        changespritestat(i, STAT_MISC);
 //                        break;
 //                    }
@@ -5370,7 +5373,7 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //                }
 //                else
 //                {
-//                    sp->xrepeat = sp->yrepeat = 0;
+//                    sp.xrepeat = sp.yrepeat = 0;
 //                    changespritestat(i, STAT_MISC);
 //                    break;
 //                }
@@ -5378,38 +5381,38 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //            }
 //            else
 //            {
-//                sp->xrepeat = sp->yrepeat = 0;
+//                sp.xrepeat = sp.yrepeat = 0;
 //                changespritestat(i, STAT_MISC);
 //                break;
 //            }
 
 //        }
 
-//        if (sector[SECT].lotag == ST_1_ABOVE_WATER)
+//        if (sector[sprite[i].sectnum].lotag == ST_1_ABOVE_WATER)
 //        {
 //            changespritestat(i, STAT_MISC);
 //            break;
 //        }
 
-//        if (j >= 0 && sp->picnum != PUKE)
+//        if (j >= 0 && sp.picnum != PUKE)
 //        {
 //            if (sprite[j].pal == 1)
-//                sp->pal = 1;
+//                sp.pal = 1;
 //            else if (sprite[j].pal != 6 && sprite[j].picnum != NUKEBARREL && sprite[j].picnum != TIRE)
 //            {
 //                if (sprite[j].picnum == FECES)
-//                    sp->pal = 7; // Brown
-//                else sp->pal = 2; // Red
+//                    sp.pal = 7; // Brown
+//                else sp.pal = 2; // Red
 //            }
-//            else sp->pal = 0;  // green
+//            else sp.pal = 0;  // green
 
 //            if (sprite[j].picnum == TIRE)
-//                sp->shade = 127;
+//                sp.shade = 127;
 //        }
-//        sp->cstat |= 32;
+//        sp.cstat |= 32;
 //        case FECES__STATIC:
 //            if (j >= 0)
-//                sp->xrepeat = sp->yrepeat = 1;
+//                sp.xrepeat = sp.yrepeat = 1;
 //            changespritestat(i, STAT_MISC);
 //            break;
 
@@ -5417,40 +5420,40 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //        case BLOODSPLAT2__STATIC:
 //        case BLOODSPLAT3__STATIC:
 //        case BLOODSPLAT4__STATIC:
-//            sp->cstat |= 16;
-//            sp->xrepeat = 7+(krand()&7);
-//            sp->yrepeat = 7+(krand()&7);
-//            sp->z -= (16<<8);
+//            sp.cstat |= 16;
+//            sp.xrepeat = 7+(krand()&7);
+//            sp.yrepeat = 7+(krand()&7);
+//            sp.z -= (16<<8);
 //            if (j >= 0 && sprite[j].pal == 6)
-//                sp->pal = 6;
+//                sp.pal = 6;
 //            A_AddToDeleteQueue(i);
 //            changespritestat(i, STAT_MISC);
 //            break;
 
 //        case TRIPBOMB__STATIC:
-//            if (sp->lotag > ud.player_skill)
+//            if (sp.lotag > ud.player_skill)
 //            {
-//                sp->xrepeat=sp->yrepeat=0;
+//                sp.xrepeat=sp.yrepeat=0;
 //                changespritestat(i, STAT_MISC);
 //                break;
 //            }
 
-//            sp->xrepeat=4;
-//            sp->yrepeat=5;
+//            sp.xrepeat=4;
+//            sp.yrepeat=5;
 
-//            sp->owner = sp->hitag = i;
+//            sp.owner = sp.hitag = i;
 
-//            sp->xvel = 16;
+//            sp.xvel = 16;
 //            A_SetSprite(i,CLIPMASK0);
 //            actor[i].t_data[0] = 17;
 //            actor[i].t_data[2] = 0;
-//            actor[i].t_data[5] = sp->ang;
+//            actor[i].t_data[5] = sp.ang;
 //            changespritestat(i, STAT_ZOMBIEACTOR);
 //            break;
 
 //        case SPACEMARINE__STATIC:
-//            sp->extra = 20;
-//            sp->cstat |= 257;
+//            sp.extra = 20;
+//            sp.cstat |= 257;
 //            changespritestat(i, STAT_ZOMBIEACTOR);
 //            break;
 
@@ -5519,25 +5522,25 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //        case PIPE4__STATIC:
 //        case PIPE5__STATIC:
 //        case PIPE6__STATIC:
-//            sp->clipdist = 32;
-//            sp->cstat |= 257;
+//            sp.clipdist = 32;
+//            sp.cstat |= 257;
 //        case OCEANSPRITE4__STATIC:
 //            changespritestat(i, STAT_DEFAULT);
 //            break;
 //        case FEMMAG1__STATIC:
 //        case FEMMAG2__STATIC:
-//            sp->cstat &= ~257;
+//            sp.cstat &= ~257;
 //            changespritestat(i, STAT_DEFAULT);
 //            break;
 //        case DUKETAG__STATIC:
 //        case SIGN1__STATIC:
 //        case SIGN2__STATIC:
-//            if ((!g_netServer && ud.multimode < 2) && sp->pal)
+//            if ((!g_netServer && ud.multimode < 2) && sp.pal)
 //            {
-//                sp->xrepeat = sp->yrepeat = 0;
+//                sp.xrepeat = sp.yrepeat = 0;
 //                changespritestat(i, STAT_MISC);
 //            }
-//            else sp->pal = 0;
+//            else sp.pal = 0;
 //            break;
 //        case MASKWALL1__STATIC:
 //        case MASKWALL2__STATIC:
@@ -5554,8 +5557,8 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //        case MASKWALL13__STATIC:
 //        case MASKWALL14__STATIC:
 //        case MASKWALL15__STATIC:
-//            j = sp->cstat&60;
-//            sp->cstat = j|1;
+//            j = sp.cstat&60;
+//            sp.cstat = j|1;
 //            changespritestat(i, STAT_DEFAULT);
 //            break;
 //        case FOOTPRINTS__STATIC:
@@ -5564,57 +5567,57 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //        case FOOTPRINTS4__STATIC:
 //            if (j >= 0)
 //            {
-//                int16_t s1 = sp->sectnum;
+//                int16_t s1 = sp.sectnum;
 
-//                updatesector(sp->x+84,sp->y+84,&s1);
-//                if (s1 >= 0 && sector[s1].floorz == sector[sp->sectnum].floorz)
+//                updatesector(sp.x+84,sp.y+84,&s1);
+//                if (s1 >= 0 && sector[s1].floorz == sector[sp.sectnum].floorz)
 //                {
-//                    updatesector(sp->x-84,sp->y-84,&s1);
-//                    if (s1 >= 0 && sector[s1].floorz == sector[sp->sectnum].floorz)
+//                    updatesector(sp.x-84,sp.y-84,&s1);
+//                    if (s1 >= 0 && sector[s1].floorz == sector[sp.sectnum].floorz)
 //                    {
-//                        updatesector(sp->x+84,sp->y-84,&s1);
-//                        if (s1 >= 0 && sector[s1].floorz == sector[sp->sectnum].floorz)
+//                        updatesector(sp.x+84,sp.y-84,&s1);
+//                        if (s1 >= 0 && sector[s1].floorz == sector[sp.sectnum].floorz)
 //                        {
-//                            updatesector(sp->x-84,sp->y+84,&s1);
-//                            if (s1 >= 0 && sector[s1].floorz != sector[sp->sectnum].floorz)
+//                            updatesector(sp.x-84,sp.y+84,&s1);
+//                            if (s1 >= 0 && sector[s1].floorz != sector[sp.sectnum].floorz)
 //                            {
-//                                sp->xrepeat = sp->yrepeat = 0;
+//                                sp.xrepeat = sp.yrepeat = 0;
 //                                changespritestat(i, STAT_MISC);
 //                                break;
 //                            }
 //                        }
 //                        else
 //                        {
-//                            sp->xrepeat = sp->yrepeat = 0;
+//                            sp.xrepeat = sp.yrepeat = 0;
 //                            break;
 //                        }
 //                    }
 //                    else
 //                    {
-//                        sp->xrepeat = sp->yrepeat = 0;
+//                        sp.xrepeat = sp.yrepeat = 0;
 //                        break;
 //                    }
 //                }
 //                else
 //                {
-//                    sp->xrepeat = sp->yrepeat = 0;
+//                    sp.xrepeat = sp.yrepeat = 0;
 //                    break;
 //                }
 
-//                sp->cstat = 32+((g_player[sprite[j].yvel].ps->footprintcount&1)<<2);
-//                sp->ang = sprite[j].ang;
+//                sp.cstat = 32+((g_player[sprite[j].yvel].ps.footprintcount&1)<<2);
+//                sp.ang = sprite[j].ang;
 //            }
 
-//            sp->z = sector[sect].floorz;
+//            sp.z = sector[sect].floorz;
 //            if (sector[sect].lotag != ST_1_ABOVE_WATER && sector[sect].lotag != ST_2_UNDERWATER)
-//                sp->xrepeat = sp->yrepeat = 32;
+//                sp.xrepeat = sp.yrepeat = 32;
 
 //            A_AddToDeleteQueue(i);
 //            changespritestat(i, STAT_MISC);
 //            break;
 
 //        case PODFEM1__STATIC:
-//            sp->extra <<= 1;
+//            sp.extra <<= 1;
 //        case FEM1__STATIC:
 //        case FEM2__STATIC:
 //        case FEM3__STATIC:
@@ -5628,51 +5631,51 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //        case NAKED1__STATIC:
 //        case STATUE__STATIC:
 //        case TOUGHGAL__STATIC:
-//            sp->yvel = sp->hitag;
-//            sp->hitag = -1;
+//            sp.yvel = sp.hitag;
+//            sp.hitag = -1;
 //        case BLOODYPOLE__STATIC:
-//            sp->cstat |= 257;
-//            sp->clipdist = 32;
+//            sp.cstat |= 257;
+//            sp.clipdist = 32;
 //            changespritestat(i, STAT_ZOMBIEACTOR);
 //            break;
 
 //        case QUEBALL__STATIC:
 //        case STRIPEBALL__STATIC:
-//            sp->cstat = 256;
-//            sp->clipdist = 8;
+//            sp.cstat = 256;
+//            sp.clipdist = 8;
 //            changespritestat(i, STAT_ZOMBIEACTOR);
 //            break;
 
 //        case DUKELYINGDEAD__STATIC:
 //            if (j >= 0 && sprite[j].picnum == APLAYER)
 //            {
-//                sp->xrepeat = sprite[j].xrepeat;
-//                sp->yrepeat = sprite[j].yrepeat;
-//                sp->shade = sprite[j].shade;
-//                sp->pal = g_player[sprite[j].yvel].ps->palookup;
+//                sp.xrepeat = sprite[j].xrepeat;
+//                sp.yrepeat = sprite[j].yrepeat;
+//                sp.shade = sprite[j].shade;
+//                sp.pal = g_player[sprite[j].yvel].ps.palookup;
 //            }
 //        case DUKECAR__STATIC:
 //        case HELECOPT__STATIC:
-//            //                if(sp->picnum == HELECOPT || sp->picnum == DUKECAR) sp->xvel = 1024;
-//            sp->cstat = 0;
-//            sp->extra = 1;
-//            sp->xvel = 292;
-//            sp->zvel = 360;
+//            //                if(sp.picnum == HELECOPT || sp.picnum == DUKECAR) sp.xvel = 1024;
+//            sp.cstat = 0;
+//            sp.extra = 1;
+//            sp.xvel = 292;
+//            sp.zvel = 360;
 //        case BLIMP__STATIC:
-//            sp->cstat |= 257;
-//            sp->clipdist = 128;
+//            sp.cstat |= 257;
+//            sp.clipdist = 128;
 //            changespritestat(i, STAT_ACTOR);
 //            break;
 
 //        case RESPAWNMARKERRED__STATIC:
-//            sp->xrepeat = sp->yrepeat = 24;
-//            if (j >= 0) sp->z = actor[j].floorz; // -(1<<4);
+//            sp.xrepeat = sp.yrepeat = 24;
+//            if (j >= 0) sp.z = actor[j].floorz; // -(1<<4);
 //            changespritestat(i, STAT_ACTOR);
 //            break;
 
 //        case MIKE__STATIC:
-//            sp->yvel = sp->hitag;
-//            sp->hitag = 0;
+//            sp.yvel = sp.hitag;
+//            sp.hitag = 0;
 //            changespritestat(i, STAT_ACTOR);
 //            break;
 //        case WEATHERWARN__STATIC:
@@ -5680,12 +5683,12 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //            break;
 
 //        case SPOTLITE__STATIC:
-//            T1 = sp->x;
-//            T2 = sp->y;
+//            actor[i].t_data[0] = sp.x;
+//            actor[i].t_data[1] = sp.y;
 //            break;
 //        case BULLETHOLE__STATIC:
-//            sp->xrepeat = sp->yrepeat = 3;
-//            sp->cstat = 16+(krand()&12);
+//            sp.xrepeat = sp.yrepeat = 3;
+//            sp.cstat = 16+(krand()&12);
 //            A_AddToDeleteQueue(i);
 //            changespritestat(i, STAT_MISC);
 //            break;
@@ -5694,16 +5697,16 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //        case MAIL__STATIC:
 //        case PAPER__STATIC:
 //            actor[i].t_data[0] = krand()&2047;
-//            sp->cstat = krand()&12;
-//            sp->xrepeat = sp->yrepeat = 8;
-//            sp->ang = krand()&2047;
+//            sp.cstat = krand()&12;
+//            sp.xrepeat = sp.yrepeat = 8;
+//            sp.ang = krand()&2047;
 //            changespritestat(i, STAT_MISC);
 //            break;
 
 //        case VIEWSCREEN__STATIC:
 //        case VIEWSCREEN2__STATIC:
-//            sp->owner = i;
-//            sp->lotag = sp->extra = 1;
+//            sp.owner = i;
+//            sp.lotag = sp.extra = 1;
 //            changespritestat(i, STAT_STANDABLE);
 //            break;
 
@@ -5716,59 +5719,59 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //                if (sprite[j].picnum == APLAYER)
 //                {
 //                    snum = sprite[j].yvel;
-//                    a = g_player[snum].ps->ang-(krand()&63)+8;  //Fine tune
+//                    a = g_player[snum].ps.ang-(krand()&63)+8;  //Fine tune
 
-//                    T1 = krand()&1;
-//                    sp->z = (3<<8)+g_player[snum].ps->pyoff+g_player[snum].ps->pos.z-
-//                            ((g_player[snum].ps->horizoff+g_player[snum].ps->horiz-100)<<4);
-//                    if (sp->picnum == SHOTGUNSHELL)
-//                        sp->z += (3<<8);
-//                    sp->zvel = -(krand()&255);
+//                    actor[i].t_data[0] = krand()&1;
+//                    sp.z = (3<<8)+g_player[snum].ps.pyoff+g_player[snum].ps.pos.z-
+//                            ((g_player[snum].ps.horizoff+g_player[snum].ps.horiz-100)<<4);
+//                    if (sp.picnum == SHOTGUNSHELL)
+//                        sp.z += (3<<8);
+//                    sp.zvel = -(krand()&255);
 //                }
 //                else
 //                {
-//                    a = sp->ang;
-//                    sp->z = sprite[j].z-PHEIGHT+(3<<8);
+//                    a = sp.ang;
+//                    sp.z = sprite[j].z-PHEIGHT+(3<<8);
 //                }
 
-//                sp->x = sprite[j].x+(sintable[(a+512)&2047]>>7);
-//                sp->y = sprite[j].y+(sintable[a&2047]>>7);
+//                sp.x = sprite[j].x+(sintable[(a+512)&2047]>>7);
+//                sp.y = sprite[j].y+(sintable[a&2047]>>7);
 
-//                sp->shade = -8;
+//                sp.shade = -8;
 
-//                if (sp->yvel == 1 || NAM)
+//                if (sp.yvel == 1 || NAM)
 //                {
-//                    sp->ang = a+512;
-//                    sp->xvel = 30;
+//                    sp.ang = a+512;
+//                    sp.xvel = 30;
 //                }
 //                else
 //                {
-//                    sp->ang = a-512;
-//                    sp->xvel = 20;
+//                    sp.ang = a-512;
+//                    sp.xvel = 20;
 //                }
-//                sp->xrepeat=sp->yrepeat=4;
+//                sp.xrepeat=sp.yrepeat=4;
 
 //                changespritestat(i, STAT_MISC);
 //            }
 //            break;
 
 //        case RESPAWN__STATIC:
-//            sp->extra = 66-13;
+//            sp.extra = 66-13;
 //        case MUSICANDSFX__STATIC:
-//            if ((!g_netServer && ud.multimode < 2) && sp->pal == 1)
+//            if ((!g_netServer && ud.multimode < 2) && sp.pal == 1)
 //            {
-//                sp->xrepeat = sp->yrepeat = 0;
+//                sp.xrepeat = sp.yrepeat = 0;
 //                changespritestat(i, STAT_MISC);
 //                break;
 //            }
-//            sp->cstat = 32768;
+//            sp.cstat = 32768;
 //            changespritestat(i, STAT_FX);
 //            break;
 
 //        case EXPLOSION2__STATIC:
-//            if (sp->yrepeat > 32)
+//            if (sp.yrepeat > 32)
 //            {
-//                G_AddGameLight(0, i, ((sp->yrepeat*tilesizy[sp->picnum])<<1), 32768, 255+(95<<8),PR_LIGHT_PRIO_MAX_GAME);
+//                G_AddGameLight(0, i, ((sp.yrepeat*tilesizy[sp.picnum])<<1), 32768, 255+(95<<8),PR_LIGHT_PRIO_MAX_GAME);
 //                actor[i].lightcount = 2;
 //            }
 //        case EXPLOSION2BOT__STATIC:
@@ -5780,34 +5783,34 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 
 //            if (j >= 0)
 //            {
-//                sp->ang = sprite[j].ang;
-//                sp->shade = -64;
-//                sp->cstat = 128|(krand()&4);
+//                sp.ang = sprite[j].ang;
+//                sp.shade = -64;
+//                sp.cstat = 128|(krand()&4);
 //            }
 
-//            if (sp->picnum == EXPLOSION2 || sp->picnum == EXPLOSION2BOT)
+//            if (sp.picnum == EXPLOSION2 || sp.picnum == EXPLOSION2BOT)
 //            {
-//                sp->xrepeat = sp->yrepeat = 48;
-//                sp->shade = -127;
-//                sp->cstat |= 128;
+//                sp.xrepeat = sp.yrepeat = 48;
+//                sp.shade = -127;
+//                sp.cstat |= 128;
 //            }
-//            else if (sp->picnum == SHRINKEREXPLOSION)
-//                sp->xrepeat = sp->yrepeat = 32;
-//            else if (sp->picnum == SMALLSMOKE)
+//            else if (sp.picnum == SHRINKEREXPLOSION)
+//                sp.xrepeat = sp.yrepeat = 32;
+//            else if (sp.picnum == SMALLSMOKE)
 //            {
 //                // 64 "money"
-//                sp->xrepeat = sp->yrepeat = 24;
+//                sp.xrepeat = sp.yrepeat = 24;
 //            }
-//            else if (sp->picnum == BURNING || sp->picnum == BURNING2)
-//                sp->xrepeat = sp->yrepeat = 4;
+//            else if (sp.picnum == BURNING || sp.picnum == BURNING2)
+//                sp.xrepeat = sp.yrepeat = 4;
 
-//            sp->cstat |= 8192;
+//            sp.cstat |= 8192;
 
 //            if (j >= 0)
 //            {
-//                int32_t z = getflorzofslope(sp->sectnum,sp->x,sp->y);
-//                if (sp->z > z-(12<<8))
-//                    sp->z = z-(12<<8);
+//                int32_t z = getflorzofslope(sp.sectnum,sp.x,sp.y);
+//                if (sp.z > z-(12<<8))
+//                    sp.z = z-(12<<8);
 //            }
 
 //            changespritestat(i, STAT_MISC);
@@ -5817,58 +5820,58 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //        case PLAYERONWATER__STATIC:
 //            if (j >= 0)
 //            {
-//                sp->xrepeat = sprite[j].xrepeat;
-//                sp->yrepeat = sprite[j].yrepeat;
-//                sp->zvel = 128;
-//                if (sector[sp->sectnum].lotag != ST_2_UNDERWATER)
-//                    sp->cstat |= 32768;
+//                sp.xrepeat = sprite[j].xrepeat;
+//                sp.yrepeat = sprite[j].yrepeat;
+//                sp.zvel = 128;
+//                if (sector[sp.sectnum].lotag != ST_2_UNDERWATER)
+//                    sp.cstat |= 32768;
 //            }
 //            changespritestat(i, STAT_DUMMYPLAYER);
 //            break;
 
 //        case APLAYER__STATIC:
-//            sp->xrepeat = sp->yrepeat = 0;
-//            sp->cstat = 32768;
+//            sp.xrepeat = sp.yrepeat = 0;
+//            sp.cstat = 32768;
 //            if ((!g_netServer && ud.multimode < 2) ||
-//                    ((GametypeFlags[ud.coop] & GAMETYPE_COOPSPAWN)/GAMETYPE_COOPSPAWN) != sp->lotag)
+//                    ((GametypeFlags[ud.coop] & GAMETYPE_COOPSPAWN)/GAMETYPE_COOPSPAWN) != sp.lotag)
 //                changespritestat(i,STAT_MISC);
 //            else
 //                changespritestat(i,STAT_PLAYER);
 //            break;
 //        case WATERBUBBLE__STATIC:
 //            if (j >= 0 && sprite[j].picnum == APLAYER)
-//                sp->z -= (16<<8);
-//            if (sp->picnum == WATERBUBBLE)
+//                sp.z -= (16<<8);
+//            if (sp.picnum == WATERBUBBLE)
 //            {
 //                if (j >= 0)
-//                    sp->ang = sprite[j].ang;
-//                sp->xrepeat = sp->yrepeat = 4;
+//                    sp.ang = sprite[j].ang;
+//                sp.xrepeat = sp.yrepeat = 4;
 //            }
-//            else sp->xrepeat = sp->yrepeat = 32;
+//            else sp.xrepeat = sp.yrepeat = 32;
 
 //            changespritestat(i, STAT_MISC);
 //            break;
 
 //        case CRANE__STATIC:
 
-//            sp->cstat |= 64|257;
+//            sp.cstat |= 64|257;
 
-//            sp->picnum += 2;
-//            sp->z = sector[sect].ceilingz+(48<<8);
-//            T5 = tempwallptr;
+//            sp.picnum += 2;
+//            sp.z = sector[sect].ceilingz+(48<<8);
+//            actor[i].t_data[4] = tempwallptr;
 
-//            msx[tempwallptr] = sp->x;
-//            msy[tempwallptr] = sp->y;
-//            msx[tempwallptr+2] = sp->z;
+//            msx[tempwallptr] = sp.x;
+//            msy[tempwallptr] = sp.y;
+//            msx[tempwallptr+2] = sp.z;
 
 //            s = headspritestat[STAT_DEFAULT];
 //            while (s >= 0)
 //            {
-//                if (sprite[s].picnum == CRANEPOLE && SHT == (sprite[s].hitag))
+//                if (sprite[s].picnum == CRANEPOLE && sprite[i].hitag == (sprite[s].hitag))
 //                {
 //                    msy[tempwallptr+2] = s;
 
-//                    T2 = sprite[s].sectnum;
+//                    actor[i].t_data[1] = sprite[s].sectnum;
 
 //                    sprite[s].xrepeat = 48;
 //                    sprite[s].yrepeat = 128;
@@ -5876,10 +5879,10 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //                    msx[tempwallptr+1] = sprite[s].x;
 //                    msy[tempwallptr+1] = sprite[s].y;
 
-//                    sprite[s].x = sp->x;
-//                    sprite[s].y = sp->y;
-//                    sprite[s].z = sp->z;
-//                    sprite[s].shade = sp->shade;
+//                    sprite[s].x = sp.x;
+//                    sprite[s].y = sp.y;
+//                    sprite[s].z = sp.z;
+//                    sprite[s].shade = sp.shade;
 
 //                    setsprite(s,(vec3_t *)&sprite[s]);
 //                    break;
@@ -5888,78 +5891,78 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //            }
 
 //            tempwallptr += 3;
-//            sp->owner = -1;
-//            sp->extra = 8;
+//            sp.owner = -1;
+//            sp.extra = 8;
 //            changespritestat(i, STAT_STANDABLE);
 //            break;
 
 //        case TRASH__STATIC:
-//            sp->ang = krand()&2047;
-//            sp->xrepeat = sp->yrepeat = 24;
+//            sp.ang = krand()&2047;
+//            sp.xrepeat = sp.yrepeat = 24;
 //            changespritestat(i, STAT_STANDABLE);
 //            break;
 
 //        case WATERDRIP__STATIC:
 //            if (j >= 0 && (sprite[j].statnum == STAT_PLAYER || sprite[j].statnum == STAT_ACTOR))
 //            {
-//                sp->shade = 32;
+//                sp.shade = 32;
 //                if (sprite[j].pal != 1)
 //                {
-//                    sp->pal = 2;
-//                    sp->z -= (18<<8);
+//                    sp.pal = 2;
+//                    sp.z -= (18<<8);
 //                }
-//                else sp->z -= (13<<8);
-//                sp->ang = getangle(g_player[0].ps->pos.x-sp->x,g_player[0].ps->pos.y-sp->y);
-//                sp->xvel = 48-(krand()&31);
+//                else sp.z -= (13<<8);
+//                sp.ang = getangle(g_player[0].ps.pos.x-sp.x,g_player[0].ps.pos.y-sp.y);
+//                sp.xvel = 48-(krand()&31);
 //                A_SetSprite(i,CLIPMASK0);
 //            }
 //            else if (j == -1)
 //            {
-//                sp->z += (4<<8);
-//                T1 = sp->z;
-//                T2 = krand()&127;
+//                sp.z += (4<<8);
+//                actor[i].t_data[0] = sp.z;
+//                actor[i].t_data[1] = krand()&127;
 //            }
 //        case WATERDRIPSPLASH__STATIC:
-//            sp->xrepeat = sp->yrepeat = 24;
+//            sp.xrepeat = sp.yrepeat = 24;
 //            changespritestat(i, STAT_STANDABLE);
 //            break;
 
 //        case PLUG__STATIC:
-//            sp->lotag = 9999;
+//            sp.lotag = 9999;
 //            changespritestat(i, STAT_STANDABLE);
 //            break;
 //        case TOUCHPLATE__STATIC:
-//            T3 = sector[sect].floorz;
+//            actor[i].t_data[2] = sector[sect].floorz;
 //            if (sector[sect].lotag != ST_1_ABOVE_WATER && sector[sect].lotag != ST_2_UNDERWATER)
-//                sector[sect].floorz = sp->z;
-//            if (sp->pal && (g_netServer || ud.multimode > 1))
+//                sector[sect].floorz = sp.z;
+//            if (sp.pal && (g_netServer || ud.multimode > 1))
 //            {
-//                sp->xrepeat=sp->yrepeat=0;
+//                sp.xrepeat=sp.yrepeat=0;
 //                changespritestat(i, STAT_MISC);
 //                break;
 //            }
 //        case WATERBUBBLEMAKER__STATIC:
-//            if (sp->hitag && sp->picnum == WATERBUBBLEMAKER)
+//            if (sp.hitag && sp.picnum == WATERBUBBLEMAKER)
 //            {
 //                // JBF 20030913: Pisses off X_Move(), eg. in bobsp2
 //                OSD_Printf_nowarn(OSD_ERROR "WARNING: WATERBUBBLEMAKER %d @ %d,%d with hitag!=0. Applying fixup.\n",
-//                           i,TrackerCast(sp->x),TrackerCast(sp->y));
-//                sp->hitag = 0;
+//                           i,TrackerCast(sp.x),TrackerCast(sp.y));
+//                sp.hitag = 0;
 //            }
-//            sp->cstat |= 32768;
+//            sp.cstat |= 32768;
 //            changespritestat(i, STAT_STANDABLE);
 //            break;
 //        case MASTERSWITCH__STATIC:
-//            if (sp->picnum == MASTERSWITCH)
-//                sp->cstat |= 32768;
-//            sp->yvel = 0;
+//            if (sp.picnum == MASTERSWITCH)
+//                sp.cstat |= 32768;
+//            sp.yvel = 0;
 //            changespritestat(i, STAT_STANDABLE);
 //            break;
 //        case TARGET__STATIC:
 //        case DUCK__STATIC:
 //        case LETTER__STATIC:
-//            sp->extra = 1;
-//            sp->cstat |= 257;
+//            sp.extra = 1;
+//            sp.cstat |= 257;
 //            changespritestat(i, STAT_ACTOR);
 //            break;
 //        case OCTABRAINSTAYPUT__STATIC:
@@ -5970,15 +5973,15 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //        case PIGCOPDIVE__STATIC:
 //        case COMMANDERSTAYPUT__STATIC:
 //        case BOSS4STAYPUT__STATIC:
-//            actor[i].actorstayput = sp->sectnum;
+//            actor[i].actorstayput = sp.sectnum;
 //        case BOSS1__STATIC:
 //        case BOSS2__STATIC:
 //        case BOSS3__STATIC:
 //        case BOSS4__STATIC:
 //        case ROTATEGUN__STATIC:
 //        case GREENSLIME__STATIC:
-//            if (sp->picnum == GREENSLIME)
-//                sp->extra = 1;
+//            if (sp.picnum == GREENSLIME)
+//                sp.extra = 1;
 //        case DRONE__STATIC:
 //        case LIZTROOPONTOILET__STATIC:
 //        case LIZTROOPJUSTSIT__STATIC:
@@ -5998,9 +6001,9 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //        case RAT__STATIC:
 //        case SHARK__STATIC:
 
-//            if (sp->pal == 0)
+//            if (sp.pal == 0)
 //            {
-//                switch (DYNAMICTILEMAP(sp->picnum))
+//                switch (DYNAMICTILEMAP(sp.picnum))
 //                {
 //                case LIZTROOPONTOILET__STATIC:
 //                case LIZTROOPSHOOT__STATIC:
@@ -6010,13 +6013,13 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //                case LIZTROOPSTAYPUT__STATIC:
 //                case LIZTROOPJUSTSIT__STATIC:
 //                case LIZTROOP__STATIC:
-//                    sp->pal = 22;
+//                    sp.pal = 22;
 //                    break;
 //                }
 //            }
 //            else
 //            {
-//                switch (DYNAMICTILEMAP(sp->picnum))
+//                switch (DYNAMICTILEMAP(sp.picnum))
 //                {
 //                case LIZTROOPONTOILET__STATIC:
 //                case LIZTROOPSHOOT__STATIC:
@@ -6028,48 +6031,48 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //                case LIZTROOP__STATIC:
 //                    if (g_scriptVersion != 14)
 //                default:
-//                        sp->extra <<= 1;
+//                        sp.extra <<= 1;
 //                    break;
 //                }
 //            }
 
-//            if (sp->picnum == BOSS4STAYPUT || sp->picnum == BOSS1 || sp->picnum == BOSS2 ||
-//                sp->picnum == BOSS1STAYPUT || sp->picnum == BOSS3 || sp->picnum == BOSS4)
+//            if (sp.picnum == BOSS4STAYPUT || sp.picnum == BOSS1 || sp.picnum == BOSS2 ||
+//                sp.picnum == BOSS1STAYPUT || sp.picnum == BOSS3 || sp.picnum == BOSS4)
 //            {
 //                if (j >= 0 && sprite[j].picnum == RESPAWN)
-//                    sp->pal = sprite[j].pal;
-//                if (sp->pal)
+//                    sp.pal = sprite[j].pal;
+//                if (sp.pal)
 //                {
-//                    sp->clipdist = 80;
-//                    sp->xrepeat = sp->yrepeat = 40;
+//                    sp.clipdist = 80;
+//                    sp.xrepeat = sp.yrepeat = 40;
 //                }
 //                else
 //                {
-//                    sp->xrepeat = sp->yrepeat = 80;
-//                    sp->clipdist = 164;
+//                    sp.xrepeat = sp.yrepeat = 80;
+//                    sp.clipdist = 164;
 //                }
 //            }
 //            else
 //            {
-//                if (sp->picnum != SHARK)
+//                if (sp.picnum != SHARK)
 //                {
-//                    sp->xrepeat = sp->yrepeat = 40;
-//                    sp->clipdist = 80;
+//                    sp.xrepeat = sp.yrepeat = 40;
+//                    sp.clipdist = 80;
 //                }
 //                else
 //                {
-//                    sp->xrepeat = sp->yrepeat = 60;
-//                    sp->clipdist = 40;
+//                    sp.xrepeat = sp.yrepeat = 60;
+//                    sp.clipdist = 40;
 //                }
 //            }
 
 //            // If spawned from parent sprite (as opposed to 'from premap'),
 //            // ignore skill.
-//            if (j >= 0) sp->lotag = 0;
+//            if (j >= 0) sp.lotag = 0;
 
-//            if ((sp->lotag > ud.player_skill) || ud.monsters_off == 1)
+//            if ((sp.lotag > ud.player_skill) || ud.monsters_off == 1)
 //            {
-//                sp->xrepeat=sp->yrepeat=0;
+//                sp.xrepeat=sp.yrepeat=0;
 //                changespritestat(i, STAT_MISC);
 //                break;
 //            }
@@ -6077,21 +6080,21 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //            {
 //                A_Fall(i);
 
-//                if (sp->picnum == RAT)
+//                if (sp.picnum == RAT)
 //                {
-//                    sp->ang = krand()&2047;
-//                    sp->xrepeat = sp->yrepeat = 48;
-//                    sp->cstat = 0;
+//                    sp.ang = krand()&2047;
+//                    sp.xrepeat = sp.yrepeat = 48;
+//                    sp.cstat = 0;
 //                }
 //                else
 //                {
-//                    sp->cstat |= 257;
+//                    sp.cstat |= 257;
 
-//                    if (sp->picnum != SHARK)
-//                        g_player[myconnectindex].ps->max_actors_killed++;
+//                    if (sp.picnum != SHARK)
+//                        g_player[myconnectindex].ps.max_actors_killed++;
 //                }
 
-//                if (sp->picnum == ORGANTIC) sp->cstat |= 128;
+//                if (sp.picnum == ORGANTIC) sp.cstat |= 128;
 
 //                if (j >= 0)
 //                {
@@ -6102,38 +6105,38 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //                else changespritestat(i, STAT_ZOMBIEACTOR);
 //            }
 
-//            if (sp->picnum == ROTATEGUN)
-//                sp->zvel = 0;
+//            if (sp.picnum == ROTATEGUN)
+//                sp.zvel = 0;
 
 //            break;
 
 //        case LOCATORS__STATIC:
-//            sp->cstat |= 32768;
+//            sp.cstat |= 32768;
 //            changespritestat(i, STAT_LOCATOR);
 //            break;
 
 //        case ACTIVATORLOCKED__STATIC:
 //        case ACTIVATOR__STATIC:
-//            sp->cstat = 32768;
-//            if (sp->picnum == ACTIVATORLOCKED)
-//                sector[sp->sectnum].lotag |= 16384;
+//            sp.cstat = 32768;
+//            if (sp.picnum == ACTIVATORLOCKED)
+//                sector[sp.sectnum].lotag |= 16384;
 //            changespritestat(i, STAT_ACTIVATOR);
 //            break;
 
 //        case DOORSHOCK__STATIC:
-//            sp->cstat |= 1+256;
-//            sp->shade = -12;
+//            sp.cstat |= 1+256;
+//            sp.shade = -12;
 //            changespritestat(i, STAT_STANDABLE);
 //            break;
 
 //        case OOZ__STATIC:
 //        case OOZ2__STATIC:
-//            sp->shade = -12;
+//            sp.shade = -12;
 
 //            if (j >= 0)
 //            {
 //                if (sprite[j].picnum == NUKEBARREL)
-//                    sp->pal = 8;
+//                    sp.pal = 8;
 //                A_AddToDeleteQueue(i);
 //            }
 
@@ -6143,75 +6146,75 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 
 //            j = (actor[i].floorz-actor[i].ceilingz)>>9;
 
-//            sp->yrepeat = j;
-//            sp->xrepeat = 25-(j>>1);
-//            sp->cstat |= (krand()&4);
+//            sp.yrepeat = j;
+//            sp.xrepeat = 25-(j>>1);
+//            sp.cstat |= (krand()&4);
 
 //            break;
 
 //        case REACTOR2__STATIC:
 //        case REACTOR__STATIC:
-//            sp->extra = g_impactDamage;
-//            CS |= 257;
-//            if ((!g_netServer && ud.multimode < 2) && sp->pal != 0)
+//            sp.extra = g_impactDamage;
+//            sprite[i].cstat |= 257;
+//            if ((!g_netServer && ud.multimode < 2) && sp.pal != 0)
 //            {
-//                sp->xrepeat = sp->yrepeat = 0;
+//                sp.xrepeat = sp.yrepeat = 0;
 //                changespritestat(i, STAT_MISC);
 //                break;
 //            }
-//            sp->pal = 0;
-//            SS = -17;
+//            sp.pal = 0;
+//            sprite[i].shade = -17;
 
 //            changespritestat(i, STAT_ZOMBIEACTOR);
 //            break;
 
 //        case HEAVYHBOMB__STATIC:
 //            if (j >= 0)
-//                sp->owner = j;
-//            else sp->owner = i;
+//                sp.owner = j;
+//            else sp.owner = i;
 
-//            sp->xrepeat = sp->yrepeat = 9;
-//            sp->yvel = 4;
-//            CS |= 257;
+//            sp.xrepeat = sp.yrepeat = 9;
+//            sp.yvel = 4;
+//            sprite[i].cstat |= 257;
 
-//            if ((!g_netServer && ud.multimode < 2) && sp->pal != 0)
+//            if ((!g_netServer && ud.multimode < 2) && sp.pal != 0)
 //            {
-//                sp->xrepeat = sp->yrepeat = 0;
+//                sp.xrepeat = sp.yrepeat = 0;
 //                changespritestat(i, STAT_MISC);
 //                break;
 //            }
-//            sp->pal = 0;
-//            SS = -17;
+//            sp.pal = 0;
+//            sprite[i].shade = -17;
 
 //            changespritestat(i, STAT_ZOMBIEACTOR);
 //            break;
 
 //        case RECON__STATIC:
-//            if (sp->lotag > ud.player_skill)
+//            if (sp.lotag > ud.player_skill)
 //            {
-//                sp->xrepeat = sp->yrepeat = 0;
+//                sp.xrepeat = sp.yrepeat = 0;
 //                changespritestat(i, STAT_MISC);
-//                goto SPAWN_END;
+//                return SPAWN_END();
 //            }
-//            g_player[myconnectindex].ps->max_actors_killed++;
+//            g_player[myconnectindex].ps.max_actors_killed++;
 //            actor[i].t_data[5] = 0;
 //            if (ud.monsters_off == 1)
 //            {
-//                sp->xrepeat = sp->yrepeat = 0;
+//                sp.xrepeat = sp.yrepeat = 0;
 //                changespritestat(i, STAT_MISC);
 //                break;
 //            }
-//            sp->extra = 130;
-//            CS |= 256; // Make it hitable
+//            sp.extra = 130;
+//            sprite[i].cstat |= 256; // Make it hitable
 
-//            if ((!g_netServer && ud.multimode < 2) && sp->pal != 0)
+//            if ((!g_netServer && ud.multimode < 2) && sp.pal != 0)
 //            {
-//                sp->xrepeat = sp->yrepeat = 0;
+//                sp.xrepeat = sp.yrepeat = 0;
 //                changespritestat(i, STAT_MISC);
 //                break;
 //            }
-//            sp->pal = 0;
-//            SS = -17;
+//            sp.pal = 0;
+//            sprite[i].shade = -17;
 
 //            changespritestat(i, STAT_ZOMBIEACTOR);
 //            break;
@@ -6250,46 +6253,46 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 
 //            if (j >= 0)
 //            {
-//                sp->lotag = 0;
-//                sp->z -= (32<<8);
-//                sp->zvel = -1024;
+//                sp.lotag = 0;
+//                sp.z -= (32<<8);
+//                sp.zvel = -1024;
 //                A_SetSprite(i,CLIPMASK0);
-//                sp->cstat = krand()&4;
+//                sp.cstat = krand()&4;
 //            }
 //            else
 //            {
-//                sp->owner = i;
-//                sp->cstat = 0;
+//                sp.owner = i;
+//                sp.cstat = 0;
 //            }
 
-//            if (((!g_netServer && ud.multimode < 2) && sp->pal != 0) || (sp->lotag > ud.player_skill))
+//            if (((!g_netServer && ud.multimode < 2) && sp.pal != 0) || (sp.lotag > ud.player_skill))
 //            {
-//                sp->xrepeat = sp->yrepeat = 0;
+//                sp.xrepeat = sp.yrepeat = 0;
 //                changespritestat(i, STAT_MISC);
 //                break;
 //            }
 
-//            sp->pal = 0;
+//            sp.pal = 0;
 
 //        case ACCESSCARD__STATIC:
 
-//            if (sp->picnum == ATOMICHEALTH)
-//                sp->cstat |= 128;
+//            if (sp.picnum == ATOMICHEALTH)
+//                sp.cstat |= 128;
 
-//            if ((g_netServer || ud.multimode > 1) && !GTFLAGS(GAMETYPE_ACCESSCARDSPRITES) && sp->picnum == ACCESSCARD)
+//            if ((g_netServer || ud.multimode > 1) && !GTFLAGS(GAMETYPE_ACCESSCARDSPRITES) && sp.picnum == ACCESSCARD)
 //            {
-//                sp->xrepeat = sp->yrepeat = 0;
+//                sp.xrepeat = sp.yrepeat = 0;
 //                changespritestat(i, STAT_MISC);
 //                break;
 //            }
 //            else
 //            {
-//                if (sp->picnum == AMMO)
-//                    sp->xrepeat = sp->yrepeat = 16;
-//                else sp->xrepeat = sp->yrepeat = 32;
+//                if (sp.picnum == AMMO)
+//                    sp.xrepeat = sp.yrepeat = 16;
+//                else sp.xrepeat = sp.yrepeat = 32;
 //            }
 
-//            sp->shade = -17;
+//            sp.shade = -17;
 
 //            if (j >= 0) changespritestat(i, STAT_ACTOR);
 //            else
@@ -6300,39 +6303,39 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //            break;
 
 //        case WATERFOUNTAIN__STATIC:
-//            SLT = 1;
+//            sprite[i].lotag = 1;
 
 //        case TREE1__STATIC:
 //        case TREE2__STATIC:
 //        case TIRE__STATIC:
 //        case CONE__STATIC:
 //        case BOX__STATIC:
-//            CS = 257; // Make it hitable
+//            sprite[i].cstat = 257; // Make it hitable
 //            sprite[i].extra = 1;
 //            changespritestat(i, STAT_STANDABLE);
 //            break;
 
 //        case FLOORFLAME__STATIC:
-//            sp->shade = -127;
+//            sp.shade = -127;
 //            changespritestat(i, STAT_STANDABLE);
 //            break;
 
 //        case BOUNCEMINE__STATIC:
-//            sp->owner = i;
-//            sp->cstat |= 1+256; //Make it hitable
-//            sp->xrepeat = sp->yrepeat = 24;
-//            sp->shade = -127;
-//            sp->extra = g_impactDamage<<2;
+//            sp.owner = i;
+//            sp.cstat |= 1+256; //Make it hitable
+//            sp.xrepeat = sp.yrepeat = 24;
+//            sp.shade = -127;
+//            sp.extra = g_impactDamage<<2;
 //            changespritestat(i, STAT_ZOMBIEACTOR);
 //            break;
 
 //        case STEAM__STATIC:
 //            if (j >= 0)
 //            {
-//                sp->ang = sprite[j].ang;
-//                sp->cstat = 16+128+2;
-//                sp->xrepeat=sp->yrepeat=1;
-//                sp->xvel = -8;
+//                sp.ang = sprite[j].ang;
+//                sp.cstat = 16+128+2;
+//                sp.xrepeat=sp.yrepeat=1;
+//                sp.xvel = -8;
 //                A_SetSprite(i,CLIPMASK0);
 //            }
 //        case CEILINGSTEAM__STATIC:
@@ -6340,133 +6343,133 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //            break;
 
 //        case SECTOREFFECTOR__STATIC:
-//            sp->cstat |= 32768;
-//            sp->xrepeat = sp->yrepeat = 0;
+//            sp.cstat |= 32768;
+//            sp.xrepeat = sp.yrepeat = 0;
 
-//            switch (sp->lotag)
+//            switch (sp.lotag)
 //            {
 //            case 40:
 //            case 41:
-//                sp->cstat = 32;
-//                sp->xrepeat = sp->yrepeat = 64;
+//                sp.cstat = 32;
+//                sp.xrepeat = sp.yrepeat = 64;
 //                changespritestat(i, STAT_EFFECTOR);
 //                for (j=0; j < MAXSPRITES; j++)
 //                    if (sprite[j].picnum == SECTOREFFECTOR && (sprite[j].lotag == 40 || sprite[j].lotag == 41) &&
-//                            sprite[j].hitag == sp->hitag && i != j)
+//                            sprite[j].hitag == sp.hitag && i != j)
 //                    {
 ////                        initprintf("found ror match\n");
-//                        sp->yvel = j;
+//                        sp.yvel = j;
 //                        break;
 //                    }
-//                goto SPAWN_END;
+//                return SPAWN_END();
 //                break;
 //            case 46:
-//                ror_protectedsectors[sp->sectnum] = 1;
+//                ror_protectedsectors[sp.sectnum] = 1;
 //                /* XXX: fall-through intended? */
 //            case SE_49_POINT_LIGHT:
 //            case SE_50_SPOT_LIGHT:
 //            {
 //                int32_t j, nextj;
 
-//                for (TRAVERSE_SPRITE_SECT(headspritesect[sp->sectnum], j, nextj))
+//                for (TRAVERSE_SPRITE_SECT(headspritesect[sp.sectnum], j, nextj))
 //                    if (sprite[j].picnum == ACTIVATOR || sprite[j].picnum == ACTIVATORLOCKED)
 //                        actor[i].flags |= SPRITE_USEACTIVATOR;
 //            }
-//            changespritestat(i, sp->lotag==46 ? STAT_EFFECTOR : STAT_LIGHT);
-//            goto SPAWN_END;
+//            changespritestat(i, sp.lotag==46 ? STAT_EFFECTOR : STAT_LIGHT);
+//            return SPAWN_END();
 //            break;
 //            }
 
-//            sp->yvel = sector[sect].extra;
+//            sp.yvel = sector[sect].extra;
 
-//            switch (sp->lotag)
+//            switch (sp.lotag)
 //            {
 //            case SE_28_LIGHTNING:
-//                T6 = 65;// Delay for lightning
+//                actor[i].t_data[5] = 65;// Delay for lightning
 //                break;
 //            case SE_7_TELEPORT: // Transporters!!!!
 //            case SE_23_ONE_WAY_TELEPORT:// XPTR END
-//                if (sp->lotag != SE_23_ONE_WAY_TELEPORT)
+//                if (sp.lotag != SE_23_ONE_WAY_TELEPORT)
 //                {
 //                    for (j=0; j<MAXSPRITES; j++)
 //                        if (sprite[j].statnum < MAXSTATUS && sprite[j].picnum == SECTOREFFECTOR &&
-//                                (sprite[j].lotag == SE_7_TELEPORT || sprite[j].lotag == SE_23_ONE_WAY_TELEPORT) && i != j && sprite[j].hitag == SHT)
+//                                (sprite[j].lotag == SE_7_TELEPORT || sprite[j].lotag == SE_23_ONE_WAY_TELEPORT) && i != j && sprite[j].hitag == sprite[i].hitag)
 //                        {
-//                            OW = j;
+//                            sprite[i].owner = j;
 //                            break;
 //                        }
 //                }
-//                else OW = i;
+//                else sprite[i].owner = i;
 
-//                T5 = (sector[sect].floorz == SZ);  // ONFLOORZ
-//                sp->cstat = 0;
+//                actor[i].t_data[4] = (sector[sect].floorz == SZ);  // ONFLOORZ
+//                sp.cstat = 0;
 //                changespritestat(i, STAT_TRANSPORT);
-//                goto SPAWN_END;
+//                return SPAWN_END();
 //            case SE_1_PIVOT:
-//                sp->owner = -1;
-//                T1 = 1;
+//                sp.owner = -1;
+//                actor[i].t_data[0] = 1;
 //                break;
 //            case SE_18_INCREMENTAL_SECTOR_RISE_FALL:
 
-//                if (sp->ang == 512)
+//                if (sp.ang == 512)
 //                {
-//                    T2 = sector[sect].ceilingz;
-//                    if (sp->pal)
-//                        sector[sect].ceilingz = sp->z;
+//                    actor[i].t_data[1] = sector[sect].ceilingz;
+//                    if (sp.pal)
+//                        sector[sect].ceilingz = sp.z;
 //                }
 //                else
 //                {
-//                    T2 = sector[sect].floorz;
-//                    if (sp->pal)
-//                        sector[sect].floorz = sp->z;
+//                    actor[i].t_data[1] = sector[sect].floorz;
+//                    if (sp.pal)
+//                        sector[sect].floorz = sp.z;
 //                }
 
-//                sp->hitag <<= 2;
+//                sp.hitag <<= 2;
 //                break;
 
 //            case SE_19_EXPLOSION_LOWERS_CEILING:
-//                sp->owner = -1;
+//                sp.owner = -1;
 //                break;
 //            case SE_25_PISTON: // Pistons
-//                T4 = sector[sect].ceilingz;
-//                T5 = 1;
-//                sector[sect].ceilingz = sp->z;
+//                actor[i].t_data[3] = sector[sect].ceilingz;
+//                actor[i].t_data[4] = 1;
+//                sector[sect].ceilingz = sp.z;
 //                G_SetInterpolation(&sector[sect].ceilingz);
 //                break;
 //            case SE_35:
-//                sector[sect].ceilingz = sp->z;
+//                sector[sect].ceilingz = sp.z;
 //                break;
 //            case SE_27_DEMO_CAM:
 //                if (ud.recstat == 1)
 //                {
-//                    sp->xrepeat=sp->yrepeat=64;
-//                    sp->cstat &= 32768;
+//                    sp.xrepeat=sp.yrepeat=64;
+//                    sp.cstat &= 32768;
 //                }
 //                break;
 //            case SE_12_LIGHT_SWITCH:
 
-//                T2 = sector[sect].floorshade;
-//                T3 = sector[sect].ceilingshade;
+//                actor[i].t_data[1] = sector[sect].floorshade;
+//                actor[i].t_data[2] = sector[sect].ceilingshade;
 //                break;
 
 //            case SE_13_EXPLOSIVE:
 
-//                T1 = sector[sect].ceilingz;
-//                T2 = sector[sect].floorz;
+//                actor[i].t_data[0] = sector[sect].ceilingz;
+//                actor[i].t_data[1] = sector[sect].floorz;
 
-//                if (klabs(T1-sp->z) < klabs(T2-sp->z))
-//                    sp->owner = 1;
-//                else sp->owner = 0;
+//                if (klabs(actor[i].t_data[0]-sp.z) < klabs(actor[i].t_data[1]-sp.z))
+//                    sp.owner = 1;
+//                else sp.owner = 0;
 
-//                if (sp->ang == 512)
+//                if (sp.ang == 512)
 //                {
-//                    if (sp->owner)
-//                        sector[sect].ceilingz = sp->z;
+//                    if (sp.owner)
+//                        sector[sect].ceilingz = sp.z;
 //                    else
-//                        sector[sect].floorz = sp->z;
+//                        sector[sect].floorz = sp.z;
 //#ifdef YAX_ENABLE
 //                    {
-//                        int16_t cf=!sp->owner, bn=yax_getbunch(sect, cf);
+//                        int16_t cf=!sp.owner, bn=yax_getbunch(sect, cf);
 //                        int32_t jj, daz=SECTORFLD(sect,z, cf);
 
 //                        if (bn >= 0)
@@ -6488,23 +6491,23 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //#endif
 //                }
 //                else
-//                    sector[sect].ceilingz = sector[sect].floorz = sp->z;
+//                    sector[sect].ceilingz = sector[sect].floorz = sp.z;
 
 //                if (sector[sect].ceilingstat&1)
 //                {
 //                    sector[sect].ceilingstat ^= 1;
-//                    T4 = 1;
+//                    actor[i].t_data[3] = 1;
 
-//                    if (!sp->owner && sp->ang==512)
+//                    if (!sp.owner && sp.ang==512)
 //                    {
 //                        sector[sect].ceilingstat ^= 1;
-//                        T4 = 0;
+//                        actor[i].t_data[3] = 0;
 //                    }
 
 //                    sector[sect].ceilingshade =
 //                        sector[sect].floorshade;
 
-//                    if (sp->ang==512)
+//                    if (sp.ang==512)
 //                    {
 //                        startwall = sector[sect].wallptr;
 //                        endwall = startwall+sector[sect].wallnum;
@@ -6528,17 +6531,17 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 
 //            case SE_17_WARP_ELEVATOR:
 
-//                T3 = sector[sect].floorz; //Stopping loc
+//                actor[i].t_data[2] = sector[sect].floorz; //Stopping loc
 
 //                j = nextsectorneighborz(sect,sector[sect].floorz,-1,-1);
 //                if (j >= 0)
 //                {
-//                    T4 = sector[j].ceilingz;
+//                    actor[i].t_data[3] = sector[j].ceilingz;
 //                }
 //                else
 //                {
 //                    // use elevator sector's ceiling as heuristic
-//                    T4 = sector[sect].ceilingz;
+//                    actor[i].t_data[3] = sector[sect].ceilingz;
 
 //                    OSD_Printf(OSD_ERROR "WARNING: SE17 sprite %d using own sector's ceilingz to "
 //                               "determine when to warp. Sector %d adjacent to a door?\n", i, sect);
@@ -6546,7 +6549,7 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 
 //                j = nextsectorneighborz(sect,sector[sect].ceilingz,1,1);
 //                if (j >= 0)
-//                    T5 = sector[j].floorz;
+//                    actor[i].t_data[4] = sector[j].floorz;
 //                else
 //                {
 //                    // XXX: we should return to the menu for this and similar failures
@@ -6564,7 +6567,7 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //                break;
 
 //            case SE_24_CONVEYOR:
-//                sp->yvel <<= 1;
+//                sp.yvel <<= 1;
 //            case SE_36_PROJ_SHOOTER:
 //                break;
 
@@ -6582,7 +6585,7 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //                    x = wall[s].x;
 //                    y = wall[s].y;
 
-//                    d = FindDistance2D(sp->x-x,sp->y-y);
+//                    d = FindDistance2D(sp.x-x,sp.y-y);
 //                    if (d < q)
 //                    {
 //                        q = d;
@@ -6590,7 +6593,7 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //                    }
 //                }
 
-//                T2 = clostest;
+//                actor[i].t_data[1] = clostest;
 
 //                q = INT32_MAX;
 
@@ -6599,28 +6602,28 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //                    x = wall[s].x;
 //                    y = wall[s].y;
 
-//                    d = FindDistance2D(sp->x-x,sp->y-y);
-//                    if (d < q && s != T2)
+//                    d = FindDistance2D(sp.x-x,sp.y-y);
+//                    if (d < q && s != actor[i].t_data[1])
 //                    {
 //                        q = d;
 //                        clostest = s;
 //                    }
 //                }
 
-//                T3 = clostest;
+//                actor[i].t_data[2] = clostest;
 //            }
 
 //            break;
 
 //            case SE_3_RANDOM_LIGHTS_AFTER_SHOT_OUT:
 
-//                T4=sector[sect].floorshade;
+//                actor[i].t_data[3]=sector[sect].floorshade;
 
-//                sector[sect].floorshade = sp->shade;
-//                sector[sect].ceilingshade = sp->shade;
+//                sector[sect].floorshade = sp.shade;
+//                sector[sect].ceilingshade = sp.shade;
 
-//                sp->owner = sector[sect].ceilingpal<<8;
-//                sp->owner |= sector[sect].floorpal;
+//                sp.owner = sector[sect].ceilingpal<<8;
+//                sp.owner |= sector[sect].floorpal;
 
 //                //fix all the walls;
 
@@ -6630,20 +6633,20 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //                for (s=startwall; s<endwall; s++)
 //                {
 //                    if (!(wall[s].hitag&1))
-//                        wall[s].shade=sp->shade;
+//                        wall[s].shade=sp.shade;
 //                    if ((wall[s].cstat&2) && wall[s].nextwall >= 0)
-//                        wall[wall[s].nextwall].shade = sp->shade;
+//                        wall[wall[s].nextwall].shade = sp.shade;
 //                }
 //                break;
 
 //            case SE_31_FLOOR_RISE_FALL:
 //            {
-//                T2 = sector[sect].floorz;
-//                //    T3 = sp->hitag;
-//                if (sp->ang != 1536)
+//                actor[i].t_data[1] = sector[sect].floorz;
+//                //    actor[i].t_data[2] = sp.hitag;
+//                if (sp.ang != 1536)
 //                {
-//                    sector[sect].floorz = sp->z;
-//                    Yax_SetBunchZs(sect, YAX_FLOOR, sp->z);
+//                    sector[sect].floorz = sp.z;
+//                    Yax_SetBunchZs(sect, YAX_FLOOR, sp.z);
 //                }
 
 //                startwall = sector[sect].wallptr;
@@ -6659,12 +6662,12 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 
 //            case SE_32_CEILING_RISE_FALL:
 //            {
-//                T2 = sector[sect].ceilingz;
-//                T3 = sp->hitag;
-//                if (sp->ang != 1536)
+//                actor[i].t_data[1] = sector[sect].ceilingz;
+//                actor[i].t_data[2] = sp.hitag;
+//                if (sp.ang != 1536)
 //                {
-//                    sector[sect].ceilingz = sp->z;
-//                    Yax_SetBunchZs(sect, YAX_CEILING, sp->z);
+//                    sector[sect].ceilingz = sp.z;
+//                    Yax_SetBunchZs(sect, YAX_CEILING, sp.z);
 //                }
 
 //                startwall = sector[sect].wallptr;
@@ -6680,44 +6683,44 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 
 //            case SE_4_RANDOM_LIGHTS: //Flashing lights
 
-//                T3 = sector[sect].floorshade;
+//                actor[i].t_data[2] = sector[sect].floorshade;
 
 //                startwall = sector[sect].wallptr;
 //                endwall = startwall+sector[sect].wallnum;
 
-//                sp->owner = sector[sect].ceilingpal<<8;
-//                sp->owner |= sector[sect].floorpal;
+//                sp.owner = sector[sect].ceilingpal<<8;
+//                sp.owner |= sector[sect].floorpal;
 
 //                for (s=startwall; s<endwall; s++)
-//                    if (wall[s].shade > T4)
-//                        T4 = wall[s].shade;
+//                    if (wall[s].shade > actor[i].t_data[3])
+//                        actor[i].t_data[3] = wall[s].shade;
 
 //                break;
 
 //            case SE_9_DOWN_OPEN_DOOR_LIGHTS:
 //                if (sector[sect].lotag &&
-//                        labs(sector[sect].ceilingz-sp->z) > 1024)
+//                        labs(sector[sect].ceilingz-sp.z) > 1024)
 //                    sector[sect].lotag |= 32768; //If its open
 //            case SE_8_UP_OPEN_DOOR_LIGHTS:
 //                //First, get the ceiling-floor shade
 
-//                T1 = sector[sect].floorshade;
-//                T2 = sector[sect].ceilingshade;
+//                actor[i].t_data[0] = sector[sect].floorshade;
+//                actor[i].t_data[1] = sector[sect].ceilingshade;
 
 //                startwall = sector[sect].wallptr;
 //                endwall = startwall+sector[sect].wallnum;
 
 //                for (s=startwall; s<endwall; s++)
-//                    if (wall[s].shade > T3)
-//                        T3 = wall[s].shade;
+//                    if (wall[s].shade > actor[i].t_data[2])
+//                        actor[i].t_data[2] = wall[s].shade;
 
-//                T4 = 1; //Take Out;
+//                actor[i].t_data[3] = 1; //Take Out;
 
 //                break;
 
 //            case SE_11_SWINGING_DOOR://Pivitor rotater
-//                if (sp->ang>1024) T4 = 2;
-//                else T4 = -2;
+//                if (sp.ang>1024) actor[i].t_data[3] = 2;
+//                else actor[i].t_data[3] = -2;
 //            case SE_0_ROTATING_SECTOR:
 //            case SE_2_EARTHQUAKE://Earthquakemakers
 //            case SE_5://Boss Creature
@@ -6727,13 +6730,13 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //            case SE_16_REACTOR://That rotating blocker reactor thing
 //            case SE_26://ESCELATOR
 //            case SE_30_TWO_WAY_TRAIN://No rotational subways
-//                if (sp->lotag == 0)
+//                if (sp.lotag == 0)
 //                {
 //                    if (sector[sect].lotag == ST_30_ROTATE_RISE_BRIDGE)
 //                    {
-//                        if (sp->pal) sprite[i].clipdist = 1;
+//                        if (sp.pal) sprite[i].clipdist = 1;
 //                        else sprite[i].clipdist = 0;
-//                        T4 = sector[sect].floorz;
+//                        actor[i].t_data[3] = sector[sect].floorz;
 //                        sector[sect].hitag = i;
 //                    }
 
@@ -6742,12 +6745,12 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //                        if (sprite[j].statnum < MAXSTATUS)
 //                            if (sprite[j].picnum == SECTOREFFECTOR &&
 //                                    sprite[j].lotag == 1 &&
-//                                    sprite[j].hitag == sp->hitag)
+//                                    sprite[j].hitag == sp.hitag)
 //                            {
-//                                if (sp->ang == 512)
+//                                if (sp.ang == 512)
 //                                {
-//                                    sp->x = sprite[j].x;
-//                                    sp->y = sprite[j].y;
+//                                    sp.x = sprite[j].x;
+//                                    sp.y = sprite[j].y;
 //                                }
 //                                break;
 //                            }
@@ -6755,21 +6758,21 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //                    if (j == -1)
 //                    {
 //                        OSD_Printf_nowarn(OSD_ERROR "Found lonely Sector Effector (lotag 0) at (%d,%d)\n",
-//                            TrackerCast(sp->x),TrackerCast(sp->y));
+//                            TrackerCast(sp.x),TrackerCast(sp.y));
 //                        changespritestat(i, STAT_ACTOR);
-//                        goto SPAWN_END;
+//                        return SPAWN_END();
 //                    }
-//                    sp->owner = j;
+//                    sp.owner = j;
 //                }
 
 //                startwall = sector[sect].wallptr;
 //                endwall = startwall+sector[sect].wallnum;
 
-//                T2 = tempwallptr;
+//                actor[i].t_data[1] = tempwallptr;
 //                for (s=startwall; s<endwall; s++)
 //                {
-//                    msx[tempwallptr] = wall[s].x-sp->x;
-//                    msy[tempwallptr] = wall[s].y-sp->y;
+//                    msx[tempwallptr] = wall[s].x-sp.x;
+//                    msy[tempwallptr] = wall[s].y-sp.y;
 //                    tempwallptr++;
 //                    if (tempwallptr > 2047)
 //                    {
@@ -6778,7 +6781,7 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //                    }
 //                }
 
-//                if (sp->lotag == SE_30_TWO_WAY_TRAIN || sp->lotag == SE_6_SUBWAY || sp->lotag == SE_14_SUBWAY_CAR || sp->lotag == SE_5)
+//                if (sp.lotag == SE_30_TWO_WAY_TRAIN || sp.lotag == SE_6_SUBWAY || sp.lotag == SE_14_SUBWAY_CAR || sp.lotag == SE_5)
 //                {
 //#ifdef YAX_ENABLE
 //                    int32_t outerwall=-1;
@@ -6787,8 +6790,8 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //                    endwall = startwall+sector[sect].wallnum;
 
 //                    if (sector[sect].hitag == UINT16_MAX)
-//                        sp->extra = 0;
-//                    else sp->extra = 1;
+//                        sp.extra = 0;
+//                    else sp.extra = 1;
 
 //                    sector[sect].hitag = i;
 
@@ -6819,7 +6822,7 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //                        {
 //                            int32_t jj;
 //                            for (jj=headspritesect[uppersect]; jj>=0; jj=nextspritesect[jj])
-//                                if (sprite[jj].picnum==SECTOREFFECTOR && sprite[jj].lotag==sp->lotag)
+//                                if (sprite[jj].picnum==SECTOREFFECTOR && sprite[jj].lotag==sp.lotag)
 //                                    break;
 //                            if (jj < 0)
 //                            {
@@ -6832,39 +6835,39 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //                    if (j == 0)
 //                    {
 //                        Bsprintf_nowarn(tempbuf,"Subway found no zero'd sectors with locators\nat (%d,%d).\n",
-//                            TrackerCast(sp->x),TrackerCast(sp->y));
+//                            TrackerCast(sp.x),TrackerCast(sp.y));
 //                        G_GameExit(tempbuf);
 //                    }
 
-//                    sp->owner = -1;
-//                    T1 = s;
+//                    sp.owner = -1;
+//                    actor[i].t_data[0] = s;
 
-//                    if (sp->lotag != SE_30_TWO_WAY_TRAIN)
-//                        T4 = sp->hitag;
+//                    if (sp.lotag != SE_30_TWO_WAY_TRAIN)
+//                        actor[i].t_data[3] = sp.hitag;
 //                }
 
-//                else if (sp->lotag == SE_16_REACTOR)
-//                    T4 = sector[sect].ceilingz;
+//                else if (sp.lotag == SE_16_REACTOR)
+//                    actor[i].t_data[3] = sector[sect].ceilingz;
 
-//                else if (sp->lotag == SE_26)
+//                else if (sp.lotag == SE_26)
 //                {
-//                    T4 = sp->x;
-//                    T5 = sp->y;
-//                    if (sp->shade==sector[sect].floorshade) //UP
-//                        sp->zvel = -256;
+//                    actor[i].t_data[3] = sp.x;
+//                    actor[i].t_data[4] = sp.y;
+//                    if (sp.shade==sector[sect].floorshade) //UP
+//                        sp.zvel = -256;
 //                    else
-//                        sp->zvel = 256;
+//                        sp.zvel = 256;
 
-//                    sp->shade = 0;
+//                    sp.shade = 0;
 //                }
-//                else if (sp->lotag == SE_2_EARTHQUAKE)
+//                else if (sp.lotag == SE_2_EARTHQUAKE)
 //                {
-//                    T6 = sector[sp->sectnum].floorheinum;
-//                    sector[sp->sectnum].floorheinum = 0;
+//                    actor[i].t_data[5] = sector[sp.sectnum].floorheinum;
+//                    sector[sp.sectnum].floorheinum = 0;
 //                }
 //            }
 
-//            switch (sp->lotag)
+//            switch (sp.lotag)
 //            {
 //            case SE_6_SUBWAY:
 //            case SE_14_SUBWAY_CAR:
@@ -6889,15 +6892,15 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 
 //        case SEENINE__STATIC:
 //        case OOZFILTER__STATIC:
-//            sp->shade = -16;
-//            if (sp->xrepeat <= 8)
+//            sp.shade = -16;
+//            if (sp.xrepeat <= 8)
 //            {
-//                sp->cstat = 32768;
-//                sp->xrepeat=sp->yrepeat=0;
+//                sp.cstat = 32768;
+//                sp.xrepeat=sp.yrepeat=0;
 //            }
-//            else sp->cstat = 1+256;
-//            sp->extra = g_impactDamage<<2;
-//            sp->owner = i;
+//            else sp.cstat = 1+256;
+//            sp.extra = g_impactDamage<<2;
+//            sp.owner = i;
 
 //            changespritestat(i, STAT_STANDABLE);
 //            break;
@@ -6907,37 +6910,37 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //        case CRACK3__STATIC:
 //        case CRACK4__STATIC:
 //        case FIREEXT__STATIC:
-//            if (sp->picnum == FIREEXT)
+//            if (sp.picnum == FIREEXT)
 //            {
-//                sp->cstat = 257;
-//                sp->extra = g_impactDamage<<2;
+//                sp.cstat = 257;
+//                sp.extra = g_impactDamage<<2;
 //            }
 //            else
 //            {
-//                sp->cstat |= (sp->cstat & 48) ? 1 : 17;
-//                sp->extra = 1;
+//                sp.cstat |= (sp.cstat & 48) ? 1 : 17;
+//                sp.extra = 1;
 //            }
 
-//            if ((!g_netServer && ud.multimode < 2) && sp->pal != 0)
+//            if ((!g_netServer && ud.multimode < 2) && sp.pal != 0)
 //            {
-//                sp->xrepeat = sp->yrepeat = 0;
+//                sp.xrepeat = sp.yrepeat = 0;
 //                changespritestat(i, STAT_MISC);
 //                break;
 //            }
 
-//            sp->pal = 0;
-//            sp->owner = i;
+//            sp.pal = 0;
+//            sp.owner = i;
 //            changespritestat(i, STAT_STANDABLE);
-//            sp->xvel = 8;
+//            sp.xvel = 8;
 //            A_SetSprite(i,CLIPMASK0);
 //            break;
 
 //        case TOILET__STATIC:
 //        case STALL__STATIC:
-//            sp->lotag = 1;
-//            sp->cstat |= 257;
-//            sp->clipdist = 8;
-//            sp->owner = i;
+//            sp.lotag = 1;
+//            sp.cstat |= 257;
+//            sp.clipdist = 8;
+//            sp.owner = i;
 //            break;
 
 //        case CANWITHSOMETHING__STATIC:
@@ -6945,7 +6948,7 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //        case CANWITHSOMETHING3__STATIC:
 //        case CANWITHSOMETHING4__STATIC:
 //        case RUBBERCAN__STATIC:
-//            sp->extra = 0;
+//            sp.extra = 0;
 //        case EXPLODINGBARREL__STATIC:
 //        case HORSEONSIDE__STATIC:
 //        case FIREBARREL__STATIC:
@@ -6955,42 +6958,45 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //        case NUKEBARRELLEAKED__STATIC:
 //        case WOODENHORSE__STATIC:
 //            if (j >= 0)
-//                sp->xrepeat = sp->yrepeat = 32;
-//            sp->clipdist = 72;
+//                sp.xrepeat = sp.yrepeat = 32;
+//            sp.clipdist = 72;
 //            A_Fall(i);
 //            if (j >= 0)
-//                sp->owner = j;
-//            else sp->owner = i;
+//                sp.owner = j;
+//            else sp.owner = i;
 //        case EGG__STATIC:
-//            if (ud.monsters_off == 1 && sp->picnum == EGG)
+//            if (ud.monsters_off == 1 && sp.picnum == EGG)
 //            {
-//                sp->xrepeat = sp->yrepeat = 0;
+//                sp.xrepeat = sp.yrepeat = 0;
 //                changespritestat(i, STAT_MISC);
 //            }
 //            else
 //            {
-//                if (sp->picnum == EGG)
-//                    sp->clipdist = 24;
-//                sp->cstat = 257|(krand()&4);
+//                if (sp.picnum == EGG)
+//                    sp.clipdist = 24;
+//                sp.cstat = 257|(krand()&4);
 //                changespritestat(i, STAT_ZOMBIEACTOR);
 //            }
 //            break;
 
 //        case TOILETWATER__STATIC:
-//            sp->shade = -16;
+//            sp.shade = -16;
 //            changespritestat(i, STAT_STANDABLE);
 //            break;
-//        }
-
-//SPAWN_END:
-//    if (G_HaveEvent(EVENT_SPAWN))
-//    {
-//        int32_t p;
-//        int32_t pl=A_FindPlayer(&sprite[i],&p);
-//        VM_OnEvent(EVENT_SPAWN,i, pl, p, 0);
-//    }
-
-//    return i;
+        }
+    
+    function SPAWN_END(): number {
+        todoThrow();
+        //if (G_HaveEvent(EVENT_SPAWN))
+        //{
+        //    var p = new R<number>(0);
+        //    var pl=A_FindPlayer(sprite[i],p);
+        //    VM_OnEvent(EVENT_SPAWN,i, pl, p, 0);
+        //}
+        return i;
+    }   
+    SPAWN_END();
+    return i;
 }
 
 //static int32_t G_MaybeTakeOnFloorPal(spritetype *datspr, int32_t sect)
@@ -6998,9 +7004,9 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //    int32_t dapal = sector[sect].floorpal;
 
 //    if (dapal && !g_noFloorPal[dapal] && dapal < g_numRealPalettes
-//            && !A_CheckSpriteFlags(datspr->owner,SPRITE_NOPAL))
+//            && !A_CheckSpriteFlags(datspr.owner,SPRITE_NOPAL))
 //    {
-//        datspr->pal = dapal;
+//        datspr.pal = dapal;
 //        return 1;
 //    }
 
@@ -7009,30 +7015,30 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 
 //static int32_t getofs_viewtype5(const spritetype *s, spritetype *t, int32_t a, uint8_t invertp)
 //{
-//    int32_t angdif = invertp ? a-s->ang : s->ang-a;
+//    int32_t angdif = invertp ? a-s.ang : s.ang-a;
 //    int32_t k = (((angdif+3072+128)&2047)>>8)&7;
 
 //    if (k>4)
 //    {
 //        k = 8-k;
-//        t->cstat |= 4;
+//        t.cstat |= 4;
 //    }
-//    else t->cstat &= ~4;
+//    else t.cstat &= ~4;
 
 //    return k;
 //}
 
 //static int32_t getofs_viewtype7(const spritetype *s, spritetype *t, int32_t a, uint8_t invertp)
 //{
-//    int32_t angdif = invertp ? a-s->ang : s->ang-a;
+//    int32_t angdif = invertp ? a-s.ang : s.ang-a;
 //    int32_t k = ((angdif+3072+128)&2047)/170;
 
 //    if (k>6)
 //    {
 //        k = 12-k;
-//        t->cstat |= 4;
+//        t.cstat |= 4;
 //    }
-//    else t->cstat &= ~4;
+//    else t.cstat &= ~4;
 
 //    return k;
 //}
@@ -7138,26 +7144,26 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //    for (j=spritesortcnt-1; j>=0; j--)
 //    {
 //        spritetype *const t = &tsprite[j];
-//        const int32_t i = t->owner;
+//        const int32_t i = t.owner;
 //        const spritetype *const s = &sprite[i];
 
-//        switch (DYNAMICTILEMAP(s->picnum))
+//        switch (DYNAMICTILEMAP(s.picnum))
 //        {
 //        case SECTOREFFECTOR__STATIC:
-//            if (s->lotag == 40 || s->lotag == 41)
+//            if (s.lotag == 40 || s.lotag == 41)
 //            {
-//                t->cstat = 32768;
+//                t.cstat = 32768;
 
 //                if (ror_sprite == -1) ror_sprite = i;
 //            }
 
-//            if (t->lotag == SE_27_DEMO_CAM && ud.recstat == 1)
+//            if (t.lotag == SE_27_DEMO_CAM && ud.recstat == 1)
 //            {
-//                t->picnum = 11+((totalclock>>3)&1);
-//                t->cstat |= 128;
+//                t.picnum = 11+((totalclock>>3)&1);
+//                t.cstat |= 128;
 //            }
 //            else
-//                t->xrepeat = t->yrepeat = 0;
+//                t.xrepeat = t.yrepeat = 0;
 //            break;
 //        }
 //    }
@@ -7165,19 +7171,19 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //    for (j=spritesortcnt-1; j>=0; j--)
 //    {
 //        spritetype *const t = &tsprite[j];
-//        const int32_t i = t->owner;
+//        const int32_t i = t.owner;
 //        const spritetype *const s = &sprite[i];
 
 ///*
 //        if (A_CheckSpriteFlags(i, SPRITE_NULL))
 //        {
-//            t->xrepeat = t->yrepeat = 0;
+//            t.xrepeat = t.yrepeat = 0;
 //            continue;
 //        }
 //*/
 
-//        if (t->picnum < GREENSLIME || t->picnum > GREENSLIME+7)
-//            switch (DYNAMICTILEMAP(t->picnum))
+//        if (t.picnum < GREENSLIME || t.picnum > GREENSLIME+7)
+//            switch (DYNAMICTILEMAP(t.picnum))
 //            {
 //            case BLOODPOOL__STATIC:
 //            case PUKE__STATIC:
@@ -7185,33 +7191,33 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //            case FOOTPRINTS2__STATIC:
 //            case FOOTPRINTS3__STATIC:
 //            case FOOTPRINTS4__STATIC:
-//                if (t->shade == 127) continue;
+//                if (t.shade == 127) continue;
 //                break;
 //            case RESPAWNMARKERRED__STATIC:
 //            case RESPAWNMARKERYELLOW__STATIC:
 //            case RESPAWNMARKERGREEN__STATIC:
 //                if (ud.marker == 0)
-//                    t->xrepeat = t->yrepeat = 0;
+//                    t.xrepeat = t.yrepeat = 0;
 //                continue;
 //            case CHAIR3__STATIC:
 //#ifdef USE_OPENGL
-//                if (getrendermode() >= REND_POLYMOST && usemodels && md_tilehasmodel(t->picnum,t->pal) >= 0 && !(spriteext[i].flags&SPREXT_NOTMD))
+//                if (getrendermode() >= REND_POLYMOST && usemodels && md_tilehasmodel(t.picnum,t.pal) >= 0 && !(spriteext[i].flags&SPREXT_NOTMD))
 //                {
-//                    t->cstat &= ~4;
+//                    t.cstat &= ~4;
 //                    break;
 //                }
 //#endif
 //                k = getofs_viewtype5(t, t, oura, 0);
-//                t->picnum = s->picnum+k;
+//                t.picnum = s.picnum+k;
 //                break;
 //            case BLOODSPLAT1__STATIC:
 //            case BLOODSPLAT2__STATIC:
 //            case BLOODSPLAT3__STATIC:
 //            case BLOODSPLAT4__STATIC:
-//                if (ud.lockout) t->xrepeat = t->yrepeat = 0;
-//                else if (t->pal == 6)
+//                if (ud.lockout) t.xrepeat = t.yrepeat = 0;
+//                else if (t.pal == 6)
 //                {
-//                    t->shade = -127;
+//                    t.shade = -127;
 //                    continue;
 //                }
 //            case BULLETHOLE__STATIC:
@@ -7219,7 +7225,7 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //            case CRACK2__STATIC:
 //            case CRACK3__STATIC:
 //            case CRACK4__STATIC:
-//                t->shade = 16;
+//                t.shade = 16;
 //                continue;
 //            case NEON1__STATIC:
 //            case NEON2__STATIC:
@@ -7238,22 +7244,22 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //                //case GREENSLIME+7:
 //                //    break;
 //            default:
-//                if (((t->cstat&16)) || (A_CheckEnemySprite(t) && t->extra > 0) || t->statnum == STAT_PLAYER)
+//                if (((t.cstat&16)) || (A_CheckEnemySprite(t) && t.extra > 0) || t.statnum == STAT_PLAYER)
 //                    continue;
 //            }
 
-//        if (A_CheckSpriteFlags(t->owner,SPRITE_NOSHADE) || (t->cstat&2048))
-//            l = sprite[t->owner].shade;
+//        if (A_CheckSpriteFlags(t.owner,SPRITE_NOSHADE) || (t.cstat&2048))
+//            l = sprite[t.owner].shade;
 //        else
 //        {
-//            if (sector[t->sectnum].ceilingstat&1)
-//                l = sector[t->sectnum].ceilingshade;
+//            if (sector[t.sectnum].ceilingstat&1)
+//                l = sector[t.sectnum].ceilingshade;
 //            else
-//                l = sector[t->sectnum].floorshade;
+//                l = sector[t.sectnum].floorshade;
 //            if (l < -127) l = -127;
 ////            if (l > 128) l =  127;
 //        }
-//        t->shade = l;
+//        t.shade = l;
 //    }
 
 //    for (j=spritesortcnt-1; j>=0; j--) //Between drawrooms() and drawmasks()
@@ -7267,44 +7273,44 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //#endif
 //        //is the perfect time to animate sprites
 //        spritetype *const t = &tsprite[j];
-//        const int32_t i = t->owner;
+//        const int32_t i = t.owner;
 //        // XXX: what's up with the (i < 0) check?
 //        // NOTE: not const spritetype because set at SET_SPRITE_NOT_TSPRITE (see below).
 //        spritetype *const s = (i < 0) ? &tsprite[j] : &sprite[i];
 
-//        if (ud.lockout && G_CheckAdultTile(DYNAMICTILEMAP(s->picnum)))
+//        if (ud.lockout && G_CheckAdultTile(DYNAMICTILEMAP(s.picnum)))
 //        {
-//            t->xrepeat = t->yrepeat = 0;
+//            t.xrepeat = t.yrepeat = 0;
 //            continue;
 //        }
 
-//        if (s->picnum == NATURALLIGHTNING)
+//        if (s.picnum == NATURALLIGHTNING)
 //        {
-//            t->shade = -127;
-//            t->cstat |= 8192;
+//            t.shade = -127;
+//            t.cstat |= 8192;
 //        }
 
-//        if (t->statnum == TSPR_TEMP)
+//        if (t.statnum == TSPR_TEMP)
 //            continue;
 
-//        if (s->statnum != STAT_ACTOR && s->picnum == APLAYER && g_player[s->yvel].ps->newowner == -1 && s->owner >= 0)
+//        if (s.statnum != STAT_ACTOR && s.picnum == APLAYER && g_player[s.yvel].ps.newowner == -1 && s.owner >= 0)
 //        {
-//            t->x -= mulscale16(65536-smoothratio,g_player[s->yvel].ps->pos.x-g_player[s->yvel].ps->opos.x);
-//            t->y -= mulscale16(65536-smoothratio,g_player[s->yvel].ps->pos.y-g_player[s->yvel].ps->opos.y);
+//            t.x -= mulscale16(65536-smoothratio,g_player[s.yvel].ps.pos.x-g_player[s.yvel].ps.opos.x);
+//            t.y -= mulscale16(65536-smoothratio,g_player[s.yvel].ps.pos.y-g_player[s.yvel].ps.opos.y);
 //            // dirty hack
-//            if (g_player[s->yvel].ps->dead_flag) t->z = g_player[s->yvel].ps->opos.z;
-//            t->z += mulscale16(smoothratio,g_player[s->yvel].ps->pos.z-g_player[s->yvel].ps->opos.z) -
-//                    (g_player[s->yvel].ps->dead_flag ? 0 : PHEIGHT) + PHEIGHT;
+//            if (g_player[s.yvel].ps.dead_flag) t.z = g_player[s.yvel].ps.opos.z;
+//            t.z += mulscale16(smoothratio,g_player[s.yvel].ps.pos.z-g_player[s.yvel].ps.opos.z) -
+//                    (g_player[s.yvel].ps.dead_flag ? 0 : PHEIGHT) + PHEIGHT;
 //        }
-//        else if ((s->statnum == STAT_DEFAULT && s->picnum != CRANEPOLE) || s->statnum == STAT_PLAYER ||
-//                 s->statnum == STAT_STANDABLE || s->statnum == STAT_PROJECTILE || s->statnum == STAT_MISC || s->statnum == STAT_ACTOR)
+//        else if ((s.statnum == STAT_DEFAULT && s.picnum != CRANEPOLE) || s.statnum == STAT_PLAYER ||
+//                 s.statnum == STAT_STANDABLE || s.statnum == STAT_PROJECTILE || s.statnum == STAT_MISC || s.statnum == STAT_ACTOR)
 //        {
-//            t->x -= mulscale16(65536-smoothratio,s->x-actor[i].bpos.x);
-//            t->y -= mulscale16(65536-smoothratio,s->y-actor[i].bpos.y);
-//            t->z -= mulscale16(65536-smoothratio,s->z-actor[i].bpos.z);
+//            t.x -= mulscale16(65536-smoothratio,s.x-actor[i].bpos.x);
+//            t.y -= mulscale16(65536-smoothratio,s.y-actor[i].bpos.y);
+//            t.z -= mulscale16(65536-smoothratio,s.z-actor[i].bpos.z);
 //        }
 
-//        sect = s->sectnum;
+//        sect = s.sectnum;
 
 //        Bassert(i >= 0);
 //        curframe = AC_CURFRAME(actor[i].t_data);
@@ -7314,26 +7320,26 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //        startframe = actor[i].ac.startframe;
 //        viewtype = actor[i].ac.viewtype;
 //#endif
-//        switchpic = s->picnum;
+//        switchpic = s.picnum;
 //        // Some special cases because dynamictostatic system can't handle
 //        // addition to constants.
-//        if ((s->picnum >= SCRAP6) && (s->picnum<=SCRAP6+7))
+//        if ((s.picnum >= SCRAP6) && (s.picnum<=SCRAP6+7))
 //            switchpic = SCRAP5;
-//        else if ((s->picnum==MONEY+1) || (s->picnum==MAIL+1) || (s->picnum==PAPER+1))
+//        else if ((s.picnum==MONEY+1) || (s.picnum==MAIL+1) || (s.picnum==PAPER+1))
 //            switchpic--;
 
 //        switch (DYNAMICTILEMAP(switchpic))
 //        {
 //        case DUKELYINGDEAD__STATIC:
-//            t->z += (24<<8);
+//            t.z += (24<<8);
 //            break;
 //        case BLOODPOOL__STATIC:
 //        case FOOTPRINTS__STATIC:
 //        case FOOTPRINTS2__STATIC:
 //        case FOOTPRINTS3__STATIC:
 //        case FOOTPRINTS4__STATIC:
-//            if (t->pal == 6)
-//                t->shade = -127;
+//            if (t.pal == 6)
+//                t.shade = -127;
 //        case PUKE__STATIC:
 //        case MONEY__STATIC:
 //            //case MONEY+1__STATIC:
@@ -7341,237 +7347,237 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //            //case MAIL+1__STATIC:
 //        case PAPER__STATIC:
 //            //case PAPER+1__STATIC:
-//            if (ud.lockout && s->pal == 2)
+//            if (ud.lockout && s.pal == 2)
 //            {
-//                t->xrepeat = t->yrepeat = 0;
+//                t.xrepeat = t.yrepeat = 0;
 //                continue;
 //            }
 //            break;
 //        case TRIPBOMB__STATIC:
 //            continue;
 //        case FORCESPHERE__STATIC:
-//            if (t->statnum == STAT_MISC)
+//            if (t.statnum == STAT_MISC)
 //            {
 //                int16_t sqa,sqb;
 
 //                sqa =
 //                    getangle(
-//                        sprite[s->owner].x-g_player[screenpeek].ps->pos.x,
-//                        sprite[s->owner].y-g_player[screenpeek].ps->pos.y);
+//                        sprite[s.owner].x-g_player[screenpeek].ps.pos.x,
+//                        sprite[s.owner].y-g_player[screenpeek].ps.pos.y);
 //                sqb =
 //                    getangle(
-//                        sprite[s->owner].x-t->x,
-//                        sprite[s->owner].y-t->y);
+//                        sprite[s.owner].x-t.x,
+//                        sprite[s.owner].y-t.y);
 
 //                if (klabs(G_GetAngleDelta(sqa,sqb)) > 512)
-//                    if (ldist(&sprite[s->owner],t) < ldist(&sprite[g_player[screenpeek].ps->i],&sprite[s->owner]))
-//                        t->xrepeat = t->yrepeat = 0;
+//                    if (ldist(&sprite[s.owner],t) < ldist(&sprite[g_player[screenpeek].ps.i],&sprite[s.owner]))
+//                        t.xrepeat = t.yrepeat = 0;
 //            }
 //            continue;
 //        case BURNING__STATIC:
 //        case BURNING2__STATIC:
-//            if (sprite[s->owner].statnum == STAT_PLAYER)
+//            if (sprite[s.owner].statnum == STAT_PLAYER)
 //            {
-//                if (display_mirror == 0 && sprite[s->owner].yvel == screenpeek && g_player[sprite[s->owner].yvel].ps->over_shoulder_on == 0)
-//                    t->xrepeat = 0;
+//                if (display_mirror == 0 && sprite[s.owner].yvel == screenpeek && g_player[sprite[s.owner].yvel].ps.over_shoulder_on == 0)
+//                    t.xrepeat = 0;
 //                else
 //                {
-//                    t->ang = getangle(ourx-t->x, oury-t->y);
-//                    t->x = sprite[s->owner].x + (sintable[(t->ang+512)&2047]>>10);
-//                    t->y = sprite[s->owner].y + (sintable[t->ang&2047]>>10);
+//                    t.ang = getangle(ourx-t.x, oury-t.y);
+//                    t.x = sprite[s.owner].x + (sintable[(t.ang+512)&2047]>>10);
+//                    t.y = sprite[s.owner].y + (sintable[t.ang&2047]>>10);
 //                }
 //            }
 //            break;
 
 //        case ATOMICHEALTH__STATIC:
-//            t->z -= (4<<8);
+//            t.z -= (4<<8);
 //            break;
 //        case CRYSTALAMMO__STATIC:
-//            t->shade = (sintable[(totalclock<<4)&2047]>>10);
+//            t.shade = (sintable[(totalclock<<4)&2047]>>10);
 //            continue;
 //        case VIEWSCREEN__STATIC:
 //        case VIEWSCREEN2__STATIC:
-//            if (camsprite >= 0 && actor[OW].t_data[0] == 1)
+//            if (camsprite >= 0 && actor[sprite[i].owner].t_data[0] == 1)
 //            {
-//                t->picnum = STATIC;
-//                t->cstat |= (rand()&12);
-//                t->xrepeat += 8;
-//                t->yrepeat += 8;
+//                t.picnum = STATIC;
+//                t.cstat |= (rand()&12);
+//                t.xrepeat += 8;
+//                t.yrepeat += 8;
 //            }
 //            else if (camsprite >= 0 && waloff[TILE_VIEWSCR] && walock[TILE_VIEWSCR] > 200)
 //            {
-//                t->picnum = TILE_VIEWSCR;
+//                t.picnum = TILE_VIEWSCR;
 //            }
 //            break;
 
 //        case SHRINKSPARK__STATIC:
-//            t->picnum = SHRINKSPARK+((totalclock>>4)&3);
+//            t.picnum = SHRINKSPARK+((totalclock>>4)&3);
 //            break;
 //        case GROWSPARK__STATIC:
-//            t->picnum = GROWSPARK+((totalclock>>4)&3);
+//            t.picnum = GROWSPARK+((totalclock>>4)&3);
 //            break;
 //        case RPG__STATIC:
 //#ifdef USE_OPENGL
-//            if (getrendermode() >= REND_POLYMOST && usemodels && md_tilehasmodel(t->picnum,t->pal) >= 0 &&
+//            if (getrendermode() >= REND_POLYMOST && usemodels && md_tilehasmodel(t.picnum,t.pal) >= 0 &&
 //                    !(spriteext[i].flags & SPREXT_NOTMD))
 //            {
-//                int32_t v = getangle(t->xvel, t->zvel>>4);
+//                int32_t v = getangle(t.xvel, t.zvel>>4);
 
 //                spriteext[i].pitch = (v > 1023 ? v-2048 : v);
-//                t->cstat &= ~4;
+//                t.cstat &= ~4;
 //                break;
 //            }
 //#endif
-//            k = getofs_viewtype7(s, t, getangle(s->x-ourx, s->y-oury), 0);
-//            t->picnum = RPG+k;
+//            k = getofs_viewtype7(s, t, getangle(s.x-ourx, s.y-oury), 0);
+//            t.picnum = RPG+k;
 //            break;
 
 //        case RECON__STATIC:
 //#ifdef USE_OPENGL
-//            if (getrendermode() >= REND_POLYMOST && usemodels && md_tilehasmodel(t->picnum,t->pal) >= 0 && !(spriteext[i].flags&SPREXT_NOTMD))
+//            if (getrendermode() >= REND_POLYMOST && usemodels && md_tilehasmodel(t.picnum,t.pal) >= 0 && !(spriteext[i].flags&SPREXT_NOTMD))
 //            {
-//                t->cstat &= ~4;
+//                t.cstat &= ~4;
 //                break;
 //            }
 //#endif
-//            k = getofs_viewtype7(s, t, getangle(s->x-ourx, s->y-oury), 0);
+//            k = getofs_viewtype7(s, t, getangle(s.x-ourx, s.y-oury), 0);
 
 //            // RECON_T4
 //            if (klabs(curframe) > 64)
 //                k += 7;  // tilted recon car
 
-//            t->picnum = RECON+k;
+//            t.picnum = RECON+k;
 
 //            break;
 
 //        case APLAYER__STATIC:
-//            p = s->yvel;
+//            p = s.yvel;
 
-//            if (t->pal == 1) t->z -= (18<<8);
+//            if (t.pal == 1) t.z -= (18<<8);
 
-//            if (g_player[p].ps->over_shoulder_on > 0 && g_player[p].ps->newowner < 0)
+//            if (g_player[p].ps.over_shoulder_on > 0 && g_player[p].ps.newowner < 0)
 //            {
-//                t->ang = g_player[p].ps->ang +
-//                    mulscale16((((g_player[p].ps->ang+1024 - g_player[p].ps->oang)&2047)-1024),
+//                t.ang = g_player[p].ps.ang +
+//                    mulscale16((((g_player[p].ps.ang+1024 - g_player[p].ps.oang)&2047)-1024),
 //                               smoothratio);
 //#ifdef USE_OPENGL
-//                if (bpp > 8 && usemodels && md_tilehasmodel(t->picnum, t->pal) >= 0)
+//                if (bpp > 8 && usemodels && md_tilehasmodel(t.picnum, t.pal) >= 0)
 //                {
 //                    static int32_t targetang = 0;
 
-//                    if (g_player[p].sync->extbits&(1<<1))
+//                    if (g_player[p].sync.extbits&(1<<1))
 //                    {
-//                        if (g_player[p].sync->extbits&(1<<2))targetang += 16;
-//                        else if (g_player[p].sync->extbits&(1<<3)) targetang -= 16;
+//                        if (g_player[p].sync.extbits&(1<<2))targetang += 16;
+//                        else if (g_player[p].sync.extbits&(1<<3)) targetang -= 16;
 //                        else if (targetang > 0) targetang -= targetang>>2;
 //                        else if (targetang < 0) targetang += (-targetang)>>2;
 //                    }
 //                    else
 //                    {
-//                        if (g_player[p].sync->extbits&(1<<2))targetang -= 16;
-//                        else if (g_player[p].sync->extbits&(1<<3)) targetang += 16;
+//                        if (g_player[p].sync.extbits&(1<<2))targetang -= 16;
+//                        else if (g_player[p].sync.extbits&(1<<3)) targetang += 16;
 //                        else if (targetang > 0) targetang -= targetang>>2;
 //                        else if (targetang < 0) targetang += (-targetang)>>2;
 //                    }
 
 //                    targetang = clamp(targetang, -128, 128);
-//                    t->ang += targetang;
+//                    t.ang += targetang;
 //                }
 //                else
 //#endif
-//                    t->cstat |= 2;
+//                    t.cstat |= 2;
 //            }
 
-//            if ((g_netServer || ud.multimode > 1) && (display_mirror || screenpeek != p || s->owner == -1))
+//            if ((g_netServer || ud.multimode > 1) && (display_mirror || screenpeek != p || s.owner == -1))
 //            {
-//                if (ud.showweapons && sprite[g_player[p].ps->i].extra > 0 && g_player[p].ps->curr_weapon > 0
+//                if (ud.showweapons && sprite[g_player[p].ps.i].extra > 0 && g_player[p].ps.curr_weapon > 0
 //                        && spritesortcnt < MAXSPRITESONSCREEN)
 //                {
 //                    spritetype *const newt = &tsprite[spritesortcnt];
-//                    int32_t curweap = g_player[p].ps->curr_weapon;
+//                    int32_t curweap = g_player[p].ps.curr_weapon;
 
 //                    Bmemcpy(newt, t, sizeof(spritetype));
 
-//                    newt->statnum = TSPR_TEMP;
+//                    newt.statnum = TSPR_TEMP;
 //                    /*
-//                    newt->yrepeat = (t->yrepeat>>3);
-//                    if (t->yrepeat < 4) t->yrepeat = 4;
+//                    newt.yrepeat = (t.yrepeat>>3);
+//                    if (t.yrepeat < 4) t.yrepeat = 4;
 //                    */
 
-//                    newt->cstat = newt->pal = 0;
+//                    newt.cstat = newt.pal = 0;
 
-//                    newt->picnum = (curweap==GROW_WEAPON ? GROWSPRITEICON : WeaponPickupSprites[curweap]);
+//                    newt.picnum = (curweap==GROW_WEAPON ? GROWSPRITEICON : WeaponPickupSprites[curweap]);
 
-//                    if (s->owner >= 0)
-//                        newt->z = g_player[p].ps->pos.z-(12<<8);
+//                    if (s.owner >= 0)
+//                        newt.z = g_player[p].ps.pos.z-(12<<8);
 //                    else
-//                        newt->z = s->z-(51<<8);
+//                        newt.z = s.z-(51<<8);
 
-//                    if (newt->picnum == HEAVYHBOMB)
-//                        newt->xrepeat = newt->yrepeat = 10;
+//                    if (newt.picnum == HEAVYHBOMB)
+//                        newt.xrepeat = newt.yrepeat = 10;
 //                    else
-//                        newt->xrepeat = newt->yrepeat = 16;
+//                        newt.xrepeat = newt.yrepeat = 16;
 
 //                    spritesortcnt++;
 //                }
 
-//                if (g_player[p].sync->extbits & (1<<7) && !ud.pause_on && spritesortcnt<MAXSPRITESONSCREEN)
+//                if (g_player[p].sync.extbits & (1<<7) && !ud.pause_on && spritesortcnt<MAXSPRITESONSCREEN)
 //                {
 //                    spritetype *const newt = &tsprite[spritesortcnt];
 
 //                    Bmemcpy(newt, t, sizeof(spritetype));
 
-//                    newt->statnum = TSPR_TEMP;
+//                    newt.statnum = TSPR_TEMP;
 
-//                    newt->yrepeat = (t->yrepeat>>3);
-//                    if (newt->yrepeat < 4) newt->yrepeat = 4;
+//                    newt.yrepeat = (t.yrepeat>>3);
+//                    if (newt.yrepeat < 4) newt.yrepeat = 4;
 
-//                    newt->cstat = 0;
-//                    newt->picnum = RESPAWNMARKERGREEN;
+//                    newt.cstat = 0;
+//                    newt.picnum = RESPAWNMARKERGREEN;
 
-//                    if (s->owner >= 0)
-//                        newt->z = g_player[p].ps->pos.z-(20<<8);
+//                    if (s.owner >= 0)
+//                        newt.z = g_player[p].ps.pos.z-(20<<8);
 //                    else
-//                        newt->z = s->z-(96<<8);
+//                        newt.z = s.z-(96<<8);
 
-//                    newt->xrepeat = newt->yrepeat = 32;
-//                    newt->pal = 20;
+//                    newt.xrepeat = newt.yrepeat = 32;
+//                    newt.pal = 20;
 
 //                    spritesortcnt++;
 //                }
 //            }
 
-//            if (s->owner == -1)
+//            if (s.owner == -1)
 //            {
 //#ifdef USE_OPENGL
-//                if (getrendermode() >= REND_POLYMOST && usemodels && md_tilehasmodel(s->picnum,t->pal) >= 0 && !(spriteext[i].flags&SPREXT_NOTMD))
+//                if (getrendermode() >= REND_POLYMOST && usemodels && md_tilehasmodel(s.picnum,t.pal) >= 0 && !(spriteext[i].flags&SPREXT_NOTMD))
 //                {
 //                    k = 0;
-//                    t->cstat &= ~4;
+//                    t.cstat &= ~4;
 //                }
 //                else
 //#endif
 //                    k = getofs_viewtype5(s, t, oura, 0);
 
-//                if (sector[s->sectnum].lotag == ST_2_UNDERWATER) k += 1795-1405;
-//                else if ((actor[i].floorz-s->z) > (64<<8)) k += 60;
+//                if (sector[s.sectnum].lotag == ST_2_UNDERWATER) k += 1795-1405;
+//                else if ((actor[i].floorz-s.z) > (64<<8)) k += 60;
 
-//                t->picnum += k;
-//                t->pal = g_player[p].ps->palookup;
+//                t.picnum += k;
+//                t.pal = g_player[p].ps.palookup;
 
 //                goto PALONLY;
 //            }
 
-//            if (g_player[p].ps->on_crane == -1 && (sector[s->sectnum].lotag&0x7ff) != 1)  // ST_1_ABOVE_WATER ?
+//            if (g_player[p].ps.on_crane == -1 && (sector[s.sectnum].lotag&0x7ff) != 1)  // ST_1_ABOVE_WATER ?
 //            {
-//                l = s->z-actor[g_player[p].ps->i].floorz+(3<<8);
+//                l = s.z-actor[g_player[p].ps.i].floorz+(3<<8);
 //                // SET_SPRITE_NOT_TSPRITE
-//                if (l > 1024 && s->yrepeat > 32 && s->extra > 0)
-//                    s->yoffset = (int8_t)(l/(s->yrepeat<<2));
-//                else s->yoffset=0;
+//                if (l > 1024 && s.yrepeat > 32 && s.extra > 0)
+//                    s.yoffset = (int8_t)(l/(s.yrepeat<<2));
+//                else s.yoffset=0;
 //            }
 
-//            if (g_player[p].ps->newowner > -1)
+//            if (g_player[p].ps.newowner > -1)
 //            {
 //                // Display APLAYER sprites with action PSTAND when viewed through
 //                // a camera.  Not implemented for Lunatic.
@@ -7584,42 +7590,42 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //                curframe = 0;
 //            }
 
-//            if (ud.camerasprite == -1 && g_player[p].ps->newowner == -1)
-//                if (s->owner >= 0 && display_mirror == 0 && g_player[p].ps->over_shoulder_on == 0)
+//            if (ud.camerasprite == -1 && g_player[p].ps.newowner == -1)
+//                if (s.owner >= 0 && display_mirror == 0 && g_player[p].ps.over_shoulder_on == 0)
 //                    if ((!g_netServer && ud.multimode < 2) || ((g_netServer || ud.multimode > 1) && p == screenpeek))
 //                    {
 //                        if (getrendermode() == REND_POLYMER)
-//                            t->cstat |= 16384;
+//                            t.cstat |= 16384;
 //                        else
 //                        {
-//                            t->owner = -1;
-//                            t->xrepeat = t->yrepeat = 0;
+//                            t.owner = -1;
+//                            t.xrepeat = t.yrepeat = 0;
 //                            continue;
 //                        }
 
 //#ifdef USE_OPENGL
-//                        if (getrendermode() >= REND_POLYMOST && usemodels && md_tilehasmodel(s->picnum,t->pal) >= 0 && !(spriteext[i].flags&SPREXT_NOTMD))
+//                        if (getrendermode() >= REND_POLYMOST && usemodels && md_tilehasmodel(s.picnum,t.pal) >= 0 && !(spriteext[i].flags&SPREXT_NOTMD))
 //                        {
 //                            k = 0;
-//                            t->cstat &= ~4;
+//                            t.cstat &= ~4;
 //                        }
 //                        else
 //#endif
 //                            k = getofs_viewtype5(s, t, oura, 0);
 
-//                        if (sector[t->sectnum].lotag == ST_2_UNDERWATER) k += 1795-1405;
-//                        else if ((actor[i].floorz-s->z) > (64<<8)) k += 60;
+//                        if (sector[t.sectnum].lotag == ST_2_UNDERWATER) k += 1795-1405;
+//                        else if ((actor[i].floorz-s.z) > (64<<8)) k += 60;
 
-//                        t->picnum += k;
-//                        t->pal = g_player[p].ps->palookup;
+//                        t.picnum += k;
+//                        t.pal = g_player[p].ps.palookup;
 //                    }
 //PALONLY:
 //            G_MaybeTakeOnFloorPal(t, sect);
 
-//            if (s->owner == -1) continue;
+//            if (s.owner == -1) continue;
 
-//            if (t->z > actor[i].floorz && t->xrepeat < 32)
-//                t->z = actor[i].floorz;
+//            if (t.z > actor[i].floorz && t.xrepeat < 32)
+//                t.z = actor[i].floorz;
 
 //            break;
 
@@ -7640,27 +7646,27 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //        case DUKETORSO__STATIC:
 //            if (ud.lockout)
 //            {
-//                t->xrepeat = t->yrepeat = 0;
+//                t.xrepeat = t.yrepeat = 0;
 //                continue;
 //            }
-//            if (t->pal == 6) t->shade = -120;
+//            if (t.pal == 6) t.shade = -120;
 //        case SCRAP1__STATIC:
 //        case SCRAP2__STATIC:
 //        case SCRAP3__STATIC:
 //        case SCRAP4__STATIC:
 //        case SCRAP5__STATIC:
-//            if (actor[i].picnum == BLIMP && t->picnum == SCRAP1 && s->yvel >= 0)
-//                t->picnum = s->yvel;
-//            else t->picnum += T1;
-//            t->shade -= 6;
+//            if (actor[i].picnum == BLIMP && t.picnum == SCRAP1 && s.yvel >= 0)
+//                t.picnum = s.yvel;
+//            else t.picnum += actor[i].t_data[0];
+//            t.shade -= 6;
 
 //            G_MaybeTakeOnFloorPal(t, sect);
 //            break;
 
 //        case WATERBUBBLE__STATIC:
-//            if (sector[t->sectnum].floorpicnum == FLOORSLIME)
+//            if (sector[t.sectnum].floorpicnum == FLOORSLIME)
 //            {
-//                t->pal = 7;
+//                t.pal = 7;
 //                break;
 //            }
 //        default:
@@ -7668,7 +7674,7 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //            break;
 //        }
 
-//        if (G_HaveActor(s->picnum))
+//        if (G_HaveActor(s.picnum))
 //        {
 //#if !defined LUNATIC
 //            if ((unsigned)scrofs_action + 2 >= (unsigned)g_scriptSize)
@@ -7680,41 +7686,41 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //#endif
 
 //#ifdef USE_OPENGL
-//            if (getrendermode() >= REND_POLYMOST && usemodels && md_tilehasmodel(s->picnum,t->pal) >= 0 && !(spriteext[i].flags&SPREXT_NOTMD))
+//            if (getrendermode() >= REND_POLYMOST && usemodels && md_tilehasmodel(s.picnum,t.pal) >= 0 && !(spriteext[i].flags&SPREXT_NOTMD))
 //            {
 //                k = 0;
-//                t->cstat &= ~4;
+//                t.cstat &= ~4;
 //            }
 //            else
 //#endif
 //                switch (l)
 //                {
 //                case 2:
-//                    k = (((s->ang+3072+128-oura)&2047)>>8)&1;
+//                    k = (((s.ang+3072+128-oura)&2047)>>8)&1;
 //                    break;
 
 //                case 3:
 //                case 4:
-//                    k = (((s->ang+3072+128-oura)&2047)>>7)&7;
+//                    k = (((s.ang+3072+128-oura)&2047)>>7)&7;
 //                    if (k > 3)
 //                    {
-//                        t->cstat |= 4;
+//                        t.cstat |= 4;
 //                        k = 7-k;
 //                    }
-//                    else t->cstat &= ~4;
+//                    else t.cstat &= ~4;
 //                    break;
 
 //                case 5:
 //                case -5:
-//                    k = getofs_viewtype5(s, t, getangle(s->x-ourx, s->y-oury), l<0);
+//                    k = getofs_viewtype5(s, t, getangle(s.x-ourx, s.y-oury), l<0);
 //                    break;
 //                case 7:
 //                case -7:
-//                    k = getofs_viewtype7(s, t, getangle(s->x-ourx, s->y-oury), l<0);
+//                    k = getofs_viewtype7(s, t, getangle(s.x-ourx, s.y-oury), l<0);
 //                    break;
 //                case 8:
-//                    k = (((s->ang+3072+128-oura)&2047)>>8)&7;
-//                    t->cstat &= ~4;
+//                    k = (((s.ang+3072+128-oura)&2047)>>8)&7;
+//                    t.cstat &= ~4;
 //                    break;
 //                default:
 //                    k = 0;
@@ -7724,21 +7730,21 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //            l = klabs(l);
 
 //#if !defined LUNATIC
-//            t->picnum += k + script[scrofs_action] + l*curframe;
+//            t.picnum += k + script[scrofs_action] + l*curframe;
 //#else
-//            t->picnum += k + startframe + l*curframe;
+//            t.picnum += k + startframe + l*curframe;
 //#endif
-//            // XXX: t->picnum can be out-of-bounds by bad user code.
+//            // XXX: t.picnum can be out-of-bounds by bad user code.
 
 //            if (l > 0)
-//                while (tilesizx[t->picnum] == 0 && t->picnum > 0)
-//                    t->picnum -= l;       //Hack, for actors
+//                while (tilesizx[t.picnum] == 0 && t.picnum > 0)
+//                    t.picnum -= l;       //Hack, for actors
 
 //            if (actor[i].dispicnum >= 0)
-//                actor[i].dispicnum = t->picnum;
+//                actor[i].dispicnum = t.picnum;
 //        }
 ////        else if (display_mirror == 1)
-////            t->cstat |= 4;
+////            t.cstat |= 4;
 //        /* completemirror() already reverses the drawn frame, so the above isn't necessary.
 //         * Even Polymost's and Polymer's mirror seems to function correctly this way. */
 
@@ -7748,15 +7754,15 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //        // XXX: Currently, for the splitscreen mod, sprites will be pal6-colored iff the first
 //        // player has nightvision on.  We should pass stuff like "from which player is this view
 //        // supposed to be" as parameters ("drawing context") instead of relying on globals.
-//        if (g_player[screenpeek].ps->inv_amount[GET_HEATS] > 0 && g_player[screenpeek].ps->heat_on &&
-//                (A_CheckEnemySprite(s) || A_CheckSpriteFlags(t->owner,SPRITE_NVG) || s->picnum == APLAYER || s->statnum == STAT_DUMMYPLAYER))
+//        if (g_player[screenpeek].ps.inv_amount[GET_HEATS] > 0 && g_player[screenpeek].ps.heat_on &&
+//                (A_CheckEnemySprite(s) || A_CheckSpriteFlags(t.owner,SPRITE_NVG) || s.picnum == APLAYER || s.statnum == STAT_DUMMYPLAYER))
 //        {
-//            t->pal = 6;
-//            t->shade = 0;
+//            t.pal = 6;
+//            t.shade = 0;
 //        }
 
-//        if (s->statnum == STAT_DUMMYPLAYER || A_CheckEnemySprite(s) || A_CheckSpriteFlags(t->owner,SPRITE_SHADOW) || (s->picnum == APLAYER && s->owner >= 0))
-//            if (t->statnum != TSPR_TEMP && s->picnum != EXPLOSION2 && s->picnum != HANGLIGHT && s->picnum != DOMELITE && s->picnum != HOTMEAT)
+//        if (s.statnum == STAT_DUMMYPLAYER || A_CheckEnemySprite(s) || A_CheckSpriteFlags(t.owner,SPRITE_SHADOW) || (s.picnum == APLAYER && s.owner >= 0))
+//            if (t.statnum != TSPR_TEMP && s.picnum != EXPLOSION2 && s.picnum != HANGLIGHT && s.picnum != DOMELITE && s.picnum != HOTMEAT)
 //            {
 //                if (actor[i].dispicnum < 0)
 //                {
@@ -7776,47 +7782,47 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //                {
 //                    int32_t daz;
 
-//                    if ((sector[sect].lotag&0xff) > 2 || s->statnum == STAT_PROJECTILE || s->statnum == STAT_MISC
-//                            || s->picnum == DRONE || s->picnum == COMMANDER)
+//                    if ((sector[sect].lotag&0xff) > 2 || s.statnum == STAT_PROJECTILE || s.statnum == STAT_MISC
+//                            || s.picnum == DRONE || s.picnum == COMMANDER)
 //                        daz = sector[sect].floorz;
 //                    else
 //                        daz = actor[i].floorz;
 
-//                    if ((s->z-daz) < (8<<8) && g_player[screenpeek].ps->pos.z < daz)
+//                    if ((s.z-daz) < (8<<8) && g_player[screenpeek].ps.pos.z < daz)
 //                    {
 //                        spritetype *const newt = &tsprite[spritesortcnt];
 
 //                        Bmemcpy(newt, t, sizeof(spritetype));
 
-//                        newt->statnum = TSPR_TEMP;
+//                        newt.statnum = TSPR_TEMP;
 
-//                        newt->yrepeat = (t->yrepeat>>3);
-//                        if (t->yrepeat < 4) t->yrepeat = 4;
+//                        newt.yrepeat = (t.yrepeat>>3);
+//                        if (t.yrepeat < 4) t.yrepeat = 4;
 
-//                        newt->shade = 127;
-//                        newt->cstat |= 2;
+//                        newt.shade = 127;
+//                        newt.cstat |= 2;
 
-//                        newt->z = daz;
-//                        newt->pal = 4;
+//                        newt.z = daz;
+//                        newt.pal = 4;
 //#ifdef USE_OPENGL
 //                        if (getrendermode() >= REND_POLYMOST)
 //                        {
-//                            if (usemodels && md_tilehasmodel(t->picnum,t->pal) >= 0)
+//                            if (usemodels && md_tilehasmodel(t.picnum,t.pal) >= 0)
 //                            {
-//                                newt->yrepeat = 0;
+//                                newt.yrepeat = 0;
 //                                // 512:trans reverse
 //                                //1024:tell MD2SPRITE.C to use Z-buffer hacks to hide overdraw issues
-//                                newt->cstat |= (512+CSTAT_SPRITE_MDHACK);
+//                                newt.cstat |= (512+CSTAT_SPRITE_MDHACK);
 //                            }
 //                            else
 //                            {
 //                                int32_t ii;
 
-//                                ii = getangle(newt->x-g_player[screenpeek].ps->pos.x,
-//                                              newt->y-g_player[screenpeek].ps->pos.y);
+//                                ii = getangle(newt.x-g_player[screenpeek].ps.pos.x,
+//                                              newt.y-g_player[screenpeek].ps.pos.y);
 
-//                                newt->x += sintable[(ii+2560)&2047]>>9;
-//                                newt->y += sintable[(ii+2048)&2047]>>9;
+//                                newt.x += sintable[(ii+2560)&2047]>>9;
+//                                newt.y += sintable[(ii+2048)&2047]>>9;
 //                            }
 //                        }
 //#endif
@@ -7825,13 +7831,13 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //                }
 //            }
 
-//        switch (DYNAMICTILEMAP(s->picnum))
+//        switch (DYNAMICTILEMAP(s.picnum))
 //        {
 //        case LASERLINE__STATIC:
-//            if (sector[t->sectnum].lotag == ST_2_UNDERWATER) t->pal = 8;
-//            t->z = sprite[s->owner].z-(3<<8);
-//            if (g_tripbombLaserMode == 2 && g_player[screenpeek].ps->heat_on == 0)
-//                t->yrepeat = 0;
+//            if (sector[t.sectnum].lotag == ST_2_UNDERWATER) t.pal = 8;
+//            t.z = sprite[s.owner].z-(3<<8);
+//            if (g_tripbombLaserMode == 2 && g_player[screenpeek].ps.heat_on == 0)
+//                t.yrepeat = 0;
 //        case EXPLOSION2__STATIC:
 //        case EXPLOSION2BOT__STATIC:
 //        case FREEZEBLAST__STATIC:
@@ -7843,82 +7849,82 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //        case SHRINKEREXPLOSION__STATIC:
 //        case RPG__STATIC:
 //        case FLOORFLAME__STATIC:
-//            if (t->picnum == EXPLOSION2)
+//            if (t.picnum == EXPLOSION2)
 //            {
-//                g_player[screenpeek].ps->visibility = -127;
+//                g_player[screenpeek].ps.visibility = -127;
 //                lastvisinc = totalclock+32;
 //                //g_restorePalette = 1;   // JBF 20040101: why?
 //            }
-//            t->shade = -127;
-//            t->cstat |= 8192;
+//            t.shade = -127;
+//            t.cstat |= 8192;
 //            break;
 //        case FIRE__STATIC:
 //        case FIRE2__STATIC:
-//            t->cstat |= 128;
+//            t.cstat |= 128;
 //        case BURNING__STATIC:
 //        case BURNING2__STATIC:
-//            if (sprite[s->owner].picnum != TREE1 && sprite[s->owner].picnum != TREE2)
-//                t->z = actor[t->owner].floorz;
-//            t->shade = -127;
+//            if (sprite[s.owner].picnum != TREE1 && sprite[s.owner].picnum != TREE2)
+//                t.z = actor[t.owner].floorz;
+//            t.shade = -127;
 //        case SMALLSMOKE__STATIC:
-//            t->cstat |= 8192;
+//            t.cstat |= 8192;
 //            break;
 //        case COOLEXPLOSION1__STATIC:
-//            t->shade = -127;
-//            t->cstat |= 8192;
-//            t->picnum += (s->shade>>1);
+//            t.shade = -127;
+//            t.cstat |= 8192;
+//            t.picnum += (s.shade>>1);
 //            break;
 //        case PLAYERONWATER__STATIC:
 //#ifdef USE_OPENGL
-//            if (getrendermode() >= REND_POLYMOST && usemodels && md_tilehasmodel(s->picnum,s->pal) >= 0 && !(spriteext[i].flags&SPREXT_NOTMD))
+//            if (getrendermode() >= REND_POLYMOST && usemodels && md_tilehasmodel(s.picnum,s.pal) >= 0 && !(spriteext[i].flags&SPREXT_NOTMD))
 //            {
 //                k = 0;
-//                t->cstat &= ~4;
+//                t.cstat &= ~4;
 //            }
 //            else
 //#endif
 //                k = getofs_viewtype5(t, t, oura, 0);
 
-//            t->picnum = s->picnum+k+((T1<4)*5);
-//            t->shade = sprite[s->owner].shade;
+//            t.picnum = s.picnum+k+((actor[i].t_data[0]<4)*5);
+//            t.shade = sprite[s.owner].shade;
 
 //            break;
 
 //        case WATERSPLASH2__STATIC:
 //            // WATERSPLASH_T2
-//            t->picnum = WATERSPLASH2+T2;
+//            t.picnum = WATERSPLASH2+actor[i].t_data[1];
 //            break;
 //        case SHELL__STATIC:
-//            t->picnum = s->picnum+(T1&1);
+//            t.picnum = s.picnum+(actor[i].t_data[0]&1);
 //        case SHOTGUNSHELL__STATIC:
-//            t->cstat |= 12;
-//            if (T1 > 2) t->cstat &= ~16;
-//            else if (T1 > 1) t->cstat &= ~4;
+//            t.cstat |= 12;
+//            if (actor[i].t_data[0] > 2) t.cstat &= ~16;
+//            else if (actor[i].t_data[0] > 1) t.cstat &= ~4;
 //            break;
 //        case FRAMEEFFECT1_13__STATIC:
 //            if (PLUTOPAK) break;
 //        case FRAMEEFFECT1__STATIC:
-//            if (s->owner >= 0 && sprite[s->owner].statnum < MAXSTATUS)
+//            if (s.owner >= 0 && sprite[s.owner].statnum < MAXSTATUS)
 //            {
-//                if (sprite[s->owner].picnum == APLAYER)
+//                if (sprite[s.owner].picnum == APLAYER)
 //                    if (ud.camerasprite == -1)
-//                        if (screenpeek == sprite[s->owner].yvel && display_mirror == 0)
+//                        if (screenpeek == sprite[s.owner].yvel && display_mirror == 0)
 //                        {
-//                            t->owner = -1;
+//                            t.owner = -1;
 //                            break;
 //                        }
-//                if ((sprite[s->owner].cstat&32768) == 0)
+//                if ((sprite[s.owner].cstat&32768) == 0)
 //                {
-//                    if (!actor[s->owner].dispicnum)
-//                        t->picnum = actor[i].t_data[1];
-//                    else t->picnum = actor[s->owner].dispicnum;
+//                    if (!actor[s.owner].dispicnum)
+//                        t.picnum = actor[i].t_data[1];
+//                    else t.picnum = actor[s.owner].dispicnum;
 
 //                    if (!G_MaybeTakeOnFloorPal(t, sect))
-//                        t->pal = sprite[s->owner].pal;
+//                        t.pal = sprite[s.owner].pal;
 
-//                    t->shade = sprite[s->owner].shade;
-//                    t->ang = sprite[s->owner].ang;
-//                    t->cstat = 2|sprite[s->owner].cstat;
+//                    t.shade = sprite[s.owner].shade;
+//                    t.ang = sprite[s.owner].ang;
+//                    t.cstat = 2|sprite[s.owner].cstat;
 //                }
 //            }
 //            break;
@@ -7926,22 +7932,22 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //        case CAMERA1__STATIC:
 //        case RAT__STATIC:
 //#ifdef USE_OPENGL
-//            if (getrendermode() >= REND_POLYMOST && usemodels && md_tilehasmodel(s->picnum,s->pal) >= 0 && !(spriteext[i].flags&SPREXT_NOTMD))
+//            if (getrendermode() >= REND_POLYMOST && usemodels && md_tilehasmodel(s.picnum,s.pal) >= 0 && !(spriteext[i].flags&SPREXT_NOTMD))
 //            {
-//                t->cstat &= ~4;
+//                t.cstat &= ~4;
 //                break;
 //            }
 //#endif
 //            k = getofs_viewtype5(t, t, oura, 0);
-//            t->picnum = s->picnum+k;
+//            t.picnum = s.picnum+k;
 //            break;
 //        }
 
-//        actor[i].dispicnum = t->picnum;
+//        actor[i].dispicnum = t.picnum;
 //        // why?
 //        /*
-//                if (sector[t->sectnum].floorpicnum == MIRROR)
-//                    t->xrepeat = t->yrepeat = 0;
+//                if (sector[t.sectnum].floorpicnum == MIRROR)
+//                    t.xrepeat = t.yrepeat = 0;
 //        */
 //    }
 
@@ -7987,9 +7993,9 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 
 //static void doinvcheat(int32_t invidx, int32_t defaultnum, int32_t event)
 //{
-//    defaultnum = VM_OnEvent(event, g_player[myconnectindex].ps->i, myconnectindex, -1, defaultnum);
+//    defaultnum = VM_OnEvent(event, g_player[myconnectindex].ps.i, myconnectindex, -1, defaultnum);
 //    if (defaultnum >= 0)
-//        g_player[myconnectindex].ps->inv_amount[invidx] = defaultnum;
+//        g_player[myconnectindex].ps.inv_amount[invidx] = defaultnum;
 //}
 
 //static void G_CheatGetInv(void)
@@ -8001,12 +8007,12 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //    doinvcheat(GET_SCUBA, 6400, EVENT_CHEATGETSCUBA);
 //    doinvcheat(GET_HOLODUKE, 2400, EVENT_CHEATGETHOLODUKE);
 //    doinvcheat(GET_JETPACK, 1600, EVENT_CHEATGETJETPACK);
-//    doinvcheat(GET_FIRSTAID, g_player[myconnectindex].ps->max_player_health, EVENT_CHEATGETFIRSTAID);
+//    doinvcheat(GET_FIRSTAID, g_player[myconnectindex].ps.max_player_health, EVENT_CHEATGETFIRSTAID);
 //}
 
 //static void end_cheat(void)
 //{
-//    g_player[myconnectindex].ps->cheat_phase = 0;
+//    g_player[myconnectindex].ps.cheat_phase = 0;
 //    KB_FlushKeyboardQueue();
 //}
 
@@ -8026,7 +8032,7 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //        consolecheat = 1;
 //    }
 
-//    if (g_player[myconnectindex].ps->gm & (MODE_TYPE|MODE_MENU))
+//    if (g_player[myconnectindex].ps.gm & (MODE_TYPE|MODE_MENU))
 //        return;
 
 //    if (VOLUMEONE && !vol1inited)
@@ -8039,7 +8045,7 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //    if (consolecheat && numplayers < 2 && ud.recstat == 0)
 //        goto FOUNDCHEAT;
 
-//    if (g_player[myconnectindex].ps->cheat_phase == 1)
+//    if (g_player[myconnectindex].ps.cheat_phase == 1)
 //    {
 //        while (KB_KeyWaiting())
 //        {
@@ -8047,7 +8053,7 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 
 //            if (!((ch >= 'a' && ch <= 'z') || (ch >= '0' && ch <= '9')))
 //            {
-//                g_player[myconnectindex].ps->cheat_phase = 0;
+//                g_player[myconnectindex].ps.cheat_phase = 0;
 ////                P_DoQuote(QUOTE_46,g_player[myconnectindex].ps);
 //                return;
 //            }
@@ -8058,7 +8064,7 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 
 //            if (cheatbuflen > MAXCHEATLEN)
 //            {
-//                g_player[myconnectindex].ps->cheat_phase = 0;
+//                g_player[myconnectindex].ps.cheat_phase = 0;
 //                return;
 //            }
 
@@ -8075,7 +8081,7 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //                }
 //            }
 
-//            g_player[myconnectindex].ps->cheat_phase = 0;
+//            g_player[myconnectindex].ps.cheat_phase = 0;
 //            return;
 
 //FOUNDCHEAT:
@@ -8090,8 +8096,8 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 
 //                    for (weapon = PISTOL_WEAPON; weapon < MAX_WEAPONS-j; weapon++)
 //                    {
-//                        P_AddAmmo(weapon, g_player[myconnectindex].ps, g_player[myconnectindex].ps->max_ammo_amount[weapon]);
-//                        g_player[myconnectindex].ps->gotweapon |= (1<<weapon);
+//                        P_AddAmmo(weapon, g_player[myconnectindex].ps, g_player[myconnectindex].ps.max_ammo_amount[weapon]);
+//                        g_player[myconnectindex].ps.gotweapon |= (1<<weapon);
 //                    }
 
 //                    P_DoQuote(QUOTE_CHEAT_ALL_WEAPONS, g_player[myconnectindex].ps);
@@ -8106,7 +8112,7 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //                    return;
 
 //                case CHEAT_KEYS:
-//                    g_player[myconnectindex].ps->got_access =  7;
+//                    g_player[myconnectindex].ps.got_access =  7;
 //                    KB_FlushKeyboardQueue();
 //                    end_cheat();
 //                    return;
@@ -8129,14 +8135,14 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //                    return;
 
 //                case CHEAT_RESERVED2:
-//                    g_player[myconnectindex].ps->player_par = 0;
-//                    g_player[myconnectindex].ps->gm = MODE_EOL;
+//                    g_player[myconnectindex].ps.player_par = 0;
+//                    g_player[myconnectindex].ps.gm = MODE_EOL;
 //                    end_cheat();
 //                    return;
 
 //                case CHEAT_ALLEN:
 //                    P_DoQuote(QUOTE_CHEAT_ALLEN,g_player[myconnectindex].ps);
-//                    g_player[myconnectindex].ps->cheat_phase = 0;
+//                    g_player[myconnectindex].ps.cheat_phase = 0;
 //                    KB_ClearKeyDown(sc_N);
 //                    return;
 
@@ -8144,7 +8150,7 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //                case CHEAT_KROZ:
 //                case CHEAT_COMEGETSOME:
 //                {
-//                    const int32_t pi = g_player[myconnectindex].ps->i;
+//                    const int32_t pi = g_player[myconnectindex].ps.i;
 
 //                    ud.god = 1-ud.god;
 
@@ -8163,7 +8169,7 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 
 //                        sprite[pi].hitag = 0;
 //                        sprite[pi].lotag = 0;
-//                        sprite[pi].pal = g_player[myconnectindex].ps->palookup;
+//                        sprite[pi].pal = g_player[myconnectindex].ps.palookup;
 
 //                        if (k != CHEAT_COMEGETSOME)
 //                        {
@@ -8178,27 +8184,27 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //                            G_CheatGetInv();
 
 //                            for (weapon = PISTOL_WEAPON; weapon < MAX_WEAPONS; weapon++)
-//                                g_player[myconnectindex].ps->gotweapon |= (1<<weapon);
+//                                g_player[myconnectindex].ps.gotweapon |= (1<<weapon);
 
 //                            for (weapon = PISTOL_WEAPON; weapon < MAX_WEAPONS; weapon++)
-//                                P_AddAmmo(weapon, g_player[myconnectindex].ps, g_player[myconnectindex].ps->max_ammo_amount[weapon]);
+//                                P_AddAmmo(weapon, g_player[myconnectindex].ps, g_player[myconnectindex].ps.max_ammo_amount[weapon]);
 
-//                            g_player[myconnectindex].ps->got_access = 7;
+//                            g_player[myconnectindex].ps.got_access = 7;
 //                        }
 //                    }
 //                    else
 //                    {
-//                        sprite[pi].extra = g_player[myconnectindex].ps->max_player_health;
+//                        sprite[pi].extra = g_player[myconnectindex].ps.max_player_health;
 //                        actor[pi].extra = -1;
-//                        g_player[myconnectindex].ps->last_extra = g_player[myconnectindex].ps->max_player_health;
+//                        g_player[myconnectindex].ps.last_extra = g_player[myconnectindex].ps.max_player_health;
 //                        P_DoQuote(QUOTE_CHEAT_GODMODE_OFF, g_player[myconnectindex].ps);
 //                    }
 
-//                    sprite[pi].extra = g_player[myconnectindex].ps->max_player_health;
+//                    sprite[pi].extra = g_player[myconnectindex].ps.max_player_health;
 //                    actor[pi].extra = 0;
 
 //                    if (k != CHEAT_COMEGETSOME)
-//                        g_player[myconnectindex].ps->dead_flag = 0;
+//                        g_player[myconnectindex].ps.dead_flag = 0;
 
 //                    end_cheat();
 //                    return;
@@ -8211,17 +8217,17 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //                        j = 6;
 
 //                    for (weapon = PISTOL_WEAPON; weapon < MAX_WEAPONS-j; weapon++)
-//                        g_player[myconnectindex].ps->gotweapon |= (1<<weapon);
+//                        g_player[myconnectindex].ps.gotweapon |= (1<<weapon);
 
 //                    for (weapon = PISTOL_WEAPON; weapon < MAX_WEAPONS-j; weapon++)
-//                        P_AddAmmo(weapon, g_player[myconnectindex].ps, g_player[myconnectindex].ps->max_ammo_amount[weapon]);
+//                        P_AddAmmo(weapon, g_player[myconnectindex].ps, g_player[myconnectindex].ps.max_ammo_amount[weapon]);
 
 //                    G_CheatGetInv();
-//                    g_player[myconnectindex].ps->got_access = 7;
+//                    g_player[myconnectindex].ps.got_access = 7;
 //                    P_DoQuote(QUOTE_CHEAT_EVERYTHING, g_player[myconnectindex].ps);
 
 ////                    P_DoQuote(QUOTE_21,g_player[myconnectindex].ps);
-//                    g_player[myconnectindex].ps->inven_icon = ICON_FIRSTAID;
+//                    g_player[myconnectindex].ps.inven_icon = ICON_FIRSTAID;
 
 //                    end_cheat();
 //                    return;
@@ -8273,7 +8279,7 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //                    }
 //                    /*if (numplayers > 1 && g_netServer)
 //                        Net_NewGame(ud.m_volume_number,ud.m_level_number);
-//                    else*/ g_player[myconnectindex].ps->gm |= MODE_RESTART;
+//                    else*/ g_player[myconnectindex].ps.gm |= MODE_RESTART;
 
 //                    end_cheat();
 //                    return;
@@ -8284,11 +8290,11 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //                    return;
 
 //                case CHEAT_VIEW:
-//                    if (g_player[myconnectindex].ps->over_shoulder_on)
-//                        g_player[myconnectindex].ps->over_shoulder_on = 0;
+//                    if (g_player[myconnectindex].ps.over_shoulder_on)
+//                        g_player[myconnectindex].ps.over_shoulder_on = 0;
 //                    else
 //                    {
-//                        g_player[myconnectindex].ps->over_shoulder_on = 1;
+//                        g_player[myconnectindex].ps.over_shoulder_on = 1;
 //                        CAMERADIST = 0;
 //                        CAMERACLOCK = totalclock;
 //                    }
@@ -8312,10 +8318,10 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //                        {
 //                            if (j&(0xffff-16384))
 //                                sector[i].lotag &= (0xffff-16384);
-//                            G_OperateSectors(i,g_player[myconnectindex].ps->i);
+//                            G_OperateSectors(i,g_player[myconnectindex].ps.i);
 //                        }
 //                    }
-//                    G_OperateForceFields(g_player[myconnectindex].ps->i,-1);
+//                    G_OperateForceFields(g_player[myconnectindex].ps.i,-1);
 
 //                    P_DoQuote(QUOTE_CHEAT_UNLOCK,g_player[myconnectindex].ps);
 //                    end_cheat();
@@ -8324,12 +8330,12 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //                case CHEAT_CASHMAN:
 //                    ud.cashman = 1-ud.cashman;
 //                    KB_ClearKeyDown(sc_N);
-//                    g_player[myconnectindex].ps->cheat_phase = 0;
+//                    g_player[myconnectindex].ps.cheat_phase = 0;
 //                    return;
 
 //                case CHEAT_ITEMS:
 //                    G_CheatGetInv();
-//                    g_player[myconnectindex].ps->got_access = 7;
+//                    g_player[myconnectindex].ps.got_access = 7;
 //                    P_DoQuote(QUOTE_CHEAT_EVERYTHING,g_player[myconnectindex].ps);
 //                    end_cheat();
 //                    return;
@@ -8363,8 +8369,8 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //                    return;
 
 //                case CHEAT_HYPER:
-//                    g_player[myconnectindex].ps->inv_amount[GET_STEROIDS] = 399;
-//                    g_player[myconnectindex].ps->inv_amount[GET_HEATS] = 1200;
+//                    g_player[myconnectindex].ps.inv_amount[GET_STEROIDS] = 399;
+//                    g_player[myconnectindex].ps.inv_amount[GET_HEATS] = 1200;
 //                    P_DoQuote(QUOTE_CHEAT_STEROIDS,g_player[myconnectindex].ps);
 //                    end_cheat();
 //                    return;
@@ -8386,8 +8392,8 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //                case CHEAT_RESERVED:
 //                case CHEAT_RESERVED3:
 //                    ud.eog = 1;
-//                    g_player[myconnectindex].ps->player_par = 0;
-//                    g_player[myconnectindex].ps->gm |= MODE_EOL;
+//                    g_player[myconnectindex].ps.player_par = 0;
+//                    g_player[myconnectindex].ps.gm |= MODE_EOL;
 //                    KB_FlushKeyboardQueue();
 //                    return;
 //                }
@@ -8398,34 +8404,34 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //    {
 //        if (KB_KeyPressed((uint8_t)CheatKeys[0]))
 //        {
-//            if (g_player[myconnectindex].ps->cheat_phase >= 0 && numplayers < 2 && ud.recstat == 0)
+//            if (g_player[myconnectindex].ps.cheat_phase >= 0 && numplayers < 2 && ud.recstat == 0)
 //            {
 //                if (CheatKeys[0] == CheatKeys[1])
 //                    KB_ClearKeyDown((uint8_t)CheatKeys[0]);
-//                g_player[myconnectindex].ps->cheat_phase = -1;
+//                g_player[myconnectindex].ps.cheat_phase = -1;
 //            }
 //        }
 
 //        if (KB_KeyPressed((uint8_t)CheatKeys[1]))
 //        {
-//            if (g_player[myconnectindex].ps->cheat_phase == -1)
+//            if (g_player[myconnectindex].ps.cheat_phase == -1)
 //            {
 //                if (ud.player_skill == 4)
 //                {
 //                    P_DoQuote(QUOTE_CHEATS_DISABLED,g_player[myconnectindex].ps);
-//                    g_player[myconnectindex].ps->cheat_phase = 0;
+//                    g_player[myconnectindex].ps.cheat_phase = 0;
 //                }
 //                else
 //                {
-//                    g_player[myconnectindex].ps->cheat_phase = 1;
+//                    g_player[myconnectindex].ps.cheat_phase = 1;
 //                    //                    P_DoQuote(QUOTE_25,g_player[myconnectindex].ps);
 //                    cheatbuflen = 0;
 //                }
 //                KB_FlushKeyboardQueue();
 //            }
-//            else if (g_player[myconnectindex].ps->cheat_phase != 0)
+//            else if (g_player[myconnectindex].ps.cheat_phase != 0)
 //            {
-//                g_player[myconnectindex].ps->cheat_phase = 0;
+//                g_player[myconnectindex].ps.cheat_phase = 0;
 //                KB_ClearKeyDown((uint8_t)CheatKeys[0]);
 //                KB_ClearKeyDown((uint8_t)CheatKeys[1]);
 //            }
@@ -8476,7 +8482,7 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //        }
 //    }
 
-//    if (!ALT_IS_PRESSED && ud.overhead_on == 0 && (g_player[myconnectindex].ps->gm & MODE_TYPE) == 0)
+//    if (!ALT_IS_PRESSED && ud.overhead_on == 0 && (g_player[myconnectindex].ps.gm & MODE_TYPE) == 0)
 //    {
 //        if (BUTTON(gamefunc_Enlarge_Screen))
 //        {
@@ -8519,7 +8525,7 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //        }
 //    }
 
-//    if (g_player[myconnectindex].ps->cheat_phase == 1 || (g_player[myconnectindex].ps->gm&(MODE_MENU|MODE_TYPE)))
+//    if (g_player[myconnectindex].ps.cheat_phase == 1 || (g_player[myconnectindex].ps.gm&(MODE_MENU|MODE_TYPE)))
 //        return;
 
 //    if (BUTTON(gamefunc_See_Coop_View) && (GTFLAGS(GAMETYPE_COOPVIEW) || ud.recstat == 2))
@@ -8550,9 +8556,9 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //        ud.scrollmode = 1-ud.scrollmode;
 //        if (ud.scrollmode)
 //        {
-//            ud.folx = g_player[screenpeek].ps->opos.x;
-//            ud.foly = g_player[screenpeek].ps->opos.y;
-//            ud.fola = g_player[screenpeek].ps->oang;
+//            ud.folx = g_player[screenpeek].ps.opos.x;
+//            ud.foly = g_player[screenpeek].ps.opos.y;
+//            ud.fola = g_player[screenpeek].ps.oang;
 //        }
 //        P_DoQuote(QUOTE_MAP_FOLLOW_OFF+ud.scrollmode,g_player[myconnectindex].ps);
 //    }
@@ -8643,7 +8649,7 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //            g_demo_cnt = g_demo_goalCnt = ud.reccnt = ud.pause_on = ud.recstat = ud.m_recstat = 0;
 //            // XXX: probably redundant; this stuff needs an API anyway:
 //            kclose(g_demo_recFilePtr); g_demo_recFilePtr = -1;
-//            g_player[myconnectindex].ps->gm = MODE_GAME;
+//            g_player[myconnectindex].ps.gm = MODE_GAME;
 //            ready2send=1;  // TODO: research this weird variable
 //            screenpeek=myconnectindex;
 ////            g_demo_paused=0;
@@ -8670,7 +8676,7 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //        {
 //            if (SHIFTS_IS_PRESSED)
 //            {
-//                if (i == 5 && g_player[myconnectindex].ps->fta > 0 && g_player[myconnectindex].ps->ftq == QUOTE_MUSIC)
+//                if (i == 5 && g_player[myconnectindex].ps.fta > 0 && g_player[myconnectindex].ps.ftq == QUOTE_MUSIC)
 //                {
 //                    i = (VOLUMEALL?MAXVOLUMES*MAXLEVELS:6);
 //                    g_musicIndex = (g_musicIndex+1)%i;
@@ -8755,7 +8761,7 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //        {
 //            KB_FlushKeyboardQueue();
 //            CONTROL_ClearButton(gamefunc_SendMessage);
-//            g_player[myconnectindex].ps->gm |= MODE_TYPE;
+//            g_player[myconnectindex].ps.gm |= MODE_TYPE;
 //            typebuf[0] = 0;
 //            inputloc = 0;
 //        }
@@ -8767,7 +8773,7 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //            FX_StopAllSounds();
 //            S_ClearSoundLocks();
 
-//            g_player[myconnectindex].ps->gm |= MODE_MENU;
+//            g_player[myconnectindex].ps.gm |= MODE_MENU;
 
 //            if ((!g_netServer && ud.multimode < 2))
 //            {
@@ -8805,7 +8811,7 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //                KB_ClearKeyDown(sc_F2);
 
 //FAKE_F2:
-//                if (sprite[g_player[myconnectindex].ps->i].extra <= 0)
+//                if (sprite[g_player[myconnectindex].ps.i].extra <= 0)
 //                {
 //                    P_DoQuote(QUOTE_SAVE_DEAD,g_player[myconnectindex].ps);
 //                    return;
@@ -8820,7 +8826,7 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //                S_ClearSoundLocks();
 
 //                //                setview(0,0,xdim-1,ydim-1);
-//                g_player[myconnectindex].ps->gm |= MODE_MENU;
+//                g_player[myconnectindex].ps.gm |= MODE_MENU;
 
 //                if ((!g_netServer && ud.multimode < 2))
 //                {
@@ -8840,7 +8846,7 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //                S_ClearSoundLocks();
 
 //                //                setview(0,0,xdim-1,ydim-1);
-//                g_player[myconnectindex].ps->gm |= MODE_MENU;
+//                g_player[myconnectindex].ps.gm |= MODE_MENU;
 //                if ((!g_netServer && ud.multimode < 2) && ud.recstat != 2)
 //                {
 //                    ready2send = 0;
@@ -8856,7 +8862,7 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //            FX_StopAllSounds();
 //            S_ClearSoundLocks();
 
-//            g_player[myconnectindex].ps->gm |= MODE_MENU;
+//            g_player[myconnectindex].ps.gm |= MODE_MENU;
 //            if ((!g_netServer && ud.multimode < 2) && ud.recstat != 2)
 //            {
 //                ready2send = 0;
@@ -8866,7 +8872,7 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 
 //        }
 
-//        if ((KB_UnBoundKeyPressed(sc_F6) || g_doQuickSave == 1) && (g_player[myconnectindex].ps->gm&MODE_GAME))
+//        if ((KB_UnBoundKeyPressed(sc_F6) || g_doQuickSave == 1) && (g_player[myconnectindex].ps.gm&MODE_GAME))
 //        {
 //            KB_ClearKeyDown(sc_F6);
 //            g_doQuickSave = 0;
@@ -8875,7 +8881,7 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 
 //            KB_FlushKeyboardQueue();
 
-//            if (sprite[g_player[myconnectindex].ps->i].extra <= 0)
+//            if (sprite[g_player[myconnectindex].ps.i].extra <= 0)
 //            {
 //                P_DoQuote(QUOTE_SAVE_DEAD,g_player[myconnectindex].ps);
 //                return;
@@ -8897,15 +8903,15 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //        if (KB_UnBoundKeyPressed(sc_F7))
 //        {
 //            KB_ClearKeyDown(sc_F7);
-//            if (g_player[myconnectindex].ps->over_shoulder_on)
-//                g_player[myconnectindex].ps->over_shoulder_on = 0;
+//            if (g_player[myconnectindex].ps.over_shoulder_on)
+//                g_player[myconnectindex].ps.over_shoulder_on = 0;
 //            else
 //            {
-//                g_player[myconnectindex].ps->over_shoulder_on = 1;
+//                g_player[myconnectindex].ps.over_shoulder_on = 1;
 //                CAMERADIST = 0;
 //                CAMERACLOCK = totalclock;
 //            }
-//            P_DoQuote(QUOTE_VIEW_MODE_OFF+g_player[myconnectindex].ps->over_shoulder_on,g_player[myconnectindex].ps);
+//            P_DoQuote(QUOTE_VIEW_MODE_OFF+g_player[myconnectindex].ps.over_shoulder_on,g_player[myconnectindex].ps);
 //        }
 
 //        if (KB_UnBoundKeyPressed(sc_F5) && ud.config.MusicDevice >= 0)
@@ -8935,7 +8941,7 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //            }
 //        }
 
-//        if ((KB_UnBoundKeyPressed(sc_F9) || g_doQuickSave == 2) && (g_player[myconnectindex].ps->gm&MODE_GAME))
+//        if ((KB_UnBoundKeyPressed(sc_F9) || g_doQuickSave == 2) && (g_player[myconnectindex].ps.gm&MODE_GAME))
 //        {
 //            KB_ClearKeyDown(sc_F9);
 //            g_doQuickSave = 0;
@@ -8959,7 +8965,7 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //            M_ChangeMenu(500);
 //            FX_StopAllSounds();
 //            S_ClearSoundLocks();
-//            g_player[myconnectindex].ps->gm |= MODE_MENU;
+//            g_player[myconnectindex].ps.gm |= MODE_MENU;
 //            if ((!g_netServer && ud.multimode < 2) && ud.recstat != 2)
 //            {
 //                ready2send = 0;
@@ -8973,19 +8979,19 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //            j = totalclock-nonsharedtimer;
 //            nonsharedtimer += j;
 //            if (BUTTON(gamefunc_Enlarge_Screen))
-//                g_player[myconnectindex].ps->zoom += mulscale6(j,max(g_player[myconnectindex].ps->zoom,256));
+//                g_player[myconnectindex].ps.zoom += mulscale6(j,max(g_player[myconnectindex].ps.zoom,256));
 //            if (BUTTON(gamefunc_Shrink_Screen))
-//                g_player[myconnectindex].ps->zoom -= mulscale6(j,max(g_player[myconnectindex].ps->zoom,256));
+//                g_player[myconnectindex].ps.zoom -= mulscale6(j,max(g_player[myconnectindex].ps.zoom,256));
 
-//            if (g_player[myconnectindex].ps->zoom > 2048)
-//                g_player[myconnectindex].ps->zoom = 2048;
-//            if (g_player[myconnectindex].ps->zoom < 48)
-//                g_player[myconnectindex].ps->zoom = 48;
+//            if (g_player[myconnectindex].ps.zoom > 2048)
+//                g_player[myconnectindex].ps.zoom = 2048;
+//            if (g_player[myconnectindex].ps.zoom < 48)
+//                g_player[myconnectindex].ps.zoom = 48;
 
 //        }
 //    }
 
-//    if (I_EscapeTrigger() && ud.overhead_on && g_player[myconnectindex].ps->newowner == -1)
+//    if (I_EscapeTrigger() && ud.overhead_on && g_player[myconnectindex].ps.newowner == -1)
 //    {
 //        I_EscapeTriggerClear();
 //        ud.last_overhead = ud.overhead_on;
@@ -9025,7 +9031,7 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //        M_ChangeMenu(232);
 //        FX_StopAllSounds();
 //        S_ClearSoundLocks();
-//        g_player[myconnectindex].ps->gm |= MODE_MENU;
+//        g_player[myconnectindex].ps.gm |= MODE_MENU;
 //        if ((!g_netServer && ud.multimode < 2) && ud.recstat != 2)
 //        {
 //            ready2send = 0;
@@ -9212,7 +9218,7 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //        else
 //            {
 //            initprintf("Warning: Failed including %s on line %s:%d\n",
-//                       fn, script->filename,scriptfile_getlinum(script,cmdtokptr));
+//                       fn, script.filename,scriptfile_getlinum(script,cmdtokptr));
 //            }
 //*/
 //    }
@@ -9254,7 +9260,7 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //    while (1)
 //    {
 //        tokn = getatoken(script,tokens,sizeof(tokens)/sizeof(tokenlist));
-//        cmdtokptr = script->ltextptr;
+//        cmdtokptr = script.ltextptr;
 //        switch (tokn)
 //        {
 //        case T_LOADGRP:
@@ -9305,12 +9311,12 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //            break;
 //        case T_MUSIC:
 //        {
-//            char *tinttokptr = script->ltextptr;
+//            char *tinttokptr = script.ltextptr;
 //            char *ID=NULL, *fn="";
 //            char *musicend;
 
 //            if (scriptfile_getbraces(script,&musicend)) break;
-//            while (script->textptr < musicend)
+//            while (script.textptr < musicend)
 //            {
 //                switch (getatoken(script,sound_musictokens,sizeof(sound_musictokens)/sizeof(tokenlist)))
 //                {
@@ -9326,7 +9332,7 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //            {
 //                if (ID==NULL)
 //                {
-//                    initprintf("Error: missing ID for music definition near line %s:%d\n", script->filename, scriptfile_getlinum(script,tinttokptr));
+//                    initprintf("Error: missing ID for music definition near line %s:%d\n", script.filename, scriptfile_getlinum(script,tinttokptr));
 //                    break;
 //                }
 
@@ -9334,7 +9340,7 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //                    break;
 
 //                if (S_DefineMusic(ID,fn))
-//                    initprintf("Error: invalid music ID on line %s:%d\n", script->filename, scriptfile_getlinum(script,tinttokptr));
+//                    initprintf("Error: invalid music ID on line %s:%d\n", script.filename, scriptfile_getlinum(script,tinttokptr));
 //            }
 //        }
 //        break;
@@ -9342,7 +9348,7 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //#ifdef USE_LIBVPX
 //        case T_ANIMSOUNDS:
 //        {
-//            char *otokptr = script->ltextptr;
+//            char *otokptr = script.ltextptr;
 //            char *animsoundsend = NULL;
 //            int32_t animnum, numpairs=0, allocsz=4, bad=1, lastframenum=INT32_MIN;
 
@@ -9365,14 +9371,14 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //            animnum = getatoken(script, hardcoded_anim_tokens, NUM_HARDCODED_ANIMS);
 //            if ((unsigned)animnum >= NUM_HARDCODED_ANIMS)
 //                initprintf("Error: expected a hardcoded anim file name (sans extension) on line %s:%d\n",
-//                           script->filename, scriptfile_getlinum(script, otokptr));
+//                           script.filename, scriptfile_getlinum(script, otokptr));
 
 //            if (scriptfile_getbraces(script, &animsoundsend)) break;
 
 //            if (anim_hi_sounds[animnum])
 //            {
 //                initprintf("Warning: overwriting already defined hi-anim %s's sounds on line %s:%d\n",
-//                           hardcoded_anim_tokens[animnum].text, script->filename,
+//                           hardcoded_anim_tokens[animnum].text, script.filename,
 //                           scriptfile_getlinum(script, otokptr));
 //                Bfree(anim_hi_sounds[animnum]);
 //                anim_hi_numsounds[animnum] = 0;
@@ -9380,7 +9386,7 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 
 //            if (!preload)
 //                anim_hi_sounds[animnum] = (uint16_t *)Bcalloc(allocsz, 2*sizeof(anim_hi_sounds[0]));
-//            while (script->textptr < animsoundsend)
+//            while (script.textptr < animsoundsend)
 //            {
 //                int32_t framenum, soundnum;
 
@@ -9394,7 +9400,7 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //                // HACK: we've reached the end of the list
 //                //  (hack because it relies on knowledge of
 //                //   how scriptfile_* preprocesses the text)
-//                if (animsoundsend - script->textptr == 1)
+//                if (animsoundsend - script.textptr == 1)
 //                    break;
 
 //                // would produce error when it encounters the closing '}'
@@ -9412,7 +9418,7 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //                if (framenum <= 0)
 //                {
 //                    initprintf("Error: frame number must be greater zero on line %s:%d\n",
-//                               script->filename, scriptfile_getlinum(script, script->ltextptr));
+//                               script.filename, scriptfile_getlinum(script, script.ltextptr));
 //                    break;
 //                }
 
@@ -9420,7 +9426,7 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //                {
 //                    initprintf("Error: frame numbers must be in (not necessarily strictly)"
 //                               " ascending order (line %s:%d)\n",
-//                               script->filename, scriptfile_getlinum(script, script->ltextptr));
+//                               script.filename, scriptfile_getlinum(script, script.ltextptr));
 //                    break;
 //                }
 //                lastframenum = framenum;
@@ -9428,7 +9434,7 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //                if ((unsigned)soundnum >= MAXSOUNDS)
 //                {
 //                    initprintf("Error: sound number #%d invalid on line %s:%d\n", soundnum,
-//                               script->filename, scriptfile_getlinum(script, script->ltextptr));
+//                               script.filename, scriptfile_getlinum(script, script.ltextptr));
 //                    break;
 //                }
 
@@ -9485,13 +9491,13 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //        break;
 //        case T_SOUND:
 //        {
-//            char *tinttokptr = script->ltextptr;
+//            char *tinttokptr = script.ltextptr;
 //            char *fn="";
 //            int32_t num=-1;
 //            char *musicend;
 
 //            if (scriptfile_getbraces(script,&musicend)) break;
-//            while (script->textptr < musicend)
+//            while (script.textptr < musicend)
 //            {
 //                switch (getatoken(script,sound_musictokens,sizeof(sound_musictokens)/sizeof(tokenlist)))
 //                {
@@ -9507,7 +9513,7 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //            {
 //                if (num==-1)
 //                {
-//                    initprintf("Error: missing ID for sound definition near line %s:%d\n", script->filename, scriptfile_getlinum(script,tinttokptr));
+//                    initprintf("Error: missing ID for sound definition near line %s:%d\n", script.filename, scriptfile_getlinum(script,tinttokptr));
 //                    break;
 //                }
 
@@ -9515,7 +9521,7 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //                    break;
 
 //                if (S_DefineSound(num,fn))
-//                    initprintf("Error: invalid sound ID on line %s:%d\n", script->filename, scriptfile_getlinum(script,tinttokptr));
+//                    initprintf("Error: invalid sound ID on line %s:%d\n", script.filename, scriptfile_getlinum(script,tinttokptr));
 //            }
 //        }
 //        break;
@@ -10300,7 +10306,7 @@ function G_CheckCommandLine(argc: number, argv: string[]) : void
 
 //        if (!NAM)
 //        {
-//            //g_player[myconnectindex].ps->palette = drealms;
+//            //g_player[myconnectindex].ps.palette = drealms;
 //            //G_FadePalette(0,0,0,63);
 //            if (logoflags & LOGO_3DRSCREEN)
 //            {
@@ -10323,7 +10329,7 @@ function G_CheckCommandLine(argc: number, argv: string[]) : void
 
 //                    if (g_restorePalette)
 //                    {
-//                        P_SetGamePalette(g_player[myconnectindex].ps,g_player[myconnectindex].ps->palette,0);
+//                        P_SetGamePalette(g_player[myconnectindex].ps,g_player[myconnectindex].ps.palette,0);
 //                        g_restorePalette = 0;
 //                    }
 //                    nextpage();
@@ -10340,7 +10346,7 @@ function G_CheckCommandLine(argc: number, argv: string[]) : void
 //        {
 //            clearallviews(0);
 
-//            //g_player[myconnectindex].ps->palette = titlepal;
+//            //g_player[myconnectindex].ps.palette = titlepal;
 //            P_SetGamePalette(g_player[myconnectindex].ps, TITLEPAL, 8+2+1);   // JBF 20040308
 //            flushperms();
 //            rotatesprite_fs(0,0,65536L,0,BETASCREEN,0,0,2+8+16);
@@ -10418,7 +10424,7 @@ function G_CheckCommandLine(argc: number, argv: string[]) : void
 
 //                if (g_restorePalette)
 //                {
-//                    P_SetGamePalette(g_player[myconnectindex].ps,g_player[myconnectindex].ps->palette,0);
+//                    P_SetGamePalette(g_player[myconnectindex].ps,g_player[myconnectindex].ps.palette,0);
 //                    g_restorePalette = 0;
 //                }
 //#ifdef LUNATIC
@@ -10435,7 +10441,7 @@ function G_CheckCommandLine(argc: number, argv: string[]) : void
 //    clearallviews(0L);
 //    nextpage();
 
-//    //g_player[myconnectindex].ps->palette = palette;
+//    //g_player[myconnectindex].ps.palette = palette;
 //    P_SetGamePalette(g_player[myconnectindex].ps, BASEPAL, 0);    // JBF 20040308
 //    S_PlaySound(NITEVISION_ONOFF);
 
@@ -10911,23 +10917,23 @@ function G_Startup() : void
 //    if (numplayers > 1)
 //    {
 //        Net_SendClientInfo();
-//        if (sprite[g_player[myconnectindex].ps->i].picnum == APLAYER && sprite[g_player[myconnectindex].ps->i].pal != 1)
-//            sprite[g_player[myconnectindex].ps->i].pal = g_player[myconnectindex].pcolor;
+//        if (sprite[g_player[myconnectindex].ps.i].picnum == APLAYER && sprite[g_player[myconnectindex].ps.i].pal != 1)
+//            sprite[g_player[myconnectindex].ps.i].pal = g_player[myconnectindex].pcolor;
 //    }
 //    else
 //    {
-//        /*int32_t j = g_player[myconnectindex].ps->team;*/
+//        /*int32_t j = g_player[myconnectindex].ps.team;*/
 
 //        // CODEDUP_UD_TO_GPLAYER
-//        g_player[myconnectindex].ps->aim_mode = ud.mouseaiming;
-//        g_player[myconnectindex].ps->auto_aim = ud.config.AutoAim;
-//        g_player[myconnectindex].ps->weaponswitch = ud.weaponswitch;
-//        g_player[myconnectindex].ps->palookup = g_player[myconnectindex].pcolor = ud.color;
+//        g_player[myconnectindex].ps.aim_mode = ud.mouseaiming;
+//        g_player[myconnectindex].ps.auto_aim = ud.config.AutoAim;
+//        g_player[myconnectindex].ps.weaponswitch = ud.weaponswitch;
+//        g_player[myconnectindex].ps.palookup = g_player[myconnectindex].pcolor = ud.color;
 
 //        g_player[myconnectindex].pteam = ud.team;
 
-//        if (sprite[g_player[myconnectindex].ps->i].picnum == APLAYER && sprite[g_player[myconnectindex].ps->i].pal != 1)
-//            sprite[g_player[myconnectindex].ps->i].pal = g_player[myconnectindex].pcolor;
+//        if (sprite[g_player[myconnectindex].ps.i].picnum == APLAYER && sprite[g_player[myconnectindex].ps.i].pal != 1)
+//            sprite[g_player[myconnectindex].ps.i].pal = g_player[myconnectindex].pcolor;
 //    }
 //}
 
@@ -10937,7 +10943,7 @@ function G_BackToMenu(): void
     //boardfilename[0] = 0;
     //if (ud.recstat == 1) G_CloseDemoWrite();
     //ud.warp_on = 0;
-    //g_player[myconnectindex].ps->gm = MODE_MENU;
+    //g_player[myconnectindex].ps.gm = MODE_MENU;
     //M_ChangeMenu(MENU_MAIN);
     //KB_FlushKeyboardQueue();
     //Bsprintf(tempbuf, "%s - " APPNAME, g_gameNamePtr);
@@ -10949,7 +10955,7 @@ function G_BackToMenu(): void
 //    P_SetGamePalette(g_player[myconnectindex].ps, BASEPAL, 0);
 //    P_UpdateScreenPal(g_player[myconnectindex].ps);
 
-//    if (g_player[myconnectindex].ps->gm&MODE_EOL)
+//    if (g_player[myconnectindex].ps.gm&MODE_EOL)
 //    {
 //        G_CloseDemoWrite();
 
@@ -10970,7 +10976,7 @@ function G_BackToMenu(): void
 //            {
 //                if (!VOLUMEALL)
 //                    G_DoOrderScreen();
-//                g_player[myconnectindex].ps->gm = MODE_MENU;
+//                g_player[myconnectindex].ps.gm = MODE_MENU;
 //                M_ChangeMenu(MENU_MAIN);
 //                probey = 0;
 //                return 2;
@@ -10984,8 +10990,8 @@ function G_BackToMenu(): void
 //    }
 //    ud.display_bonus_screen = 1;
 //    ready2send = 0;
-//    if (numplayers > 1) g_player[myconnectindex].ps->gm = MODE_GAME;
-//    if (G_EnterLevel(g_player[myconnectindex].ps->gm))
+//    if (numplayers > 1) g_player[myconnectindex].ps.gm = MODE_GAME;
+//    if (G_EnterLevel(g_player[myconnectindex].ps.gm))
 //    {
 //        G_BackToMenu();
 //        return 2;
@@ -11006,7 +11012,7 @@ function G_BackToMenu(): void
 //// See FILENAME_CASE_CHECK in cache1d.c
 //static int32_t check_filename_casing(void)
 //{
-//    return !(g_player[myconnectindex].ps->gm&MODE_GAME);
+//    return !(g_player[myconnectindex].ps.gm&MODE_GAME);
 //}
 //#endif
 
@@ -11038,7 +11044,7 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
         G_GameExit("OUT OF MEMORY");
 //#ifdef LUNATIC
 //    g_player_ps[pnum] = g_player[pnum].ps;
-//    g_player[pnum].ps->wa.idx = pnum;
+//    g_player[pnum].ps.wa.idx = pnum;
 //#endif
 }
 
@@ -11067,23 +11073,23 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
 //    if (grp && FindGroup(DUKE15_CRC))
 //    {
 //        clearGrpNamePtr();
-//        g_grpNamePtr = dup_filename(FindGroup(DUKE15_CRC)->name);
+//        g_grpNamePtr = dup_filename(FindGroup(DUKE15_CRC).name);
 
-//        G_AddGroup(grp->name);
+//        G_AddGroup(grp.name);
 
-//        for (grp = listgrps; grp; grp=grp->next)
-//            if (crc == grp->crcval) break;
+//        for (grp = listgrps; grp; grp=grp.next)
+//            if (crc == grp.crcval) break;
 
-//        if (grp != NULL && grp->scriptname)
+//        if (grp != NULL && grp.scriptname)
 //        {
 //            clearScriptNamePtr();
-//            g_scriptNamePtr = dup_filename(grp->scriptname);
+//            g_scriptNamePtr = dup_filename(grp.scriptname);
 //        }
 
-//        if (grp != NULL && grp->defname)
+//        if (grp != NULL && grp.defname)
 //        {
 //            clearDefNamePtr();
-//            g_defNamePtr = dup_filename(grp->defname);
+//            g_defNamePtr = dup_filename(grp.defname);
 //        }
 //    }
 //}
@@ -11215,15 +11221,15 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
 //        struct strllist *s;
 //        while (CommandPaths)
 //        {
-//            s = CommandPaths->next;
-//            i = addsearchpath(CommandPaths->str);
+//            s = CommandPaths.next;
+//            i = addsearchpath(CommandPaths.str);
 //            if (i < 0)
 //            {
-//                initprintf("Failed adding %s for game data: %s\n", CommandPaths->str,
+//                initprintf("Failed adding %s for game data: %s\n", CommandPaths.str,
 //                           i==-1 ? "not a directory" : "no such directory");
 //            }
 
-//            Bfree(CommandPaths->str);
+//            Bfree(CommandPaths.str);
 //            Bfree(CommandPaths);
 //            CommandPaths = s;
 //        }
@@ -11362,21 +11368,21 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
 //        // if it is not found, choose the first GRP from the list
 //        struct grpfile *fg, *first = NULL;
 
-//        for (fg = foundgrps; fg; fg=fg->next)
+//        for (fg = foundgrps; fg; fg=fg.next)
 //        {
 //            struct grpfile *grp;
-//            for (grp = listgrps; grp; grp=grp->next)
-//                if (fg->crcval == grp->crcval) break;
+//            for (grp = listgrps; grp; grp=grp.next)
+//                if (fg.crcval == grp.crcval) break;
 
 //            if (grp == NULL)
 //                continue;
 
-//            fg->game = grp->game;
+//            fg.game = grp.game;
 //            if (!first) first = fg;
-//            if (!Bstrcasecmp(fg->name, G_DefaultGrpFile()))
+//            if (!Bstrcasecmp(fg.name, G_DefaultGrpFile()))
 //            {
-//                g_gameType = grp->game;
-//                g_gameNamePtr = grp->name;
+//                g_gameType = grp.game;
+//                g_gameNamePtr = grp.name;
 //                break;
 //            }
 //        }
@@ -11385,10 +11391,10 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
 //            if (g_grpNamePtr == NULL)
 //            {
 //                clearGrpNamePtr();
-//                g_grpNamePtr = dup_filename(first->name);
+//                g_grpNamePtr = dup_filename(first.name);
 //            }
-//            g_gameType = first->game;
-//            g_gameNamePtr = listgrps->name;
+//            g_gameType = first.game;
+//            g_gameNamePtr = listgrps.name;
 //        }
 //        else if (!fg) g_gameNamePtr = "Unknown GRP";
 //    }
@@ -11445,10 +11451,10 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
 //            struct grpfile * grp = FindGroup(g_dependencyCRC);
 //            if (grp)
 //            {
-//                if ((i = initgroupfile(grp->name)) == -1)
-//                    initprintf("Warning: could not find main data file \"%s\"!\n",grp->name);
+//                if ((i = initgroupfile(grp.name)) == -1)
+//                    initprintf("Warning: could not find main data file \"%s\"!\n",grp.name);
 //                else
-//                    initprintf("Using \"%s\" as main game data file.\n", grp->name);
+//                    initprintf("Using \"%s\" as main game data file.\n", grp.name);
 //            }
 //        }
 
@@ -11490,19 +11496,19 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
 //        pathsearchmode = 1;
 //        while (CommandGrps)
 //        {
-//            s = CommandGrps->next;
+//            s = CommandGrps.next;
 
-//            if ((j = initgroupfile(CommandGrps->str)) == -1)
-//                initprintf("Could not find file \"%s\".\n",CommandGrps->str);
+//            if ((j = initgroupfile(CommandGrps.str)) == -1)
+//                initprintf("Could not find file \"%s\".\n",CommandGrps.str);
 //            else
 //            {
 //                g_groupFileHandle = j;
-//                initprintf("Using file \"%s\" as game data.\n",CommandGrps->str);
+//                initprintf("Using file \"%s\" as game data.\n",CommandGrps.str);
 //                if (!g_noAutoLoad && !ud.config.NoAutoLoad)
-//                    G_DoAutoload(CommandGrps->str);
+//                    G_DoAutoload(CommandGrps.str);
 //            }
 
-//            Bfree(CommandGrps->str);
+//            Bfree(CommandGrps.str);
 //            Bfree(CommandGrps);
 //            CommandGrps = s;
 //        }
@@ -11741,7 +11747,7 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
             ud.config.ScreenBPP = bpp[i];
         }
 
-        todo("setbrightness(ud.brightness>>2,g_player[myconnectindex].ps->palette,0);");
+        todo("setbrightness(ud.brightness>>2,g_player[myconnectindex].ps.palette,0);");
 
         todo("S_MusicStartup();");
         todo("S_SoundStartup();");
@@ -11752,7 +11758,7 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
     {
         todoThrow();
 //        clearview(0L);
-//        //g_player[myconnectindex].ps->palette = palette;
+//        //g_player[myconnectindex].ps.palette = palette;
 //        //G_FadePalette(0,0,0,0);
 //        P_SetGamePalette(g_player[myconnectindex].ps, BASEPAL, 0);    // JBF 20040308
 //        rotatesprite_fs(320<<15,200<<15,65536L,0,LOADSCREEN,0,0,2+8+64+(ud.bgstretch?1024:0));
@@ -11827,17 +11833,17 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
 ////    ud.auto_run = ud.config.RunMode;
 //    ud.showweapons = ud.config.ShowOpponentWeapons;
 //    // CODEDUP_UD_TO_GPLAYER
-//    g_player[myconnectindex].ps->aim_mode = ud.mouseaiming;
-//    g_player[myconnectindex].ps->auto_aim = ud.config.AutoAim;
-//    g_player[myconnectindex].ps->weaponswitch = ud.weaponswitch;
+//    g_player[myconnectindex].ps.aim_mode = ud.mouseaiming;
+//    g_player[myconnectindex].ps.auto_aim = ud.config.AutoAim;
+//    g_player[myconnectindex].ps.weaponswitch = ud.weaponswitch;
 //    g_player[myconnectindex].pteam = ud.team;
 
 //    if (GametypeFlags[ud.coop] & GAMETYPE_TDM)
-//        g_player[myconnectindex].ps->palookup = g_player[myconnectindex].pcolor = G_GetTeamPalette(g_player[myconnectindex].pteam);
+//        g_player[myconnectindex].ps.palookup = g_player[myconnectindex].pcolor = G_GetTeamPalette(g_player[myconnectindex].pteam);
 //    else
 //    {
-//        if (ud.color) g_player[myconnectindex].ps->palookup = g_player[myconnectindex].pcolor = ud.color;
-//        else g_player[myconnectindex].ps->palookup = g_player[myconnectindex].pcolor;
+//        if (ud.color) g_player[myconnectindex].ps.palookup = g_player[myconnectindex].pcolor = ud.color;
+//        else g_player[myconnectindex].ps.palookup = g_player[myconnectindex].pcolor;
 //    }
 
 //    ud.warp_on = 0;
@@ -11858,10 +11864,10 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
 //        Net_GetPackets();
 
 //        // only allow binds to function if the player is actually in a game (not in a menu, typing, et cetera) or demo
-//        CONTROL_BindsEnabled = g_player[myconnectindex].ps->gm & (MODE_GAME|MODE_DEMO);
+//        CONTROL_BindsEnabled = g_player[myconnectindex].ps.gm & (MODE_GAME|MODE_DEMO);
 
 //#ifndef _WIN32
-//        // stdin -> OSD input for dedicated server
+//        // stdin . OSD input for dedicated server
 //        if (g_networkMode == NET_DEDICATED_SERVER)
 //        {
 //            int32_t nb;
@@ -11894,7 +11900,7 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
 
 //        OSD_DispatchQueued();
 
-//        if (((g_netClient || g_netServer) || !(g_player[myconnectindex].ps->gm & (MODE_MENU|MODE_DEMO))) && totalclock >= ototalclock+TICSPERFRAME)
+//        if (((g_netClient || g_netServer) || !(g_player[myconnectindex].ps.gm & (MODE_MENU|MODE_DEMO))) && totalclock >= ototalclock+TICSPERFRAME)
 //        {
 //            if (g_networkMode != NET_DEDICATED_SERVER)
 //            {
@@ -11924,8 +11930,8 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
 
 //                clockbeforetic = totalclock;
 
-//                if (((ud.show_help == 0 && (g_player[myconnectindex].ps->gm&MODE_MENU) != MODE_MENU) || ud.recstat == 2 || (g_netServer || ud.multimode > 1)) &&
-//                        (g_player[myconnectindex].ps->gm&MODE_GAME))
+//                if (((ud.show_help == 0 && (g_player[myconnectindex].ps.gm&MODE_MENU) != MODE_MENU) || ud.recstat == 2 || (g_netServer || ud.multimode > 1)) &&
+//                        (g_player[myconnectindex].ps.gm&MODE_GAME))
 //                    G_MoveLoop();
 
 //                sampletimer();
@@ -11938,13 +11944,13 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
 //                    break;
 //                }
 //            }
-//            while (((g_netClient || g_netServer) || !(g_player[myconnectindex].ps->gm & (MODE_MENU|MODE_DEMO))) && totalclock >= ototalclock+TICSPERFRAME);
+//            while (((g_netClient || g_netServer) || !(g_player[myconnectindex].ps.gm & (MODE_MENU|MODE_DEMO))) && totalclock >= ototalclock+TICSPERFRAME);
 
 //        }
 
 //        G_DoCheats();
 
-//        if (g_player[myconnectindex].ps->gm & (MODE_EOL|MODE_RESTART))
+//        if (g_player[myconnectindex].ps.gm & (MODE_EOL|MODE_RESTART))
 //        {
 //            switch (G_EndOfLevel())
 //            {
@@ -11974,7 +11980,7 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
 
 //            nextrender += g_frameDelay;
 
-//            if ((ud.show_help == 0 && (!g_netServer && ud.multimode < 2) && !(g_player[myconnectindex].ps->gm&MODE_MENU)) ||
+//            if ((ud.show_help == 0 && (!g_netServer && ud.multimode < 2) && !(g_player[myconnectindex].ps.gm&MODE_MENU)) ||
 //                    (g_netServer || ud.multimode > 1) || ud.recstat == 2)
 //                i = calc_smoothratio(totalclock, ototalclock);
 //            else
@@ -11989,7 +11995,7 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
 //        }
 
 //skipframe:
-//        if (g_player[myconnectindex].ps->gm&MODE_DEMO)
+//        if (g_player[myconnectindex].ps.gm&MODE_DEMO)
 //            goto MAIN_LOOP_RESTART;
 //    }
 //    while (1);
@@ -12033,31 +12039,31 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
 //        DukePlayer_t *const p = g_player[screenpeek].ps;
 
 //        for (i=0; i<ud.multimode; i++)
-//            if (g_player[i].ps->holoduke_on != -1)
-//                sprite[g_player[i].ps->holoduke_on].cstat ^= 256;
+//            if (g_player[i].ps.holoduke_on != -1)
+//                sprite[g_player[i].ps.holoduke_on].cstat ^= 256;
 
-//        hitscan((vec3_t *)p,p->cursectnum,
-//                sintable[(p->ang+512)&2047],
-//                sintable[p->ang&2047],
-//                (100-p->horiz-p->horizoff)<<11,&hit,0xffff0030);
+//        hitscan((vec3_t *)p,p.cursectnum,
+//                sintable[(p.ang+512)&2047],
+//                sintable[p.ang&2047],
+//                (100-p.horiz-p.horizoff)<<11,&hit,0xffff0030);
 
 //        for (i=0; i<ud.multimode; i++)
-//            if (g_player[i].ps->holoduke_on != -1)
-//                sprite[g_player[i].ps->holoduke_on].cstat ^= 256;
+//            if (g_player[i].ps.holoduke_on != -1)
+//                sprite[g_player[i].ps.holoduke_on].cstat ^= 256;
 
-//        if ((hit.sprite >= 0) && !(g_player[myconnectindex].ps->gm & MODE_MENU) &&
+//        if ((hit.sprite >= 0) && !(g_player[myconnectindex].ps.gm & MODE_MENU) &&
 //                sprite[hit.sprite].picnum == APLAYER && sprite[hit.sprite].yvel != screenpeek &&
-//                g_player[sprite[hit.sprite].yvel].ps->dead_flag == 0)
+//                g_player[sprite[hit.sprite].yvel].ps.dead_flag == 0)
 //        {
-//            if (p->fta == 0 || p->ftq == QUOTE_RESERVED3)
+//            if (p.fta == 0 || p.ftq == QUOTE_RESERVED3)
 //            {
-//                if (ldist(&sprite[p->i],&sprite[hit.sprite]) < 9216)
+//                if (ldist(&sprite[p.i],&sprite[hit.sprite]) < 9216)
 //                {
 //                    Bsprintf(ScriptQuotes[QUOTE_RESERVED3],"%s",&g_player[sprite[hit.sprite].yvel].user_name[0]);
-//                    p->fta = 12, p->ftq = QUOTE_RESERVED3;
+//                    p.fta = 12, p.ftq = QUOTE_RESERVED3;
 //                }
 //            }
-//            else if (p->fta > 2) p->fta -= 3;
+//            else if (p.fta > 2) p.fta -= 3;
 //        }
 //    }
 
@@ -12087,7 +12093,7 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
 //        j = -1;
 //        for (TRAVERSE_CONNECT(i))
 //        {
-//            if (g_player[i].playerquitflag == 0 || TEST_SYNC_KEY(g_player[i].sync->bits,SK_GAMEQUIT) == 0)
+//            if (g_player[i].playerquitflag == 0 || TEST_SYNC_KEY(g_player[i].sync.bits,SK_GAMEQUIT) == 0)
 //            {
 //                j = i;
 //                continue;
@@ -12114,20 +12120,20 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
 
 //    for (TRAVERSE_CONNECT(i))
 //    {
-//        if (g_player[i].sync->extbits&(1<<6))
+//        if (g_player[i].sync.extbits&(1<<6))
 //        {
-//            g_player[i].ps->team = g_player[i].pteam;
+//            g_player[i].ps.team = g_player[i].pteam;
 //            if (GametypeFlags[ud.coop] & GAMETYPE_TDM)
 //            {
-//                actor[g_player[i].ps->i].picnum = APLAYERTOP;
+//                actor[g_player[i].ps.i].picnum = APLAYERTOP;
 //                P_QuickKill(g_player[i].ps);
 //            }
 //        }
 //        if (GametypeFlags[ud.coop] & GAMETYPE_TDM)
-//            g_player[i].ps->palookup = g_player[i].pcolor = G_GetTeamPalette(g_player[i].ps->team);
+//            g_player[i].ps.palookup = g_player[i].pcolor = G_GetTeamPalette(g_player[i].ps.team);
 
-//        if (sprite[g_player[i].ps->i].pal != 1)
-//            sprite[g_player[i].ps->i].pal = g_player[i].pcolor;
+//        if (sprite[g_player[i].ps.i].pal != 1)
+//            sprite[g_player[i].ps.i].pal = g_player[i].pcolor;
 
 //        P_HandleSharedKeys(i);
 
@@ -12539,15 +12545,15 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
 //            Bsprintf(tempbuf,"%d",i+1);
 
 //            minitext(30,90+t,tempbuf,0,2+8+16+128);
-//            minitext(38,90+t,g_player[i].user_name,g_player[i].ps->palookup,2+8+16+128);
+//            minitext(38,90+t,g_player[i].user_name,g_player[i].ps.palookup,2+8+16+128);
 
 //            for (y=0; y<playerswhenstarted; y++)
 //            {
 //                if (i == y)
 //                {
-//                    Bsprintf(tempbuf,"%-4d",g_player[y].ps->fraggedself);
+//                    Bsprintf(tempbuf,"%-4d",g_player[y].ps.fraggedself);
 //                    minitext(92+(y*23),90+t,tempbuf,2,2+8+16+128);
-//                    xfragtotal -= g_player[y].ps->fraggedself;
+//                    xfragtotal -= g_player[y].ps.fraggedself;
 //                }
 //                else
 //                {
@@ -12569,7 +12575,7 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
 //            for (i=0; i<playerswhenstarted; i++)
 //            {
 //                if (i == y)
-//                    yfragtotal += g_player[i].ps->fraggedself;
+//                    yfragtotal += g_player[i].ps.fraggedself;
 //                yfragtotal += g_player[i].frags[y];
 //            }
 //            Bsprintf(tempbuf,"%-4d",yfragtotal);
@@ -12620,13 +12626,13 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
 
 //    playerbest = CONFIG_GetMapBestTime(MapInfo[ud.volume_number*MAXLEVELS+ud.last_level-1].filename);
 
-//    if (g_player[myconnectindex].ps->player_par > 0 && (g_player[myconnectindex].ps->player_par < playerbest || playerbest < 0))
-//        CONFIG_SetMapBestTime(MapInfo[ud.volume_number*MAXLEVELS+ud.last_level-1].filename, g_player[myconnectindex].ps->player_par);
+//    if (g_player[myconnectindex].ps.player_par > 0 && (g_player[myconnectindex].ps.player_par < playerbest || playerbest < 0))
+//        CONFIG_SetMapBestTime(MapInfo[ud.volume_number*MAXLEVELS+ud.last_level-1].filename, g_player[myconnectindex].ps.player_par);
 
 //    {
 //        int32_t ii, ij;
 
-//        for (ii=g_player[myconnectindex].ps->player_par/(REALGAMETICSPERSEC*60), ij=1; ii>9; ii/=10, ij++) ;
+//        for (ii=g_player[myconnectindex].ps.player_par/(REALGAMETICSPERSEC*60), ij=1; ii>9; ii/=10, ij++) ;
 //        clockpad = max(clockpad,ij);
 //        if (!(ud.volume_number == 0 && ud.last_level-1 == 7))
 //        {
@@ -12650,7 +12656,7 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
 
 //        MUSIC_Update();
 
-//        if (g_player[myconnectindex].ps->gm&MODE_EOL)
+//        if (g_player[myconnectindex].ps.gm&MODE_EOL)
 //        {
 //            clearallviews(0);
 
@@ -12733,7 +12739,7 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
 //                }
 //                if (playerbest > 0)
 //                {
-//                    gametext(10,yy+9,(g_player[myconnectindex].ps->player_par > 0 && g_player[myconnectindex].ps->player_par < playerbest)?"Prev Best Time:":"Your Best Time:",0,2+8+16);
+//                    gametext(10,yy+9,(g_player[myconnectindex].ps.player_par > 0 && g_player[myconnectindex].ps.player_par < playerbest)?"Prev Best Time:":"Your Best Time:",0,2+8+16);
 //                    yy += 10;
 //                }
 
@@ -12749,15 +12755,15 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
 //                        S_PlaySound(PIPEBOMB_EXPLODE);
 //                    }
 
-//                    if (g_player[myconnectindex].ps->player_par > 0)
+//                    if (g_player[myconnectindex].ps.player_par > 0)
 //                    {
 //                        Bsprintf(tempbuf,"%0*d:%02d.%02d",clockpad,
-//                                 (g_player[myconnectindex].ps->player_par/(REALGAMETICSPERSEC*60)),
-//                                 (g_player[myconnectindex].ps->player_par/REALGAMETICSPERSEC)%60,
-//                                 ((g_player[myconnectindex].ps->player_par%REALGAMETICSPERSEC)*33)/10
+//                                 (g_player[myconnectindex].ps.player_par/(REALGAMETICSPERSEC*60)),
+//                                 (g_player[myconnectindex].ps.player_par/REALGAMETICSPERSEC)%60,
+//                                 ((g_player[myconnectindex].ps.player_par%REALGAMETICSPERSEC)*33)/10
 //                                );
 //                        gametext((320>>2)+71,yy+9,tempbuf,0,2+8+16);
-//                        if (g_player[myconnectindex].ps->player_par < playerbest)
+//                        if (g_player[myconnectindex].ps.player_par < playerbest)
 //                            gametext((320>>2)+89+(clockpad*24),yy+9,"New record!",0,2+8+16);
 //                    }
 //                    else
@@ -12818,7 +12824,7 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
 //                        bonuscnt++;
 //                        S_PlaySound(PIPEBOMB_EXPLODE);
 //                    }
-//                    Bsprintf(tempbuf,"%-3d",g_player[myconnectindex].ps->actors_killed);
+//                    Bsprintf(tempbuf,"%-3d",g_player[myconnectindex].ps.actors_killed);
 //                    gametext((320>>2)+70,yy+9,tempbuf,0,2+8+16);
 //                    yy += 10;
 //                    if (ud.player_skill > 3)
@@ -12829,9 +12835,9 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
 //                    }
 //                    else
 //                    {
-//                        if ((g_player[myconnectindex].ps->max_actors_killed-g_player[myconnectindex].ps->actors_killed) < 0)
+//                        if ((g_player[myconnectindex].ps.max_actors_killed-g_player[myconnectindex].ps.actors_killed) < 0)
 //                            Bsprintf(tempbuf,"%-3d",0);
-//                        else Bsprintf(tempbuf,"%-3d",g_player[myconnectindex].ps->max_actors_killed-g_player[myconnectindex].ps->actors_killed);
+//                        else Bsprintf(tempbuf,"%-3d",g_player[myconnectindex].ps.max_actors_killed-g_player[myconnectindex].ps.actors_killed);
 //                        gametext((320>>2)+70,yy+9,tempbuf,0,2+8+16);
 //                        yy += 10;
 //                    }
@@ -12855,12 +12861,12 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
 //                        bonuscnt++;
 //                        S_PlaySound(PIPEBOMB_EXPLODE);
 //                    }
-//                    Bsprintf(tempbuf,"%-3d",g_player[myconnectindex].ps->secret_rooms);
+//                    Bsprintf(tempbuf,"%-3d",g_player[myconnectindex].ps.secret_rooms);
 //                    gametext((320>>2)+70,yy+9,tempbuf,0,2+8+16);
 //                    yy += 10;
-//                    if (g_player[myconnectindex].ps->secret_rooms > 0)
-//                        Bsprintf(tempbuf,"%-3d%%",(100*g_player[myconnectindex].ps->secret_rooms/g_player[myconnectindex].ps->max_secret_rooms));
-//                    Bsprintf(tempbuf,"%-3d",g_player[myconnectindex].ps->max_secret_rooms-g_player[myconnectindex].ps->secret_rooms);
+//                    if (g_player[myconnectindex].ps.secret_rooms > 0)
+//                        Bsprintf(tempbuf,"%-3d%%",(100*g_player[myconnectindex].ps.secret_rooms/g_player[myconnectindex].ps.max_secret_rooms));
+//                    Bsprintf(tempbuf,"%-3d",g_player[myconnectindex].ps.max_secret_rooms-g_player[myconnectindex].ps.secret_rooms);
 //                    gametext((320>>2)+70,yy+9,tempbuf,0,2+8+16);
 //                    yy += 10;
 //                }
@@ -12884,7 +12890,7 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
 //        else
 //            break;
 
-//        VM_OnEvent(EVENT_DISPLAYBONUSSCREEN, g_player[screenpeek].ps->i, screenpeek, -1, 0);
+//        VM_OnEvent(EVENT_DISPLAYBONUSSCREEN, g_player[screenpeek].ps.i, screenpeek, -1, 0);
 //        nextpage();
 //    }
 //    while (1);
@@ -12895,7 +12901,7 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
 //    char flipbits;
 //    int32_t x , y;
 
-//    if (!T1)
+//    if (!actor[i].t_data[0])
 //    {
 //        rotatesprite_win(24<<16,33<<16,65536L,0,CAMCORNER,0,0,2);
 //        rotatesprite_win((320-26)<<16,34<<16,65536L,0,CAMCORNER+1,0,0,2);
@@ -12941,7 +12947,7 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
 //        for (j=n-1; j >= 0 ; j--)
 //        {
 //            a = SA-256+(krand()&511)+1024;
-//            A_InsertSprite(SECT,SX,SY,SZ,GLASSPIECES+(j%3),-32,36,36,a,32+(krand()&63),1024-(krand()&1023),i,5);
+//            A_InsertSprite(sprite[i].sectnum,SX,SY,SZ,GLASSPIECES+(j%3),-32,36,36,a,32+(krand()&63),1024-(krand()&1023),i,5);
 //        }
 //        return;
 //    }
@@ -12972,7 +12978,7 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
 //            if (z < -(32<<8) || z > (32<<8))
 //                z = SZ-(32<<8)+(krand()&((64<<8)-1));
 //            a = SA-1024;
-//            A_InsertSprite(SECT,x1,y1,z,GLASSPIECES+(j%3),-32,36,36,a,32+(krand()&63),-(krand()&1023),i,5);
+//            A_InsertSprite(sprite[i].sectnum,x1,y1,z,GLASSPIECES+(j%3),-32,36,36,a,32+(krand()&63),-(krand()&1023),i,5);
 //        }
 //    }
 //}
@@ -12981,7 +12987,7 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
 //{
 //    for (; n>0; n--)
 //    {
-//        int32_t k = A_InsertSprite(SECT,SX,SY,SZ-((krand()&16)<<8),GLASSPIECES+(n%3),
+//        int32_t k = A_InsertSprite(sprite[i].sectnum,SX,SY,SZ-((krand()&16)<<8),GLASSPIECES+(n%3),
 //                                   krand()&15,36,36,krand()&2047,32+(krand()&63),-512-(krand()&2047),i,5);
 //        sprite[k].pal = sprite[i].pal;
 //    }
@@ -13023,7 +13029,7 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
 //        for (j=n-1; j >= 0 ; j--)
 //        {
 //            a = krand()&2047;
-//            k = A_InsertSprite(SECT,SX,SY,SZ-(krand()&(63<<8)),GLASSPIECES+(j%3),-32,36,36,a,32+(krand()&63),1024-(krand()&2047),i,5);
+//            k = A_InsertSprite(sprite[i].sectnum,SX,SY,SZ-(krand()&(63<<8)),GLASSPIECES+(j%3),-32,36,36,a,32+(krand()&63),1024-(krand()&2047),i,5);
 //            sprite[k].pal = krand()&15;
 //        }
 //        return;
@@ -13046,7 +13052,7 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
 //        if (z < -(32<<8) || z > (32<<8))
 //            z = SZ-(32<<8)+(krand()&((64<<8)-1));
 //        a = SA-1024;
-//        k = A_InsertSprite(SECT,x1,y1,z,GLASSPIECES+(j%3),-32,36,36,a,32+(krand()&63),-(krand()&2047),i,5);
+//        k = A_InsertSprite(sprite[i].sectnum,x1,y1,z,GLASSPIECES+(j%3),-32,36,36,a,32+(krand()&63),-(krand()&2047),i,5);
 //        sprite[k].pal = krand()&7;
 //    }
 //}

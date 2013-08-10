@@ -8605,11 +8605,11 @@ var preinitcalled = 0; // int32_t
 //#ifndef DYNALLOC_ARRAYS
 //# if !defined DEBUG_MAIN_ARRAYS
 var spriteext_s /*: spriteext_t[] todo: convert to typescript classes*/ = newStructArray(spriteext_t, MAXSPRITES + MAXUNIQHUDID); 
-var spritesmooth_s = newStructArray(spritesmooth_t, MAXSPRITES + MAXUNIQHUDID);
-var sector_s = newStructArray(sectortype, MAXSECTORS + M32_FIXME_SECTORS); 
-var wall_s = newStructArray(walltype, MAXWALLS + M32_FIXME_WALLS);
-var sprite_s = newStructArray(spritetype, MAXSPRITES);
-var tsprite_s = newStructArray(spritetype, MAXSPRITESONSCREEN);
+var spritesmooth_s = newStructArray<spritesmooth_t>(spritesmooth_t, MAXSPRITES + MAXUNIQHUDID);
+var sector_s = newStructArray<sectortype>(sectortype, MAXSECTORS + M32_FIXME_SECTORS); 
+var wall_s = newStructArray<walltype>(walltype, MAXWALLS + M32_FIXME_WALLS);
+var sprite_s = newStructArray<spritetype>(spritetype, MAXSPRITES);
+var tsprite_s = newStructArray<spritetype>(spritetype, MAXSPRITESONSCREEN);
 //# endif
 //#else
 //void *blockptr = NULL;

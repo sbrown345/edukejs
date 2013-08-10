@@ -117,7 +117,6 @@ function VM_ScriptInfo (): void
 // May recurse, e.g. through EVENT_XXX . ... . EVENT_KILLIT
 function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: number, iReturn: number): number
 {
-    todo("VM_OnEvent");
 //#ifdef LUNATIC
 //    const double t = gethitickms();
 
@@ -130,38 +129,39 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //    g_eventCalls[iEventID]++;
 //#else
 
-//    if (apScriptGameEvent[iEventID])
-//    {
-//        intptr_t *oinsptr=insptr;
-//        vmstate_t vm_backup;
+    if (apScriptGameEvent[iEventID])
+    {
+        todoThrow();
+        //intptr_t *oinsptr=insptr;
+        //vmstate_t vm_backup;
 
-//        vmstate_t tempvm = { iActor, iPlayer, lDist,
-//                             iActor >= 0 ? &actor[iActor].t_data[0] : NULL,
-//                             iActor >= 0 ? &sprite[iActor] : NULL,
-//                             0 };
+        //vmstate_t tempvm = { iActor, iPlayer, lDist,
+        //                     iActor >= 0 ? &actor[iActor].t_data[0] : NULL,
+        //                     iActor >= 0 ? &sprite[iActor] : NULL,
+        //                     0 };
                              
-//        int32_t backupReturnVar = aGameVars[g_iReturnVarID].val.lValue;
-//        int32_t backupEventExec = g_currentEventExec;
+        //int32_t backupReturnVar = aGameVars[g_iReturnVarID].val.lValue;
+        //int32_t backupEventExec = g_currentEventExec;
 
-//        aGameVars[g_iReturnVarID].val.lValue = iReturn;
-//        g_currentEventExec = iEventID;
-//        insptr = apScriptGameEvent[iEventID];
+        //aGameVars[g_iReturnVarID].val.lValue = iReturn;
+        //g_currentEventExec = iEventID;
+        //insptr = apScriptGameEvent[iEventID];
 
-//        Bmemcpy(&vm_backup, &vm, sizeof(vmstate_t));
-//        Bmemcpy(&vm, &tempvm, sizeof(vmstate_t));
+        //Bmemcpy(&vm_backup, &vm, sizeof(vmstate_t));
+        //Bmemcpy(&vm, &tempvm, sizeof(vmstate_t));
 
-//        VM_Execute(1);
+        //VM_Execute(1);
 
-//        if (vm.g_flags & VM_KILL)
-//            VM_KillIt(iActor, iPlayer);
+        //if (vm.g_flags & VM_KILL)
+        //    VM_KillIt(iActor, iPlayer);
 
-//        Bmemcpy(&vm, &vm_backup, sizeof(vmstate_t));
-//        insptr = oinsptr;
+        //Bmemcpy(&vm, &vm_backup, sizeof(vmstate_t));
+        //insptr = oinsptr;
 
-//        g_currentEventExec = backupEventExec;
-//        iReturn = aGameVars[g_iReturnVarID].val.lValue;
-//        aGameVars[g_iReturnVarID].val.lValue = backupReturnVar;
-//    }
+        //g_currentEventExec = backupEventExec;
+        //iReturn = aGameVars[g_iReturnVarID].val.lValue;
+        //aGameVars[g_iReturnVarID].val.lValue = backupReturnVar;
+    }
 //#endif
 
     return iReturn;
@@ -1164,11 +1164,11 @@ function VM_Execute(/*int32_t */loop: number): void
             if (vm.g_flags & (VM_RETURN|VM_KILL|VM_NOEXECUTE))
                 return;
 
-            tw = *insptr;
+            tw = script[insptr];
         }
 
         skip_check = false;
-        //      Bsprintf(g_szBuf,"Parsing: %d",*insptr);
+        //      Bsprintf(g_szBuf,"Parsing: %d",script[insptr]);
         //      AddLog(g_szBuf);
 
         g_errorLineNum = tw>>12;
@@ -1179,7 +1179,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_REDEFINEQUOTE:
 //            insptr++;
 //            {
-//                int32_t q = *insptr++, i = *insptr++;
+//                int32_t q = script[insptr++], i = script[insptr++];
 //                if ((ScriptQuotes[q] == NULL || ScriptQuoteRedefinitions[i] == NULL))
 //                {
 //                    CON_ERRPRINTF("%d %d null quote\n", q,i);
@@ -1195,7 +1195,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //            {
 //                // syntax [gs]etplayer[<var>].x <VAR>
 //                // <varid> <xxxid> <varid>
-//                int32_t lVar1=*insptr++, lLabelID=*insptr++, lVar2=*insptr++;
+//                int32_t lVar1=script[insptr++], lLabelID=script[insptr++], lVar2=script[insptr++];
 
 //                VM_AccessActiveProjectile(tw==CON_SETTHISPROJECTILE,lVar1,lLabelID,lVar2);
 //                continue;
@@ -1356,7 +1356,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_AI:
 //            insptr++;
 //            //Following changed to use pointersizes
-//            AC_AI_ID(vm.g_t) = *insptr++; // Ai
+//            AC_AI_ID(vm.g_t) = script[insptr++]; // Ai
 
 //            AC_ACTION_ID(vm.g_t) = *(script + AC_AI_ID(vm.g_t));  // Action
 
@@ -1376,7 +1376,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_ACTION:
 //            insptr++;
 //            AC_ACTION_COUNT(vm.g_t) = AC_CURFRAME(vm.g_t) = 0;
-//            AC_ACTION_ID(vm.g_t) = *insptr++;
+//            AC_ACTION_ID(vm.g_t) = script[insptr++];
 //            continue;
 
 //        case CON_IFPLAYERSL:
@@ -1401,12 +1401,12 @@ function VM_Execute(/*int32_t */loop: number): void
 
 //        case CON_ADDSTRENGTH:
 //            insptr++;
-//            vm.g_sp.extra += *insptr++;
+//            vm.g_sp.extra += script[insptr++];
 //            continue;
 
 //        case CON_STRENGTH:
 //            insptr++;
-//            vm.g_sp.extra = *insptr++;
+//            vm.g_sp.extra = script[insptr++];
 //            continue;
 
 //        case CON_IFGOTWEAPONCE:
@@ -1486,7 +1486,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //            insptr++;
 
 //            {
-//                int32_t j = (*insptr++ - vm.g_sp.xrepeat)<<1;
+//                int32_t j = (script[insptr++] - vm.g_sp.xrepeat)<<1;
 //                vm.g_sp.xrepeat += ksgn(j);
 
 //                if ((vm.g_sp.picnum == APLAYER && vm.g_sp.yrepeat < 36) || *insptr < vm.g_sp.yrepeat ||
@@ -1502,29 +1502,29 @@ function VM_Execute(/*int32_t */loop: number): void
 
 //        case CON_SIZEAT:
 //            insptr++;
-//            vm.g_sp.xrepeat = (uint8_t) *insptr++;
-//            vm.g_sp.yrepeat = (uint8_t) *insptr++;
+//            vm.g_sp.xrepeat = (uint8_t) script[insptr++];
+//            vm.g_sp.yrepeat = (uint8_t) script[insptr++];
 //            continue;
 
 //        case CON_SHOOT:
 //            insptr++;
-//            A_Shoot(vm.g_i,*insptr++);
+//            A_Shoot(vm.g_i,script[insptr++]);
 //            continue;
 
 //        case CON_SOUNDONCE:
 //            if (((unsigned)*(++insptr) >= MAXSOUNDS))
 //            {
-//                CON_ERRPRINTF("Invalid sound %d\n", (int32_t)*insptr++);
+//                CON_ERRPRINTF("Invalid sound %d\n", (int32_t)script[insptr++]);
 //                continue;
 //            }
-//            if (!S_CheckSoundPlaying(vm.g_i,*insptr++))
+//            if (!S_CheckSoundPlaying(vm.g_i,script[insptr++]))
 //                A_PlaySound(*(insptr-1),vm.g_i);
 //            continue;
 
 //        case CON_IFACTORSOUND:
 //            insptr++;
 //            {
-//                int32_t i = Gv_GetVarX(*insptr++), j = Gv_GetVarX(*insptr++);
+//                int32_t i = Gv_GetVarX(script[insptr++]), j = Gv_GetVarX(script[insptr++]);
 
 //                if (((unsigned)j >= MAXSOUNDS))
 //                {
@@ -1563,7 +1563,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_STOPACTORSOUND:
 //            insptr++;
 //            {
-//                int32_t i = Gv_GetVarX(*insptr++), j = Gv_GetVarX(*insptr++);
+//                int32_t i = Gv_GetVarX(script[insptr++]), j = Gv_GetVarX(script[insptr++]);
 
 //                if ((j<0 || j>=MAXSOUNDS))
 //                {
@@ -1580,7 +1580,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_SETACTORSOUNDPITCH:
 //            insptr++;
 //            {
-//                int32_t i = Gv_GetVarX(*insptr++), j = Gv_GetVarX(*insptr++), pitchoffset = Gv_GetVarX(*insptr++);
+//                int32_t i = Gv_GetVarX(script[insptr++]), j = Gv_GetVarX(script[insptr++]), pitchoffset = Gv_GetVarX(script[insptr++]);
 
 //                if ((j<0 || j>=MAXSOUNDS))
 //                {
@@ -1614,7 +1614,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //                insptr++;
 //                continue;
 //            }
-//            A_PlaySound(*insptr++,vm.g_i);
+//            A_PlaySound(script[insptr++],vm.g_i);
 //            continue;
 
 //        case CON_TIP:
@@ -1640,7 +1640,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_ADDAMMO:
 //            insptr++;
 //            {
-//                int32_t weap=*insptr++, amount=*insptr++;
+//                int32_t weap=script[insptr++], amount=script[insptr++];
 //                DukePlayer_t *ps = g_player[vm.g_p].ps;
 
 //                if ((unsigned)weap >= MAX_WEAPONS)
@@ -1662,33 +1662,33 @@ function VM_Execute(/*int32_t */loop: number): void
 
 //        case CON_MONEY:
 //            insptr++;
-//            A_SpawnMultiple(vm.g_i, MONEY, *insptr++);
+//            A_SpawnMultiple(vm.g_i, MONEY, script[insptr++]);
 //            continue;
 
 //        case CON_MAIL:
 //            insptr++;
-//            A_SpawnMultiple(vm.g_i, MAIL, *insptr++);
+//            A_SpawnMultiple(vm.g_i, MAIL, script[insptr++]);
 //            continue;
 
 //        case CON_SLEEPTIME:
 //            insptr++;
-//            actor[vm.g_i].timetosleep = (int16_t)*insptr++;
+//            actor[vm.g_i].timetosleep = (int16_t)script[insptr++];
 //            continue;
 
 //        case CON_PAPER:
 //            insptr++;
-//            A_SpawnMultiple(vm.g_i, PAPER, *insptr++);
+//            A_SpawnMultiple(vm.g_i, PAPER, script[insptr++]);
 //            continue;
 
 //        case CON_ADDKILLS:
 //            insptr++;
-//            g_player[vm.g_p].ps.actors_killed += *insptr++;
+//            g_player[vm.g_p].ps.actors_killed += script[insptr++];
 //            actor[vm.g_i].actorstayput = -1;
 //            continue;
 
 //        case CON_LOTSOFGLASS:
 //            insptr++;
-//            A_SpawnGlass(vm.g_i,*insptr++);
+//            A_SpawnGlass(vm.g_i,script[insptr++]);
 //            continue;
 
 //        case CON_KILLIT:
@@ -1699,7 +1699,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_ADDWEAPON:
 //            insptr++;
 //            {
-//                int32_t weap=*insptr++, amount=*insptr++;
+//                int32_t weap=script[insptr++], amount=script[insptr++];
 //                VM_AddWeapon(weap, amount, g_player[vm.g_p].ps);
 
 //                continue;
@@ -1707,13 +1707,13 @@ function VM_Execute(/*int32_t */loop: number): void
 
 //        case CON_DEBUG:
 //            insptr++;
-//            initprintf("%" PRIdPTR "\n",*insptr++);
+//            initprintf("%" PRIdPTR "\n",script[insptr++]);
 //            continue;
 
 //        case CON_ENDOFGAME:
 //        case CON_ENDOFLEVEL:
 //            insptr++;
-//            g_player[vm.g_p].ps.timebeforeexit = *insptr++;
+//            g_player[vm.g_p].ps.timebeforeexit = script[insptr++];
 //            g_player[vm.g_p].ps.customexitsound = -1;
 //            ud.eog = 1;
 //            continue;
@@ -1791,8 +1791,8 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_MOVE:
 //            insptr++;
 //            AC_COUNT(vm.g_t) = 0;
-//            AC_MOVE_ID(vm.g_t) = *insptr++;
-//            vm.g_sp.hitag = *insptr++;
+//            AC_MOVE_ID(vm.g_t) = script[insptr++];
+//            vm.g_sp.hitag = script[insptr++];
 //            if (A_CheckEnemySprite(vm.g_sp) && vm.g_sp.extra <= 0) // hack
 //                continue;
 //            if (vm.g_sp.hitag&random_angle)
@@ -1802,7 +1802,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_ADDWEAPONVAR:
 //            insptr++;
 //            {
-//                int32_t weap=Gv_GetVarX(*insptr++), amount=Gv_GetVarX(*insptr++);
+//                int32_t weap=Gv_GetVarX(script[insptr++]), amount=Gv_GetVarX(script[insptr++]);
 //                VM_AddWeapon(weap, amount, g_player[vm.g_p].ps);
 //                continue;
 //            }
@@ -1814,13 +1814,13 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_SSP:
 //            insptr++;
 //            {
-//                int32_t var1 = Gv_GetVarX(*insptr++), var2;
+//                int32_t var1 = Gv_GetVarX(script[insptr++]), var2;
 //                if (tw == CON_OPERATEACTIVATORS && *insptr == g_iThisActorID)
 //                {
 //                    var2 = vm.g_p;
 //                    insptr++;
 //                }
-//                else var2 = Gv_GetVarX(*insptr++);
+//                else var2 = Gv_GetVarX(script[insptr++]);
 
 //                switch (tw)
 //                {
@@ -1850,7 +1850,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_CANSEESPR:
 //            insptr++;
 //            {
-//                int32_t lVar1 = Gv_GetVarX(*insptr++), lVar2 = Gv_GetVarX(*insptr++), res;
+//                int32_t lVar1 = Gv_GetVarX(script[insptr++]), lVar2 = Gv_GetVarX(script[insptr++]), res;
 
 //                if ((unsigned)lVar1 >= MAXSPRITES || (unsigned)lVar2 >= MAXSPRITES)
 //                {
@@ -1860,23 +1860,23 @@ function VM_Execute(/*int32_t */loop: number): void
 //                else res=cansee(sprite[lVar1].x,sprite[lVar1].y,sprite[lVar1].z,sprite[lVar1].sectnum,
 //                                    sprite[lVar2].x,sprite[lVar2].y,sprite[lVar2].z,sprite[lVar2].sectnum);
 
-//                Gv_SetVarX(*insptr++, res);
+//                Gv_SetVarX(script[insptr++], res);
 //                continue;
 //            }
 
 //        case CON_OPERATERESPAWNS:
 //            insptr++;
-//            G_OperateRespawns(Gv_GetVarX(*insptr++));
+//            G_OperateRespawns(Gv_GetVarX(script[insptr++]));
 //            continue;
 
 //        case CON_OPERATEMASTERSWITCHES:
 //            insptr++;
-//            G_OperateMasterSwitches(Gv_GetVarX(*insptr++));
+//            G_OperateMasterSwitches(Gv_GetVarX(script[insptr++]));
 //            continue;
 
 //        case CON_CHECKACTIVATORMOTION:
 //            insptr++;
-//            aGameVars[g_iReturnVarID].val.lValue = G_CheckActivatorMotion(Gv_GetVarX(*insptr++));
+//            aGameVars[g_iReturnVarID].val.lValue = G_CheckActivatorMotion(Gv_GetVarX(script[insptr++]));
 //            continue;
 
 //        case CON_INSERTSPRITEQ:
@@ -1887,8 +1887,8 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_QSTRLEN:
 //            insptr++;
 //            {
-//                int32_t i=*insptr++;
-//                int32_t j=Gv_GetVarX(*insptr++);
+//                int32_t i=script[insptr++];
+//                int32_t j=Gv_GetVarX(script[insptr++]);
 //                if ((ScriptQuotes[j] == NULL))
 //                {
 //                    CON_ERRPRINTF("null quote %d\n", j);
@@ -1904,19 +1904,19 @@ function VM_Execute(/*int32_t */loop: number): void
 //            {
 //                vec2_t dim = { 0, 0, };
 
-//                int32_t w=*insptr++;
-//                int32_t h=*insptr++;
+//                int32_t w=script[insptr++];
+//                int32_t h=script[insptr++];
 
-//                int32_t tilenum = Gv_GetVarX(*insptr++);
-//                int32_t x=Gv_GetVarX(*insptr++), y=Gv_GetVarX(*insptr++), z = Gv_GetVarX(*insptr++);
-//                int32_t blockangle=Gv_GetVarX(*insptr++);
-//                int32_t q=Gv_GetVarX(*insptr++);
-//                int32_t orientation=Gv_GetVarX(*insptr++);
-//                int32_t xspace=Gv_GetVarX(*insptr++), yline=Gv_GetVarX(*insptr++);
-//                int32_t xbetween=Gv_GetVarX(*insptr++), ybetween=Gv_GetVarX(*insptr++);
-//                int32_t f=Gv_GetVarX(*insptr++);
-//                int32_t x1=Gv_GetVarX(*insptr++), y1=Gv_GetVarX(*insptr++);
-//                int32_t x2=Gv_GetVarX(*insptr++), y2=Gv_GetVarX(*insptr++);
+//                int32_t tilenum = Gv_GetVarX(script[insptr++]);
+//                int32_t x=Gv_GetVarX(script[insptr++]), y=Gv_GetVarX(script[insptr++]), z = Gv_GetVarX(script[insptr++]);
+//                int32_t blockangle=Gv_GetVarX(script[insptr++]);
+//                int32_t q=Gv_GetVarX(script[insptr++]);
+//                int32_t orientation=Gv_GetVarX(script[insptr++]);
+//                int32_t xspace=Gv_GetVarX(script[insptr++]), yline=Gv_GetVarX(script[insptr++]);
+//                int32_t xbetween=Gv_GetVarX(script[insptr++]), ybetween=Gv_GetVarX(script[insptr++]);
+//                int32_t f=Gv_GetVarX(script[insptr++]);
+//                int32_t x1=Gv_GetVarX(script[insptr++]), y1=Gv_GetVarX(script[insptr++]);
+//                int32_t x2=Gv_GetVarX(script[insptr++]), y2=Gv_GetVarX(script[insptr++]);
 
 //                orientation &= (ROTATESPRITE_MAX-1);
 
@@ -1937,8 +1937,8 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_HEADSPRITESTAT:
 //            insptr++;
 //            {
-//                int32_t i=*insptr++;
-//                int32_t j=Gv_GetVarX(*insptr++);
+//                int32_t i=script[insptr++];
+//                int32_t j=Gv_GetVarX(script[insptr++]);
 //                if ((unsigned)j > MAXSTATUS)
 //                {
 //                    CON_ERRPRINTF("invalid status list %d\n", j);
@@ -1951,8 +1951,8 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_PREVSPRITESTAT:
 //            insptr++;
 //            {
-//                int32_t i=*insptr++;
-//                int32_t j=Gv_GetVarX(*insptr++);
+//                int32_t i=script[insptr++];
+//                int32_t j=Gv_GetVarX(script[insptr++]);
 //                if ((unsigned)j >= MAXSPRITES)
 //                {
 //                    CON_ERRPRINTF("invalid sprite ID %d\n", j);
@@ -1965,8 +1965,8 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_NEXTSPRITESTAT:
 //            insptr++;
 //            {
-//                int32_t i=*insptr++;
-//                int32_t j=Gv_GetVarX(*insptr++);
+//                int32_t i=script[insptr++];
+//                int32_t j=Gv_GetVarX(script[insptr++]);
 //                if ((unsigned)j >= MAXSPRITES)
 //                {
 //                    CON_ERRPRINTF("invalid sprite ID %d\n", j);
@@ -1979,8 +1979,8 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_HEADSPRITESECT:
 //            insptr++;
 //            {
-//                int32_t i=*insptr++;
-//                int32_t j=Gv_GetVarX(*insptr++);
+//                int32_t i=script[insptr++];
+//                int32_t j=Gv_GetVarX(script[insptr++]);
 //                if ((unsigned)j >= (unsigned)numsectors)
 //                {
 //                    CON_ERRPRINTF("invalid sector %d\n", j);
@@ -1993,8 +1993,8 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_PREVSPRITESECT:
 //            insptr++;
 //            {
-//                int32_t i=*insptr++;
-//                int32_t j=Gv_GetVarX(*insptr++);
+//                int32_t i=script[insptr++];
+//                int32_t j=Gv_GetVarX(script[insptr++]);
 //                if ((unsigned)j >= MAXSPRITES)
 //                {
 //                    CON_ERRPRINTF("invalid sprite ID %d\n", j);
@@ -2007,8 +2007,8 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_NEXTSPRITESECT:
 //            insptr++;
 //            {
-//                int32_t i=*insptr++;
-//                int32_t j=Gv_GetVarX(*insptr++);
+//                int32_t i=script[insptr++];
+//                int32_t j=Gv_GetVarX(script[insptr++]);
 //                if ((unsigned)j >= MAXSPRITES)
 //                {
 //                    CON_ERRPRINTF("invalid sprite ID %d\n", j);
@@ -2021,9 +2021,9 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_GETKEYNAME:
 //            insptr++;
 //            {
-//                int32_t i = Gv_GetVarX(*insptr++),
-//                        f = Gv_GetVarX(*insptr++);
-//                int32_t j = Gv_GetVarX(*insptr++);
+//                int32_t i = Gv_GetVarX(script[insptr++]),
+//                        f = Gv_GetVarX(script[insptr++]);
+//                int32_t j = Gv_GetVarX(script[insptr++]);
 
 //                if ((unsigned)i >= MAXQUOTES)
 //                {
@@ -2062,10 +2062,10 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_QSUBSTR:
 //            insptr++;
 //            {
-//                int32_t q1 = Gv_GetVarX(*insptr++);
-//                int32_t q2 = Gv_GetVarX(*insptr++);
-//                int32_t st = Gv_GetVarX(*insptr++);
-//                int32_t ln = Gv_GetVarX(*insptr++);
+//                int32_t q1 = Gv_GetVarX(script[insptr++]);
+//                int32_t q2 = Gv_GetVarX(script[insptr++]);
+//                int32_t st = Gv_GetVarX(script[insptr++]);
+//                int32_t ln = Gv_GetVarX(script[insptr++]);
 
 //                if ((unsigned)q1>=MAXQUOTES)
 //                {
@@ -2111,13 +2111,13 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_CHANGESPRITESECT:
 //            insptr++;
 //            {
-//                int32_t i = Gv_GetVarX(*insptr++), j;
+//                int32_t i = Gv_GetVarX(script[insptr++]), j;
 //                if (tw == CON_GETPNAME && *insptr == g_iThisActorID)
 //                {
 //                    j = vm.g_p;
 //                    insptr++;
 //                }
-//                else j = Gv_GetVarX(*insptr++);
+//                else j = Gv_GetVarX(script[insptr++]);
 
 //                switch (tw)
 //                {
@@ -2168,7 +2168,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //                    break;
 //                case CON_QSTRNCAT:
 //                    if ((ScriptQuotes[i] == NULL || ScriptQuotes[j] == NULL)) goto nullquote;
-//                    Bstrncat(ScriptQuotes[i],ScriptQuotes[j],Gv_GetVarX(*insptr++));
+//                    Bstrncat(ScriptQuotes[i],ScriptQuotes[j],Gv_GetVarX(script[insptr++]));
 //                    break;
 //                case CON_QSTRCPY:
 //                    if ((ScriptQuotes[i] == NULL || ScriptQuotes[j] == NULL)) goto nullquote;
@@ -2199,8 +2199,8 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_CHANGESPRITESTAT:
 //            insptr++;
 //            {
-//                int32_t i = Gv_GetVarX(*insptr++);
-//                int32_t j = Gv_GetVarX(*insptr++);
+//                int32_t i = Gv_GetVarX(script[insptr++]);
+//                int32_t j = Gv_GetVarX(script[insptr++]);
 
 //                if ((unsigned)i >= MAXSPRITES)
 //                {
@@ -2251,7 +2251,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //            insptr++; // skip command
 //            {
 //                // from 'level' cheat in game.c (about line 6250)
-//                int32_t volnume=Gv_GetVarX(*insptr++), levnume=Gv_GetVarX(*insptr++);
+//                int32_t volnume=Gv_GetVarX(script[insptr++]), levnume=Gv_GetVarX(script[insptr++]);
 
 //                if ((volnume > MAXVOLUMES-1 || volnume < 0))
 //                {
@@ -2284,8 +2284,8 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_MYOSPAL:
 //            insptr++;
 //            {
-//                int32_t x=Gv_GetVarX(*insptr++), y=Gv_GetVarX(*insptr++), tilenum=Gv_GetVarX(*insptr++);
-//                int32_t shade=Gv_GetVarX(*insptr++), orientation=Gv_GetVarX(*insptr++);
+//                int32_t x=Gv_GetVarX(script[insptr++]), y=Gv_GetVarX(script[insptr++]), tilenum=Gv_GetVarX(script[insptr++]);
+//                int32_t shade=Gv_GetVarX(script[insptr++]), orientation=Gv_GetVarX(script[insptr++]);
 
 //                switch (tw)
 //                {
@@ -2294,7 +2294,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //                    break;
 //                case CON_MYOSPAL:
 //                {
-//                    int32_t pal=Gv_GetVarX(*insptr++);
+//                    int32_t pal=Gv_GetVarX(script[insptr++]);
 //                    G_DrawTilePal(x,y,tilenum,shade,orientation,pal);
 //                    break;
 //                }
@@ -2303,7 +2303,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //                    break;
 //                case CON_MYOSPALX:
 //                {
-//                    int32_t pal=Gv_GetVarX(*insptr++);
+//                    int32_t pal=Gv_GetVarX(script[insptr++]);
 //                    G_DrawTilePalSmall(x,y,tilenum,shade,orientation,pal);
 //                    break;
 //                }
@@ -2321,7 +2321,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //                // script offset to default case (null if none)
 //                // For each case: value, ptr to code
 //                //AddLog("Processing Switch...");
-//                int32_t lValue=Gv_GetVarX(*insptr++), lEnd=*insptr++, lCases=*insptr++;
+//                int32_t lValue=Gv_GetVarX(script[insptr++]), lEnd=script[insptr++], lCases=script[insptr++];
 //                intptr_t *lpDefault=insptr++, *lpCases=insptr;
 //                int32_t bMatched=0, lCheckCase;
 //                int32_t left,right;
@@ -2387,13 +2387,13 @@ function VM_Execute(/*int32_t */loop: number): void
 
 //        case CON_DISPLAYRAND:
 //            insptr++;
-//            Gv_SetVarX(*insptr++, system_15bit_rand());
+//            Gv_SetVarX(script[insptr++], system_15bit_rand());
 //            continue;
 
 //        case CON_DRAGPOINT:
 //            insptr++;
 //            {
-//                int32_t wallnum = Gv_GetVarX(*insptr++), newx = Gv_GetVarX(*insptr++), newy = Gv_GetVarX(*insptr++);
+//                int32_t wallnum = Gv_GetVarX(script[insptr++]), newx = Gv_GetVarX(script[insptr++]), newy = Gv_GetVarX(script[insptr++]);
 
 //                if ((wallnum<0 || wallnum>=numwalls))
 //                {
@@ -2407,7 +2407,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_LDIST:
 //            insptr++;
 //            {
-//                int32_t distvar = *insptr++, xvar = Gv_GetVarX(*insptr++), yvar = Gv_GetVarX(*insptr++);
+//                int32_t distvar = script[insptr++], xvar = Gv_GetVarX(script[insptr++]), yvar = Gv_GetVarX(script[insptr++]);
 
 //                if ((unsigned)xvar >= MAXSPRITES || (unsigned)yvar >= MAXSPRITES)
 //                {
@@ -2422,7 +2422,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_DIST:
 //            insptr++;
 //            {
-//                int32_t distvar = *insptr++, xvar = Gv_GetVarX(*insptr++), yvar = Gv_GetVarX(*insptr++);
+//                int32_t distvar = script[insptr++], xvar = Gv_GetVarX(script[insptr++]), yvar = Gv_GetVarX(script[insptr++]);
 
 //                if ((unsigned)xvar >= MAXSPRITES || (unsigned)yvar >= MAXSPRITES)
 //                {
@@ -2437,9 +2437,9 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_GETANGLE:
 //            insptr++;
 //            {
-//                int32_t angvar = *insptr++;
-//                int32_t xvar = Gv_GetVarX(*insptr++);
-//                int32_t yvar = Gv_GetVarX(*insptr++);
+//                int32_t angvar = script[insptr++];
+//                int32_t xvar = Gv_GetVarX(script[insptr++]);
+//                int32_t yvar = Gv_GetVarX(script[insptr++]);
 
 //                Gv_SetVarX(angvar, getangle(xvar,yvar));
 //                continue;
@@ -2448,9 +2448,9 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_GETINCANGLE:
 //            insptr++;
 //            {
-//                int32_t angvar = *insptr++;
-//                int32_t xvar = Gv_GetVarX(*insptr++);
-//                int32_t yvar = Gv_GetVarX(*insptr++);
+//                int32_t angvar = script[insptr++];
+//                int32_t xvar = Gv_GetVarX(script[insptr++]);
+//                int32_t yvar = Gv_GetVarX(script[insptr++]);
 
 //                Gv_SetVarX(angvar, G_GetAngleDelta(xvar,yvar));
 //                continue;
@@ -2459,8 +2459,8 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_MULSCALE:
 //            insptr++;
 //            {
-//                int32_t var1 = *insptr++, var2 = Gv_GetVarX(*insptr++);
-//                int32_t var3 = Gv_GetVarX(*insptr++), var4 = Gv_GetVarX(*insptr++);
+//                int32_t var1 = script[insptr++], var2 = Gv_GetVarX(script[insptr++]);
+//                int32_t var3 = Gv_GetVarX(script[insptr++]), var4 = Gv_GetVarX(script[insptr++]);
 
 //                Gv_SetVarX(var1, mulscale(var2, var3, var4));
 //                continue;
@@ -2468,7 +2468,7 @@ function VM_Execute(/*int32_t */loop: number): void
 
 //        case CON_INITTIMER:
 //            insptr++;
-//            G_InitTimer(Gv_GetVarX(*insptr++));
+//            G_InitTimer(Gv_GetVarX(script[insptr++]));
 //            continue;
 
 //        case CON_TIME:
@@ -2480,7 +2480,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_QSPAWNVAR:
 //            insptr++;
 //            {
-//                int32_t lIn=Gv_GetVarX(*insptr++);
+//                int32_t lIn=Gv_GetVarX(script[insptr++]);
 //                int32_t j;
 //                if ((unsigned)vm.g_sp.sectnum >= (unsigned)numsectors)
 //                {
@@ -2519,7 +2519,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //                    continue;
 //                }
 
-//                j = A_Spawn(vm.g_i,*insptr++);
+//                j = A_Spawn(vm.g_i,script[insptr++]);
 
 //                switch (tw)
 //                {
@@ -2546,7 +2546,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //                // NOTE: (int16_t) cast because we want to exclude that
 //                // SHOOT_HARDCODED_ZVEL is passed.
 //                const int32_t zvel = (tw == CON_ESHOOT) ?
-//                    SHOOT_HARDCODED_ZVEL : (int16_t)Gv_GetVarX(*insptr++);
+//                    SHOOT_HARDCODED_ZVEL : (int16_t)Gv_GetVarX(script[insptr++]);
 
 //                if ((unsigned)vm.g_sp.sectnum >= (unsigned)numsectors)
 //                {
@@ -2555,7 +2555,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //                    continue;
 //                }
 
-//                j = A_ShootWithZvel(vm.g_i,*insptr++,zvel);
+//                j = A_ShootWithZvel(vm.g_i,script[insptr++],zvel);
 
 //                if (tw != CON_ZSHOOT)
 //                    aGameVars[g_iReturnVarID].val.lValue = j;
@@ -2566,7 +2566,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_ESHOOTVAR:
 //            insptr++;
 //            {
-//                int32_t j=Gv_GetVarX(*insptr++);
+//                int32_t j=Gv_GetVarX(script[insptr++]);
 
 //                if ((unsigned)vm.g_sp.sectnum >= (unsigned)numsectors)
 //                {
@@ -2584,8 +2584,8 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_ZSHOOTVAR:
 //            insptr++;
 //            {
-//                const int32_t zvel = (int16_t)Gv_GetVarX(*insptr++);
-//                int32_t j=Gv_GetVarX(*insptr++);
+//                const int32_t zvel = (int16_t)Gv_GetVarX(script[insptr++]);
+//                int32_t j=Gv_GetVarX(script[insptr++]);
 
 //                if ((unsigned)vm.g_sp.sectnum >= (unsigned)numsectors)
 //                {
@@ -2601,7 +2601,7 @@ function VM_Execute(/*int32_t */loop: number): void
 
 //        case CON_CMENU:
 //            insptr++;
-//            M_ChangeMenu(Gv_GetVarX(*insptr++));
+//            M_ChangeMenu(Gv_GetVarX(script[insptr++]));
 //            continue;
 
 //        case CON_SOUNDVAR:
@@ -2611,7 +2611,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_SCREENSOUND:
 //            insptr++;
 //            {
-//                int32_t j=Gv_GetVarX(*insptr++);
+//                int32_t j=Gv_GetVarX(script[insptr++]);
 
 //                if (j<0 || j>=MAXSOUNDS)
 //                {
@@ -2645,7 +2645,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_GUNIQHUDID:
 //            insptr++;
 //            {
-//                int32_t j=Gv_GetVarX(*insptr++);
+//                int32_t j=Gv_GetVarX(script[insptr++]);
 //                if (j >= 0 && j < MAXUNIQHUDID-1)
 //                    guniqhudid = j;
 //                else
@@ -2667,11 +2667,11 @@ function VM_Execute(/*int32_t */loop: number): void
 //            {
 //            case CON_SAVEGAMEVAR:
 //                i=Gv_GetVarX(*insptr);
-//                SCRIPT_PutNumber(ud.config.scripthandle, "Gamevars",aGameVars[*insptr++].szLabel,i,FALSE,FALSE);
+//                SCRIPT_PutNumber(ud.config.scripthandle, "Gamevars",aGameVars[script[insptr++]].szLabel,i,FALSE,FALSE);
 //                break;
 //            case CON_READGAMEVAR:
 //                SCRIPT_GetNumber(ud.config.scripthandle, "Gamevars",aGameVars[*insptr].szLabel,&i);
-//                Gv_SetVarX(*insptr++, i);
+//                Gv_SetVarX(script[insptr++], i);
 //                break;
 //            }
 //            continue;
@@ -2681,16 +2681,16 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_SHOWVIEWUNBIASED:
 //            insptr++;
 //            {
-//                int32_t x=Gv_GetVarX(*insptr++);
-//                int32_t y=Gv_GetVarX(*insptr++);
-//                int32_t z=Gv_GetVarX(*insptr++);
-//                int32_t a=Gv_GetVarX(*insptr++);
-//                int32_t horiz=Gv_GetVarX(*insptr++);
-//                int32_t sect=Gv_GetVarX(*insptr++);
-//                int32_t x1=Gv_GetVarX(*insptr++);
-//                int32_t y1=Gv_GetVarX(*insptr++);
-//                int32_t x2=Gv_GetVarX(*insptr++);
-//                int32_t y2=Gv_GetVarX(*insptr++);
+//                int32_t x=Gv_GetVarX(script[insptr++]);
+//                int32_t y=Gv_GetVarX(script[insptr++]);
+//                int32_t z=Gv_GetVarX(script[insptr++]);
+//                int32_t a=Gv_GetVarX(script[insptr++]);
+//                int32_t horiz=Gv_GetVarX(script[insptr++]);
+//                int32_t sect=Gv_GetVarX(script[insptr++]);
+//                int32_t x1=Gv_GetVarX(script[insptr++]);
+//                int32_t y1=Gv_GetVarX(script[insptr++]);
+//                int32_t x2=Gv_GetVarX(script[insptr++]);
+//                int32_t y2=Gv_GetVarX(script[insptr++]);
 
 //                if (x1 < 0 || y1 < 0 || x2 >= 320 || y2 >= 200)
 //                {
@@ -2714,12 +2714,12 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_ROTATESPRITE:
 //            insptr++;
 //            {
-//                int32_t x=Gv_GetVarX(*insptr++),   y=Gv_GetVarX(*insptr++),           z=Gv_GetVarX(*insptr++);
-//                int32_t a=Gv_GetVarX(*insptr++),   tilenum=Gv_GetVarX(*insptr++),     shade=Gv_GetVarX(*insptr++);
-//                int32_t pal=Gv_GetVarX(*insptr++), orientation=Gv_GetVarX(*insptr++);
-//                int32_t alpha = (tw == CON_ROTATESPRITEA) ? Gv_GetVarX(*insptr++) : 0;
-//                int32_t x1=Gv_GetVarX(*insptr++),  y1=Gv_GetVarX(*insptr++);
-//                int32_t x2=Gv_GetVarX(*insptr++),  y2=Gv_GetVarX(*insptr++);
+//                int32_t x=Gv_GetVarX(script[insptr++]),   y=Gv_GetVarX(script[insptr++]),           z=Gv_GetVarX(script[insptr++]);
+//                int32_t a=Gv_GetVarX(script[insptr++]),   tilenum=Gv_GetVarX(script[insptr++]),     shade=Gv_GetVarX(script[insptr++]);
+//                int32_t pal=Gv_GetVarX(script[insptr++]), orientation=Gv_GetVarX(script[insptr++]);
+//                int32_t alpha = (tw == CON_ROTATESPRITEA) ? Gv_GetVarX(script[insptr++]) : 0;
+//                int32_t x1=Gv_GetVarX(script[insptr++]),  y1=Gv_GetVarX(script[insptr++]);
+//                int32_t x2=Gv_GetVarX(script[insptr++]),  y2=Gv_GetVarX(script[insptr++]);
 
 //                if (tw != CON_ROTATESPRITE16 && !(orientation&ROTATESPRITE_FULL16))
 //                {
@@ -2749,13 +2749,13 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_GAMETEXTZ:
 //            insptr++;
 //            {
-//                int32_t tilenum = Gv_GetVarX(*insptr++);
-//                int32_t x=Gv_GetVarX(*insptr++), y=Gv_GetVarX(*insptr++), q=Gv_GetVarX(*insptr++);
-//                int32_t shade=Gv_GetVarX(*insptr++), pal=Gv_GetVarX(*insptr++);
-//                int32_t orientation=Gv_GetVarX(*insptr++);
-//                int32_t x1=Gv_GetVarX(*insptr++), y1=Gv_GetVarX(*insptr++);
-//                int32_t x2=Gv_GetVarX(*insptr++), y2=Gv_GetVarX(*insptr++);
-//                int32_t z = (tw == CON_GAMETEXTZ) ? Gv_GetVarX(*insptr++) : 65536;
+//                int32_t tilenum = Gv_GetVarX(script[insptr++]);
+//                int32_t x=Gv_GetVarX(script[insptr++]), y=Gv_GetVarX(script[insptr++]), q=Gv_GetVarX(script[insptr++]);
+//                int32_t shade=Gv_GetVarX(script[insptr++]), pal=Gv_GetVarX(script[insptr++]);
+//                int32_t orientation=Gv_GetVarX(script[insptr++]);
+//                int32_t x1=Gv_GetVarX(script[insptr++]), y1=Gv_GetVarX(script[insptr++]);
+//                int32_t x2=Gv_GetVarX(script[insptr++]), y2=Gv_GetVarX(script[insptr++]);
+//                int32_t z = (tw == CON_GAMETEXTZ) ? Gv_GetVarX(script[insptr++]) : 65536;
 
 //                if (tilenum < 0 || tilenum+255 >= MAXTILES)
 //                {
@@ -2785,13 +2785,13 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_DIGITALNUMBERZ:
 //            insptr++;
 //            {
-//                int32_t tilenum = Gv_GetVarX(*insptr++);
-//                int32_t x=Gv_GetVarX(*insptr++), y=Gv_GetVarX(*insptr++), q=Gv_GetVarX(*insptr++);
-//                int32_t shade=Gv_GetVarX(*insptr++), pal=Gv_GetVarX(*insptr++);
-//                int32_t orientation=Gv_GetVarX(*insptr++);
-//                int32_t x1=Gv_GetVarX(*insptr++), y1=Gv_GetVarX(*insptr++);
-//                int32_t x2=Gv_GetVarX(*insptr++), y2=Gv_GetVarX(*insptr++);
-//                int32_t z = (tw == CON_DIGITALNUMBERZ) ? Gv_GetVarX(*insptr++) : 65536;
+//                int32_t tilenum = Gv_GetVarX(script[insptr++]);
+//                int32_t x=Gv_GetVarX(script[insptr++]), y=Gv_GetVarX(script[insptr++]), q=Gv_GetVarX(script[insptr++]);
+//                int32_t shade=Gv_GetVarX(script[insptr++]), pal=Gv_GetVarX(script[insptr++]);
+//                int32_t orientation=Gv_GetVarX(script[insptr++]);
+//                int32_t x1=Gv_GetVarX(script[insptr++]), y1=Gv_GetVarX(script[insptr++]);
+//                int32_t x2=Gv_GetVarX(script[insptr++]), y2=Gv_GetVarX(script[insptr++]);
+//                int32_t z = (tw == CON_DIGITALNUMBERZ) ? Gv_GetVarX(script[insptr++]) : 65536;
 
 //                // NOTE: '-' not taken into account, but we have rotatesprite() bound check now anyway
 //                if (tilenum < 0 || tilenum+9 >= MAXTILES)
@@ -2807,8 +2807,8 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_MINITEXT:
 //            insptr++;
 //            {
-//                int32_t x=Gv_GetVarX(*insptr++), y=Gv_GetVarX(*insptr++), q=Gv_GetVarX(*insptr++);
-//                int32_t shade=Gv_GetVarX(*insptr++), pal=Gv_GetVarX(*insptr++);
+//                int32_t x=Gv_GetVarX(script[insptr++]), y=Gv_GetVarX(script[insptr++]), q=Gv_GetVarX(script[insptr++]);
+//                int32_t shade=Gv_GetVarX(script[insptr++]), pal=Gv_GetVarX(script[insptr++]);
 
 //                if ((unsigned)q >= MAXQUOTES)
 //                {
@@ -2828,18 +2828,18 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_SCREENTEXT:
 //            insptr++;
 //            {
-//                int32_t tilenum = Gv_GetVarX(*insptr++);
-//                int32_t x=Gv_GetVarX(*insptr++), y=Gv_GetVarX(*insptr++), z = Gv_GetVarX(*insptr++);
-//                int32_t blockangle=Gv_GetVarX(*insptr++), charangle=Gv_GetVarX(*insptr++);
-//                int32_t q=Gv_GetVarX(*insptr++);
-//                int32_t shade=Gv_GetVarX(*insptr++), pal=Gv_GetVarX(*insptr++);
-//                int32_t orientation=Gv_GetVarX(*insptr++);
-//                int32_t alpha=Gv_GetVarX(*insptr++);
-//                int32_t xspace=Gv_GetVarX(*insptr++), yline=Gv_GetVarX(*insptr++);
-//                int32_t xbetween=Gv_GetVarX(*insptr++), ybetween=Gv_GetVarX(*insptr++);
-//                int32_t f=Gv_GetVarX(*insptr++);
-//                int32_t x1=Gv_GetVarX(*insptr++), y1=Gv_GetVarX(*insptr++);
-//                int32_t x2=Gv_GetVarX(*insptr++), y2=Gv_GetVarX(*insptr++);
+//                int32_t tilenum = Gv_GetVarX(script[insptr++]);
+//                int32_t x=Gv_GetVarX(script[insptr++]), y=Gv_GetVarX(script[insptr++]), z = Gv_GetVarX(script[insptr++]);
+//                int32_t blockangle=Gv_GetVarX(script[insptr++]), charangle=Gv_GetVarX(script[insptr++]);
+//                int32_t q=Gv_GetVarX(script[insptr++]);
+//                int32_t shade=Gv_GetVarX(script[insptr++]), pal=Gv_GetVarX(script[insptr++]);
+//                int32_t orientation=Gv_GetVarX(script[insptr++]);
+//                int32_t alpha=Gv_GetVarX(script[insptr++]);
+//                int32_t xspace=Gv_GetVarX(script[insptr++]), yline=Gv_GetVarX(script[insptr++]);
+//                int32_t xbetween=Gv_GetVarX(script[insptr++]), ybetween=Gv_GetVarX(script[insptr++]);
+//                int32_t f=Gv_GetVarX(script[insptr++]);
+//                int32_t x1=Gv_GetVarX(script[insptr++]), y1=Gv_GetVarX(script[insptr++]);
+//                int32_t x2=Gv_GetVarX(script[insptr++]), y2=Gv_GetVarX(script[insptr++]);
 
 //                if (tilenum < 0 || tilenum+255 >= MAXTILES)
 //                {
@@ -2867,7 +2867,7 @@ function VM_Execute(/*int32_t */loop: number): void
 
 //        case CON_ANGOFF:
 //            insptr++;
-//            spriteext[vm.g_i].angoff=*insptr++;
+//            spriteext[vm.g_i].angoff=script[insptr++];
 //            continue;
 
 //        case CON_GETZRANGE:
@@ -2875,14 +2875,14 @@ function VM_Execute(/*int32_t */loop: number): void
 //            {
 //                vec3_t vect;
 
-//                vect.x = Gv_GetVarX(*insptr++);
-//                vect.y = Gv_GetVarX(*insptr++);
-//                vect.z = Gv_GetVarX(*insptr++);
+//                vect.x = Gv_GetVarX(script[insptr++]);
+//                vect.y = Gv_GetVarX(script[insptr++]);
+//                vect.z = Gv_GetVarX(script[insptr++]);
 
 //                {
-//                    int32_t sectnum=Gv_GetVarX(*insptr++);
-//                    int32_t ceilzvar=*insptr++, ceilhitvar=*insptr++, florzvar=*insptr++, florhitvar=*insptr++;
-//                    int32_t walldist=Gv_GetVarX(*insptr++), clipmask=Gv_GetVarX(*insptr++);
+//                    int32_t sectnum=Gv_GetVarX(script[insptr++]);
+//                    int32_t ceilzvar=script[insptr++], ceilhitvar=script[insptr++], florzvar=script[insptr++], florhitvar=script[insptr++];
+//                    int32_t walldist=Gv_GetVarX(script[insptr++]), clipmask=Gv_GetVarX(script[insptr++]);
 //                    int32_t ceilz, ceilhit, florz, florhit;
 
 
@@ -2904,7 +2904,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_SECTCLEARINTERPOLATION:
 //            insptr++;
 //            {
-//                int32_t sectnum = Gv_GetVarX(*insptr++);
+//                int32_t sectnum = Gv_GetVarX(script[insptr++]);
 
 //                if ((unsigned)sectnum >= (unsigned)numsectors)
 //                {
@@ -2923,8 +2923,8 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_CALCHYPOTENUSE:
 //            insptr++;
 //            {
-//                int32_t retvar=*insptr++;
-//                int64_t dax=Gv_GetVarX(*insptr++), day=Gv_GetVarX(*insptr++);
+//                int32_t retvar=script[insptr++];
+//                int64_t dax=Gv_GetVarX(script[insptr++]), day=Gv_GetVarX(script[insptr++]);
 //                int64_t hypsq = dax*dax + day*day;
 
 //                if (hypsq > (int64_t)INT32_MAX)
@@ -2939,10 +2939,10 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_RAYINTERSECT:
 //            insptr++;
 //            {
-//                int32_t x1=Gv_GetVarX(*insptr++), y1=Gv_GetVarX(*insptr++), z1=Gv_GetVarX(*insptr++);
-//                int32_t x2=Gv_GetVarX(*insptr++), y2=Gv_GetVarX(*insptr++), z2=Gv_GetVarX(*insptr++);
-//                int32_t x3=Gv_GetVarX(*insptr++), y3=Gv_GetVarX(*insptr++), x4=Gv_GetVarX(*insptr++), y4=Gv_GetVarX(*insptr++);
-//                int32_t intxvar=*insptr++, intyvar=*insptr++, intzvar=*insptr++, retvar=*insptr++;
+//                int32_t x1=Gv_GetVarX(script[insptr++]), y1=Gv_GetVarX(script[insptr++]), z1=Gv_GetVarX(script[insptr++]);
+//                int32_t x2=Gv_GetVarX(script[insptr++]), y2=Gv_GetVarX(script[insptr++]), z2=Gv_GetVarX(script[insptr++]);
+//                int32_t x3=Gv_GetVarX(script[insptr++]), y3=Gv_GetVarX(script[insptr++]), x4=Gv_GetVarX(script[insptr++]), y4=Gv_GetVarX(script[insptr++]);
+//                int32_t intxvar=script[insptr++], intyvar=script[insptr++], intzvar=script[insptr++], retvar=script[insptr++];
 //                int32_t intx, inty, intz, ret;
 
 //                if (tw==CON_LINEINTERSECT)
@@ -2966,10 +2966,10 @@ function VM_Execute(/*int32_t */loop: number): void
 //            insptr++;
 //            {
 //                vec3_t vect;
-//                int32_t retvar=*insptr++, xvar=*insptr++, yvar=*insptr++, z=Gv_GetVarX(*insptr++), sectnumvar=*insptr++;
-//                int32_t xvect=Gv_GetVarX(*insptr++), yvect=Gv_GetVarX(*insptr++);
-//                int32_t walldist=Gv_GetVarX(*insptr++), floordist=Gv_GetVarX(*insptr++), ceildist=Gv_GetVarX(*insptr++);
-//                int32_t clipmask=Gv_GetVarX(*insptr++);
+//                int32_t retvar=script[insptr++], xvar=script[insptr++], yvar=script[insptr++], z=Gv_GetVarX(script[insptr++]), sectnumvar=script[insptr++];
+//                int32_t xvect=Gv_GetVarX(script[insptr++]), yvect=Gv_GetVarX(script[insptr++]);
+//                int32_t walldist=Gv_GetVarX(script[insptr++]), floordist=Gv_GetVarX(script[insptr++]), ceildist=Gv_GetVarX(script[insptr++]);
+//                int32_t clipmask=Gv_GetVarX(script[insptr++]);
 //                int16_t sectnum;
 
 //                vect.x = Gv_GetVarX(xvar);
@@ -2999,15 +2999,15 @@ function VM_Execute(/*int32_t */loop: number): void
 //                vec3_t vect;
 //                hitdata_t hit;
 
-//                vect.x = Gv_GetVarX(*insptr++);
-//                vect.y = Gv_GetVarX(*insptr++);
-//                vect.z = Gv_GetVarX(*insptr++);
+//                vect.x = Gv_GetVarX(script[insptr++]);
+//                vect.y = Gv_GetVarX(script[insptr++]);
+//                vect.z = Gv_GetVarX(script[insptr++]);
 
 //                {
-//                    int32_t sectnum=Gv_GetVarX(*insptr++);
-//                    int32_t vx=Gv_GetVarX(*insptr++), vy=Gv_GetVarX(*insptr++), vz=Gv_GetVarX(*insptr++);
-//                    int32_t hitsectvar=*insptr++, hitwallvar=*insptr++, hitspritevar=*insptr++;
-//                    int32_t hitxvar=*insptr++, hityvar=*insptr++, hitzvar=*insptr++, cliptype=Gv_GetVarX(*insptr++);
+//                    int32_t sectnum=Gv_GetVarX(script[insptr++]);
+//                    int32_t vx=Gv_GetVarX(script[insptr++]), vy=Gv_GetVarX(script[insptr++]), vz=Gv_GetVarX(script[insptr++]);
+//                    int32_t hitsectvar=script[insptr++], hitwallvar=script[insptr++], hitspritevar=script[insptr++];
+//                    int32_t hitxvar=script[insptr++], hityvar=script[insptr++], hitzvar=script[insptr++], cliptype=Gv_GetVarX(script[insptr++]);
 
 //                    if ((unsigned)sectnum >= (unsigned)numsectors)
 //                    {
@@ -3028,10 +3028,10 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_CANSEE:
 //            insptr++;
 //            {
-//                int32_t x1=Gv_GetVarX(*insptr++), y1=Gv_GetVarX(*insptr++), z1=Gv_GetVarX(*insptr++);
-//                int32_t sect1=Gv_GetVarX(*insptr++);
-//                int32_t x2=Gv_GetVarX(*insptr++), y2=Gv_GetVarX(*insptr++), z2=Gv_GetVarX(*insptr++);
-//                int32_t sect2=Gv_GetVarX(*insptr++), rvar=*insptr++;
+//                int32_t x1=Gv_GetVarX(script[insptr++]), y1=Gv_GetVarX(script[insptr++]), z1=Gv_GetVarX(script[insptr++]);
+//                int32_t sect1=Gv_GetVarX(script[insptr++]);
+//                int32_t x2=Gv_GetVarX(script[insptr++]), y2=Gv_GetVarX(script[insptr++]), z2=Gv_GetVarX(script[insptr++]);
+//                int32_t sect2=Gv_GetVarX(script[insptr++]), rvar=script[insptr++];
 
 //                if ((unsigned)sect1 >= (unsigned)numsectors || (unsigned)sect2 >= (unsigned)numsectors)
 //                {
@@ -3046,9 +3046,9 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_ROTATEPOINT:
 //            insptr++;
 //            {
-//                int32_t xpivot=Gv_GetVarX(*insptr++), ypivot=Gv_GetVarX(*insptr++);
-//                int32_t x=Gv_GetVarX(*insptr++), y=Gv_GetVarX(*insptr++), daang=Gv_GetVarX(*insptr++);
-//                int32_t x2var=*insptr++, y2var=*insptr++;
+//                int32_t xpivot=Gv_GetVarX(script[insptr++]), ypivot=Gv_GetVarX(script[insptr++]);
+//                int32_t x=Gv_GetVarX(script[insptr++]), y=Gv_GetVarX(script[insptr++]), daang=Gv_GetVarX(script[insptr++]);
+//                int32_t x2var=script[insptr++], y2var=script[insptr++];
 //                int32_t x2, y2;
 
 //                rotatepoint(xpivot,ypivot,x,y,daang,&x2,&y2);
@@ -3068,10 +3068,10 @@ function VM_Execute(/*int32_t */loop: number): void
 //                //                     int32_t neartagrange,      //Choose maximum distance to scan (scale: 1024=largest grid size)
 //                //                     char tagsearch)         //1-lotag only, 2-hitag only, 3-lotag&hitag
 
-//                int32_t x=Gv_GetVarX(*insptr++), y=Gv_GetVarX(*insptr++), z=Gv_GetVarX(*insptr++);
-//                int32_t sectnum=Gv_GetVarX(*insptr++), ang=Gv_GetVarX(*insptr++);
-//                int32_t neartagsectorvar=*insptr++, neartagwallvar=*insptr++, neartagspritevar=*insptr++, neartaghitdistvar=*insptr++;
-//                int32_t neartagrange=Gv_GetVarX(*insptr++), tagsearch=Gv_GetVarX(*insptr++);
+//                int32_t x=Gv_GetVarX(script[insptr++]), y=Gv_GetVarX(script[insptr++]), z=Gv_GetVarX(script[insptr++]);
+//                int32_t sectnum=Gv_GetVarX(script[insptr++]), ang=Gv_GetVarX(script[insptr++]);
+//                int32_t neartagsectorvar=script[insptr++], neartagwallvar=script[insptr++], neartagspritevar=script[insptr++], neartaghitdistvar=script[insptr++];
+//                int32_t neartagrange=Gv_GetVarX(script[insptr++]), tagsearch=Gv_GetVarX(script[insptr++]);
 
 //                if ((unsigned)sectnum >= (unsigned)numsectors)
 //                {
@@ -3096,7 +3096,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //                G_GetTimeDate(vals);
 
 //                for (i=0; i<8; i++)
-//                    Gv_SetVarX(*insptr++, vals[i]);
+//                    Gv_SetVarX(script[insptr++], vals[i]);
 
 //                continue;
 //            }
@@ -3105,12 +3105,12 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_SETSPRITE:
 //            insptr++;
 //            {
-//                int32_t spritenum = Gv_GetVarX(*insptr++);
+//                int32_t spritenum = Gv_GetVarX(script[insptr++]);
 //                vec3_t davector;
 
-//                davector.x = Gv_GetVarX(*insptr++);
-//                davector.y = Gv_GetVarX(*insptr++);
-//                davector.z = Gv_GetVarX(*insptr++);
+//                davector.x = Gv_GetVarX(script[insptr++]);
+//                davector.y = Gv_GetVarX(script[insptr++]);
+//                davector.z = Gv_GetVarX(script[insptr++]);
 
 //                if (tw == CON_SETSPRITE)
 //                {
@@ -3124,7 +3124,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //                }
 
 //                {
-//                    int32_t cliptype = Gv_GetVarX(*insptr++);
+//                    int32_t cliptype = Gv_GetVarX(script[insptr++]);
 
 //                    if ((unsigned)spritenum >= MAXSPRITES)
 //                    {
@@ -3132,7 +3132,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //                        insptr++;
 //                        continue;
 //                    }
-//                    Gv_SetVarX(*insptr++, A_MoveSprite(spritenum, &davector, cliptype));
+//                    Gv_SetVarX(script[insptr++], A_MoveSprite(spritenum, &davector, cliptype));
 //                    continue;
 //                }
 //            }
@@ -3141,7 +3141,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_GETCEILZOFSLOPE:
 //            insptr++;
 //            {
-//                int32_t sectnum = Gv_GetVarX(*insptr++), x = Gv_GetVarX(*insptr++), y = Gv_GetVarX(*insptr++);
+//                int32_t sectnum = Gv_GetVarX(script[insptr++]), x = Gv_GetVarX(script[insptr++]), y = Gv_GetVarX(script[insptr++]);
 //                if ((unsigned)sectnum >= (unsigned)numsectors)
 //                {
 //                    CON_ERRPRINTF("Invalid sector %d\n", sectnum);
@@ -3151,10 +3151,10 @@ function VM_Execute(/*int32_t */loop: number): void
 
 //                if (tw == CON_GETFLORZOFSLOPE)
 //                {
-//                    Gv_SetVarX(*insptr++, getflorzofslope(sectnum,x,y));
+//                    Gv_SetVarX(script[insptr++], getflorzofslope(sectnum,x,y));
 //                    continue;
 //                }
-//                Gv_SetVarX(*insptr++, getceilzofslope(sectnum,x,y));
+//                Gv_SetVarX(script[insptr++], getceilzofslope(sectnum,x,y));
 //                continue;
 //            }
 
@@ -3162,9 +3162,9 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_UPDATESECTORZ:
 //            insptr++;
 //            {
-//                int32_t x=Gv_GetVarX(*insptr++), y=Gv_GetVarX(*insptr++);
-//                int32_t z=(tw==CON_UPDATESECTORZ)?Gv_GetVarX(*insptr++):0;
-//                int32_t var=*insptr++;
+//                int32_t x=Gv_GetVarX(script[insptr++]), y=Gv_GetVarX(script[insptr++]);
+//                int32_t z=(tw==CON_UPDATESECTORZ)?Gv_GetVarX(script[insptr++]):0;
+//                int32_t var=script[insptr++];
 //                int16_t w=sprite[vm.g_i].sectnum;
 
 //                if (tw==CON_UPDATESECTOR) updatesector(x,y,&w);
@@ -3181,7 +3181,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //                insptr++;
 //                continue;
 //            }
-//            A_Spawn(vm.g_i,*insptr++);
+//            A_Spawn(vm.g_i,script[insptr++]);
 //            continue;
 
 //        case CON_IFWASWEAPON:
@@ -3212,7 +3212,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_DEBRIS:
 //            insptr++;
 //            {
-//                int32_t dnum = *insptr++;
+//                int32_t dnum = script[insptr++];
 //                int32_t s, l, j;
 
 //                if ((unsigned)vm.g_sp.sectnum < MAXSECTORS)
@@ -3238,29 +3238,29 @@ function VM_Execute(/*int32_t */loop: number): void
 
 //        case CON_COUNT:
 //            insptr++;
-//            AC_COUNT(vm.g_t) = (int16_t) *insptr++;
+//            AC_COUNT(vm.g_t) = (int16_t) script[insptr++];
 //            continue;
 
 //        case CON_CSTATOR:
 //            insptr++;
-//            vm.g_sp.cstat |= (int16_t) *insptr++;
+//            vm.g_sp.cstat |= (int16_t) script[insptr++];
 //            continue;
 
 //        case CON_CLIPDIST:
 //            insptr++;
-//            vm.g_sp.clipdist = (int16_t) *insptr++;
+//            vm.g_sp.clipdist = (int16_t) script[insptr++];
 //            continue;
 
 //        case CON_CSTAT:
 //            insptr++;
-//            vm.g_sp.cstat = (int16_t) *insptr++;
+//            vm.g_sp.cstat = (int16_t) script[insptr++];
 //            continue;
 
 //        case CON_SAVENN:
 //        case CON_SAVE:
 //            insptr++;
 //            {
-//                g_lastSaveSlot = *insptr++;
+//                g_lastSaveSlot = script[insptr++];
 
 //                if ((unsigned)g_lastSaveSlot >= 10)
 //                    continue;
@@ -3293,7 +3293,7 @@ function VM_Execute(/*int32_t */loop: number): void
 
 //        case CON_QUAKE:
 //            insptr++;
-//            g_earthquakeTime = Gv_GetVarX(*insptr++);
+//            g_earthquakeTime = Gv_GetVarX(script[insptr++]);
 //            A_PlaySound(EARTHQUAKE,g_player[screenpeek].ps.i);
 //            continue;
 
@@ -3405,8 +3405,8 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_HITRADIUSVAR:
 //            insptr++;
 //            {
-//                int32_t v1=Gv_GetVarX(*insptr++),v2=Gv_GetVarX(*insptr++),v3=Gv_GetVarX(*insptr++);
-//                int32_t v4=Gv_GetVarX(*insptr++),v5=Gv_GetVarX(*insptr++);
+//                int32_t v1=Gv_GetVarX(script[insptr++]),v2=Gv_GetVarX(script[insptr++]),v3=Gv_GetVarX(script[insptr++]);
+//                int32_t v4=Gv_GetVarX(script[insptr++]),v5=Gv_GetVarX(script[insptr++]);
 //                A_RadiusDamage(vm.g_i,v1,v2,v3,v4,v5);
 //            }
 //            continue;
@@ -3512,7 +3512,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_CLEARMAPSTATE:
 //            insptr++;
 //            {
-//                int32_t j = Gv_GetVarX(*insptr++);
+//                int32_t j = Gv_GetVarX(script[insptr++]);
 //                if ((unsigned)j >= MAXVOLUMES*MAXLEVELS)
 //                {
 //                    CON_ERRPRINTF("Invalid map number: %d\n", j);
@@ -3587,12 +3587,12 @@ function VM_Execute(/*int32_t */loop: number): void
 //            insptr++;
 //            if (vm.g_sp.picnum != APLAYER)
 //                actor[vm.g_i].tempang = vm.g_sp.pal;
-//            vm.g_sp.pal = *insptr++;
+//            vm.g_sp.pal = script[insptr++];
 //            continue;
 
 //        case CON_CACTOR:
 //            insptr++;
-//            vm.g_sp.picnum = *insptr++;
+//            vm.g_sp.picnum = script[insptr++];
 //            continue;
 
 //        case CON_IFBULLETNEAR:
@@ -3624,7 +3624,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //            }
 //            else
 //            {
-//                uint8_t f=*insptr++, r=*insptr++, g=*insptr++, b=*insptr++;
+//                uint8_t f=script[insptr++], r=script[insptr++], g=script[insptr++], b=script[insptr++];
 
 //                P_PalFrom(g_player[vm.g_p].ps, f, r,g,b);
 //            }
@@ -3633,22 +3633,22 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_SECTOROFWALL:
 //            insptr++;
 //            {
-//                int32_t j = *insptr++;
+//                int32_t j = script[insptr++];
 
-//                Gv_SetVarX(j, sectorofwall(Gv_GetVarX(*insptr++)));
+//                Gv_SetVarX(j, sectorofwall(Gv_GetVarX(script[insptr++])));
 //            }
 //            continue;
 
 //        case CON_QSPRINTF:
 //            insptr++;
 //            {
-//                int32_t dq = Gv_GetVarX(*insptr++), sq = Gv_GetVarX(*insptr++);
+//                int32_t dq = Gv_GetVarX(script[insptr++]), sq = Gv_GetVarX(script[insptr++]);
 //                if ((ScriptQuotes[sq] == NULL || ScriptQuotes[dq] == NULL))
 //                {
 //                    CON_ERRPRINTF("null quote %d\n", ScriptQuotes[sq] ? dq : sq);
 
 //                    while ((*insptr & 0xFFF) != CON_NULLOP)
-//                        Gv_GetVarX(*insptr++);
+//                        Gv_GetVarX(script[insptr++]);
 
 //                    insptr++; // skip the NOP
 //                    continue;
@@ -3660,7 +3660,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //                    char tempbuf[MAXQUOTELEN];
 
 //                    while ((*insptr & 0xFFF) != CON_NULLOP && i < 32)
-//                        arg[i++] = Gv_GetVarX(*insptr++);
+//                        arg[i++] = Gv_GetVarX(script[insptr++]);
 //                    numargs = i;
 
 //                    insptr++; // skip the NOP
@@ -3765,7 +3765,7 @@ function VM_Execute(/*int32_t */loop: number): void
 
 //                        insptr++;
 
-//                        index=Gv_GetVarX(*insptr++);
+//                        index=Gv_GetVarX(script[insptr++]);
 //                        if (index>=0 && index < aGameArrays[lVarID].size)
 //                        {
 //                            OSD_Printf(OSDTEXT_GREEN "%s: L=%d %s[%d] =%d\n", keyw[g_tw], g_errorLineNum,
@@ -3785,15 +3785,15 @@ function VM_Execute(/*int32_t */loop: number): void
 //                        if ((lVarID & (MAXGAMEVARS-1)) == g_iActorVarID)
 //                        {
 //                            intptr_t *oinsptr = insptr++;
-//                            int32_t index = Gv_GetVarX(*insptr++);
+//                            int32_t index = Gv_GetVarX(script[insptr++]);
 //                            insptr = oinsptr;
 //                            if ((unsigned)index >= MAXSPRITES-1)
 //                            {
 //                                CON_ERRPRINTF("invalid array index\n");
-//                                Gv_GetVarX(*insptr++);
+//                                Gv_GetVarX(script[insptr++]);
 //                                continue;
 //                            }
-//                            OSD_Printf(OSDTEXT_GREEN "%s: L=%d %d %d\n",keyw[g_tw],g_errorLineNum,index,Gv_GetVar(*insptr++,index,vm.g_p));
+//                            OSD_Printf(OSDTEXT_GREEN "%s: L=%d %d %d\n",keyw[g_tw],g_errorLineNum,index,Gv_GetVar(script[insptr++],index,vm.g_p));
 //                            continue;
 //                        }
 //                    }
@@ -3844,7 +3844,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //            {
 //                // syntax [gs]etsector[<var>].x <VAR>
 //                // <varid> <xxxid> <varid>
-//                int32_t lVar1=*insptr++, lLabelID=*insptr++, lVar2=*insptr++;
+//                int32_t lVar1=script[insptr++], lLabelID=script[insptr++], lVar2=script[insptr++];
 
 //                VM_AccessSector(tw==CON_SETSECTOR, lVar1, lLabelID, lVar2);
 //                continue;
@@ -3854,7 +3854,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //            insptr++;
 //            {
 //                // syntax sqrt <invar> <outvar>
-//                int32_t lInVarID=*insptr++, lOutVarID=*insptr++;
+//                int32_t lInVarID=script[insptr++], lOutVarID=script[insptr++];
 
 //                Gv_SetVarX(lOutVarID, ksqrt((uint32_t)Gv_GetVarX(lInVarID)));
 //                continue;
@@ -3871,7 +3871,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //                // that is of <type> into <getvar>
 //                // -1 for none found
 //                // <type> <maxdist> <varid>
-//                int32_t lType=*insptr++, lMaxDist=*insptr++, lVarID=*insptr++;
+//                int32_t lType=script[insptr++], lMaxDist=script[insptr++], lVarID=script[insptr++];
 //                int32_t lFound=-1, j, k = MAXSTATUS-1;
 
 //                if (tw == CON_FINDNEARACTOR || tw == CON_FINDNEARACTOR3D)
@@ -3933,7 +3933,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //                // that is of <type> into <getvar>
 //                // -1 for none found
 //                // <type> <maxdistvarid> <varid>
-//                int32_t lType=*insptr++, lMaxDist=Gv_GetVarX(*insptr++), lVarID=*insptr++;
+//                int32_t lType=script[insptr++], lMaxDist=Gv_GetVarX(script[insptr++]), lVarID=script[insptr++];
 //                int32_t lFound=-1, j, k = 1;
 
 //                if (tw == CON_FINDNEARSPRITEVAR || tw == CON_FINDNEARSPRITE3DVAR)
@@ -3995,9 +3995,9 @@ function VM_Execute(/*int32_t */loop: number): void
 //                // that is of <type> into <getvar>
 //                // -1 for none found
 //                // <type> <maxdistvarid> <varid>
-//                int32_t lType=*insptr++, lMaxDist=Gv_GetVarX(*insptr++);
-//                int32_t lMaxZDist=Gv_GetVarX(*insptr++);
-//                int32_t lVarID=*insptr++, lFound=-1, lTemp, lTemp2, j, k=MAXSTATUS-1;
+//                int32_t lType=script[insptr++], lMaxDist=Gv_GetVarX(script[insptr++]);
+//                int32_t lMaxZDist=Gv_GetVarX(script[insptr++]);
+//                int32_t lVarID=script[insptr++], lFound=-1, lTemp, lTemp2, j, k=MAXSTATUS-1;
 //                do
 //                {
 //                    j=headspritestat[tw==CON_FINDNEARACTORZVAR?1:k];    // all sprites
@@ -4039,7 +4039,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //                // that is of <type> into <getvar>
 //                // -1 for none found
 //                // <type> <maxdist> <varid>
-//                int32_t lType=*insptr++, lMaxDist=*insptr++, lMaxZDist=*insptr++, lVarID=*insptr++;
+//                int32_t lType=script[insptr++], lMaxDist=script[insptr++], lMaxZDist=script[insptr++], lVarID=script[insptr++];
 //                int32_t lTemp, lTemp2, lFound=-1, j, k=MAXSTATUS-1;
 //                do
 //                {
@@ -4078,7 +4078,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //            {
 //                int32_t j;
 //                aGameVars[g_iReturnVarID].val.lValue = A_FindPlayer(&sprite[vm.g_i],&j);
-//                Gv_SetVarX(*insptr++, j);
+//                Gv_SetVarX(script[insptr++], j);
 //            }
 //            continue;
 
@@ -4088,7 +4088,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //                int32_t j;
 //                //            Gv_SetVarX(g_iReturnVarID, P_FindOtherPlayer(vm.g_p,&j));
 //                aGameVars[g_iReturnVarID].val.lValue = P_FindOtherPlayer(vm.g_p,&j);
-//                Gv_SetVarX(*insptr++, j);
+//                Gv_SetVarX(script[insptr++], j);
 //            }
 //            continue;
 
@@ -4097,12 +4097,12 @@ function VM_Execute(/*int32_t */loop: number): void
 //            {
 //                // syntax [gs]etplayer[<var>].x <VAR>
 //                // <varid> <xxxid> <varid>
-//                int32_t lVar1=*insptr++, lLabelID=*insptr++, lParm2 = 0, lVar2;
+//                int32_t lVar1=script[insptr++], lLabelID=script[insptr++], lParm2 = 0, lVar2;
 //                // HACK: need to have access to labels structure at run-time...
 
 //                if (PlayerLabels[lLabelID].flags & LABEL_HASPARM2)
-//                    lParm2=Gv_GetVarX(*insptr++);
-//                lVar2=*insptr++;
+//                    lParm2=Gv_GetVarX(script[insptr++]);
+//                lVar2=script[insptr++];
 
 //                VM_SetPlayer(lVar1, lLabelID, lVar2, lParm2);
 //                continue;
@@ -4114,12 +4114,12 @@ function VM_Execute(/*int32_t */loop: number): void
 //            {
 //                // syntax [gs]etplayer[<var>].x <VAR>
 //                // <varid> <xxxid> <varid>
-//                int32_t lVar1=*insptr++, lLabelID=*insptr++, lParm2 = 0, lVar2;
+//                int32_t lVar1=script[insptr++], lLabelID=script[insptr++], lParm2 = 0, lVar2;
 //                // HACK: need to have access to labels structure at run-time...
 
 //                if (PlayerLabels[lLabelID].flags & LABEL_HASPARM2)
-//                    lParm2=Gv_GetVarX(*insptr++);
-//                lVar2=*insptr++;
+//                    lParm2=Gv_GetVarX(script[insptr++]);
+//                lVar2=script[insptr++];
 
 //                VM_GetPlayer(lVar1, lLabelID, lVar2, lParm2);
 //                continue;
@@ -4131,7 +4131,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //            {
 //                // syntax [gs]etplayer[<var>].x <VAR>
 //                // <varid> <xxxid> <varid>
-//                int32_t lVar1=*insptr++, lLabelID=*insptr++, lVar2=*insptr++;
+//                int32_t lVar1=script[insptr++], lLabelID=script[insptr++], lVar2=script[insptr++];
 
 //                VM_AccessPlayerInput(tw==CON_SETINPUT, lVar1, lLabelID, lVar2);
 //                continue;
@@ -4143,7 +4143,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //            {
 //                // syntax [gs]etuserdef.xxx <VAR>
 //                //  <xxxid> <varid>
-//                int32_t lLabelID=*insptr++, lVar2=*insptr++;
+//                int32_t lLabelID=script[insptr++], lVar2=script[insptr++];
 
 //                VM_AccessUserdef(tw==CON_SETUSERDEF, lLabelID, lVar2);
 //                continue;
@@ -4155,7 +4155,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //            {
 //                // syntax [gs]etplayer[<var>].x <VAR>
 //                // <varid> <xxxid> <varid>
-//                int32_t lVar1=Gv_GetVarX(*insptr++), lLabelID=*insptr++, lVar2=*insptr++;
+//                int32_t lVar1=Gv_GetVarX(script[insptr++]), lLabelID=script[insptr++], lVar2=script[insptr++];
 
 //                VM_AccessProjectile(tw==CON_SETPROJECTILE,lVar1,lLabelID,lVar2);
 //                continue;
@@ -4167,7 +4167,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //            {
 //                // syntax [gs]etwall[<var>].x <VAR>
 //                // <varid> <xxxid> <varid>
-//                int32_t lVar1=*insptr++, lLabelID=*insptr++, lVar2=*insptr++;
+//                int32_t lVar1=script[insptr++], lLabelID=script[insptr++], lVar2=script[insptr++];
 
 //                VM_AccessWall(tw==CON_SETWALL, lVar1, lLabelID, lVar2);
 //                continue;
@@ -4180,8 +4180,8 @@ function VM_Execute(/*int32_t */loop: number): void
 //                // syntax [gs]etactorvar[<var>].<varx> <VAR>
 //                // gets the value of the per-actor variable varx into VAR
 //                // <var> <varx> <VAR>
-//                int32_t lSprite=Gv_GetVarX(*insptr++), lVar1=*insptr++;
-//                int32_t lVar2=*insptr++;
+//                int32_t lSprite=Gv_GetVarX(script[insptr++]), lVar1=script[insptr++];
+//                int32_t lVar2=script[insptr++];
 
 //                if ((unsigned)lSprite >= MAXSPRITES)
 //                {
@@ -4211,7 +4211,7 @@ function VM_Execute(/*int32_t */loop: number): void
 
 //                insptr++;
 //                {
-//                    int32_t lVar1=*insptr++, lVar2=*insptr++;
+//                    int32_t lVar1=script[insptr++], lVar2=script[insptr++];
 
 //                    if ((unsigned)iPlayer >= (unsigned)playerswhenstarted)
 //                    {
@@ -4237,13 +4237,13 @@ function VM_Execute(/*int32_t */loop: number): void
 //                // syntax [gs]etactor[<var>].x <VAR>
 //                // <varid> <xxxid> <varid>
 
-//                int32_t lVar1=*insptr++, lLabelID=*insptr++, lParm2 = 0;
+//                int32_t lVar1=script[insptr++], lLabelID=script[insptr++], lParm2 = 0;
 
 //                if (ActorLabels[lLabelID].flags & LABEL_HASPARM2)
-//                    lParm2=Gv_GetVarX(*insptr++);
+//                    lParm2=Gv_GetVarX(script[insptr++]);
 
 //                {
-//                    int32_t lVar2=*insptr++;
+//                    int32_t lVar2=script[insptr++];
 
 //                    VM_SetSprite(lVar1, lLabelID, lVar2, lParm2);
 //                }
@@ -4256,13 +4256,13 @@ function VM_Execute(/*int32_t */loop: number): void
 //                // syntax [gs]etactor[<var>].x <VAR>
 //                // <varid> <xxxid> <varid>
 
-//                int32_t lVar1=*insptr++, lLabelID=*insptr++, lParm2 = 0;
+//                int32_t lVar1=script[insptr++], lLabelID=script[insptr++], lParm2 = 0;
 
 //                if (ActorLabels[lLabelID].flags & LABEL_HASPARM2)
-//                    lParm2=Gv_GetVarX(*insptr++);
+//                    lParm2=Gv_GetVarX(script[insptr++]);
 
 //                {
-//                    int32_t lVar2=*insptr++;
+//                    int32_t lVar2=script[insptr++];
 
 //                    VM_GetSprite(lVar1, lLabelID, lVar2, lParm2);
 //                }
@@ -4276,7 +4276,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //                // syntax [gs]etactor[<var>].x <VAR>
 //                // <varid> <xxxid> <varid>
 
-//                int32_t lVar1=*insptr++, lLabelID=*insptr++, lVar2=*insptr++;
+//                int32_t lVar1=script[insptr++], lLabelID=script[insptr++], lVar2=script[insptr++];
 
 //                VM_AccessTsprite(tw==CON_SETTSPR, lVar1, lLabelID, lVar2);
 //                continue;
@@ -4285,17 +4285,17 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_GETANGLETOTARGET:
 //            insptr++;
 //            // Actor[vm.g_i].lastvx and lastvy are last known location of target.
-//            Gv_SetVarX(*insptr++, getangle(actor[vm.g_i].lastvx-vm.g_sp.x,actor[vm.g_i].lastvy-vm.g_sp.y));
+//            Gv_SetVarX(script[insptr++], getangle(actor[vm.g_i].lastvx-vm.g_sp.x,actor[vm.g_i].lastvy-vm.g_sp.y));
 //            continue;
 
 //        case CON_ANGOFFVAR:
 //            insptr++;
-//            spriteext[vm.g_i].angoff=Gv_GetVarX(*insptr++);
+//            spriteext[vm.g_i].angoff=Gv_GetVarX(script[insptr++]);
 //            continue;
 
 //        case CON_LOCKPLAYER:
 //            insptr++;
-//            g_player[vm.g_p].ps.transporter_hold=Gv_GetVarX(*insptr++);
+//            g_player[vm.g_p].ps.transporter_hold=Gv_GetVarX(script[insptr++]);
 //            continue;
 
 //        case CON_CHECKAVAILWEAPON:
@@ -4323,23 +4323,23 @@ function VM_Execute(/*int32_t */loop: number): void
 
 //        case CON_GETPLAYERANGLE:
 //            insptr++;
-//            Gv_SetVarX(*insptr++, g_player[vm.g_p].ps.ang);
+//            Gv_SetVarX(script[insptr++], g_player[vm.g_p].ps.ang);
 //            continue;
 
 //        case CON_SETPLAYERANGLE:
 //            insptr++;
-//            g_player[vm.g_p].ps.ang=Gv_GetVarX(*insptr++);
+//            g_player[vm.g_p].ps.ang=Gv_GetVarX(script[insptr++]);
 //            g_player[vm.g_p].ps.ang &= 2047;
 //            continue;
 
 //        case CON_GETACTORANGLE:
 //            insptr++;
-//            Gv_SetVarX(*insptr++, vm.g_sp.ang);
+//            Gv_SetVarX(script[insptr++], vm.g_sp.ang);
 //            continue;
 
 //        case CON_SETACTORANGLE:
 //            insptr++;
-//            vm.g_sp.ang=Gv_GetVarX(*insptr++);
+//            vm.g_sp.ang=Gv_GetVarX(script[insptr++]);
 //            vm.g_sp.ang &= 2047;
 //            continue;
 
@@ -4358,9 +4358,9 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_SETARRAY:
 //            insptr++;
 //            {
-//                int32_t j=*insptr++;
-//                int32_t index = Gv_GetVarX(*insptr++);
-//                int32_t value = Gv_GetVarX(*insptr++);
+//                int32_t j=script[insptr++];
+//                int32_t index = Gv_GetVarX(script[insptr++]);
+//                int32_t value = Gv_GetVarX(script[insptr++]);
 
 //                if (j<0 || j >= g_gameArrayCount || index >= aGameArrays[j].size || index < 0)
 //                {
@@ -4380,9 +4380,9 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_READARRAYFROMFILE:
 //            insptr++;
 //            {
-//                int32_t j=*insptr++;
+//                int32_t j=script[insptr++];
 //                {
-//                    int q = *insptr++;
+//                    int q = script[insptr++];
 
 //                    if (ScriptQuotes[q] == NULL)
 //                    {
@@ -4442,8 +4442,8 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_GETARRAYSIZE:
 //            insptr++;
 //            {
-//                int32_t j=*insptr++;
-//                Gv_SetVarX(*insptr++, (aGameArrays[j].dwFlags&GAMEARRAY_VARSIZE) ?
+//                int32_t j=script[insptr++];
+//                Gv_SetVarX(script[insptr++], (aGameArrays[j].dwFlags&GAMEARRAY_VARSIZE) ?
 //                           Gv_GetVarX(aGameArrays[j].size) : aGameArrays[j].size);
 //            }
 //            continue;
@@ -4451,8 +4451,8 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_RESIZEARRAY:
 //            insptr++;
 //            {
-//                int32_t j=*insptr++;
-//                int32_t asize = Gv_GetVarX(*insptr++);
+//                int32_t j=script[insptr++];
+//                int32_t asize = Gv_GetVarX(script[insptr++]);
 
 //                if (asize > 0)
 //                {
@@ -4466,11 +4466,11 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_COPY:
 //            insptr++;
 //            {
-//                int32_t si=*insptr++, ssiz = 0;
-//                int32_t sidx = Gv_GetVarX(*insptr++); //, vm.g_i, vm.g_p);
-//                int32_t di=*insptr++, dsiz = 0;
-//                int32_t didx = Gv_GetVarX(*insptr++);
-//                int32_t numelts = Gv_GetVarX(*insptr++);
+//                int32_t si=script[insptr++], ssiz = 0;
+//                int32_t sidx = Gv_GetVarX(script[insptr++]); //, vm.g_i, vm.g_p);
+//                int32_t di=script[insptr++], dsiz = 0;
+//                int32_t didx = Gv_GetVarX(script[insptr++]);
+//                int32_t numelts = Gv_GetVarX(script[insptr++]);
 
 //                if (si<0 || si>=g_gameArrayCount)
 //                {
@@ -4601,75 +4601,75 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_SETVARVAR:
 //            insptr++;
 //            {
-//                int32_t j=*insptr++;
+//                int32_t j=script[insptr++];
 //                if ((aGameVars[j].dwFlags & (GAMEVAR_USER_MASK|GAMEVAR_PTR_MASK)) == 0)
 //                {
-//                    aGameVars[j].val.lValue = Gv_GetVarX(*insptr++);
+//                    aGameVars[j].val.lValue = Gv_GetVarX(script[insptr++]);
 //                    continue;
 //                }
 
-//                Gv_SetVarX(j, Gv_GetVarX(*insptr++));
+//                Gv_SetVarX(j, Gv_GetVarX(script[insptr++]));
 //            }
 //            continue;
 
 //        case CON_RANDVARVAR:
 //            insptr++;
 //            {
-//                int32_t j=*insptr++;
-//                Gv_SetVarX(j,mulscale16(krand(), Gv_GetVarX(*insptr++)+1));
+//                int32_t j=script[insptr++];
+//                Gv_SetVarX(j,mulscale16(krand(), Gv_GetVarX(script[insptr++])+1));
 //            }
 //            continue;
 
 //        case CON_DISPLAYRANDVARVAR:
 //            insptr++;
 //            {
-//                int32_t j=*insptr++;
-//                Gv_SetVarX(j,mulscale15(system_15bit_rand(), Gv_GetVarX(*insptr++)+1));
+//                int32_t j=script[insptr++];
+//                Gv_SetVarX(j,mulscale15(system_15bit_rand(), Gv_GetVarX(script[insptr++])+1));
 //            }
 //            continue;
 
 //        case CON_GMAXAMMO:
 //            insptr++;
 //            {
-//                int32_t j=Gv_GetVarX(*insptr++);
+//                int32_t j=Gv_GetVarX(script[insptr++]);
 //                if ((unsigned)j>=MAX_WEAPONS)
 //                {
 //                    CON_ERRPRINTF("Invalid weapon ID %d\n", j);
 //                    insptr++;
 //                    continue;
 //                }
-//                Gv_SetVarX(*insptr++, g_player[vm.g_p].ps.max_ammo_amount[j]);
+//                Gv_SetVarX(script[insptr++], g_player[vm.g_p].ps.max_ammo_amount[j]);
 //            }
 //            continue;
 
 //        case CON_SMAXAMMO:
 //            insptr++;
 //            {
-//                int32_t j=Gv_GetVarX(*insptr++);
+//                int32_t j=Gv_GetVarX(script[insptr++]);
 //                if ((unsigned)j>=MAX_WEAPONS)
 //                {
 //                    CON_ERRPRINTF("Invalid weapon ID %d\n", j);
 //                    insptr++;
 //                    continue;
 //                }
-//                g_player[vm.g_p].ps.max_ammo_amount[j]=Gv_GetVarX(*insptr++);
+//                g_player[vm.g_p].ps.max_ammo_amount[j]=Gv_GetVarX(script[insptr++]);
 //            }
 //            continue;
 
 //        case CON_MULVARVAR:
 //            insptr++;
 //            {
-//                int32_t j=*insptr++;
+//                int32_t j=script[insptr++];
 
-//                Gv_MulVar(j, Gv_GetVarX(*insptr++));
+//                Gv_MulVar(j, Gv_GetVarX(script[insptr++]));
 //            }
 //            continue;
 
 //        case CON_DIVVARVAR:
 //            insptr++;
 //            {
-//                int32_t j=*insptr++;
-//                int32_t l2=Gv_GetVarX(*insptr++);
+//                int32_t j=script[insptr++];
+//                int32_t l2=Gv_GetVarX(script[insptr++]);
 
 //                if (!l2)
 //                {
@@ -4684,8 +4684,8 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_MODVARVAR:
 //            insptr++;
 //            {
-//                int32_t j=*insptr++;
-//                int32_t l2=Gv_GetVarX(*insptr++);
+//                int32_t j=script[insptr++];
+//                int32_t l2=Gv_GetVarX(script[insptr++]);
 
 //                if (!l2)
 //                {
@@ -4701,24 +4701,24 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_ANDVARVAR:
 //            insptr++;
 //            {
-//                int32_t j=*insptr++;
-//                Gv_AndVar(j, Gv_GetVarX(*insptr++));
+//                int32_t j=script[insptr++];
+//                Gv_AndVar(j, Gv_GetVarX(script[insptr++]));
 //            }
 //            continue;
 
 //        case CON_XORVARVAR:
 //            insptr++;
 //            {
-//                int32_t j=*insptr++;
-//                Gv_XorVar(j, Gv_GetVarX(*insptr++));
+//                int32_t j=script[insptr++];
+//                Gv_XorVar(j, Gv_GetVarX(script[insptr++]));
 //            }
 //            continue;
 
 //        case CON_ORVARVAR:
 //            insptr++;
 //            {
-//                int32_t j=*insptr++;
-//                Gv_OrVar(j, Gv_GetVarX(*insptr++));
+//                int32_t j=script[insptr++];
+//                Gv_OrVar(j, Gv_GetVarX(script[insptr++]));
 //            }
 //            continue;
 
@@ -4731,8 +4731,8 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_SUBVARVAR:
 //            insptr++;
 //            {
-//                int32_t j=*insptr++;
-//                Gv_SubVar(j, Gv_GetVarX(*insptr++));
+//                int32_t j=script[insptr++];
+//                Gv_SubVar(j, Gv_GetVarX(script[insptr++]));
 //            }
 //            continue;
 
@@ -4781,8 +4781,8 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_ADDVARVAR:
 //            insptr++;
 //            {
-//                int32_t j=*insptr++;
-//                Gv_AddVar(j, Gv_GetVarX(*insptr++));
+//                int32_t j=script[insptr++];
+//                Gv_AddVar(j, Gv_GetVarX(script[insptr++]));
 //            }
 //            continue;
 
@@ -4850,8 +4850,8 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_IFVARVARAND:
 //            insptr++;
 //            {
-//                int32_t j = Gv_GetVarX(*insptr++);
-//                j &= Gv_GetVarX(*insptr++);
+//                int32_t j = Gv_GetVarX(script[insptr++]);
+//                j &= Gv_GetVarX(script[insptr++]);
 //                insptr--;
 //                VM_CONDITIONAL(j);
 //            }
@@ -4860,8 +4860,8 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_IFVARVAROR:
 //            insptr++;
 //            {
-//                int32_t j = Gv_GetVarX(*insptr++);
-//                j |= Gv_GetVarX(*insptr++);
+//                int32_t j = Gv_GetVarX(script[insptr++]);
+//                j |= Gv_GetVarX(script[insptr++]);
 //                insptr--;
 //                VM_CONDITIONAL(j);
 //            }
@@ -4870,8 +4870,8 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_IFVARVARXOR:
 //            insptr++;
 //            {
-//                int32_t j = Gv_GetVarX(*insptr++);
-//                j ^= Gv_GetVarX(*insptr++);
+//                int32_t j = Gv_GetVarX(script[insptr++]);
+//                j ^= Gv_GetVarX(script[insptr++]);
 //                insptr--;
 //                VM_CONDITIONAL(j);
 //            }
@@ -4880,8 +4880,8 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_IFVARVAREITHER:
 //            insptr++;
 //            {
-//                int32_t j = Gv_GetVarX(*insptr++);
-//                int32_t l = Gv_GetVarX(*insptr++);
+//                int32_t j = Gv_GetVarX(script[insptr++]);
+//                int32_t l = Gv_GetVarX(script[insptr++]);
 //                insptr--;
 //                VM_CONDITIONAL(j || l);
 //            }
@@ -4890,8 +4890,8 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_IFVARVARN:
 //            insptr++;
 //            {
-//                int32_t j = Gv_GetVarX(*insptr++);
-//                j = (j != Gv_GetVarX(*insptr++));
+//                int32_t j = Gv_GetVarX(script[insptr++]);
+//                j = (j != Gv_GetVarX(script[insptr++]));
 //                insptr--;
 //                VM_CONDITIONAL(j);
 //            }
@@ -4900,8 +4900,8 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_IFVARVARE:
 //            insptr++;
 //            {
-//                int32_t j = Gv_GetVarX(*insptr++);
-//                j = (j == Gv_GetVarX(*insptr++));
+//                int32_t j = Gv_GetVarX(script[insptr++]);
+//                j = (j == Gv_GetVarX(script[insptr++]));
 //                insptr--;
 //                VM_CONDITIONAL(j);
 //            }
@@ -4910,8 +4910,8 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_IFVARVARG:
 //            insptr++;
 //            {
-//                int32_t j = Gv_GetVarX(*insptr++);
-//                j = (j > Gv_GetVarX(*insptr++));
+//                int32_t j = Gv_GetVarX(script[insptr++]);
+//                j = (j > Gv_GetVarX(script[insptr++]));
 //                insptr--;
 //                VM_CONDITIONAL(j);
 //            }
@@ -4920,8 +4920,8 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_IFVARVARL:
 //            insptr++;
 //            {
-//                int32_t j = Gv_GetVarX(*insptr++);
-//                j = (j < Gv_GetVarX(*insptr++));
+//                int32_t j = Gv_GetVarX(script[insptr++]);
+//                j = (j < Gv_GetVarX(script[insptr++]));
 //                insptr--;
 //                VM_CONDITIONAL(j);
 //            }
@@ -4930,7 +4930,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_IFVARE:
 //            insptr++;
 //            {
-//                int32_t j=Gv_GetVarX(*insptr++);
+//                int32_t j=Gv_GetVarX(script[insptr++]);
 //                VM_CONDITIONAL(j == *insptr);
 //            }
 //            continue;
@@ -4938,7 +4938,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_IFVARN:
 //            insptr++;
 //            {
-//                int32_t j=Gv_GetVarX(*insptr++);
+//                int32_t j=Gv_GetVarX(script[insptr++]);
 //                VM_CONDITIONAL(j != *insptr);
 //            }
 //            continue;
@@ -4965,7 +4965,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //            {
 //                insptr=savedinsptr;
 //                j = Gv_GetVarX(*(insptr-1));
-//                j = (j != Gv_GetVarX(*insptr++));
+//                j = (j != Gv_GetVarX(script[insptr++]));
 //                insptr--;
 //                VM_CONDITIONAL(j);
 //            }
@@ -4976,7 +4976,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_IFVARAND:
 //            insptr++;
 //            {
-//                int32_t j=Gv_GetVarX(*insptr++);
+//                int32_t j=Gv_GetVarX(script[insptr++]);
 //                VM_CONDITIONAL(j & *insptr);
 //            }
 //            continue;
@@ -4984,7 +4984,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_IFVAROR:
 //            insptr++;
 //            {
-//                int32_t j=Gv_GetVarX(*insptr++);
+//                int32_t j=Gv_GetVarX(script[insptr++]);
 //                VM_CONDITIONAL(j | *insptr);
 //            }
 //            continue;
@@ -4992,7 +4992,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_IFVARXOR:
 //            insptr++;
 //            {
-//                int32_t j=Gv_GetVarX(*insptr++);
+//                int32_t j=Gv_GetVarX(script[insptr++]);
 //                VM_CONDITIONAL(j ^ *insptr);
 //            }
 //            continue;
@@ -5000,7 +5000,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_IFVAREITHER:
 //            insptr++;
 //            {
-//                int32_t j=Gv_GetVarX(*insptr++);
+//                int32_t j=Gv_GetVarX(script[insptr++]);
 //                VM_CONDITIONAL(j || *insptr);
 //            }
 //            continue;
@@ -5008,7 +5008,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_IFVARG:
 //            insptr++;
 //            {
-//                int32_t j=Gv_GetVarX(*insptr++);
+//                int32_t j=Gv_GetVarX(script[insptr++]);
 //                VM_CONDITIONAL(j > *insptr);
 //            }
 //            continue;
@@ -5016,7 +5016,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_IFVARL:
 //            insptr++;
 //            {
-//                int32_t j=Gv_GetVarX(*insptr++);
+//                int32_t j=Gv_GetVarX(script[insptr++]);
 //                VM_CONDITIONAL(j < *insptr);
 //            }
 //            continue;
@@ -5032,7 +5032,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //                int32_t j = 0;
 //                DukePlayer_t *const ps = g_player[vm.g_p].ps;
 
-//                switch (*insptr++)
+//                switch (script[insptr++])
 //                {
 //                case GET_STEROIDS:
 //                    if (ps.inv_amount[GET_STEROIDS] != *insptr)
@@ -5165,7 +5165,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_USERQUOTE:
 //            insptr++;
 //            {
-//                int32_t i=Gv_GetVarX(*insptr++);
+//                int32_t i=Gv_GetVarX(script[insptr++]);
 
 //                if ((unsigned)i >= MAXQUOTES)
 //                {
@@ -5186,7 +5186,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_ECHO:
 //            insptr++;
 //            {
-//                int32_t i=Gv_GetVarX(*insptr++);
+//                int32_t i=Gv_GetVarX(script[insptr++]);
 
 //                if ((unsigned)i >= MAXQUOTES)
 //                {
@@ -5260,18 +5260,18 @@ function VM_Execute(/*int32_t */loop: number): void
 
 //        case CON_SPRITEFLAGS:
 //            insptr++;
-//            actor[vm.g_i].flags = Gv_GetVarX(*insptr++);
+//            actor[vm.g_i].flags = Gv_GetVarX(script[insptr++]);
 //            continue;
 
 //        case CON_GETTICKS:
 //            insptr++;
-//            Gv_SetVarX(*insptr++, getticks());
+//            Gv_SetVarX(script[insptr++], getticks());
 //            continue;
 
 //        case CON_GETCURRADDRESS:
 //            insptr++;
 //            {
-//                int32_t j=*insptr++;
+//                int32_t j=script[insptr++];
 //                Gv_SetVarX(j, (intptr_t)(insptr-script));
 //            }
 //            continue;
@@ -5279,7 +5279,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_JUMP:  // XXX XXX XXX
 //            insptr++;
 //            {
-//                int32_t j = Gv_GetVarX(*insptr++);
+//                int32_t j = Gv_GetVarX(script[insptr++]);
 //                insptr = (intptr_t *)(j+script);
 //            }
 //            continue;
@@ -5308,7 +5308,7 @@ function A_LoadActor(iActor: number):void
     vm.g_sp = sprite[vm.g_i];    // Pointer to sprite structure
     vm.g_t = actor[vm.g_i].t_data;   // Sprite's 'extra' data
 
-    if (g_tile[vm.g_sp.picnum].loadPtr == NULL)
+    if (!g_tile[vm.g_sp.picnum].loadPtr)
         return;
 
     vm.g_flags &= ~(VM_RETURN|VM_KILL|VM_NOEXECUTE);

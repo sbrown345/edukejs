@@ -61,6 +61,7 @@
 /// <reference path="../../eduke32/source/player.c.ts" />
 /// <reference path="../../eduke32/source/premap.c.ts" />
 /// <reference path="../../eduke32/source/rts.c.ts" />
+/// <reference path="../../eduke32/source/sector.c.ts" />
 /// <reference path="../../eduke32/source/osdfuncs.c.ts" />
 /// <reference path="../../eduke32/source/sounds.c.ts" />
 /// <reference path="../../eduke32/source/soundsdyn.c.ts" />

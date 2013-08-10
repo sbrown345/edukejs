@@ -115,6 +115,7 @@
     <Content Include="eduke32\source\premap.c.ts" />
     <Content Include="eduke32\headers\premap.h.ts" />
     <Content Include="eduke32\source\rts.c.ts" />
+    <Content Include="eduke32\source\sector.c.ts" />
     <Content Include="eduke32\source\sounds.c.ts" />
     <Content Include="eduke32\source\soundsdyn.c.ts" />
     <Content Include="eduke32\source\winbits.c.ts" />

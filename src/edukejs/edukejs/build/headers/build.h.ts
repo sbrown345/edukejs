@@ -726,11 +726,18 @@ class spriteext_t {
 //#endif
 } //spriteext_t;
 
-function spritesmooth_t() {
-    this.smoothduration = 0.0;                     //float 
-    this.mdcurframe = 0, this.mdoldframe = 0;            //int16_t 
-    this.mdsmooth = 0;                          //int16_t 
-    this.filler = new Uint8Array(2);                         //uint8_t [2]
+class spritesmooth_t {
+    smoothduration: number;                     //float 
+    mdcurframe: number; mdoldframe: number;            //int16_t 
+    mdsmooth: number;                          //int16_t 
+    filler: Uint8Array;     
+
+    constructor() {
+        this.smoothduration = 0.0;                     //float 
+        this.mdcurframe = 0, this.mdoldframe = 0;            //int16_t 
+        this.mdsmooth = 0;                          //int16_t 
+        this.filler = new Uint8Array(2);                         //uint8_t [2]
+    }
 } //spritesmooth_t;
 
 //#define SPREXT_NOTMD 1

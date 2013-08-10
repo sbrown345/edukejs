@@ -236,6 +236,10 @@ class actor_t {
 //#endif
 
     constructor() {
+        this.init();
+    }
+
+    init() {
         this.t_data = new Int32Array(10);
 
         this.flags = 0; //4b                                 //int32_t 
