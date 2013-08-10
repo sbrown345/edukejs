@@ -122,7 +122,7 @@ var NORMALPAL  =(MAXPALOOKUPS - 4);
 //#endif
 
 //////////// yax defs //////////
-//#define SECTORFLD(Sect,Fld, Cf) (*((Cf) ? (&sector[Sect].floor##Fld) : (&sector[Sect].ceiling##Fld)))
+function SECTORFLD(Sect: number,Fld: string, Cf: bool) {return ((Cf) ? (sector[Sect]["floor" + Fld]) : (sector[Sect]["ceiling" + Fld]));}
 
 var YAX_CEILING = 0;  // don't change!
 var YAX_FLOOR = 1;  // don't change!
@@ -1331,20 +1331,20 @@ function /*uint32_t */uhypsq(/*int32_t*/ dx: number, /*int32_t */dy: number): nu
 //void   getzsofslopeptr(const sectortype *sec, int32_t dax, int32_t day,
 //                       int32_t *ceilz, int32_t *florz) ATTRIBUTE((nonnull(1,4,5)));
 
-//static inline int32_t getceilzofslope(int16_t sectnum, int32_t dax, int32_t day)
-//{
-//    return getceilzofslopeptr(&sector[sectnum], dax, day);
-//}
+function /*int32_t */getceilzofslope(/*int16_t */sectnum: number, /*int32_t */numberdax: number, /*int32_t*/ day: number): number
+{
+    return getceilzofslopeptr(sector[sectnum], dax, day);
+}
 
 function /*int32_t*/ getflorzofslope(/*int16_t*/ sectnum: number, /*int32_t*/ dax: number, /*int32_t */day: number): number
 {
     return getflorzofslopeptr(sector[sectnum], dax, day);
 }
 
-//static inline void getzsofslope(int16_t sectnum, int32_t dax, int32_t day, int32_t *ceilz, int32_t *florz)
-//{
-//    getzsofslopeptr(&sector[sectnum], dax, day, ceilz, florz);
-//}
+function getzsofslope(/*int16_t */sectnum: number, /*int32_t */dax: number, /*int32_t */day: number, /*int32_t **/ceilz: R<number>, /*int32_t **/florz: R<number>): void
+{
+    getzsofslopeptr(sector[sectnum], dax, day, ceilz, florz);
+}
 
 //// Is <wal> a red wall in a safe fashion, i.e. only if consistency invariant
 //// ".nextsector >= 0 iff .nextwall >= 0" holds.

@@ -93,14 +93,14 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //#include "duke3d.h"
 //#include "actors_inline.h"
 
-//ACTOR_INLINE int32_t A_SetSprite(int32_t i,uint32_t cliptype)
-//{
-//    vec3_t davect = {(sprite[i].xvel*(sintable[(sprite[i].ang+512)&2047]))>>14,
-//                     (sprite[i].xvel*(sintable[sprite[i].ang&2047]))>>14,
-//                     sprite[i].zvel
-//                    };
-//    return (A_MoveSprite(i,&davect,cliptype)==0);
-//}
+function A_SetSprite(/*int32_t*/ i: number,/*uint32_t*/ cliptype: number): number
+{
+    var davect = new vec3_t((sprite[i].xvel*(sintable[(sprite[i].ang+512)&2047]))>>14,
+                     (sprite[i].xvel*(sintable[sprite[i].ang&2047]))>>14,
+                     sprite[i].zvel
+                    );
+    return (A_MoveSprite(i,davect,cliptype)==0)?1:0;
+}
 
 
 //EXTERN_INLINE void G_UpdateInterpolations(void)  //Stick at beginning of G_DoMoveThings

@@ -397,7 +397,16 @@ function A_Fall(/*int32_t*/ iActor: number): void
         var cstat = s.cstat;
         s.cstat = 0;
         s.z -= ZOFFSET;
-        getzrange(s,s.sectnum,&actor[iActor].ceilingz,&hz,&actor[iActor].floorz,&lz,127,CLIPMASK0);
+        var $ceilingz = new R(actor[iActor].ceilingz);
+        var $hz = new R(hz);
+        var $floorz = new R(actor[iActor].floorz);
+        var $lz = new R(lz);
+        getzrange(s,s.sectnum,$ceilingz,$hz,$floorz,$lz,127,CLIPMASK0);
+        actor[iActor].ceilingz = $ceilingz.$;
+        hz = $hz.$;
+        actor[iActor].floorz = $floorz.$;
+        lz = $lz.$;
+
         s.z += ZOFFSET;
         s.cstat = cstat;
     }
@@ -427,7 +436,7 @@ function A_Fall(/*int32_t*/ iActor: number): void
 
 //#ifdef YAX_ENABLE
     if (fbunch >= 0)
-        setspritez(iActor, (vec3_t *)s);
+        setspritez(iActor, s);
     else
 //#endif
         if (s.z >= actor[iActor].floorz-ZOFFSET)

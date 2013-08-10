@@ -114,7 +114,7 @@ var g_scriptDebug:number; //G_EXTERN int32_t
 var g_showShareware:number;//G_EXTERN int32_t 
 var g_numPlayerSprites:number;//G_EXTERN int8_t 
 var g_tripbombLaserMode:number;////G_EXTERN int32_t 
-//G_EXTERN int32_t msx[2048]:number,msy[2048]:number;
+var msx= new Int32Array(2048),msy= new Int32Array(2048);//G_EXTERN int32_t 
 var neartaghitdist:number,lockclock:number,g_startArmorAmount:number;//G_EXTERN int32_t
 var playerswhenstarted : number; ////G_EXTERN int32_t
 var screenpeek: number;

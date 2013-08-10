@@ -704,20 +704,20 @@ function yax_update(/*int32_t*/ resetstat: number): void
 //#endif
 }
 
-//int32_t yax_getneighborsect(int32_t x, int32_t y, int32_t sectnum, int32_t cf)
-//{
-//    int16_t bunchnum = yax_getbunch(sectnum, cf);
-//    int32_t i;
+function yax_getneighborsect(/*int32_t */x: number, /*int32_t */y: number, /*int32_t */sectnum: number, /*int32_t */cf: number): number
+{
+    var /*int16_t*/ bunchnum = yax_getbunch(sectnum, cf);
+    var /*int32_t*/ i: number;
 
-//    if (bunchnum < 0)
-//        return -1;
+    if (bunchnum < 0)
+        return -1;
+    todoThrow();
+    //for (SECTORS_OF_BUNCH(bunchnum, !cf, i))
+    //    if (inside(x, y, i)==1)
+    //        return i;
 
-//    for (SECTORS_OF_BUNCH(bunchnum, !cf, i))
-//        if (inside(x, y, i)==1)
-//            return i;
-
-//    return -1;
-//}
+    return -1;
+}
 
 //// indexed as a list:
 //static int16_t bunches[2][YAX_MAXBUNCHES];
@@ -2050,35 +2050,60 @@ function clipmapinfo_init() : void
 ////
 
 
-function nsqrtasm(c: number): number    
+function nsqrtasm(/*uint32_t */ a: number): number    
 {
-    return Math.sqrt(c) | 0;
+    //return Math.sqrt(c) | 0;
+    // JBF 20030901: This was a damn lot simpler to reverse engineer than
+    // msqrtasm was. Really, it was just like simplifying an algebra equation.
+    var c: number;
+    a >>>= 0;
+
+    if (a & 0xff000000)  			// test eax, 0xff000000  /  jnz short over24
+    {
+        c = shlookup[(a >> 24) + 4096];	// mov ebx, eax
+        // over24: shr ebx, 24
+        // mov cx, word ptr shlookup[ebx*2+8192]
+    }
+    else
+    {
+        c = shlookup[a >> 12];		// mov ebx, eax
+        // shr ebx, 12
+        // mov cx, word ptr shlookup[ebx*2]
+        // jmp short under24
+    }
+    a >>>= c&0xff;				// under24: shr eax, cl
+    a = (a&0xffff0000)|(sqrtable[a]);	// mov ax, word ptr sqrtable[eax*2]
+    a >>>= ((c&0xff00) >> 8);		// mov cl, ch
+    // shr eax, cl
+    return a;
 }
 
-function msqrtasm(c: number): number    
+function msqrtasm(/*uint32_t */ c: number): number    
 {
-    return Math.sqrt(c) | 0;
-    //_asm
-    //{
-    //    push ebx
-    //    mov ecx, c
-    //    mov eax, 0x40000000
-    //    mov ebx, 0x20000000
-    //    begit:
-    //    cmp ecx, eax
-    //    jl skip
-    //    sub ecx, eax
-    //    lea eax, [eax+ebx*4]
-    //    skip:
-    //    sub eax, ebx
-    //    shr eax, 1
-    //    shr ebx, 2
-    //    jnz begit
-    //    cmp ecx, eax
-    //    sbb eax, -1
-    //    shr eax, 1
-    //    pop ebx
-    //}
+    //return Math.sqrt(c) | 0;
+    var a: number,b: number;
+
+    c >>>= 0;
+
+    a = 0x40000000 >>> 0;		// mov eax, 0x40000000
+    b = 0x20000000 >>> 0;		// mov ebx, 0x20000000
+    do  				// begit:
+    {
+        if (c >= a)  		// cmp ecx, eax	 /  jl skip
+        {
+            c -= a;		// sub ecx, eax
+            a += b*4;	// lea eax, [eax+ebx*4]
+            a >>>= 0;
+        }			// skip:
+        a -= b;			// sub eax, ebx
+        a >>>= 1;		// shr eax, 1
+        b >>>= 2;		// shr ebx, 2
+    }
+    while (b);			// jnz begit
+    if (c >= a)			// cmp ecx, eax
+        a++;			// sbb eax, -1
+    a >>>= 1;			// shr eax, 1
+    return a;
 }
 
 ////0x007ff000 is (11<<13), 0x3f800000 is (127<<23)
@@ -11586,42 +11611,46 @@ function inside(/*int32_t*/ x: number, /*int32_t*/ y: number, /*int16_t*/ sectnu
 //    return zofs;
 //}
 
-////
-//// setsprite
-////
-//int32_t setsprite(int16_t spritenum, const vec3_t *newpos)
-//{
-//    int16_t tempsectnum = sprite[spritenum].sectnum;
+//
+// setsprite
+//
+function /*int32_t */setsprite(/*int16_t*/ spritenum: number, /*const vec3_t **/newpos: IVec3)
+{
+    var tempsectnum = sprite[spritenum].sectnum;
 
-//    if ((void *)newpos != (void *)&sprite[spritenum])
-//        Bmemcpy(&sprite[spritenum], newpos, sizeof(vec3_t));
+    if (/*(void *)*/newpos != /*(void *)&*/sprite[spritenum]) 
+        {newpos.x = sprite[spritenum].x;newpos.y = sprite[spritenum].y;newpos.z = sprite[spritenum].z;}//Bmemcpy(&sprite[spritenum], newpos, sizeof(vec3_t));
 
-//    updatesector(newpos.x,newpos.y,&tempsectnum);
+    var $tempsectnum = new R(tempsectnum);
+    updatesector(newpos.x,newpos.y,$tempsectnum);
+    tempsectnum = $tempsectnum.$;
 
-//    if (tempsectnum < 0)
-//        return(-1);
-//    if (tempsectnum != sprite[spritenum].sectnum)
-//        changespritesect(spritenum,tempsectnum);
+    if (tempsectnum < 0)
+        return(-1);
+    if (tempsectnum != sprite[spritenum].sectnum)
+        changespritesect(spritenum,tempsectnum);
 
-//    return(0);
-//}
+    return(0);
+}
 
-//int32_t setspritez(int16_t spritenum, const vec3_t *newpos)
-//{
-//    int16_t tempsectnum = sprite[spritenum].sectnum;
+function /*int32_t */ setspritez(/*int16_t */spritenum: number, /*const vec3_t **/newpos: IVec3)
+{
+    var /*int16_t*/ tempsectnum = sprite[spritenum].sectnum;
 
-//    if ((void *)newpos != (void *)&sprite[spritenum])
-//        Bmemcpy(&sprite[spritenum], newpos, sizeof(vec3_t));
+    if (/*(void *)*/newpos != /*(void *)&*/sprite[spritenum])
+        {newpos.x = sprite[spritenum].x;newpos.y = sprite[spritenum].y;newpos.z = sprite[spritenum].z;}//Bmemcpy(&sprite[spritenum], newpos, sizeof(vec3_t));
 
-//    updatesectorz(newpos.x,newpos.y,newpos.z,&tempsectnum);
+    var $tempsectnum = new R(tempsectnum);
+    updatesectorz(newpos.x,newpos.y,newpos.z,$tempsectnum);
+    tempsectnum = $tempsectnum.$;
 
-//    if (tempsectnum < 0)
-//        return(-1);
-//    if (tempsectnum != sprite[spritenum].sectnum)
-//        changespritesect(spritenum,tempsectnum);
+    if (tempsectnum < 0)
+        return(-1);
+    if (tempsectnum != sprite[spritenum].sectnum)
+        changespritesect(spritenum,tempsectnum);
 
-//    return(0);
-//}
+    return(0);
+}
 
 
 ////
@@ -12869,13 +12898,13 @@ function inside(/*int32_t*/ x: number, /*int32_t*/ y: number, /*int16_t*/ sectnu
 //    return ret;
 //}
 
-////
-//// clipmove
-////
-//int32_t clipmove(vec3_t *pos, int16_t *sectnum,
-//                 int32_t xvect, int32_t yvect,
-//                 int32_t walldist, int32_t ceildist, int32_t flordist, uint32_t cliptype)
-//{
+//
+// clipmove
+//
+function /*int32_t */clipmove(pos: IVec3, /*int16_t **/sectnum: R<number>,
+                 /*int32_t*/ xvect: number, /*int32_t */yvect:number,
+                 /*int32_t*/ walldistnumber:number, /*int32_t*/ ceildistnumber:number, /*int32_t*/ flordistnumber:number, /*uint32_t*/ cliptypenumber:number): number
+{todoThrow();return -999999999999; 
 //    const sectortype *sec2;
 //    int32_t i, j, k, tempint1, tempint2;
 //    int32_t x1, y1, x2, y2;
@@ -13304,7 +13333,7 @@ function inside(/*int32_t*/ x: number, /*int32_t*/ y: number, /*int16_t*/ sectnu
 //        }
 
 //    return retval;
-//}
+}
 
 
 ////
@@ -13596,68 +13625,72 @@ function updatesector(/*int32_t*/ x: number, /*int32_t */y: number, /*int16_t **
 //    *sectnum = -1;
 //}
 
-//// new: if *sectnum >= MAXSECTORS, *sectnum-=MAXSECTORS is considered instead
-////      as starting sector and the 'initial' z check is skipped
-////      (not initial anymore because it follows the sector updating due to TROR)
-//void updatesectorz(int32_t x, int32_t y, int32_t z, int16_t *sectnum)
-//{
-//    int32_t i;
+// new: if *sectnum >= MAXSECTORS, *sectnum-=MAXSECTORS is considered instead
+//      as starting sector and the 'initial' z check is skipped
+//      (not initial anymore because it follows the sector updating due to TROR)
+function updatesectorz(/*int32_t*/ x, /*int32_t*/ y, /*int32_t*/ z, /*int16_t **/sectnum: R<number>): void
+{
+    var /*int32_t*/ i: number;
 
-//    if ((uint32_t)(*sectnum) < 2*MAXSECTORS)
-//    {
-//        const walltype *wal;
-//        int32_t j, cz, fz;
+    if (uint32(sectnum.$) < 2*MAXSECTORS)
+    {
+        var wal: walltype ;
+        var /*int32_t  */j: number, cz: number, fz: number;
 
-//        int32_t nofirstzcheck = 0;
+        var nofirstzcheck = 0;
 
-//        if (*sectnum >= MAXSECTORS)
-//        {
-//            *sectnum -= MAXSECTORS;
-//            nofirstzcheck = 1;
-//        }
+        if (sectnum.$ >= MAXSECTORS)
+        {
+            sectnum.$ -= MAXSECTORS;
+            nofirstzcheck = 1;
+        }
 
-//        // this block used to be outside the "if" and caused crashes in Polymost Mapster32
-//        getzsofslope(*sectnum, x, y, &cz, &fz);
+        // this block used to be outside the "if" and caused crashes in Polymost Mapster32
+        var $cz = new R(cz);
+        var $fz = new R(fz);
+        getzsofslope(sectnum.$, x, y, $cz,$fz);
+        cz = $cz.$;
+        fz = $fz.$;
 
 //#ifdef YAX_ENABLE
-//        if (z < cz)
-//        {
-//            i = yax_getneighborsect(x, y, *sectnum, YAX_CEILING);
-//            if (i >= 0 && z >= getceilzofslope(i, x, y))
-//                {sectnum.$ = i; return;}
-//        }
+        if (z < cz)
+        {
+            i = yax_getneighborsect(x, y, sectnum.$, YAX_CEILING);
+            if (i >= 0 && z >= getceilzofslope(i, x, y))
+                {sectnum.$ = i; return;}
+        }
 
-//        if (z > fz)
-//        {
-//            i = yax_getneighborsect(x, y, *sectnum, YAX_FLOOR);
-//            if (i >= 0 && z <= getflorzofslope(i, x, y))
-//                {sectnum.$ = i; return;}
-//        }
+        if (z > fz)
+        {
+            i = yax_getneighborsect(x, y, sectnum.$, YAX_FLOOR);
+            if (i >= 0 && z <= getflorzofslope(i, x, y))
+                {sectnum.$ = i; return;}
+        }
 //#endif
-//        if (nofirstzcheck || (z >= cz && z <= fz))
-//            if (inside_p(x, y, *sectnum))
-//                return;
+        if (nofirstzcheck || (z >= cz && z <= fz))
+            if (inside_p(x, y, sectnum.$))
+                return;
 
-//        wal = &wall[sector[*sectnum].wallptr];
-//        j = sector[*sectnum].wallnum;
-//        do
-//        {
-//            // YAX: TODO: check neighboring sectors here too?
-//            i = wal.nextsector;
-//            if (i>=0 && inside_z_p(x,y,z, i))
-//                {sectnum.$ = i; return;}
+        wal = wall[sector[sectnum.$].wallptr];
+        j = sector[sectnum.$].wallnum;
+        do
+        {
+            // YAX: TODO: check neighboring sectors here too?
+            i = wal.nextsector;
+            if (i>=0 && inside_z_p(x,y,z, i))
+                {sectnum.$ = i; return;}
 
-//            wal++; j--;
-//        }
-//        while (j != 0);
-//    }
+            wal++; j--;
+        }
+        while (j != 0);
+    }
 
-//    for (i=numsectors-1; i>=0; i--)
-//        if (inside_z_p(x,y,z, i))
-//            {sectnum.$ = i; return;}
+    for (i=numsectors-1; i>=0; i--)
+        if (inside_z_p(x,y,z, i))
+            {sectnum.$ = i; return;}
 
-//    *sectnum = -1;
-//}
+    sectnum.$ = -1;
+}
 
 
 ////
@@ -15018,28 +15051,28 @@ function clearallviews(dacol: number): void
 //}
 
 
-//int32_t getceilzofslopeptr(const sectortype *sec, int32_t dax, int32_t day)
-//{
-//    if (!(sec.ceilingstat&2))
-//        return sec.ceilingz;
+function/*int32_t */getceilzofslopeptr(/*const sectortype **/sec: sectortype, /*int32_t */dax: number, /*int32_t */day: number): number
+{
+    if (!(sec.ceilingstat&2))
+        return sec.ceilingz;
 
-//    {
-//        const walltype *wal = &wall[sec.wallptr];
+    {
+        var wal = wall[sec.wallptr];
 
-//        // floor(sqrt(2**31-1)) == 46340
-//        int32_t i, j, wx=wal.x, wy=wal.y;
-//        int32_t dx = wall[wal.point2].x-wx, dy = wall[wal.point2].y-wy;
+        // floor(sqrt(2**31-1)) == 46340
+        var /*int32_t */i: number, j: number, wx=wal.x, wy=wal.y;
+        var /*int32_t */dx = wall[wal.point2].x-wx, dy = wall[wal.point2].y-wy;
 
-//        i = nsqrtasm(uhypsq(dx,dy))<<5;
-//        if (i == 0)
-//            return sec.ceilingz;
+        i = nsqrtasm(uhypsq(dx,dy))<<5;
+        if (i == 0)
+            return sec.ceilingz;
 
-//        j = dmulscale3(dx, day-wy, -dy, dax-wx);
-//        return sec.ceilingz + (scale(sec.ceilingheinum,j>>1,i)<<1);
-//    }
-//}
+        j = dmulscale3(dx, day-wy, -dy, dax-wx);
+        return sec.ceilingz + (scale(sec.ceilingheinum,j>>1,i)<<1);
+    }
+}
 
-function getflorzofslopeptr(/*const sectortype * */sec: sectortype, /*int32_t */dax: number, /*int32_t */day: number)
+function getflorzofslopeptr(/*const sectortype * */sec: sectortype, /*int32_t */dax: number, /*int32_t */day: number): number
 {
     if (!(sec.floorstat&2))
         return sec.floorz;
@@ -15059,27 +15092,27 @@ function getflorzofslopeptr(/*const sectortype * */sec: sectortype, /*int32_t */
     }
 }
 
-//void getzsofslopeptr(const sectortype *sec, int32_t dax, int32_t day, int32_t *ceilz, int32_t *florz)
-//{
-//    *ceilz = sec.ceilingz; *florz = sec.floorz;
+function getzsofslopeptr(/*const sectortype **/sec: sectortype, /*int32_t */dax: number, /*int32_t */day: number, /*int32_t **/ceilz: R<number>, /*int32_t **/florz: R<number>): void
+{
+    ceilz.$ = sec.ceilingz; florz.$ = sec.floorz;
 
-//    if ((sec.ceilingstat|sec.floorstat)&2)
-//    {
-//        int32_t i, j;
-//        const walltype *wal = &wall[sec.wallptr], *wal2 = &wall[wal.point2];
-//        const int32_t dx = wal2.x-wal.x, dy = wal2.y-wal.y;
+    if ((sec.ceilingstat|sec.floorstat)&2)
+    {
+        var i:number, j: number;
+        var wal = wall[sec.wallptr], wal2 = wall[wal.point2];
+        var /*int32_t */dx = wal2.x-wal.x, dy = wal2.y-wal.y;
 
-//        i = nsqrtasm(uhypsq(dx,dy))<<5;
-//        if (i == 0)
-//            return;
-
-//        j = dmulscale3(dx,day-wal.y, -dy,dax-wal.x);
-//        if (sec.ceilingstat&2)
-//            *ceilz += scale(sec.ceilingheinum,j>>1,i)<<1;
-//        if (sec.floorstat&2)
-//            *florz += scale(sec.floorheinum,j>>1,i)<<1;
-//    }
-//}
+        i = nsqrtasm(uhypsq(dx,dy))<<5;
+        if (i == 0)
+            return;
+        
+        j = dmulscale3(dx,day-wal.y, -dy,dax-wal.x);
+        if (sec.ceilingstat&2)
+            ceilz.$ += scale(sec.ceilingheinum,j>>1,i)<<1;
+        if (sec.floorstat&2)
+            florz.$ += scale(sec.floorheinum,j>>1,i)<<1;
+    }
+}
 
 
 ////

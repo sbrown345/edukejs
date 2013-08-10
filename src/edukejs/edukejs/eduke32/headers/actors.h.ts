@@ -208,7 +208,7 @@ class actor_t {
 //    // Movement flags, sprite[i].hitag in C-CON:
 //    uint16_t movflags;
 //#endif
-//    int16_t cgg;
+    cgg: number; //    int16_t 
 
     lightId:number; lightcount:number; lightmaxrange: number; //6b//    int16_t 
 //#ifdef POLYMER
@@ -255,6 +255,8 @@ class actor_t {
         this.actorstayput = 0;this. dispicnum = 0;                    //int16_t 
 
         this.shootzvel_ = 0;
+
+        this.cgg = 0;
 
         this.lightId=0; this.lightcount=0; this.lightmaxrange=0;
 
@@ -346,27 +348,27 @@ var SPRITE_SHADOW           = 0x00000001,
 //// Custom projectiles "workslike" flags.
 //// XXX: Currently not predefined from CON.
 //enum pflags_t {
-//    PROJECTILE_HITSCAN             = 0x00000001,
-//    PROJECTILE_RPG                 = 0x00000002,
-//    PROJECTILE_BOUNCESOFFWALLS     = 0x00000004,
-//    PROJECTILE_BOUNCESOFFMIRRORS   = 0x00000008,
-//    PROJECTILE_KNEE                = 0x00000010,
-//    PROJECTILE_WATERBUBBLES        = 0x00000020,
-//    PROJECTILE_TIMED               = 0x00000040,
-//    PROJECTILE_BOUNCESOFFSPRITES   = 0x00000080,
-//    PROJECTILE_SPIT                = 0x00000100,
-//    PROJECTILE_COOLEXPLOSION1      = 0x00000200,
-//    PROJECTILE_BLOOD               = 0x00000400,
-//    PROJECTILE_LOSESVELOCITY       = 0x00000800,
-//    PROJECTILE_NOAIM               = 0x00001000,
-//    PROJECTILE_RANDDECALSIZE       = 0x00002000,
-//    PROJECTILE_EXPLODEONTIMER      = 0x00004000,
-//    PROJECTILE_RPG_IMPACT          = 0x00008000,
-//    PROJECTILE_RADIUS_PICNUM       = 0x00010000,
-//    PROJECTILE_ACCURATE_AUTOAIM    = 0x00020000,
-//    PROJECTILE_FORCEIMPACT         = 0x00040000,
-//    PROJECTILE_REALCLIPDIST        = 0x00080000,
-//    PROJECTILE_ACCURATE            = 0x00100000,
+var PROJECTILE_HITSCAN             = 0x00000001,
+    PROJECTILE_RPG                 = 0x00000002,
+    PROJECTILE_BOUNCESOFFWALLS     = 0x00000004,
+    PROJECTILE_BOUNCESOFFMIRRORS   = 0x00000008,
+    PROJECTILE_KNEE                = 0x00000010,
+    PROJECTILE_WATERBUBBLES        = 0x00000020,
+    PROJECTILE_TIMED               = 0x00000040,
+    PROJECTILE_BOUNCESOFFSPRITES   = 0x00000080,
+    PROJECTILE_SPIT                = 0x00000100,
+    PROJECTILE_COOLEXPLOSION1      = 0x00000200,
+    PROJECTILE_BLOOD               = 0x00000400,
+    PROJECTILE_LOSESVELOCITY       = 0x00000800,
+    PROJECTILE_NOAIM               = 0x00001000,
+    PROJECTILE_RANDDECALSIZE       = 0x00002000,
+    PROJECTILE_EXPLODEONTIMER      = 0x00004000,
+    PROJECTILE_RPG_IMPACT          = 0x00008000,
+    PROJECTILE_RADIUS_PICNUM       = 0x00010000,
+    PROJECTILE_ACCURATE_AUTOAIM    = 0x00020000,
+    PROJECTILE_FORCEIMPACT         = 0x00040000,
+    PROJECTILE_REALCLIPDIST        = 0x00080000,
+    PROJECTILE_ACCURATE            = 0x00100000;
 //};
 
 var g_tile: tiledata_t[] = newStructArray(tiledata_t, MAXTILES);

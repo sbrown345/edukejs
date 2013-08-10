@@ -422,203 +422,207 @@ function G_SetInterpolation(/*int32_t * */posptr: R<number>): number
 //    return 0;
 //}
 
-//// Check whether to do a z position update of sprite <spritenum>.
-//// Returns:
-////  0 if no.
-////  1 if yes, but stayed inside [actor[].ceilingz+1, actor[].floorz].
-//// <0 if yes, but passed a TROR no-SE7 water boundary. -returnvalue-1 is the
-////       other-side sector number.
-//static int32_t A_CheckNeedZUpdate(int32_t spritenum, int32_t changez, int32_t *dazptr)
-//{
-//    const spritetype *spr = &sprite[spritenum];
-//    const int32_t daz = spr.z + (changez>>1);
+// Check whether to do a z position update of sprite <spritenum>.
+// Returns:
+//  0 if no.
+//  1 if yes, but stayed inside [actor[].ceilingz+1, actor[].floorz].
+// <0 if yes, but passed a TROR no-SE7 water boundary. -returnvalue-1 is the
+//       other-side sector number.
+function A_CheckNeedZUpdate(/*int32_t*/ spritenum: number, /*int32_t */changez: number, /*int32_t **/dazptr: R<number>): number
+{
+    var spr = sprite[spritenum];
+    var /*int32_t */daz = spr.z + (changez>>1);
 
-//    *dazptr = daz;
+    dazptr.$ = daz;
 
-//    if (changez == 0)
-//        return 0;
+    if (changez == 0)
+        return 0;
 
-//    if (daz > actor[spritenum].ceilingz && daz <= actor[spritenum].floorz)
-//        return 1;
+    if (daz > actor[spritenum].ceilingz && daz <= actor[spritenum].floorz)
+        return 1;
 
 //#ifdef YAX_ENABLE
-//    {
-//        const int32_t psect=spr.sectnum, slotag=sector[psect].lotag;
-//        int32_t othersect;
+    {
+        var psect=spr.sectnum, slotag=sector[psect].lotag;
+        var /*int32_t */othersect: number;
+        todoThrow();
+        //// Non-SE7 water.
+        //// PROJECTILE_CHSECT
+        //if ((changez < 0 && slotag==ST_2_UNDERWATER) || (changez > 0 && slotag==ST_1_ABOVE_WATER))
+        //    if (A_CheckNoSE7Water(spr, sprite[spritenum].sectnum, slotag, &othersect))
+        //    {
+        //        A_Spawn(spritenum, WATERSPLASH2);
+        //        // NOTE: Don't tweak its z position afterwards like with
+        //        // SE7-induced projectile teleportation. It doesn't look good
+        //        // with TROR water.
 
-//        // Non-SE7 water.
-//        // PROJECTILE_CHSECT
-//        if ((changez < 0 && slotag==ST_2_UNDERWATER) || (changez > 0 && slotag==ST_1_ABOVE_WATER))
-//            if (A_CheckNoSE7Water(spr, sprite[spritenum].sectnum, slotag, &othersect))
-//            {
-//                A_Spawn(spritenum, WATERSPLASH2);
-//                // NOTE: Don't tweak its z position afterwards like with
-//                // SE7-induced projectile teleportation. It doesn't look good
-//                // with TROR water.
-
-//                actor[spritenum].flags |= SPRITE_DIDNOSE7WATER;
-//                return -othersect-1;
-//            }
-//    }
+        //        actor[spritenum].flags |= SPRITE_DIDNOSE7WATER;
+        //        return -othersect-1;
+        //    }
+    }
 //#endif
 
-//    return 0;
-//}
+    return 0;
+}
 
-//int32_t A_MoveSprite(int32_t spritenum, const vec3_t *change, uint32_t cliptype)
-//{
-//    spritetype *const spr = &sprite[spritenum];
-//    int32_t retval, daz, dozupdate;
-//    int16_t dasectnum;
-//    const int32_t bg = A_CheckEnemySprite(spr);
-//    const int32_t oldx = spr.x, oldy = spr.y;
-////    const int32_t osectnum = spr.sectnum;
+function /*int32_t */A_MoveSprite(/*int32_t*/ spritenum: number, /*const vec3_t **/change: IVec3, /*uint32_t*/ cliptype: number): number
+{
+    var spr = sprite[spritenum];
+    var retval: number, daz: number, dozupdate: number;      //int32_t 
+    var dasectnum: number;                   //int16_t 
+    var bg = A_CheckEnemySprite(spr);
+    var oldx = spr.x, oldy = spr.y;
+//    const int32_t osectnum = spr.sectnum;
 
-//    if (spr.statnum == STAT_MISC || (bg && spr.xrepeat < 4))
-//    {
-//        spr.x += change.x;
-//        spr.y += change.y;
-//        spr.z += change.z;
+    if (spr.statnum == STAT_MISC || (bg && spr.xrepeat < 4))
+    {
+        spr.x += change.x;
+        spr.y += change.y;
+        spr.z += change.z;
 
-//        if (bg)
-//            setsprite(spritenum, (vec3_t *)spr);
+        if (bg)
+            setsprite(spritenum, spr);
 
-//        return 0;
-//    }
+        return 0;
+    }
 
-//    dasectnum = spr.sectnum;
-//    daz = spr.z - 2*tilesizy[spr.picnum]*spr.yrepeat;
+    dasectnum = spr.sectnum;
+    daz = spr.z - 2*tilesizy[spr.picnum]*spr.yrepeat;
 
-//    {
-//        const int32_t oldz=spr.z;
-//        int32_t clipdist;
+    {
+        var oldz=spr.z;
+        var clipdist: number;
 
-//        if (bg)
-//        {
-//            if (spr.xrepeat > 60)
-//                clipdist = 1024;
-//            else if (spr.picnum == LIZMAN)
-//                clipdist = 292;
-//            else if (A_CheckSpriteTileFlags(spr.picnum, SPRITE_BADGUY))
-//                clipdist = spr.clipdist<<2;
-//            else
-//                clipdist = 192;
-//        }
-//        else
-//        {
-//            if (spr.statnum == STAT_PROJECTILE && (SpriteProjectile[spritenum].workslike & PROJECTILE_REALCLIPDIST) == 0)
-//                clipdist = 8;
-//            else
-//                clipdist = spr.clipdist<<2;
-//        }
+        if (bg)
+        {
+            if (spr.xrepeat > 60)
+                clipdist = 1024;
+            else if (spr.picnum == LIZMAN)
+                clipdist = 292;
+            else if (A_CheckSpriteTileFlags(spr.picnum, SPRITE_BADGUY))
+                clipdist = spr.clipdist<<2;
+            else
+                clipdist = 192;
+        }
+        else
+        {
+            if (spr.statnum == STAT_PROJECTILE && (SpriteProjectile[spritenum].workslike & PROJECTILE_REALCLIPDIST) == 0)
+                clipdist = 8;
+            else
+                clipdist = spr.clipdist<<2;
+        }
 
-//        spr.z = daz;
-//        retval = clipmove((vec3_t *)spr, &dasectnum,
-//                          change.x<<13, change.y<<13,
-//                          clipdist, 4<<8, 4<<8, cliptype);
-//        spr.z = oldz;
-//    }
+        spr.z = daz;
+        var $dasectnum = new R(dasectnum);
+        retval = clipmove(spr, $dasectnum,
+                          change.x<<13, change.y<<13,
+                          clipdist, 4<<8, 4<<8, cliptype);
+        dasectnum = $dasectnum.$;
+        spr.z = oldz;
+    }
 
-//    if (bg)
-//    {
-//        if (dasectnum < 0 ||
-//                ((actor[spritenum].actorstayput >= 0 && actor[spritenum].actorstayput != dasectnum) ||
-//                 (spr.picnum == BOSS2 && spr.pal == 0 && sector[dasectnum].lotag != ST_3) ||
-//                 ((spr.picnum == BOSS1 || spr.picnum == BOSS2) && sector[dasectnum].lotag == ST_1_ABOVE_WATER)
-////                 || (sector[dasectnum].lotag == ST_1_ABOVE_WATER && (spr.picnum == LIZMAN || (spr.picnum == LIZTROOP && spr.zvel == 0)))
-//                )
-//            )
-//        {
-//            spr.x = oldx;
-//            spr.y = oldy;
-///*
-//            if (dasectnum >= 0 && sector[dasectnum].lotag == ST_1_ABOVE_WATER && spr.picnum == LIZMAN)
-//                spr.ang = (krand()&2047);
-//            else if ((Actor[spritenum].t_data[0]&3) == 1 && spr.picnum != COMMANDER)
-//                spr.ang = (krand()&2047);
-//*/
-//            setsprite(spritenum, (vec3_t *)spr);
+    if (bg)
+    {
+        if (dasectnum < 0 ||
+                ((actor[spritenum].actorstayput >= 0 && actor[spritenum].actorstayput != dasectnum) ||
+                 (spr.picnum == BOSS2 && spr.pal == 0 && sector[dasectnum].lotag != ST_3) ||
+                 ((spr.picnum == BOSS1 || spr.picnum == BOSS2) && sector[dasectnum].lotag == ST_1_ABOVE_WATER)
+//                 || (sector[dasectnum].lotag == ST_1_ABOVE_WATER && (spr.picnum == LIZMAN || (spr.picnum == LIZTROOP && spr.zvel == 0)))
+                )
+            )
+        {
+            spr.x = oldx;
+            spr.y = oldy;
+/*
+            if (dasectnum >= 0 && sector[dasectnum].lotag == ST_1_ABOVE_WATER && spr.picnum == LIZMAN)
+                spr.ang = (krand()&2047);
+            else if ((Actor[spritenum].t_data[0]&3) == 1 && spr.picnum != COMMANDER)
+                spr.ang = (krand()&2047);
+*/
+            setsprite(spritenum, spr);
 
-//            if (dasectnum < 0)
-//                dasectnum = 0;
+            if (dasectnum < 0)
+                dasectnum = 0;
 
-//            return 16384+dasectnum;
-//        }
+            return 16384+dasectnum;
+        }
 
-//        if ((retval&49152) >= 32768 && actor[spritenum].cgg==0)
-//            spr.ang += 768;
-//    }
+        if ((retval&49152) >= 32768 && actor[spritenum].cgg==0)
+            spr.ang += 768;
+    }
 
-//    if (dasectnum == -1)
-//    {
-//        dasectnum = spr.sectnum;
-////        OSD_Printf("%s:%d wtf\n",__FILE__,__LINE__);
-//    }
-//    else if (dasectnum != spr.sectnum)
-//    {
-//        changespritesect(spritenum, dasectnum);
-//        // A_GetZLimits(spritenum);
-//    }
+    if (dasectnum == -1)
+    {
+        dasectnum = spr.sectnum;
+//        OSD_Printf("%s:%d wtf\n",__FILE__,__LINE__);
+    }
+    else if (dasectnum != spr.sectnum)
+    {
+        changespritesect(spritenum, dasectnum);
+        // A_GetZLimits(spritenum);
+    }
 
-//    Bassert(dasectnum == spr.sectnum);
+    Bassert(dasectnum == spr.sectnum);
 
-//    dozupdate = A_CheckNeedZUpdate(spritenum, change.z, &daz);
+    var $daz = new R(daz);
+    dozupdate = A_CheckNeedZUpdate(spritenum, change.z, $daz);
+    daz = $daz.$;
 
-//    // Update sprite's z positions and (for TROR) maybe the sector number.
-//    if (dozupdate)
-//    {
-//        spr.z = daz;
+    // Update sprite's z positions and (for TROR) maybe the sector number.
+    if (dozupdate)
+    {
+        spr.z = daz;
 //#ifdef YAX_ENABLE
-//        if (dozupdate < 0)
-//        {
-//            // If we passed a TROR no-SE7 water boundary, signal to the outside
-//            // that the ceiling/floor was not hit. However, this is not enough:
-//            // later, code checks for (retval&49152)!=49152
-//            // [i.e. not "was ceiling or floor hit", but "was no sprite hit"]
-//            // and calls G_WeaponHitCeilingOrFloor() then, so we need to set
-//            // actor[].flags |= SPRITE_DIDNOSE7WATER in A_CheckNeedZUpdate()
-//            // previously.
-//            // XXX: Why is this contrived data flow necessary? (If at all.)
-//            changespritesect(spritenum, -dozupdate-1);
-//            return 0;
-//        }
-
-//        if (yax_getbunch(dasectnum, (change.z>0))>=0
-//                && (SECTORFLD(dasectnum,stat, (change.z>0))&yax_waltosecmask(cliptype))==0)
-//        {
-//            setspritez(spritenum, (vec3_t *)spr);
-//        }
+        if (dozupdate < 0)
+        {
+            // If we passed a TROR no-SE7 water boundary, signal to the outside
+            // that the ceiling/floor was not hit. However, this is not enough:
+            // later, code checks for (retval&49152)!=49152
+            // [i.e. not "was ceiling or floor hit", but "was no sprite hit"]
+            // and calls G_WeaponHitCeilingOrFloor() then, so we need to set
+            // actor[].flags |= SPRITE_DIDNOSE7WATER in A_CheckNeedZUpdate()
+            // previously.
+            // XXX: Why is this contrived data flow necessary? (If at all.)
+            changespritesect(spritenum, -dozupdate-1);
+            return 0;
+        }
+        todoThrow();
+        //if (yax_getbunch(dasectnum, (change.z>0))>=0
+        //        && (SECTORFLD(dasectnum,"stat", (change.z>0))&yax_waltosecmask(cliptype))==0)
+        //{
+        //    setspritez(spritenum, pr);
+        //}
 //#endif
-//    }
-//    else if (change.z != 0 && retval == 0)
-//        retval = 16384+dasectnum;
+    }
+    else if (change.z != 0 && retval == 0)
+        retval = 16384+dasectnum;
 
-//    if (retval == 16384+dasectnum)
-//        if (spr.statnum == STAT_PROJECTILE)
-//        {
-//            int32_t i;
+    if (retval == 16384+dasectnum)
+        if (spr.statnum == STAT_PROJECTILE)
+        {
+            var i: number;
+            todoThrow();
+            //// Projectile sector changes due to transport SEs (SE7_PROJECTILE).
+            //// PROJECTILE_CHSECT
+            //for (SPRITES_OF(STAT_TRANSPORT, i))
+            //    if (sprite[i].sectnum == dasectnum)
+            //    {
+            //        var /*int32_t */lotag = sector[dasectnum].lotag;
 
-//            // Projectile sector changes due to transport SEs (SE7_PROJECTILE).
-//            // PROJECTILE_CHSECT
-//            for (SPRITES_OF(STAT_TRANSPORT, i))
-//                if (sprite[i].sectnum == dasectnum)
-//                {
-//                    const int32_t lotag = sector[dasectnum].lotag;
+            //        if (lotag == ST_1_ABOVE_WATER)
+            //            if (daz >= actor[spritenum].floorz)
+            //                if (Proj_MaybeDoTransport(spritenum, i, 0, daz))
+            //                    return 0;
 
-//                    if (lotag == ST_1_ABOVE_WATER)
-//                        if (daz >= actor[spritenum].floorz)
-//                            if (Proj_MaybeDoTransport(spritenum, i, 0, daz))
-//                                return 0;
+            //        if (lotag == ST_2_UNDERWATER)
+            //            if (daz <= actor[spritenum].ceilingz)
+            //                if (Proj_MaybeDoTransport(spritenum, i, 1, daz))
+            //                    return 0;
+            //    }
+        }
 
-//                    if (lotag == ST_2_UNDERWATER)
-//                        if (daz <= actor[spritenum].ceilingz)
-//                            if (Proj_MaybeDoTransport(spritenum, i, 1, daz))
-//                                return 0;
-//                }
-//        }
-
-//    return retval;
-//}
+    return retval;
+}
 
 var block_deletesprite = 0;//int32_t 
 
