@@ -122,7 +122,7 @@ var NORMALPAL  =(MAXPALOOKUPS - 4);
 //#endif
 
 //////////// yax defs //////////
-function SECTORFLD(Sect: number,Fld: string, Cf: bool) {return ((Cf) ? (sector[Sect]["floor" + Fld]) : (sector[Sect]["ceiling" + Fld]));}
+function SECTORFLD(Sect: number,Fld: string, Cf: boolean) {return ((Cf) ? (sector[Sect]["floor" + Fld]) : (sector[Sect]["ceiling" + Fld]));}
 
 var YAX_CEILING = 0;  // don't change!
 var YAX_FLOOR = 1;  // don't change!
@@ -1331,7 +1331,7 @@ function /*uint32_t */uhypsq(/*int32_t*/ dx: number, /*int32_t */dy: number): nu
 //void   getzsofslopeptr(const sectortype *sec, int32_t dax, int32_t day,
 //                       int32_t *ceilz, int32_t *florz) ATTRIBUTE((nonnull(1,4,5)));
 
-function /*int32_t */getceilzofslope(/*int16_t */sectnum: number, /*int32_t */numberdax: number, /*int32_t*/ day: number): number
+function /*int32_t */getceilzofslope(/*int16_t */sectnum: number, /*int32_t */dax: number, /*int32_t*/ day: number): number
 {
     return getceilzofslopeptr(sector[sectnum], dax, day);
 }
