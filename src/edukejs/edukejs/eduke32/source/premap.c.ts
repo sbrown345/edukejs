@@ -1168,7 +1168,7 @@ function prelevel(/*char*/ g: number): void
 
         if (sector[i].ceilingstat&1)
         {
-            if (waloff[sector[i].ceilingpicnum] == 0)
+            if (!waloff[sector[i].ceilingpicnum])
             {
                 if (sector[i].ceilingpicnum == LA)
                     for (j=0; j<5; j++)

@@ -958,7 +958,7 @@ class picanm_t {
     public static size = 4;   
 }
 var picanm: picanm_t[] = newStructArray(picanm_t, MAXTILES);
-var waloff: Int32Array = new Int32Array(MAXTILES);  // stores pointers to cache  -- SA //EXTERN intptr_t 
+var waloff: ArrayBuffer[] = new Array(MAXTILES);  // stores pointers to cache  -- SA //EXTERN intptr_t 
 
 //EXTERN int32_t windowpos, windowx, windowy;
 
