@@ -132,8 +132,8 @@ var MapInfo: map_t[] = newStructArray(map_t, (MAXVOLUMES+1)*MAXLEVELS);  // +1 v
 //G_EXTERN playerspawn_t g_playerSpawnPoints[MAXPLAYERS];
 //G_EXTERN input_t inputfifo[MOVEFIFOSIZ][MAXPLAYERS];
 //#pragma pack(pop)
-var ProjectileData:projectile_t[];//= newStructArray(projectile_t, MAXTILES);
-var SpriteProjectile:projectile_t[];//= newStructArray(projectile_t, MAXSPRITES);
+var ProjectileData:projectile_t[] = new Array(MAXTILES);//= newStructArray(projectile_t, MAXTILES);
+var SpriteProjectile:projectile_t[] = new Array(MAXSPRITES);//= newStructArray(projectile_t, MAXSPRITES);
 //G_EXTERN sound_t g_sounds[MAXSOUNDS];
 var everyothertime: number;   ////G_EXTERN uint32_t
 var g_moveThingsCount: number;////G_EXTERN uint32_t

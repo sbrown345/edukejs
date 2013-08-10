@@ -97,6 +97,29 @@ class PtrVal {
     }
 }
 
+var ptrMemoryCount = 0;
+var ptrMemory: PtrVal[] = [];
+var ptrMemoryMap = {};
+
+function regIntptr_t(evalSrc: string): number {
+    if(typeof ptrMemoryMap[evalSrc] !== "undefined") {
+        console.warn("already registered " + evalSrc);
+    }
+
+    var offset = 10000;
+    var location = offset + (ptrMemoryCount++);
+    ptrMemory[location] = new PtrVal(evalSrc);
+    ptrMemoryMap[evalSrc] = location;
+    return location;
+}
+
+function getIntptrVal(location: number): any {
+    if(typeof ptrMemory[location] == "undefined") {
+        throw "not registered " + location;
+    }
+    return ptrMemory[location].getVal(); 
+}
+
 //#pragma pack(push,1)
 class gamevar_t {
     val: gamevar_t_union;

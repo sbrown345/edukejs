@@ -403,25 +403,25 @@ class weapondata_t
 //extern weapondata_t g_playerWeapon[MAXPLAYERS][MAX_WEAPONS];
 //#else
 function PWEAPON(Player: number, Weapon: number, Wmember: string): number {return window["aplWeapon" + Wmember][Weapon][Player];}
-var aplWeaponClip:PtrVal[];/*[MAX_WEAPONS]:PtrVal[];*/            // number of items in clip                                           //extern intptr_t         *
-var aplWeaponReload:PtrVal[];/*[MAX_WEAPONS]:PtrVal[];*/          // delay to reload (include fire)                                    //extern intptr_t         *
-var aplWeaponFireDelay:PtrVal[];/*[MAX_WEAPONS]:PtrVal[];*/       // delay to fire                                                     //extern intptr_t         *
-var aplWeaponHoldDelay:PtrVal[];/*[MAX_WEAPONS]:PtrVal[];*/       // delay after release fire button to fire (0 for none)              //extern intptr_t         *
-var aplWeaponTotalTime:PtrVal[];/*[MAX_WEAPONS]:PtrVal[];*/       // The total time the weapon is cycling before next fire.            //extern intptr_t         *
-var aplWeaponFlags:PtrVal[];/*[MAX_WEAPONS]:PtrVal[];*/           // Flags for weapon                                                  //extern intptr_t         *
-var aplWeaponShoots:PtrVal[];/*[MAX_WEAPONS]:PtrVal[];*/          // what the weapon shoots                                            //extern intptr_t         *
-var aplWeaponSpawnTime:PtrVal[];/*[MAX_WEAPONS]:PtrVal[];*/       // the frame at which to spawn an item                               //extern intptr_t         *
-var aplWeaponSpawn:PtrVal[];/*[MAX_WEAPONS]:PtrVal[];*/           // the item to spawn                                                 //extern intptr_t         *
-var aplWeaponShotsPerBurst:PtrVal[];/*[MAX_WEAPONS]:PtrVal[];*/   // number of shots per 'burst' (one ammo per 'burst'                 //extern intptr_t         *
-var aplWeaponWorksLike:PtrVal[];/*[MAX_WEAPONS]:PtrVal[];*/       // What original the weapon works like                               //extern intptr_t         *
-var aplWeaponInitialSound:PtrVal[];/*[MAX_WEAPONS]:PtrVal[];*/    // Sound made when initialy firing. zero for no sound                //extern intptr_t         *
-var aplWeaponFireSound:PtrVal[];/*[MAX_WEAPONS]:PtrVal[];*/       // Sound made when firing (each time for automatic)                  //extern intptr_t         *
-var aplWeaponSound2Time:PtrVal[];/*[MAX_WEAPONS]:PtrVal[];*/      // Alternate sound time                                              //extern intptr_t         *
-var aplWeaponSound2Sound:PtrVal[];/*[MAX_WEAPONS]:PtrVal[];*/     // Alternate sound sound ID                                          //extern intptr_t         *
-var aplWeaponReloadSound1:PtrVal[];/*[MAX_WEAPONS]:PtrVal[];*/    // Sound of magazine being removed                                   //extern intptr_t         *
-var aplWeaponReloadSound2:PtrVal[];/*[MAX_WEAPONS]:PtrVal[];*/    // Sound of magazine being inserted                                  //extern intptr_t         *
-var aplWeaponSelectSound:PtrVal[];/*[MAX_WEAPONS]:PtrVal[];*/     // Sound for weapon selection                                        //extern intptr_t         *
-var aplWeaponFlashColor:PtrVal[];/*[MAX_WEAPONS];*/      // Color for polymer muzzle flash                                    //extern intptr_t         *
+var aplWeaponClip: Int32Array[] = new Array(MAX_WEAPONS);            // number of items in clip                                      extern intptr_t         
+var aplWeaponReload: Int32Array[] = new Array(MAX_WEAPONS);          // delay to reload (include fire)                               extern intptr_t         
+var aplWeaponFireDelay: Int32Array[] = new Array(MAX_WEAPONS);       // delay to fire                                                extern intptr_t         
+var aplWeaponHoldDelay: Int32Array[] = new Array(MAX_WEAPONS);       // delay after release fire button to fire (0 for none)         extern intptr_t         
+var aplWeaponTotalTime: Int32Array[] = new Array(MAX_WEAPONS);       // The total time the weapon is cycling before next fire.       extern intptr_t         
+var aplWeaponFlags: Int32Array[] = new Array(MAX_WEAPONS);           // Flags for weapon                                             extern intptr_t         
+var aplWeaponShoots: Int32Array[] = new Array(MAX_WEAPONS);          // what the weapon shoots                                       extern intptr_t         
+var aplWeaponSpawnTime: Int32Array[] = new Array(MAX_WEAPONS);       // the frame at which to spawn an item                          extern intptr_t         
+var aplWeaponSpawn: Int32Array[] = new Array(MAX_WEAPONS);           // the item to spawn                                            extern intptr_t         
+var aplWeaponShotsPerBurst: Int32Array[] = new Array(MAX_WEAPONS);   // number of shots per 'burst' (one ammo per 'burst'            extern intptr_t         
+var aplWeaponWorksLike: Int32Array[] = new Array(MAX_WEAPONS);       // What original the weapon works like                          extern intptr_t         
+var aplWeaponInitialSound: Int32Array[] = new Array(MAX_WEAPONS);    // Sound made when initialy firing. zero for no sound           extern intptr_t         
+var aplWeaponFireSound: Int32Array[] = new Array(MAX_WEAPONS);       // Sound made when firing (each time for automatic)             extern intptr_t         
+var aplWeaponSound2Time: Int32Array[] = new Array(MAX_WEAPONS);      // Alternate sound time                                         extern intptr_t         
+var aplWeaponSound2Sound: Int32Array[] = new Array(MAX_WEAPONS);     // Alternate sound sound ID                                     extern intptr_t         
+var aplWeaponReloadSound1: Int32Array[] = new Array(MAX_WEAPONS);    // Sound of magazine being removed                              extern intptr_t         
+var aplWeaponReloadSound2: Int32Array[] = new Array(MAX_WEAPONS);    // Sound of magazine being inserted                             extern intptr_t         
+var aplWeaponSelectSound: Int32Array[] = new Array(MAX_WEAPONS);     // Sound for weapon selection                                   extern intptr_t         
+var aplWeaponFlashColor: Int32Array[] = new Array(MAX_WEAPONS);      // Color for polymer muzzle flash                               extern intptr_t         
 //#endif
 
 //// KEEPINSYNC lunatic/defs.ilua
