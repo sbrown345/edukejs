@@ -5,7 +5,7 @@
 
 /// <reference path="../../build/headers/baselayer.h.ts" />
 /// <reference path="../../build/headers/build.h.ts" />
-/// <reference path="../../build/healse switch (DYNAMICTders/cache1d.h.ts" />
+/// <reference path="../../build/headers/cache1d.h.ts" />
 /// <reference path="../../build/headers/compat.h.ts" />
 /// <reference path="../../build/headers/engine_priv.h.ts" />
 /// <reference path="../../build/headers/hightile.h.ts" />
@@ -2542,11 +2542,12 @@ var minitext_lowercase = 0;         //static int32_t
 //static int32_t dr_yxaspect, dr_viewingrange;
 
 //#ifdef DEBUGGINGAIDS
-//static struct {
-//    uint32_t lastgtic;
-//    uint32_t lastnumins, numins;
-//    int32_t numonscreen;
-//} g_spriteStat;
+var g_spriteStat =  {
+    lastgtic: 0,             //uint32_t 
+    lastnumins: 0, numins: 0,   //uint32_t 
+    numonscreen: 0          //int32_t  
+};
+
 //#endif
 
 //static void G_PrintCoords(int32_t snum)
@@ -4782,8 +4783,9 @@ var ror_protectedsectors = new Uint8Array(MAXSECTORS);
 //    }
 //}
 
-//static void G_DumpDebugInfo(void)
-//{
+function G_DumpDebugInfo(): void
+{
+    todoThrow();
 //#if !defined LUNATIC
 //    int32_t i,j,x;
 //    //    FILE * fp=fopen("condebug.log","w");
@@ -4858,24 +4860,24 @@ var ror_protectedsectors = new Uint8Array(MAXSECTORS);
 //#endif
 //    saveboard("debug.map", &g_player[myconnectindex].ps.pos, g_player[myconnectindex].ps.ang,
 //              g_player[myconnectindex].ps.cursectnum);
-//}
+}
 
-//// if <set_movflag_uncond> is true, set the moveflag unconditionally,
-//// else only if it equals 0.
-//static int32_t G_InitActor(int32_t i, int32_t tilenum, int32_t set_movflag_uncond)
-//{
+// if <set_movflag_uncond> is true, set the moveflag unconditionally,
+// else only if it equals 0.
+function G_InitActor(/*int32_t*/ i: number, /*int32_t*/ tilenum: number, /*int32_t*/ set_movflag_uncond: number): number
+{
 //#if !defined LUNATIC
-//    if (g_tile[tilenum].execPtr)
-//    {
-//        sprite[i].extra = *(g_tile[tilenum].execPtr);
-//        AC_ACTION_ID(actor[i].t_data) = *(g_tile[tilenum].execPtr+1);
-//        AC_MOVE_ID(actor[i].t_data) = *(g_tile[tilenum].execPtr+2);
+    if (g_tile[tilenum].execPtr)
+    {
+        sprite[i].extra = *(g_tile[tilenum].execPtr);
+        AC_ACTION_ID(actor[i].t_data) = *(g_tile[tilenum].execPtr+1);
+        AC_MOVE_ID(actor[i].t_data) = *(g_tile[tilenum].execPtr+2);
 
-//        if (set_movflag_uncond || sprite[i].hitag == 0)  // AC_MOVFLAGS
-//            sprite[i].hitag = *(g_tile[tilenum].execPtr+3);
+        if (set_movflag_uncond || sprite[i].hitag == 0)  // AC_MOVFLAGS
+            sprite[i].hitag = *(g_tile[tilenum].execPtr+3);
 
-//        return 1;
-//    }
+        return 1;
+    }
 //#else
 //    if (El_HaveActor(tilenum))
 //    {
@@ -4896,96 +4898,99 @@ var ror_protectedsectors = new Uint8Array(MAXSECTORS);
 //    }
 //#endif
 
-//    return 0;
-//}
+    return 0;
+}
 
-//int32_t A_InsertSprite(int32_t whatsect,int32_t s_x,int32_t s_y,int32_t s_z,int32_t s_pn,int32_t s_s,
-//                       int32_t s_xr,int32_t s_yr,int32_t s_a,int32_t s_ve,int32_t s_zv,int32_t s_ow,int32_t s_ss)
-//{
-//    int32_t p;
-//    int32_t i;
-//    spritetype *s;
-//    spritetype spr_temp;
+function A_InsertSprite(whatsect:number,s_x:number,s_y:number,s_z:number,s_pn:number,s_s:number,
+                       s_xr:number,s_yr:number,s_a:number,s_ve:number,s_zv:number,s_ow:number,s_ss)
+{
+    assert.argumentsAre.int32(arguments);
+    var p: number;
+    var i: number;
+    var s: spritetype;
+    var spr_temp: spritetype;
 
-//    // NetAlloc
-//    if (Net_IsRelevantStat(s_ss))
-//    {
-//        i = Net_InsertSprite(whatsect,s_ss);
-//    }
-//    else
-//    {
-//        i = insertsprite(whatsect,s_ss);
-//    }
+    // NetAlloc
+    if (Net_IsRelevantStat(s_ss))
+    {
+        i = Net_InsertSprite(whatsect,s_ss);
+    }
+    else
+    {
+        i = insertsprite(whatsect,s_ss);
+    }
 
-//    memset(&spr_temp, 0, sizeof(spritetype));
-//    spr_temp.x = s_x;
-//    spr_temp.y = s_y;
-//    spr_temp.z = s_z;
-//    spr_temp.picnum = s_pn;
-//    spr_temp.shade = s_s;
-//    spr_temp.xrepeat = s_xr;
-//    spr_temp.yrepeat = s_yr;
-//    spr_temp.sectnum = whatsect;
-//    spr_temp.statnum = s_ss;
-//    spr_temp.ang = s_a;
-//    spr_temp.owner = s_ow;
-//    spr_temp.xvel = s_ve;
-//    spr_temp.zvel = s_zv;
+    spr_temp = new spritetype();
+    spr_temp.x = s_x;
+    spr_temp.y = s_y;
+    spr_temp.z = s_z;
+    spr_temp.picnum = s_pn;
+    spr_temp.shade = s_s;
+    spr_temp.xrepeat = s_xr;
+    spr_temp.yrepeat = s_yr;
+    spr_temp.sectnum = whatsect;
+    spr_temp.statnum = s_ss;
+    spr_temp.ang = s_a;
+    spr_temp.owner = s_ow;
+    spr_temp.xvel = s_ve;
+    spr_temp.zvel = s_zv;
 
-//    if (i < 0)
-//    {
-//        G_DumpDebugInfo();
-//        OSD_Printf_nowarn("Failed spawning pic %d spr from pic %d spr %d at x:%d,y:%d,z:%d,sect:%d\n",
-//                          s_pn,s_ow < 0 ? -1 : TrackerCast(sprite[s_ow].picnum),s_ow,s_x,s_y,s_z,whatsect);
-//        G_GameExit("Too many sprites spawned.");
-//    }
+    if (i < 0)
+    {
+        G_DumpDebugInfo();
+        OSD_Printf_nowarn("Failed spawning pic %d spr from pic %d spr %d at x:%d,y:%d,z:%d,sect:%d\n",
+                          s_pn,s_ow < 0 ? -1 : TrackerCast(sprite[s_ow].picnum),s_ow,s_x,s_y,s_z,whatsect);
+        G_GameExit("Too many sprites spawned.");
+    }
 
-//#ifdef DEBUGGINGAIDS
-//    g_spriteStat.numins++;
-//#endif
+if(DEBUGGINGAIDS) {
+    g_spriteStat.numins++;
+}
 
-//    s = &sprite[i];
+    s = sprite[i];
 
-//    Bmemcpy(s, &spr_temp, sizeof(spritetype));
-//    Bmemset(&actor[i], 0, sizeof(actor_t));
-//    Bmemcpy(&actor[i].bpos.x, s, sizeof(vec3_t)); // update bposx/y/z
+    ITypeInfoCopier(s, spr_temp, spritetype.typeInfo); //Bmemcpy(s, &spr_temp, sizeof(spritetype));
+    actor[i].init();//Bmemset(&actor[i], 0, sizeof(actor_t));
+    actor[i].bpos.x = s.x;// Bmemcpy(&actor[i].bpos.x, s, sizeof(vec3_t)); // update bposx/y/z
+    actor[i].bpos.y = s.y; 
+    actor[i].bpos.z = s.z;
 
-//    if ((unsigned)s_ow < MAXSPRITES)
-//    {
-//        actor[i].picnum = sprite[s_ow].picnum;
-//        actor[i].floorz = actor[s_ow].floorz;
-//        actor[i].ceilingz = actor[s_ow].ceilingz;
-//    }
+    if (/*(unsigned)*/s_ow < MAXSPRITES)
+    {
+        actor[i].picnum = sprite[s_ow].picnum;
+        actor[i].floorz = actor[s_ow].floorz;
+        actor[i].ceilingz = actor[s_ow].ceilingz;
+    }
 
-//    actor[i].actorstayput = actor[i].extra = actor[i].lightId = -1;
-//    actor[i].owner = s_ow;
+    actor[i].actorstayput = actor[i].extra = actor[i].lightId = -1;
+    actor[i].owner = s_ow;
 
-//    // sprpos[i].ang = sprpos[i].oldang = sprite[i].ang;
+    // sprpos[i].ang = sprpos[i].oldang = sprite[i].ang;
 
-//    G_InitActor(i, s_pn, 1);
+    G_InitActor(i, s_pn, 1);
 
-//    Bmemset(&spriteext[i], 0, sizeof(spriteext_t));
-//    Bmemset(&spritesmooth[i], 0, sizeof(spritesmooth_t));
+    Bmemset(&spriteext[i], 0, sizeof(spriteext_t));
+    Bmemset(&spritesmooth[i], 0, sizeof(spritesmooth_t));
 
 //#if defined LUNATIC
 //    if (!g_noResetVars)
 //#endif
-//        A_ResetVars(i);
+        A_ResetVars(i);
 //#if defined LUNATIC
 //    g_noResetVars = 0;
 //#endif
 
-//    if (G_HaveEvent(EVENT_EGS))
-//    {
-//        int32_t pl=A_FindPlayer(s, &p);
+    if (G_HaveEvent(EVENT_EGS))
+    {
+        var pl=A_FindPlayer(s, p);
 
-//        block_deletesprite++;
-//        VM_OnEvent(EVENT_EGS, i, pl, p, 0);
-//        block_deletesprite--;
-//    }
+        block_deletesprite++;
+        VM_OnEvent(EVENT_EGS, i, pl, p, 0);
+        block_deletesprite--;
+    }
 
-//    return i;
-//}
+    return i;
+}
 
 //#ifdef YAX_ENABLE
 //void Yax_SetBunchZs(int32_t sectnum, int32_t cf, int32_t daz)
@@ -5058,32 +5063,33 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
         if (sprite[i].picnum != SPEAKER && sprite[i].picnum != LETTER && sprite[i].picnum != DUCK && sprite[i].picnum != TARGET && sprite[i].picnum != TRIPBOMB && sprite[i].picnum != VIEWSCREEN && sprite[i].picnum != VIEWSCREEN2 && (sprite[i].cstat&48))
             if (!(sprite[i].picnum >= CRACK1 && sprite[i].picnum <= CRACK4))
             {
-                if (sprite[i].shade == 127) return SPAWN_END();
-                if (A_CheckSwitchTile(i) == 1 && (sprite[i].cstat&16))
-                {
-                    if (sprite[i].picnum != ACCESSSWITCH && sprite[i].picnum != ACCESSSWITCH2 && sprite[i].pal)
-                    {
-                        if (((!g_netServer && ud.multimode < 2)) || ((g_netServer || ud.multimode > 1) && !GTFLAGS(GAMETYPE_DMSWITCHES)))
-                        {
-                            sprite[i].xrepeat = sprite[i].yrepeat = 0;
-                            sprite[i].lotag = sprite[i].hitag = 0;
-                            sprite[i].cstat = 32768;
-                            return SPAWN_END();
-                        }
-                    }
-                    sprite[i].cstat |= 257;
-                    if (sprite[i].pal && sprite[i].picnum != ACCESSSWITCH && sprite[i].picnum != ACCESSSWITCH2)
-                        sprite[i].pal = 0;
-                    return SPAWN_END();
-                }
+                todoThrow();
+                //if (sprite[i].shade == 127) return SPAWN_END();
+                //if (A_CheckSwitchTile(i) == 1 && (sprite[i].cstat&16))
+                //{
+                //    if (sprite[i].picnum != ACCESSSWITCH && sprite[i].picnum != ACCESSSWITCH2 && sprite[i].pal)
+                //    {
+                //        if (((!g_netServer && ud.multimode < 2)) || ((g_netServer || ud.multimode > 1) && !GTFLAGS(GAMETYPE_DMSWITCHES)))
+                //        {
+                //            sprite[i].xrepeat = sprite[i].yrepeat = 0;
+                //            sprite[i].lotag = sprite[i].hitag = 0;
+                //            sprite[i].cstat = 32768;
+                //            return SPAWN_END();
+                //        }
+                //    }
+                //    sprite[i].cstat |= 257;
+                //    if (sprite[i].pal && sprite[i].picnum != ACCESSSWITCH && sprite[i].picnum != ACCESSSWITCH2)
+                //        sprite[i].pal = 0;
+                //    return SPAWN_END();
+                //}
 
-                if (sprite[i].hitag)
-                {
-                    changespritestat(i, STAT_FALLER);
-                    sprite[i].cstat |=  257;
-                    sprite[i].extra = g_impactDamage;
-                    return SPAWN_END();
-                }
+                //if (sprite[i].hitag)
+                //{
+                //    changespritestat(i, STAT_FALLER);
+                //    sprite[i].cstat |=  257;
+                //    sprite[i].extra = g_impactDamage;
+                //    return SPAWN_END();
+                //}
             }
 
         s = sprite[i].picnum;

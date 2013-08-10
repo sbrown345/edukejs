@@ -1165,11 +1165,21 @@ function getrendermode(): number
 //    int32_t x, y;
 //} vec2_t;
 
-class vec3_t{
+interface IVec3 {
+    x: number; y: number; z: number;
+}
+
+class vec3_t implements IVec3{
     x: number; y: number; z: number;//    int32_t
 
     constructor() {
         this.x = this.y = this.z = 0;
+    }
+
+    copyTo(v: IVec3) {
+        v.x = this.x;
+        v.y = this.y;
+        v.z = this.z;
     }
 };
 

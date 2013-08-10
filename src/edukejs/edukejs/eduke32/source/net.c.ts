@@ -1356,25 +1356,25 @@ function Net_GetPackets() : void
 //    }
 //}
 
-//int32_t Net_IsRelevantStat(int32_t stat)
-//{
-//    int32_t statIndex;
+function Net_IsRelevantStat(/*int32_t */stat: number): number
+{
+    var statIndex: number;
 
-//    if (g_netServer == NULL && g_netClient == NULL)
-//    {
-//        return 0;
-//    }
+    if (g_netServer == NULL && g_netClient == NULL)
+    {
+        return 0;
+    }
+    todoThrow();
+    //for (statIndex = 0; g_netStatnums[statIndex] != MAXSTATUS; ++statIndex)
+    //{
+    //    if (g_netStatnums[statIndex] == stat)
+    //    {
+    //        return 1;
+    //    }
+    //}
 
-//    for (statIndex = 0; g_netStatnums[statIndex] != MAXSTATUS; ++statIndex)
-//    {
-//        if (g_netStatnums[statIndex] == stat)
-//        {
-//            return 1;
-//        }
-//    }
-
-//    return 0;
-//}
+    return 0;
+}
 
 //int32_t Net_InsertSprite(int32_t sect, int32_t stat)
 //{

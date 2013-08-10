@@ -11,6 +11,12 @@ function ITypeInfoLogger(v: ITypeInfo, typeInfo: string[][]) {
     }
 }
 
+function ITypeInfoCopier(dest: ITypeInfo, source: ITypeInfo, typeInfo: string[][]) {
+    for (var j = 0; j < typeInfo.length; j++) {
+        var name = typeInfo[j][0];   
+        dest[name] = source[name]; 
+    }
+}
 
 var int8ConvertArray = new Int8Array(1);
 var int8 = function (v: number): number {

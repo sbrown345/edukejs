@@ -93,7 +93,7 @@ var STAT_NETALLOC      = MAXSTATUS-1;
 //#define AC_CURFRAME(t) ((t)[3])  /* the actor's current frame offset */
 ///* The ID of the actor's current action. In C-CON, the bytecode offset to the
 // * action composite: */
-//#define AC_ACTION_ID(t) ((t)[4])
+function AC_ACTION_ID(t: Int32Array) {return (t)[4];}
 //#define AC_AI_ID(t) ((t)[5])  /* the ID of the actor's current ai */
 
 //#ifdef LUNATIC
