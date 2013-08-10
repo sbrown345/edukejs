@@ -41,11 +41,11 @@ var NAM_GRENADE_LIFETIME_VAR   = 30;
 //#define AUTO_AIM_ANGLE              48
 //#define PHEIGHT                     (38<<8)
 
-//#define TRIPBOMB_TRIPWIRE       0x00000001
-//#define TRIPBOMB_TIMER          0x00000002
+var TRIPBOMB_TRIPWIRE      = 0x00000001;
+var TRIPBOMB_TIMER         = 0x00000002;
 
-//#define PIPEBOMB_REMOTE         0x00000001
-//#define PIPEBOMB_TIMER          0x00000002
+var PIPEBOMB_REMOTE        = 0x00000001;
+var PIPEBOMB_TIMER         = 0x00000002;
 
 var WEAPON_POS_LOWER =           -9;
 var WEAPON_POS_RAISE =           10;
@@ -345,30 +345,55 @@ class playerdata_t {
 //#pragma pack(pop)
 
 // KEEPINSYNC lunatic/con_lang.lua
-function weapondata_t(wl : number = 0,cl : number = 0,rl : number = 0,fd : number = 0,tt : number = 0,hd : number = 0,f : number = 0,s : number = 0,st : number = 0,spawn : number = 0,
-    spb : number = 0,is : number = 0,fs : number = 0, s2t : number = 0, s2s : number = 0, rs1 : number = 0, rs2 : number = 0, sSound : number = 0, fc : number = 0)
+class weapondata_t
 {
     // NOTE: the member names must be identical to aplWeapon* suffixes.
-    this.WorksLike = wl;  // What the original works like
-    this.Clip = cl;  // number of items in magazine
-    this.Reload = rl;  // delay to reload (include fire)
-    this.FireDelay = fd;  // delay to fire
-    this.TotalTime = tt;  // The total time the weapon is cycling before next fire.
-    this.HoldDelay = hd;  // delay after release fire button to fire (0 for none)
-    this.Flags = f;  // Flags for weapon
-    this.Shoots = s;  // what the weapon shoots
-    this.SpawnTime = st;  // the frame at which to spawn an item
-    this.Spawn = spawn;  // the item to spawn
-    this.ShotsPerBurst = spb;  // number of shots per 'burst' (one ammo per 'burst')
-    this.InitialSound = is;  // Sound made when weapon starts firing. zero for no sound
-    this.FireSound = fs;  // Sound made when firing (each time for automatic)
-    this.Sound2Time = s2t;  // Alternate sound time
-    this.Sound2Sound = s2s;  // Alternate sound sound ID
-    this.ReloadSound1 = rs1;  // Sound of magazine being removed
-    this.ReloadSound2 = rs2;  // Sound of magazine being inserted
-    this.SelectSound = sSound;  // Sound of weapon being selected
-    this.FlashColor = fc;  // Muzzle flash color
+    WorksLike: number;  // What the original works like
+    Clip : number;  // number of items in magazine
+    Reload;  // delay to reload (include fire)
+    FireDelay: number;  // delay to fire
+    TotalTime: number;  // The total time the weapon is cycling before next fire.
+    HoldDelay: number;  // delay after release fire button to fire (0 for none)
+    Flags: number;  // Flags for weapon
+    Shoots: number;  // what the weapon shoots
+    SpawnTime: number;  // the frame at which to spawn an item
+    Spawn: number;  // the item to spawn
+    ShotsPerBurst: number;  // number of shots per 'burst' (one ammo per 'burst')
+    InitialSound: number;  // Sound made when weapon starts firing. zero for no sound
+    FireSound: number;  // Sound made when firing (each time for automatic)
+    Sound2Time: number;  // Alternate sound time
+    Sound2Sound: number;  // Alternate sound sound ID
+    ReloadSound1: number;  // Sound of magazine being removed
+    ReloadSound2: number;  // Sound of magazine being inserted
+    SelectSound: number;  // Sound of weapon being selected
+    FlashColor: number;  // Muzzle flash color
+
+    constructor(wl : number = 0,cl : number = 0,rl : number = 0,fd : number = 0,tt : number = 0,hd : number = 0,f : number = 0,s : number = 0,st : number = 0,spawn : number = 0,
+        spb : number = 0,is : number = 0,fs : number = 0, s2t : number = 0, s2s : number = 0, rs1 : number = 0, rs2 : number = 0, sSound : number = 0, fc : number = 0)
+    {
+        // NOTE: the member names must be identical to aplWeapon* suffixes.
+        this.WorksLike = wl;  // What the original works like
+        this.Clip = cl;  // number of items in magazine
+        this.Reload = rl;  // delay to reload (include fire)
+        this.FireDelay = fd;  // delay to fire
+        this.TotalTime = tt;  // The total time the weapon is cycling before next fire.
+        this.HoldDelay = hd;  // delay after release fire button to fire (0 for none)
+        this.Flags = f;  // Flags for weapon
+        this.Shoots = s;  // what the weapon shoots
+        this.SpawnTime = st;  // the frame at which to spawn an item
+        this.Spawn = spawn;  // the item to spawn
+        this.ShotsPerBurst = spb;  // number of shots per 'burst' (one ammo per 'burst')
+        this.InitialSound = is;  // Sound made when weapon starts firing. zero for no sound
+        this.FireSound = fs;  // Sound made when firing (each time for automatic)
+        this.Sound2Time = s2t;  // Alternate sound time
+        this.Sound2Sound = s2s;  // Alternate sound sound ID
+        this.ReloadSound1 = rs1;  // Sound of magazine being removed
+        this.ReloadSound2 = rs2;  // Sound of magazine being inserted
+        this.SelectSound = sSound;  // Sound of weapon being selected
+        this.FlashColor = fc;  // Muzzle flash color
+    }
 } //weapondata_t;
+
 
 //extern int8_t             g_numPlayerSprites;
 //extern int32_t          fricxv,fricyv;
@@ -378,25 +403,25 @@ function weapondata_t(wl : number = 0,cl : number = 0,rl : number = 0,fd : numbe
 //extern weapondata_t g_playerWeapon[MAXPLAYERS][MAX_WEAPONS];
 //#else
 function PWEAPON(Player: number, Weapon: number, Wmember: string): number {return window["aplWeapon" + Wmember][Weapon][Player];}
-var aplWeaponClip:Int32Array[];/*[MAX_WEAPONS]:Int32Array[];*/            // number of items in clip                                           //extern intptr_t         *
-var aplWeaponReload:Int32Array[];/*[MAX_WEAPONS]:Int32Array[];*/          // delay to reload (include fire)                                    //extern intptr_t         *
-var aplWeaponFireDelay:Int32Array[];/*[MAX_WEAPONS]:Int32Array[];*/       // delay to fire                                                     //extern intptr_t         *
-var aplWeaponHoldDelay:Int32Array[];/*[MAX_WEAPONS]:Int32Array[];*/       // delay after release fire button to fire (0 for none)              //extern intptr_t         *
-var aplWeaponTotalTime:Int32Array[];/*[MAX_WEAPONS]:Int32Array[];*/       // The total time the weapon is cycling before next fire.            //extern intptr_t         *
-var aplWeaponFlags:Int32Array[];/*[MAX_WEAPONS]:Int32Array[];*/           // Flags for weapon                                                  //extern intptr_t         *
-var aplWeaponShoots:Int32Array[];/*[MAX_WEAPONS]:Int32Array[];*/          // what the weapon shoots                                            //extern intptr_t         *
-var aplWeaponSpawnTime:Int32Array[];/*[MAX_WEAPONS]:Int32Array[];*/       // the frame at which to spawn an item                               //extern intptr_t         *
-var aplWeaponSpawn:Int32Array[];/*[MAX_WEAPONS]:Int32Array[];*/           // the item to spawn                                                 //extern intptr_t         *
-var aplWeaponShotsPerBurst:Int32Array[];/*[MAX_WEAPONS]:Int32Array[];*/   // number of shots per 'burst' (one ammo per 'burst'                 //extern intptr_t         *
-var aplWeaponWorksLike:Int32Array[];/*[MAX_WEAPONS]:Int32Array[];*/       // What original the weapon works like                               //extern intptr_t         *
-var aplWeaponInitialSound:Int32Array[];/*[MAX_WEAPONS]:Int32Array[];*/    // Sound made when initialy firing. zero for no sound                //extern intptr_t         *
-var aplWeaponFireSound:Int32Array[];/*[MAX_WEAPONS]:Int32Array[];*/       // Sound made when firing (each time for automatic)                  //extern intptr_t         *
-var aplWeaponSound2Time:Int32Array[];/*[MAX_WEAPONS]:Int32Array[];*/      // Alternate sound time                                              //extern intptr_t         *
-var aplWeaponSound2Sound:Int32Array[];/*[MAX_WEAPONS]:Int32Array[];*/     // Alternate sound sound ID                                          //extern intptr_t         *
-var aplWeaponReloadSound1:Int32Array[];/*[MAX_WEAPONS]:Int32Array[];*/    // Sound of magazine being removed                                   //extern intptr_t         *
-var aplWeaponReloadSound2:Int32Array[];/*[MAX_WEAPONS]:Int32Array[];*/    // Sound of magazine being inserted                                  //extern intptr_t         *
-var aplWeaponSelectSound:Int32Array[];/*[MAX_WEAPONS]:Int32Array[];*/     // Sound for weapon selection                                        //extern intptr_t         *
-var aplWeaponFlashColor:Int32Array[];/*[MAX_WEAPONS];*/      // Color for polymer muzzle flash                                    //extern intptr_t         *
+var aplWeaponClip:PtrVal[];/*[MAX_WEAPONS]:PtrVal[];*/            // number of items in clip                                           //extern intptr_t         *
+var aplWeaponReload:PtrVal[];/*[MAX_WEAPONS]:PtrVal[];*/          // delay to reload (include fire)                                    //extern intptr_t         *
+var aplWeaponFireDelay:PtrVal[];/*[MAX_WEAPONS]:PtrVal[];*/       // delay to fire                                                     //extern intptr_t         *
+var aplWeaponHoldDelay:PtrVal[];/*[MAX_WEAPONS]:PtrVal[];*/       // delay after release fire button to fire (0 for none)              //extern intptr_t         *
+var aplWeaponTotalTime:PtrVal[];/*[MAX_WEAPONS]:PtrVal[];*/       // The total time the weapon is cycling before next fire.            //extern intptr_t         *
+var aplWeaponFlags:PtrVal[];/*[MAX_WEAPONS]:PtrVal[];*/           // Flags for weapon                                                  //extern intptr_t         *
+var aplWeaponShoots:PtrVal[];/*[MAX_WEAPONS]:PtrVal[];*/          // what the weapon shoots                                            //extern intptr_t         *
+var aplWeaponSpawnTime:PtrVal[];/*[MAX_WEAPONS]:PtrVal[];*/       // the frame at which to spawn an item                               //extern intptr_t         *
+var aplWeaponSpawn:PtrVal[];/*[MAX_WEAPONS]:PtrVal[];*/           // the item to spawn                                                 //extern intptr_t         *
+var aplWeaponShotsPerBurst:PtrVal[];/*[MAX_WEAPONS]:PtrVal[];*/   // number of shots per 'burst' (one ammo per 'burst'                 //extern intptr_t         *
+var aplWeaponWorksLike:PtrVal[];/*[MAX_WEAPONS]:PtrVal[];*/       // What original the weapon works like                               //extern intptr_t         *
+var aplWeaponInitialSound:PtrVal[];/*[MAX_WEAPONS]:PtrVal[];*/    // Sound made when initialy firing. zero for no sound                //extern intptr_t         *
+var aplWeaponFireSound:PtrVal[];/*[MAX_WEAPONS]:PtrVal[];*/       // Sound made when firing (each time for automatic)                  //extern intptr_t         *
+var aplWeaponSound2Time:PtrVal[];/*[MAX_WEAPONS]:PtrVal[];*/      // Alternate sound time                                              //extern intptr_t         *
+var aplWeaponSound2Sound:PtrVal[];/*[MAX_WEAPONS]:PtrVal[];*/     // Alternate sound sound ID                                          //extern intptr_t         *
+var aplWeaponReloadSound1:PtrVal[];/*[MAX_WEAPONS]:PtrVal[];*/    // Sound of magazine being removed                                   //extern intptr_t         *
+var aplWeaponReloadSound2:PtrVal[];/*[MAX_WEAPONS]:PtrVal[];*/    // Sound of magazine being inserted                                  //extern intptr_t         *
+var aplWeaponSelectSound:PtrVal[];/*[MAX_WEAPONS]:PtrVal[];*/     // Sound for weapon selection                                        //extern intptr_t         *
+var aplWeaponFlashColor:PtrVal[];/*[MAX_WEAPONS];*/      // Color for polymer muzzle flash                                    //extern intptr_t         *
 //#endif
 
 //// KEEPINSYNC lunatic/defs.ilua

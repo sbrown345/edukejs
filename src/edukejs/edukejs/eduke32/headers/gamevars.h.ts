@@ -74,30 +74,50 @@ var GAMEARRAY_READONLY = 0x00001000,
 //};
 
 //#pragma pack(push,1)
-function gamevar_t() {
-    this.val = {
-        lValue : 0, // intptr_t lValue;
-        plValues: null   // intptr_t *plValues;     // array of values when 'per-player', or 'per-actor'
-    };
-    this.lDefault = 0; //intptr_t lDefault;
-    this.dwFlags = 0; //uintptr_t dwFlags;
-    this.szLabel = ""; //char *szLabel;
+class gamevar_t {
+    val: gamevar_t_union;
+    lDefault: number;
+    dwFlags: number;
+    szLabel: string;
+    
+    constructor() {
+        this.val = new gamevar_t_union(0, null);
+        this.lDefault = 0; //intptr_t lDefault;
+        this.dwFlags = 0; //uintptr_t dwFlags;
+        this.szLabel = ""; //char *szLabel;
+    }
 } //gamevar_t;
 
-function gamearray_t() {
-    this.szLabel = "";
-    this.plValues=null;  // intptr_t *plValues;   // array of values
-    this.size=0;
-    this.dwFlags=0;
+class gamevar_t_union {
+    lValue: number;// intptr_t lValue;
+    plValues: Int32Array;   // intptr_t *plValues;     // array of values when 'per-player', or 'per-actor'
+    constructor(val: number, vals: Int32Array) {
+        this.lValue = val;
+        this.plValues = vals;
+    }
+}
+
+class gamearray_t {
+    szLabel: string;
+    plValues: Int32Array;     // array of values           //intptr_t *
+    size: number;                                       //intptr_t 
+    dwFlags: number;                                    //intptr_t 
+
+    constructor() {
+        this.szLabel = "";
+        this.plValues=null;  // intptr_t *plValues;   // array of values
+        this.size=0;
+        this.dwFlags=0;
+    }
 }
 //#pragma pack(pop)
 
 //# define GAR_ELTSZ (sizeof(aGameArrays[0].plValues[0]))
 
-var aGameVars : Array;
-var aGameArrays : Array;
-var g_gameVarCount : number;
-var g_gameArrayCount : number;
+var aGameVars : gamevar_t[];
+var aGameArrays : gamearray_t[];
+var g_gameVarCount : number = 0;
+var g_gameArrayCount : number = 0;
 
 //int32_t __fastcall Gv_GetVar(register int32_t id,register int32_t iActor,register int32_t iPlayer);
 //void __fastcall Gv_SetVar(register int32_t id,register int32_t lValue,register int32_t iActor,register int32_t iPlayer);
