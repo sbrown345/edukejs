@@ -88,6 +88,7 @@
     <Content Include="eduke32\headers\gamevars.h.ts" />
     <Content Include="eduke32\headers\global.h.ts" />
     <Content Include="eduke32\headers\grpscan.h.ts" />
+    <Content Include="eduke32\headers\macros.h.ts" />
     <Content Include="eduke32\headers\namesdyn.h.ts" />
     <Content Include="eduke32\headers\net.h.ts" />
     <Content Include="eduke32\headers\player.h.ts" />

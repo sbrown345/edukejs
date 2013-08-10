@@ -32,6 +32,7 @@
 /// <reference path="../../eduke32/headers/gameexec.h.ts" />
 /// <reference path="../../eduke32/headers/global.h.ts" />
 /// <reference path="../../eduke32/headers/grpscan.h.ts" />
+/// <reference path="../../eduke32/headers/macros.h.ts" />
 /// <reference path="../../eduke32/headers/net.h.ts" />
 /// <reference path="../../eduke32/headers/player.h.ts" />
 /// <reference path="../../eduke32/headers/quotes.h.ts" />
@@ -4869,12 +4870,13 @@ function G_InitActor(/*int32_t*/ i: number, /*int32_t*/ tilenum: number, /*int32
 //#if !defined LUNATIC
     if (g_tile[tilenum].execPtr)
     {
-        sprite[i].extra = *(g_tile[tilenum].execPtr);
-        AC_ACTION_ID(actor[i].t_data) = *(g_tile[tilenum].execPtr+1);
-        AC_MOVE_ID(actor[i].t_data) = *(g_tile[tilenum].execPtr+2);
+        debugger; //check execPtr values
+        sprite[i].extra = script[(g_tile[tilenum].execPtr)];//*(g_tile[tilenum].execPtr);
+        AC_ACTION_ID_SET(actor[i].t_data, script[g_tile[tilenum].execPtr+1]);
+        AC_MOVE_ID_SET(actor[i].t_data, script[g_tile[tilenum].execPtr+2]);
 
         if (set_movflag_uncond || sprite[i].hitag == 0)  // AC_MOVFLAGS
-            sprite[i].hitag = *(g_tile[tilenum].execPtr+3);
+            sprite[i].hitag = script[g_tile[tilenum].execPtr+3];
 
         return 1;
     }
@@ -4913,7 +4915,7 @@ function A_InsertSprite(whatsect:number,s_x:number,s_y:number,s_z:number,s_pn:nu
     // NetAlloc
     if (Net_IsRelevantStat(s_ss))
     {
-        i = Net_InsertSprite(whatsect,s_ss);
+        todoThrow("i = Net_InsertSprite(whatsect,s_ss);");
     }
     else
     {
@@ -4969,8 +4971,8 @@ if(DEBUGGINGAIDS) {
 
     G_InitActor(i, s_pn, 1);
 
-    Bmemset(&spriteext[i], 0, sizeof(spriteext_t));
-    Bmemset(&spritesmooth[i], 0, sizeof(spritesmooth_t));
+    spriteext[i].init();//Bmemset(&spriteext[i], 0, sizeof(spriteext_t));
+    spritesmooth[i].init();//Bmemset(&spritesmooth[i], 0, sizeof(spritesmooth_t));
 
 //#if defined LUNATIC
 //    if (!g_noResetVars)
@@ -4982,7 +4984,9 @@ if(DEBUGGINGAIDS) {
 
     if (G_HaveEvent(EVENT_EGS))
     {
-        var pl=A_FindPlayer(s, p);
+        var $p = new R<number>(p);
+        var pl=A_FindPlayer(s, $p);
+        p = $p.$;
 
         block_deletesprite++;
         VM_OnEvent(EVENT_EGS, i, pl, p, 0);
@@ -5063,33 +5067,32 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
         if (sprite[i].picnum != SPEAKER && sprite[i].picnum != LETTER && sprite[i].picnum != DUCK && sprite[i].picnum != TARGET && sprite[i].picnum != TRIPBOMB && sprite[i].picnum != VIEWSCREEN && sprite[i].picnum != VIEWSCREEN2 && (sprite[i].cstat&48))
             if (!(sprite[i].picnum >= CRACK1 && sprite[i].picnum <= CRACK4))
             {
-                todoThrow();
-                //if (sprite[i].shade == 127) return SPAWN_END();
-                //if (A_CheckSwitchTile(i) == 1 && (sprite[i].cstat&16))
-                //{
-                //    if (sprite[i].picnum != ACCESSSWITCH && sprite[i].picnum != ACCESSSWITCH2 && sprite[i].pal)
-                //    {
-                //        if (((!g_netServer && ud.multimode < 2)) || ((g_netServer || ud.multimode > 1) && !GTFLAGS(GAMETYPE_DMSWITCHES)))
-                //        {
-                //            sprite[i].xrepeat = sprite[i].yrepeat = 0;
-                //            sprite[i].lotag = sprite[i].hitag = 0;
-                //            sprite[i].cstat = 32768;
-                //            return SPAWN_END();
-                //        }
-                //    }
-                //    sprite[i].cstat |= 257;
-                //    if (sprite[i].pal && sprite[i].picnum != ACCESSSWITCH && sprite[i].picnum != ACCESSSWITCH2)
-                //        sprite[i].pal = 0;
-                //    return SPAWN_END();
-                //}
+                if (sprite[i].shade == 127) return SPAWN_END();
+                if (A_CheckSwitchTile(i) == 1 && (sprite[i].cstat&16))
+                {
+                    if (sprite[i].picnum != ACCESSSWITCH && sprite[i].picnum != ACCESSSWITCH2 && sprite[i].pal)
+                    {
+                        if (((!g_netServer && ud.multimode < 2)) || ((g_netServer || ud.multimode > 1) && !GTFLAGS(GAMETYPE_DMSWITCHES)))
+                        {
+                            sprite[i].xrepeat = sprite[i].yrepeat = 0;
+                            sprite[i].lotag = sprite[i].hitag = 0;
+                            sprite[i].cstat = 32768;
+                            return SPAWN_END();
+                        }
+                    }
+                    sprite[i].cstat |= 257;
+                    if (sprite[i].pal && sprite[i].picnum != ACCESSSWITCH && sprite[i].picnum != ACCESSSWITCH2)
+                        sprite[i].pal = 0;
+                    return SPAWN_END();
+                }
 
-                //if (sprite[i].hitag)
-                //{
-                //    changespritestat(i, STAT_FALLER);
-                //    sprite[i].cstat |=  257;
-                //    sprite[i].extra = g_impactDamage;
-                //    return SPAWN_END();
-                //}
+                if (sprite[i].hitag)
+                {
+                    changespritestat(i, STAT_FALLER);
+                    sprite[i].cstat |=  257;
+                    sprite[i].extra = g_impactDamage;
+                    return SPAWN_END();
+                }
             }
 
         s = sprite[i].picnum;
@@ -6992,13 +6995,12 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
         }
     
     function SPAWN_END(): number {
-        todoThrow();
-        //if (G_HaveEvent(EVENT_SPAWN))
-        //{
-        //    var p = new R<number>(0);
-        //    var pl=A_FindPlayer(sprite[i],p);
-        //    VM_OnEvent(EVENT_SPAWN,i, pl, p, 0);
-        //}
+        if (G_HaveEvent(EVENT_SPAWN))
+        {
+            var p = new R<number>(0);
+            var pl=A_FindPlayer(sprite[i],p);
+            VM_OnEvent(EVENT_SPAWN,i, pl, p.$, 0);
+        }
         return i;
     }   
     SPAWN_END();

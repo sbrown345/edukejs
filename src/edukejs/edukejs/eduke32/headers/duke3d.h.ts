@@ -148,14 +148,14 @@ var PACKBUF_SIZE        = 32768;
 //# include "lunatic_game.h"
 //#endif
 
-//static inline int32_t G_HaveEvent(int32_t iEventID)
-//{
+function G_HaveEvent(/*int32_t*/ iEventID: number): number
+{
 //#ifdef LUNATIC
 //    return El_HaveEvent(iEventID);
 //#else
-//    return apScriptGameEvent[iEventID]!=NULL;
+    return apScriptGameEvent[iEventID]!=NULL?1:0;
 //#endif
-//}
+}
 
 //static inline int32_t G_HaveActor(int32_t actortile)
 //{

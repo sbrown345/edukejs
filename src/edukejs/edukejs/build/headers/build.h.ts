@@ -733,6 +733,9 @@ class spritesmooth_t {
     filler: Uint8Array;     
 
     constructor() {
+        this.init();
+    }
+    init() {
         this.smoothduration = 0.0;                     //float 
         this.mdcurframe = 0, this.mdoldframe = 0;            //int16_t 
         this.mdsmooth = 0;                          //int16_t 
@@ -762,8 +765,8 @@ var wall: walltype[];//EXTERN walltype *wall;
 var sprite: spritetype[];//EXTERN spritetype *sprite;
 var tsprite: spritetype[];//EXTERN spritetype *tsprite;
 //#else
-var spriteext;//EXTERN spriteext_t spriteext[MAXSPRITES+MAXUNIQHUDID];
-var spritesmooth;//EXTERN spritesmooth_t spritesmooth[MAXSPRITES+MAXUNIQHUDID];
+var spriteext: spriteext_t[];//EXTERN spriteext_t spriteext[MAXSPRITES+MAXUNIQHUDID];
+var spritesmooth: spritesmooth_t[];//EXTERN spritesmooth_t spritesmooth[MAXSPRITES+MAXUNIQHUDID];
 
 //EXTERN sectortype sector[MAXSECTORS + M32_FIXME_SECTORS];
 //EXTERN walltype wall[MAXWALLS + M32_FIXME_WALLS];

@@ -728,7 +728,7 @@ function A_DeleteSprite(s: number): void
 //    {
 //        a = krand()&2047;
 //        i = A_InsertSprite(s.sectnum,s.x+(krand()&255)-128,s.y+(krand()&255)-128,gutz-(krand()&8191),gtype,-32,sx,sy,a,48+(krand()&31),-512-(krand()&2047),sp,5);
-//        if (PN == JIBS2)
+//        if (sprite[i].picnum == JIBS2)
 //        {
 //            sprite[i].xrepeat >>= 2;
 //            sprite[i].yrepeat >>= 2;
@@ -1044,7 +1044,7 @@ function A_DeleteSprite(s: number): void
 //    int32_t i;
 
 //    for (SPRITES_OF(STAT_MISC, i))
-//        if (PN == EXPLOSION2 && sectnum == SECT)
+//        if (sprite[i].picnum == EXPLOSION2 && sectnum == SECT)
 //            return i;
 
 //    return -1;
@@ -1624,7 +1624,7 @@ function A_DeleteSprite(s: number): void
 //        if ((t[7]&(0xffff0000))!=ROTFIXSPR_MAGIC)
 //            Bmemcpy(&actor[i].bpos.x, s, sizeof(vec3_t));
 
-//        if (PN >= CRANE && PN <= CRANE+3)
+//        if (sprite[i].picnum >= CRANE && sprite[i].picnum <= CRANE+3)
 //        {
 //            int32_t nextj;
 
@@ -1812,7 +1812,7 @@ function A_DeleteSprite(s: number): void
 //            goto BOLT;
 //        }
 
-//        if (PN >= WATERFOUNTAIN && PN <= WATERFOUNTAIN+3)
+//        if (sprite[i].picnum >= WATERFOUNTAIN && sprite[i].picnum <= WATERFOUNTAIN+3)
 //        {
 //            if (t[0] > 0)
 //            {
@@ -3762,9 +3762,9 @@ function A_DeleteSprite(s: number): void
 //                KILLIT(i);
 
 //            if (T1 >= (g_itemRespawnTime>>1) && T1 < ((g_itemRespawnTime>>1)+(g_itemRespawnTime>>2)))
-//                PN = RESPAWNMARKERYELLOW;
+//                sprite[i].picnum = RESPAWNMARKERYELLOW;
 //            else if (T1 > ((g_itemRespawnTime>>1)+(g_itemRespawnTime>>2)))
-//                PN = RESPAWNMARKERGREEN;
+//                sprite[i].picnum = RESPAWNMARKERGREEN;
 
 //            A_Fall(i);
 //            break;
@@ -5227,7 +5227,7 @@ function A_DeleteSprite(s: number): void
 //                    s.z = l;
 
 //                    A_AddToDeleteQueue(i);
-//                    PN ++;
+//                    sprite[i].picnum ++;
 
 //                    for (SPRITES_OF(STAT_MISC, j))
 //                        if (sprite[j].picnum == BLOODPOOL)
@@ -5520,7 +5520,7 @@ function A_DeleteSprite(s: number): void
 //                goto BOLT;
 //            }
 
-//        if (PN >= SCRAP6 && PN <= SCRAP5+3)
+//        if (sprite[i].picnum >= SCRAP6 && sprite[i].picnum <= SCRAP5+3)
 //        {
 //            if (s.xvel > 0)
 //                s.xvel--;
@@ -8200,7 +8200,7 @@ function A_DeleteSprite(s: number): void
 //void A_PlayAlertSound(int32_t i)
 //{
 //    if (sprite[i].extra > 0)
-//        switch (DYNAMICTILEMAP(PN))
+//        switch (DYNAMICTILEMAP(sprite[i].picnum))
 //        {
 //        case LIZTROOPONTOILET__STATIC:
 //        case LIZTROOPJUSTSIT__STATIC:
@@ -8265,54 +8265,54 @@ function A_DeleteSprite(s: number): void
 //}
 
 //int32_t A_CheckEnemyTile(int32_t pn)
-//{
+//{A_CheckSwitchTile
 //    return ((g_tile[pn].flags & (SPRITE_HARDCODED_BADGUY|SPRITE_BADGUY)) != 0);
 //}
 
-//int32_t A_CheckSwitchTile(int32_t i)
-//{
-//    int32_t j;
+function A_CheckSwitchTile(i: number): number
+{
+    var j: number;
 
-//    if (PN <= 0)  // picnum 0 would oob in the switch below
-//        return 0;
+    if (sprite[i].picnum <= 0)  // picnum 0 would oob in the switch below
+        return 0;
 
-//    // MULTISWITCH has 4 states so deal with it separately.
-//    if (PN >= MULTISWITCH && PN <= MULTISWITCH+3)
-//        return 1;
+    // MULTISWITCH has 4 states so deal with it separately.
+    if (sprite[i].picnum >= MULTISWITCH && sprite[i].picnum <= MULTISWITCH+3)
+        return 1;
 
-//    // ACCESSSWITCH and ACCESSSWITCH2 are only active in one state so deal with
-//    // them separately.
-//    if (PN == ACCESSSWITCH || PN == ACCESSSWITCH2) return 1;
+    // ACCESSSWITCH and ACCESSSWITCH2 are only active in one state so deal with
+    // them separately.
+    if (sprite[i].picnum == ACCESSSWITCH || sprite[i].picnum == ACCESSSWITCH2) return 1;
 
-//    // Loop to catch both states of switches.
-//    for (j=1; j>=0; j--)
-//    {
-//        switch (DYNAMICTILEMAP(PN-j))
-//        {
-//        case HANDPRINTSWITCH__STATIC:
-//        case ALIENSWITCH__STATIC:
-//        case MULTISWITCH__STATIC:
-//        case PULLSWITCH__STATIC:
-//        case HANDSWITCH__STATIC:
-//        case SLOTDOOR__STATIC:
-//        case LIGHTSWITCH__STATIC:
-//        case SPACELIGHTSWITCH__STATIC:
-//        case SPACEDOORSWITCH__STATIC:
-//        case FRANKENSTINESWITCH__STATIC:
-//        case LIGHTSWITCH2__STATIC:
-//        case POWERSWITCH1__STATIC:
-//        case LOCKSWITCH1__STATIC:
-//        case POWERSWITCH2__STATIC:
-//        case DIPSWITCH__STATIC:
-//        case DIPSWITCH2__STATIC:
-//        case TECHSWITCH__STATIC:
-//        case DIPSWITCH3__STATIC:
-//            return 1;
-//        }
-//    }
+    // Loop to catch both states of switches.
+    for (j=1; j>=0; j--)
+    {
+        switch (DYNAMICTILEMAP(sprite[i].picnum-j))
+        {
+        case HANDPRINTSWITCH__STATIC:
+        case ALIENSWITCH__STATIC:
+        case MULTISWITCH__STATIC:
+        case PULLSWITCH__STATIC:
+        case HANDSWITCH__STATIC:
+        case SLOTDOOR__STATIC:
+        case LIGHTSWITCH__STATIC:
+        case SPACELIGHTSWITCH__STATIC:
+        case SPACEDOORSWITCH__STATIC:
+        case FRANKENSTINESWITCH__STATIC:
+        case LIGHTSWITCH2__STATIC:
+        case POWERSWITCH1__STATIC:
+        case LOCKSWITCH1__STATIC:
+        case POWERSWITCH2__STATIC:
+        case DIPSWITCH__STATIC:
+        case DIPSWITCH2__STATIC:
+        case TECHSWITCH__STATIC:
+        case DIPSWITCH3__STATIC:
+            return 1;
+        }
+    }
 
-//    return 0;
-//}
+    return 0;
+}
 
 //void G_MoveWorld(void)
 //{

@@ -88,12 +88,14 @@ var STAT_NETALLOC      = MAXSTATUS-1;
 //#define AC_COUNT(t) ((t)[0])  /* the actor's count */
 ///* The ID of the actor's current move. In C-CON, the bytecode offset to the
 // * move composite: */
-//#define AC_MOVE_ID(t) ((t)[1])
+function AC_MOVE_ID(t: Int32Array): number {return (t)[1];}
+function AC_MOVE_ID_SET(t: Int32Array, v: number): void { (t)[1] = v;}
 //#define AC_ACTION_COUNT(t) ((t)[2])  /* the actor's action count */
 //#define AC_CURFRAME(t) ((t)[3])  /* the actor's current frame offset */
 ///* The ID of the actor's current action. In C-CON, the bytecode offset to the
 // * action composite: */
-function AC_ACTION_ID(t: Int32Array) {return (t)[4];}
+function AC_ACTION_ID(t: Int32Array): number {return (t)[4];}
+function AC_ACTION_ID_SET(t: Int32Array, v: number): void {(t)[4] = v;}
 //#define AC_AI_ID(t) ((t)[5])  /* the ID of the actor's current ai */
 
 //#ifdef LUNATIC
