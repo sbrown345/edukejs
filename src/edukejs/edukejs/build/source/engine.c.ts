@@ -13675,19 +13675,21 @@ function updatesectorz(/*int32_t*/ x, /*int32_t*/ y, /*int32_t*/ z, /*int16_t **
         j = sector[sectnum.$].wallnum;
         do
         {
-            // YAX: TODO: check neighboring sectors here too?
-            i = wal.nextsector;
-            if (i>=0 && inside_z_p(x,y,z, i))
-                {sectnum.$ = i; return;}
+            todoThrow();
+            //// YAX: TODO: check neighboring sectors here too?
+            //i = wal.nextsector;
+            //if (i>=0 && inside_z_p(x,y,z, i))
+            //    {sectnum.$ = i; return;}
 
-            wal++; j--;
+            //wal++; j--;
         }
         while (j != 0);
     }
 
-    for (i=numsectors-1; i>=0; i--)
-        if (inside_z_p(x,y,z, i))
-            {sectnum.$ = i; return;}
+            todoThrow();
+    //for (i=numsectors-1; i>=0; i--)
+    //    if (inside_z_p(x,y,z, i))
+    //        {sectnum.$ = i; return;}
 
     sectnum.$ = -1;
 }

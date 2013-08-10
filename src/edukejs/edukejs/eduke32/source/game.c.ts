@@ -3,6 +3,8 @@
 /// <reference path="../../utils/todo.ts" />
 /// <reference path="../../utils/types.ts" />
 
+/// <reference path="../../jmact/source/mathutil.c.ts" />
+
 /// <reference path="../../build/headers/baselayer.h.ts" />
 /// <reference path="../../build/headers/build.h.ts" />
 /// <reference path="../../build/headers/cache1d.h.ts" />
@@ -5923,7 +5925,7 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
                     sp.z -= (18<<8);
                 }
                 else sp.z -= (13<<8);
-                sp.ang = getangle(g_player[0].ps.pos.x-sp.x,g_player[0].ps.pos.y-sp.y);
+                todoThrow("sp.ang = getangle(g_player[0].ps.pos.x-sp.x,g_player[0].ps.pos.y-sp.y);");                
                 sp.xvel = 48-(krand()&31);
                 A_SetSprite(i,CLIPMASK0);
             }
