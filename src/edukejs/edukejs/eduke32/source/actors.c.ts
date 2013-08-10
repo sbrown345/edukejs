@@ -55,6 +55,7 @@
 /// <reference path="../../eduke32/source/rts.c.ts" />
 /// <reference path="../../eduke32/source/sector.c.ts" />
 /// <reference path="../../eduke32/source/osdfuncs.c.ts" />
+/// <reference path="../../eduke32/source/sounds.c.ts" />
 /// <reference path="../../eduke32/source/soundsdyn.c.ts" />
 /// <reference path="../../eduke32/source/winbits.c.ts" />
 /// <reference path="../../eduke32/source/winlayer.c.ts" />
@@ -102,22 +103,23 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 //int32_t otherp;
 
-//int32_t G_SetInterpolation(int32_t *posptr)
-//{
-//    int32_t i=g_numInterpolations-1;
+function G_SetInterpolation(/*int32_t * */posptr: R<number>): number
+{
+    todo("G_SetInterpolation");
+    //int32_t i=g_numInterpolations-1;
 
-//    if (g_numInterpolations >= MAXINTERPOLATIONS)
-//        return 1;
+    //if (g_numInterpolations >= MAXINTERPOLATIONS)
+    //    return 1;
 
-//    for (; i>=0; i--)
-//        if (curipos[i] == posptr)
-//            return 0;
+    //for (; i>=0; i--)
+    //    if (curipos[i] == posptr)
+    //        return 0;
 
-//    curipos[g_numInterpolations] = posptr;
-//    oldipos[g_numInterpolations] = *posptr;
-//    g_numInterpolations++;
-//    return 0;
-//}
+    //curipos[g_numInterpolations] = posptr;
+    //oldipos[g_numInterpolations] = *posptr;
+    //g_numInterpolations++;
+    return 0;
+}
 
 //void G_StopInterpolation(int32_t *posptr)
 //{
@@ -678,19 +680,19 @@ function A_DeleteSprite(s: number): void
 //    }
 }
 
-//void A_AddToDeleteQueue(int32_t i)
-//{
-//    if (g_spriteDeleteQueueSize == 0)
-//    {
-//        A_DeleteSprite(i);
-//        return;
-//    }
+function A_AddToDeleteQueue(/*int32_t */i: number): void
+{
+    if (g_spriteDeleteQueueSize == 0)
+    {
+        A_DeleteSprite(i);
+        return;
+    }
 
-//    if (SpriteDeletionQueue[g_spriteDeleteQueuePos] >= 0)
-//        sprite[SpriteDeletionQueue[g_spriteDeleteQueuePos]].xrepeat = 0;
-//    SpriteDeletionQueue[g_spriteDeleteQueuePos] = i;
-//    g_spriteDeleteQueuePos = (g_spriteDeleteQueuePos+1)%g_spriteDeleteQueueSize;
-//}
+    if (SpriteDeletionQueue[g_spriteDeleteQueuePos] >= 0)
+        sprite[SpriteDeletionQueue[g_spriteDeleteQueuePos]].xrepeat = 0;
+    SpriteDeletionQueue[g_spriteDeleteQueuePos] = i;
+    g_spriteDeleteQueuePos = (g_spriteDeleteQueuePos+1)%g_spriteDeleteQueueSize;
+}
 
 //void A_SpawnMultiple(int32_t sp, int32_t pic, int32_t n)
 //{
@@ -8197,77 +8199,77 @@ function A_DeleteSprite(s: number): void
 //}
 //#endif // POLYMER
 
-//void A_PlayAlertSound(int32_t i)
-//{
-//    if (sprite[i].extra > 0)
-//        switch (DYNAMICTILEMAP(sprite[i].picnum))
-//        {
-//        case LIZTROOPONTOILET__STATIC:
-//        case LIZTROOPJUSTSIT__STATIC:
-//        case LIZTROOPSHOOT__STATIC:
-//        case LIZTROOPJETPACK__STATIC:
-//        case LIZTROOPDUCKING__STATIC:
-//        case LIZTROOPRUNNING__STATIC:
-//        case LIZTROOP__STATIC:
-//            A_PlaySound(PRED_RECOG,i);
-//            break;
-//        case LIZMAN__STATIC:
-//        case LIZMANSPITTING__STATIC:
-//        case LIZMANFEEDING__STATIC:
-//        case LIZMANJUMP__STATIC:
-//            A_PlaySound(CAPT_RECOG,i);
-//            break;
-//        case PIGCOP__STATIC:
-//        case PIGCOPDIVE__STATIC:
-//            A_PlaySound(PIG_RECOG,i);
-//            break;
-//        case RECON__STATIC:
-//            A_PlaySound(RECO_RECOG,i);
-//            break;
-//        case DRONE__STATIC:
-//            A_PlaySound(DRON_RECOG,i);
-//            break;
-//        case COMMANDER__STATIC:
-//        case COMMANDERSTAYPUT__STATIC:
-//            A_PlaySound(COMM_RECOG,i);
-//            break;
-//        case ORGANTIC__STATIC:
-//            A_PlaySound(TURR_RECOG,i);
-//            break;
-//        case OCTABRAIN__STATIC:
-//        case OCTABRAINSTAYPUT__STATIC:
-//            A_PlaySound(OCTA_RECOG,i);
-//            break;
-//        case BOSS1__STATIC:
-//        case BOSS1STAYPUT__STATIC:
-//            S_PlaySound(BOS1_RECOG);
-//            break;
-//        case BOSS2__STATIC:
-//            if (sprite[i].pal != 0)
-//                S_PlaySound(BOS2_RECOG);
-//            else S_PlaySound(WHIPYOURASS);
-//            break;
-//        case BOSS3__STATIC:
-//            if (sprite[i].pal != 0)
-//                S_PlaySound(BOS3_RECOG);
-//            else S_PlaySound(RIPHEADNECK);
-//            break;
-//        case BOSS4__STATIC:
-//        case BOSS4STAYPUT__STATIC:
-//            if (sprite[i].pal != 0)
-//                S_PlaySound(BOS4_RECOG);
-//            else S_PlaySound(BOSS4_FIRSTSEE);
-//            break;
-//        case GREENSLIME__STATIC:
-//            A_PlaySound(SLIM_RECOG,i);
-//            break;
-//        }
-//}
+function A_PlayAlertSound(/*int32_t*/ i: number): void
+{
+    if (sprite[i].extra > 0)
+        switch (DYNAMICTILEMAP(sprite[i].picnum))
+        {
+        case LIZTROOPONTOILET__STATIC:
+        case LIZTROOPJUSTSIT__STATIC:
+        case LIZTROOPSHOOT__STATIC:
+        case LIZTROOPJETPACK__STATIC:
+        case LIZTROOPDUCKING__STATIC:
+        case LIZTROOPRUNNING__STATIC:
+        case LIZTROOP__STATIC:
+            A_PlaySound(PRED_RECOG,i);
+            break;
+        case LIZMAN__STATIC:
+        case LIZMANSPITTING__STATIC:
+        case LIZMANFEEDING__STATIC:
+        case LIZMANJUMP__STATIC:
+            A_PlaySound(CAPT_RECOG,i);
+            break;
+        case PIGCOP__STATIC:
+        case PIGCOPDIVE__STATIC:
+            A_PlaySound(PIG_RECOG,i);
+            break;
+        case RECON__STATIC:
+            A_PlaySound(RECO_RECOG,i);
+            break;
+        case DRONE__STATIC:
+            A_PlaySound(DRON_RECOG,i);
+            break;
+        case COMMANDER__STATIC:
+        case COMMANDERSTAYPUT__STATIC:
+            A_PlaySound(COMM_RECOG,i);
+            break;
+        case ORGANTIC__STATIC:
+            A_PlaySound(TURR_RECOG,i);
+            break;
+        case OCTABRAIN__STATIC:
+        case OCTABRAINSTAYPUT__STATIC:
+            A_PlaySound(OCTA_RECOG,i);
+            break;
+        case BOSS1__STATIC:
+        case BOSS1STAYPUT__STATIC:
+            S_PlaySound(BOS1_RECOG);
+            break;
+        case BOSS2__STATIC:
+            if (sprite[i].pal != 0)
+                S_PlaySound(BOS2_RECOG);
+            else S_PlaySound(WHIPYOURASS);
+            break;
+        case BOSS3__STATIC:
+            if (sprite[i].pal != 0)
+                S_PlaySound(BOS3_RECOG);
+            else S_PlaySound(RIPHEADNECK);
+            break;
+        case BOSS4__STATIC:
+        case BOSS4STAYPUT__STATIC:
+            if (sprite[i].pal != 0)
+                S_PlaySound(BOS4_RECOG);
+            else S_PlaySound(BOSS4_FIRSTSEE);
+            break;
+        case GREENSLIME__STATIC:
+            A_PlaySound(SLIM_RECOG,i);
+            break;
+        }
+}
 
-//int32_t A_CheckEnemyTile(int32_t pn)
-//{A_CheckSwitchTile
-//    return ((g_tile[pn].flags & (SPRITE_HARDCODED_BADGUY|SPRITE_BADGUY)) != 0);
-//}
+function A_CheckEnemyTile(/*int32_t */pn: number): number
+{
+    return ((g_tile[pn].flags & (SPRITE_HARDCODED_BADGUY|SPRITE_BADGUY)) != 0)?1:0;
+}
 
 function A_CheckSwitchTile(i: number): number
 {

@@ -324,14 +324,15 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //    }
 //}
 
-//void A_GetZLimits(int32_t iActor)
-//{
-//    spritetype *s = &sprite[iActor];
+function A_GetZLimits(/*int32_t */iActor:  number): number
+{
+    todoThrow();return -22222222222222222222222222222222222222;
+//    var s = sprite[iActor];
 
 ////    if (s.statnum == STAT_PLAYER || s.statnum == STAT_STANDABLE || s.statnum == STAT_ZOMBIEACTOR || s.statnum == STAT_ACTOR || s.statnum == STAT_PROJECTILE)
 //    {
-//        int32_t hz,lz,zr = 127;
-//        int32_t cstat = s.cstat;
+//        var hz,lz,zr = 127;    
+//        var cstat = s.cstat;   
 
 //        s.cstat = 0;
 
@@ -339,7 +340,7 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //            zr = 4;
 
 //        s.z -= ZOFFSET;
-//        getzrange((vec3_t *)s,s.sectnum,&actor[iActor].ceilingz,&hz,&actor[iActor].floorz,&lz,zr,CLIPMASK0);
+//        getzrange(s,s.sectnum,&actor[iActor].ceilingz,&hz,&actor[iActor].floorz,&lz,zr,CLIPMASK0);
 //        s.z += ZOFFSET;
 
 //        s.cstat = cstat;
@@ -373,67 +374,68 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //            actor[iActor].floorz   = sector[s.sectnum].floorz;
 //        }
 //    */
-//}
+}
 
-//void A_Fall(int32_t iActor)
-//{
-//    spritetype *s = &sprite[iActor];
-//    int32_t hz,lz,c = g_spriteGravity;
+function A_Fall(/*int32_t*/ iActor: number): void
+{
+    debugger;
+    var s = sprite[iActor];
+    var hz,lz,c = g_spriteGravity;
 //#ifdef YAX_ENABLE
-//    int16_t fbunch;
+    var fbunch;
 //#endif
-//    if (G_CheckForSpaceFloor(s.sectnum))
-//        c = 0;
-//    else
-//    {
-//        if (G_CheckForSpaceCeiling(s.sectnum) || sector[s.sectnum].lotag == ST_2_UNDERWATER)
-//            c = g_spriteGravity/6;
-//    }
+    if (G_CheckForSpaceFloor(s.sectnum))
+        c = 0;
+    else
+    {
+        if (G_CheckForSpaceCeiling(s.sectnum) || sector[s.sectnum].lotag == ST_2_UNDERWATER)
+            c = g_spriteGravity/6;
+    }
 
-//    if (s.statnum == STAT_ACTOR || s.statnum == STAT_PLAYER || s.statnum == STAT_ZOMBIEACTOR || s.statnum == STAT_STANDABLE)
-//    {
-//        int32_t cstat = s.cstat;
-//        s.cstat = 0;
-//        s.z -= ZOFFSET;
-//        getzrange((vec3_t *)s,s.sectnum,&actor[iActor].ceilingz,&hz,&actor[iActor].floorz,&lz,127L,CLIPMASK0);
-//        s.z += ZOFFSET;
-//        s.cstat = cstat;
-//    }
-//    else
-//    {
-//        actor[iActor].ceilingz = sector[s.sectnum].ceilingz;
-//        actor[iActor].floorz   = sector[s.sectnum].floorz;
-//    }
-
-//#ifdef YAX_ENABLE
-//    if (sector[s.sectnum].floorstat&512)
-//        fbunch = -1;
-//    else
-//        fbunch = yax_getbunch(s.sectnum, YAX_FLOOR);
-//#endif
-
-//    if (s.z < actor[iActor].floorz-ZOFFSET
-//#ifdef YAX_ENABLE
-//            || fbunch >= 0
-//#endif
-//       )
-//    {
-//        if (sector[s.sectnum].lotag == ST_2_UNDERWATER && s.zvel > 3122)
-//            s.zvel = 3144;
-//        s.z += s.zvel = min(6144, s.zvel+c);
-//    }
+    if (s.statnum == STAT_ACTOR || s.statnum == STAT_PLAYER || s.statnum == STAT_ZOMBIEACTOR || s.statnum == STAT_STANDABLE)
+    {
+        var cstat = s.cstat;
+        s.cstat = 0;
+        s.z -= ZOFFSET;
+        getzrange(s,s.sectnum,&actor[iActor].ceilingz,&hz,&actor[iActor].floorz,&lz,127,CLIPMASK0);
+        s.z += ZOFFSET;
+        s.cstat = cstat;
+    }
+    else
+    {
+        actor[iActor].ceilingz = sector[s.sectnum].ceilingz;
+        actor[iActor].floorz   = sector[s.sectnum].floorz;
+    }
 
 //#ifdef YAX_ENABLE
-//    if (fbunch >= 0)
-//        setspritez(iActor, (vec3_t *)s);
-//    else
+    if (sector[s.sectnum].floorstat&512)
+        fbunch = -1;
+    else
+        fbunch = yax_getbunch(s.sectnum, YAX_FLOOR);
 //#endif
-//        if (s.z >= actor[iActor].floorz-ZOFFSET)
-//        {
-//            s.z = actor[iActor].floorz-ZOFFSET;
-//            s.zvel = 0;
-//        }
-//}
+
+    if (s.z < actor[iActor].floorz-ZOFFSET
+//#ifdef YAX_ENABLE
+            || fbunch >= 0
+//#endif
+       )
+    {
+        if (sector[s.sectnum].lotag == ST_2_UNDERWATER && s.zvel > 3122)
+            s.zvel = 3144;
+        s.z += s.zvel = min(6144, s.zvel+c);
+    }
+
+//#ifdef YAX_ENABLE
+    if (fbunch >= 0)
+        setspritez(iActor, (vec3_t *)s);
+    else
+//#endif
+        if (s.z >= actor[iActor].floorz-ZOFFSET)
+        {
+            s.z = actor[iActor].floorz-ZOFFSET;
+            s.zvel = 0;
+        }
+}
 
 //int32_t G_GetAngleDelta(int32_t a,int32_t na)
 //{

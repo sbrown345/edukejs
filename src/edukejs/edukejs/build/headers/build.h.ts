@@ -427,8 +427,12 @@ class walltypev7 implements ITypeInfo
 ////   bit 15: 1 = Invisible sprite, 0 = not invisible
 
 //44 bytes
-class spritetype implements ITypeInfo
+class spritetype implements ITypeInfo, IVec3
 {
+    // check it's not passed by ref!
+    //public toVec3(): vec3_t {
+    //    return new vec3_t(this.x, this.y, this.z);
+    //}
 
     x:number; y:number; z:number;         //Tracker(Sprite, int32_t)  
 
@@ -1175,8 +1179,10 @@ interface IVec3 {
 class vec3_t implements IVec3{
     x: number; y: number; z: number;//    int32_t
 
-    constructor() {
-        this.x = this.y = this.z = 0;
+    constructor(x = 0, y = 0, z = 0) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
     }
 
     copyTo(v: IVec3) {
@@ -1310,10 +1316,10 @@ function rotatesprite_fs(sx: number, sy: number, z: number, a: number, picnum: n
 //int32_t   ksqrt(uint32_t num);
 //int32_t   __fastcall getangle(int32_t xvect, int32_t yvect);
 
-//static inline uint32_t uhypsq(int32_t dx, int32_t dy)
-//{
-//    return (uint32_t)dx*dx + (uint32_t)dy*dy;
-//}
+function /*uint32_t */uhypsq(/*int32_t*/ dx: number, /*int32_t */dy: number): number
+{
+    return uint32(uint32(dx*dx) + uint32(dy*dy));
+}
 
 //void   rotatepoint(int32_t xpivot, int32_t ypivot, int32_t x, int32_t y,
 //                   int16_t daang, int32_t *x2, int32_t *y2) ATTRIBUTE((nonnull(6,7)));
@@ -1330,10 +1336,10 @@ function rotatesprite_fs(sx: number, sy: number, z: number, a: number, picnum: n
 //    return getceilzofslopeptr(&sector[sectnum], dax, day);
 //}
 
-//static inline int32_t getflorzofslope(int16_t sectnum, int32_t dax, int32_t day)
-//{
-//    return getflorzofslopeptr(&sector[sectnum], dax, day);
-//}
+function /*int32_t*/ getflorzofslope(/*int16_t*/ sectnum: number, /*int32_t*/ dax: number, /*int32_t */day: number): number
+{
+    return getflorzofslopeptr(sector[sectnum], dax, day);
+}
 
 //static inline void getzsofslope(int16_t sectnum, int32_t dax, int32_t day, int32_t *ceilz, int32_t *florz)
 //{

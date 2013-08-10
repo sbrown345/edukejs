@@ -695,8 +695,9 @@ var g_numEnvSoundsPlaying,g_maxSoundPos = 0; //int32
 //    return voice;
 //}
 
-//int32_t S_PlaySound(int32_t num)
-//{
+function S_PlaySound(/*int32_t*/ num: number): number
+{
+    todoThrow();return -99999999999999999999999999999;
 //    int32_t pitch;
 //    int32_t voice, j;
 
@@ -759,15 +760,15 @@ var g_numEnvSoundsPlaying,g_maxSoundPos = 0; //int32
 //    g_sounds[num].SoundOwner[j].sndist = 255-LOUDESTVOLUME;
 //    g_sounds[num].SoundOwner[j].clock = totalclock;
 //    return voice;
-//}
+}
 
-//int32_t A_PlaySound(uint32_t num, int32_t i)
-//{
-//    if ((unsigned)num > (unsigned)g_maxSoundPos) return -1;
+function A_PlaySound(/*uint32_t */num: number, /*int32_t */i: number): number
+{
+    //if ((unsigned)num > (unsigned)g_maxSoundPos) return -1;
 
-//    return i < 0 ? S_PlaySound(num) : 
-//        S_PlaySound3D(num, i, (vec3_t *)&sprite[i]);
-//}
+    //return i < 0 ? S_PlaySound(num) : 
+    //    S_PlaySound3D(num, i, (vec3_t *)&sprite[i]);
+}
 
 //void S_StopEnvSound(int32_t num, int32_t i)
 //{

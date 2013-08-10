@@ -545,7 +545,7 @@ function yax_setbunches(/*int16_t*/ i: number, /*int16_t*/ cb: number, /*int16_t
 //}
 
 
-//// in-struct --> array transfer (only resetstat==0); list construction
+//// in-struct -. array transfer (only resetstat==0); list construction
 // resetstat:  0: reset and read data from structs and construct linked lists etc.
 //             1: only reset
 //             2: read data from game-time arrays and construct linked lists etc.
@@ -627,7 +627,7 @@ function yax_update(/*int32_t*/ resetstat: number): void
         }
     }
 
-    // In-struct --> array transfer (resetstat==0 and !defined NEW_MAP_FORMAT)
+    // In-struct -. array transfer (resetstat==0 and !defined NEW_MAP_FORMAT)
     // and list construction.
     for (i=numsectors-1; i>=0; i--)
     {
@@ -907,7 +907,7 @@ function yax_update(/*int32_t*/ resetstat: number): void
 
 //        spritenum &= MAXSPRITES-1;
 //        spr = &sprite[spritenum];
-//        sectnum = spr->sectnum;
+//        sectnum = spr.sectnum;
 
 //        if (gotthrough == (MAXSPRITES|(MAXSPRITES<<1)))
 //        {
@@ -929,7 +929,7 @@ function yax_update(/*int32_t*/ resetstat: number): void
 //                    if (yax_getbunch(sectnum, cf) != yax_globalbunch)
 //                        continue;
 
-//                sectnum = yax_getneighborsect(spr->x, spr->y, sectnum, cf);
+//                sectnum = yax_getneighborsect(spr.x, spr.y, sectnum, cf);
 //                if (sectnum < 0)
 //                    continue;
 //            }
@@ -1318,18 +1318,18 @@ function mapinfo_t()
 //{
 //    if (bak)
 //    {
-//        bak->numsectors = numsectors;
-//        bak->numwalls = numwalls;
-//        bak->sector = sector;
-//        bak->wall = wall;
+//        bak.numsectors = numsectors;
+//        bak.numwalls = numwalls;
+//        bak.sector = sector;
+//        bak.wall = wall;
 //    }
 
 //    if (newmap)
 //    {
-//        numsectors = newmap->numsectors;
-//        numwalls = newmap->numwalls;
-//        sector = newmap->sector;
-//        wall = newmap->wall;
+//        numsectors = newmap.numsectors;
+//        numwalls = newmap.numwalls;
+//        sector = newmap.sector;
+//        wall = newmap.wall;
 //    }
 //}
 
@@ -1364,7 +1364,7 @@ var loadsprite;//static spritetype *
 //#define CM_SOME (CM_NONE-1)
 //#define CM_OUTER (CM_MAX)   // sector surrounds clipping sector
 
-//// sprite -> sector tag mappings
+//// sprite . sector tag mappings
 //#define CM_XREPEAT floorpal
 //#define CM_YREPEAT floorxpanning
 //#define CM_XOFFSET ceilingshade
@@ -2049,29 +2049,11 @@ function clipmapinfo_init() : void
 //// Microsoft C Inline Assembly Routines
 ////
 
-//static inline int32_t nsqrtasm(int32_t a)
-//{
-//    _asm
-//    {
-//        push ebx
-//        mov eax, a
-//        test eax, 0xff000000
-//        mov ebx, eax
-//        jnz short over24
-//        shr ebx, 12
-//        mov cx, word ptr shlookup[ebx*2]
-//        jmp short under24
-//        over24:
-//        shr ebx, 24
-//        mov cx, word ptr shlookup[ebx*2+8192]
-//        under24:
-//        shr eax, cl
-//        mov cl, ch
-//        mov ax, word ptr sqrtable[eax*2]
-//        shr eax, cl
-//        pop ebx
-//    }
-//}
+
+function nsqrtasm(c: number): number    
+{
+    return Math.sqrt(c) | 0;
+}
 
 function msqrtasm(c: number): number    
 {
@@ -2586,7 +2568,7 @@ var palfadedelta = 0; //char
 //        (*sortcnt)++;
 
 //        // now check whether the tsprite needs duplication into another level
-//        if ((spr->cstat&48)==32)
+//        if ((spr.cstat&48)==32)
 //            return 0;
 
 //        yax_getbunches(sectnum, &cb, &fb);
@@ -2596,7 +2578,7 @@ var palfadedelta = 0; //char
 //        spzofs = spriteheightofs(z, &spheight, 1);
 
 //        // TODO: get*zofslope?
-//        if (cb>=0 && spr->z+spzofs-spheight < sector[sectnum].ceilingz)
+//        if (cb>=0 && spr.z+spzofs-spheight < sector[sectnum].ceilingz)
 //        {
 //            sortcnt = &yax_spritesortcnt[yax_globallev-1];
 //            if (*sortcnt < MAXSPRITESONSCREEN)
@@ -2605,7 +2587,7 @@ var palfadedelta = 0; //char
 //                (*sortcnt)++;
 //            }
 //        }
-//        if (fb>=0 && spr->z+spzofs > sector[sectnum].floorz)
+//        if (fb>=0 && spr.z+spzofs > sector[sectnum].floorz)
 //        {
 //            sortcnt = &yax_spritesortcnt[yax_globallev+1];
 //            if (*sortcnt < MAXSPRITESONSCREEN)
@@ -2643,12 +2625,12 @@ var palfadedelta = 0; //char
 //        for (z=headspritesect[sectnum]; z>=0; z=nextspritesect[z])
 //        {
 //            spr = &sprite[z];
-//            if ((((spr->cstat&0x8000) == 0) || (showinvisibility)) &&
-//                    (spr->xrepeat > 0) && (spr->yrepeat > 0))
+//            if ((((spr.cstat&0x8000) == 0) || (showinvisibility)) &&
+//                    (spr.xrepeat > 0) && (spr.yrepeat > 0))
 //            {
-//                xs = spr->x-globalposx; ys = spr->y-globalposy;
-//                if ((spr->cstat&48) || ((int64_t)xs*cosglobalang+(int64_t)ys*singlobalang > 0))
-//                    if ((spr->cstat&(64+48))!=(64+16) || dmulscale6(sintable[(spr->ang+512)&2047],-xs, sintable[spr->ang&2047],-ys) > 0)
+//                xs = spr.x-globalposx; ys = spr.y-globalposy;
+//                if ((spr.cstat&48) || ((int64_t)xs*cosglobalang+(int64_t)ys*singlobalang > 0))
+//                    if ((spr.cstat&(64+48))!=(64+16) || dmulscale6(sintable[(spr.ang+512)&2047],-xs, sintable[spr.ang&2047],-ys) > 0)
 //                        if (engine_addtsprite(z, sectnum))
 //                            break;
 //            }
@@ -2664,13 +2646,13 @@ var palfadedelta = 0; //char
 //        scanfirst = numscans;
 //        for (z=startwall,wal=&wall[z]; z<endwall; z++,wal++)
 //        {
-//            nextsectnum = wal->nextsector;
+//            nextsectnum = wal.nextsector;
 
-//            wal2 = &wall[wal->point2];
-//            x1 = wal->x-globalposx; y1 = wal->y-globalposy;
-//            x2 = wal2->x-globalposx; y2 = wal2->y-globalposy;
+//            wal2 = &wall[wal.point2];
+//            x1 = wal.x-globalposx; y1 = wal.y-globalposy;
+//            x2 = wal2.x-globalposx; y2 = wal2.y-globalposy;
 
-//            if ((nextsectnum >= 0) && ((wal->cstat&32) == 0))
+//            if ((nextsectnum >= 0) && ((wal.cstat&32) == 0))
 //#ifdef YAX_ENABLE
 //                if (yax_nomaskpass==0 || !yax_isislandwall(z, !yax_globalcf) || (yax_nomaskdidit=1, 0))
 //#endif
@@ -2997,10 +2979,10 @@ var palfadedelta = 0; //char
 //    walltype *wal;
 //    int32_t x11, y11, x21, y21, x12, y12, x22, y22, dx, dy, t1, t2;
 
-//    wal = &wall[thewall[l1]]; x11 = wal->x; y11 = wal->y;
-//    wal = &wall[wal->point2]; x21 = wal->x; y21 = wal->y;
-//    wal = &wall[thewall[l2]]; x12 = wal->x; y12 = wal->y;
-//    wal = &wall[wal->point2]; x22 = wal->x; y22 = wal->y;
+//    wal = &wall[thewall[l1]]; x11 = wal.x; y11 = wal.y;
+//    wal = &wall[wal.point2]; x21 = wal.x; y21 = wal.y;
+//    wal = &wall[thewall[l2]]; x12 = wal.x; y12 = wal.y;
+//    wal = &wall[wal.point2]; x22 = wal.x; y22 = wal.y;
 
 //    dx = x21-x11; dy = y21-y11;
 //    t1 = dmulscale2(x12-x11,dy,-dx,y12-y11); //p1(l2) vs. l1
@@ -3033,10 +3015,10 @@ var palfadedelta = 0; //char
 //static inline int32_t spritewallfront(const spritetype *s, int32_t w)
 //{
 //    const walltype *const wal = &wall[w];
-//    const walltype *wal2 = &wall[wal->point2];
-//    const int32_t x1 = wal->x, y1 = wal->y;
+//    const walltype *wal2 = &wall[wal.point2];
+//    const int32_t x1 = wal.x, y1 = wal.y;
 
-//    return (dmulscale32(wal2->x-x1, s->y-y1, -(s->x-x1), wal2->y-y1) >= 0);
+//    return (dmulscale32(wal2.x-x1, s.y-y1, -(s.x-x1), wal2.y-y1) >= 0);
 //}
 
 ////
@@ -3054,8 +3036,8 @@ var palfadedelta = 0; //char
 //    double d1, d2;
 
 //    // wall line equation
-//    wal = &wall[w]; x1 = wal->x - globalposx; y1 = wal->y - globalposy;
-//    wal = &wall[wal->point2]; x2 = wal->x - globalposx; y2 = wal->y - globalposy;
+//    wal = &wall[w]; x1 = wal.x - globalposx; y1 = wal.y - globalposy;
+//    wal = &wall[wal.point2]; x2 = wal.x - globalposx; y2 = wal.y - globalposy;
 //    if ((x2 - x1) != 0)
 //        a1 = (float)(y2 - y1)/(x2 - x1);
 //    else
@@ -3064,8 +3046,8 @@ var palfadedelta = 0; //char
 //    c1 = (y1 - (a1 * x1));
 
 //    // player to sprite line equation
-//    if ((s->x - globalposx) != 0)
-//        a2 = (float)(s->y - globalposy)/(s->x - globalposx);
+//    if ((s.x - globalposx) != 0)
+//        a2 = (float)(s.y - globalposy)/(s.x - globalposx);
 //    else
 //        a2 = 1e+37;
 //    b2 = -1;
@@ -3077,8 +3059,8 @@ var palfadedelta = 0; //char
 //    y = ((a2*c1 - a1*c2) * d1);
 
 //    // distance between the sprite and the player
-//    a1 = s->x - globalposx;
-//    b1 = s->y - globalposy;
+//    a1 = s.x - globalposx;
+//    b1 = s.y - globalposy;
 //    d1 = (a1 * a1 + b1 * b1);
 
 //    // distance between the intersection point and the player
@@ -3162,7 +3144,7 @@ var palfadedelta = 0; //char
 //{
 //    int32_t l=0, ol=0, x;
 
-//    int32_t walxrepeat = (wal->xrepeat<<3);
+//    int32_t walxrepeat = (wal.xrepeat<<3);
 
 //    //lwall calculation
 //    int32_t tmpx = xb1[z]-halfxdimen;
@@ -3238,7 +3220,7 @@ var palfadedelta = 0; //char
 //    if (lwall[xb2[z]] >= walxrepeat && walxrepeat)
 //        lwall[xb2[z]] = walxrepeat-1;
 
-//    if (wal->cstat&8)
+//    if (wal.cstat&8)
 //    {
 //        walxrepeat--;
 //        for (x=xb1[z]; x<=xb2[z]; x++)
@@ -3543,7 +3525,7 @@ function animateoffs(/*int16_t */tilenum: number, /*int16_t */fakevar: number): 
 //    return(bad);
 //}
 
-//// globalpicnum --> globalxshift, globalyshift
+//// globalpicnum -. globalxshift, globalyshift
 //static void calc_globalshifts(void)
 //{
 //    globalxshift = (8-(picsiz[globalpicnum]&15));
@@ -3582,7 +3564,7 @@ function animateoffs(/*int16_t */tilenum: number, /*int16_t */fakevar: number): 
 
 //    globalshade = shade;
 //    globvis = globalcisibility;
-//    if (sec->visibility != 0) globvis = mulscale4(globvis, (uint8_t)(sec->visibility+16));
+//    if (sec.visibility != 0) globvis = mulscale4(globvis, (uint8_t)(sec.visibility+16));
 //    globalorientation = stat;
 
 //    if ((globalorientation&64) == 0)
@@ -3594,7 +3576,7 @@ function animateoffs(/*int16_t */tilenum: number, /*int16_t */fakevar: number): 
 //    }
 //    else
 //    {
-//        j = sec->wallptr;
+//        j = sec.wallptr;
 //        ox = wall[wall[j].point2].x - wall[j].x;
 //        oy = wall[wall[j].point2].y - wall[j].y;
 //        i = nsqrtasm(uhypsq(ox,oy)); if (i == 0) i = 1024; else i = 1048576/i;
@@ -3653,9 +3635,9 @@ function animateoffs(/*int16_t */tilenum: number, /*int16_t */fakevar: number): 
 //    int32_t twall, bwall;
 //    const sectortype *sec = &sector[sectnum];
 
-//    if (setup_globals_cf1(sec, sec->ceilingpal, sec->ceilingz-globalposz,
-//                          sec->ceilingpicnum, sec->ceilingshade, sec->ceilingstat,
-//                          sec->ceilingxpanning, sec->ceilingypanning, x1))
+//    if (setup_globals_cf1(sec, sec.ceilingpal, sec.ceilingz-globalposz,
+//                          sec.ceilingpicnum, sec.ceilingshade, sec.ceilingstat,
+//                          sec.ceilingxpanning, sec.ceilingypanning, x1))
 //        return;
 
 //    if (!(globalorientation&0x180))
@@ -3748,9 +3730,9 @@ function animateoffs(/*int16_t */tilenum: number, /*int16_t */fakevar: number): 
 //     int32_t twall, bwall;
 //     const sectortype *sec = &sector[sectnum];
 
-//     if (setup_globals_cf1(sec, sec->floorpal, globalposz-sec->floorz,
-//                           sec->floorpicnum, sec->floorshade, sec->floorstat,
-//                           sec->floorxpanning, sec->floorypanning, x1))
+//     if (setup_globals_cf1(sec, sec.floorpal, globalposz-sec.floorz,
+//                           sec.floorpicnum, sec.floorshade, sec.floorstat,
+//                           sec.floorxpanning, sec.floorypanning, x1))
 //         return;
 
 //    if (!(globalorientation&0x180))
@@ -4342,23 +4324,23 @@ function animateoffs(/*int16_t */tilenum: number, /*int16_t */fakevar: number): 
 //    {
 //        if (globalposz <= getceilzofslope(sectnum,globalposx,globalposy))
 //            return;  //Back-face culling
-//        globalorientation = sec->ceilingstat;
-//        globalpicnum = sec->ceilingpicnum;
-//        globalshade = sec->ceilingshade;
-//        globalpal = sec->ceilingpal;
-//        daslope = sec->ceilingheinum;
-//        daz = sec->ceilingz;
+//        globalorientation = sec.ceilingstat;
+//        globalpicnum = sec.ceilingpicnum;
+//        globalshade = sec.ceilingshade;
+//        globalpal = sec.ceilingpal;
+//        daslope = sec.ceilingheinum;
+//        daz = sec.ceilingz;
 //    }
 //    else
 //    {
 //        if (globalposz >= getflorzofslope(sectnum,globalposx,globalposy))
 //            return;  //Back-face culling
-//        globalorientation = sec->floorstat;
-//        globalpicnum = sec->floorpicnum;
-//        globalshade = sec->floorshade;
-//        globalpal = sec->floorpal;
-//        daslope = sec->floorheinum;
-//        daz = sec->floorz;
+//        globalorientation = sec.floorstat;
+//        globalpicnum = sec.floorpicnum;
+//        globalshade = sec.floorshade;
+//        globalpal = sec.floorpal;
+//        daslope = sec.floorheinum;
+//        daz = sec.floorz;
 //    }
 
 //    DO_TILE_ANIM(globalpicnum, sectnum);
@@ -4366,9 +4348,9 @@ function animateoffs(/*int16_t */tilenum: number, /*int16_t */fakevar: number): 
 //    if ((tilesizx[globalpicnum] <= 0) || (tilesizy[globalpicnum] <= 0)) return;
 //    if (waloff[globalpicnum] == 0) loadtile(globalpicnum);
 
-//    wal = &wall[sec->wallptr];
-//    wx = wall[wal->point2].x - wal->x;
-//    wy = wall[wal->point2].y - wal->y;
+//    wal = &wall[sec.wallptr];
+//    wx = wall[wal.point2].x - wal.x;
+//    wy = wall[wal.point2].y - wal.y;
 //    dasqr = krecipasm(nsqrtasm(uhypsq(wx,wy)));
 //    i = mulscale21(daslope,dasqr);
 //    wx *= i; wy *= i;
@@ -4386,8 +4368,8 @@ function animateoffs(/*int16_t */tilenum: number, /*int16_t */fakevar: number): 
 
 //    if (globalorientation&64)  //Relative alignment
 //    {
-//        dx = mulscale14(wall[wal->point2].x-wal->x,dasqr);
-//        dy = mulscale14(wall[wal->point2].y-wal->y,dasqr);
+//        dx = mulscale14(wall[wal.point2].x-wal.x,dasqr);
+//        dy = mulscale14(wall[wal.point2].y-wal.y,dasqr);
 
 //        i = nsqrtasm(daslope*daslope+16777216);
 
@@ -4395,7 +4377,7 @@ function animateoffs(/*int16_t */tilenum: number, /*int16_t */fakevar: number): 
 //        globalx = dmulscale16(x,dx,y,dy);
 //        globaly = mulscale12(dmulscale16(-y,dx,x,dy),i);
 
-//        x = ((wal->x-globalposx)<<8); y = ((wal->y-globalposy)<<8);
+//        x = ((wal.x-globalposx)<<8); y = ((wal.y-globalposy)<<8);
 //        globalx1 = dmulscale16(-x,dx,-y,dy);
 //        globaly1 = mulscale12(dmulscale16(-y,dx,x,dy),i);
 
@@ -4412,7 +4394,7 @@ function animateoffs(/*int16_t */tilenum: number, /*int16_t */fakevar: number): 
 //    if (globalorientation&0x10) { globalx1 = -globalx1, globalx2 = -globalx2, globalx = -globalx; }
 //    if (globalorientation&0x20) { globaly1 = -globaly1, globaly2 = -globaly2, globaly = -globaly; }
 
-//    daz = dmulscale9(wx,globalposy-wal->y,-wy,globalposx-wal->x) + ((daz-globalposz)<<8);
+//    daz = dmulscale9(wx,globalposy-wal.y,-wy,globalposx-wal.x) + ((daz-globalposz)<<8);
 //    globalx2 = mulscale20(globalx2,daz); globalx = mulscale28(globalx,daz);
 //    globaly2 = mulscale20(globaly2,-daz); globaly = mulscale28(globaly,-daz);
 
@@ -4423,19 +4405,19 @@ function animateoffs(/*int16_t */tilenum: number, /*int16_t */fakevar: number): 
 
 //    if (dastat == 0)
 //    {
-//        globalx1 += (uint32_t)sec->ceilingxpanning<<24;
-//        globaly1 += (uint32_t)sec->ceilingypanning<<24;
+//        globalx1 += (uint32_t)sec.ceilingxpanning<<24;
+//        globaly1 += (uint32_t)sec.ceilingypanning<<24;
 //    }
 //    else
 //    {
-//        globalx1 += (uint32_t)sec->floorxpanning<<24;
-//        globaly1 += (uint32_t)sec->floorypanning<<24;
+//        globalx1 += (uint32_t)sec.floorxpanning<<24;
+//        globaly1 += (uint32_t)sec.floorypanning<<24;
 //    }
 
 //    asm1 = -(globalzd>>(16-BITSOFPRECISION));
 
 //    globvis = globalvisibility;
-//    if (sec->visibility != 0) globvis = mulscale4(globvis, (uint8_t)(sec->visibility+16));
+//    if (sec.visibility != 0) globvis = mulscale4(globvis, (uint8_t)(sec.visibility+16));
 //    globvis = mulscale13(globvis,daz);
 //    globvis = mulscale16(globvis,xdimscale);
 //    j = FP_OFF(palookup[globalpal]);
@@ -4515,26 +4497,26 @@ function animateoffs(/*int16_t */tilenum: number, /*int16_t */fakevar: number): 
 //    globalhorizbak = globalhoriz;
 //    globvis = globalpisibility;
 //    //globalorientation = 0;
-//    if (sec->visibility != 0)
-//        globvis = mulscale4(globvis, (uint8_t)(sec->visibility+16));
+//    if (sec.visibility != 0)
+//        globvis = mulscale4(globvis, (uint8_t)(sec.visibility+16));
 
 //    if (dastat == 0)
 //    {
-//        globalpal = sec->ceilingpal;
-//        globalpicnum = sec->ceilingpicnum;
-//        globalshade = (int32_t)sec->ceilingshade;
-//        globalxpanning = (int32_t)sec->ceilingxpanning;
-//        globalypanning = (int32_t)sec->ceilingypanning;
+//        globalpal = sec.ceilingpal;
+//        globalpicnum = sec.ceilingpicnum;
+//        globalshade = (int32_t)sec.ceilingshade;
+//        globalxpanning = (int32_t)sec.ceilingxpanning;
+//        globalypanning = (int32_t)sec.ceilingypanning;
 //        topptr = umost;
 //        botptr = uplc;
 //    }
 //    else
 //    {
-//        globalpal = sec->floorpal;
-//        globalpicnum = sec->floorpicnum;
-//        globalshade = (int32_t)sec->floorshade;
-//        globalxpanning = (int32_t)sec->floorxpanning;
-//        globalypanning = (int32_t)sec->floorypanning;
+//        globalpal = sec.floorpal;
+//        globalpicnum = sec.floorpicnum;
+//        globalshade = (int32_t)sec.floorshade;
+//        globalxpanning = (int32_t)sec.floorxpanning;
+//        globalypanning = (int32_t)sec.floorypanning;
 //        topptr = dplc;
 //        botptr = dmost;
 //    }
@@ -4594,7 +4576,7 @@ function animateoffs(/*int16_t */tilenum: number, /*int16_t */fakevar: number): 
 
 //    // WGR2 SVN: select new episode after playing wgmicky1 with Polymer
 //    //  (maybe switched to classic earlier).
-//    //  --> rendmode==0, glrendermode == REND_POLYMER, we end up with globalpicnum==266,
+//    //  -. rendmode==0, glrendermode == REND_POLYMER, we end up with globalpicnum==266,
 //    //      picsiz...==9 and dapskybits==3
 //    // FIXME ?
 //    if (k < 0)
@@ -4700,17 +4682,17 @@ function animateoffs(/*int16_t */tilenum: number, /*int16_t */fakevar: number): 
 //// set orientation, panning, shade, pal; picnum
 //static void setup_globals_wall1(const walltype *wal, int32_t dapicnum)
 //{
-//    globalorientation = wal->cstat;
+//    globalorientation = wal.cstat;
 
 //    globalpicnum = dapicnum;
 //    if ((unsigned)globalpicnum >= MAXTILES) globalpicnum = 0;
 //    DO_TILE_ANIM(globalpicnum, 0);
 
-//    globalxpanning = wal->xpanning;
-//    globalypanning = wal->ypanning;
+//    globalxpanning = wal.xpanning;
+//    globalypanning = wal.ypanning;
 
-//    globalshade = wal->shade;
-//    globalpal = wal->pal;
+//    globalshade = wal.shade;
+//    globalpal = wal.pal;
 //    if (palookup[globalpal] == NULL) globalpal = 0;    // JBF: fixes crash
 //}
 
@@ -4739,16 +4721,16 @@ function animateoffs(/*int16_t */tilenum: number, /*int16_t */fakevar: number): 
 //    if ((!oldnonpow2() && pow2long[logtilesizy] != tsizy) || tsizy >= 512)
 //    {
 //        globaltilesizy = tsizy;
-//        globalyscale = divscale13(wal->yrepeat, tsizy);
+//        globalyscale = divscale13(wal.yrepeat, tsizy);
 //        globalshiftval = 0;
 //    }
 //    else
 //#endif
 //    {
-//        // globalshiftval==13 --> globalshiftval==19
+//        // globalshiftval==13 -. globalshiftval==19
 //        //  ==> upper texture y size limit *here* = 8192
 //        globalshiftval = 32-globalshiftval;
-//        globalyscale = wal->yrepeat<<(globalshiftval-19);
+//        globalyscale = wal.yrepeat<<(globalshiftval-19);
 //    }
 
 //    if ((globalorientation&4) == 0)
@@ -4896,13 +4878,13 @@ function animateoffs(/*int16_t */tilenum: number, /*int16_t */fakevar: number): 
 //        if ((andwstat1&3) != 3)     //draw ceilings
 //#ifdef YAX_ENABLE
 //            // this is to prevent double-drawing of translucent masked ceilings
-//            if (r_tror_nomaskpass==0 || yax_globallev==YAX_MAXDRAWS || (sec->ceilingstat&256)==0 ||
+//            if (r_tror_nomaskpass==0 || yax_globallev==YAX_MAXDRAWS || (sec.ceilingstat&256)==0 ||
 //                yax_nomaskpass==1 || !(yax_gotsector[sectnum>>3]&(1<<(sectnum&7))))
 //#endif
 //        {
-//            if ((sec->ceilingstat&3) == 2)
+//            if ((sec.ceilingstat&3) == 2)
 //                grouscan(xb1[bunchfirst[bunch]],xb2[bunchlast[bunch]],sectnum,0);
-//            else if ((sec->ceilingstat&1) == 0)
+//            else if ((sec.ceilingstat&1) == 0)
 //                ceilscan(xb1[bunchfirst[bunch]],xb2[bunchlast[bunch]],sectnum);
 //            else
 //                parascan(xb1[bunchfirst[bunch]],xb2[bunchlast[bunch]],sectnum,0,bunch);
@@ -4911,13 +4893,13 @@ function animateoffs(/*int16_t */tilenum: number, /*int16_t */fakevar: number): 
 //        if ((andwstat2&12) != 12)   //draw floors
 //#ifdef YAX_ENABLE
 //            // this is to prevent double-drawing of translucent masked floors
-//            if (r_tror_nomaskpass==0 || yax_globallev==YAX_MAXDRAWS || (sec->floorstat&256)==0 ||
+//            if (r_tror_nomaskpass==0 || yax_globallev==YAX_MAXDRAWS || (sec.floorstat&256)==0 ||
 //                yax_nomaskpass==1 || !(yax_gotsector[sectnum>>3]&(1<<(sectnum&7))))
 //#endif
 //        {
-//            if ((sec->floorstat&3) == 2)
+//            if ((sec.floorstat&3) == 2)
 //                grouscan(xb1[bunchfirst[bunch]],xb2[bunchlast[bunch]],sectnum,1);
-//            else if ((sec->floorstat&1) == 0)
+//            else if ((sec.floorstat&1) == 0)
 //                florscan(xb1[bunchfirst[bunch]],xb2[bunchlast[bunch]],sectnum);
 //            else
 //                parascan(xb1[bunchfirst[bunch]],xb2[bunchlast[bunch]],sectnum,1,bunch);
@@ -4943,7 +4925,7 @@ function animateoffs(/*int16_t */tilenum: number, /*int16_t */fakevar: number): 
 //        }
 
 //        wallnum = thewall[z]; wal = &wall[wallnum];
-//        nextsectnum = wal->nextsector;
+//        nextsectnum = wal.nextsector;
 //        nextsec = nextsectnum>=0 ? &sector[nextsectnum] : NULL;
 
 //        gotswall = 0;
@@ -4956,7 +4938,7 @@ function animateoffs(/*int16_t */tilenum: number, /*int16_t */fakevar: number): 
 //            if (searchy <= uplc[searchx]
 //#ifdef YAX_ENABLE
 //                && umost[searchx] <= searchy && getceilzofslope(sectnum, globalposx, globalposy) <= globalposz
-//                && (yax_getbunch(sectnum, YAX_CEILING) < 0 || showinvisibility || (sec->ceilingstat&(256+128)) || klabs(yax_globallev-YAX_MAXDRAWS)==YAX_MAXDRAWS)
+//                && (yax_getbunch(sectnum, YAX_CEILING) < 0 || showinvisibility || (sec.ceilingstat&(256+128)) || klabs(yax_globallev-YAX_MAXDRAWS)==YAX_MAXDRAWS)
 //#endif
 //                ) //ceiling
 //            {
@@ -4966,7 +4948,7 @@ function animateoffs(/*int16_t */tilenum: number, /*int16_t */fakevar: number): 
 //            else if (dplc[searchx] <= searchy
 //#ifdef YAX_ENABLE
 //                     && searchy < dmost[searchx] && getflorzofslope(sectnum, globalposx, globalposy) >= globalposz
-//                     && (yax_getbunch(sectnum, YAX_FLOOR) < 0 || showinvisibility || (sec->floorstat&(256+128)) || klabs(yax_globallev-YAX_MAXDRAWS)==YAX_MAXDRAWS)
+//                     && (yax_getbunch(sectnum, YAX_FLOOR) < 0 || showinvisibility || (sec.floorstat&(256+128)) || klabs(yax_globallev-YAX_MAXDRAWS)==YAX_MAXDRAWS)
 //#endif
 //                ) //floor
 //            {
@@ -4982,19 +4964,19 @@ function animateoffs(/*int16_t */tilenum: number, /*int16_t */fakevar: number): 
 //        {
 //            // 2       <---       3
 //            // x------------------x
-//            // 0       --->       1
+//            // 0       --.       1
 //            //
 //            //     4 (our pos, z wrt the nextsector!)
 
-//            getzsofslope((int16_t)sectnum,wal->x,wal->y,&cz[0],&fz[0]);
-//            getzsofslope((int16_t)sectnum,wall[wal->point2].x,wall[wal->point2].y,&cz[1],&fz[1]);
-//            getzsofslope((int16_t)nextsectnum,wal->x,wal->y,&cz[2],&fz[2]);
-//            getzsofslope((int16_t)nextsectnum,wall[wal->point2].x,wall[wal->point2].y,&cz[3],&fz[3]);
+//            getzsofslope((int16_t)sectnum,wal.x,wal.y,&cz[0],&fz[0]);
+//            getzsofslope((int16_t)sectnum,wall[wal.point2].x,wall[wal.point2].y,&cz[1],&fz[1]);
+//            getzsofslope((int16_t)nextsectnum,wal.x,wal.y,&cz[2],&fz[2]);
+//            getzsofslope((int16_t)nextsectnum,wall[wal.point2].x,wall[wal.point2].y,&cz[3],&fz[3]);
 //            getzsofslope((int16_t)nextsectnum,globalposx,globalposy,&cz[4],&fz[4]);
 
-//            if ((wal->cstat&48) == 16) maskwall[maskwallcnt++] = z;
+//            if ((wal.cstat&48) == 16) maskwall[maskwallcnt++] = z;
 
-//            if (((sec->ceilingstat&1) == 0) || ((nextsec->ceilingstat&1) == 0))
+//            if (((sec.ceilingstat&1) == 0) || ((nextsec.ceilingstat&1) == 0))
 //            {
 //                if ((cz[2] <= cz[0]) && (cz[3] <= cz[1]))
 //                {
@@ -5026,8 +5008,8 @@ function animateoffs(/*int16_t */tilenum: number, /*int16_t */fakevar: number): 
 //                            searchstat = 0; searchit = 1;
 //                        }
 
-//                    setup_globals_wall1(wal, wal->picnum);
-//                    setup_globals_wall2(wal, sec->visibility, nextsec->ceilingz, sec->ceilingz);
+//                    setup_globals_wall1(wal, wal.picnum);
+//                    setup_globals_wall2(wal, sec.visibility, nextsec.ceilingz, sec.ceilingz);
 
 //                    if (gotswall == 0) { gotswall = 1; prepwall(z,wal); }
 //                    wallscan(x1,x2,uplc,dwall,swall,lwall);
@@ -5078,7 +5060,7 @@ function animateoffs(/*int16_t */tilenum: number, /*int16_t */fakevar: number): 
 //                }
 //            }
 
-//            if (((sec->floorstat&1) == 0) || ((nextsec->floorstat&1) == 0))
+//            if (((sec.floorstat&1) == 0) || ((nextsec.floorstat&1) == 0))
 //            {
 //                if ((fz[2] >= fz[0]) && (fz[3] >= fz[1]))
 //                {
@@ -5106,17 +5088,17 @@ function animateoffs(/*int16_t */tilenum: number, /*int16_t */fakevar: number): 
 //                        if (searchy >= uwall[searchx]) //wall
 //                        {
 //                            searchsector = sectnum; searchbottomwall = searchwall = wallnum;
-//                            if ((wal->cstat&2) > 0) searchbottomwall = wal->nextwall;
+//                            if ((wal.cstat&2) > 0) searchbottomwall = wal.nextwall;
 //                            searchisbottom = 1;
 //                            searchstat = 0; searchit = 1;
 //                        }
 
 //                    {
-//                        const walltype *twal = (wal->cstat&2) ? &wall[wal->nextwall] : wal;
-//                        setup_globals_wall1(twal, twal->picnum);
+//                        const walltype *twal = (wal.cstat&2) ? &wall[wal.nextwall] : wal;
+//                        setup_globals_wall1(twal, twal.picnum);
 //                    }
 
-//                    setup_globals_wall2(wal, sec->visibility, nextsec->floorz, sec->ceilingz);
+//                    setup_globals_wall2(wal, sec.visibility, nextsec.floorz, sec.ceilingz);
 
 //                    if (gotswall == 0) { gotswall = 1; prepwall(z,wal); }
 //                    wallscan(x1,x2,uwall,dplc,swall,lwall);
@@ -5168,7 +5150,7 @@ function animateoffs(/*int16_t */tilenum: number, /*int16_t */fakevar: number): 
 //            }
 
 //            if (numhits < 0) return;
-//            if ((!(wal->cstat&32)) && ((gotsector[nextsectnum>>3]&pow2char[nextsectnum&7]) == 0))
+//            if ((!(wal.cstat&32)) && ((gotsector[nextsectnum>>3]&pow2char[nextsectnum&7]) == 0))
 //            {
 //                if (umost[x2] < dmost[x2])
 //                    scansector(nextsectnum);
@@ -5192,12 +5174,12 @@ function animateoffs(/*int16_t */tilenum: number, /*int16_t */fakevar: number): 
 //            }
 //        }
 
-//        if ((nextsectnum < 0) || (wal->cstat&32))   //White/1-way wall
+//        if ((nextsectnum < 0) || (wal.cstat&32))   //White/1-way wall
 //        {
-//            setup_globals_wall1(wal, (nextsectnum < 0) ? wal->picnum : wal->overpicnum);
-//            setup_globals_wall2(wal, sec->visibility,
-//                                (nextsectnum >= 0) ? nextsec->ceilingz : sec->ceilingz,
-//                                (nextsectnum >= 0) ? sec->ceilingz : sec->floorz);
+//            setup_globals_wall1(wal, (nextsectnum < 0) ? wal.picnum : wal.overpicnum);
+//            setup_globals_wall2(wal, sec.visibility,
+//                                (nextsectnum >= 0) ? nextsec.ceilingz : sec.ceilingz,
+//                                (nextsectnum >= 0) ? sec.ceilingz : sec.floorz);
 
 //            if (gotswall == 0) { gotswall = 1; prepwall(z,wal); }
 //            wallscan(x1,x2,uplc,dplc,swall,lwall);
@@ -5205,7 +5187,7 @@ function animateoffs(/*int16_t */tilenum: number, /*int16_t */fakevar: number): 
 //#ifdef YAX_ENABLE
 //            // TODO: slopes?
 
-//            if (globalposz > sec->floorz && yax_isislandwall(wallnum, YAX_FLOOR))
+//            if (globalposz > sec.floorz && yax_isislandwall(wallnum, YAX_FLOOR))
 //            {
 //                for (x=x1; x<=x2; x++)
 //                    if (dplc[x] > umost[x] && umost[x] <= dmost[x])
@@ -5214,7 +5196,7 @@ function animateoffs(/*int16_t */tilenum: number, /*int16_t */fakevar: number): 
 //                        if (umost[x] > dmost[x]) numhits--;
 //                    }
 //            }
-//            else if (globalposz < sec->ceilingz && yax_isislandwall(wallnum, YAX_CEILING))
+//            else if (globalposz < sec.ceilingz && yax_isislandwall(wallnum, YAX_CEILING))
 //            {
 //                for (x=x1; x<=x2; x++)
 //                    if (uplc[x] < dmost[x] && umost[x] <= dmost[x])
@@ -5561,14 +5543,14 @@ function animateoffs(/*int16_t */tilenum: number, /*int16_t */fakevar: number): 
 //                                     int32_t cstat, int32_t *z1ptr, int32_t *z2ptr)
 //{
 //    int32_t logtilesizy, tsizy;
-//    int32_t z1, z2 = tspr->z - ((yoff*tspr->yrepeat)<<2);
+//    int32_t z1, z2 = tspr.z - ((yoff*tspr.yrepeat)<<2);
 
 //    if (cstat&128)
 //    {
-//        z2 += ((yspan*tspr->yrepeat)<<1);
-//        if (yspan&1) z2 += (tspr->yrepeat<<1);        //Odd yspans
+//        z2 += ((yspan*tspr.yrepeat)<<1);
+//        if (yspan&1) z2 += (tspr.yrepeat<<1);        //Odd yspans
 //    }
-//    z1 = z2 - ((yspan*tspr->yrepeat)<<2);
+//    z1 = z2 - ((yspan*tspr.yrepeat)<<2);
 
 //    globalorientation = 0;
 //    globalpicnum = tilenum;
@@ -5577,7 +5559,7 @@ function animateoffs(/*int16_t */tilenum: number, /*int16_t */fakevar: number): 
 //    globalypanning = 0;
 
 //    globvis = globalvisibility;
-//    if (sec->visibility != 0) globvis = mulscale4(globvis, (uint8_t)(sec->visibility+16));
+//    if (sec.visibility != 0) globvis = mulscale4(globvis, (uint8_t)(sec.visibility+16));
 
 //    logtilesizy = (picsiz[globalpicnum]>>4);
 //    tsizy = tilesizy[globalpicnum];
@@ -5592,14 +5574,14 @@ function animateoffs(/*int16_t */tilenum: number, /*int16_t */fakevar: number): 
 //    if (pow2long[logtilesizy] != tsizy || tsizy >= 512)
 //    {
 //        globaltilesizy = tsizy;
-//        globalyscale = (1<<22)/(tsizy*tspr->yrepeat);
+//        globalyscale = (1<<22)/(tsizy*tspr.yrepeat);
 //        globalshiftval = 0;
 //    }
 //    else
 //#endif
 //    {
 //        globalshiftval = 32-globalshiftval;
-//        globalyscale = divscale(512,tspr->yrepeat,globalshiftval-19);
+//        globalyscale = divscale(512,tspr.yrepeat,globalshiftval-19);
 //    }
 
 //    globalzd = ((int64_t)(globalposz-z1)*globalyscale)<<8;
@@ -5655,11 +5637,11 @@ function animateoffs(/*int16_t */tilenum: number, /*int16_t */fakevar: number): 
 
 //    const int32_t xb = spritesx[snum];
 //    const int32_t yp = spritesy[snum];
-//    const int32_t spritenum = tspr->owner;
-//    const int32_t sectnum = tspr->sectnum;
+//    const int32_t spritenum = tspr.owner;
+//    const int32_t sectnum = tspr.sectnum;
 //    const sectortype *const sec = (sectnum>=0) ? &sector[sectnum] : NULL;
 //    int32_t tilenum;
-//    int32_t cstat = tspr->cstat;
+//    int32_t cstat = tspr.cstat;
 
 //    if (sec == NULL)
 //        return;
@@ -5667,7 +5649,7 @@ function animateoffs(/*int16_t */tilenum: number, /*int16_t */fakevar: number): 
 //    if (bad_tspr(tspr))
 //        return;
 
-//    DO_TILE_ANIM(tspr->picnum, spritenum+32768);
+//    DO_TILE_ANIM(tspr.picnum, spritenum+32768);
 
 //#ifdef USE_OPENGL
 //    {
@@ -5690,12 +5672,12 @@ function animateoffs(/*int16_t */tilenum: number, /*int16_t */fakevar: number): 
 //                    return;
 //            }
 
-//            tspr->cstat = cstat;
+//            tspr.cstat = cstat;
 //        }
 //    }
 //#endif
 
-//    tilenum = tspr->picnum;
+//    tilenum = tspr.picnum;
 
 //    if ((cstat&48)==48)
 //        vtilenum = tilenum; // if the game wants voxels, it gets voxels
@@ -5715,20 +5697,20 @@ function animateoffs(/*int16_t */tilenum: number, /*int16_t */fakevar: number): 
 //            return;
 //    }
 
-//    if (tspr->xrepeat <= 0 || tspr->yrepeat <= 0)
+//    if (tspr.xrepeat <= 0 || tspr.yrepeat <= 0)
 //        return;
 
-//    globalpal = tspr->pal;
+//    globalpal = tspr.pal;
 //    if (palookup[globalpal] == NULL) globalpal = 0;    // JBF: fixes null-pointer crash
-//    globalshade = tspr->shade;
+//    globalshade = tspr.shade;
 
 //    if (cstat&2)
 //    {
 //        if (cstat&512) settransreverse(); else settransnormal();
 //    }
 
-//    xoff = picanm[tilenum].xofs + tspr->xoffset;
-//    yoff = picanm[tilenum].yofs + tspr->yoffset;
+//    xoff = picanm[tilenum].xofs + tspr.xoffset;
+//    yoff = picanm[tilenum].yofs + tspr.yoffset;
 
 //    if ((cstat&48) == 0)
 //    {
@@ -5741,12 +5723,12 @@ function animateoffs(/*int16_t */tilenum: number, /*int16_t */fakevar: number): 
 
 //        siz = divscale19(xdimenscale,yp);
 
-//        xv = mulscale16(((int32_t)tspr->xrepeat)<<16,xyaspect);
+//        xv = mulscale16(((int32_t)tspr.xrepeat)<<16,xyaspect);
 
 //        xspan = tilesizx[tilenum];
 //        yspan = tilesizy[tilenum];
 //        xsiz = mulscale30(siz,xv*xspan);
-//        ysiz = mulscale14(siz,tspr->yrepeat*yspan);
+//        ysiz = mulscale14(siz,tspr.yrepeat*yspan);
 
 //        if ((tilesizx[tilenum]>>11) >= xsiz || yspan >= (ysiz>>1))
 //            return;  //Watch out for divscale overflow
@@ -5756,13 +5738,13 @@ function animateoffs(/*int16_t */tilenum: number, /*int16_t */fakevar: number): 
 //        i = mulscale30(siz,xv*xoff);
 //        if ((cstat&4) == 0) x1 -= i; else x1 += i;
 
-//        y1 = mulscale16(tspr->z-globalposz,siz);
-//        y1 -= mulscale14(siz,tspr->yrepeat*yoff);
+//        y1 = mulscale16(tspr.z-globalposz,siz);
+//        y1 -= mulscale14(siz,tspr.yrepeat*yoff);
 //        y1 += (globalhoriz<<8)-ysiz;
 //        if (cstat&128)
 //        {
 //            y1 += (ysiz>>1);
-//            if (yspan&1) y1 += mulscale15(siz,tspr->yrepeat);  //Odd yspans
+//            if (yspan&1) y1 += mulscale15(siz,tspr.yrepeat);  //Odd yspans
 //        }
 
 //        x2 = x1+xsiz-1;
@@ -5773,12 +5755,12 @@ function animateoffs(/*int16_t */tilenum: number, /*int16_t */fakevar: number): 
 //        rx = (x2>>8); if (rx >= xdimen) rx = xdimen-1;
 //        if (lx > rx) return;
 
-//        if ((sec->ceilingstat&3) == 0)
-//            startum = globalhoriz+mulscale24(siz,sec->ceilingz-globalposz)-1;
+//        if ((sec.ceilingstat&3) == 0)
+//            startum = globalhoriz+mulscale24(siz,sec.ceilingz-globalposz)-1;
 //        else
 //            startum = 0;
-//        if ((sec->floorstat&3) == 0)
-//            startdm = globalhoriz+mulscale24(siz,sec->floorz-globalposz)+1;
+//        if ((sec.floorstat&3) == 0)
+//            startdm = globalhoriz+mulscale24(siz,sec.floorz-globalposz)+1;
 //        else
 //            startdm = INT32_MAX;
 //        if ((y1>>8) > startum) startum = (y1>>8);
@@ -5873,7 +5855,7 @@ function animateoffs(/*int16_t */tilenum: number, /*int16_t */fakevar: number): 
 //                // initialize the float of the union
 //                ((cstat&8) ? -1 : 1)
 //                * (float)yp * xdimscale
-//                * (1<<(22-19)) / (yspan*tspr->yrepeat)
+//                * (1<<(22-19)) / (yspan*tspr.yrepeat)
 //            };
 
 //            clearbuf(&swallf[lx], rx-lx+1, sw.i);
@@ -5898,11 +5880,11 @@ function animateoffs(/*int16_t */tilenum: number, /*int16_t */fakevar: number): 
 //        if ((cstat&8) > 0) yoff = -yoff;
 
 //        xspan = tilesizx[tilenum]; yspan = tilesizy[tilenum];
-//        xv = tspr->xrepeat*sintable[(tspr->ang+2560+1536)&2047];
-//        yv = tspr->xrepeat*sintable[(tspr->ang+2048+1536)&2047];
+//        xv = tspr.xrepeat*sintable[(tspr.ang+2560+1536)&2047];
+//        yv = tspr.xrepeat*sintable[(tspr.ang+2048+1536)&2047];
 //        i = (xspan>>1)+xoff;
-//        x1 = tspr->x-globalposx-mulscale16(xv,i); x2 = x1+mulscale16(xv,xspan);
-//        y1 = tspr->y-globalposy-mulscale16(yv,i); y2 = y1+mulscale16(yv,xspan);
+//        x1 = tspr.x-globalposx-mulscale16(xv,i); x2 = x1+mulscale16(xv,xspan);
+//        y1 = tspr.y-globalposy-mulscale16(yv,i); y2 = y1+mulscale16(yv,xspan);
 
 //        yp1 = dmulscale6(x1,cosviewingrangeglobalang,y1,sinviewingrangeglobalang);
 //        yp2 = dmulscale6(x2,cosviewingrangeglobalang,y2,sinviewingrangeglobalang);
@@ -6000,10 +5982,10 @@ function animateoffs(/*int16_t */tilenum: number, /*int16_t */fakevar: number): 
 
 //        setup_globals_sprite1(tspr, sec, yspan, yoff, tilenum, cstat, &z1, &z2);
 
-//        if (((sec->ceilingstat&1) == 0) && (z1 < sec->ceilingz))
-//            z1 = sec->ceilingz;
-//        if (((sec->floorstat&1) == 0) && (z2 > sec->floorz))
-//            z2 = sec->floorz;
+//        if (((sec.ceilingstat&1) == 0) && (z1 < sec.ceilingz))
+//            z1 = sec.ceilingz;
+//        if (((sec.floorstat&1) == 0) && (z2 > sec.floorz))
+//            z2 = sec.floorz;
 
 //        xb1[MAXWALLSB-1] = sx1;
 //        xb2[MAXWALLSB-1] = sx2;
@@ -6022,7 +6004,7 @@ function animateoffs(/*int16_t */tilenum: number, /*int16_t */fakevar: number): 
 //            float hplcf = cc/sy1;
 //            const float hincf = sx2-sx1 ? (cc/sy2 - hplcf)/(sx2-sx1) : 0;
 //            const float loopcc = ((cstat&8) ? -1 : 1)*((float)(1<<30)*(1<<24))
-//                / (yspan*tspr->yrepeat);
+//                / (yspan*tspr.yrepeat);
 //#endif
 //            for (i=sx1; i<=sx2; i++)
 //            {
@@ -6066,9 +6048,9 @@ function animateoffs(/*int16_t */tilenum: number, /*int16_t */fakevar: number): 
 //                            x = -(z1+z2);
 //                        else
 //                        {
-//                            if ((xp2-xp1)*(tspr->y-yp1) == (tspr->x-xp1)*(yp2-yp1))
+//                            if ((xp2-xp1)*(tspr.y-yp1) == (tspr.x-xp1)*(yp2-yp1))
 //                            {
-//                                if (wall[thewall[j]].nextsector == tspr->sectnum)
+//                                if (wall[thewall[j]].nextsector == tspr.sectnum)
 //                                    x = INT32_MIN;
 //                                else
 //                                    x = INT32_MAX;
@@ -6158,7 +6140,7 @@ function animateoffs(/*int16_t */tilenum: number, /*int16_t */fakevar: number): 
 //        int32_t cosang, sinang, lpoint, lmax, rpoint, rmax;
 
 //        if ((cstat&64) != 0)
-//            if ((globalposz > tspr->z) == ((cstat&8)==0))
+//            if ((globalposz > tspr.z) == ((cstat&8)==0))
 //                return;
 
 //        if ((cstat&4) > 0) xoff = -xoff;
@@ -6167,22 +6149,22 @@ function animateoffs(/*int16_t */tilenum: number, /*int16_t */fakevar: number): 
 //        yspan = tilesizy[tilenum];
 
 //        //Rotate center point
-//        dax = tspr->x-globalposx;
-//        day = tspr->y-globalposy;
+//        dax = tspr.x-globalposx;
+//        day = tspr.y-globalposy;
 //        rzi[0] = dmulscale10(cosglobalang,dax,singlobalang,day);
 //        rxi[0] = dmulscale10(cosglobalang,day,-singlobalang,dax);
 
 //        //Get top-left corner
-//        i = ((tspr->ang+2048-globalang)&2047);
+//        i = ((tspr.ang+2048-globalang)&2047);
 //        cosang = sintable[(i+512)&2047]; sinang = sintable[i];
-//        dax = ((xspan>>1)+xoff)*tspr->xrepeat;
-//        day = ((yspan>>1)+yoff)*tspr->yrepeat;
+//        dax = ((xspan>>1)+xoff)*tspr.xrepeat;
+//        day = ((yspan>>1)+yoff)*tspr.yrepeat;
 //        rzi[0] += dmulscale12(sinang,dax,cosang,day);
 //        rxi[0] += dmulscale12(sinang,day,-cosang,dax);
 
 //        //Get other 3 corners
-//        dax = xspan*tspr->xrepeat;
-//        day = yspan*tspr->yrepeat;
+//        dax = xspan*tspr.xrepeat;
+//        day = yspan*tspr.yrepeat;
 //        rzi[1] = rzi[0]-mulscale12(sinang,dax);
 //        rxi[1] = rxi[0]+mulscale12(cosang,dax);
 //        dax = -mulscale12(cosang,day);
@@ -6191,7 +6173,7 @@ function animateoffs(/*int16_t */tilenum: number, /*int16_t */fakevar: number): 
 //        rzi[3] = rzi[0]+dax; rxi[3] = rxi[0]+day;
 
 //        //Put all points on same z
-//        ryi[0] = scale((tspr->z-globalposz),yxaspect,320<<8);
+//        ryi[0] = scale((tspr.z-globalposz),yxaspect,320<<8);
 //        if (ryi[0] == 0) return;
 //        ryi[1] = ryi[2] = ryi[3] = ryi[0];
 
@@ -6394,9 +6376,9 @@ function animateoffs(/*int16_t */tilenum: number, /*int16_t */fakevar: number): 
 //            //if (spritewallfront(tspr,thewall[j]) == 0)
 //            x = thewall[j]; xp1 = wall[x].x; yp1 = wall[x].y;
 //            x = wall[x].point2; xp2 = wall[x].x; yp2 = wall[x].y;
-//            x = (xp2-xp1)*(tspr->y-yp1)-(tspr->x-xp1)*(yp2-yp1);
+//            x = (xp2-xp1)*(tspr.y-yp1)-(tspr.x-xp1)*(yp2-yp1);
 //            if ((yp > yb1[j]) && (yp > yb2[j])) x = -1;
-//            if ((x >= 0) && ((x != 0) || (wall[thewall[j]].nextsector != tspr->sectnum))) continue;
+//            if ((x >= 0) && ((x != 0) || (wall[thewall[j]].nextsector != tspr.sectnum))) continue;
 
 //            dalx2 = max(xb1[j],lx); darx2 = min(xb2[j],rx);
 
@@ -6443,7 +6425,7 @@ function animateoffs(/*int16_t */tilenum: number, /*int16_t */fakevar: number): 
 //        globalbufplc = waloff[globalpicnum];
 
 //        globvis = mulscale16(globalhisibility,viewingrange);
-//        if (sec->visibility != 0) globvis = mulscale4(globvis, (uint8_t)(sec->visibility+16));
+//        if (sec.visibility != 0) globvis = mulscale4(globvis, (uint8_t)(sec.visibility+16));
 
 //        x = picsiz[globalpicnum]; y = ((x>>4)&15); x &= 15;
 //#if 0
@@ -6481,7 +6463,7 @@ function animateoffs(/*int16_t */tilenum: number, /*int16_t */fakevar: number): 
 //    else if ((cstat&48) == 48)
 //    {
 //        int32_t nxrepeat, nyrepeat;
-//        int32_t daxrepeat = tspr->xrepeat;
+//        int32_t daxrepeat = tspr.xrepeat;
 //        const int32_t *longptr;
 
 //        if ((sprite[spritenum].cstat&48)==16)
@@ -6543,27 +6525,27 @@ function animateoffs(/*int16_t */tilenum: number, /*int16_t */fakevar: number): 
 //        if (longptr == NULL)
 //        {
 //            globalshade = 32;
-//            tspr->xrepeat = tspr->yrepeat = 255;
+//            tspr.xrepeat = tspr.yrepeat = 255;
 //            goto draw_as_face_sprite;
 //        }
 
 //        if (voxscale[vtilenum] == 65536)
 //        {
 //            nxrepeat = (daxrepeat<<16);
-//            nyrepeat = (((int32_t)tspr->yrepeat)<<16);
+//            nyrepeat = (((int32_t)tspr.yrepeat)<<16);
 //        }
 //        else
 //        {
 //            nxrepeat = daxrepeat*voxscale[vtilenum];
-//            nyrepeat = ((int32_t)tspr->yrepeat)*voxscale[vtilenum];
+//            nyrepeat = ((int32_t)tspr.yrepeat)*voxscale[vtilenum];
 //        }
 
-//        if (!(cstat&128)) tspr->z -= mulscale22(B_LITTLE32(longptr[5]),nyrepeat);
-//        yoff = /*picanm[sprite[tspr->owner].picnum].yofs +*/ tspr->yoffset;
-//        tspr->z -= mulscale14(yoff,nyrepeat);
+//        if (!(cstat&128)) tspr.z -= mulscale22(B_LITTLE32(longptr[5]),nyrepeat);
+//        yoff = /*picanm[sprite[tspr.owner].picnum].yofs +*/ tspr.yoffset;
+//        tspr.z -= mulscale14(yoff,nyrepeat);
 
 //        globvis = globalvisibility;
-//        if (sec->visibility != 0) globvis = mulscale4(globvis, (uint8_t)(sec->visibility+16));
+//        if (sec.visibility != 0) globvis = mulscale4(globvis, (uint8_t)(sec.visibility+16));
 
 //#ifdef YAX_ENABLE
 //        if (yax_globallev==YAX_MAXDRAWS || searchit==2)
@@ -6587,7 +6569,7 @@ function animateoffs(/*int16_t */tilenum: number, /*int16_t */fakevar: number): 
 //                i = mulscale30(siz,xv*xoff);
 //                if ((cstat&4) == 0) x1 -= i; else x1 += i;
 
-//                y1 = mulscale16(tspr->z-globalposz,siz);
+//                y1 = mulscale16(tspr.z-globalposz,siz);
 //                //y1 -= mulscale30(siz,nyrepeat*yoff);
 //                y1 += (globalhoriz<<8)-ysiz;
 //                //if (cstat&128)  //Already fixed up above
@@ -6599,13 +6581,13 @@ function animateoffs(/*int16_t */tilenum: number, /*int16_t */fakevar: number): 
 //                {
 //                    int32_t startum, startdm;
 
-//                    if ((sec->ceilingstat&3) == 0)
-//                        startum = globalhoriz+mulscale24(siz,sec->ceilingz-globalposz)-1;
+//                    if ((sec.ceilingstat&3) == 0)
+//                        startum = globalhoriz+mulscale24(siz,sec.ceilingz-globalposz)-1;
 //                    else
 //                        startum = 0;
 
-//                    if ((sec->floorstat&3) == 0)
-//                        startdm = globalhoriz+mulscale24(siz,sec->floorz-globalposz)+1;
+//                    if ((sec.floorstat&3) == 0)
+//                        startdm = globalhoriz+mulscale24(siz,sec.floorz-globalposz)+1;
 //                    else
 //                        startdm = INT32_MAX;
 
@@ -6619,11 +6601,11 @@ function animateoffs(/*int16_t */tilenum: number, /*int16_t */fakevar: number): 
 //            }
 //        }
 
-//        i = (int32_t)tspr->ang+1536;
+//        i = (int32_t)tspr.ang+1536;
 //#ifdef USE_OPENGL
 //        i += spriteext[spritenum].angoff;
 //#endif
-//        drawvox(tspr->x,tspr->y,tspr->z,i,daxrepeat,(int32_t)tspr->yrepeat,vtilenum,tspr->shade,tspr->pal,lwall,swall);
+//        drawvox(tspr.x,tspr.y,tspr.z,i,daxrepeat,(int32_t)tspr.yrepeat,vtilenum,tspr.shade,tspr.pal,lwall,swall);
 //    }
 //}
 
@@ -6668,24 +6650,24 @@ function animateoffs(/*int16_t */tilenum: number, /*int16_t */fakevar: number): 
 //    z = maskwall[damaskwallcnt];
 //    wal = &wall[thewall[z]];
 //    sectnum = thesector[z]; sec = &sector[sectnum];
-//    nsec = &sector[wal->nextsector];
-//    z1 = max(nsec->ceilingz,sec->ceilingz);
-//    z2 = min(nsec->floorz,sec->floorz);
+//    nsec = &sector[wal.nextsector];
+//    z1 = max(nsec.ceilingz,sec.ceilingz);
+//    z2 = min(nsec.floorz,sec.floorz);
 
 //    wallmost(uwall,z,sectnum,(uint8_t)0);
-//    wallmost(uplc,z,(int32_t)wal->nextsector,(uint8_t)0);
+//    wallmost(uplc,z,(int32_t)wal.nextsector,(uint8_t)0);
 //    for (x=xb1[z]; x<=xb2[z]; x++)
 //        if (uplc[x] > uwall[x])
 //            uwall[x] = uplc[x];
 //    wallmost(dwall,z,sectnum,(uint8_t)1);
-//    wallmost(dplc,z,(int32_t)wal->nextsector,(uint8_t)1);
+//    wallmost(dplc,z,(int32_t)wal.nextsector,(uint8_t)1);
 //    for (x=xb1[z]; x<=xb2[z]; x++)
 //        if (dplc[x] < dwall[x])
 //            dwall[x] = dplc[x];
 //    prepwall(z,wal);
 
-//    setup_globals_wall1(wal, wal->overpicnum);
-//    setup_globals_wall2(wal, sec->visibility, z1, z2);
+//    setup_globals_wall1(wal, wal.overpicnum);
+//    setup_globals_wall2(wal, sec.visibility, z1, z2);
 
 //    for (i=smostwallcnt-1; i>=0; i--)
 //    {
@@ -8565,7 +8547,7 @@ function changespritestat(/*int16_t*/ spritenum: number, /*int16_t*/ newstatnum:
 //    switch (sig)
 //    {
 //    case SIGFPE:
-//        switch (info->si_code)
+//        switch (info.si_code)
 //        {
 //        case FPE_INTDIV:
 //            s = "FPE_INTDIV (integer divide by zero)"; break;
@@ -8586,7 +8568,7 @@ function changespritestat(/*int16_t*/ spritenum: number, /*int16_t*/ newstatnum:
 //        default:
 //            s = "?! (unknown)"; break;
 //        }
-//        ERRprintf("Caught SIGFPE at address %p, code %s. Aborting.\n", info->si_addr, s);
+//        ERRprintf("Caught SIGFPE at address %p, code %s. Aborting.\n", info.si_addr, s);
 //        break;
 //    default:
 //        break;
@@ -8848,7 +8830,7 @@ function initspritelists(): void
     //  statnum 1: nil
     //     . . .
     //  statnum MAXSTATUS-1: nil
-    //  "statnum MAXSTATUS": nil <- 0 <-> 1 <-> 2 <-> ... <-> MAXSPRITES-1 -> nil
+    //  "statnum MAXSTATUS": nil <- 0 <. 1 <. 2 <. ... <. MAXSPRITES-1 . nil
     //
     // That is, the dummy MAXSTATUS statnum has all sprites.
 
@@ -9178,10 +9160,10 @@ function initspritelists(): void
 //    walltype        *w1, *w2;
 
 //    w1 = &wall[wallnum];
-//    w2 = &wall[w1->point2];
+//    w2 = &wall[w1.point2];
 
-//    a1 = getangle(w1->x - x, w1->y - y);
-//    a2 = getangle(w2->x - x, w2->y - y);
+//    a1 = getangle(w1.x - x, w1.y - y);
+//    a2 = getangle(w2.x - x, w2.y - y);
 
 //    //if ((wallnum == 23) || (wallnum == 9))
 //    //    OSD_Printf("Wall %d : %d - sector %d - x %d - y %d.\n", wallnum, (a2 + (2048 - a1)) & 2047, globalcursectnum, globalposx, globalposy);
@@ -9208,7 +9190,7 @@ function initspritelists(): void
 //// check if a point that's on the line is within the segment boundaries
 //int32_t             pointonmask(_point2d point, _maskleaf* wall)
 //{
-//    if ((min(wall->p1.x, wall->p2.x) <= point.x) && (point.x <= max(wall->p1.x, wall->p2.x)) && (min(wall->p1.y, wall->p2.y) <= point.y) && (point.y <= max(wall->p1.y, wall->p2.y)))
+//    if ((min(wall.p1.x, wall.p2.x) <= point.x) && (point.x <= max(wall.p1.x, wall.p2.x)) && (min(wall.p1.y, wall.p2.y) <= point.y) && (point.y <= max(wall.p1.y, wall.p2.y)))
 //        return (1);
 //    return (0);
 //}
@@ -9218,19 +9200,19 @@ function initspritelists(): void
 //{
 //    _point2d    cross;
 
-//    cross = intersection(wall2->p1eq, wall1->maskeq);
+//    cross = intersection(wall2.p1eq, wall1.maskeq);
 //    if (pointonmask(cross, wall1))
 //        return (1);
 
-//    cross = intersection(wall2->p2eq, wall1->maskeq);
+//    cross = intersection(wall2.p2eq, wall1.maskeq);
 //    if (pointonmask(cross, wall1))
 //        return (1);
 
-//    cross = intersection(wall1->p1eq, wall2->maskeq);
+//    cross = intersection(wall1.p1eq, wall2.maskeq);
 //    if (pointonmask(cross, wall2))
 //        return (1);
 
-//    cross = intersection(wall1->p2eq, wall2->maskeq);
+//    cross = intersection(wall1.p2eq, wall2.maskeq);
 //    if (pointonmask(cross, wall2))
 //        return (1);
 
@@ -9242,20 +9224,20 @@ function initspritelists(): void
 //{
 //    int32_t i;
 
-//    wall->drawing = 1;
+//    wall.drawing = 1;
 //    i = 0;
-//    while (wall->branch[i] != NULL)
+//    while (wall.branch[i] != NULL)
 //    {
-//        if (wall->branch[i]->drawing == 0)
+//        if (wall.branch[i].drawing == 0)
 //        {
-//            //OSD_Printf("Drawing parent of %i : mask %i\n", wall->index, wall->branch[i]->index);
-//            drawmaskleaf(wall->branch[i]);
+//            //OSD_Printf("Drawing parent of %i : mask %i\n", wall.index, wall.branch[i].index);
+//            drawmaskleaf(wall.branch[i]);
 //        }
 //        i++;
 //    }
 
-//    //OSD_Printf("Drawing mask %i\n", wall->index);
-//    drawmaskwall(wall->index);
+//    //OSD_Printf("Drawing mask %i\n", wall.index);
+//    drawmaskwall(wall.index);
 //}
 //#endif
 
@@ -9263,8 +9245,8 @@ function initspritelists(): void
 //{
 //    float   sign1, sign2;
 
-//    sign1 = eq->a * p1->x + eq->b * p1->y + eq->c;
-//    sign2 = eq->a * p2->x + eq->b * p2->y + eq->c;
+//    sign1 = eq.a * p1.x + eq.b * p1.y + eq.c;
+//    sign2 = eq.a * p2.x + eq.b * p2.y + eq.c;
 
 //    sign1 = sign1 * sign2;
 //    if (sign1 > 0)
@@ -9289,10 +9271,10 @@ function initspritelists(): void
 
 //    for (i=spritesortcnt-1; i>=0; i--)
 //    {
-//        const int32_t xs = tspriteptr[i]->x-globalposx, ys = tspriteptr[i]->y-globalposy;
+//        const int32_t xs = tspriteptr[i].x-globalposx, ys = tspriteptr[i].y-globalposy;
 //        const int32_t yp = dmulscale6(xs,cosviewingrangeglobalang,ys,sinviewingrangeglobalang);
 //#ifdef USE_OPENGL
-//        modelp = (usemodels && tile2model[tspriteptr[i]->picnum].modelid >= 0);
+//        modelp = (usemodels && tile2model[tspriteptr[i].picnum].modelid >= 0);
 //#endif
 //        if (yp > (4<<8))
 //        {
@@ -9303,7 +9285,7 @@ function initspritelists(): void
 
 //            spritesx[i] = scale(xp+yp,xdimen<<7,yp);
 //        }
-//        else if ((tspriteptr[i]->cstat&48) == 0)
+//        else if ((tspriteptr[i].cstat&48) == 0)
 //        {
 //killsprite:
 //            if (!modelp)
@@ -9354,15 +9336,15 @@ function initspritelists(): void
 //                {
 //                    const spritetype *const s = tspriteptr[k];
 
-//                    spritesz[k] = s->z;
-//                    if ((s->cstat&48) != 32)
+//                    spritesz[k] = s.z;
+//                    if ((s.cstat&48) != 32)
 //                    {
-//                        int32_t yoff = picanm[s->picnum].yofs + s->yoffset;
-//                        int32_t yspan = (tilesizy[s->picnum]*s->yrepeat<<2);
+//                        int32_t yoff = picanm[s.picnum].yofs + s.yoffset;
+//                        int32_t yspan = (tilesizy[s.picnum]*s.yrepeat<<2);
 
-//                        spritesz[k] -= (yoff*s->yrepeat)<<2;
+//                        spritesz[k] -= (yoff*s.yrepeat)<<2;
 
-//                        if (!(s->cstat&128))
+//                        if (!(s.cstat&128))
 //                            spritesz[k] -= (yspan>>1);
 //                        if (klabs(spritesz[k]-globalposz) < (yspan>>1))
 //                            spritesz[k] = globalposz;
@@ -9379,7 +9361,7 @@ function initspritelists(): void
 //                        }
 //                for (k=i+1; k<j; k++)
 //                    for (l=i; l<k; l++)
-//                        if (tspriteptr[k]->statnum < tspriteptr[l]->statnum)
+//                        if (tspriteptr[k].statnum < tspriteptr[l].statnum)
 //                        {
 //                            swaplong(&tspriteptr[k],&tspriteptr[l]);
 //                            swaplong(&spritesx[k],&spritesx[l]);
@@ -9394,9 +9376,9 @@ function initspritelists(): void
 //#if 0
 //    for (i=spritesortcnt-1; i>=0; i--)
 //    {
-//        double xs = tspriteptr[i]->x-globalposx;
-//        double ys = tspriteptr[i]->y-globalposy;
-//        int32_t zs = tspriteptr[i]->z-globalposz;
+//        double xs = tspriteptr[i].x-globalposx;
+//        double ys = tspriteptr[i].y-globalposy;
+//        int32_t zs = tspriteptr[i].z-globalposz;
 
 //        int32_t xp = ys*cosglobalang-xs*singlobalang;
 //        int32_t yp = (zs<<1);
@@ -9460,8 +9442,8 @@ function initspritelists(): void
 //                {
 //                    _point2d spr;
 
-//                    spr.x = (float)tspriteptr[i]->x;
-//                    spr.y = (float)tspriteptr[i]->y;
+//                    spr.x = (float)tspriteptr[i].x;
+//                    spr.y = (float)tspriteptr[i].y;
 
 //                    if (!sameside(&maskeq, &spr, &pos) &&
 //                        (otherside_spr_first ||
@@ -9544,29 +9526,29 @@ function initspritelists(): void
 //                continue;
 //#endif
 //            npoints = 0; i = 0;
-//            startwall = sec->wallptr;
+//            startwall = sec.wallptr;
 //#if 0
-//            for (w=sec->wallnum,wal=&wall[startwall]; w>0; w--,wal++)
+//            for (w=sec.wallnum,wal=&wall[startwall]; w>0; w--,wal++)
 //            {
-//                ox = wal->x - dax; oy = wal->y - day;
+//                ox = wal.x - dax; oy = wal.y - day;
 //                x = dmulscale16(ox,xvect,-oy,yvect) + (xdim<<11);
 //                y = dmulscale16(oy,xvect2,ox,yvect2) + (ydim<<11);
 //                i |= getclipmask(x-cx1,cx2-x,y-cy1,cy2-y);
 //                rx1[npoints] = x;
 //                ry1[npoints] = y;
-//                xb1[npoints] = wal->point2 - startwall;
+//                xb1[npoints] = wal.point2 - startwall;
 //                npoints++;
 //            }
 //#else
 //            j = startwall; l = 0;
-//            for (w=sec->wallnum,wal=&wall[startwall]; w>0; w--,wal++,j++)
+//            for (w=sec.wallnum,wal=&wall[startwall]; w>0; w--,wal++,j++)
 //            {
 //                k = lastwall(j);
 //                if ((k > j) && (npoints > 0)) { xb1[npoints-1] = l; l = npoints; } //overwrite point2
-//                //wall[k].x wal->x wall[wal->point2].x
-//                //wall[k].y wal->y wall[wal->point2].y
-//                if (!dmulscale1(wal->x-wall[k].x,wall[wal->point2].y-wal->y,-(wal->y-wall[k].y),wall[wal->point2].x-wal->x)) continue;
-//                ox = wal->x - dax; oy = wal->y - day;
+//                //wall[k].x wal.x wall[wal.point2].x
+//                //wall[k].y wal.y wall[wal.point2].y
+//                if (!dmulscale1(wal.x-wall[k].x,wall[wal.point2].y-wal.y,-(wal.y-wall[k].y),wall[wal.point2].x-wal.x)) continue;
+//                ox = wal.x - dax; oy = wal.y - day;
 //                x = dmulscale16(ox,xvect,-oy,yvect) + (xdim<<11);
 //                y = dmulscale16(oy,xvect2,ox,yvect2) + (ydim<<11);
 //                i |= getclipmask(x-cx1,cx2-x,y-cy1,cy2-y);
@@ -9595,27 +9577,27 @@ function initspritelists(): void
 
 //            gotsector[s>>3] |= pow2char[s&7];
 
-//            globalorientation = (int32_t)sec->floorstat;
+//            globalorientation = (int32_t)sec.floorstat;
 //            if ((globalorientation&1) != 0) continue;
 
-//            globalpal = sec->floorpal;
+//            globalpal = sec.floorpal;
 
-//            if (palookup[sec->floorpal] != globalpalwritten)
+//            if (palookup[sec.floorpal] != globalpalwritten)
 //            {
-//                globalpalwritten = palookup[sec->floorpal];
+//                globalpalwritten = palookup[sec.floorpal];
 //                if (!globalpalwritten) globalpalwritten = palookup[0];	// JBF: fixes null-pointer crash
 //                setpalookupaddress(globalpalwritten);
 //            }
-//            globalpicnum = sec->floorpicnum;
+//            globalpicnum = sec.floorpicnum;
 //            if ((unsigned)globalpicnum >= (unsigned)MAXTILES) globalpicnum = 0;
 //            setgotpic(globalpicnum);
 //            if ((tilesizx[globalpicnum] <= 0) || (tilesizy[globalpicnum] <= 0)) continue;
 //            DO_TILE_ANIM(globalpicnum, s);
 //            if (waloff[globalpicnum] == 0) loadtile(globalpicnum);
 //            globalbufplc = waloff[globalpicnum];
-//            globalshade = max(min(sec->floorshade,numshades-1),0);
+//            globalshade = max(min(sec.floorshade,numshades-1),0);
 //            globvis = globalhisibility;
-//            if (sec->visibility != 0) globvis = mulscale4(globvis, (uint8_t)(sec->visibility+16));
+//            if (sec.visibility != 0) globvis = mulscale4(globvis, (uint8_t)(sec.visibility+16));
 //            globalpolytype = 0;
 //            if ((globalorientation&64) == 0)
 //            {
@@ -9659,8 +9641,8 @@ function initspritelists(): void
 //            asm2 = (globalx2<<globalyshift);
 //            globalx1 <<= globalxshift;
 //            globaly2 <<= globalyshift;
-//            globalposx = ((int64_t)globalposx<<(20+globalxshift))+(((uint32_t)sec->floorxpanning)<<24);
-//            globalposy = ((int64_t)globalposy<<(20+globalyshift))-(((uint32_t)sec->floorypanning)<<24);
+//            globalposx = ((int64_t)globalposx<<(20+globalxshift))+(((uint32_t)sec.floorxpanning)<<24);
+//            globalposy = ((int64_t)globalposy<<(20+globalyshift))-(((uint32_t)sec.floorypanning)<<24);
 
 //            fillpolygon(npoints);
 //        }
@@ -9678,17 +9660,17 @@ function initspritelists(): void
 //    for (s=sortnum-1; s>=0; s--)
 //    {
 //        spr = &sprite[tsprite[s].owner];
-//        if ((spr->cstat&48) == 32)
+//        if ((spr.cstat&48) == 32)
 //        {
 //            int32_t xspan;
 
 //            npoints = 0;
 
-//            x1 = spr->x;
-//            y1 = spr->y;
+//            x1 = spr.x;
+//            y1 = spr.y;
 //            get_floorspr_points(spr, 0, 0, &x1, &x2, &x3, &x4,
 //                               &y1, &y2, &y3, &y4);
-//            xspan = tilesizx[spr->picnum];
+//            xspan = tilesizx[spr.picnum];
 
 //            xb1[0] = 1; xb1[1] = 2; xb1[2] = 3; xb1[3] = 0;
 //            npoints = 4;
@@ -9726,8 +9708,8 @@ function initspritelists(): void
 //                if (npoints < 3) continue;
 //            }
 
-//            globalpicnum = spr->picnum;
-//            globalpal = spr->pal; // GL needs this, software doesn't
+//            globalpicnum = spr.picnum;
+//            globalpal = spr.pal; // GL needs this, software doesn't
 //            if ((unsigned)globalpicnum >= (unsigned)MAXTILES) globalpicnum = 0;
 //            setgotpic(globalpicnum);
 //            if ((tilesizx[globalpicnum] <= 0) || (tilesizy[globalpicnum] <= 0)) continue;
@@ -9741,15 +9723,15 @@ function initspritelists(): void
 //            if (!globalbufplc)
 //                continue;
 
-//            if ((sector[spr->sectnum].ceilingstat&1) > 0)
-//                globalshade = ((int32_t)sector[spr->sectnum].ceilingshade);
+//            if ((sector[spr.sectnum].ceilingstat&1) > 0)
+//                globalshade = ((int32_t)sector[spr.sectnum].ceilingshade);
 //            else
-//                globalshade = ((int32_t)sector[spr->sectnum].floorshade);
-//            globalshade = max(min(globalshade+spr->shade+6,numshades-1),0);
-//            asm3 = FP_OFF(palookup[spr->pal]+(globalshade<<8));
+//                globalshade = ((int32_t)sector[spr.sectnum].floorshade);
+//            globalshade = max(min(globalshade+spr.shade+6,numshades-1),0);
+//            asm3 = FP_OFF(palookup[spr.pal]+(globalshade<<8));
 //            globvis = globalhisibility;
-//            if (sec->visibility != 0) globvis = mulscale4(globvis, (uint8_t)(sec->visibility+16));
-//            globalpolytype = ((spr->cstat&2)>>1)+1;
+//            if (sec.visibility != 0) globvis = mulscale4(globvis, (uint8_t)(sec.visibility+16));
+//            globalpolytype = ((spr.cstat&2)>>1)+1;
 
 //            //relative alignment stuff
 //            ox = x2-x1; oy = y2-y1;
@@ -9773,20 +9755,20 @@ function initspritelists(): void
 //            globalposx = dmulscale28(-baky1,globalx1,-bakx1,globaly1);
 //            globalposy = dmulscale28(bakx1,globalx2,-baky1,globaly2);
 
-//            if ((spr->cstat&2) == 0)
+//            if ((spr.cstat&2) == 0)
 //                msethlineshift(ox,oy);
 //            else
 //            {
-//                if (spr->cstat&512) settransreverse(); else settransnormal();
+//                if (spr.cstat&512) settransreverse(); else settransnormal();
 //                tsethlineshift(ox,oy);
 //            }
 
-//            if ((spr->cstat&0x4) > 0) globalx1 = -globalx1, globaly1 = -globaly1, globalposx = -globalposx;
+//            if ((spr.cstat&0x4) > 0) globalx1 = -globalx1, globaly1 = -globaly1, globalposx = -globalposx;
 //            asm1 = (globaly1<<2); globalx1 <<= 2; globalposx <<= (20+2);
 //            asm2 = (globalx2<<2); globaly2 <<= 2; globalposy <<= (20+2);
 
 //            // so polymost can get the translucency. ignored in software mode:
-//            globalorientation = ((spr->cstat&2)<<7) | ((spr->cstat&512)>>2);
+//            globalorientation = ((spr.cstat&2)<<7) | ((spr.cstat&512)>>2);
 //            fillpolygon(npoints);
 //        }
 //    }
@@ -10426,7 +10408,7 @@ function loadboard(filename: string, /*char*/ flags: number, dapos: vec3_t , /*i
 //        tok = scriptfile_gettoken(script);
 //        if (!tok) break;
 //        for (i=0; legaltokens[i].text; i++) if (!Bstrcasecmp(tok,legaltokens[i].text)) break;
-//        cmdtokptr = script->ltextptr;
+//        cmdtokptr = script.ltextptr;
 
 //        if (!filename && legaltokens[i].tokenid != T_LIGHT) continue;
 
@@ -10439,7 +10421,7 @@ function loadboard(filename: string, /*char*/ flags: number, dapos: vec3_t , /*i
 //            {
 //                // sprite number out of range
 //                initprintf("Sprite number out of range 0-%d on line %s:%d\n",
-//                           MAXSPRITES-1,script->filename, scriptfile_getlinum(script,cmdtokptr));
+//                           MAXSPRITES-1,script.filename, scriptfile_getlinum(script,cmdtokptr));
 //                whichsprite = -1;
 //                break;
 //            }
@@ -10454,7 +10436,7 @@ function loadboard(filename: string, /*char*/ flags: number, dapos: vec3_t , /*i
 //            {
 //                // no sprite directive preceeding
 //                initprintf("Ignoring angle offset directive because of absent/invalid sprite number on line %s:%d\n",
-//                           script->filename, scriptfile_getlinum(script,cmdtokptr));
+//                           script.filename, scriptfile_getlinum(script,cmdtokptr));
 //                break;
 //            }
 //            spriteext[whichsprite].angoff = (int16_t)ang;
@@ -10465,7 +10447,7 @@ function loadboard(filename: string, /*char*/ flags: number, dapos: vec3_t , /*i
 //            {
 //                // no sprite directive preceeding
 //                initprintf("Ignoring not-MD2/MD3 directive because of absent/invalid sprite number on line %s:%d\n",
-//                           script->filename, scriptfile_getlinum(script,cmdtokptr));
+//                           script.filename, scriptfile_getlinum(script,cmdtokptr));
 //                break;
 //            }
 //            spriteext[whichsprite].flags |= SPREXT_NOTMD;
@@ -10475,7 +10457,7 @@ function loadboard(filename: string, /*char*/ flags: number, dapos: vec3_t , /*i
 //            {
 //                // no sprite directive preceeding
 //                initprintf("Ignoring no-MD2/MD3-anim directive because of absent/invalid sprite number on line %s:%d\n",
-//                           script->filename, scriptfile_getlinum(script,cmdtokptr));
+//                           script.filename, scriptfile_getlinum(script,cmdtokptr));
 //                break;
 //            }
 //            spriteext[whichsprite].flags |= SPREXT_NOMDANIM;
@@ -10489,7 +10471,7 @@ function loadboard(filename: string, /*char*/ flags: number, dapos: vec3_t , /*i
 //            {
 //                // no sprite directive preceeding
 //                initprintf("Ignoring pitch directive because of absent/invalid sprite number on line %s:%d\n",
-//                           script->filename, scriptfile_getlinum(script,cmdtokptr));
+//                           script.filename, scriptfile_getlinum(script,cmdtokptr));
 //                break;
 //            }
 //            spriteext[whichsprite].pitch = (int16_t)pitch;
@@ -10504,7 +10486,7 @@ function loadboard(filename: string, /*char*/ flags: number, dapos: vec3_t , /*i
 //            {
 //                // no sprite directive preceeding
 //                initprintf("Ignoring roll directive because of absent/invalid sprite number on line %s:%d\n",
-//                           script->filename, scriptfile_getlinum(script,cmdtokptr));
+//                           script.filename, scriptfile_getlinum(script,cmdtokptr));
 //                break;
 //            }
 //            spriteext[whichsprite].roll = (int16_t)roll;
@@ -10519,7 +10501,7 @@ function loadboard(filename: string, /*char*/ flags: number, dapos: vec3_t , /*i
 //            {
 //                // no sprite directive preceeding
 //                initprintf("Ignoring mdxoff directive because of absent/invalid sprite number on line %s:%d\n",
-//                           script->filename, scriptfile_getlinum(script,cmdtokptr));
+//                           script.filename, scriptfile_getlinum(script,cmdtokptr));
 //                break;
 //            }
 //            spriteext[whichsprite].xoff = i;
@@ -10534,7 +10516,7 @@ function loadboard(filename: string, /*char*/ flags: number, dapos: vec3_t , /*i
 //            {
 //                // no sprite directive preceeding
 //                initprintf("Ignoring mdyoff directive because of absent/invalid sprite number on line %s:%d\n",
-//                           script->filename, scriptfile_getlinum(script,cmdtokptr));
+//                           script.filename, scriptfile_getlinum(script,cmdtokptr));
 //                break;
 //            }
 //            spriteext[whichsprite].yoff = i;
@@ -10549,7 +10531,7 @@ function loadboard(filename: string, /*char*/ flags: number, dapos: vec3_t , /*i
 //            {
 //                // no sprite directive preceeding
 //                initprintf("Ignoring mdzoff directive because of absent/invalid sprite number on line %s:%d\n",
-//                           script->filename, scriptfile_getlinum(script,cmdtokptr));
+//                           script.filename, scriptfile_getlinum(script,cmdtokptr));
 //                break;
 //            }
 //            spriteext[whichsprite].zoff = i;
@@ -10560,7 +10542,7 @@ function loadboard(filename: string, /*char*/ flags: number, dapos: vec3_t , /*i
 //            {
 //                // no sprite directive preceeding
 //                initprintf("Ignoring moving away directive because of absent/invalid sprite number on line %s:%d\n",
-//                           script->filename, scriptfile_getlinum(script,cmdtokptr));
+//                           script.filename, scriptfile_getlinum(script,cmdtokptr));
 //                break;
 //            }
 //            spriteext[whichsprite].flags |= SPREXT_AWAY1;
@@ -10570,7 +10552,7 @@ function loadboard(filename: string, /*char*/ flags: number, dapos: vec3_t , /*i
 //            {
 //                // no sprite directive preceeding
 //                initprintf("Ignoring moving away directive because of absent/invalid sprite number on line %s:%d\n",
-//                           script->filename, scriptfile_getlinum(script,cmdtokptr));
+//                           script.filename, scriptfile_getlinum(script,cmdtokptr));
 //                break;
 //            }
 //            spriteext[whichsprite].flags |= SPREXT_AWAY2;
@@ -10729,9 +10711,9 @@ function loadboard(filename: string, /*char*/ flags: number, dapos: vec3_t , /*i
 //    mapversion = get_mapversion();
 //    tl = B_LITTLE32(mapversion);    Bwrite(fil,&tl,4);
 
-//    tl = B_LITTLE32(dapos->x);      Bwrite(fil,&tl,4);
-//    tl = B_LITTLE32(dapos->y);      Bwrite(fil,&tl,4);
-//    tl = B_LITTLE32(dapos->z);      Bwrite(fil,&tl,4);
+//    tl = B_LITTLE32(dapos.x);      Bwrite(fil,&tl,4);
+//    tl = B_LITTLE32(dapos.y);      Bwrite(fil,&tl,4);
+//    tl = B_LITTLE32(dapos.z);      Bwrite(fil,&tl,4);
 //    ts = B_LITTLE16(daang);        Bwrite(fil,&ts,2);
 //    ts = B_LITTLE16(dacursectnum); Bwrite(fil,&ts,2);
 
@@ -10756,19 +10738,19 @@ function loadboard(filename: string, /*char*/ flags: number, dapos: vec3_t , /*i
 //        {
 //            sectortypev7 *const sec = &tsect[i];
 
-//            sec->wallptr       = B_LITTLE16(sec->wallptr);
-//            sec->wallnum       = B_LITTLE16(sec->wallnum);
-//            sec->ceilingz      = B_LITTLE32(sec->ceilingz);
-//            sec->floorz        = B_LITTLE32(sec->floorz);
-//            sec->ceilingstat   = B_LITTLE16(sec->ceilingstat);
-//            sec->floorstat     = B_LITTLE16(sec->floorstat);
-//            sec->ceilingpicnum = B_LITTLE16(sec->ceilingpicnum);
-//            sec->ceilingheinum = B_LITTLE16(sec->ceilingheinum);
-//            sec->floorpicnum   = B_LITTLE16(sec->floorpicnum);
-//            sec->floorheinum   = B_LITTLE16(sec->floorheinum);
-//            sec->lotag         = B_LITTLE16(sec->lotag);
-//            sec->hitag         = B_LITTLE16(sec->hitag);
-//            sec->extra         = B_LITTLE16(sec->extra);
+//            sec.wallptr       = B_LITTLE16(sec.wallptr);
+//            sec.wallnum       = B_LITTLE16(sec.wallnum);
+//            sec.ceilingz      = B_LITTLE32(sec.ceilingz);
+//            sec.floorz        = B_LITTLE32(sec.floorz);
+//            sec.ceilingstat   = B_LITTLE16(sec.ceilingstat);
+//            sec.floorstat     = B_LITTLE16(sec.floorstat);
+//            sec.ceilingpicnum = B_LITTLE16(sec.ceilingpicnum);
+//            sec.ceilingheinum = B_LITTLE16(sec.ceilingheinum);
+//            sec.floorpicnum   = B_LITTLE16(sec.floorpicnum);
+//            sec.floorheinum   = B_LITTLE16(sec.floorheinum);
+//            sec.lotag         = B_LITTLE16(sec.lotag);
+//            sec.hitag         = B_LITTLE16(sec.hitag);
+//            sec.extra         = B_LITTLE16(sec.extra);
 //#ifdef YAX_ENABLE__COMPAT
 //            if (editstatus == 0)
 //            {
@@ -10804,14 +10786,14 @@ function loadboard(filename: string, /*char*/ flags: number, dapos: vec3_t , /*i
 //        {
 //            walltypev7 *const wal = &twall[i];
 
-//            wal->x          = B_LITTLE32(wal->x);
-//            wal->y          = B_LITTLE32(wal->y);
-//            wal->point2     = B_LITTLE16(wal->point2);
-//            wal->nextwall   = B_LITTLE16(wal->nextwall);
-//            wal->nextsector = B_LITTLE16(wal->nextsector);
-//            wal->cstat      = B_LITTLE16(wal->cstat);
-//            wal->picnum     = B_LITTLE16(wal->picnum);
-//            wal->overpicnum = B_LITTLE16(wal->overpicnum);
+//            wal.x          = B_LITTLE32(wal.x);
+//            wal.y          = B_LITTLE32(wal.y);
+//            wal.point2     = B_LITTLE16(wal.point2);
+//            wal.nextwall   = B_LITTLE16(wal.nextwall);
+//            wal.nextsector = B_LITTLE16(wal.nextsector);
+//            wal.cstat      = B_LITTLE16(wal.cstat);
+//            wal.picnum     = B_LITTLE16(wal.picnum);
+//            wal.overpicnum = B_LITTLE16(wal.overpicnum);
 //#ifdef YAX_ENABLE__COMPAT
 //            if (editstatus == 0)
 //            {
@@ -10823,9 +10805,9 @@ function loadboard(filename: string, /*char*/ flags: number, dapos: vec3_t , /*i
 //                    YAX_PTRNEXTWALL(twall,i,YAX_FLOOR) = ynw;
 //            }
 //#endif
-//            wal->lotag      = B_LITTLE16(wal->lotag);
-//            wal->hitag      = B_LITTLE16(wal->hitag);
-//            wal->extra      = B_LITTLE16(wal->extra);
+//            wal.lotag      = B_LITTLE16(wal.lotag);
+//            wal.hitag      = B_LITTLE16(wal.hitag);
+//            wal.extra      = B_LITTLE16(wal.extra);
 //        }
 
 //        Bwrite(fil, twall, sizeof(walltypev7)*numwalls);
@@ -10846,21 +10828,21 @@ function loadboard(filename: string, /*char*/ flags: number, dapos: vec3_t , /*i
 //                if (sprite[j].statnum != MAXSTATUS)
 //                {
 //                    Bmemcpy(spri, &sprite[j], sizeof(spritetype));
-//                    spri->x       = B_LITTLE32(spri->x);
-//                    spri->y       = B_LITTLE32(spri->y);
-//                    spri->z       = B_LITTLE32(spri->z);
-//                    spri->cstat   = B_LITTLE16(spri->cstat);
-//                    spri->picnum  = B_LITTLE16(spri->picnum);
-//                    spri->sectnum = B_LITTLE16(spri->sectnum);
-//                    spri->statnum = B_LITTLE16(spri->statnum);
-//                    spri->ang     = B_LITTLE16(spri->ang);
-//                    spri->owner   = B_LITTLE16(spri->owner);
-//                    spri->xvel    = B_LITTLE16(spri->xvel);
-//                    spri->yvel    = B_LITTLE16(spri->yvel);
-//                    spri->zvel    = B_LITTLE16(spri->zvel);
-//                    spri->lotag   = B_LITTLE16(spri->lotag);
-//                    spri->hitag   = B_LITTLE16(spri->hitag);
-//                    spri->extra   = B_LITTLE16(spri->extra);
+//                    spri.x       = B_LITTLE32(spri.x);
+//                    spri.y       = B_LITTLE32(spri.y);
+//                    spri.z       = B_LITTLE32(spri.z);
+//                    spri.cstat   = B_LITTLE16(spri.cstat);
+//                    spri.picnum  = B_LITTLE16(spri.picnum);
+//                    spri.sectnum = B_LITTLE16(spri.sectnum);
+//                    spri.statnum = B_LITTLE16(spri.statnum);
+//                    spri.ang     = B_LITTLE16(spri.ang);
+//                    spri.owner   = B_LITTLE16(spri.owner);
+//                    spri.xvel    = B_LITTLE16(spri.xvel);
+//                    spri.yvel    = B_LITTLE16(spri.yvel);
+//                    spri.zvel    = B_LITTLE16(spri.zvel);
+//                    spri.lotag   = B_LITTLE16(spri.lotag);
+//                    spri.hitag   = B_LITTLE16(spri.hitag);
+//                    spri.extra   = B_LITTLE16(spri.extra);
 //                    spri++;
 //                }
 //            }
@@ -11429,8 +11411,8 @@ function loadtile(tilenume: number): void
 
 //    const int32_t r = walldist<<1;
 
-//    wal = &wall[wallnum];     x1 = wal->x+walldist-x; y1 = wal->y+walldist-y;
-//    wal = &wall[wal->point2]; x2 = wal->x+walldist-x; y2 = wal->y+walldist-y;
+//    wal = &wall[wallnum];     x1 = wal.x+walldist-x; y1 = wal.y+walldist-y;
+//    wal = &wall[wal.point2]; x2 = wal.x+walldist-x; y2 = wal.y+walldist-y;
 
 //    if ((x1 < 0) && (x2 < 0)) return(0);
 //    if ((y1 < 0) && (y2 < 0)) return(0);
@@ -11588,12 +11570,12 @@ function inside(/*int32_t*/ x: number, /*int32_t*/ y: number, /*int16_t*/ sectnu
 //int32_t spriteheightofsptr(const spritetype *spr, int32_t *height, int32_t alsotileyofs)
 //{
 //    int32_t hei, zofs=0;
-//    const int32_t picnum=spr->picnum, yrepeat=spr->yrepeat;
+//    const int32_t picnum=spr.picnum, yrepeat=spr.yrepeat;
 
 //    hei = (tilesizy[picnum]*yrepeat)<<2;
 //    *height = hei;
 
-//    if (spr->cstat&128)
+//    if (spr.cstat&128)
 //        zofs = hei>>1;
 
 //    // NOTE: a positive per-tile yoffset translates the sprite into the
@@ -11614,7 +11596,7 @@ function inside(/*int32_t*/ x: number, /*int32_t*/ y: number, /*int16_t*/ sectnu
 //    if ((void *)newpos != (void *)&sprite[spritenum])
 //        Bmemcpy(&sprite[spritenum], newpos, sizeof(vec3_t));
 
-//    updatesector(newpos->x,newpos->y,&tempsectnum);
+//    updatesector(newpos.x,newpos.y,&tempsectnum);
 
 //    if (tempsectnum < 0)
 //        return(-1);
@@ -11631,7 +11613,7 @@ function inside(/*int32_t*/ x: number, /*int32_t*/ y: number, /*int16_t*/ sectnu
 //    if ((void *)newpos != (void *)&sprite[spritenum])
 //        Bmemcpy(&sprite[spritenum], newpos, sizeof(vec3_t));
 
-//    updatesectorz(newpos->x,newpos->y,newpos->z,&tempsectnum);
+//    updatesectorz(newpos.x,newpos.y,newpos.z,&tempsectnum);
 
 //    if (tempsectnum < 0)
 //        return(-1);
@@ -11657,7 +11639,7 @@ function inside(/*int32_t*/ x: number, /*int32_t*/ y: number, /*int16_t*/ sectnu
 
 //    do
 //    {
-//        const int32_t ns = wal->nextsector;
+//        const int32_t ns = wal.nextsector;
 
 //        if (ns >= 0)
 //        {
@@ -11674,7 +11656,7 @@ function inside(/*int32_t*/ x: number, /*int32_t*/ y: number, /*int16_t*/ sectnu
 //            if (ok)
 //            {
 //                nextz = testz;
-//                sectortouse = wal->nextsector;
+//                sectortouse = wal.nextsector;
 //            }
 //        }
 
@@ -11735,11 +11717,11 @@ function inside(/*int32_t*/ x: number, /*int32_t*/ y: number, /*int16_t*/ sectnu
 //        getzsofslope(dasectnum, x1,y1, &cfz1[0], &cfz1[1]);
 //        getzsofslope(dasectnum, x2,y2, &cfz2[0], &cfz2[1]);
 //#endif
-//        for (cnt=sec->wallnum,wal=&wall[sec->wallptr]; cnt>0; cnt--,wal++)
+//        for (cnt=sec.wallnum,wal=&wall[sec.wallptr]; cnt>0; cnt--,wal++)
 //        {
-//            const walltype *const wal2 = &wall[wal->point2];
-//            const int32_t x31 = wal->x-x1, x34 = wal->x-wal2->x;
-//            const int32_t y31 = wal->y-y1, y34 = wal->y-wal2->y;
+//            const walltype *const wal2 = &wall[wal.point2];
+//            const int32_t x31 = wal.x-x1, x34 = wal.x-wal2.x;
+//            const int32_t y31 = wal.y-y1, y34 = wal.y-wal2.y;
 
 //            int32_t x, y, z, nexts, t, bot;
 //            int32_t cfz[2];
@@ -11788,12 +11770,12 @@ function inside(/*int32_t*/ x: number, /*int32_t*/ y: number, /*int16_t*/ sectnu
 //                continue;
 //            }
 
-//            nexts = wal->nextsector;
+//            nexts = wal.nextsector;
 
 //#ifdef YAX_ENABLE
 //            if (bn[0]<0 && bn[1]<0)
 //#endif
-//                if (nexts < 0 || wal->cstat&32)
+//                if (nexts < 0 || wal.cstat&32)
 //                    return 0;
 
 //            t = divscale24(t,bot);
@@ -11835,7 +11817,7 @@ function inside(/*int32_t*/ x: number, /*int32_t*/ y: number, /*int16_t*/ sectnu
 //            }
 
 //#ifdef YAX_ENABLE
-//            if (nexts < 0 || (wal->cstat&32))
+//            if (nexts < 0 || (wal.cstat&32))
 //                return 0;
 //#endif
 //            getzsofslope(nexts, x,y, &cfz[0],&cfz[1]);
@@ -11871,12 +11853,12 @@ function inside(/*int32_t*/ x: number, /*int32_t*/ y: number, /*int16_t*/ sectnu
 //static inline void hit_set(hitdata_t *hit, int32_t sectnum, int32_t wallnum, int32_t spritenum,
 //                           int32_t x, int32_t y, int32_t z)
 //{
-//    hit->sect = sectnum;
-//    hit->wall = wallnum;
-//    hit->sprite = spritenum;
-//    hit->pos.x = x;
-//    hit->pos.y = y;
-//    hit->pos.z = z;
+//    hit.sect = sectnum;
+//    hit.wall = wallnum;
+//    hit.sprite = spritenum;
+//    hit.pos.x = x;
+//    hit.pos.y = y;
+//    hit.pos.z = z;
 //}
 
 //static int32_t hitscan_hitsectcf=-1;
@@ -11892,9 +11874,9 @@ function inside(/*int32_t*/ x: number, /*int32_t*/ y: number, /*int16_t*/ sectnu
 
 //    if (stat&2)
 //    {
-//        const walltype *const wal = &wall[sec->wallptr];
-//        const walltype *const wal2 = &wall[wal->point2];
-//        int32_t j, dax=wal2->x-wal->x, day=wal2->y-wal->y;
+//        const walltype *const wal = &wall[sec.wallptr];
+//        const walltype *const wal2 = &wall[wal.point2];
+//        int32_t j, dax=wal2.x-wal.x, day=wal2.y-wal.y;
 
 //        i = nsqrtasm(uhypsq(dax,day)); if (i == 0) return 1; //continue;
 //        i = divscale15(heinum,i);
@@ -11903,28 +11885,28 @@ function inside(/*int32_t*/ x: number, /*int32_t*/ y: number, /*int16_t*/ sectnu
 //        j = (vz<<8)-dmulscale15(dax,vy,-day,vx);
 //        if (j != 0)
 //        {
-//            i = ((z - sv->z)<<8)+dmulscale15(dax,sv->y-wal->y,-day,sv->x-wal->x);
+//            i = ((z - sv.z)<<8)+dmulscale15(dax,sv.y-wal.y,-day,sv.x-wal.x);
 //            if (((i^j) >= 0) && ((klabs(i)>>1) < klabs(j)))
 //            {
 //                i = divscale30(i,j);
-//                x1 = sv->x + mulscale30(vx,i);
-//                y1 = sv->y + mulscale30(vy,i);
-//                z1 = sv->z + mulscale30(vz,i);
+//                x1 = sv.x + mulscale30(vx,i);
+//                y1 = sv.y + mulscale30(vy,i);
+//                z1 = sv.z + mulscale30(vz,i);
 //            }
 //        }
 //    }
-//    else if ((how*vz > 0) && (how*sv->z <= how*z))
+//    else if ((how*vz > 0) && (how*sv.z <= how*z))
 //    {
-//        z1 = z; i = z1-sv->z;
+//        z1 = z; i = z1-sv.z;
 //        if ((klabs(i)>>1) < vz*how)
 //        {
 //            i = divscale30(i,vz);
-//            x1 = sv->x + mulscale30(vx,i);
-//            y1 = sv->y + mulscale30(vy,i);
+//            x1 = sv.x + mulscale30(vx,i);
+//            y1 = sv.y + mulscale30(vy,i);
 //        }
 //    }
 
-//    if ((x1 != INT32_MAX) && (klabs(x1-sv->x)+klabs(y1-sv->y) < klabs((hit->pos.x)-sv->x)+klabs((hit->pos.y)-sv->y)))
+//    if ((x1 != INT32_MAX) && (klabs(x1-sv.x)+klabs(y1-sv.y) < klabs((hit.pos.x)-sv.x)+klabs((hit.pos.y)-sv.y)))
 //    {
 //        if (tmp==NULL)
 //        {
@@ -11943,7 +11925,7 @@ function inside(/*int32_t*/ x: number, /*int32_t*/ y: number, /*int16_t*/ sectnu
 //            if (!thislastsec)
 //            {
 //                if (inside(x1,y1,sec-sector) == 1)
-//                    hit_set(hit, curspr->sectnum, -1, curspr-sprite, x1, y1, z1);
+//                    hit_set(hit, curspr.sectnum, -1, curspr-sprite, x1, y1, z1);
 //            }
 //#ifdef HAVE_CLIPSHAPE_FEATURE
 //            else
@@ -11952,7 +11934,7 @@ function inside(/*int32_t*/ x: number, /*int32_t*/ y: number, /*int16_t*/ sectnu
 //                {
 //                    if (inside(x1,y1,sectq[i]) == 1)
 //                    {
-//                        hit_set(hit, curspr->sectnum, -1, curspr-sprite, x1, y1, z1);
+//                        hit_set(hit, curspr.sectnum, -1, curspr-sprite, x1, y1, z1);
 //                        break;
 //                    }
 //                }
@@ -11972,12 +11954,12 @@ function inside(/*int32_t*/ x: number, /*int32_t*/ y: number, /*int16_t*/ sectnu
 //    //These lines get the 2 points of the rotated sprite
 //    //Given: (x1, y1) starts out as the center point
 
-//    const int32_t tilenum=spr->picnum, ang=spr->ang;
-//    const int32_t xrepeat = spr->xrepeat;
-//    int32_t xoff = picanm[tilenum].xofs + spr->xoffset;
+//    const int32_t tilenum=spr.picnum, ang=spr.ang;
+//    const int32_t xrepeat = spr.xrepeat;
+//    int32_t xoff = picanm[tilenum].xofs + spr.xoffset;
 //    int32_t k, l, dax, day;
 
-//    if (spr->cstat&4)
+//    if (spr.cstat&4)
 //        xoff = -xoff;
 
 //    dax = sintable[ang&2047]*xrepeat;
@@ -11999,23 +11981,23 @@ function inside(/*int32_t*/ x: number, /*int32_t*/ y: number, /*int16_t*/ sectnu
 //                               int32_t *x1, int32_t *x2, int32_t *x3, int32_t *x4,
 //                               int32_t *y1, int32_t *y2, int32_t *y3, int32_t *y4)
 //{
-//    const int32_t tilenum = spr->picnum;
+//    const int32_t tilenum = spr.picnum;
 //    // &2047 in sinang:
-//    // DNE 1.3D lights camera action (1st level), spr->ang==2306
+//    // DNE 1.3D lights camera action (1st level), spr.ang==2306
 //    // (probably from CON)
-//    const int32_t cosang = sintable[(spr->ang+512)&2047];
-//    const int32_t sinang = sintable[spr->ang&2047];
+//    const int32_t cosang = sintable[(spr.ang+512)&2047];
+//    const int32_t sinang = sintable[spr.ang&2047];
 
-//    const int32_t xspan=tilesizx[tilenum], xrepeat=spr->xrepeat;
-//    const int32_t yspan=tilesizy[tilenum], yrepeat=spr->yrepeat;
+//    const int32_t xspan=tilesizx[tilenum], xrepeat=spr.xrepeat;
+//    const int32_t yspan=tilesizy[tilenum], yrepeat=spr.yrepeat;
 
-//    int32_t xoff = picanm[tilenum].xofs + spr->xoffset;
-//    int32_t yoff = picanm[tilenum].yofs + spr->yoffset;
+//    int32_t xoff = picanm[tilenum].xofs + spr.xoffset;
+//    int32_t yoff = picanm[tilenum].yofs + spr.yoffset;
 //    int32_t k, l, dax, day;
 
-//    if (spr->cstat&4)
+//    if (spr.cstat&4)
 //        xoff = -xoff;
-//    if (spr->cstat&8)
+//    if (spr.cstat&8)
 //        yoff = -yoff;
 
 //    dax = ((xspan>>1)+xoff)*xrepeat;
@@ -12067,8 +12049,8 @@ function inside(/*int32_t*/ x: number, /*int32_t*/ y: number, /*int16_t*/ sectnu
 //                                     int32_t vx, int32_t vy, int32_t vz,
 //                                     vec3_t *intp, int32_t strictly_smaller_than_p)
 //{
-//    const int32_t x1=spr->x, y1=spr->y;
-//    const int32_t xs=refpos->x, ys=refpos->y;
+//    const int32_t x1=spr.x, y1=spr.y;
+//    const int32_t xs=refpos.x, ys=refpos.y;
 
 //    const int32_t topt = vx*(x1-xs) + vy*(y1-ys);
 //    if (topt > 0)
@@ -12077,8 +12059,8 @@ function inside(/*int32_t*/ x: number, /*int32_t*/ y: number, /*int16_t*/ sectnu
 //        if (bot != 0)
 //        {
 //            int32_t i;
-//            const int32_t intz = refpos->z + scale(vz,topt,bot);
-//            const int32_t z1 = spr->z + spriteheightofsptr(spr, &i, 1);
+//            const int32_t intz = refpos.z + scale(vz,topt,bot);
+//            const int32_t z1 = spr.z + spriteheightofsptr(spr, &i, 1);
 
 //            if (intz >= z1-i && intz <= z1)
 //            {
@@ -12088,18 +12070,18 @@ function inside(/*int32_t*/ x: number, /*int32_t*/ y: number, /*int16_t*/ sectnu
 //                const int32_t offy = scale(vy,topu,bot);
 //                const int32_t dist = offx*offx + offy*offy;
 
-//                i = tilesizx[spr->picnum]*spr->xrepeat;
+//                i = tilesizx[spr.picnum]*spr.xrepeat;
 //                if (dist <= mulscale7(i,i))
 //                {
 //                    const int32_t intx = xs + scale(vx,topt,bot);
 //                    const int32_t inty = ys + scale(vy,topt,bot);
 
 //                    if (klabs(intx-xs)+klabs(inty-ys) + strictly_smaller_than_p
-//                            <= klabs(intp->x-xs)+klabs(intp->y-ys))
+//                            <= klabs(intp.x-xs)+klabs(intp.y-ys))
 //                    {
-//                        intp->x = intx;
-//                        intp->y = inty;
-//                        intp->z = intz;
+//                        intp.x = intx;
+//                        intp.y = inty;
+//                        intp.z = intz;
 //                        return 1;
 //                    }
 //                }
@@ -12132,13 +12114,13 @@ function inside(/*int32_t*/ x: number, /*int32_t*/ y: number, /*int16_t*/ sectnu
 //    const int32_t dawalclipmask = (cliptype&65535);
 //    const int32_t dasprclipmask = (cliptype>>16);
 
-//    hit->sect = -1; hit->wall = -1; hit->sprite = -1;
+//    hit.sect = -1; hit.wall = -1; hit.sprite = -1;
 //    if (sectnum < 0) return(-1);
 
 //#ifdef YAX_ENABLE
 //restart_grand:
 //#endif
-//    hit->pos.x = hitscangoalx; hit->pos.y = hitscangoaly;
+//    hit.pos.x = hitscangoalx; hit.pos.y = hitscangoaly;
 
 //    clipsectorlist[0] = sectnum;
 //    tempshortcnt = 0; tempshortnum = 1;
@@ -12159,11 +12141,11 @@ function inside(/*int32_t*/ x: number, /*int32_t*/ y: number, /*int16_t*/ sectnu
 //            curspr = &sprite[clipspritelist[clipspritecnt]];
 
 //            if (curidx < 0)  // per-sprite init
-//                curidx = pictoidx[curspr->picnum];
+//                curidx = pictoidx[curspr.picnum];
 //            else
 //                curidx = clipinfo[curidx].next;
 
-//            while (curidx>=0 && (curspr->cstat&32) != (sector[sectq[clipinfo[curidx].qbeg]].CM_CSTAT&32))
+//            while (curidx>=0 && (curspr.cstat&32) != (sector[sectq[clipinfo[curidx].qbeg]].CM_CSTAT&32))
 //                curidx = clipinfo[curidx].next;
 
 //            if (curidx < 0)
@@ -12195,33 +12177,33 @@ function inside(/*int32_t*/ x: number, /*int32_t*/ y: number, /*int16_t*/ sectnu
 //            else tmp[2] = 0;
 //        }
 //#endif
-//        if (hitscan_trysector(sv, sec, hit, vx,vy,vz, sec->ceilingstat, sec->ceilingheinum, sec->ceilingz, -i, tmpptr))
+//        if (hitscan_trysector(sv, sec, hit, vx,vy,vz, sec.ceilingstat, sec.ceilingheinum, sec.ceilingz, -i, tmpptr))
 //            continue;
-//        if (hitscan_trysector(sv, sec, hit, vx,vy,vz, sec->floorstat, sec->floorheinum, sec->floorz, i, tmpptr))
+//        if (hitscan_trysector(sv, sec, hit, vx,vy,vz, sec.floorstat, sec.floorheinum, sec.floorz, i, tmpptr))
 //            continue;
 
 //        ////////// Walls //////////
 
-//        startwall = sec->wallptr; endwall = startwall + sec->wallnum;
+//        startwall = sec.wallptr; endwall = startwall + sec.wallnum;
 //        for (z=startwall,wal=&wall[startwall]; z<endwall; z++,wal++)
 //        {
-//            const int32_t nextsector = wal->nextsector;
-//            const walltype *const wal2 = &wall[wal->point2];
+//            const int32_t nextsector = wal.nextsector;
+//            const walltype *const wal2 = &wall[wal.point2];
 //            int32_t daz2, zz;
 
 //            if (curspr && nextsector<0) continue;
 
-//            x1 = wal->x; y1 = wal->y; x2 = wal2->x; y2 = wal2->y;
+//            x1 = wal.x; y1 = wal.y; x2 = wal2.x; y2 = wal2.y;
 
-//            if ((int64_t)(x1-sv->x)*(y2-sv->y) < (int64_t)(x2-sv->x)*(y1-sv->y)) continue;
-//            if (rintersect(sv->x,sv->y,sv->z, vx,vy,vz, x1,y1, x2,y2, &intx,&inty,&intz) == -1) continue;
+//            if ((int64_t)(x1-sv.x)*(y2-sv.y) < (int64_t)(x2-sv.x)*(y1-sv.y)) continue;
+//            if (rintersect(sv.x,sv.y,sv.z, vx,vy,vz, x1,y1, x2,y2, &intx,&inty,&intz) == -1) continue;
 
-//            if (klabs(intx-sv->x)+klabs(inty-sv->y) >= klabs((hit->pos.x)-sv->x)+klabs((hit->pos.y)-sv->y))
+//            if (klabs(intx-sv.x)+klabs(inty-sv.y) >= klabs((hit.pos.x)-sv.x)+klabs((hit.pos.y)-sv.y))
 //                continue;
 
 //            if (!curspr)
 //            {
-//                if ((nextsector < 0) || (wal->cstat&dawalclipmask))
+//                if ((nextsector < 0) || (wal.cstat&dawalclipmask))
 //                {
 //                    hit_set(hit, dasector, z, -1, intx, inty, intz);
 //                    continue;
@@ -12239,9 +12221,9 @@ function inside(/*int32_t*/ x: number, /*int32_t*/ y: number, /*int16_t*/ sectnu
 //            {
 //                int32_t cz,fz;
 
-//                if (wal->cstat&dawalclipmask)
+//                if (wal.cstat&dawalclipmask)
 //                {
-//                    hit_set(hit, curspr->sectnum, -1, curspr-sprite, intx, inty, intz);
+//                    hit_set(hit, curspr.sectnum, -1, curspr-sprite, intx, inty, intz);
 //                    continue;
 //                }
 
@@ -12250,7 +12232,7 @@ function inside(/*int32_t*/ x: number, /*int32_t*/ y: number, /*int16_t*/ sectnu
 //                // ceil   cz daz daz2 fz   floor
 //                if ((cz <= intz && intz <= daz) || (daz2 <= intz && intz <= fz))
 //                {
-//                    hit_set(hit, curspr->sectnum, -1, curspr-sprite, intx, inty, intz);
+//                    hit_set(hit, curspr.sectnum, -1, curspr-sprite, intx, inty, intz);
 //                    continue;
 //                }
 //            }
@@ -12272,7 +12254,7 @@ function inside(/*int32_t*/ x: number, /*int32_t*/ y: number, /*int16_t*/ sectnu
 //        for (z=headspritesect[dasector]; z>=0; z=nextspritesect[z])
 //        {
 //            const spritetype *const spr = &sprite[z];
-//            const int32_t cstat = spr->cstat;
+//            const int32_t cstat = spr.cstat;
 //#ifdef USE_OPENGL
 //            if (!hitallsprites)
 //#endif
@@ -12281,9 +12263,9 @@ function inside(/*int32_t*/ x: number, /*int32_t*/ y: number, /*int16_t*/ sectnu
 
 //#ifdef HAVE_CLIPSHAPE_FEATURE
 //            // try and see whether this sprite's picnum has sector-like clipping data
-//            i = pictoidx[spr->picnum];
+//            i = pictoidx[spr.picnum];
 //            // handle sector-like floor sprites separately
-//            while (i>=0 && (spr->cstat&32) != (clipmapinfo.sector[sectq[clipinfo[i].qbeg]].CM_CSTAT&32))
+//            while (i>=0 && (spr.cstat&32) != (clipmapinfo.sector[sectq[clipinfo[i].qbeg]].CM_CSTAT&32))
 //                i = clipinfo[i].next;
 //            if (i>=0 && clipspritenum<MAXCLIPNUM)
 //            {
@@ -12291,16 +12273,16 @@ function inside(/*int32_t*/ x: number, /*int32_t*/ y: number, /*int16_t*/ sectnu
 //                continue;
 //            }
 //#endif
-//            x1 = spr->x; y1 = spr->y; z1 = spr->z;
+//            x1 = spr.x; y1 = spr.y; z1 = spr.z;
 //            switch (cstat&48)
 //            {
 //            case 0:
 //            {
-//                if (try_facespr_intersect(spr, sv, vx, vy, vz, &hit->pos, 0))
+//                if (try_facespr_intersect(spr, sv, vx, vy, vz, &hit.pos, 0))
 //                {
-//                    hit->sect = dasector;
-//                    hit->wall = -1;
-//                    hit->sprite = z;
+//                    hit.sect = dasector;
+//                    hit.wall = -1;
+//                    hit.sprite = z;
 //                }
 
 //                break;
@@ -12309,20 +12291,20 @@ function inside(/*int32_t*/ x: number, /*int32_t*/ y: number, /*int16_t*/ sectnu
 //            case 16:
 //            {
 //                int32_t ucoefup16;
-//                int32_t tilenum = spr->picnum;
+//                int32_t tilenum = spr.picnum;
 
 //                get_wallspr_points(spr, &x1, &x2, &y1, &y2);
 
 //                if ((cstat&64) != 0)   //back side of 1-way sprite
-//                    if ((int64_t)(x1-sv->x)*(y2-sv->y) < (int64_t)(x2-sv->x)*(y1-sv->y)) continue;
+//                    if ((int64_t)(x1-sv.x)*(y2-sv.y) < (int64_t)(x2-sv.x)*(y1-sv.y)) continue;
 
-//                ucoefup16 = rintersect(sv->x,sv->y,sv->z,vx,vy,vz,x1,y1,x2,y2,&intx,&inty,&intz);
+//                ucoefup16 = rintersect(sv.x,sv.y,sv.z,vx,vy,vz,x1,y1,x2,y2,&intx,&inty,&intz);
 //                if (ucoefup16 == -1) continue;
 
-//                if (klabs(intx-sv->x)+klabs(inty-sv->y) > klabs((hit->pos.x)-sv->x)+klabs((hit->pos.y)-sv->y))
+//                if (klabs(intx-sv.x)+klabs(inty-sv.y) > klabs((hit.pos.x)-sv.x)+klabs((hit.pos.y)-sv.y))
 //                    continue;
 
-//                daz = spr->z + spriteheightofs(z, &k, 1);
+//                daz = spr.z + spriteheightofs(z, &k, 1);
 //                if (intz > daz-k && intz < daz)
 //                {
 //                    if (picanm[tilenum].sf&PICANM_TEXHITSCAN_BIT)
@@ -12356,23 +12338,23 @@ function inside(/*int32_t*/ x: number, /*int32_t*/ y: number, /*int16_t*/ sectnu
 
 //                if (vz == 0) continue;
 //                intz = z1;
-//                if (((intz-sv->z)^vz) < 0) continue;
+//                if (((intz-sv.z)^vz) < 0) continue;
 //                if ((cstat&64) != 0)
-//                    if ((sv->z > intz) == ((cstat&8)==0)) continue;
+//                    if ((sv.z > intz) == ((cstat&8)==0)) continue;
 //#if 1
-//                // Abyss crash prevention code ((intz-sv->z)*zx overflowing a 8-bit word)
+//                // Abyss crash prevention code ((intz-sv.z)*zx overflowing a 8-bit word)
 //                // PK: the reason for the crash is not the overflowing (even if it IS a problem;
 //                // signed overflow is undefined behavior in C), but rather the idiv trap when
 //                // the resulting quotient doesn't fit into a *signed* 32-bit integer.
-//                zz = (uint32_t)(intz-sv->z) * vx;
-//                intx = sv->x+scale(zz,1,vz);
-//                zz = (uint32_t)(intz-sv->z) * vy;
-//                inty = sv->y+scale(zz,1,vz);
+//                zz = (uint32_t)(intz-sv.z) * vx;
+//                intx = sv.x+scale(zz,1,vz);
+//                zz = (uint32_t)(intz-sv.z) * vy;
+//                inty = sv.y+scale(zz,1,vz);
 //#else
-//                intx = sv->x+scale(intz-sv->z,vx,vz);
-//                inty = sv->y+scale(intz-sv->z,vy,vz);
+//                intx = sv.x+scale(intz-sv.z,vx,vz);
+//                inty = sv.y+scale(intz-sv.z,vy,vz);
 //#endif
-//                if (klabs(intx-sv->x)+klabs(inty-sv->y) > klabs((hit->pos.x)-sv->x)+klabs((hit->pos.y)-sv->y))
+//                if (klabs(intx-sv.x)+klabs(inty-sv.y) > klabs((hit.pos.x)-sv.x)+klabs((hit.pos.y)-sv.y))
 //                    continue;
 
 //                get_floorspr_points(spr, intx, inty, &x1, &x2, &x3, &x4,
@@ -12399,33 +12381,33 @@ function inside(/*int32_t*/ x: number, /*int32_t*/ y: number, /*int16_t*/ sectnu
 //    if (numyaxbunches == 0 || editstatus)
 //        return 0;
 
-//    if (hit->sprite==-1 && hit->wall==-1 && hit->sect!=oldhitsect
-//        && hit->sect != oldhitsect2)  // 'ping-pong' infloop protection
+//    if (hit.sprite==-1 && hit.wall==-1 && hit.sect!=oldhitsect
+//        && hit.sect != oldhitsect2)  // 'ping-pong' infloop protection
 //    {
-//        if (hit->sect == -1 && oldhitsect >= 0)
+//        if (hit.sect == -1 && oldhitsect >= 0)
 //        {
 //            // this is bad: we didn't hit anything after going through a ceiling/floor
-//            Bmemcpy(&hit->pos, &newsv, sizeof(vec3_t));
-//            hit->sect = oldhitsect;
+//            Bmemcpy(&hit.pos, &newsv, sizeof(vec3_t));
+//            hit.sect = oldhitsect;
 
 //            return 0;
 //        }
 
 //        // 1st, 2nd, ... ceil/floor hit
-//        // hit->sect is >=0 because if oldhitsect's init and check above
-//        if (SECTORFLD(hit->sect,stat, hitscan_hitsectcf)&yax_waltosecmask(dawalclipmask))
+//        // hit.sect is >=0 because if oldhitsect's init and check above
+//        if (SECTORFLD(hit.sect,stat, hitscan_hitsectcf)&yax_waltosecmask(dawalclipmask))
 //            return 0;
 
-//        i = yax_getneighborsect(hit->pos.x, hit->pos.y, hit->sect, hitscan_hitsectcf);
+//        i = yax_getneighborsect(hit.pos.x, hit.pos.y, hit.sect, hitscan_hitsectcf);
 //        if (i >= 0)
 //        {
-//            Bmemcpy(&newsv, &hit->pos, sizeof(vec3_t));
+//            Bmemcpy(&newsv, &hit.pos, sizeof(vec3_t));
 //            sectnum = i;
 //            sv = &newsv;
 
 //            oldhitsect2 = oldhitsect;
-//            oldhitsect = hit->sect;
-//            hit->sect = -1;
+//            oldhitsect = hit.sect;
+//            hit.sect = -1;
 
 //            // sector-like sprite re-init:
 //            curspr = 0;
@@ -12475,10 +12457,10 @@ function inside(/*int32_t*/ x: number, /*int32_t*/ y: number, /*int16_t*/ sectnu
 
 //        for (z=startwall,wal=&wall[startwall]; z<=endwall; z++,wal++)
 //        {
-//            const walltype *const wal2 = &wall[wal->point2];
-//            const int32_t nextsector = wal->nextsector;
+//            const walltype *const wal2 = &wall[wal.point2];
+//            const int32_t nextsector = wal.nextsector;
 
-//            const int32_t x1=wal->x, y1=wal->y, x2=wal2->x, y2=wal2->y;
+//            const int32_t x1=wal.x, y1=wal.y, x2=wal2.x, y2=wal2.y;
 //            int32_t intx, inty, intz, good = 0;
 
 //            if (nextsector >= 0)
@@ -12487,8 +12469,8 @@ function inside(/*int32_t*/ x: number, /*int32_t*/ y: number, /*int16_t*/ sectnu
 //                if ((tagsearch&2) && sector[nextsector].hitag) good |= 1;
 //            }
 
-//            if ((tagsearch&1) && wal->lotag) good |= 2;
-//            if ((tagsearch&2) && wal->hitag) good |= 2;
+//            if ((tagsearch&1) && wal.lotag) good |= 2;
+//            if ((tagsearch&2) && wal.hitag) good |= 2;
 
 //            if ((good == 0) && (nextsector < 0)) continue;
 //            if ((int64_t)(x1-xs)*(y2-ys) < (int64_t)(x2-xs)*(y1-ys)) continue;
@@ -12525,7 +12507,7 @@ function inside(/*int32_t*/ x: number, /*int32_t*/ y: number, /*int16_t*/ sectnu
 //            if (blacklist_sprite_func && blacklist_sprite_func(z))
 //                continue;
 
-//            if (((tagsearch&1) && spr->lotag) || ((tagsearch&2) && spr->hitag))
+//            if (((tagsearch&1) && spr.lotag) || ((tagsearch&2) && spr.hitag))
 //            {
 //                if (try_facespr_intersect(spr, &sv, vx, vy, 0, &hitv, 1))
 //                {
@@ -12728,9 +12710,9 @@ function inside(/*int32_t*/ x: number, /*int32_t*/ y: number, /*int16_t*/ sectnu
 //static int32_t clipsprite_try(const spritetype *spr, int32_t xmin, int32_t ymin, int32_t xmax, int32_t ymax)
 //{
 //    // try and see whether this sprite's picnum has sector-like clipping data
-//    int32_t i = pictoidx[spr->picnum];
+//    int32_t i = pictoidx[spr.picnum];
 //    // handle sector-like floor sprites separately
-//    while (i>=0 && (spr->cstat&32) != (clipmapinfo.sector[sectq[clipinfo[i].qbeg]].CM_CSTAT&32))
+//    while (i>=0 && (spr.cstat&32) != (clipmapinfo.sector[sectq[clipinfo[i].qbeg]].CM_CSTAT&32))
 //        i = clipinfo[i].next;
 
 //    if (i>=0)
@@ -12738,25 +12720,25 @@ function inside(/*int32_t*/ x: number, /*int32_t*/ y: number, /*int16_t*/ sectnu
 //        int32_t maxcorrection = clipinfo[i].maxdist;
 //        const int32_t k = sectq[clipinfo[i].qbeg];
 
-//        if ((spr->cstat&48)!=32)  // face/wall sprite
+//        if ((spr.cstat&48)!=32)  // face/wall sprite
 //        {
 //            int32_t tempint1 = clipmapinfo.sector[k].CM_XREPEAT;
-//            maxcorrection = (maxcorrection * (int32_t)spr->xrepeat)/tempint1;
+//            maxcorrection = (maxcorrection * (int32_t)spr.xrepeat)/tempint1;
 //        }
 //        else  // floor sprite
 //        {
 //            int32_t tempint1 = clipmapinfo.sector[k].CM_XREPEAT;
 //            int32_t tempint2 = clipmapinfo.sector[k].CM_YREPEAT;
-//            maxcorrection = max((maxcorrection * (int32_t)spr->xrepeat)/tempint1,
-//                                (maxcorrection * (int32_t)spr->yrepeat)/tempint2);
+//            maxcorrection = max((maxcorrection * (int32_t)spr.xrepeat)/tempint1,
+//                                (maxcorrection * (int32_t)spr.yrepeat)/tempint2);
 //        }
 
 //        maxcorrection -= MAXCLIPDIST;
 
-//        if (spr->x < xmin - maxcorrection) return 1;
-//        if (spr->y < ymin - maxcorrection) return 1;
-//        if (spr->x > xmax + maxcorrection) return 1;
-//        if (spr->y > ymax + maxcorrection) return 1;
+//        if (spr.x < xmin - maxcorrection) return 1;
+//        if (spr.y < ymin - maxcorrection) return 1;
+//        if (spr.x > xmax + maxcorrection) return 1;
+//        if (spr.y > ymax + maxcorrection) return 1;
 
 //        if (clipspritenum < MAXCLIPNUM)
 //            clipspritelist[clipspritenum++] = spr-sprite;
@@ -12770,7 +12752,7 @@ function inside(/*int32_t*/ x: number, /*int32_t*/ y: number, /*int16_t*/ sectnu
 //// return: -1 if curspr has x-flip xor y-flip (in the horizontal map plane!), 1 else
 //static int32_t clipsprite_initindex(int32_t curidx, spritetype *curspr, int32_t *clipsectcnt, const vec3_t *vect)
 //{
-//    int32_t k, daz = curspr->z;
+//    int32_t k, daz = curspr.z;
 //    int32_t scalex, scaley, scalez, flipx, flipy;
 //    int32_t flipmul=1;
 
@@ -12778,25 +12760,25 @@ function inside(/*int32_t*/ x: number, /*int32_t*/ y: number, /*int16_t*/ sectnu
 //    const int32_t tempint1 = sector[j].CM_XREPEAT;
 //    const int32_t tempint2 = sector[j].CM_YREPEAT;
 
-//    const int32_t rotang = (curspr->ang - sector[j].CM_ANG)&2047;
+//    const int32_t rotang = (curspr.ang - sector[j].CM_ANG)&2047;
 //    const int32_t dorot = !CM_NOROTS(j);
 
-//    if ((curspr->cstat&48)!=32)  // face/wall sprite
+//    if ((curspr.cstat&48)!=32)  // face/wall sprite
 //    {
-//        scalex = scaley = divscale22(curspr->xrepeat, tempint1);
-//        scalez = divscale22(curspr->yrepeat, tempint2);
+//        scalex = scaley = divscale22(curspr.xrepeat, tempint1);
+//        scalez = divscale22(curspr.yrepeat, tempint2);
 
-//        flipx = 1-((curspr->cstat&4)>>1);
+//        flipx = 1-((curspr.cstat&4)>>1);
 //        flipy = 1;
 //    }
 //    else
 //    {
-//        scalex = divscale22(curspr->xrepeat, tempint1);
-//        scaley = divscale22(curspr->yrepeat, tempint2);
+//        scalex = divscale22(curspr.xrepeat, tempint1);
+//        scaley = divscale22(curspr.yrepeat, tempint2);
 //        scalez = scalex;
 
-//        flipx = 1-((curspr->cstat&4)>>1);
-//        flipy = 1-((curspr->cstat&8)>>2);
+//        flipx = 1-((curspr.cstat&4)>>1);
+//        flipy = 1-((curspr.cstat&8)>>2);
 //    }
 
 //    if (dorot)
@@ -12806,8 +12788,8 @@ function inside(/*int32_t*/ x: number, /*int32_t*/ y: number, /*int16_t*/ sectnu
 //            wall = loadwallinv;
 //    }
 
-//    if ((curspr->cstat&128) != (sector[j].CM_CSTAT&128))
-//        daz += (((curspr->cstat&128)>>6)-1)*((tilesizy[curspr->picnum]*curspr->yrepeat)<<1);
+//    if ((curspr.cstat&128) != (sector[j].CM_CSTAT&128))
+//        daz += (((curspr.cstat&128)>>6)-1)*((tilesizy[curspr.picnum]*curspr.yrepeat)<<1);
 
 //    *clipsectcnt = clipsectnum = 0;
 //    // init sectors for this index
@@ -12815,32 +12797,32 @@ function inside(/*int32_t*/ x: number, /*int32_t*/ y: number, /*int16_t*/ sectnu
 //    {
 //        const int32_t j = sectq[k];
 //        sectortype *const sec = &sector[j];
-//        const int32_t startwall = sec->wallptr, endwall = startwall+sec->wallnum;
+//        const int32_t startwall = sec.wallptr, endwall = startwall+sec.wallnum;
 
 //        int32_t w;
 //        walltype *wal;
 
-//        sec->floorz = daz + mulscale22(scalez, CM_FLOORZ(j));
-//        sec->ceilingz = daz + mulscale22(scalez, CM_CEILINGZ(j));
-////initprintf("sec %d: f=%d, c=%d\n", j, sec->floorz, sec->ceilingz);
+//        sec.floorz = daz + mulscale22(scalez, CM_FLOORZ(j));
+//        sec.ceilingz = daz + mulscale22(scalez, CM_CEILINGZ(j));
+////initprintf("sec %d: f=%d, c=%d\n", j, sec.floorz, sec.ceilingz);
 
 //        for (w=startwall,wal=&wall[startwall]; w<endwall; w++,wal++)
 //        {
-//            wal->x = mulscale22(scalex, CM_WALL_X(w));
-//            wal->y = mulscale22(scaley, CM_WALL_Y(w));
+//            wal.x = mulscale22(scalex, CM_WALL_X(w));
+//            wal.y = mulscale22(scaley, CM_WALL_Y(w));
 
 //            if (dorot)
 //            {
-//                wal->x *= flipx;
-//                wal->y *= flipy;
-//                rotatepoint(0,0, wal->x,wal->y, rotang, &wal->x,&wal->y);
+//                wal.x *= flipx;
+//                wal.y *= flipy;
+//                rotatepoint(0,0, wal.x,wal.y, rotang, &wal.x,&wal.y);
 //            }
 
-//            wal->x += curspr->x;
-//            wal->y += curspr->y;
+//            wal.x += curspr.x;
+//            wal.y += curspr.y;
 //        }
 
-//        if (inside(vect->x, vect->y, j)==1)
+//        if (inside(vect.x, vect.y, j)==1)
 //            clipsectorlist[clipsectnum++] = j;
 //    }
 
@@ -12908,13 +12890,13 @@ function inside(/*int32_t*/ x: number, /*int32_t*/ y: number, /*int16_t*/ sectnu
 
 //    const int32_t oxvect=xvect, oyvect=yvect;
 
-//    int32_t goalx = pos->x + (xvect>>14);
-//    int32_t goaly = pos->y + (yvect>>14);
-//    const int32_t cx = (pos->x+goalx)>>1;
-//    const int32_t cy = (pos->y+goaly)>>1;
+//    int32_t goalx = pos.x + (xvect>>14);
+//    int32_t goaly = pos.y + (yvect>>14);
+//    const int32_t cx = (pos.x+goalx)>>1;
+//    const int32_t cy = (pos.y+goaly)>>1;
 
 //    //Extra walldist for sprites on sector lines
-//    const int32_t gx=goalx-(pos->x), gy=goaly-(pos->y);
+//    const int32_t gx=goalx-(pos.x), gy=goaly-(pos.y);
 //    const int32_t rad = nsqrtasm(uhypsq(gx,gy)) + MAXCLIPDIST+walldist + 8;
 //    const int32_t xmin = cx-rad, ymin = cy-rad;
 //    const int32_t xmax = cx+rad, ymax = cy+rad;
@@ -12954,11 +12936,11 @@ function inside(/*int32_t*/ x: number, /*int32_t*/ y: number, /*int16_t*/ sectnu
 //            curspr = &sprite[clipspritelist[clipspritecnt]];
 
 //            if (curidx < 0)  // per-sprite init
-//                curidx = pictoidx[curspr->picnum];
+//                curidx = pictoidx[curspr.picnum];
 //            else
 //                curidx = clipinfo[curidx].next;
 
-//            while (curidx>=0 && (curspr->cstat&32) != (sector[sectq[clipinfo[curidx].qbeg]].CM_CSTAT&32))
+//            while (curidx>=0 && (curspr.cstat&32) != (sector[sectq[clipinfo[curidx].qbeg]].CM_CSTAT&32))
 //                curidx = clipinfo[curidx].next;
 
 //            if (curidx < 0)
@@ -12978,21 +12960,21 @@ function inside(/*int32_t*/ x: number, /*int32_t*/ y: number, /*int16_t*/ sectnu
 //        ////////// Walls //////////
 
 //        sec = &sector[dasect];
-//        startwall = sec->wallptr; endwall = startwall + sec->wallnum;
+//        startwall = sec.wallptr; endwall = startwall + sec.wallnum;
 //        for (j=startwall,wal=&wall[startwall]; j<endwall; j++,wal++)
 //        {
 //            int32_t clipyou = 0, dx, dy;
-//            const walltype *const wal2 = &wall[wal->point2];
+//            const walltype *const wal2 = &wall[wal.point2];
 
-//            if (wal->x < xmin && wal2->x < xmin) continue;
-//            if (wal->x > xmax && wal2->x > xmax) continue;
-//            if (wal->y < ymin && wal2->y < ymin) continue;
-//            if (wal->y > ymax && wal2->y > ymax) continue;
+//            if (wal.x < xmin && wal2.x < xmin) continue;
+//            if (wal.x > xmax && wal2.x > xmax) continue;
+//            if (wal.y < ymin && wal2.y < ymin) continue;
+//            if (wal.y > ymax && wal2.y > ymax) continue;
 
-//            x1 = wal->x; y1 = wal->y; x2 = wal2->x; y2 = wal2->y;
+//            x1 = wal.x; y1 = wal.y; x2 = wal2.x; y2 = wal2.y;
 
 //            dx = x2-x1; dy = y2-y1;
-//            if (dx*((pos->y)-y1) < ((pos->x)-x1)*dy) continue;  //If wall's not facing you
+//            if (dx*((pos.y)-y1) < ((pos.x)-x1)*dy) continue;  //If wall's not facing you
 
 //            if (dx > 0) dax = dx*(ymin-y1); else dax = dx*(ymax-y1);
 //            if (dy > 0) day = dy*(xmax-x1); else day = dy*(xmin-x1);
@@ -13001,39 +12983,39 @@ function inside(/*int32_t*/ x: number, /*int32_t*/ y: number, /*int16_t*/ sectnu
 //#ifdef HAVE_CLIPSHAPE_FEATURE
 //            if (curspr)
 //            {
-//                if (wal->nextsector>=0)
+//                if (wal.nextsector>=0)
 //                {
 //                    int32_t basez, daz, daz2;
 
-//                    if (rintersect(pos->x,pos->y,0, gx,gy,0, x1,y1, x2,y2, &dax,&day,&daz) == -1)
-//                        dax = pos->x, day = pos->y;
+//                    if (rintersect(pos.x,pos.y,0, gx,gy,0, x1,y1, x2,y2, &dax,&day,&daz) == -1)
+//                        dax = pos.x, day = pos.y;
 
 //                    daz = getflorzofslope(dasect, dax,day);
-//                    daz2 = getflorzofslope(wal->nextsector, dax,day);
+//                    daz2 = getflorzofslope(wal.nextsector, dax,day);
 //                    basez = getflorzofslope(sectq[clipinfo[curidx].qend], dax,day);
 
-//                    sec2 = &sector[wal->nextsector];
-//                    if ((sec2->floorstat&1) == 0)
+//                    sec2 = &sector[wal.nextsector];
+//                    if ((sec2.floorstat&1) == 0)
 ////                        if (dasect==sectq[clipinfo[curidx].qend] || daz2 < daz-(1<<8))
-//                        if (daz2-(flordist-1) <= pos->z && pos->z <= basez+(flordist-1))
+//                        if (daz2-(flordist-1) <= pos.z && pos.z <= basez+(flordist-1))
 //                            clipyou = 1;
 
 //                    if (clipyou == 0)
 //                    {
 //                        daz = getceilzofslope(dasect, dax,day);
-//                        daz2 = getceilzofslope(wal->nextsector, dax,day);
+//                        daz2 = getceilzofslope(wal.nextsector, dax,day);
 //                        basez = getceilzofslope(sectq[clipinfo[curidx].qend], dax,day);
 
-//                        if ((sec2->ceilingstat&1) == 0)
+//                        if ((sec2.ceilingstat&1) == 0)
 ////                            if (dasect==sectq[clipinfo[curidx].qend] || daz2 > daz+(1<<8))
-//                            if (basez-(ceildist-1) <= pos->z && pos->z <= daz2+(ceildist-1))
+//                            if (basez-(ceildist-1) <= pos.z && pos.z <= daz2+(ceildist-1))
 //                                clipyou = 1;
 //                    }
 //                }
 //            }
 //            else
 //#endif
-//            if (wal->nextsector < 0 || (wal->cstat&dawalclipmask))
+//            if (wal.nextsector < 0 || (wal.cstat&dawalclipmask))
 //            {
 //                clipyou = 1;
 //            }
@@ -13041,26 +13023,26 @@ function inside(/*int32_t*/ x: number, /*int32_t*/ y: number, /*int16_t*/ sectnu
 //            {
 //                int32_t daz, daz2;
 
-//                if (rintersect(pos->x,pos->y,0,gx,gy,0,x1,y1,x2,y2,&dax,&day,&daz) == -1)
-//                    dax = pos->x, day = pos->y;
+//                if (rintersect(pos.x,pos.y,0,gx,gy,0,x1,y1,x2,y2,&dax,&day,&daz) == -1)
+//                    dax = pos.x, day = pos.y;
 
 //                daz = getflorzofslope(dasect, dax,day);
-//                daz2 = getflorzofslope(wal->nextsector, dax,day);
+//                daz2 = getflorzofslope(wal.nextsector, dax,day);
 
-//                sec2 = &sector[wal->nextsector];
+//                sec2 = &sector[wal.nextsector];
 //                if (daz2 < daz-(1<<8))
-//                    if ((sec2->floorstat&1) == 0)
-//                        if (pos->z >= daz2-(flordist-1))
+//                    if ((sec2.floorstat&1) == 0)
+//                        if (pos.z >= daz2-(flordist-1))
 //                            clipyou = 1;
 
 //                if (clipyou == 0)
 //                {
 //                    daz = getceilzofslope(dasect, dax,day);
-//                    daz2 = getceilzofslope(wal->nextsector, dax,day);
+//                    daz2 = getceilzofslope(wal.nextsector, dax,day);
 
 //                    if (daz2 > daz+(1<<8))
-//                        if ((sec2->ceilingstat&1) == 0)
-//                            if (pos->z <= daz2+(ceildist-1))
+//                        if ((sec2.ceilingstat&1) == 0)
+//                            if (pos.z <= daz2+(ceildist-1))
 //                                clipyou = 1;
 //                }
 //            }
@@ -13087,11 +13069,11 @@ function inside(/*int32_t*/ x: number, /*int32_t*/ y: number, /*int16_t*/ sectnu
 //                day = walldist; if (dx < 0) day = -day;
 //                addclipline(x1+dax,y1+day, x2+dax,y2+day, objtype);
 //            }
-//            else if (wal->nextsector>=0)
+//            else if (wal.nextsector>=0)
 //            {
 //                for (i=clipsectnum-1; i>=0; i--)
-//                    if (wal->nextsector == clipsectorlist[i]) break;
-//                if (i < 0) clipsectorlist[clipsectnum++] = wal->nextsector;
+//                    if (wal.nextsector == clipsectorlist[i]) break;
+//                if (i < 0) clipsectorlist[clipsectnum++] = wal.nextsector;
 //            }
 //        }
 
@@ -13107,7 +13089,7 @@ function inside(/*int32_t*/ x: number, /*int32_t*/ y: number, /*int16_t*/ sectnu
 //        for (j=headspritesect[dasect]; j>=0; j=nextspritesect[j])
 //        {
 //            const spritetype *const spr = &sprite[j];
-//            const int32_t cstat = spr->cstat;
+//            const int32_t cstat = spr.cstat;
 
 //            if ((cstat&dasprclipmask) == 0)
 //                continue;
@@ -13116,21 +13098,21 @@ function inside(/*int32_t*/ x: number, /*int32_t*/ y: number, /*int16_t*/ sectnu
 //            if (clipsprite_try(spr, xmin,ymin, xmax,ymax))
 //                continue;
 //#endif
-//            x1 = spr->x; y1 = spr->y;
+//            x1 = spr.x; y1 = spr.y;
 
 //            switch (cstat&48)
 //            {
 //            case 0:
 //                if (x1 >= xmin && x1 <= xmax && y1 >= ymin && y1 <= ymax)
 //                {
-//                    const int32_t daz = spr->z + spriteheightofs(j, &k, 1);
+//                    const int32_t daz = spr.z + spriteheightofs(j, &k, 1);
 
-//                    if ((pos->z < daz+ceildist) && (pos->z > daz-k-flordist))
+//                    if ((pos.z < daz+ceildist) && (pos.z > daz-k-flordist))
 //                    {
 //                        int32_t bsz;
-//                        bsz = (spr->clipdist<<2)+walldist; if (gx < 0) bsz = -bsz;
+//                        bsz = (spr.clipdist<<2)+walldist; if (gx < 0) bsz = -bsz;
 //                        addclipline(x1-bsz,y1-bsz,x1-bsz,y1+bsz,(int16_t)j+49152);
-//                        bsz = (spr->clipdist<<2)+walldist; if (gy < 0) bsz = -bsz;
+//                        bsz = (spr.clipdist<<2)+walldist; if (gy < 0) bsz = -bsz;
 //                        addclipline(x1+bsz,y1-bsz,x1-bsz,y1-bsz,(int16_t)j+49152);
 //                    }
 //                }
@@ -13138,19 +13120,19 @@ function inside(/*int32_t*/ x: number, /*int32_t*/ y: number, /*int16_t*/ sectnu
 
 //            case 16:
 //            {
-//                const int32_t daz = spr->z + spriteheightofs(j, &k, 1) + ceildist;
+//                const int32_t daz = spr.z + spriteheightofs(j, &k, 1) + ceildist;
 //                const int32_t daz2 = daz-k - flordist;
 
-//                if (pos->z < daz && pos->z > daz2)
+//                if (pos.z < daz && pos.z > daz2)
 //                {
 //                    get_wallspr_points(spr, &x1, &x2, &y1, &y2);
 
 //                    if (clipinsideboxline(cx,cy,x1,y1,x2,y2,rad) != 0)
 //                    {
-//                        dax = mulscale14(sintable[(spr->ang+256+512)&2047],walldist);
-//                        day = mulscale14(sintable[(spr->ang+256)&2047],walldist);
+//                        dax = mulscale14(sintable[(spr.ang+256+512)&2047],walldist);
+//                        day = mulscale14(sintable[(spr.ang+256)&2047],walldist);
 
-//                        if ((x1-(pos->x))*(y2-(pos->y)) >= (x2-(pos->x))*(y1-(pos->y)))   //Front
+//                        if ((x1-(pos.x))*(y2-(pos.y)) >= (x2-(pos.x))*(y1-(pos.y)))   //Front
 //                        {
 //                            addclipline(x1+dax,y1+day,x2+day,y2-dax,(int16_t)j+49152);
 //                        }
@@ -13161,9 +13143,9 @@ function inside(/*int32_t*/ x: number, /*int32_t*/ y: number, /*int16_t*/ sectnu
 //                        }
 
 //                        //Side blocker
-//                        if ((x2-x1)*((pos->x)-x1) + (y2-y1)*((pos->y)-y1) < 0)
+//                        if ((x2-x1)*((pos.x)-x1) + (y2-y1)*((pos.y)-y1) < 0)
 //                            addclipline(x1-day,y1+dax,x1+dax,y1+day,(int16_t)j+49152); 
-//                        else if ((x1-x2)*((pos->x)-x2) + (y1-y2)*((pos->y)-y2) < 0)
+//                        else if ((x1-x2)*((pos.x)-x2) + (y1-y2)*((pos.y)-y2) < 0)
 //                            addclipline(x2+day,y2-dax,x2-dax,y2-day,(int16_t)j+49152);
 //                    }
 //                }
@@ -13172,13 +13154,13 @@ function inside(/*int32_t*/ x: number, /*int32_t*/ y: number, /*int16_t*/ sectnu
 
 //            case 32:
 //            {
-//                const int32_t daz = spr->z + ceildist;
-//                const int32_t daz2 = spr->z - flordist;
+//                const int32_t daz = spr.z + ceildist;
+//                const int32_t daz2 = spr.z - flordist;
 
-//                if (pos->z < daz && pos->z > daz2)
+//                if (pos.z < daz && pos.z > daz2)
 //                {
 //                    if ((cstat&64) != 0)
-//                        if ((pos->z > spr->z) == ((cstat&8)==0))
+//                        if ((pos.z > spr.z) == ((cstat&8)==0))
 //                            continue;
 
 //                    rxi[0] = x1;
@@ -13186,26 +13168,26 @@ function inside(/*int32_t*/ x: number, /*int32_t*/ y: number, /*int16_t*/ sectnu
 //                    get_floorspr_points(spr, 0, 0, &rxi[0], &rxi[1], &rxi[2], &rxi[3],
 //                                       &ryi[0], &ryi[1], &ryi[2], &ryi[3]);
 
-//                    dax = mulscale14(sintable[(spr->ang-256+512)&2047],walldist);
-//                    day = mulscale14(sintable[(spr->ang-256)&2047],walldist);
+//                    dax = mulscale14(sintable[(spr.ang-256+512)&2047],walldist);
+//                    day = mulscale14(sintable[(spr.ang-256)&2047],walldist);
 
-//                    if ((rxi[0]-(pos->x))*(ryi[1]-(pos->y)) < (rxi[1]-(pos->x))*(ryi[0]-(pos->y)))
+//                    if ((rxi[0]-(pos.x))*(ryi[1]-(pos.y)) < (rxi[1]-(pos.x))*(ryi[0]-(pos.y)))
 //                    {
 //                        if (clipinsideboxline(cx,cy,rxi[1],ryi[1],rxi[0],ryi[0],rad) != 0)
 //                            addclipline(rxi[1]-day,ryi[1]+dax,rxi[0]+dax,ryi[0]+day,(int16_t)j+49152);
 //                    }
-//                    else if ((rxi[2]-(pos->x))*(ryi[3]-(pos->y)) < (rxi[3]-(pos->x))*(ryi[2]-(pos->y)))
+//                    else if ((rxi[2]-(pos.x))*(ryi[3]-(pos.y)) < (rxi[3]-(pos.x))*(ryi[2]-(pos.y)))
 //                    {
 //                        if (clipinsideboxline(cx,cy,rxi[3],ryi[3],rxi[2],ryi[2],rad) != 0)
 //                            addclipline(rxi[3]+day,ryi[3]-dax,rxi[2]-dax,ryi[2]-day,(int16_t)j+49152);
 //                    }
 
-//                    if ((rxi[1]-(pos->x))*(ryi[2]-(pos->y)) < (rxi[2]-(pos->x))*(ryi[1]-(pos->y)))
+//                    if ((rxi[1]-(pos.x))*(ryi[2]-(pos.y)) < (rxi[2]-(pos.x))*(ryi[1]-(pos.y)))
 //                    {
 //                        if (clipinsideboxline(cx,cy,rxi[2],ryi[2],rxi[1],ryi[1],rad) != 0)
 //                            addclipline(rxi[2]-dax,ryi[2]-day,rxi[1]-day,ryi[1]+dax,(int16_t)j+49152);
 //                    }
-//                    else if ((rxi[3]-(pos->x))*(ryi[0]-(pos->y)) < (rxi[0]-(pos->x))*(ryi[3]-(pos->y)))
+//                    else if ((rxi[3]-(pos.x))*(ryi[0]-(pos.y)) < (rxi[0]-(pos.x))*(ryi[3]-(pos.y)))
 //                    {
 //                        if (clipinsideboxline(cx,cy,rxi[0],ryi[0],rxi[3],ryi[3],rad) != 0)
 //                            addclipline(rxi[0]+dax,ryi[0]+day,rxi[3]+day,ryi[3]-dax,(int16_t)j+49152);
@@ -13235,7 +13217,7 @@ function inside(/*int32_t*/ x: number, /*int32_t*/ y: number, /*int16_t*/ sectnu
 //    {
 //        int32_t intx=goalx, inty=goaly;
 
-//        hitwall = raytrace(pos->x, pos->y, &intx, &inty);
+//        hitwall = raytrace(pos.x, pos.y, &intx, &inty);
 //        if (hitwall >= 0)
 //        {
 //            const int32_t lx = clipit[hitwall].x2-clipit[hitwall].x1;
@@ -13264,7 +13246,7 @@ function inside(/*int32_t*/ x: number, /*int32_t*/ y: number, /*int16_t*/ sectnu
 //                                      clipit[j].y2-clipit[j].y1, oyvect);
 //                if ((tempint1^tempint2) < 0)
 //                {
-//                    updatesector(pos->x,pos->y,sectnum);
+//                    updatesector(pos.x,pos.y,sectnum);
 //                    return retval;
 //                }
 //            }
@@ -13278,13 +13260,13 @@ function inside(/*int32_t*/ x: number, /*int32_t*/ y: number, /*int16_t*/ sectnu
 //        }
 //        cnt--;
 
-//        pos->x = intx;
-//        pos->y = inty;
+//        pos.x = intx;
+//        pos.y = inty;
 //    }
 //    while ((xvect|yvect) != 0 && hitwall >= 0 && cnt > 0);
 
 //    for (j=0; j<clipsectnum; j++)
-//        if (inside(pos->x,pos->y,clipsectorlist[j]) == 1)
+//        if (inside(pos.x,pos.y,clipsectorlist[j]) == 1)
 //        {
 //            *sectnum = clipsectorlist[j];
 //            return retval;
@@ -13292,12 +13274,12 @@ function inside(/*int32_t*/ x: number, /*int32_t*/ y: number, /*int16_t*/ sectnu
 
 //    *sectnum = -1; tempint1 = INT32_MAX;
 //    for (j=numsectors-1; j>=0; j--)
-//        if (inside(pos->x,pos->y,j) == 1)
+//        if (inside(pos.x,pos.y,j) == 1)
 //        {
 //            if (sector[j].ceilingstat&2)
-//                tempint2 = getceilzofslope(j, pos->x, pos->y) - pos->z;
+//                tempint2 = getceilzofslope(j, pos.x, pos.y) - pos.z;
 //            else
-//                tempint2 = sector[j].ceilingz - pos->z;
+//                tempint2 = sector[j].ceilingz - pos.z;
 
 //            if (tempint2 > 0)
 //            {
@@ -13307,9 +13289,9 @@ function inside(/*int32_t*/ x: number, /*int32_t*/ y: number, /*int16_t*/ sectnu
 //            else
 //            {
 //                if (sector[j].floorstat&2)
-//                    tempint2 = pos->z - getflorzofslope(j, pos->x, pos->y);
+//                    tempint2 = pos.z - getflorzofslope(j, pos.x, pos.y);
 //                else
-//                    tempint2 = pos->z - sector[j].floorz;
+//                    tempint2 = pos.z - sector[j].floorz;
 
 //                if (tempint2 <= 0)
 //                {
@@ -13360,17 +13342,17 @@ function inside(/*int32_t*/ x: number, /*int32_t*/ y: number, /*int16_t*/ sectnu
 //            for(i=headspritesect[clipsectorlist[clipsectcnt]];i>=0;i=nextspritesect[i])
 //            {
 //                spr = &sprite[i];
-//                if (((spr->cstat&48) != 0) && ((spr->cstat&48) != 48)) continue;
-//                if ((spr->cstat&dasprclipmask) == 0) continue;
+//                if (((spr.cstat&48) != 0) && ((spr.cstat&48) != 48)) continue;
+//                if ((spr.cstat&dasprclipmask) == 0) continue;
 
-//                dax = (vect->x)-spr->x; day = (vect->y)-spr->y;
-//                t = (spr->clipdist<<2)+walldist;
+//                dax = (vect.x)-spr.x; day = (vect.y)-spr.y;
+//                t = (spr.clipdist<<2)+walldist;
 //                if ((klabs(dax) < t) && (klabs(day) < t))
 //                {
-//                    daz = spr->z + spriteheightofs(i, &t, 1);
-//                    if (((vect->z) < daz+ceildist) && ((vect->z) > daz-t-flordist))
+//                    daz = spr.z + spriteheightofs(i, &t, 1);
+//                    if (((vect.z) < daz+ceildist) && ((vect.z) > daz-t-flordist))
 //                    {
-//                        t = (spr->clipdist<<2)+walldist;
+//                        t = (spr.clipdist<<2)+walldist;
 
 //                        j = getangle(dax,day);
 //                        dx = (sintable[(j+512)&2047]>>11);
@@ -13378,37 +13360,37 @@ function inside(/*int32_t*/ x: number, /*int32_t*/ y: number, /*int16_t*/ sectnu
 //                        bad2 = 16;
 //                        do
 //                        {
-//                            vect->x = (vect->x) + dx; vect->y = (vect->y) + dy;
+//                            vect.x = (vect.x) + dx; vect.y = (vect.y) + dy;
 //                            bad2--; if (bad2 == 0) break;
-//                        } while ((klabs((vect->x)-spr->x) < t) && (klabs((vect->y)-spr->y) < t));
+//                        } while ((klabs((vect.x)-spr.x) < t) && (klabs((vect.y)-spr.y) < t));
 //                        bad = -1;
 //                        k--; if (k <= 0) return(bad);
-//                        updatesector(vect->x,vect->y,sectnum);
+//                        updatesector(vect.x,vect.y,sectnum);
 //                    }
 //                }
 //            }
 //#endif
 //            sec = &sector[clipsectorlist[clipsectcnt]];
 //            if (dir > 0)
-//                startwall = sec->wallptr, endwall = startwall + sec->wallnum;
+//                startwall = sec.wallptr, endwall = startwall + sec.wallnum;
 //            else
-//                endwall = sec->wallptr, startwall = endwall + sec->wallnum;
+//                endwall = sec.wallptr, startwall = endwall + sec.wallnum;
 
 //            for (i=startwall,wal=&wall[startwall]; i!=endwall; i+=dir,wal+=dir)
-//                if (clipinsidebox(vect->x,vect->y,i,walldist-4) == 1)
+//                if (clipinsidebox(vect.x,vect.y,i,walldist-4) == 1)
 //                {
 //                    j = 0;
-//                    if (wal->nextsector < 0) j = 1;
-//                    if (wal->cstat&dawalclipmask) j = 1;
+//                    if (wal.nextsector < 0) j = 1;
+//                    if (wal.cstat&dawalclipmask) j = 1;
 //                    if (j == 0)
 //                    {
-//                        const sectortype *const sec2 = &sector[wal->nextsector];
+//                        const sectortype *const sec2 = &sector[wal.nextsector];
 //                        int32_t daz2;
 
-//                        //Find closest point on wall (dax, day) to (vect->x, vect->y)
-//                        dax = wall[wal->point2].x-wal->x;
-//                        day = wall[wal->point2].y-wal->y;
-//                        daz = dax*((vect->x)-wal->x) + day*((vect->y)-wal->y);
+//                        //Find closest point on wall (dax, day) to (vect.x, vect.y)
+//                        dax = wall[wal.point2].x-wal.x;
+//                        day = wall[wal.point2].y-wal.y;
+//                        daz = dax*((vect.x)-wal.x) + day*((vect.y)-wal.y);
 //                        if (daz <= 0)
 //                            t = 0;
 //                        else
@@ -13416,43 +13398,43 @@ function inside(/*int32_t*/ x: number, /*int32_t*/ y: number, /*int16_t*/ sectnu
 //                            daz2 = dax*dax+day*day;
 //                            if (daz >= daz2) t = (1<<30); else t = divscale30(daz,daz2);
 //                        }
-//                        dax = wal->x + mulscale30(dax,t);
-//                        day = wal->y + mulscale30(day,t);
+//                        dax = wal.x + mulscale30(dax,t);
+//                        day = wal.y + mulscale30(day,t);
 
 
 //                        daz = getflorzofslope(clipsectorlist[clipsectcnt],dax,day);
-//                        daz2 = getflorzofslope(wal->nextsector,dax,day);
-//                        if ((daz2 < daz-(1<<8)) && ((sec2->floorstat&1) == 0))
-//                            if (vect->z >= daz2-(flordist-1)) j = 1;
+//                        daz2 = getflorzofslope(wal.nextsector,dax,day);
+//                        if ((daz2 < daz-(1<<8)) && ((sec2.floorstat&1) == 0))
+//                            if (vect.z >= daz2-(flordist-1)) j = 1;
 
 //                        daz = getceilzofslope(clipsectorlist[clipsectcnt],dax,day);
-//                        daz2 = getceilzofslope(wal->nextsector,dax,day);
-//                        if ((daz2 > daz+(1<<8)) && ((sec2->ceilingstat&1) == 0))
-//                            if (vect->z <= daz2+(ceildist-1)) j = 1;
+//                        daz2 = getceilzofslope(wal.nextsector,dax,day);
+//                        if ((daz2 > daz+(1<<8)) && ((sec2.ceilingstat&1) == 0))
+//                            if (vect.z <= daz2+(ceildist-1)) j = 1;
 //                    }
 
 //                    if (j != 0)
 //                    {
-//                        j = getangle(wall[wal->point2].x-wal->x,wall[wal->point2].y-wal->y);
+//                        j = getangle(wall[wal.point2].x-wal.x,wall[wal.point2].y-wal.y);
 //                        dx = (sintable[(j+1024)&2047]>>11);
 //                        dy = (sintable[(j+512)&2047]>>11);
 //                        bad2 = 16;
 //                        do
 //                        {
-//                            vect->x = (vect->x) + dx; vect->y = (vect->y) + dy;
+//                            vect.x = (vect.x) + dx; vect.y = (vect.y) + dy;
 //                            bad2--; if (bad2 == 0) break;
 //                        }
-//                        while (clipinsidebox(vect->x,vect->y,i,walldist-4) != 0);
+//                        while (clipinsidebox(vect.x,vect.y,i,walldist-4) != 0);
 //                        bad = -1;
 //                        k--; if (k <= 0) return(bad);
-//                        updatesector(vect->x,vect->y,sectnum);
+//                        updatesector(vect.x,vect.y,sectnum);
 //                        if (*sectnum < 0) return -1;
 //                    }
 //                    else
 //                    {
 //                        for (j=clipsectnum-1; j>=0; j--)
-//                            if (wal->nextsector == clipsectorlist[j]) break;
-//                        if (j < 0) clipsectorlist[clipsectnum++] = wal->nextsector;
+//                            if (wal.nextsector == clipsectorlist[j]) break;
+//                        if (j < 0) clipsectorlist[clipsectnum++] = wal.nextsector;
 //                    }
 //                }
 
@@ -13572,8 +13554,8 @@ function updatesector(/*int32_t*/ x: number, /*int32_t */y: number, /*int16_t **
 
 //        {
 //            const sectortype *sec = &sector[sectlist[sectcnt]];
-//            int32_t startwall = sec->wallptr;
-//            int32_t endwall = sec->wallptr + sec->wallnum;
+//            int32_t startwall = sec.wallptr;
+//            int32_t endwall = sec.wallptr + sec.wallnum;
 
 //            for (j=startwall; j<endwall; j++)
 //                if (wall[j].nextsector >= 0)
@@ -13598,7 +13580,7 @@ function updatesector(/*int32_t*/ x: number, /*int32_t */y: number, /*int16_t **
 
 //        do
 //        {
-//            i = wal->nextsector;
+//            i = wal.nextsector;
 //            if (inside_exclude_p(x, y, i, excludesectbitmap))
 //                {sectnum.$ = i; return;}
 
@@ -13661,7 +13643,7 @@ function updatesector(/*int32_t*/ x: number, /*int32_t */y: number, /*int16_t **
 //        do
 //        {
 //            // YAX: TODO: check neighboring sectors here too?
-//            i = wal->nextsector;
+//            i = wal.nextsector;
 //            if (i>=0 && inside_z_p(x,y,z, i))
 //                {sectnum.$ = i; return;}
 
@@ -13753,11 +13735,22 @@ function updatesector(/*int32_t*/ x: number, /*int32_t */y: number, /*int16_t **
 //#endif  // KRANDDEBUG
 
 
-////
-//// krand
-////
-//int32_t krand(void)
-//{
+//
+// krand
+//
+/*int32_t*/function krand(): number
+{
+    //return 10; //- breaks animation
+    // c method arguments eval in the opposite direction to js
+    //
+    // todo: search for all methods that have multiple krand() or krand etc - reverse argument order
+    // and swap values around so they eval in the same order as the C version (regex: krand.+krand      and krand().+krand())
+    randomseed = (mul32(randomseed, 27584621) + 1) | 0;
+    printf("result: %i\n", randomseed >>> 16);
+    return randomseed >>> 16;
+
+
+    //original
 ////    randomseed = (randomseed*27584621)+1;
 //    randomseed = (randomseed * 1664525ul) + 221297ul;
 
@@ -13771,16 +13764,25 @@ function updatesector(/*int32_t*/ x: number, /*int32_t */y: number, /*int16_t **
 //#endif
 
 //    return ((uint32_t)randomseed)>>16;
-//}
+}
+
+function mul32(n, m) {
+    n = n | 0;
+    m = m | 0;
+    var nlo = n & 0xffff;
+    var nhi = n >> 16; // Sign extending.
+    var res = ((nlo * m) + (((nhi * m) & 0xffff) << 16)) | 0;
+    return res;
+}
 
 
-////
-//// getzrange
-////
-//void getzrange(const vec3_t *pos, int16_t sectnum,
-//               int32_t *ceilz, int32_t *ceilhit, int32_t *florz, int32_t *florhit,
-//               int32_t walldist, uint32_t cliptype)
-//{
+//
+// getzrange
+//
+ function getzrange(pos:IVec3, /*int16_t */sectnum: number,
+               /*int32_t **/ceilz: R<number>, /*int32_t **/ceilhit: R<number>, /*int32_t **/florz: R<number>, /*int32_t **/florhit: R<number>,
+               /*int32_t */walldist: number, /*uint32_t */cliptype: number): void
+{todoThrow();
 //    int32_t clipsectcnt;
 //    int32_t dax, day, daz, daz2;
 //    int32_t i, j, k, dx, dy;
@@ -13796,8 +13798,8 @@ function updatesector(/*int32_t*/ x: number, /*int32_t */y: number, /*int16_t **
 
 //    //Extra walldist for sprites on sector lines
 //    const int32_t extradist = walldist+MAXCLIPDIST+1;
-//    const int32_t xmin = pos->x-extradist, ymin = pos->y-extradist;
-//    const int32_t xmax = pos->x+extradist, ymax = pos->y+extradist;
+//    const int32_t xmin = pos.x-extradist, ymin = pos.y-extradist;
+//    const int32_t xmax = pos.x+extradist, ymax = pos.y+extradist;
 
 //    const int32_t dawalclipmask = (cliptype&65535);
 //    const int32_t dasprclipmask = (cliptype>>16);
@@ -13809,7 +13811,7 @@ function updatesector(/*int32_t*/ x: number, /*int32_t */y: number, /*int16_t **
 //        return;
 //    }
 
-//    getzsofslope(sectnum,pos->x,pos->y,ceilz,florz);
+//    getzsofslope(sectnum,pos.x,pos.y,ceilz,florz);
 //    *ceilhit = sectnum+16384; *florhit = sectnum+16384;
 
 //#ifdef YAX_ENABLE
@@ -13847,11 +13849,11 @@ function updatesector(/*int32_t*/ x: number, /*int32_t */y: number, /*int16_t **
 //            curspr = &sprite[clipspritelist[clipspritecnt]];
 
 //            if (curidx < 0)  // per-sprite init
-//                curidx = pictoidx[curspr->picnum];
+//                curidx = pictoidx[curspr.picnum];
 //            else
 //                curidx = clipinfo[curidx].next;
 
-//            while (curidx>=0 && (curspr->cstat&32) != (sector[sectq[clipinfo[curidx].qbeg]].CM_CSTAT&32))
+//            while (curidx>=0 && (curspr.cstat&32) != (sector[sectq[clipinfo[curidx].qbeg]].CM_CSTAT&32))
 //                curidx = clipinfo[curidx].next;
 
 //            if (curidx < 0)
@@ -13871,19 +13873,19 @@ function updatesector(/*int32_t*/ x: number, /*int32_t */y: number, /*int16_t **
 //                if (k==sectq[clipinfo[curidx].qend])
 //                    continue;
 
-//                getzsofslope((int16_t)k,pos->x,pos->y,&daz,&daz2);
-//                getzsofslope(sectq[clipinfo[curidx].qend],pos->x,pos->y,&cz,&fz);
+//                getzsofslope((int16_t)k,pos.x,pos.y,&daz,&daz2);
+//                getzsofslope(sectq[clipinfo[curidx].qend],pos.x,pos.y,&cz,&fz);
 //                hitwhat = (curspr-sprite)+49152;
 
 //                if ((sector[k].ceilingstat&1)==0)
 //                {
-//                    if (pos->z < cz && cz < *florz) { *florz = cz; *florhit = hitwhat; }
-//                    if (pos->z > daz && daz > *ceilz) { *ceilz = daz; *ceilhit = hitwhat; }
+//                    if (pos.z < cz && cz < *florz) { *florz = cz; *florhit = hitwhat; }
+//                    if (pos.z > daz && daz > *ceilz) { *ceilz = daz; *ceilhit = hitwhat; }
 //                }
 //                if ((sector[k].floorstat&1)==0)
 //                {
-//                    if (pos->z < daz2 && daz2 < *florz) { *florz = daz2; *florhit = hitwhat; }
-//                    if (pos->z > fz && fz > *ceilz) { *ceilz = fz; *ceilhit = hitwhat; }
+//                    if (pos.z < daz2 && daz2 < *florz) { *florz = daz2; *florhit = hitwhat; }
+//                    if (pos.z > fz && fz > *ceilz) { *ceilz = fz; *ceilhit = hitwhat; }
 //                }
 //            }
 //        }
@@ -13891,28 +13893,28 @@ function updatesector(/*int32_t*/ x: number, /*int32_t */y: number, /*int16_t **
 //        ////////// Walls //////////
 
 //        sec = &sector[clipsectorlist[clipsectcnt]];
-//        startwall = sec->wallptr; endwall = startwall + sec->wallnum;
+//        startwall = sec.wallptr; endwall = startwall + sec.wallnum;
 //        for (j=startwall,wal=&wall[startwall]; j<endwall; j++,wal++)
 //        {
-//            k = wal->nextsector;
+//            k = wal.nextsector;
 //            if (k >= 0)
 //            {
-//                const walltype *const wal2 = &wall[wal->point2];
+//                const walltype *const wal2 = &wall[wal.point2];
 
-//                x1 = wal->x; x2 = wal2->x;
+//                x1 = wal.x; x2 = wal2.x;
 //                if ((x1 < xmin) && (x2 < xmin)) continue;
 //                if ((x1 > xmax) && (x2 > xmax)) continue;
-//                y1 = wal->y; y2 = wal2->y;
+//                y1 = wal.y; y2 = wal2.y;
 //                if ((y1 < ymin) && (y2 < ymin)) continue;
 //                if ((y1 > ymax) && (y2 > ymax)) continue;
 
 //                dx = x2-x1; dy = y2-y1;
-//                if (dx*(pos->y-y1) < (pos->x-x1)*dy) continue; //back
+//                if (dx*(pos.y-y1) < (pos.x-x1)*dy) continue; //back
 //                if (dx > 0) dax = dx*(ymin-y1); else dax = dx*(ymax-y1);
 //                if (dy > 0) day = dy*(xmax-x1); else day = dy*(xmin-x1);
 //                if (dax >= day) continue;
 
-//                if (wal->cstat&dawalclipmask) continue;  // XXX?
+//                if (wal.cstat&dawalclipmask) continue;  // XXX?
 //                sec = &sector[k];
 
 //#ifdef HAVE_CLIPSHAPE_FEATURE
@@ -13920,15 +13922,15 @@ function updatesector(/*int32_t*/ x: number, /*int32_t */y: number, /*int16_t **
 //                {
 //                    if (k==sectq[clipinfo[curidx].qend])
 //                        continue;
-//                    if ((sec->ceilingstat&1) && (sec->floorstat&1))
+//                    if ((sec.ceilingstat&1) && (sec.floorstat&1))
 //                        continue;
 //                }
 //                else
 //#endif
 //                if (editstatus == 0)
 //                {
-//                    if (((sec->ceilingstat&1) == 0) && (pos->z <= sec->ceilingz+(3<<8))) continue;
-//                    if (((sec->floorstat&1) == 0) && (pos->z >= sec->floorz-(3<<8))) continue;
+//                    if (((sec.ceilingstat&1) == 0) && (pos.z <= sec.ceilingz+(3<<8))) continue;
+//                    if (((sec.floorstat&1) == 0) && (pos.z >= sec.floorz-(3<<8))) continue;
 //                }
 
 //                for (i=clipsectnum-1; i>=0; i--)
@@ -13947,23 +13949,23 @@ function updatesector(/*int32_t*/ x: number, /*int32_t */y: number, /*int16_t **
 //                    origclipsectorlist[origclipsectnum++] = k;
 //#endif
 //                //It actually got here, through all the continue's!!!
-//                getzsofslope(k, pos->x,pos->y, &daz,&daz2);
+//                getzsofslope(k, pos.x,pos.y, &daz,&daz2);
 
 //#ifdef HAVE_CLIPSHAPE_FEATURE
 //                if (curspr)
 //                {
 //                    int32_t fz,cz, hitwhat=(curspr-sprite)+49152;
-//                    getzsofslope(sectq[clipinfo[curidx].qend],pos->x,pos->y,&cz,&fz);
+//                    getzsofslope(sectq[clipinfo[curidx].qend],pos.x,pos.y,&cz,&fz);
 
-//                    if ((sec->ceilingstat&1)==0)
+//                    if ((sec.ceilingstat&1)==0)
 //                    {
-//                        if (pos->z < cz && cz < *florz) { *florz = cz; *florhit = hitwhat; }
-//                        if (pos->z > daz && daz > *ceilz) { *ceilz = daz; *ceilhit = hitwhat; }
+//                        if (pos.z < cz && cz < *florz) { *florz = cz; *florhit = hitwhat; }
+//                        if (pos.z > daz && daz > *ceilz) { *ceilz = daz; *ceilhit = hitwhat; }
 //                    }
-//                    if ((sec->floorstat&1)==0)
+//                    if ((sec.floorstat&1)==0)
 //                    {
-//                        if (pos->z < daz2 && daz2 < *florz) { *florz = daz2; *florhit = hitwhat; }
-//                        if (pos->z > fz && fz > *ceilz) { *ceilz = fz; *ceilhit = hitwhat; }
+//                        if (pos.z < daz2 && daz2 < *florz) { *florz = daz2; *florhit = hitwhat; }
+//                        if (pos.z > fz && fz > *ceilz) { *ceilz = fz; *ceilhit = hitwhat; }
 //                    }
 //                }
 //                else
@@ -14009,7 +14011,7 @@ function updatesector(/*int32_t*/ x: number, /*int32_t */y: number, /*int16_t **
 //        for (j=headspritesect[clipsectorlist[i]]; j>=0; j=nextspritesect[j])
 //        {
 //            const spritetype *const spr = &sprite[j];
-//            const int32_t cstat = spr->cstat;
+//            const int32_t cstat = spr.cstat;
 
 //            if (cstat&dasprclipmask)
 //            {
@@ -14019,15 +14021,15 @@ function updatesector(/*int32_t*/ x: number, /*int32_t */y: number, /*int16_t **
 //                if (clipsprite_try(spr, xmin,ymin, xmax,ymax))
 //                    continue;
 //#endif
-//                x1 = spr->x; y1 = spr->y;
+//                x1 = spr.x; y1 = spr.y;
 
 //                switch (cstat&48)
 //                {
 //                case 0:
-//                    k = walldist+(spr->clipdist<<2)+1;
-//                    if ((klabs(x1-pos->x) <= k) && (klabs(y1-pos->y) <= k))
+//                    k = walldist+(spr.clipdist<<2)+1;
+//                    if ((klabs(x1-pos.x) <= k) && (klabs(y1-pos.y) <= k))
 //                    {
-//                        daz = spr->z + spriteheightofs(j, &k, 1);
+//                        daz = spr.z + spriteheightofs(j, &k, 1);
 //                        daz2 = daz - k;
 //                        clipyou = 1;
 //                    }
@@ -14037,9 +14039,9 @@ function updatesector(/*int32_t*/ x: number, /*int32_t */y: number, /*int16_t **
 //                {
 //                    get_wallspr_points(spr, &x1, &x2, &y1, &y2);
 
-//                    if (clipinsideboxline(pos->x,pos->y,x1,y1,x2,y2,walldist+1) != 0)
+//                    if (clipinsideboxline(pos.x,pos.y,x1,y1,x2,y2,walldist+1) != 0)
 //                    {
-//                        daz = spr->z + spriteheightofs(j, &k, 1);
+//                        daz = spr.z + spriteheightofs(j, &k, 1);
 //                        daz2 = daz-k;
 //                        clipyou = 1;
 //                    }
@@ -14050,16 +14052,16 @@ function updatesector(/*int32_t*/ x: number, /*int32_t */y: number, /*int16_t **
 //                {
 //                    int32_t x3, y3, x4, y4;
 
-//                    daz = spr->z; daz2 = daz;
+//                    daz = spr.z; daz2 = daz;
 
 //                    if ((cstat&64) != 0)
-//                        if ((pos->z > daz) == ((cstat&8)==0)) continue;
+//                        if ((pos.z > daz) == ((cstat&8)==0)) continue;
 
-//                    get_floorspr_points(spr, pos->x, pos->y, &x1, &x2, &x3, &x4,
+//                    get_floorspr_points(spr, pos.x, pos.y, &x1, &x2, &x3, &x4,
 //                                       &y1, &y2, &y3, &y4);
 
-//                    dax = mulscale14(sintable[(spr->ang-256+512)&2047],walldist+4);
-//                    day = mulscale14(sintable[(spr->ang-256)&2047],walldist+4);
+//                    dax = mulscale14(sintable[(spr.ang-256+512)&2047],walldist+4);
+//                    day = mulscale14(sintable[(spr.ang-256)&2047],walldist+4);
 //                    x1 += dax; x2 -= day; x3 -= dax; x4 += day;
 //                    y1 += day; y2 += dax; y3 -= day; y4 -= dax;
 
@@ -14070,7 +14072,7 @@ function updatesector(/*int32_t*/ x: number, /*int32_t */y: number, /*int16_t **
 
 //                if (clipyou != 0)
 //                {
-//                    if ((pos->z > daz) && (daz > *ceilz
+//                    if ((pos.z > daz) && (daz > *ceilz
 //#ifdef YAX_ENABLE
 //                                           || (daz == *ceilz && yax_getbunch(clipsectorlist[i], YAX_CEILING)>=0)
 //#endif
@@ -14080,7 +14082,7 @@ function updatesector(/*int32_t*/ x: number, /*int32_t */y: number, /*int16_t **
 //                        *ceilhit = j+49152;
 //                    }
 
-//                    if ((pos->z < daz2) && (daz2 < *florz
+//                    if ((pos.z < daz2) && (daz2 < *florz
 //#ifdef YAX_ENABLE
 //                                            // can have a floor-sprite lying directly on the floor!
 //                                            || (daz2 == *florz && yax_getbunch(clipsectorlist[i], YAX_FLOOR)>=0)
@@ -14130,10 +14132,10 @@ function updatesector(/*int32_t*/ x: number, /*int32_t */y: number, /*int16_t **
 //                        continue;
 
 //                    for (SECTORS_OF_BUNCH(cb,YAX_FLOOR, j))
-//                        if (inside(pos->x,pos->y, j)==1)
+//                        if (inside(pos.x,pos.y, j)==1)
 //                        {
 //                            clipsectorlist[clipsectnum++] = j;
-//                            daz = getceilzofslope(j, pos->x,pos->y);
+//                            daz = getceilzofslope(j, pos.x,pos.y);
 //                            if (!didchange || daz > *ceilz)
 //                                didchange=1, *ceilhit = j+16384, *ceilz = daz;
 //                        }
@@ -14165,10 +14167,10 @@ function updatesector(/*int32_t*/ x: number, /*int32_t */y: number, /*int16_t **
 //                        continue;
 
 //                    for (SECTORS_OF_BUNCH(fb, YAX_CEILING, j))
-//                        if (inside(pos->x,pos->y, j)==1)
+//                        if (inside(pos.x,pos.y, j)==1)
 //                        {
 //                            clipsectorlist[clipsectnum++] = j;
-//                            daz = getflorzofslope(j, pos->x,pos->y);
+//                            daz = getflorzofslope(j, pos.x,pos.y);
 //                            if (!didchange || daz < *florz)
 //                                didchange=1, *florhit = j+16384, *florz = daz;
 //                        }
@@ -14186,7 +14188,7 @@ function updatesector(/*int32_t*/ x: number, /*int32_t */y: number, /*int16_t **
 //        }
 //    }
 //#endif
-//}
+}
 
 var setaspect_new_use_dimen = 0;
 
@@ -15018,64 +15020,64 @@ function clearallviews(dacol: number): void
 
 //int32_t getceilzofslopeptr(const sectortype *sec, int32_t dax, int32_t day)
 //{
-//    if (!(sec->ceilingstat&2))
-//        return sec->ceilingz;
+//    if (!(sec.ceilingstat&2))
+//        return sec.ceilingz;
 
 //    {
-//        const walltype *wal = &wall[sec->wallptr];
+//        const walltype *wal = &wall[sec.wallptr];
 
 //        // floor(sqrt(2**31-1)) == 46340
-//        int32_t i, j, wx=wal->x, wy=wal->y;
-//        int32_t dx = wall[wal->point2].x-wx, dy = wall[wal->point2].y-wy;
+//        int32_t i, j, wx=wal.x, wy=wal.y;
+//        int32_t dx = wall[wal.point2].x-wx, dy = wall[wal.point2].y-wy;
 
 //        i = nsqrtasm(uhypsq(dx,dy))<<5;
 //        if (i == 0)
-//            return sec->ceilingz;
+//            return sec.ceilingz;
 
 //        j = dmulscale3(dx, day-wy, -dy, dax-wx);
-//        return sec->ceilingz + (scale(sec->ceilingheinum,j>>1,i)<<1);
+//        return sec.ceilingz + (scale(sec.ceilingheinum,j>>1,i)<<1);
 //    }
 //}
 
-//int32_t getflorzofslopeptr(const sectortype *sec, int32_t dax, int32_t day)
-//{
-//    if (!(sec->floorstat&2))
-//        return sec->floorz;
+function getflorzofslopeptr(/*const sectortype * */sec: sectortype, /*int32_t */dax: number, /*int32_t */day: number)
+{
+    if (!(sec.floorstat&2))
+        return sec.floorz;
 
-//    {
-//        const walltype *wal = &wall[sec->wallptr];
+    {
+        var wal = wall[sec.wallptr];
 
-//        int32_t i, j, wx=wal->x, wy=wal->y;
-//        int32_t dx = wall[wal->point2].x-wx, dy = wall[wal->point2].y-wy;
+        var i: number, j: number, wx=wal.x, wy=wal.y;
+        var dx = wall[wal.point2].x-wx, dy = wall[wal.point2].y-wy;
 
-//        i = nsqrtasm(uhypsq(dx,dy))<<5;
-//        if (i == 0)
-//            return sec->floorz;
+        i = nsqrtasm(uhypsq(dx,dy))<<5;
+        if (i == 0)
+            return sec.floorz;
 
-//        j = dmulscale3(dx, day-wy, -dy, dax-wx);
-//        return sec->floorz + (scale(sec->floorheinum,j>>1,i)<<1);
-//    }
-//}
+        j = dmulscale3(dx, day-wy, -dy, dax-wx);
+        return sec.floorz + (scale(sec.floorheinum,j>>1,i)<<1);
+    }
+}
 
 //void getzsofslopeptr(const sectortype *sec, int32_t dax, int32_t day, int32_t *ceilz, int32_t *florz)
 //{
-//    *ceilz = sec->ceilingz; *florz = sec->floorz;
+//    *ceilz = sec.ceilingz; *florz = sec.floorz;
 
-//    if ((sec->ceilingstat|sec->floorstat)&2)
+//    if ((sec.ceilingstat|sec.floorstat)&2)
 //    {
 //        int32_t i, j;
-//        const walltype *wal = &wall[sec->wallptr], *wal2 = &wall[wal->point2];
-//        const int32_t dx = wal2->x-wal->x, dy = wal2->y-wal->y;
+//        const walltype *wal = &wall[sec.wallptr], *wal2 = &wall[wal.point2];
+//        const int32_t dx = wal2.x-wal.x, dy = wal2.y-wal.y;
 
 //        i = nsqrtasm(uhypsq(dx,dy))<<5;
 //        if (i == 0)
 //            return;
 
-//        j = dmulscale3(dx,day-wal->y, -dy,dax-wal->x);
-//        if (sec->ceilingstat&2)
-//            *ceilz += scale(sec->ceilingheinum,j>>1,i)<<1;
-//        if (sec->floorstat&2)
-//            *florz += scale(sec->floorheinum,j>>1,i)<<1;
+//        j = dmulscale3(dx,day-wal.y, -dy,dax-wal.x);
+//        if (sec.ceilingstat&2)
+//            *ceilz += scale(sec.ceilingheinum,j>>1,i)<<1;
+//        if (sec.floorstat&2)
+//            *florz += scale(sec.floorheinum,j>>1,i)<<1;
 //    }
 //}
 
@@ -15086,10 +15088,10 @@ function clearallviews(dacol: number): void
 //void alignceilslope(int16_t dasect, int32_t x, int32_t y, int32_t z)
 //{
 //    const walltype *const wal = &wall[sector[dasect].wallptr];
-//    const int32_t dax = wall[wal->point2].x-wal->x;
-//    const int32_t day = wall[wal->point2].y-wal->y;
+//    const int32_t dax = wall[wal.point2].x-wal.x;
+//    const int32_t day = wall[wal.point2].y-wal.y;
 
-//    const int32_t i = (y-wal->y)*dax - (x-wal->x)*day;
+//    const int32_t i = (y-wal.y)*dax - (x-wal.x)*day;
 //    if (i == 0)
 //        return;
 
@@ -15107,10 +15109,10 @@ function clearallviews(dacol: number): void
 //void alignflorslope(int16_t dasect, int32_t x, int32_t y, int32_t z)
 //{
 //    const walltype *const wal = &wall[sector[dasect].wallptr];
-//    const int32_t dax = wall[wal->point2].x-wal->x;
-//    const int32_t day = wall[wal->point2].y-wal->y;
+//    const int32_t dax = wall[wal.point2].x-wal.x;
+//    const int32_t day = wall[wal.point2].y-wal.y;
 
-//    const int32_t i = (y-wal->y)*dax - (x-wal->x)*day;
+//    const int32_t i = (y-wal.y)*dax - (x-wal.x)*day;
 //    if (i == 0)
 //        return;
 
@@ -15750,7 +15752,7 @@ function clearallviews(dacol: number): void
 //    else
 //        p = (vec3_t *)&sprite[sw-MAXWALLS];
 
-//    m32_sidedist[sw] = p->x*m32_viewplane.x + p->y*m32_viewplane.y + (p->z>>4)*m32_viewplane.z;
+//    m32_sidedist[sw] = p.x*m32_viewplane.x + p.y*m32_viewplane.y + (p.z>>4)*m32_viewplane.z;
 //}
 
 //static int sideview_cmppoints(const int16_t *sw1, const int16_t *sw2)
@@ -15918,7 +15920,7 @@ function clearallviews(dacol: number): void
 
 //    int64_t dist,dx,dy;
 
-//    j = wal->nextwall;
+//    j = wal.nextwall;
 //#if 0
 //    if (editstatus == 0)
 //    {
@@ -15945,20 +15947,20 @@ function clearallviews(dacol: number): void
 //    else
 //    {
 //        col = 33;
-//        if ((wal->cstat&1) != 0)
+//        if ((wal.cstat&1) != 0)
 //            col = 5;
-//        if ((unsigned)wal->nextwall < MAXWALLS && ((wal->cstat^wall[j].cstat)&1))
+//        if ((unsigned)wal.nextwall < MAXWALLS && ((wal.cstat^wall[j].cstat)&1))
 //            col = 2;
 //        if ((i == linehighlight) || ((linehighlight >= 0) && (i == wall[linehighlight].nextwall)))
 //            if (totalclock & 16)
 //                col += (2<<2);
 //    }
 
-//    screencoords(&x1,&y1, wal->x-posxe,wal->y-posye, zoome);
-//    screencoords(&x2,&y2, wall[wal->point2].x-posxe,wall[wal->point2].y-posye, zoome);
+//    screencoords(&x1,&y1, wal.x-posxe,wal.y-posye, zoome);
+//    screencoords(&x2,&y2, wall[wal.point2].x-posxe,wall[wal.point2].y-posye, zoome);
 
-//    dx = wal->x-wall[wal->point2].x;
-//    dy = wal->y-wall[wal->point2].y;
+//    dx = wal.x-wall[wal.point2].x;
+//    dy = wal.y-wall[wal.point2].y;
 //    dist = dx*dx+dy*dy;
 
 //    if (dist > INT32_MAX)
@@ -15973,7 +15975,7 @@ function clearallviews(dacol: number): void
 //        col = 14;
 //        if (i == linehighlight) if (totalclock & 16) col -= (2<<2);
 //    }
-//    else if (circlewall >= 0 && (i == circlewall || wal->nextwall == circlewall))
+//    else if (circlewall >= 0 && (i == circlewall || wal.nextwall == circlewall))
 //        col = 14;
 
 //    if (m32_sideview)
@@ -15982,8 +15984,8 @@ function clearallviews(dacol: number): void
 //        int32_t fz2;
 //        int32_t sect = sectorofwall(i);
 
-//        fz = getflorzofslope(sect, wal->x,wal->y);
-//        fz2 = getflorzofslope(sect, wall[wal->point2].x,wall[wal->point2].y);
+//        fz = getflorzofslope(sect, wal.x,wal.y);
+//        fz2 = getflorzofslope(sect, wall[wal.point2].x,wall[wal.point2].y);
 
 //        dz = getscreenvdisp(fz-posze,zoome);
 //        dz2 = getscreenvdisp(fz2-posze,zoome);
@@ -15991,9 +15993,9 @@ function clearallviews(dacol: number): void
 //        y1 += dz;
 //        y2 += dz2;
 
-//        if (wal->nextwall>=0)
+//        if (wal.nextwall>=0)
 //        {
-//            fzn = getflorzofslope(wal->nextsector, wal->x,wal->y);
+//            fzn = getflorzofslope(wal.nextsector, wal.x,wal.y);
 ////            if (i < wall[j].point2)
 //                drawline16mid(x1,y1, x1,y1+getscreenvdisp(fzn-fz,zoome), editorcolors[col]);
 //        }
@@ -16015,7 +16017,7 @@ function clearallviews(dacol: number): void
 //        m32_wallscreenxy[i][1] = midydim16+y1;
 //    }
 
-//    if (wal->cstat&64)  // if hitscan bit set
+//    if (wal.cstat&64)  // if hitscan bit set
 //    {
 //        int32_t one=(klabs(x2-x1) >= klabs(y2-y1)), no=!one;
 
@@ -16031,14 +16033,14 @@ function clearallviews(dacol: number): void
 //    {
 //        int32_t dax,day, k=getangle(x1-x2, y1-y2); //+angofs;
 
-//        screencoords(&dax,&day, ((wal->x+wall[wal->point2].x)>>1)-posxe,((wal->y+wall[wal->point2].y)>>1)-posye, zoome);
+//        screencoords(&dax,&day, ((wal.x+wall[wal.point2].x)>>1)-posxe,((wal.y+wall[wal.point2].y)>>1)-posye, zoome);
 //        if (m32_sideview)
 //            day += (dz2+dz)>>1;
 
-//        if (wal->nextsector >= 0)
+//        if (wal.nextsector >= 0)
 //        {
 //            int32_t ii = sector[sectorofwall(i)].floorz;
-//            int32_t jj = sector[wal->nextsector].floorz;
+//            int32_t jj = sector[wal.nextsector].floorz;
 
 //            if (jj == ii && showheightindicators > 1)
 //            {
@@ -16096,7 +16098,7 @@ function clearallviews(dacol: number): void
 //            col = 15;
 //            if (m32_sideview)
 //            {
-//                if (wal->nextwall >= 0)
+//                if (wal.nextwall >= 0)
 //                {
 //                    if (fz < fzn)
 //                        col = 7;
@@ -16271,7 +16273,7 @@ function clearallviews(dacol: number): void
 //    int32_t i, j, x1, y1;
 //    int16_t angofs = m32_sideview ? m32_sideang : 0;
 
-//    int32_t posxe=pos->x, posye=pos->y, posze=pos->z;
+//    int32_t posxe=pos.x, posye=pos.y, posze=pos.z;
 //    uint8_t *graybitmap = (uint8_t *)tempbuf;
 //    int32_t alwaysshowgray = get_alwaysshowgray();
 
@@ -16984,7 +16986,7 @@ function clearallviews(dacol: number): void
 //        // potentially deferred MD3 postprocessing
 //        for (i=0; i<nextmodelid; i++)
 //        {
-//            if (models[i]->mdnum==3 && ((md3model_t *)models[i])->head.surfs[0].geometry == NULL)
+//            if (models[i].mdnum==3 && ((md3model_t *)models[i]).head.surfs[0].geometry == NULL)
 //            {
 //                static int32_t warned=0;
 
@@ -16997,9 +16999,9 @@ function clearallviews(dacol: number): void
 
 //                if (!md3postload_polymer((md3model_t *)models[i]))
 //                    OSD_Printf("INTERNAL ERROR: mdmodel %s failed postprocessing!\n",
-//                               ((md3model_t *)models[i])->head.nam);
+//                               ((md3model_t *)models[i]).head.nam);
 
-//                if (((md3model_t *)models[i])->head.surfs[0].geometry == NULL)
+//                if (((md3model_t *)models[i]).head.surfs[0].geometry == NULL)
 //                    OSD_Printf("INTERNAL ERROR: wtf?\n");
 //            }
 ////            else
@@ -17213,28 +17215,28 @@ function hash_add(t: hashtable_t, s: string, key: number, replace: number) : voi
 //    hashitem_t *cur, *prev=NULL;
 //    int32_t code;
 
-//    if (t->items == NULL)
+//    if (t.items == NULL)
 //    {
 //        initprintf("hash_delete(): table not initialized!\n");
 //        return;
 //    }
 
-//    code = hash_getcode(s) % t->size;
-//    cur = t->items[code];
+//    code = hash_getcode(s) % t.size;
+//    cur = t.items[code];
 
 //    if (!cur)
 //        return;
 
 //    do
 //    {
-//        if (Bstrcmp(s,cur->string) == 0)
+//        if (Bstrcmp(s,cur.string) == 0)
 //        {
-//            Bfree(cur->string);
+//            Bfree(cur.string);
 
 //            if (!prev)
-//                t->items[code] = cur->next;
+//                t.items[code] = cur.next;
 //            else
-//                prev->next = cur->next;
+//                prev.next = cur.next;
 
 //            Bfree(cur);
 
@@ -17242,7 +17244,7 @@ function hash_add(t: hashtable_t, s: string, key: number, replace: number) : voi
 //        }
 //        prev = cur;
 //    }
-//    while ((cur = cur->next));
+//    while ((cur = cur.next));
 //}
 
 function hash_find(/*const hashtable_t **/t: hashtable_t, /*const char **/s: string): number
@@ -17269,18 +17271,18 @@ function hash_find(/*const hashtable_t **/t: hashtable_t, /*const char **/s: str
 //{
 //    hashitem_t *cur;
 
-//    if (t->items == NULL)
+//    if (t.items == NULL)
 //    {
 //        initprintf("hash_findcase(): table not initialized!\n");
 //        return -1;
 //    }
 
-//    if ((cur=t->items[hash_getcode(s)%t->size]) == NULL) return -1;
+//    if ((cur=t.items[hash_getcode(s)%t.size]) == NULL) return -1;
 
 //    do
-//        if (Bstrcasecmp(s,cur->string) == 0)
-//            return cur->key;
-//    while ((cur=cur->next));
+//        if (Bstrcasecmp(s,cur.string) == 0)
+//            return cur.key;
+//    while ((cur=cur.next));
 
 //    return -1;
 //}

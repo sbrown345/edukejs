@@ -157,14 +157,14 @@ function G_HaveEvent(/*int32_t*/ iEventID: number): number
 //#endif
 }
 
-//static inline int32_t G_HaveActor(int32_t actortile)
-//{
+function G_HaveActor(/*int32_t */actortile: number): number
+{
 //#ifdef LUNATIC
 //    return El_HaveActor(actortile);
 //#else
-//    return g_tile[actortile].execPtr!=NULL;
+    return g_tile[actortile].execPtr!=NULL?1:0;
 //#endif
-//}
+}
 
 //static inline int32_t G_InitialActorStrength(int32_t actortile)
 //{

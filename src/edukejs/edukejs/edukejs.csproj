@@ -99,6 +99,7 @@
     <Content Include="eduke32\headers\_functio.h.ts" />
     <Content Include="eduke32\headers\_rts.h.ts" />
     <Content Include="eduke32\source\actors.c.ts" />
+    <Content Include="eduke32\source\actors_inline.c.ts" />
     <Content Include="eduke32\source\astub.c.ts" />
     <Content Include="build\source\cache1d.c.ts" />
     <Content Include="eduke32\source\config.c.ts" />

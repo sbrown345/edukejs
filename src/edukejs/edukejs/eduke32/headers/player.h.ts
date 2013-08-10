@@ -36,10 +36,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 var NAM_GRENADE_LIFETIME       = 120;
 var NAM_GRENADE_LIFETIME_VAR   = 30;
 
-//#define HORIZ_MIN                   -99
-//#define HORIZ_MAX                   299
-//#define AUTO_AIM_ANGLE              48
-//#define PHEIGHT                     (38<<8)
+var HORIZ_MIN                 = -99;
+var HORIZ_MAX                 = 299;
+var AUTO_AIM_ANGLE            = 48;
+var PHEIGHT                   = (38<<8);
 
 var TRIPBOMB_TRIPWIRE      = 0x00000001;
 var TRIPBOMB_TIMER         = 0x00000002;

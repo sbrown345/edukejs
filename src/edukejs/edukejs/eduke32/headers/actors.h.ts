@@ -34,9 +34,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 //#include "player.h"
 
-//#define MAXSLEEPDIST        16384
-//#define SLEEPTIME           1536
-//#define ZOFFSET             (1<<8)
+ var MAXSLEEPDIST      = 16384;
+ var SLEEPTIME         = 1536;
+ var ZOFFSET           = (1<<8);
 
 //#define ACTOR_MAXFALLINGZVEL 6144
 //#define ACTOR_ONWATER_ADDZ (24<<8)
