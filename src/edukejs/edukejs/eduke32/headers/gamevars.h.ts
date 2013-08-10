@@ -73,6 +73,30 @@ var GAMEARRAY_READONLY = 0x00001000,
 /////    GAMEARRAY_NORESET  = 0x00000001,
 //};
 
+// or maybe function GetAddress(str)  - returns address number so can also use
+class PtrVal {
+    private _: string;
+
+    getVal<T>(): T {
+        return eval(this._);
+    }
+
+    setVal(val: any) {
+        var src = this._ + " = val;";
+
+        // http://blog.rakeshpai.me/2008/10/understanding-eval-scope-spoiler-its.html
+        if (window.execScript)
+            window.execScript(src); // ie
+        else
+            eval.call(null, src);
+    }
+
+    constructor(strToEval: string) {
+        // todo: drop the string eval thing
+        this._ = strToEval;
+    }
+}
+
 //#pragma pack(push,1)
 class gamevar_t {
     val: gamevar_t_union;

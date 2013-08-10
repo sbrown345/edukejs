@@ -200,8 +200,8 @@ function YAX_NEXTWALL(Wall: number, Cf: number): number{return YAX_PTRNEXTWALL(w
 //# define YAX_SKIPWALL(i) (i)=(i)
 //#endif
 
-//#define CLIPMASK0 (((1L)<<16)+1L)
-//#define CLIPMASK1 (((256L)<<16)+64L)
+var CLIPMASK0: number=(((1)<<16)+1);
+var CLIPMASK1: number=(((256)<<16)+64);
 
 //// max x/y val (= max editorgridextent in Mapster32)
 //#define BXY_MAX 524288
