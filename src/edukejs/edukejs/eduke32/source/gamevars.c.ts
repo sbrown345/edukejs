@@ -600,14 +600,13 @@ function Gv_NewVar(/*const char **/pszLabel : string, /*intptr_t*/ lValue : numb
 
 function A_ResetVars(/*register int32_t */iActor: number): void
 {
-    todoThrow();
-    //register int32_t i=(MAXGAMEVARS-1);
-    //do
-    //{
-    //    if ((aGameVars[i].dwFlags & (GAMEVAR_PERACTOR|GAMEVAR_NODEFAULT)) == GAMEVAR_PERACTOR)
-    //        aGameVars[i].val.plValues[iActor]=aGameVars[i].lDefault;
-    //}
-    //while (i--);
+    var i=(MAXGAMEVARS-1);
+    do
+    {
+        if ((aGameVars[i].dwFlags & (GAMEVAR_PERACTOR|GAMEVAR_NODEFAULT)) == GAMEVAR_PERACTOR)
+            aGameVars[i].val.plValues[iActor]=aGameVars[i].lDefault;
+    }
+    while (i--);
 }
 
 function Gv_GetVarIndex(szGameLabel: string): number
@@ -1049,7 +1048,6 @@ function G_InitProjectileData(): void
 
 function Gv_ResetSystemDefaults() : void
 {
-    debugger;
     // call many times...
 //#if !defined LUNATIC
     var i: number;
@@ -1594,88 +1592,87 @@ function Gv_InitWeaponPointers() : void
 
 function Gv_RefreshPointers(): void 
 {
-    todoThrow("Gv_RefreshPointers");
-//    aGameVars[Gv_GetVarIndex("RESPAWN_MONSTERS")].val.lValue = (intptr_t)&ud.respawn_monsters;
-//    aGameVars[Gv_GetVarIndex("RESPAWN_ITEMS")].val.lValue = (intptr_t)&ud.respawn_items;
-//    aGameVars[Gv_GetVarIndex("RESPAWN_INVENTORY")].val.lValue = (intptr_t)&ud.respawn_inventory;
-//    aGameVars[Gv_GetVarIndex("MONSTERS_OFF")].val.lValue = (intptr_t)&ud.monsters_off;
-//    aGameVars[Gv_GetVarIndex("MARKER")].val.lValue = (intptr_t)&ud.marker;
-//    aGameVars[Gv_GetVarIndex("FFIRE")].val.lValue = (intptr_t)&ud.ffire;
-//    aGameVars[Gv_GetVarIndex("LEVEL")].val.lValue = (intptr_t)&ud.level_number;
-//    aGameVars[Gv_GetVarIndex("VOLUME")].val.lValue = (intptr_t)&ud.volume_number;
+    aGameVars[Gv_GetVarIndex("RESPAWN_MONSTERS")].val.lValue = regIntptr_t("ud.respawn_monsters");
+    aGameVars[Gv_GetVarIndex("RESPAWN_ITEMS")].val.lValue = regIntptr_t("ud.respawn_items");
+    aGameVars[Gv_GetVarIndex("RESPAWN_INVENTORY")].val.lValue = regIntptr_t("ud.respawn_inventory");
+    aGameVars[Gv_GetVarIndex("MONSTERS_OFF")].val.lValue = regIntptr_t("ud.monsters_off");
+    aGameVars[Gv_GetVarIndex("MARKER")].val.lValue = regIntptr_t("ud.marker");
+    aGameVars[Gv_GetVarIndex("FFIRE")].val.lValue = regIntptr_t("ud.ffire");
+    aGameVars[Gv_GetVarIndex("LEVEL")].val.lValue = regIntptr_t("ud.level_number");
+    aGameVars[Gv_GetVarIndex("VOLUME")].val.lValue = regIntptr_t("ud.volume_number");
 
-//    aGameVars[Gv_GetVarIndex("COOP")].val.lValue = (intptr_t)&ud.coop;
-//    aGameVars[Gv_GetVarIndex("MULTIMODE")].val.lValue = (intptr_t)&ud.multimode;
+    aGameVars[Gv_GetVarIndex("COOP")].val.lValue = regIntptr_t("ud.coop");
+    aGameVars[Gv_GetVarIndex("MULTIMODE")].val.lValue = regIntptr_t("ud.multimode");
 
-//    aGameVars[Gv_GetVarIndex("myconnectindex")].val.lValue = (intptr_t)&myconnectindex;
-//    aGameVars[Gv_GetVarIndex("screenpeek")].val.lValue = (intptr_t)&screenpeek;
-//    aGameVars[Gv_GetVarIndex("currentweapon")].val.lValue = (intptr_t)&hudweap.cur;
-//    aGameVars[Gv_GetVarIndex("gs")].val.lValue = (intptr_t)&hudweap.shade;
-//    aGameVars[Gv_GetVarIndex("looking_arc")].val.lValue = (intptr_t)&hudweap.lookhoriz;
-//    aGameVars[Gv_GetVarIndex("gun_pos")].val.lValue = (intptr_t)&hudweap.gunposy;
-//    aGameVars[Gv_GetVarIndex("weapon_xoffset")].val.lValue = (intptr_t)&hudweap.gunposx;
-//    aGameVars[Gv_GetVarIndex("weaponcount")].val.lValue = (intptr_t)&hudweap.count;
-//    aGameVars[Gv_GetVarIndex("looking_angSR1")].val.lValue = (intptr_t)&hudweap.lookhalfang;
-//    aGameVars[Gv_GetVarIndex("xdim")].val.lValue = (intptr_t)&xdim;
-//    aGameVars[Gv_GetVarIndex("ydim")].val.lValue = (intptr_t)&ydim;
-//    aGameVars[Gv_GetVarIndex("windowx1")].val.lValue = (intptr_t)&windowx1;
-//    aGameVars[Gv_GetVarIndex("windowx2")].val.lValue = (intptr_t)&windowx2;
-//    aGameVars[Gv_GetVarIndex("windowy1")].val.lValue = (intptr_t)&windowy1;
-//    aGameVars[Gv_GetVarIndex("windowy2")].val.lValue = (intptr_t)&windowy2;
-//    aGameVars[Gv_GetVarIndex("totalclock")].val.lValue = (intptr_t)&totalclock;
-//    aGameVars[Gv_GetVarIndex("lastvisinc")].val.lValue = (intptr_t)&lastvisinc;
-//    aGameVars[Gv_GetVarIndex("numsectors")].val.lValue = (intptr_t)&numsectors;
-//    aGameVars[Gv_GetVarIndex("numplayers")].val.lValue = (intptr_t)&numplayers;
-//    aGameVars[Gv_GetVarIndex("current_menu")].val.lValue = (intptr_t)&g_currentMenu;
-//    aGameVars[Gv_GetVarIndex("viewingrange")].val.lValue = (intptr_t)&viewingrange;
-//    aGameVars[Gv_GetVarIndex("yxaspect")].val.lValue = (intptr_t)&yxaspect;
-//    aGameVars[Gv_GetVarIndex("gravitationalconstant")].val.lValue = (intptr_t)&g_spriteGravity;
-//    aGameVars[Gv_GetVarIndex("gametype_flags")].val.lValue = (intptr_t)&GametypeFlags[ud.coop];
-//    aGameVars[Gv_GetVarIndex("framerate")].val.lValue = (intptr_t)&g_currentFrameRate;
+    aGameVars[Gv_GetVarIndex("myconnectindex")].val.lValue = regIntptr_t("myconnectindex");
+    aGameVars[Gv_GetVarIndex("screenpeek")].val.lValue = regIntptr_t("screenpeek");
+    aGameVars[Gv_GetVarIndex("currentweapon")].val.lValue = regIntptr_t("hudweap.cur");
+    aGameVars[Gv_GetVarIndex("gs")].val.lValue = regIntptr_t("hudweap.shade");
+    aGameVars[Gv_GetVarIndex("looking_arc")].val.lValue = regIntptr_t("hudweap.lookhoriz");
+    aGameVars[Gv_GetVarIndex("gun_pos")].val.lValue = regIntptr_t("hudweap.gunposy");
+    aGameVars[Gv_GetVarIndex("weapon_xoffset")].val.lValue = regIntptr_t("hudweap.gunposx");
+    aGameVars[Gv_GetVarIndex("weaponcount")].val.lValue = regIntptr_t("hudweap.count");
+    aGameVars[Gv_GetVarIndex("looking_angSR1")].val.lValue = regIntptr_t("hudweap.lookhalfang");
+    aGameVars[Gv_GetVarIndex("xdim")].val.lValue = regIntptr_t("xdim");
+    aGameVars[Gv_GetVarIndex("ydim")].val.lValue = regIntptr_t("ydim");
+    aGameVars[Gv_GetVarIndex("windowx1")].val.lValue = regIntptr_t("windowx1");
+    aGameVars[Gv_GetVarIndex("windowx2")].val.lValue = regIntptr_t("windowx2");
+    aGameVars[Gv_GetVarIndex("windowy1")].val.lValue = regIntptr_t("windowy1");
+    aGameVars[Gv_GetVarIndex("windowy2")].val.lValue = regIntptr_t("windowy2");
+    aGameVars[Gv_GetVarIndex("totalclock")].val.lValue = regIntptr_t("totalclock");
+    aGameVars[Gv_GetVarIndex("lastvisinc")].val.lValue = regIntptr_t("lastvisinc");
+    aGameVars[Gv_GetVarIndex("numsectors")].val.lValue = regIntptr_t("numsectors");
+    aGameVars[Gv_GetVarIndex("numplayers")].val.lValue = regIntptr_t("numplayers");
+    aGameVars[Gv_GetVarIndex("current_menu")].val.lValue = regIntptr_t("g_currentMenu");
+    aGameVars[Gv_GetVarIndex("viewingrange")].val.lValue = regIntptr_t("viewingrange");
+    aGameVars[Gv_GetVarIndex("yxaspect")].val.lValue = regIntptr_t("yxaspect");
+    aGameVars[Gv_GetVarIndex("gravitationalconstant")].val.lValue = regIntptr_t("g_spriteGravity");
+    aGameVars[Gv_GetVarIndex("gametype_flags")].val.lValue = regIntptr_t("GametypeFlags[ud.coop]");
+    aGameVars[Gv_GetVarIndex("framerate")].val.lValue = regIntptr_t("g_currentFrameRate");
 
-//    aGameVars[Gv_GetVarIndex("camerax")].val.lValue = (intptr_t)&ud.camerapos.x;
-//    aGameVars[Gv_GetVarIndex("cameray")].val.lValue = (intptr_t)&ud.camerapos.y;
-//    aGameVars[Gv_GetVarIndex("cameraz")].val.lValue = (intptr_t)&ud.camerapos.z;
-//    aGameVars[Gv_GetVarIndex("cameraang")].val.lValue = (intptr_t)&ud.cameraang;
-//    aGameVars[Gv_GetVarIndex("camerahoriz")].val.lValue = (intptr_t)&ud.camerahoriz;
-//    aGameVars[Gv_GetVarIndex("camerasect")].val.lValue = (intptr_t)&ud.camerasect;
-//    aGameVars[Gv_GetVarIndex("cameradist")].val.lValue = (intptr_t)&g_cameraDistance;
-//    aGameVars[Gv_GetVarIndex("cameraclock")].val.lValue = (intptr_t)&g_cameraClock;
+    aGameVars[Gv_GetVarIndex("camerax")].val.lValue = regIntptr_t("ud.camerapos.x");
+    aGameVars[Gv_GetVarIndex("cameray")].val.lValue = regIntptr_t("ud.camerapos.y");
+    aGameVars[Gv_GetVarIndex("cameraz")].val.lValue = regIntptr_t("ud.camerapos.z");
+    aGameVars[Gv_GetVarIndex("cameraang")].val.lValue = regIntptr_t("ud.cameraang");
+    aGameVars[Gv_GetVarIndex("camerahoriz")].val.lValue = regIntptr_t("ud.camerahoriz");
+    aGameVars[Gv_GetVarIndex("camerasect")].val.lValue = regIntptr_t("ud.camerasect");
+    aGameVars[Gv_GetVarIndex("cameradist")].val.lValue = regIntptr_t("g_cameraDistance");
+    aGameVars[Gv_GetVarIndex("cameraclock")].val.lValue = regIntptr_t("g_cameraClock");
 
-//    aGameVars[Gv_GetVarIndex("myx")].val.lValue = (intptr_t)&my.x;
-//    aGameVars[Gv_GetVarIndex("myy")].val.lValue = (intptr_t)&my.y;
-//    aGameVars[Gv_GetVarIndex("myz")].val.lValue = (intptr_t)&my.z;
-//    aGameVars[Gv_GetVarIndex("omyx")].val.lValue = (intptr_t)&omy.x;
-//    aGameVars[Gv_GetVarIndex("omyy")].val.lValue = (intptr_t)&omy.y;
-//    aGameVars[Gv_GetVarIndex("omyz")].val.lValue = (intptr_t)&omy.z;
-//    aGameVars[Gv_GetVarIndex("myvelx")].val.lValue = (intptr_t)&myvel.x;
-//    aGameVars[Gv_GetVarIndex("myvely")].val.lValue = (intptr_t)&myvel.y;
-//    aGameVars[Gv_GetVarIndex("myvelz")].val.lValue = (intptr_t)&myvel.z;
+    aGameVars[Gv_GetVarIndex("myx")].val.lValue = regIntptr_t("my.x");
+    aGameVars[Gv_GetVarIndex("myy")].val.lValue = regIntptr_t("my.y");
+    aGameVars[Gv_GetVarIndex("myz")].val.lValue = regIntptr_t("my.z");
+    aGameVars[Gv_GetVarIndex("omyx")].val.lValue = regIntptr_t("omy.x");
+    aGameVars[Gv_GetVarIndex("omyy")].val.lValue = regIntptr_t("omy.y");
+    aGameVars[Gv_GetVarIndex("omyz")].val.lValue = regIntptr_t("omy.z");
+    aGameVars[Gv_GetVarIndex("myvelx")].val.lValue = regIntptr_t("myvel.x");
+    aGameVars[Gv_GetVarIndex("myvely")].val.lValue = regIntptr_t("myvel.y");
+    aGameVars[Gv_GetVarIndex("myvelz")].val.lValue = regIntptr_t("myvel.z");
 
-//    aGameVars[Gv_GetVarIndex("myhoriz")].val.lValue = (intptr_t)&myhoriz;
-//    aGameVars[Gv_GetVarIndex("myhorizoff")].val.lValue = (intptr_t)&myhorizoff;
-//    aGameVars[Gv_GetVarIndex("omyhoriz")].val.lValue = (intptr_t)&omyhoriz;
-//    aGameVars[Gv_GetVarIndex("omyhorizoff")].val.lValue = (intptr_t)&omyhorizoff;
-//    aGameVars[Gv_GetVarIndex("myang")].val.lValue = (intptr_t)&myang;
-//    aGameVars[Gv_GetVarIndex("omyang")].val.lValue = (intptr_t)&omyang;
-//    aGameVars[Gv_GetVarIndex("mycursectnum")].val.lValue = (intptr_t)&mycursectnum;
-//    aGameVars[Gv_GetVarIndex("myjumpingcounter")].val.lValue = (intptr_t)&myjumpingcounter;
+    aGameVars[Gv_GetVarIndex("myhoriz")].val.lValue = regIntptr_t("myhoriz");
+    aGameVars[Gv_GetVarIndex("myhorizoff")].val.lValue = regIntptr_t("myhorizoff");
+    aGameVars[Gv_GetVarIndex("omyhoriz")].val.lValue = regIntptr_t("omyhoriz");
+    aGameVars[Gv_GetVarIndex("omyhorizoff")].val.lValue = regIntptr_t("omyhorizoff");
+    aGameVars[Gv_GetVarIndex("myang")].val.lValue = regIntptr_t("myang");
+    aGameVars[Gv_GetVarIndex("omyang")].val.lValue = regIntptr_t("omyang");
+    aGameVars[Gv_GetVarIndex("mycursectnum")].val.lValue = regIntptr_t("mycursectnum");
+    aGameVars[Gv_GetVarIndex("myjumpingcounter")].val.lValue = regIntptr_t("myjumpingcounter");
 
-//    aGameVars[Gv_GetVarIndex("myjumpingtoggle")].val.lValue = (intptr_t)&myjumpingtoggle;
-//    aGameVars[Gv_GetVarIndex("myonground")].val.lValue = (intptr_t)&myonground;
-//    aGameVars[Gv_GetVarIndex("myhardlanding")].val.lValue = (intptr_t)&myhardlanding;
-//    aGameVars[Gv_GetVarIndex("myreturntocenter")].val.lValue = (intptr_t)&myreturntocenter;
+    aGameVars[Gv_GetVarIndex("myjumpingtoggle")].val.lValue = regIntptr_t("myjumpingtoggle");
+    aGameVars[Gv_GetVarIndex("myonground")].val.lValue = regIntptr_t("myonground");
+    aGameVars[Gv_GetVarIndex("myhardlanding")].val.lValue = regIntptr_t("myhardlanding");
+    aGameVars[Gv_GetVarIndex("myreturntocenter")].val.lValue = regIntptr_t("myreturntocenter");
 
-//    aGameVars[Gv_GetVarIndex("display_mirror")].val.lValue = (intptr_t)&display_mirror;
-//    aGameVars[Gv_GetVarIndex("randomseed")].val.lValue = (intptr_t)&randomseed;
+    aGameVars[Gv_GetVarIndex("display_mirror")].val.lValue = regIntptr_t("display_mirror");
+    aGameVars[Gv_GetVarIndex("randomseed")].val.lValue = regIntptr_t("randomseed");
 
-//    aGameVars[Gv_GetVarIndex("NUMWALLS")].val.lValue = (intptr_t)&numwalls;
-//    aGameVars[Gv_GetVarIndex("NUMSECTORS")].val.lValue = (intptr_t)&numsectors;
-//    aGameVars[Gv_GetVarIndex("Numsprites")].val.lValue = (intptr_t)&Numsprites;
+    aGameVars[Gv_GetVarIndex("NUMWALLS")].val.lValue = regIntptr_t("numwalls");
+    aGameVars[Gv_GetVarIndex("NUMSECTORS")].val.lValue = regIntptr_t("numsectors");
+    aGameVars[Gv_GetVarIndex("Numsprites")].val.lValue = regIntptr_t("Numsprites");
 
-//    aGameVars[Gv_GetVarIndex("lastsavepos")].val.lValue = (intptr_t)&g_lastSaveSlot;
+    aGameVars[Gv_GetVarIndex("lastsavepos")].val.lValue = regIntptr_t("g_lastSaveSlot");
 //# ifdef USE_OPENGL
-//    aGameVars[Gv_GetVarIndex("rendmode")].val.lValue = (intptr_t)&rendmode;
+    aGameVars[Gv_GetVarIndex("rendmode")].val.lValue = regIntptr_t("rendmode");
 //# endif
 }
 //#endif

@@ -11275,7 +11275,7 @@ function loadtile(tilenume: number): void
     if (!waloff[tilenume])
     {
         walock[tilenume] = 199;
-        waloff[tilenume] = new ArrayBuffer(dasiz);//allocache(waloff[tilenume],dasiz,walock[tilenume]);
+        waloff[tilenume] = allocache(waloff[tilenume],dasiz,walock[tilenume]);
     }
 
     if (artfilplc != tilefileoffs[tilenume])

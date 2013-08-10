@@ -891,9 +891,9 @@ var startumost = new Int16Array(MAXXDIM), startdmost = new Int16Array(MAXXDIM); 
 var pskyoff = new Int16Array(MAXPSKYTILES), pskybits: number;
 // new multi-psky -- up to MAXPSKYMULTIS
 var pskynummultis: number; //int16_t 
-//EXTERN int32_t pskymultiyscale[MAXPSKYMULTIS];
-//EXTERN int16_t pskymultilist[MAXPSKYMULTIS], pskymultibits[MAXPSKYMULTIS];
-//EXTERN int16_t pskymultioff[MAXPSKYMULTIS][MAXPSKYTILES];
+var pskymultiyscale = new Int32Array(MAXPSKYMULTIS);                                   //EXTERN int32_t 
+var pskymultilist = new Int16Array(MAXPSKYMULTIS), pskymultibits = new Int16Array(MAXPSKYMULTIS);       //EXTERN int16_t 
+var pskymultioff = multiDimArray<Int16Array>(Int16Array, MAXPSKYMULTIS, MAXPSKYTILES);                        //EXTERN int16_t 
 
 //// last sprite in the freelist, that is the spritenum for which
 ////   .statnum==MAXSTATUS && nextspritestat[spritenum]==-1
@@ -958,7 +958,7 @@ class picanm_t {
     public static size = 4;   
 }
 var picanm: picanm_t[] = newStructArray(picanm_t, MAXTILES);
-var waloff: ArrayBuffer[] = new Array(MAXTILES);  // stores pointers to cache  -- SA //EXTERN intptr_t 
+var waloff: Int32Array = new Int32Array(MAXTILES);  // stores pointers to cache  -- SA //EXTERN intptr_t 
 
 //EXTERN int32_t windowpos, windowx, windowy;
 
@@ -1160,6 +1160,10 @@ function getrendermode(): number
 
 class vec3_t{
     x: number; y: number; z: number;//    int32_t
+
+    constructor() {
+        this.x = this.y = this.z = 0;
+    }
 };
 
 //typedef struct {

@@ -1033,53 +1033,52 @@ function resetprestat(/*int32_t*/ snum: number,/*int32_t */g: number): void
 
 }
 
-//static inline void G_SetupBackdrop(int16_t sky)
-//{
-//    static int32_t multiskiesinited=0;
+var multiskiesinited=0;
+function G_SetupBackdrop(/*int16_t */sky: number): void
+{
+    if (!multiskiesinited)
+    {
+        multiskiesinited = 1;
+        G_MultiPskyInit();
+    }
 
-//    if (!multiskiesinited)
-//    {
-//        multiskiesinited = 1;
-//        G_MultiPskyInit();
-//    }
+    Bmemset(new P(pskyoff), 0, sizeof(pskyoff));
 
-//    Bmemset(pskyoff, 0, sizeof(pskyoff));
+    if (parallaxyscale != 65536)
+        parallaxyscale = 32768;
 
-//    if (parallaxyscale != 65536)
-//        parallaxyscale = 32768;
+    switch (DYNAMICTILEMAP(sky))
+    {
+    case CLOUDYOCEAN__STATIC:
+        parallaxyscale = 65536;
+        break;
+    case MOONSKY1__STATIC :
+        pskyoff[6]=1;
+        pskyoff[1]=2;
+        pskyoff[4]=2;
+        pskyoff[2]=3;
+        break;
+    case BIGORBIT1__STATIC: // orbit
+        pskyoff[5]=1;
+        pskyoff[6]=2;
+        pskyoff[7]=3;
+        pskyoff[2]=4;
+        break;
+    case LA__STATIC:
+        parallaxyscale = 16384+1024;
+        pskyoff[0]=1;
+        pskyoff[1]=2;
+        pskyoff[2]=1;
+        pskyoff[3]=3;
+        pskyoff[4]=4;
+        pskyoff[5]=0;
+        pskyoff[6]=2;
+        pskyoff[7]=3;
+        break;
+    }
 
-//    switch (DYNAMICTILEMAP(sky))
-//    {
-//    case CLOUDYOCEAN__STATIC:
-//        parallaxyscale = 65536;
-//        break;
-//    case MOONSKY1__STATIC :
-//        pskyoff[6]=1;
-//        pskyoff[1]=2;
-//        pskyoff[4]=2;
-//        pskyoff[2]=3;
-//        break;
-//    case BIGORBIT1__STATIC: // orbit
-//        pskyoff[5]=1;
-//        pskyoff[6]=2;
-//        pskyoff[7]=3;
-//        pskyoff[2]=4;
-//        break;
-//    case LA__STATIC:
-//        parallaxyscale = 16384+1024;
-//        pskyoff[0]=1;
-//        pskyoff[1]=2;
-//        pskyoff[2]=1;
-//        pskyoff[3]=3;
-//        pskyoff[4]=4;
-//        pskyoff[5]=0;
-//        pskyoff[6]=2;
-//        pskyoff[7]=3;
-//        break;
-//    }
-
-//    pskybits=3;
-//}
+    pskybits=3;
+}
 
 //// tweak moving sectors with these SE lotags
 //#define FIXSPR_SELOTAGP(k) ((k==0) || (k==6) || (k==14))
@@ -1138,9 +1137,10 @@ function G_SetupRotfixedSprites(): void
 
 function prelevel(/*char*/ g: number): void
 {
+    path("prelevel");
     debugger;
-   var i, nexti, j, startwall, endwall;                 // int32_t 
-   var switchpicnum;                                    // int32_t 
+   var i: number, nexti: number, j: number, startwall: number, endwall: number;                 // int32_t 
+   var switchpicnum: number;                                    // int32_t 
    var tagbitmap = new Uint8Array(65536>>3);// /(uint8_t *)Bcalloc(65536>>3, 1);    // uint8_t 
 
     if (tagbitmap==NULL)
@@ -1174,7 +1174,7 @@ function prelevel(/*char*/ g: number): void
                     for (j=0; j<5; j++)
                         todoThrow("tloadtile(sector[i].ceilingpicnum+j, 0);");
             }
-            todoThrow(" G_SetupBackdrop(sector[i].ceilingpicnum);");
+            G_SetupBackdrop(sector[i].ceilingpicnum);
 
             if (sector[i].ceilingpicnum == CLOUDYSKIES && g_numClouds < 127)
                 clouds[g_numClouds++] = i;
@@ -1889,6 +1889,7 @@ function G_FindLevelByFile(fn: string): number
 
 function G_EnterLevel(g: number): number
 {
+    path("G_EnterLevel");
     var i: number, mii: number;
     var levname = "";//[BMAX_PATH];
 

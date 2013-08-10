@@ -180,7 +180,7 @@ class projectile_t {
 //#pragma pack(push,1)
 //// (+ 40 16 16 4 8 6 8 6 4 20)
 class actor_t {
-//    int32_t t_data[10];  // 40b sometimes used to hold offsets to con code
+    t_data: Int32Array;//[10];  // 40b sometimes used to hold offsets to con code //    int32_t t_
 
 //#ifdef LUNATIC
 //    // total: 16b
@@ -190,27 +190,27 @@ class actor_t {
 //    uint16_t actiontics;
 //#endif
 
-//    int32_t flags; //4b
-//    vec3_t bpos; //12b
-//    int32_t floorz,ceilingz,lastvx,lastvy; //16b
-//    int32_t lasttransport; //4b
-
-//    int16_t picnum,ang,extra,owner; //8b
-//    int16_t movflag,tempang,timetosleep; //6b
-
-//    int16_t actorstayput, dispicnum;
+    flags: number; //4b                                 //int32_t 
+    bpos: vec3_t; //12b                                 //vec3_t  
+    floorz: number;ceilingz: number;lastvx: number;lastvy: number; //16b        //int32_t 
+    lasttransport; //4b                         //int32_t 
+                                                //
+    picnum: number;ang: number;extra: number;owner: number; //8b                //int16_t 
+    movflag: number;tempang: number;timetosleep: number; //6b           //int16_t 
+                                                //
+    actorstayput: number; dispicnum: number;                    //int16_t 
 //#if !defined LUNATIC
 //    // NOTE: shootzvel is not used any more.
-//    int16_t shootzvel_;
+    shootzvel_: number;//    int16_t 
 //#else
 //    // Movement flags, sprite[i].hitag in C-CON:
 //    uint16_t movflags;
 //#endif
 //    int16_t cgg;
 
-//    int16_t lightId, lightcount, lightmaxrange; //6b
+    lightId:number; lightcount:number; lightmaxrange: number; //6b//    int16_t 
 //#ifdef POLYMER
-//    _prlight *lightptr; //4b/8b
+   //todo: lightptr: _prlight; //4b/8b
 //#else
 //    void *lightptr;
 //#endif
@@ -234,6 +234,26 @@ class actor_t {
 //    /* no padding */
 //#endif
 //#endif
+
+    constructor() {
+        this.t_data = new Int32Array(10);
+
+        this.flags = 0; //4b                                 //int32_t 
+        this.bpos = new vec3_t(); //12b                                 //vec3_t  
+        this.floorz = 0;this.ceilingz = 0;this.lastvx = 0;this.lastvy = 0; //16b        //int32_t 
+        this.lasttransport=0; //4b                         //int32_t 
+   
+        this.picnum = 0;this.ang = 0;this.extra = 0;this.owner = 0; //8b                //int16_t 
+        this.movflag = 0;this.tempang = 0;this.timetosleep = 0; //6b           //int16_t 
+ 
+        this.actorstayput = 0;this. dispicnum = 0;                    //int16_t 
+
+        this.shootzvel_ = 0;
+
+        this.lightId=0; this.lightcount=0; this.lightmaxrange=0;
+
+        //todo: light
+    }
 }
 
 //// this struct needs to match the beginning of actor_t above
