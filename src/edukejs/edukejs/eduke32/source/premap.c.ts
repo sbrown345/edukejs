@@ -139,7 +139,7 @@ function tloadtile(/*int32_t */tilenume: number, /*int32_t */type: number): void
     {
         i = tilenume;
         j = tilenume + picanm[tilenume].num;
-    }
+    }   
 
     for (; i<=j; i++)
         flag_precache(i, type);
@@ -1172,7 +1172,7 @@ function prelevel(/*char*/ g: number): void
             {
                 if (sector[i].ceilingpicnum == LA)
                     for (j=0; j<5; j++)
-                        todoThrow("tloadtile(sector[i].ceilingpicnum+j, 0);");
+                        tloadtile(sector[i].ceilingpicnum+j, 0);
             }
             G_SetupBackdrop(sector[i].ceilingpicnum);
 

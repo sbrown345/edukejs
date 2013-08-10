@@ -111,12 +111,16 @@ class memberlabel_t
 //void C_InitQuotes(void);
 //void C_InitProjectiles(void);
 
-//typedef struct {
-//    int32_t g_i, g_p, g_x;
-//    int32_t *g_t;
-//    spritetype *g_sp;
-//    int32_t g_flags;
-//} vmstate_t;
+class vmstate_t{
+    g_i: number; g_p: number; g_x: number;      //int32_t     
+    g_t: Int32Array;               //int32_t *    
+    g_sp: spritetype;                  //spritetype *
+    g_flags: number;             //int32_t     
+    constructor() {
+        this.g_i =  this.g_p = this.g_x = 0;
+        this.g_flags = 0;
+    }
+}
 
 //extern vmstate_t vm;
 

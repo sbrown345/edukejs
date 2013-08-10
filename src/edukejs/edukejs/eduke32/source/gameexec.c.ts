@@ -49,12 +49,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //#endif
 
 //enum vmflags_t {
-//    VM_RETURN       = 0x00000001,
-//    VM_KILL         = 0x00000002,
-//    VM_NOEXECUTE    = 0x00000004,
+var VM_RETURN       = 0x00000001,
+    VM_KILL         = 0x00000002,
+    VM_NOEXECUTE    = 0x00000004;
 //};
 
-//vmstate_t vm;
+var vm = new vmstate_t() ;
 
 //#if !defined LUNATIC
 var g_tw: number;
@@ -68,40 +68,39 @@ var g_currentEventExec = -1;
 
 //#define VM_CONDITIONAL(xxx) { if ((xxx) || ((insptr = (intptr_t *)*(insptr+1)) && (((*insptr) & 0xfff) == CON_ELSE))) \
 //{ insptr += 2; VM_Execute(0); } }
-
-//void VM_ScriptInfo(void)
-//{
+function VM_ScriptInfo (): void 
+{
 //#if !defined LUNATIC
-//    intptr_t *p;
+    var p: number; //intptr_t
 
-//    if (!script)
-//        return;
+    if (!script)
+        return;
 
-//    if (insptr)
-//    {
-//        initprintf("\n");
+    if (insptr)
+    {
+        initprintf("\n");
 
-//        for (p=insptr-20; p<insptr+20; p++)
-//        {
-//            initprintf("%5d: %3d: ",(int32_t)(p - script),(int32_t)(p - insptr));
+        for (p=insptr-20; p<insptr+20; p++)
+        {
+            initprintf("%5d: %3d: ",script[p],script[p - insptr]);
 
-//            if (*p>>12&&(*p&0xFFF)<CON_END)
-//                initprintf("%5d %s",(int32_t)(*p>>12),keyw[*p&0xFFF]);
-//            else
-//                initprintf("%d",(int32_t)*p);
+            if (script[p]>>12&&(script[p]&0xFFF)<CON_END)
+                initprintf("%5d %s",int32(script[p]>>12),keyw[script[p]&0xFFF]);
+            else                
+                initprintf("%d",script[p]);//initprintf("%d",(int32_t)*p);
 
-//            initprintf("\n");
-//        }
+            initprintf("\n");
+        }
 
-//        initprintf("\n");
-//    }
+        initprintf("\n");
+    }
 
-//    if (vm.g_i)
-//        initprintf_nowarn("current actor: %d (%d)\n",vm.g_i,TrackerCast(vm.g_sp.picnum));
+    if (vm.g_i)
+        initprintf_nowarn("current actor: %d (%d)\n",vm.g_i,TrackerCast(vm.g_sp.picnum));
 
-//    initprintf("g_errorLineNum: %d, g_tw: %d\n",g_errorLineNum,g_tw);
+    initprintf("g_errorLineNum: %d, g_tw: %d\n",g_errorLineNum,g_tw);
 //#endif
-//}
+}
 
 //static void VM_KillIt(int32_t iActor, int32_t iPlayer)
 //{
@@ -1152,29 +1151,31 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //}
 
 //#if !defined LUNATIC
-//GAMEEXEC_STATIC void VM_Execute(int32_t loop)
-//{
-//    register int32_t tw = *insptr;
+function VM_Execute(/*int32_t */loop: number): void
+{
+   var tw = script[insptr];
 
-//    // jump directly into the loop, saving us from the checks during the first iteration
-//    goto skip_check;
+    // jump directly into the loop, saving us from the checks during the first iteration
+    var skip_check = true;
 
-//    while (loop)
-//    {
-//        if (vm.g_flags & (VM_RETURN|VM_KILL|VM_NOEXECUTE))
-//            return;
+    while (loop)
+    {
+        if(!skip_check) {
+            if (vm.g_flags & (VM_RETURN|VM_KILL|VM_NOEXECUTE))
+                return;
 
-//        tw = *insptr;
+            tw = *insptr;
+        }
 
-//skip_check:
-//        //      Bsprintf(g_szBuf,"Parsing: %d",*insptr);
-//        //      AddLog(g_szBuf);
+        skip_check = false;
+        //      Bsprintf(g_szBuf,"Parsing: %d",*insptr);
+        //      AddLog(g_szBuf);
 
-//        g_errorLineNum = tw>>12;
-//        g_tw = tw &= 0xFFF;
+        g_errorLineNum = tw>>12;
+        g_tw = tw &= 0xFFF;
 
-//        switch (tw)
-//        {
+        switch (tw)
+        {
 //        case CON_REDEFINEQUOTE:
 //            insptr++;
 //            {
@@ -5283,49 +5284,49 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //            }
 //            continue;
 
-//        default:
-//            VM_ScriptInfo();
+        default:
+            VM_ScriptInfo();
 
-//            G_GameExit("An error has occurred in the EDuke32 virtual machine.\n\n"
-//                       "If you are an end user, please e-mail the file eduke32.log\n"
-//                       "along with links to any mods you're using to terminx@gmail.com.\n\n"
-//                       "If you are a mod developer, please attach all of your CON files\n"
-//                       "along with instructions on how to reproduce this error.\n\n"
-//                       "Thank you!");
-//            break;
-//        }
-//    }
-//}
+            todoThrow();
+            G_GameExit("An error has occurred in the EDuke32 virtual machine.\n\n"+
+                       "If you are an end user, please e-mail the file eduke32.log\n"+
+                       "along with links to any mods you're using to terminx@gmail.com.\n\n"+
+                       "If you are a mod developer, please attach all of your CON files\n"+
+                       "along with instructions on how to reproduce this error.\n\n"+
+                       "Thank you!");
+            break;
+        }
+    }
+}
 
 // NORECURSE
 function A_LoadActor(iActor: number):void
 {
-    todoThrow();
-    //vm.g_i = iActor;    // Sprite ID
-    //vm.g_p = -1; // iPlayer;    // Player ID
-    //vm.g_x = -1; // lDist;    // ?
-    //vm.g_sp = &sprite[vm.g_i];    // Pointer to sprite structure
-    //vm.g_t = &actor[vm.g_i].t_data[0];   // Sprite's 'extra' data
+    vm.g_i = iActor;    // Sprite ID
+    vm.g_p = -1; // iPlayer;    // Player ID
+    vm.g_x = -1; // lDist;    // ?
+    vm.g_sp = sprite[vm.g_i];    // Pointer to sprite structure
+    vm.g_t = actor[vm.g_i].t_data;   // Sprite's 'extra' data
 
-    //if (g_tile[vm.g_sp.picnum].loadPtr == NULL)
-    //    return;
+    if (g_tile[vm.g_sp.picnum].loadPtr == NULL)
+        return;
 
-    //vm.g_flags &= ~(VM_RETURN|VM_KILL|VM_NOEXECUTE);
+    vm.g_flags &= ~(VM_RETURN|VM_KILL|VM_NOEXECUTE);
 
-    //if ((unsigned)vm.g_sp.sectnum >= MAXSECTORS)
-    //{
-    //    //      if(A_CheckEnemySprite(vm.g_sp))
-    //    //          g_player[vm.g_p].ps.actors_killed++;
-    //    A_DeleteSprite(vm.g_i);
-    //    return;
-    //}
+    if (vm.g_sp.sectnum >= MAXSECTORS)
+    {
+        //      if(A_CheckEnemySprite(vm.g_sp))
+        //          g_player[vm.g_p].ps.actors_killed++;
+        A_DeleteSprite(vm.g_i);
+        return;
+    }
 
-    //insptr = g_tile[vm.g_sp.picnum].loadPtr;
-    //VM_Execute(1);
-    //insptr = NULL;
+    insptr = g_tile[vm.g_sp.picnum].loadPtr;
+    VM_Execute(1);
+    insptr = NULL;
 
-    //if (vm.g_flags & VM_KILL)
-    //    A_DeleteSprite(vm.g_i);
+    if (vm.g_flags & VM_KILL)
+        A_DeleteSprite(vm.g_i);
 
 }
 //#endif
