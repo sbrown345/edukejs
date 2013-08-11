@@ -398,10 +398,10 @@ var yax_globalbunch = -1;                                                       
 var yax_bunchnum: Int16Array[] = multiDimArray<Int16Array>(Int16Array, MAXSECTORS, 2);
 var yax_nextwall: Int16Array[] = multiDimArray<Int16Array>(Int16Array, MAXWALLS, 2);
 
-//static int32_t yax_islockededge(int32_t line, int32_t cf)
-//{
-//    return !!(wall[line].cstat&(YAX_NEXTWALLBIT(cf)));
-//}
+function /*int32_t */yax_islockededge(/*int32_t */line: number, /*int32_t */cf: number) : number
+{
+    return !!(wall[line].cstat&(YAX_NEXTWALLBIT(cf)))?1:0;
+}
 
 //#define YAX_PTRBUNCHNUM(Ptr, Sect, Cf) (*(&Ptr[Sect].ceilingxpanning + 8*Cf))
 //#define YAX_BUNCHNUM(Sect, Cf) YAX_PTRBUNCHNUM(sector, Sect, Cf)
@@ -498,17 +498,17 @@ function yax_setbunches(/*int16_t*/ i: number, /*int16_t*/ cb: number, /*int16_t
 }
 
 //# if !defined NEW_MAP_FORMAT
-////// nextwall getters/setters
-//int16_t yax_getnextwall(int16_t wal, int16_t cf)
-//{
-//    if (editstatus==0)
-//        return yax_nextwall[wal][cf];
+//// nextwall getters/setters
+function /*int16_t */yax_getnextwall(/*int16_t */wal: number, /*int16_t*/ cf: number): number
+{
+    if (editstatus==0)
+        return yax_nextwall[wal][cf];
 
-//    if (!yax_islockededge(wal, cf))
-//        return -1;
+    if (!yax_islockededge(wal, cf))
+        return -1;
 
-//    return YAX_NEXTWALL(wal, cf);
-//}
+    return YAX_NEXTWALL(wal, cf);
+}
 
 //// unchecked!
 //void yax_setnextwall(int16_t wal, int16_t cf, int16_t thenextwall)
@@ -532,17 +532,17 @@ function yax_setbunches(/*int16_t*/ i: number, /*int16_t*/ cb: number, /*int16_t
 //}
 //# endif
 
-//// make one step in the vertical direction, and if the wall we arrive at
-//// is red, return its nextsector.
-//int16_t yax_vnextsec(int16_t line, int16_t cf)
-//{
-//    int16_t ynw = yax_getnextwall(line, cf);
+// make one step in the vertical direction, and if the wall we arrive at
+// is red, return its nextsector.
+function /*int16_t */yax_vnextsec(/*int16_t*/ line: number, /*int16_t */cf: number): number
+{
+    var /*int16_t */ynw = yax_getnextwall(line, cf);
 
-//    if (ynw < 0)
-//        return -1;
+    if (ynw < 0)
+        return -1;
 
-//    return wall[ynw].nextsector;
-//}
+    return wall[ynw].nextsector;
+}
 
 
 //// in-struct -. array transfer (only resetstat==0); list construction

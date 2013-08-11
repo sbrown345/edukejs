@@ -770,47 +770,48 @@ function A_AddToDeleteQueue(/*int32_t */i: number): void
 //    }
 //}
 
-//LUNATIC_EXTERN int32_t G_ToggleWallInterpolation(int32_t w, int32_t doset)
-//{
-//    if (doset)
-//    {
-//        return G_SetInterpolation(&wall[w].x)
-//            || G_SetInterpolation(&wall[w].y);
-//    }
-//    else
-//    {
-//        G_StopInterpolation(&wall[w].x);
-//        G_StopInterpolation(&wall[w].y);
-//        return 0;
-//    }
-//}
+function/* int32_t */G_ToggleWallInterpolation(/*int32_t */w: number, /*int32_t */doset: number)
+{
+    todoThrow();return -9999999999999999999999999;
+    //if (doset)
+    //{
+    //    return G_SetInterpolation(&wall[w].x)
+    //        || G_SetInterpolation(&wall[w].y);
+    //}
+    //else
+    //{
+    //    G_StopInterpolation(&wall[w].x);
+    //    G_StopInterpolation(&wall[w].y);
+    //    return 0;
+    //}
+}
 
-//static void Sect_ToggleInterpolation(int32_t sectnum, int32_t doset)
-//{
-//    int32_t k, j = sector[sectnum].wallptr, endwall = j+sector[sectnum].wallnum;
+function Sect_ToggleInterpolation(/*int32_t*/ sectnum: number, /*int32_t */doset: number): void
+{
+    var /*int32_t */k: number, j = sector[sectnum].wallptr, endwall = j+sector[sectnum].wallnum;
 
-//    for (; j<endwall; j++)
-//    {
-//        G_ToggleWallInterpolation(j, doset);
+    for (; j<endwall; j++)
+    {
+        G_ToggleWallInterpolation(j, doset);
 
-//        k = wall[j].nextwall;
-//        if (k >= 0)
-//        {
-//            G_ToggleWallInterpolation(k, doset);
-//            G_ToggleWallInterpolation(wall[k].point2, doset);
-//        }
-//    }
-//}
+        k = wall[j].nextwall;
+        if (k >= 0)
+        {
+            G_ToggleWallInterpolation(k, doset);
+            G_ToggleWallInterpolation(wall[k].point2, doset);
+        }
+    }
+}
 
-//void Sect_SetInterpolation(int32_t sectnum)
-//{
-//    Sect_ToggleInterpolation(sectnum, 1);
-//}
+function Sect_SetInterpolation(/*int32_t*/ sectnum: number): void
+{
+    Sect_ToggleInterpolation(sectnum, 1);
+}
 
-//void Sect_ClearInterpolation(int32_t sectnum)
-//{
-//    Sect_ToggleInterpolation(sectnum, 0);
-//}
+function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
+{
+    Sect_ToggleInterpolation(sectnum, 0);
+}
 
 //static int32_t move_rotfixed_sprite(int32_t j, int32_t pivotspr, int32_t daang)
 //{

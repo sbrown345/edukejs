@@ -130,7 +130,7 @@ var YAX_FLOOR = 1;  // don't change!
 //# ifdef NEW_MAP_FORMAT
 //#  define YAX_MAXBUNCHES 512
 //#  define YAX_BIT__COMPAT 1024
-//#  define YAX_NEXTWALLBIT__COMPAT(Cf) (1<<(10+Cf))
+function YAX_NEXTWALLBIT__COMPAT(Cf: number): number {return 1<<(10+Cf);}
 //#  define YAX_NEXTWALLBITS__COMPAT (YAX_NEXTWALLBIT__COMPAT(0)|YAX_NEXTWALLBIT__COMPAT(1))
 //# else
 var YAX_MAXBUNCHES = 256;

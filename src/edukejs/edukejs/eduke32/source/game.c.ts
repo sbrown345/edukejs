@@ -6793,7 +6793,7 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
                     if (tempwallptr > 2047)
                     {
                         Bsprintf_nowarn(tempbuf,"Too many moving sectors at (%d,%d).\n",TrackerCast(wall[s].x),TrackerCast(wall[s].y));
-                        G_GameExit(tempbuf);
+                        G_GameExit(tempbuf.toString());
                     }
                 }
 

@@ -143,6 +143,7 @@
     <Content Include="libs\webgl-debug.js" />
     <Content Include="libs\WebGL.d.ts" />
     <Content Include="log.aspx" />
+    <Content Include="test.ts" />
     <Content Include="tests\assert.tests.js" />
     <Content Include="tests\index.htm" />
     <Content Include="tests\libs\qunit.js" />

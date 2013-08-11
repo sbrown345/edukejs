@@ -29,56 +29,56 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //#include "common_game.h"
 //#include "input.h"
 
-//// PRIMITIVE
+// PRIMITIVE
 
-//static int32_t g_haltSoundHack = 0;
+var /*int32_t */g_haltSoundHack = 0;
 
-//// this function activates a sector's MUSICANDSFX sprite
-//int32_t A_CallSound(int32_t sn,int32_t whatsprite)
-//{
-//    int32_t i;
+// this function activates a sector's MUSICANDSFX sprite
+function /*int32_t */A_CallSound(/*int32_t */sn: number,/*int32_t */whatsprite: number)
+{
+    var /*int32_t */i: number;
 
-//    if (g_haltSoundHack)
-//    {
-//        g_haltSoundHack = 0;
-//        return -1;
-//    }
+    if (g_haltSoundHack)
+    {
+        g_haltSoundHack = 0;
+        return -1;
+    }
 
-//    for (SPRITES_OF_SECT(sn, i))
-//    {
-//        if (PN == MUSICANDSFX && (unsigned)SLT < 1000)  // XXX: in other places, 999
-//        {
-//            if (whatsprite == -1) whatsprite = i;
+    for (SPRITES_OF_SECT(sn, i))
+    {
+        if (sprite[i].picnum == MUSICANDSFX && (unsigned)SLT < 1000)  // XXX: in other places, 999
+        {
+            if (whatsprite == -1) whatsprite = i;
 
-//            if (T1 == 0)
-//            {
-//                if ((g_sounds[SLT].m&16) == 0)
-//                {
-//                    if (SLT)
-//                    {
-//                        A_PlaySound(SLT,whatsprite);
-//                        if (SHT && SLT != SHT && SHT < MAXSOUNDS)
-//                            S_StopEnvSound(SHT,T6);
-//                        T6 = whatsprite;
-//                    }
+            if (T1 == 0)
+            {
+                if ((g_sounds[SLT].m&16) == 0)
+                {
+                    if (SLT)
+                    {
+                        A_PlaySound(SLT,whatsprite);
+                        if (SHT && SLT != SHT && SHT < MAXSOUNDS)
+                            S_StopEnvSound(SHT,T6);
+                        T6 = whatsprite;
+                    }
 
-//                    if ((sector[SECT].lotag&0xff) != ST_22_SPLITTING_DOOR)
-//                        T1 = 1;
-//                }
-//            }
-//            else if (SHT < MAXSOUNDS)
-//            {
-//                if (SHT) A_PlaySound(SHT,whatsprite);
-//                if ((g_sounds[SLT].m&1) || (SHT && SHT != SLT))
-//                    S_StopEnvSound(SLT,T6);
-//                T6 = whatsprite;
-//                T1 = 0;
-//            }
-//            return SLT;
-//        }
-//    }
-//    return -1;
-//}
+                    if ((sector[SECT].lotag&0xff) != ST_22_SPLITTING_DOOR)
+                        T1 = 1;
+                }
+            }
+            else if (SHT < MAXSOUNDS)
+            {
+                if (SHT) A_PlaySound(SHT,whatsprite);
+                if ((g_sounds[SLT].m&1) || (SHT && SHT != SLT))
+                    S_StopEnvSound(SLT,T6);
+                T6 = whatsprite;
+                T1 = 0;
+            }
+            return SLT;
+        }
+    }
+    return -1;
+}
 
 //int32_t G_CheckActivatorMotion(int32_t lotag)
 //{
@@ -362,7 +362,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //        else if (OW >= 0 && dist(&sprite[g_player[screenpeek].ps.i],&sprite[i]) < 8192)
 //        {
 //            if (waloff[TILE_VIEWSCR] == 0)
-//                allocatepermanenttile(TILE_VIEWSCR,tilesizx[PN],tilesizy[PN]);
+//                allocatepermanenttile(TILE_VIEWSCR,tilesizx[sprite[i].picnum],tilesizy[sprite[i].picnum]);
 //            else walock[TILE_VIEWSCR] = 255;
 //            G_SetupCamTile(OW, TILE_VIEWSCR);
 //#ifdef POLYMER
@@ -632,7 +632,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //        i = headspritesect[sn];
 //        while (i >= 0)
 //        {
-//            if (PN==SECTOREFFECTOR && SLT == SE_17_WARP_ELEVATOR) break;
+//            if (sprite[i].picnum==SECTOREFFECTOR && SLT == SE_17_WARP_ELEVATOR) break;
 //            i = nextspritesect[i];
 //        }
 
@@ -973,7 +973,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //    while (i >= 0)
 //    {
 //        nexti = nextspritestat[i];
-//        if ((SLT == low) && (PN == RESPAWN))
+//        if ((SLT == low) && (sprite[i].picnum == RESPAWN))
 //        {
 //            if (A_CheckEnemyTile(SHT) && ud.monsters_off) break;
 
@@ -1087,7 +1087,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //    int32_t i = headspritestat[STAT_STANDABLE];
 //    while (i >= 0)
 //    {
-//        if (PN == MASTERSWITCH && SLT == low && SP == 0)
+//        if (sprite[i].picnum == MASTERSWITCH && SLT == low && SP == 0)
 //            SP = 1;
 //        i = nextspritestat[i];
 //    }
@@ -1269,7 +1269,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 
 //        if (lotag == SLT)
 //        {
-//            int32_t switchpicnum=PN; // put it in a variable so later switches don't trigger on the result of changes
+//            int32_t switchpicnum=sprite[i].picnum; // put it in a variable so later switches don't trigger on the result of changes
 //            if ((switchpicnum >= MULTISWITCH) && (switchpicnum <=MULTISWITCH+3))
 //            {
 //                sprite[i].picnum++;
@@ -1282,7 +1282,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //            case DIPSWITCH__STATIC:
 //            case TECHSWITCH__STATIC:
 //            case ALIENSWITCH__STATIC:
-//                if (switchissprite == 1 && w == i) PN++;
+//                if (switchissprite == 1 && w == i) sprite[i].picnum++;
 //                else if (SHT == 0) correctdips++;
 //                numdips++;
 //                break;
@@ -1312,7 +1312,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //                case TECHSWITCH__STATIC:
 //                case DIPSWITCH__STATIC:
 //                case ALIENSWITCH__STATIC:
-//                    if (switchissprite == 1 && w == i) PN--;
+//                    if (switchissprite == 1 && w == i) sprite[i].picnum--;
 //                    else if (SHT == 1) correctdips++;
 //                    numdips++;
 //                    break;
@@ -1589,7 +1589,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 
 //    while (i >= 0)
 //    {
-//        if (PN == ACTIVATOR)
+//        if (sprite[i].picnum == ACTIVATOR)
 //        {
 //            G_OperateActivators(SLT,-1);
 //            didit = 1;
@@ -1911,7 +1911,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //            i = headspritesect[sn];
 //            while (i >= 0)
 //            {
-//                if (PN == SECTOREFFECTOR && SLT == SE_12_LIGHT_SWITCH)
+//                if (sprite[i].picnum == SECTOREFFECTOR && SLT == SE_12_LIGHT_SWITCH)
 //                {
 //                    j = headspritestat[STAT_EFFECTOR];
 //                    while (j >= 0)
@@ -1956,7 +1956,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //        return;
 //    }
 
-////    int32_t switchpicnum = PN;
+////    int32_t switchpicnum = sprite[i].picnum;
 
 //    i &= (MAXSPRITES-1);
 
@@ -1964,13 +1964,13 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //        if (SpriteProjectile[sn].workslike & PROJECTILE_RPG)
 //            rpg = 1;
 ///*
-//    switchpicnum = PN;
-//    if (PN > WATERFOUNTAIN && PN < WATERFOUNTAIN+3)
+//    switchpicnum = sprite[i].picnum;
+//    if (sprite[i].picnum > WATERFOUNTAIN && sprite[i].picnum < WATERFOUNTAIN+3)
 //    {
 //        switchpicnum = WATERFOUNTAIN;
 //    }
 //*/
-//    switch (DYNAMICTILEMAP(PN))
+//    switch (DYNAMICTILEMAP(sprite[i].picnum))
 //    {
 //    case OCEANSPRITE1__STATIC:
 //    case OCEANSPRITE2__STATIC:
@@ -2056,8 +2056,8 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //                sprite[j].pal = 8;
 //            }
 
-//            if (PN == CACTUS)
-//                PN = CACTUSBROKE;
+//            if (sprite[i].picnum == CACTUS)
+//                sprite[i].picnum = CACTUSBROKE;
 //            CS &= ~257;
 //            //       else A_DeleteSprite(i);
 //            break;
@@ -2074,7 +2074,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 
 
 //    case FANSPRITE__STATIC:
-//        PN = FANSPRITEBROKE;
+//        sprite[i].picnum = FANSPRITEBROKE;
 //        CS &= (65535-257);
 //        if (sector[SECT].floorpicnum == FANSHADOW)
 //            sector[SECT].floorpicnum = FANSHADOWBROKE;
@@ -2088,7 +2088,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //        //    case WATERFOUNTAIN+1:
 //        //    case WATERFOUNTAIN+2:
 //        //    case __STATIC:
-//        PN = WATERFOUNTAINBROKE;
+//        sprite[i].picnum = WATERFOUNTAINBROKE;
 //        A_Spawn(i,TOILETWATER);
 //        break;
 //    case SATELITE__STATIC:
@@ -2132,14 +2132,14 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //    case VASE__STATIC:
 //    case STATUEFLASH__STATIC:
 //    case STATUE__STATIC:
-//        if (PN == BOTTLE10)
+//        if (sprite[i].picnum == BOTTLE10)
 //            A_SpawnMultiple(i, MONEY, 4+(krand()&3));
-//        else if (PN == STATUE || PN == STATUEFLASH)
+//        else if (sprite[i].picnum == STATUE || sprite[i].picnum == STATUEFLASH)
 //        {
 //            A_SpawnRandomGlass(i,-1,40);
 //            A_PlaySound(GLASS_HEAVYBREAK,i);
 //        }
-//        else if (PN == VASE)
+//        else if (sprite[i].picnum == VASE)
 //            A_SpawnWallGlass(i,-1,40);
 
 //        A_PlaySound(GLASS_BREAKING,i);
@@ -2148,7 +2148,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //        A_DeleteSprite(i);
 //        break;
 //    case FETUS__STATIC:
-//        PN = FETUSBROKE;
+//        sprite[i].picnum = FETUSBROKE;
 //        A_PlaySound(GLASS_BREAKING,i);
 //        A_SpawnWallGlass(i,-1,10);
 //        break;
@@ -2166,7 +2166,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //        A_DeleteSprite(i);
 //        break;
 //    case HYDROPLANT__STATIC:
-//        PN = BROKEHYDROPLANT;
+//        sprite[i].picnum = BROKEHYDROPLANT;
 //        A_PlaySound(GLASS_BREAKING,i);
 //        A_SpawnWallGlass(i,-1,10);
 //        break;
@@ -2186,7 +2186,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //        break;
 
 //    case TOILET__STATIC:
-//        PN = TOILETBROKE;
+//        sprite[i].picnum = TOILETBROKE;
 //        CS |= (krand()&1)<<2;
 //        CS &= ~257;
 //        A_Spawn(i,TOILETWATER);
@@ -2194,7 +2194,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //        break;
 
 //    case STALL__STATIC:
-//        PN = STALLBROKE;
+//        sprite[i].picnum = STALLBROKE;
 //        CS |= (krand()&1)<<2;
 //        CS &= ~257;
 //        A_Spawn(i,TOILETWATER);
@@ -2202,7 +2202,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //        break;
 
 //    case HYDRENT__STATIC:
-//        PN = BROKEFIREHYDRENT;
+//        sprite[i].picnum = BROKEFIREHYDRENT;
 //        A_Spawn(i,TOILETWATER);
 
 //        //            for(k=0;k<5;k++)
@@ -2214,24 +2214,24 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //        break;
 
 //    case GRATE1__STATIC:
-//        PN = BGRATE1;
+//        sprite[i].picnum = BGRATE1;
 //        CS &= (65535-256-1);
 //        A_PlaySound(VENT_BUST,i);
 //        break;
 
 //    case CIRCLEPANNEL__STATIC:
-//        PN = CIRCLEPANNELBROKE;
+//        sprite[i].picnum = CIRCLEPANNELBROKE;
 //        CS &= (65535-256-1);
 //        A_PlaySound(VENT_BUST,i);
 //        break;
 //    case PANNEL1__STATIC:
 //    case PANNEL2__STATIC:
-//        PN = BPANNEL1;
+//        sprite[i].picnum = BPANNEL1;
 //        CS &= (65535-256-1);
 //        A_PlaySound(VENT_BUST,i);
 //        break;
 //    case PANNEL3__STATIC:
-//        PN = BPANNEL3;
+//        sprite[i].picnum = BPANNEL3;
 //        CS &= (65535-256-1);
 //        A_PlaySound(VENT_BUST,i);
 //        break;
@@ -2241,25 +2241,25 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //    case PIPE4__STATIC:
 //    case PIPE5__STATIC:
 //    case PIPE6__STATIC:
-//        switch (DYNAMICTILEMAP(PN))
+//        switch (DYNAMICTILEMAP(sprite[i].picnum))
 //        {
 //        case PIPE1__STATIC:
-//            PN=PIPE1B;
+//            sprite[i].picnum=PIPE1B;
 //            break;
 //        case PIPE2__STATIC:
-//            PN=PIPE2B;
+//            sprite[i].picnum=PIPE2B;
 //            break;
 //        case PIPE3__STATIC:
-//            PN=PIPE3B;
+//            sprite[i].picnum=PIPE3B;
 //            break;
 //        case PIPE4__STATIC:
-//            PN=PIPE4B;
+//            sprite[i].picnum=PIPE4B;
 //            break;
 //        case PIPE5__STATIC:
-//            PN=PIPE5B;
+//            sprite[i].picnum=PIPE5B;
 //            break;
 //        case PIPE6__STATIC:
-//            PN=PIPE6B;
+//            sprite[i].picnum=PIPE6B;
 //            break;
 //        }
 
@@ -2303,7 +2303,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //        break;
 //    case CHAIR1__STATIC:
 //    case CHAIR2__STATIC:
-//        PN = BROKENCHAIR;
+//        sprite[i].picnum = BROKENCHAIR;
 //        CS = 0;
 //        break;
 //    case CHAIR3__STATIC:
@@ -2333,9 +2333,9 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //            {
 //                if (sprite[sn].picnum == RPG) sprite[sn].extra <<= 1;
 
-//                if ((PN != DRONE) && (PN != ROTATEGUN) && (PN != COMMANDER) && (PN < GREENSLIME || PN > GREENSLIME+7))
+//                if ((sprite[i].picnum != DRONE) && (sprite[i].picnum != ROTATEGUN) && (sprite[i].picnum != COMMANDER) && (sprite[i].picnum < GREENSLIME || sprite[i].picnum > GREENSLIME+7))
 //                    if (sprite[sn].picnum != FREEZEBLAST)
-//                        if (!A_CheckSpriteTileFlags(PN, SPRITE_BADGUY))
+//                        if (!A_CheckSpriteTileFlags(sprite[i].picnum, SPRITE_BADGUY))
 //                        {
 //                            j = A_Spawn(sn,JIBS6);
 //                            if (sprite[sn].pal == 6)
@@ -2348,7 +2348,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 
 //                j = sprite[sn].owner;
 
-//                if (j >= 0 && sprite[j].picnum == APLAYER && PN != ROTATEGUN && PN != DRONE)
+//                if (j >= 0 && sprite[j].picnum == APLAYER && sprite[i].picnum != ROTATEGUN && sprite[i].picnum != DRONE)
 //                    if (g_player[sprite[j].yvel].ps.curr_weapon == SHOTGUN_WEAPON)
 //                    {
 //                        A_Shoot(i,BLOODSPLAT3);
@@ -2357,7 +2357,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //                        A_Shoot(i,BLOODSPLAT4);
 //                    }
 
-//                if (PN != TANK && PN != BOSS1 && PN != BOSS4 && PN != BOSS2 && PN != BOSS3 && PN != RECON && PN != ROTATEGUN)
+//                if (sprite[i].picnum != TANK && sprite[i].picnum != BOSS1 && sprite[i].picnum != BOSS4 && sprite[i].picnum != BOSS2 && sprite[i].picnum != BOSS3 && sprite[i].picnum != RECON && sprite[i].picnum != ROTATEGUN)
 //                {
 //                    if (sprite[i].extra > 0)
 //                    {
@@ -2376,13 +2376,13 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //                    changespritestat(i, STAT_ACTOR);
 //                    actor[i].timetosleep = SLEEPTIME;
 //                }
-//                if ((sprite[i].xrepeat < 24 || PN == SHARK) && sprite[sn].picnum == SHRINKSPARK)
+//                if ((sprite[i].xrepeat < 24 || sprite[i].picnum == SHARK) && sprite[sn].picnum == SHRINKSPARK)
 //                    return;
 //            }
 
 //            if (sprite[i].statnum != STAT_ZOMBIEACTOR)
 //            {
-//                if (sprite[sn].picnum == FREEZEBLAST && ((PN == APLAYER && sprite[i].pal == 1) || (g_freezerSelfDamage == 0 && sprite[sn].owner == i)))
+//                if (sprite[sn].picnum == FREEZEBLAST && ((sprite[i].picnum == APLAYER && sprite[i].pal == 1) || (g_freezerSelfDamage == 0 && sprite[sn].owner == i)))
 //                    return;
 
 //                actor[i].picnum = sprite[sn].picnum;
@@ -2957,7 +2957,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 
 //    if (A_CheckEnemySprite(&sprite[i]))
 //        zoff = (42<<8);
-//    else if (PN == APLAYER)
+//    else if (sprite[i].picnum == APLAYER)
 //        zoff = (39<<8);
 
 //    SZ -= zoff;
@@ -3243,7 +3243,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //                // Try to find a camera sprite for the viewscreen.
 //                for (SPRITES_OF(STAT_ACTOR, i))
 //                {
-//                    if (PN == CAMERA1 && SP == 0 && sprite[neartagsprite].hitag == SLT)
+//                    if (sprite[i].picnum == CAMERA1 && SP == 0 && sprite[neartagsprite].hitag == SLT)
 //                    {
 //                        SP = 1; //Using this camera
 //                        A_PlaySound(MONITOR_ACTIVE,p.i);
@@ -3317,7 +3317,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //            i = headspritesect[neartagsector];
 //            while (i >= 0)
 //            {
-//                if (PN == ACTIVATOR || PN == MASTERSWITCH)
+//                if (sprite[i].picnum == ACTIVATOR || sprite[i].picnum == MASTERSWITCH)
 //                    return;
 //                i = nextspritesect[i];
 //            }
@@ -3330,7 +3330,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //                i = headspritesect[sprite[p.i].sectnum];
 //                while (i >= 0)
 //                {
-//                    if (PN == ACTIVATOR || PN == MASTERSWITCH) return;
+//                    if (sprite[i].picnum == ACTIVATOR || sprite[i].picnum == MASTERSWITCH) return;
 //                    i = nextspritesect[i];
 //                }
 //                G_OperateSectors(sprite[p.i].sectnum,p.i);
