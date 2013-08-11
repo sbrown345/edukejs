@@ -337,7 +337,7 @@ g_sounds = newStructArray(sound_t, MAXSOUNDS);
 //    Bmemcpy(mylightptr, &sprite[i], sizeof(vec3_t));
 //    mylightptr->range = SHT;
 //    copy_prlight_colors(mylightptr, i);
-//    mylightptr->angle = SA;
+//    mylightptr->angle = sprite[i].ang;
 //    mylightptr->horiz = SH;
 //    mylightptr->minshade = sprite[i].xoffset;
 //    mylightptr->maxshade = sprite[i].yoffset;
@@ -10748,9 +10748,9 @@ g_sounds = newStructArray(sound_t, MAXSOUNDS);
 //                                    spritelightptr[i]->faderadius = (int16_t)(spritelightptr[i]->radius * 0.75f);
 //                                    spritelightptr[i]->flags.invalidate = 1;
 //                                }
-//                                if (SA != spritelightptr[i]->angle)
+//                                if (sprite[i].ang != spritelightptr[i]->angle)
 //                                {
-//                                    spritelightptr[i]->angle = SA;
+//                                    spritelightptr[i]->angle = sprite[i].ang;
 //                                    spritelightptr[i]->flags.invalidate = 1;
 //                                }
 //                                if (SH != spritelightptr[i]->horiz)

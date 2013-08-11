@@ -12961,7 +12961,7 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
 //    {
 //        for (j=n-1; j >= 0 ; j--)
 //        {
-//            a = SA-256+(krand()&511)+1024;
+//            a = sprite[i].ang-256+(krand()&511)+1024;
 //            A_InsertSprite(sprite[i].sectnum,sprite[i].x,sprite[i].y,sprite[i].z,GLASSPIECES+(j%3),-32,36,36,a,32+(krand()&63),1024-(krand()&1023),i,5);
 //        }
 //        return;
@@ -12992,7 +12992,7 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
 //            z = sector[sect].floorz-(krand()&(klabs(sector[sect].ceilingz-sector[sect].floorz)));
 //            if (z < -(32<<8) || z > (32<<8))
 //                z = sprite[i].z-(32<<8)+(krand()&((64<<8)-1));
-//            a = SA-1024;
+//            a = sprite[i].ang-1024;
 //            A_InsertSprite(sprite[i].sectnum,x1,y1,z,GLASSPIECES+(j%3),-32,36,36,a,32+(krand()&63),-(krand()&1023),i,5);
 //        }
 //    }
@@ -13066,7 +13066,7 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
 //        z = sector[sect].floorz-(krand()&(klabs(sector[sect].ceilingz-sector[sect].floorz)));
 //        if (z < -(32<<8) || z > (32<<8))
 //            z = sprite[i].z-(32<<8)+(krand()&((64<<8)-1));
-//        a = SA-1024;
+//        a = sprite[i].ang-1024;
 //        k = A_InsertSprite(sprite[i].sectnum,x1,y1,z,GLASSPIECES+(j%3),-32,36,36,a,32+(krand()&63),-(krand()&2047),i,5);
 //        sprite[k].pal = krand()&7;
 //    }

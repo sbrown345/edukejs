@@ -137,7 +137,7 @@ function initcache(/*intptr_t */dacachestart: number, dacachesize: number): void
 //    //   initcache((FP_OFF(pic)+15)&0xfffffff0,(cachesize-((-FP_OFF(pic))&15))&0xfffffff0);
 //    //
 //    // I'm not sure why it's necessary, but the code is making sure the
-//    // cache starts on a multiple of 16 bytes?  -- SA
+//    // cache starts on a multiple of 16 bytes?  -- sprite[i].ang
 
 ////printf("BEFORE: cachestart = %x, cachesize = %d\n", dacachestart, dacachesize);
 //    cachestart = (/*(uintptr_t)*/dacachestart+15)&~/*(uintptr_t)*/0xf;

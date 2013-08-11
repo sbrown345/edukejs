@@ -904,7 +904,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //                if (SLT == SE_15_SLIDING_DOOR)
 //                {
 //                    sector[SECT].lotag ^= 0x8000; // Toggle the open or close
-//                    SA += 1024;
+//                    sprite[i].ang += 1024;
 //                    if (T5) A_CallSound(SECT,i);
 //                    A_CallSound(SECT,i);
 //                    if (sector[SECT].lotag&0x8000) T5 = 1;
@@ -1677,7 +1677,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //                    }
 
 //                    CS |= 18+128;
-//                    SA = getangle(wal.x-wall[wal.point2].x,
+//                    sprite[i].ang = getangle(wal.x-wall[wal.point2].x,
 //                                  wal.y-wall[wal.point2].y)-512;
 
 //                    A_PlaySound(SOMETHINGHITFORCE,i);
@@ -1985,8 +1985,8 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //        if (sprite[sn].picnum == QUEBALL || sprite[sn].picnum == STRIPEBALL)
 //        {
 //            sprite[sn].xvel = (sprite[i].xvel>>1)+(sprite[i].xvel>>2);
-//            sprite[sn].ang -= (SA<<1)+1024;
-//            SA = getangle(sprite[i].x-sprite[sn].x,sprite[i].y-sprite[sn].y)-512;
+//            sprite[sn].ang -= (sprite[i].ang<<1)+1024;
+//            sprite[i].ang = getangle(sprite[i].x-sprite[sn].x,sprite[i].y-sprite[sn].y)-512;
 //            if (S_CheckSoundPlaying(i,POOLBALLHIT) < 2)
 //                A_PlaySound(POOLBALLHIT,i);
 //        }
@@ -2143,7 +2143,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //            A_SpawnWallGlass(i,-1,40);
 
 //        A_PlaySound(GLASS_BREAKING,i);
-//        SA = krand()&2047;
+//        sprite[i].ang = krand()&2047;
 //        A_SpawnWallGlass(i,-1,8);
 //        A_DeleteSprite(i);
 //        break;
@@ -2156,7 +2156,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //        for (j=48; j>0; j--)
 //        {
 //            A_Shoot(i,BLOODSPLAT1);
-//            SA += 333;
+//            sprite[i].ang += 333;
 //        }
 //        A_PlaySound(GLASS_HEAVYBREAK,i);
 //        A_PlaySound(SQUISHED,i);
@@ -2276,21 +2276,21 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //    case SPACEMARINE__STATIC:
 //        sprite[i].extra -= sprite[sn].extra;
 //        if (sprite[i].extra > 0) break;
-//        SA = krand()&2047;
+//        sprite[i].ang = krand()&2047;
 //        A_Shoot(i,BLOODSPLAT1);
-//        SA = krand()&2047;
+//        sprite[i].ang = krand()&2047;
 //        A_Shoot(i,BLOODSPLAT2);
-//        SA = krand()&2047;
+//        sprite[i].ang = krand()&2047;
 //        A_Shoot(i,BLOODSPLAT3);
-//        SA = krand()&2047;
+//        sprite[i].ang = krand()&2047;
 //        A_Shoot(i,BLOODSPLAT4);
-//        SA = krand()&2047;
+//        sprite[i].ang = krand()&2047;
 //        A_Shoot(i,BLOODSPLAT1);
-//        SA = krand()&2047;
+//        sprite[i].ang = krand()&2047;
 //        A_Shoot(i,BLOODSPLAT2);
-//        SA = krand()&2047;
+//        sprite[i].ang = krand()&2047;
 //        A_Shoot(i,BLOODSPLAT3);
-//        SA = krand()&2047;
+//        sprite[i].ang = krand()&2047;
 //        A_Shoot(i,BLOODSPLAT4);
 //        A_DoGuts(i,JIBS1,1);
 //        A_DoGuts(i,JIBS2,2);
@@ -2362,7 +2362,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //                    if (sprite[i].extra > 0)
 //                    {
 //                        if ((sprite[i].cstat&48) == 0)
-//                            SA = (sprite[sn].ang+1024)&2047;
+//                            sprite[i].ang = (sprite[sn].ang+1024)&2047;
 //                        sprite[i].xvel = -(sprite[sn].extra<<2);
 //                        j = SECT;
 //                        pushmove((vec3_t *)&sprite[i],&j,128L,(4L<<8),(4L<<8),CLIPMASK0);
@@ -2962,8 +2962,8 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 
 //    sprite[i].z -= zoff;
 //    hitscan((const vec3_t *)&sprite[i],SECT,
-//            sintable[(SA+512)&2047],
-//            sintable[SA&2047],
+//            sintable[(sprite[i].ang+512)&2047],
+//            sintable[sprite[i].ang&2047],
 //            0,&hit,CLIPMASK1);
 //    sprite[i].z += zoff;
 

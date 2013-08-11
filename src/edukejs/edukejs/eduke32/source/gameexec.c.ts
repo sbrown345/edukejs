@@ -233,8 +233,8 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 
 //        bx = sprite[i].x-mx;
 //        by = sprite[i].y-my;
-//        bxvect = sintable[(SA+512)&2047];
-//        byvect = sintable[SA&2047];
+//        bxvect = sintable[(sprite[i].ang+512)&2047];
+//        byvect = sintable[sprite[i].ang&2047];
 
 //        if ((mxvect * bx) + (myvect * by) >= 0 && (bxvect * bx) + (byvect * by) < 0)
 //        {

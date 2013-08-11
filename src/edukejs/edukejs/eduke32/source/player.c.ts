@@ -181,8 +181,8 @@ var g_numSelfObituaries = 0;
 
 //    sprite[i].z -= zoff;
 //    hitscan((const vec3_t *)&sprite[i],SECT,
-//            sintable[(SA+512)&2047],
-//            sintable[SA&2047],
+//            sintable[(sprite[i].ang+512)&2047],
+//            sintable[sprite[i].ang&2047],
 //            0,&hit,CLIPMASK1);
 //    sprite[i].z += zoff;
 
@@ -4230,7 +4230,7 @@ var WeaponPickupSprites = new Int16Array([ KNEE__STATIC, FIRSTGUNSPRITE__STATIC,
 //    p->pos.x = sprite[i].x;
 //    p->pos.y = sprite[i].y;
 //    p->pos.z = sprite[i].z;
-//    p->ang =  SA;
+//    p->ang =  sprite[i].ang;
 //    p->vel.x = p->vel.y = sprite[p->i].xvel = 0;
 //    p->look_ang = 0;
 //    p->rotscrnang = 0;
