@@ -43,41 +43,41 @@ function /*int32_t */A_CallSound(/*int32_t */sn: number,/*int32_t */whatsprite: 
         g_haltSoundHack = 0;
         return -1;
     }
+    todoThrow();return 99999999999999999999999999999999;
+    //for (SPRITES_OF_SECT(sn, i))
+    //{
+    //    if (sprite[i].picnum == MUSICANDSFX && (unsigned)sprite[i].lotag < 1000)  // XXX: in other places, 999
+    //    {
+    //        if (whatsprite == -1) whatsprite = i;
 
-    for (SPRITES_OF_SECT(sn, i))
-    {
-        if (sprite[i].picnum == MUSICANDSFX && (unsigned)sprite[i].lotag < 1000)  // XXX: in other places, 999
-        {
-            if (whatsprite == -1) whatsprite = i;
+    //        if (actor[i].t_data[0] == 0)
+    //        {
+    //            if ((g_sounds[sprite[i].lotag].m&16) == 0)
+    //            {
+    //                if (sprite[i].lotag)
+    //                {
+    //                    A_PlaySound(sprite[i].lotag,whatsprite);
+    //                    if (sprite[i].hitag && sprite[i].lotag != sprite[i].hitag && sprite[i].hitag < MAXSOUNDS)
+    //                        S_StopEnvSound(sprite[i].hitag,actor[i].t_data[5]);
+    //                    actor[i].t_data[5] = whatsprite;
+    //                }
 
-            if (actor[i].t_data[0] == 0)
-            {
-                if ((g_sounds[sprite[i].lotag].m&16) == 0)
-                {
-                    if (sprite[i].lotag)
-                    {
-                        A_PlaySound(sprite[i].lotag,whatsprite);
-                        if (sprite[i].hitag && sprite[i].lotag != sprite[i].hitag && sprite[i].hitag < MAXSOUNDS)
-                            S_StopEnvSound(sprite[i].hitag,actor[i].t_data[5]);
-                        actor[i].t_data[5] = whatsprite;
-                    }
-
-                    if ((sector[sprite[i].sectnum].lotag&0xff) != ST_22_SPLITTING_DOOR)
-                        actor[i].t_data[0] = 1;
-                }
-            }
-            else if (sprite[i].hitag < MAXSOUNDS)
-            {
-                if (sprite[i].hitag) A_PlaySound(sprite[i].hitag,whatsprite);
-                if ((g_sounds[sprite[i].lotag].m&1) || (sprite[i].hitag && sprite[i].hitag != sprite[i].lotag))
-                    S_StopEnvSound(sprite[i].lotag,actor[i].t_data[5]);
-                actor[i].t_data[5] = whatsprite;
-                actor[i].t_data[0] = 0;
-            }
-            return sprite[i].lotag;
-        }
-    }
-    return -1;
+    //                if ((sector[sprite[i].sectnum].lotag&0xff) != ST_22_SPLITTING_DOOR)
+    //                    actor[i].t_data[0] = 1;
+    //            }
+    //        }
+    //        else if (sprite[i].hitag < MAXSOUNDS)
+    //        {
+    //            if (sprite[i].hitag) A_PlaySound(sprite[i].hitag,whatsprite);
+    //            if ((g_sounds[sprite[i].lotag].m&1) || (sprite[i].hitag && sprite[i].hitag != sprite[i].lotag))
+    //                S_StopEnvSound(sprite[i].lotag,actor[i].t_data[5]);
+    //            actor[i].t_data[5] = whatsprite;
+    //            actor[i].t_data[0] = 0;
+    //        }
+    //        return sprite[i].lotag;
+    //    }
+    //}
+    //return -1;
 }
 
 //int32_t G_CheckActivatorMotion(int32_t lotag)

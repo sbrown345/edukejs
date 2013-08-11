@@ -772,7 +772,7 @@ function Bstrncpyz(dst: Uint8Array, src: string, n: number): Uint8Array
 //#endif // __cplusplus
 
 var OSD_Printf_nowarn = console.log.bind(console);////#define OSD_Printf_nowarn(fmt, ...) NOWARN(OSD_Printf, fmt, ## __VA_ARGS__)
-//#define Bsprintf_nowarn(fmt, ...) NOWARN(Bsprintf, fmt, ## __VA_ARGS__)
+var Bsprintf_nowarn = printf; //(fmt, ...) NOWARN(Bsprintf, fmt, ## __VA_ARGS__)
 //#define Bsprintf_nowarn_return(x, fmt, ...) NOWARN_RETURN(Bsprintf, x, fmt, ## __VA_ARGS__)
 var initprintf_nowarn = console.log.bind(console);
 //#define message_nowarn(fmt, ...) NOWARN(message, fmt, ## __VA_ARGS__)

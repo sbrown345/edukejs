@@ -130,13 +130,13 @@ var YAX_FLOOR = 1;  // don't change!
 //# ifdef NEW_MAP_FORMAT
 //#  define YAX_MAXBUNCHES 512
 //#  define YAX_BIT__COMPAT 1024
-function YAX_NEXTWALLBIT__COMPAT(Cf: number): number {return 1<<(10+Cf);}
+//function YAX_NEXTWALLBIT__COMPAT(Cf: number): number {return 1<<(10+Cf);}
 //#  define YAX_NEXTWALLBITS__COMPAT (YAX_NEXTWALLBIT__COMPAT(0)|YAX_NEXTWALLBIT__COMPAT(1))
 //# else
 var YAX_MAXBUNCHES = 256;
 var YAX_BIT = 1024;
 //   // "has next wall when constrained"-bit (1<<10: ceiling, 1<<11: floor)
-//#  define YAX_NEXTWALLBIT(Cf) (1<<(10+Cf))
+function YAX_NEXTWALLBIT(Cf: number): number {return 1<<(10+Cf);}
 //#  define YAX_NEXTWALLBITS (YAX_NEXTWALLBIT(0)|YAX_NEXTWALLBIT(1))
 //# endif
 

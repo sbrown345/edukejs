@@ -6852,7 +6852,7 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
                     {
                         Bsprintf_nowarn(tempbuf,"Subway found no zero'd sectors with locators\nat (%d,%d).\n",
                             TrackerCast(sp.x),TrackerCast(sp.y));
-                        G_GameExit(tempbuf);
+                        G_GameExit(tempbuf.toString());
                     }
 
                     sp.owner = -1;
@@ -11600,7 +11600,7 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
     i = 1;
     for (j=numplayers; j<ud.multimode; j++)
     {
-        Bsprintf(g_player[j].user_name,"PLAYER %d",j+1);
+        Bsprintf(g_player[j].user_name.toUint8Array(),"PLAYER %d",j+1);
         g_player[j].ps.team = g_player[j].pteam = i;
         g_player[j].ps.weaponswitch = 3;
         g_player[j].ps.auto_aim = 0;

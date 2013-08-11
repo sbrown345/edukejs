@@ -764,6 +764,7 @@ function S_PlaySound(/*int32_t*/ num: number): number
 
 function A_PlaySound(/*uint32_t */num: number, /*int32_t */i: number): number
 {
+    todoUnimportant("A_PlaySound");return -1;
     //if ((unsigned)num > (unsigned)g_maxSoundPos) return -1;
 
     //return i < 0 ? S_PlaySound(num) : 
