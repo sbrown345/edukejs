@@ -46,18 +46,18 @@ function /*int32_t */A_CallSound(/*int32_t */sn: number,/*int32_t */whatsprite: 
 
     for (SPRITES_OF_SECT(sn, i))
     {
-        if (sprite[i].picnum == MUSICANDSFX && (unsigned)SLT < 1000)  // XXX: in other places, 999
+        if (sprite[i].picnum == MUSICANDSFX && (unsigned)sprite[i].lotag < 1000)  // XXX: in other places, 999
         {
             if (whatsprite == -1) whatsprite = i;
 
             if (T1 == 0)
             {
-                if ((g_sounds[SLT].m&16) == 0)
+                if ((g_sounds[sprite[i].lotag].m&16) == 0)
                 {
-                    if (SLT)
+                    if (sprite[i].lotag)
                     {
-                        A_PlaySound(SLT,whatsprite);
-                        if (SHT && SLT != SHT && SHT < MAXSOUNDS)
+                        A_PlaySound(sprite[i].lotag,whatsprite);
+                        if (SHT && sprite[i].lotag != SHT && SHT < MAXSOUNDS)
                             S_StopEnvSound(SHT,T6);
                         T6 = whatsprite;
                     }
@@ -69,12 +69,12 @@ function /*int32_t */A_CallSound(/*int32_t */sn: number,/*int32_t */whatsprite: 
             else if (SHT < MAXSOUNDS)
             {
                 if (SHT) A_PlaySound(SHT,whatsprite);
-                if ((g_sounds[SLT].m&1) || (SHT && SHT != SLT))
-                    S_StopEnvSound(SLT,T6);
+                if ((g_sounds[sprite[i].lotag].m&1) || (SHT && SHT != sprite[i].lotag))
+                    S_StopEnvSound(sprite[i].lotag,T6);
                 T6 = whatsprite;
                 T1 = 0;
             }
-            return SLT;
+            return sprite[i].lotag;
         }
     }
     return -1;
@@ -471,7 +471,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 
 //    while (i >= 0)
 //    {
-//        if (SLT == SE_17_WARP_ELEVATOR && SHT == sprite[s].hitag)
+//        if (sprite[i].lotag == SE_17_WARP_ELEVATOR && SHT == sprite[s].hitag)
 //            if ((klabs(sector[sn].floorz-actor[s].t_data[2]) > sprite[i].yvel) ||
 //                (sector[SECT].hitag == (sector[sn].hitag-d)))
 //                break;
@@ -486,7 +486,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //    i = headspritestat[STAT_EFFECTOR];
 //    do
 //    {
-//        if (SLT == SE_17_WARP_ELEVATOR && SHT == sprite[s].hitag)
+//        if (sprite[i].lotag == SE_17_WARP_ELEVATOR && SHT == sprite[s].hitag)
 //            T1 = T2 = d; //Make all check warp
 //        i = nextspritestat[i];
 //    }
@@ -632,7 +632,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //        i = headspritesect[sn];
 //        while (i >= 0)
 //        {
-//            if (sprite[i].picnum==SECTOREFFECTOR && SLT == SE_17_WARP_ELEVATOR) break;
+//            if (sprite[i].picnum==SECTOREFFECTOR && sprite[i].lotag == SE_17_WARP_ELEVATOR) break;
 //            i = nextspritesect[i];
 //        }
 
@@ -703,7 +703,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //        i = headspritestat[STAT_EFFECTOR]; //Effectors
 //        while (i >= 0)
 //        {
-//            if ((SLT == SE_22_TEETH_DOOR) &&
+//            if ((sprite[i].lotag == SE_22_TEETH_DOOR) &&
 //                    (SHT == sptr.hitag))
 //            {
 //                sector[SECT].extra = -sector[SECT].extra;
@@ -754,7 +754,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //            i = headspritesect[sn];
 //            while (i >= 0)
 //            {
-//                if (sprite[i].statnum == STAT_EFFECTOR && SLT==SE_9_DOWN_OPEN_DOOR_LIGHTS)
+//                if (sprite[i].statnum == STAT_EFFECTOR && sprite[i].lotag==SE_9_DOWN_OPEN_DOOR_LIGHTS)
 //                {
 //                    j = sprite[i].z;
 //                    break;
@@ -847,7 +847,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //        i = headspritestat[STAT_EFFECTOR];
 //        while (i >= 0)
 //        {
-//            if (SLT == SE_11_SWINGING_DOOR && SECT == sn && !T5)
+//            if (sprite[i].lotag == SE_11_SWINGING_DOOR && SECT == sn && !T5)
 //            {
 //                j = i;
 //                break;
@@ -866,7 +866,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //            i = headspritestat[STAT_EFFECTOR];
 //            while (i >= 0)
 //            {
-//                if (l == (sector[SECT].lotag&0x8000) && SLT == SE_11_SWINGING_DOOR && sprite[j].hitag == SHT && !T5)
+//                if (l == (sector[SECT].lotag&0x8000) && sprite[i].lotag == SE_11_SWINGING_DOOR && sprite[j].hitag == SHT && !T5)
 //                {
 //                    if (sector[SECT].lotag&0x8000) sector[SECT].lotag &= 0x7fff;
 //                    else sector[SECT].lotag |= 0x8000;
@@ -901,7 +901,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //        {
 //            if (SHT==sprite[j].hitag)
 //            {
-//                if (SLT == SE_15_SLIDING_DOOR)
+//                if (sprite[i].lotag == SE_15_SLIDING_DOOR)
 //                {
 //                    sector[SECT].lotag ^= 0x8000; // Toggle the open or close
 //                    sprite[i].ang += 1024;
@@ -973,7 +973,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //    while (i >= 0)
 //    {
 //        nexti = nextspritestat[i];
-//        if ((SLT == low) && (sprite[i].picnum == RESPAWN))
+//        if ((sprite[i].lotag == low) && (sprite[i].picnum == RESPAWN))
 //        {
 //            if (A_CheckEnemyTile(SHT) && ud.monsters_off) break;
 
@@ -1087,7 +1087,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //    int32_t i = headspritestat[STAT_STANDABLE];
 //    while (i >= 0)
 //    {
-//        if (sprite[i].picnum == MASTERSWITCH && SLT == low && sprite[i].yvel == 0)
+//        if (sprite[i].picnum == MASTERSWITCH && sprite[i].lotag == low && sprite[i].yvel == 0)
 //            sprite[i].yvel = 1;
 //        i = nextspritestat[i];
 //    }
@@ -1267,7 +1267,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //    while (i >= 0)
 //    {
 
-//        if (lotag == SLT)
+//        if (lotag == sprite[i].lotag)
 //        {
 //            int32_t switchpicnum=sprite[i].picnum; // put it in a variable so later switches don't trigger on the result of changes
 //            if ((switchpicnum >= MULTISWITCH) && (switchpicnum <=MULTISWITCH+3))
@@ -1591,7 +1591,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //    {
 //        if (sprite[i].picnum == ACTIVATOR)
 //        {
-//            G_OperateActivators(SLT,-1);
+//            G_OperateActivators(sprite[i].lotag,-1);
 //            didit = 1;
 //            //            return;
 //        }
@@ -1707,7 +1707,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //                        wall[wal.nextwall].cstat = 0;
 
 //                    i = A_InsertSprite(sn,pos.x,pos.y,pos.z,SECTOREFFECTOR,0,0,0,g_player[0].ps.ang,0,0,spr,3);
-//                    SLT = 128;
+//                    sprite[i].lotag = 128;
 //                    T2 = 5;
 //                    T3 = dawallnum;
 //                    A_PlaySound(GLASS_BREAKING,i);
@@ -1859,7 +1859,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //        i= headspritestat[STAT_EFFECTOR];
 //        while (i >= 0)
 //        {
-//            if (SHT == wall[dawallnum].lotag && SLT == SE_3_RANDOM_LIGHTS_AFTER_SHOT_OUT)
+//            if (SHT == wall[dawallnum].lotag && sprite[i].lotag == SE_3_RANDOM_LIGHTS_AFTER_SHOT_OUT)
 //            {
 //                T3 = j;
 //                T4 = darkestwall;
@@ -1911,7 +1911,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //            i = headspritesect[sn];
 //            while (i >= 0)
 //            {
-//                if (sprite[i].picnum == SECTOREFFECTOR && SLT == SE_12_LIGHT_SWITCH)
+//                if (sprite[i].picnum == SECTOREFFECTOR && sprite[i].lotag == SE_12_LIGHT_SWITCH)
 //                {
 //                    j = headspritestat[STAT_EFFECTOR];
 //                    while (j >= 0)
@@ -1930,7 +1930,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //        j = krand()&1;
 //        while (i >= 0)
 //        {
-//            if (SHT == (sector[sn].hitag) && SLT == SE_3_RANDOM_LIGHTS_AFTER_SHOT_OUT)
+//            if (SHT == (sector[sn].hitag) && sprite[i].lotag == SE_3_RANDOM_LIGHTS_AFTER_SHOT_OUT)
 //            {
 //                T3 = j;
 //                T5 = 1;
@@ -2271,7 +2271,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //    case LUKE__STATIC:
 //    case INDY__STATIC:
 //    case JURYGUY__STATIC:
-//        A_PlaySound(SLT,i);
+//        A_PlaySound(sprite[i].lotag,i);
 //        A_Spawn(i,SHT);
 //    case SPACEMARINE__STATIC:
 //        sprite[i].extra -= sprite[sn].extra;
@@ -2324,7 +2324,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //    case PLAYERONWATER__STATIC:
 //        i = sprite[i].owner;
 //    default:
-//        if ((sprite[i].cstat&16) && SHT == 0 && SLT == 0 && sprite[i].statnum == STAT_DEFAULT)
+//        if ((sprite[i].cstat&16) && SHT == 0 && sprite[i].lotag == 0 && sprite[i].statnum == STAT_DEFAULT)
 //            break;
 
 //        if ((sprite[sn].picnum == FREEZEBLAST || sprite[sn].owner != i) && sprite[i].statnum != STAT_PROJECTILE)
@@ -2417,7 +2417,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 
 //    while (i >= 0)
 //    {
-//        if (SLT == SE_17_WARP_ELEVATOR && sprite[i].shade > 16)
+//        if (sprite[i].lotag == SE_17_WARP_ELEVATOR && sprite[i].shade > 16)
 //        {
 //            j = headspritestat[STAT_EFFECTOR];
 //            while (j >= 0)
@@ -3243,7 +3243,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //                // Try to find a camera sprite for the viewscreen.
 //                for (SPRITES_OF(STAT_ACTOR, i))
 //                {
-//                    if (sprite[i].picnum == CAMERA1 && sprite[i].yvel == 0 && sprite[neartagsprite].hitag == SLT)
+//                    if (sprite[i].picnum == CAMERA1 && sprite[i].yvel == 0 && sprite[neartagsprite].hitag == sprite[i].lotag)
 //                    {
 //                        sprite[i].yvel = 1; //Using this camera
 //                        A_PlaySound(MONITOR_ACTIVE,p.i);

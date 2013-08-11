@@ -3684,7 +3684,7 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 
 //    for (SPRITES_OF(STAT_LOCATOR, i))
 //    {
-//        if ((sn == -1 || sn == SECT) && n == SLT)
+//        if ((sn == -1 || sn == SECT) && n == sprite[i].lotag)
 //            return i;
 //    }
 
