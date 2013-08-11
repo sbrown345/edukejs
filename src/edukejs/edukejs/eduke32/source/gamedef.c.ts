@@ -2126,7 +2126,7 @@ function C_Include(confile: string) :  void
     var temp_ScriptLineNumber: number;
     var temp_ifelse_check: number;
     var j: number;
-    var origtptr, origtptrIxd, mptr; //char *
+    var origtptr, origtptrIxd: number, mptr: Ptr; //char *
     var parentScriptFileName = "";//[255];
     var fp: number;
 

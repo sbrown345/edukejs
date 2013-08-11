@@ -102,7 +102,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //    const int16_t staticval;
 //};
 
-var g_dynSoundList =
+var g_dynSoundList: dynitem[] =
 [
 new dynitem( "KICK_HIT", DVPTR(KICK_HIT), KICK_HIT__STATIC ),
 new dynitem( "PISTOL_RICOCHET", DVPTR(PISTOL_RICOCHET), PISTOL_RICOCHET__STATIC ),

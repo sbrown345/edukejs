@@ -13628,7 +13628,7 @@ function updatesector(/*int32_t*/ x: number, /*int32_t */y: number, /*int16_t **
 // new: if *sectnum >= MAXSECTORS, *sectnum-=MAXSECTORS is considered instead
 //      as starting sector and the 'initial' z check is skipped
 //      (not initial anymore because it follows the sector updating due to TROR)
-function updatesectorz(/*int32_t*/ x, /*int32_t*/ y, /*int32_t*/ z, /*int16_t **/sectnum: R<number>): void
+function updatesectorz(/*int32_t*/ x: number, /*int32_t*/ y: number, /*int32_t*/ z: number, /*int16_t **/sectnum: R<number>): void
 {
     var /*int32_t*/ i: number;
 
@@ -13801,7 +13801,7 @@ function updatesectorz(/*int32_t*/ x, /*int32_t*/ y, /*int32_t*/ z, /*int16_t **
 //    return ((uint32_t)randomseed)>>16;
 }
 
-function mul32(n, m) {
+function mul32(n: number, m: number): number {
     n = n | 0;
     m = m | 0;
     var nlo = n & 0xffff;
@@ -17155,14 +17155,14 @@ function getzsofslopeptr(/*const sectortype **/sec: sectortype, /*int32_t */dax:
 function hash_init(t:hashtable_t) : void
 {
     hash_free(t);
-    t.items = new Array(t.size);
+    t.items = new Array<hashitem_t>(t.size);
 }
 
 function hash_free(t: hashtable_t) : void
 {
-   var  cur, tmp; //hashitem_t *
-   var  i; //int32_t
-   var  num; //int32_t
+   var  cur: hashitem_t, tmp: hashitem_t; //hashitem_t *
+   var  i: number; //int32_t
+   var  num: number; //int32_t
 
     if (!t.items)
         return;

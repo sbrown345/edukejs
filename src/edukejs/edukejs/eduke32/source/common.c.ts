@@ -606,7 +606,7 @@ function G_MultiPskyInit(): void
  * @param {numrows} numrows
  * @return {undefined}
  */
-function COMMON_clearbackground(numcols, numrows)
+function COMMON_clearbackground(numcols: number, numrows: number)
 {
     assert.argumentsAre.int32(arguments);
 	todo();

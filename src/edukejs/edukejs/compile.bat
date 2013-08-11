@@ -1,1 +1,1 @@
-tsc2 -target ES5 --debug --comments --sourcemap --out eduke.js eduke32\source\game.c.ts
+tsc2 -target ES5 --debug --noImplicitAny --comments --sourcemap --out eduke.js eduke32\source\game.c.ts

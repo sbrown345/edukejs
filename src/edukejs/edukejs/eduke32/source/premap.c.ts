@@ -1088,17 +1088,17 @@ function G_SetupBackdrop(/*int16_t */sky: number): void
 // position and should not diverge from it due to roundoff error in the future.
 // Has to be after the spawning stuff.
 function G_SetupRotfixedSprites(): void
-{todoThrow();
-//    int32_t i;
-
+{
+    var i: number;
+    throw "todo";
 //    for (i=headspritestat[STAT_EFFECTOR]; i>=0; i=nextspritestat[i])
 //    {
 //        if (FIXSPR_SELOTAGP(sprite[i].lotag))
 //        {
-//#ifdef YAX_ENABLE
-//            int32_t firstrun = 1;
-//#endif
-//            int32_t j = headspritesect[sprite[i].sectnum];
+////#ifdef YAX_ENABLE
+//            var firstrun = 1;
+////#endif
+//            var /*int32_t */j = headspritesect[sprite[i].sectnum];
 //            while (j>=0)
 //            {
 //                // TRIPBOMB uses t_data[7] for its own purposes. Wouldn't be
@@ -1107,7 +1107,7 @@ function G_SetupRotfixedSprites(): void
 //                    ((sprite[j].statnum==STAT_ACTOR || sprite[j].statnum==STAT_ZOMBIEACTOR) &&
 //                     A_CheckSpriteTileFlags(sprite[j].picnum, SPRITE_ROTFIXED)))
 //                {
-//                    int32_t pivot = i;
+//                    var /*int32_t */pivot = i;
 
 //                    if (sprite[i].lotag==0)
 //                        pivot = sprite[i].owner;
@@ -1121,7 +1121,7 @@ function G_SetupRotfixedSprites(): void
 //                }
 
 //                j = nextspritesect[j];
-//#ifdef YAX_ENABLE
+////#ifdef YAX_ENABLE
 //                if (j<0 && firstrun)
 //                    if (sprite[i].lotag==SE_6_SUBWAY || sprite[i].lotag==SE_14_SUBWAY_CAR)
 //                    {
@@ -1130,7 +1130,7 @@ function G_SetupRotfixedSprites(): void
 //                        if (j >= 0)
 //                            j = headspritesect[j];
 //                    }
-//#endif
+////#endif
 //            }
 //        }
 //    }

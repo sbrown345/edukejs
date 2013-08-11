@@ -11111,10 +11111,10 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
 //EDUKE32_STATIC_ASSERT(sizeof(actor_t)==128);
 //EDUKE32_STATIC_ASSERT(sizeof(DukePlayer_t)%4 == 0);
 
-/*int32_t*/ function app_main(/*int32_t*/ argc, /*const char ***/argv)
+/*int32_t*/ function app_main(/*int32_t*/ argc: number, /*const char ***/argv: string[])
 {
     path("app_main");
-    var i = 0, j;
+    var i = 0, j: number;
 //    char cwd[BMAX_PATH];
 ////    extern char datetimestring[];
 //#ifdef NEDMALLOC

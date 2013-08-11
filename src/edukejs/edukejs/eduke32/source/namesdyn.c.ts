@@ -46,11 +46,17 @@ function DVPTR(v: number): number {
 
 var DynamicTileMap = new Int16Array(MAXTILES);
 
-function dynitem(str: string, dynvalptr: number, staticval: number)
-{
-    this.str = str;
-    this.dynvalptr = dynvalptr;
-    this.staticval = staticval;
+class dynitem {
+    str: string;
+    dynvalptr: number;
+    staticval: number;
+
+    constructor (str: string, dynvalptr: number, staticval: number)
+    {
+        this.str = str;
+        this.dynvalptr = dynvalptr;
+        this.staticval = staticval;
+    }
 };
 
 var g_dynTileList =
