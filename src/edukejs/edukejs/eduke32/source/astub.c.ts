@@ -10720,7 +10720,7 @@ g_sounds = newStructArray(sound_t, MAXSOUNDS);
 //#pragma pack(push,1)
 //                                _prlight mylight;
 //#pragma pack(pop)
-//                                mylight.radius = (256-(SS+128))<<1;
+//                                mylight.radius = (256-(sprite[i].shade+128))<<1;
 //                                mylight.faderadius = (int16_t)(mylight.radius * 0.75f);
 //                                mylight.tilenum = OW;
 //                                mylight.publicflags.emitshadow = !(CS & 64);
@@ -10742,9 +10742,9 @@ g_sounds = newStructArray(sound_t, MAXSOUNDS);
 //                                }
 //                                if (check_prlight_colors(i))
 //                                    copy_prlight_colors(spritelightptr[i], i);
-//                                if (((256-(SS+128))<<1) != spritelightptr[i]->radius)
+//                                if (((256-(sprite[i].shade+128))<<1) != spritelightptr[i]->radius)
 //                                {
-//                                    spritelightptr[i]->radius = (256-(SS+128))<<1;
+//                                    spritelightptr[i]->radius = (256-(sprite[i].shade+128))<<1;
 //                                    spritelightptr[i]->faderadius = (int16_t)(spritelightptr[i]->radius * 0.75f);
 //                                    spritelightptr[i]->flags.invalidate = 1;
 //                                }

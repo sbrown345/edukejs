@@ -2417,7 +2417,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 
 //    while (i >= 0)
 //    {
-//        if (SLT == SE_17_WARP_ELEVATOR && SS > 16)
+//        if (SLT == SE_17_WARP_ELEVATOR && sprite[i].shade > 16)
 //        {
 //            j = headspritestat[STAT_EFFECTOR];
 //            while (j >= 0)

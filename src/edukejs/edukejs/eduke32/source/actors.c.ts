@@ -7911,7 +7911,7 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //                    mylight.color[0] = sprite[i].xvel;
 //                    mylight.color[1] = sprite[i].yvel;
 //                    mylight.color[2] = sprite[i].zvel;
-//                    mylight.radius = (256-(SS+128))<<1;
+//                    mylight.radius = (256-(sprite[i].shade+128))<<1;
 //                    mylight.faderadius = (int16_t)(mylight.radius * 0.75f);
 //                    mylight.angle = SA;
 //                    mylight.horiz = SH;
@@ -7962,9 +7962,9 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //                    actor[i].lightptr.color[1] = sprite[i].yvel;
 //                    actor[i].lightptr.color[2] = sprite[i].zvel;
 //                }
-//                if (((256-(SS+128))<<1) != actor[i].lightptr.radius)
+//                if (((256-(sprite[i].shade+128))<<1) != actor[i].lightptr.radius)
 //                {
-//                    actor[i].lightptr.radius = (256-(SS+128))<<1;
+//                    actor[i].lightptr.radius = (256-(sprite[i].shade+128))<<1;
 //                    actor[i].lightptr.faderadius = (int16_t)(actor[i].lightptr.radius * 0.75f);
 //                    actor[i].lightptr.flags.invalidate = 1;
 //                }
