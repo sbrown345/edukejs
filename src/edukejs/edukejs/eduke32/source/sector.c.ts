@@ -1676,7 +1676,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //                        else i = A_InsertSprite(sn,pos.x,pos.y,pos.z,FORCERIPPLE,-127,32,32,0,0,0,spr,5);
 //                    }
 
-//                    CS |= 18+128;
+//                    sprite[i].cstat |= 18+128;
 //                    sprite[i].ang = getangle(wal.x-wall[wal.point2].x,
 //                                  wal.y-wall[wal.point2].y)-512;
 
@@ -2013,7 +2013,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //        if (rpg == 1)
 //            if (T1 == 0)
 //            {
-//                CS &= ~257;
+//                sprite[i].cstat &= ~257;
 //                T1 = 1;
 //                A_Spawn(i,BURNING);
 //            }
@@ -2026,7 +2026,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //        case HEAVYHBOMB__STATIC:
 //            if (T1 == 0)
 //            {
-//                CS &= ~257;
+//                sprite[i].cstat &= ~257;
 //                T1 = 1;
 //                A_Spawn(i,BURNING);
 //            }
@@ -2058,7 +2058,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 
 //            if (sprite[i].picnum == CACTUS)
 //                sprite[i].picnum = CACTUSBROKE;
-//            CS &= ~257;
+//            sprite[i].cstat &= ~257;
 //            //       else A_DeleteSprite(i);
 //            break;
 //        }
@@ -2075,7 +2075,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 
 //    case FANSPRITE__STATIC:
 //        sprite[i].picnum = FANSPRITEBROKE;
-//        CS &= (65535-257);
+//        sprite[i].cstat &= (65535-257);
 //        if (sector[SECT].floorpicnum == FANSHADOW)
 //            sector[SECT].floorpicnum = FANSHADOWBROKE;
 
@@ -2187,16 +2187,16 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 
 //    case TOILET__STATIC:
 //        sprite[i].picnum = TOILETBROKE;
-//        CS |= (krand()&1)<<2;
-//        CS &= ~257;
+//        sprite[i].cstat |= (krand()&1)<<2;
+//        sprite[i].cstat &= ~257;
 //        A_Spawn(i,TOILETWATER);
 //        A_PlaySound(GLASS_BREAKING,i);
 //        break;
 
 //    case STALL__STATIC:
 //        sprite[i].picnum = STALLBROKE;
-//        CS |= (krand()&1)<<2;
-//        CS &= ~257;
+//        sprite[i].cstat |= (krand()&1)<<2;
+//        sprite[i].cstat &= ~257;
 //        A_Spawn(i,TOILETWATER);
 //        A_PlaySound(GLASS_HEAVYBREAK,i);
 //        break;
@@ -2215,24 +2215,24 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 
 //    case GRATE1__STATIC:
 //        sprite[i].picnum = BGRATE1;
-//        CS &= (65535-256-1);
+//        sprite[i].cstat &= (65535-256-1);
 //        A_PlaySound(VENT_BUST,i);
 //        break;
 
 //    case CIRCLEPANNEL__STATIC:
 //        sprite[i].picnum = CIRCLEPANNELBROKE;
-//        CS &= (65535-256-1);
+//        sprite[i].cstat &= (65535-256-1);
 //        A_PlaySound(VENT_BUST,i);
 //        break;
 //    case PANNEL1__STATIC:
 //    case PANNEL2__STATIC:
 //        sprite[i].picnum = BPANNEL1;
-//        CS &= (65535-256-1);
+//        sprite[i].cstat &= (65535-256-1);
 //        A_PlaySound(VENT_BUST,i);
 //        break;
 //    case PANNEL3__STATIC:
 //        sprite[i].picnum = BPANNEL3;
-//        CS &= (65535-256-1);
+//        sprite[i].cstat &= (65535-256-1);
 //        A_PlaySound(VENT_BUST,i);
 //        break;
 //    case PIPE1__STATIC:
@@ -2304,7 +2304,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //    case CHAIR1__STATIC:
 //    case CHAIR2__STATIC:
 //        sprite[i].picnum = BROKENCHAIR;
-//        CS = 0;
+//        sprite[i].cstat = 0;
 //        break;
 //    case CHAIR3__STATIC:
 //    case MOVIECAMERA__STATIC:

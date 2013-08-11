@@ -1018,7 +1018,7 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //                            break;
 
 //                        case RECON__STATIC:
-//                            CS |= 257;
+//                            sprite[i].cstat |= 257;
 //                            // fall-through
 //                        default:
 //                            if (A_CheckSpriteFlags(i, SPRITE_USEACTIVATOR) && sector[sprite[i].sectnum].lotag & 16384)
@@ -1197,7 +1197,7 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //        {
 //            if (ps.on_ground && ps.on_warping_sector == 1 && psectnum >= 0 && sector[psectnum].lotag == ST_1_ABOVE_WATER)
 //            {
-//                CS = 257;
+//                sprite[i].cstat = 257;
 //                sprite[i].z = sector[SECT].ceilingz+(27<<8);
 //                sprite[i].ang = ps.ang;
 //                if (T1 == 8)
@@ -1207,7 +1207,7 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //            else
 //            {
 //                if (sector[SECT].lotag != ST_2_UNDERWATER) sprite[i].z = sector[SECT].floorz;
-//                CS = 32768;
+//                sprite[i].cstat = 32768;
 //            }
 //        }
 
@@ -7851,11 +7851,11 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //                    mylight.maxshade = sprite[i].yoffset;
 //                    mylight.tilenum = 0;
 //                    mylight.publicflags.emitshadow = 0;
-//                    mylight.publicflags.negative = !!(CS & 128);
+//                    mylight.publicflags.negative = !!(sprite[i].cstat & 128);
 
-//                    if (CS & 2)
+//                    if (sprite[i].cstat & 2)
 //                    {
-//                        if (CS & 512)
+//                        if (sprite[i].cstat & 512)
 //                            mylight.priority = PR_LIGHT_PRIO_LOW;
 //                        else
 //                            mylight.priority = PR_LIGHT_PRIO_HIGH;
@@ -7888,8 +7888,8 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //                    actor[i].lightptr.color[1] = sprite[i].yvel;
 //                    actor[i].lightptr.color[2] = sprite[i].zvel;
 //                }
-//                if ((int)!!(CS & 128) != actor[i].lightptr.publicflags.negative) {
-//                    actor[i].lightptr.publicflags.negative = !!(CS & 128);
+//                if ((int)!!(sprite[i].cstat & 128) != actor[i].lightptr.publicflags.negative) {
+//                    actor[i].lightptr.publicflags.negative = !!(sprite[i].cstat & 128);
 //                }
 //            }
 //            break;
@@ -7918,12 +7918,12 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //                    mylight.minshade = sprite[i].xoffset;
 //                    mylight.maxshade = sprite[i].yoffset;
 //                    mylight.tilenum = actor[i].picnum;
-//                    mylight.publicflags.emitshadow = !(CS & 64);
-//                    mylight.publicflags.negative = !!(CS & 128);
+//                    mylight.publicflags.emitshadow = !(sprite[i].cstat & 64);
+//                    mylight.publicflags.negative = !!(sprite[i].cstat & 128);
 
-//                    if (CS & 2)
+//                    if (sprite[i].cstat & 2)
 //                    {
-//                        if (CS & 512)
+//                        if (sprite[i].cstat & 512)
 //                            mylight.priority = PR_LIGHT_PRIO_LOW;
 //                        else
 //                            mylight.priority = PR_LIGHT_PRIO_HIGH;
@@ -7978,11 +7978,11 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //                    actor[i].lightptr.horiz = SH;
 //                    actor[i].lightptr.flags.invalidate = 1;
 //                }
-//                if ((int)!(CS & 64) != actor[i].lightptr.publicflags.emitshadow) {
-//                    actor[i].lightptr.publicflags.emitshadow = !(CS & 64);
+//                if ((int)!(sprite[i].cstat & 64) != actor[i].lightptr.publicflags.emitshadow) {
+//                    actor[i].lightptr.publicflags.emitshadow = !(sprite[i].cstat & 64);
 //                }
-//                if ((int)!!(CS & 128) != actor[i].lightptr.publicflags.negative) {
-//                    actor[i].lightptr.publicflags.negative = !!(CS & 128);
+//                if ((int)!!(sprite[i].cstat & 128) != actor[i].lightptr.publicflags.negative) {
+//                    actor[i].lightptr.publicflags.negative = !!(sprite[i].cstat & 128);
 //                }
 //                actor[i].lightptr.tilenum = actor[i].picnum;
 //            }

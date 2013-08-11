@@ -345,9 +345,9 @@ g_sounds = newStructArray(sound_t, MAXSOUNDS);
 //    // overridden for spot lights
 //    mylightptr->radius = mylightptr->faderadius = mylightptr->tilenum = 0;
 
-//    if (CS & 2)
+//    if (sprite[i].cstat & 2)
 //    {
-//        if (CS & 512)
+//        if (sprite[i].cstat & 512)
 //            mylightptr->priority = PR_LIGHT_PRIO_LOW;
 //        else
 //            mylightptr->priority = PR_LIGHT_PRIO_HIGH;
@@ -355,7 +355,7 @@ g_sounds = newStructArray(sound_t, MAXSOUNDS);
 //    else
 //        mylightptr->priority = PR_LIGHT_PRIO_MAX;
 
-//    mylightptr->publicflags.negative = !!(CS & 128);
+//    mylightptr->publicflags.negative = !!(sprite[i].cstat & 128);
 
 //    spritelightid[i] = polymer_addlight(mylightptr);
 //    if (spritelightid[i] >= 0)
@@ -10704,9 +10704,9 @@ g_sounds = newStructArray(sound_t, MAXSOUNDS);
 //                                }
 //                                if (check_prlight_colors(i))
 //                                    copy_prlight_colors(spritelightptr[i], i);
-//                                if ((int)!!(CS & 128) != spritelightptr[i]->publicflags.negative)
+//                                if ((int)!!(sprite[i].cstat & 128) != spritelightptr[i]->publicflags.negative)
 //                                {
-//                                    spritelightptr[i]->publicflags.negative = !!(CS & 128);
+//                                    spritelightptr[i]->publicflags.negative = !!(sprite[i].cstat & 128);
 //                                }
 //                            }
 //                        }
@@ -10723,7 +10723,7 @@ g_sounds = newStructArray(sound_t, MAXSOUNDS);
 //                                mylight.radius = (256-(sprite[i].shade+128))<<1;
 //                                mylight.faderadius = (int16_t)(mylight.radius * 0.75f);
 //                                mylight.tilenum = sprite[i].owner;
-//                                mylight.publicflags.emitshadow = !(CS & 64);
+//                                mylight.publicflags.emitshadow = !(sprite[i].cstat & 64);
 
 //                                addprlight_common1(&mylight, i);
 //                            }
@@ -10758,13 +10758,13 @@ g_sounds = newStructArray(sound_t, MAXSOUNDS);
 //                                    spritelightptr[i]->horiz = SH;
 //                                    spritelightptr[i]->flags.invalidate = 1;
 //                                }
-//                                if ((int)!(CS & 64) != spritelightptr[i]->publicflags.emitshadow)
+//                                if ((int)!(sprite[i].cstat & 64) != spritelightptr[i]->publicflags.emitshadow)
 //                                {
-//                                    spritelightptr[i]->publicflags.emitshadow = !(CS & 64);
+//                                    spritelightptr[i]->publicflags.emitshadow = !(sprite[i].cstat & 64);
 //                                }
-//                                if ((int)!!(CS & 128) != spritelightptr[i]->publicflags.negative)
+//                                if ((int)!!(sprite[i].cstat & 128) != spritelightptr[i]->publicflags.negative)
 //                                {
-//                                    spritelightptr[i]->publicflags.negative = !!(CS & 128);
+//                                    spritelightptr[i]->publicflags.negative = !!(sprite[i].cstat & 128);
 //                                }
 //                                spritelightptr[i]->tilenum = sprite[i].owner;
 //                            }
