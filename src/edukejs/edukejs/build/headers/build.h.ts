@@ -150,7 +150,7 @@ function YAX_NEXTWALLBIT(Cf: number): number {return 1<<(10+Cf);}
 //#  define YAX_NEXTWALLDEFAULT(Cf) (-1)
 //# else
 //   // More user tag hijacking: lotag/extra. :/
-function YAX_PTRNEXTWALL(Ptr, Wall: number, Cf: number): number {return (Ptr[Wall].lotag + 2*Cf);}
+function YAX_PTRNEXTWALL(Ptr:walltype[], Wall: number, Cf: number): number {return (Ptr[Wall].lotag + 2*Cf);}
 //#  define YAX_NEXTWALLDEFAULT(Cf) (((Cf)==YAX_CEILING) ? 0 : -1)
 //   extern int16_t yax_bunchnum[MAXSECTORS][2];
 //   extern int16_t yax_nextwall[MAXWALLS][2];
@@ -1022,17 +1022,17 @@ class palette_t {
         this._values = new Uint8Array([r, g, b, f]);
     }
 
-    public get r() {return this._values[0];}
-    public set r(v) {this._values[0] = v;}
+    public get r(): number {return this._values[0];}
+    public set r(v: number) {this._values[0] = v;}
      
-    public get g() {return this._values[1];}
-    public set g(v) {this._values[1] = v;}
+    public get g(): number {return this._values[1];}
+    public set g(v: number) {this._values[1] = v;}
 
-    public get b() {return this._values[2];}
-    public set b(v) {this._values[2] = v;}
+    public get b(): number {return this._values[2];}
+    public set b(v: number) {this._values[2] = v;}
 
-    public get f() {return this._values[3];}
-    public set f(v) {this._values[3] = v;}
+    public get f(): number {return this._values[3];}
+    public set f(v: number) {this._values[3] = v;}
 }
 //extern palette_t curpalette[256], curpalettefaded[256], palfadergb;
 //extern char palfadedelta;

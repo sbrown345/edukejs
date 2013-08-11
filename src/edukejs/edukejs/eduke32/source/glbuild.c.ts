@@ -12,12 +12,12 @@ declare module WebGLDebugUtils {
     function glFunctionArgsToString(fn: string, args: any[]): WebGLRenderingContext;
 }
 
-function logGLCall(functionName, args) {   
+function logGLCall(functionName: string, args: any[]): void {   
    console.error("gl." + functionName + "(" + 
       WebGLDebugUtils.glFunctionArgsToString(functionName, args) + ")");   
 } 
 
-function validateNoneOfTheArgsAreUndefined(functionName, args) {
+function validateNoneOfTheArgsAreUndefined(functionName: string, args: any[]): void {
   for (var ii = 0; ii < args.length; ++ii) {
     if (args[ii] === undefined) {
       console.error("undefined passed to gl." + functionName + "(" +
@@ -26,7 +26,7 @@ function validateNoneOfTheArgsAreUndefined(functionName, args) {
   }
 } 
 
-function logAndValidate(functionName, args) {
+function logAndValidate(functionName: string, args: any[]): void {
    logGLCall(functionName, args);
    validateNoneOfTheArgsAreUndefined (functionName, args);
 }
@@ -53,7 +53,7 @@ var GL_TEXTURE_WRAP_S = gl.TEXTURE_WRAP_S;
 var GL_TEXTURE_WRAP_T = gl.TEXTURE_WRAP_T;
 var GL_REPEAT = gl.REPEAT;
 var GL_CLAMP_TO_EDGE = gl.CLAMP_TO_EDGE;
-var GL_CLAMP = null; //off
+var GL_CLAMP: number = null; //off
 var GL_FOG = -99999; //todo!?
 var GL_UNSIGNED_BYTE = gl.UNSIGNED_BYTE;
 var GL_MAX_TEXTURE_SIZE = gl.MAX_TEXTURE_SIZE;

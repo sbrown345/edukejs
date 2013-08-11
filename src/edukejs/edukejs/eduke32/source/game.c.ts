@@ -4905,7 +4905,7 @@ function G_InitActor(/*int32_t*/ i: number, /*int32_t*/ tilenum: number, /*int32
 }
 
 function A_InsertSprite(whatsect:number,s_x:number,s_y:number,s_z:number,s_pn:number,s_s:number,
-                       s_xr:number,s_yr:number,s_a:number,s_ve:number,s_zv:number,s_ow:number,s_ss)
+                       s_xr:number,s_yr:number,s_a:number,s_ve:number,s_zv:number,s_ow:number,s_ss:number): number
 {
     assert.argumentsAre.int32(arguments);
     var p: number;

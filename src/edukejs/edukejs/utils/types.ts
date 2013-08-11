@@ -50,13 +50,13 @@ function newStructArray<T>($class: any, count: number): T[] {
     return array;
 }
 
-function clearStructArray($class, array : Array) : void {
-    for (var i = 0; i < array.length; i++) {
-        array[i] = new $class();
-    }
-}
+////function clearStructArray($class: any, array : Array) : void {
+////    for (var i = 0; i < array.length; i++) {
+////        array[i] = new $class();
+////    }
+////}
 
-function multiDimArray <T>(arrayClass, num, arrLength): T[] {
+function multiDimArray <T>(arrayClass, num: number, arrLength: number): T[] {
     var multiDimArray = new Array(num);
     for (var i = 0; i < num; i++) {
         multiDimArray[i] = new arrayClass(arrLength);

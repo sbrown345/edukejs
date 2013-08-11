@@ -59,7 +59,7 @@ var GET_STEROIDS=0,  // 0
     GET_JETPACK=4,
     GET_DUMMY1=5,  // 5
     GET_ACCESS=6,
-    GET_HEATS7,
+    GET_HEATS=7,
     GET_DUMMY2=8,
     GET_FIRSTAID=9,
     GET_BOOTS=10,  // 10
@@ -195,7 +195,7 @@ class DukePlayer_t {
     max_actors_killed:number; actors_killed:number;                                                 //uint16_t
     gotweapon:number; zoom:number;                                                                  //uint16_t
 
-    loogiex: Uint16Array/*[64]*/; loogiey: Uint16Array/*[64]*/; sb:number;s; sound_pitch:number;                                       //int16_t
+    loogiex: Uint16Array/*[64]*/; loogiey: Uint16Array/*[64]*/; sbs:number; sound_pitch:number;                                       //int16_t
 
     ang:number; oang:number; angvel:number; cursectnum:number; look_ang:number; last_extra:number; subweapon:number;                   //int16_t
     max_ammo_amount: Int16Array/*[MAX_WEAPONS]*/; ammo_amount: Int16Array/*[MAX_WEAPONS]*/; inv_amount: Int16Array/*[GET_MAX]*/;      //int16_t
@@ -350,7 +350,7 @@ class weapondata_t
     // NOTE: the member names must be identical to aplWeapon* suffixes.
     WorksLike: number;  // What the original works like
     Clip : number;  // number of items in magazine
-    Reload;  // delay to reload (include fire)
+    Reload: number;  // delay to reload (include fire)
     FireDelay: number;  // delay to fire
     TotalTime: number;  // The total time the weapon is cycling before next fire.
     HoldDelay: number;  // delay after release fire button to fire (0 for none)

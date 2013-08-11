@@ -97,7 +97,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //// custom GRP support for the startup window, file format reflects the structure below
 //#define GAMELISTFILE "games.list"
 ////        name                                     crc          size      flags                           dependency  scriptname     defname
-var internalgrpfiles =
+var internalgrpfiles: grpfile[] =
 [
 new grpfile("Duke Nukem 3D",                         DUKE13_CRC,  26524524, GAMEFLAG_DUKE,                         0, null,          null,        null ),
 new grpfile("Duke Nukem 3D (South Korean Censored)", DUKEKR_CRC,  26385383, GAMEFLAG_DUKE,                         0, null,          null,        null ),
@@ -115,8 +115,8 @@ new grpfile("NAM",                                   NAM_CRC,     43448927, GAME
 new grpfile("NAPALM",                                NAPALM_CRC,  44365728, GAMEFLAG_NAM|GAMEFLAG_NAPALM,          0, "napalm.con",  "nam.def",   null ),
 new grpfile("WWII GI",                               WW2GI_CRC,   77939508, GAMEFLAG_WW2GI|GAMEFLAG_NAM,           0, "ww2gi.con",   "ww2gi.def", null )
 ];
-var foundgrps = null;  //struct grpfile
-var listgrps = null;   //struct grpfile
+var foundgrps: grpfile = null;  //struct grpfile
+var listgrps: grpfile = null;   //struct grpfile
 
 //static void LoadList(const char * filename)
 //{
@@ -236,7 +236,7 @@ var listgrps = null;   //struct grpfile
 function LoadGameList(): void
 {
     path("LoadGameList");
-    var fg; //grpfile
+    var fg: grpfile; //grpfile
     //CACHE1D_FIND_REC *srch, *sidx;
     
     var i : number;
@@ -398,7 +398,7 @@ function ScanGroups() : number
     path("ScanGroups");
 //    CACHE1D_FIND_REC *srch, *sidx;
 //    struct grpcache *fg, *fgg;
-    var grp;
+    var grp: grpfile;
 //    char *fn;
 //    struct Bstat st;
     var BUFFER_SIZE = (1024 * 1024 * 8);

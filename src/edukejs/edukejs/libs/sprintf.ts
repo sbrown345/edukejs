@@ -117,7 +117,7 @@ var vsprintf = function (fmt, argv, _argv) {
 /**
  * helpers
  */
-function get_type(variable) {
+function get_type(variable: any) {
     return Object.prototype.toString.call(variable).slice(8, -1).toLowerCase();
 }
 

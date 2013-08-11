@@ -44,22 +44,32 @@ var NAM_CRC    = int32(0x75C1F07B);
 var NAPALM_CRC = int32(0x3DE1589A);
 var WW2GI_CRC  = int32(0x907B82BF);
 
-enum addon_t {
-    ADDON_NONE,
-    ADDON_DUKEDC,
-    ADDON_NWINTER,
-    ADDON_CARIBBEAN,
-    NUMADDONS
-};
+//enum addon_t {
+var ADDON_NONE = 0,
+    ADDON_DUKEDC = 1,
+    ADDON_NWINTER = 2,
+    ADDON_CARIBBEAN = 3,
+    NUMADDONS = 4;
 
-function grpfile(name: string = null, crcval: number = 0, size: number = 0, game: number = 0, dependency: number = 0, scriptname: string = null, defname: string = null, next: Object = null /*grpfile*/) {
-    this.crcval = crcval;
-    this.size = size;
-    this.game = game;
-    this.dependency = dependency;
-    this.scriptname = scriptname;
-    this.defname = defname;
-    this.next = next;
+class grpfile {
+    name: string;
+    crcval:number;
+    size:number;
+    game:number;
+    dependency:number;
+    scriptname: string;
+    defname: string;
+    next: grpfile;
+
+    constructor(name: string = null, crcval: number = 0, size: number = 0, game: number = 0, dependency: number = 0, scriptname: string = null, defname: string = null, next: grpfile = null /*grpfile*/) {
+        this.crcval = crcval;
+        this.size = size;
+        this.game = game;
+        this.dependency = dependency;
+        this.scriptname = scriptname;
+        this.defname = defname;
+        this.next = next;
+    }
 } //grpfile_type;
 
 //// extern struct grpfile grpfiles[NUMGRPFILES];

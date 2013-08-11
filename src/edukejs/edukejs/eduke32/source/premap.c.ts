@@ -1322,7 +1322,7 @@ function prelevel(/*char*/ g: number): void
 
     for (i = 0; i < numwalls; i++)
     {
-        var wal;
+        var wal: walltype;
         wal = wall[i];
 
         if (wal.overpicnum == MIRROR && (wal.cstat&32) != 0)

@@ -6,14 +6,14 @@ var hardcoded = {
 };
 
 // keep track of things to do
-function todo(reason?) {
+function todo(reason?: string) {
     console.log("todo", reason);
 }
 
-function todoUnimportant(reason?) {
+function todoUnimportant(reason?: string): void {
 }
 
-function todoThrow(message : string = "") {
+function todoThrow(message : string = ""): void {
     debugger;
     console.error("todo \n" + message);
     throw "!";

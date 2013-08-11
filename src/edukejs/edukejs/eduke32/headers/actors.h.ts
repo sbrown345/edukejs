@@ -195,7 +195,7 @@ class actor_t {
     flags: number; //4b                                 //int32_t 
     bpos: vec3_t; //12b                                 //vec3_t  
     floorz: number;ceilingz: number;lastvx: number;lastvy: number; //16b        //int32_t 
-    lasttransport; //4b                         //int32_t 
+    lasttransport: number; //4b                         //int32_t 
                                                 //
     picnum: number;ang: number;extra: number;owner: number; //8b                //int16_t 
     movflag: number;tempang: number;timetosleep: number; //6b           //int16_t 

@@ -1316,7 +1316,7 @@ var alpha = 0.0;
 function drawpoly(dpx: Float64Array, dpy: Float64Array, n:number, method: number): void
 {
     var ngdx = 0.0, ngdy = 0.0, ngdo = 0.0, ngux = 0.0, nguy = 0.0, nguo = 0.0;             //double 
-    var ngvx = 0.0, ngvy = 0.0, ngvo = 0.0, dp, up, vp, du0 = 0.0, du1 = 0.0, dui = 0.0, duj = 0.0;     //double 
+    var ngvx = 0.0, ngvy = 0.0, ngvo = 0.0, dp= 0.0, up= 0.0, vp= 0.0, du0 = 0.0, du1 = 0.0, dui = 0.0, duj = 0.0;     //double 
     var f = 0.0, r = 0.0, ox = 0.0, oy = 0.0, oz = 0.0, ox2 = 0.0, oy2 = 0.0, oz2 = 0.0, dd = new Float64Array(16), uu = new Float64Array(16), vv = new Float64Array(16), px = new Float64Array(16), py = new Float64Array(16), uoffs=0.0;     //double 
     var i=0, j=0, k=0, nn=0, ix0=0, ix1=0, tsizx=0, tsizy=0; //int32_t
     var xx=0, yy=0, dorot=0; //int32_t
@@ -4168,7 +4168,7 @@ function drawpoly(dpx: Float64Array, dpy: Float64Array, n:number, method: number
 //dastat&64   1:non-masked, 0:masked
 //dastat&128  1:draw all pages (permanent)
 //cx1,...     clip window (actual screen coords)
-function polymost_dorotatesprite(sx: number, sy, z: number, a: number, picnum: number,
+function polymost_dorotatesprite(sx: number, sy: number, z: number, a: number, picnum: number,
                            dashade: number, dapalnum: number, dastat: number, daalpha: number,
                            cx1: number, cy1: number, cx2: number, cy2: number,
                            uniqid: number): void
@@ -4178,7 +4178,7 @@ function polymost_dorotatesprite(sx: number, sy, z: number, a: number, picnum: n
     var n: number, nn: number, xoff: number, yoff: number, xsiz: number, ysiz: number, method: number;            //int32_t 
     var ogpicnum: number, ogshade: number, ogpal: number, ofoffset: number;               //int32_t 
     var ogchang: number, ogshang: number, ogctang: number, ogstang: number, oghalfx: number, oghoriz: number; //double
-    var ogrhalfxdown10: number, ogrhalfxdown10x; //double
+    var ogrhalfxdown10: number, ogrhalfxdown10x: number; //double
     var d: number, cosang: number, sinang: number, cosang2: number, sinang2: number, px = new Float64Array(8), py = new Float64Array(8), px2 = new Float64Array(8), py2 = new Float64Array(8);  //double
     var m = multiDimArray<Float32Array>(Float32Array, 4, 4); //float
 

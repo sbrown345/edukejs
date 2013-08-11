@@ -113,7 +113,7 @@ var NUMKEYWORDS : number;
 var g_scriptVersion = 13; // 13 = 1.3D-style CON files, 14 = 1.4/1.5 style CON files
 var g_scriptDateVersion = 99999999;  // YYYYMMDD
 //#if !defined LUNATIC
-var  g_scriptLastKeyword; // = NUMKEYWORDS-1;//g_scriptLastKeyword
+var  g_scriptLastKeyword: number; // = NUMKEYWORDS-1;//g_scriptLastKeyword
 
 var NUMKEYWDATES : number;
 //// { keyw, date } means that at the date, all keywords up to keyw inclusive are available
@@ -279,7 +279,7 @@ var LABEL_ANY    = -1,
 //#if !defined LUNATIC
 function C_GetLabelType(type: number): string
 {
-    var i;
+    var i: number;
     var x: string; //[64];
     debugger;
     var LabelTypeText =
@@ -2126,7 +2126,7 @@ function C_Include(confile: string) :  void
     var temp_ScriptLineNumber: number;
     var temp_ifelse_check: number;
     var j: number;
-    var origtptr, origtptrIxd: number, mptr: Ptr; //char *
+    var origtptr: string, origtptrIxd: number, mptr: Ptr; //char *
     var parentScriptFileName = "";//[255];
     var fp: number;
 

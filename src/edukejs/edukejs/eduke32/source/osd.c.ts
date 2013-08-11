@@ -604,7 +604,7 @@ function _internal_gettime() : number
  * @param {number} shown
  * @return {undefined}
  */
-function _internal_onshowosd(a)
+function _internal_onshowosd(a: number): void
 {
     assert.argumentsAre.int32(arguments);
     todo();

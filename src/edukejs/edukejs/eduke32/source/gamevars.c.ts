@@ -1335,7 +1335,7 @@ function Gv_AddSystemVars() : void
 //#if !defined LUNATIC
     var aszBuf =  new Uint8Array(64); // char[64]
 //#endif
-    var i;
+    var i: number;
 
     if (window.NAM)
     {

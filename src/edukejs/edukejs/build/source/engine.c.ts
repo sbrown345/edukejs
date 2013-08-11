@@ -1352,13 +1352,13 @@ var quickloadboard=0;
 //    int32_t maxdist;
 //} clipinfo_t;
 
-var numclipmaps; //static int32_t 
+var numclipmaps: number; //static int32_t 
 //static clipinfo_t clipinfo[CM_MAX];
 
 var numclipsects: number;  // number in sectq[] ////static int32_t
-var sectoidx, sectq;  // [numsectors] ////static int16_t *
+var sectoidx: Int16Array, sectq: Int16Array;  // [numsectors] ////static int16_t *
 var pictoidx = new Int16Array(MAXTILES);  // maps tile num to clipinfo[] index
-var tempictoidx; ////static int16_t *
+var tempictoidx: Int16Array; ////static int16_t *
 
 var loadsector: sectortype;//static sectortype *
 var loadwall: walltype, loadwallinv: walltype;//static walltype *
@@ -1392,7 +1392,7 @@ var loadsprite: spritetype;//static spritetype *
 function clipmapinfo_init() : void
 {
     path("clipmapinfo_init");
-    var i; // int32_t
+    var i: number; // int32_t
 
     numclipmaps = 0;
     numclipsects = 0;
@@ -7236,7 +7236,7 @@ function dorotspr_handle_bit2(sxptr: R<number>, syptr: R<number>, z: R<number> ,
         var oxdim: number = xdim;
         var _xdim: number = oxdim;  // SHADOWS global  int32_t  // do not to confuse with external xdim
 
-        var zoomsc, sx=sxptr.$, sy=syptr.$;                   //int32_t 
+        var zoomsc: number, sx=sxptr.$, sy=syptr.$;                   //int32_t 
         var ouryxaspect = yxaspect, ourxyaspect = xyaspect;   //int32_t 
 
         // screen center to s[xy], 320<<16 coords.
@@ -7311,7 +7311,7 @@ function dorotspr_handle_bit2(sxptr: R<number>, syptr: R<number>, z: R<number> ,
 // dorotatesprite (internal)
 //
 //JBF 20031206: Thanks to Ken's hunting, s/(rx1|ry1|rx2|ry2)/n\1/ in this function
-function dorotatesprite(sx: number, sy, z: number, a: number, picnum: number,
+function dorotatesprite(sx: number, sy: number, z: number, a: number, picnum: number,
                            dashade: number, dapalnum: number, dastat: number, daalpha: number,
                            cx1: number, cy1: number, cx2: number, cy2: number,
                            uniqid: number): void
@@ -7321,12 +7321,12 @@ function dorotatesprite(sx: number, sy, z: number, a: number, picnum: number,
     var bx: number, by: number; //int32_t
 
     var cosang: number, sinang: number, v: number, nextv: number, dax1: number, dax2: number, oy: number;//int32_t
-    var i: number, x: number, y: number, x1: number, y1: number, x2: number, y2: number, gx1: number, gy1;//int32_t
+    var i: number, x: number, y: number, x1: number, y1: number, x2: number, y2: number, gx1: number, gy1: number;//int32_t
     var p, bufplc, palookupoffs; //intptr_t
     var xsiz: number, ysiz: number, xoff: number, yoff: number, npoints: number, yplc: number, yinc: number, lx: number, rx: number;//int32_t
     var xv: number, yv: number, xv2: number, yv2: number;//int32_t
 
-    var ouryxaspect, ourxyaspect;//int32_t
+    var ouryxaspect: number, ourxyaspect: number;//int32_t
 
     //UNREFERENCED_PARAMETER(uniqid);
 
@@ -7839,7 +7839,7 @@ function dorotatesprite(sx: number, sy, z: number, a: number, picnum: number,
 //
 function initksqrt() : void
 {
-    var i, j, k;
+    var i: number, j: number, k: number;
 
     j = 1; k = 0;
     for (i=0; i<4096; i++)
@@ -17200,7 +17200,7 @@ function hash_free(t: hashtable_t) : void
 function hash_getcode(/*const char **/s: string) : number
 {
     var h = 5381 >>> 0;
-    var ch;
+    var ch: number;
     var sIdx = 0;
     while ((ch = s.charCodeAt(sIdx++)))
         h = uint32(((h << 5) + h) ^ ch);

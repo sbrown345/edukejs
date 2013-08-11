@@ -381,10 +381,10 @@ function wm_ynbox(name: string, fmt : string, ...args: any[]): number
 //
 // WinMain() -- main Windows entry point
 //
-function WinMain(hInst, hPrevInst, lpCmdLine, nCmdShow)
+function WinMain(hInst, hPrevInst, lpCmdLine: number, nCmdShow: number)
 {
     path("WinMain");
-    var r;
+    var r: number;
 //#ifdef USE_OPENGL
 //    char *argp;
 //#endif

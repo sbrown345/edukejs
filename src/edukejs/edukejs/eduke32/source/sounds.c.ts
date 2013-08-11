@@ -36,7 +36,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //#include "winlayer.h"
 //#endif
 
-var g_numEnvSoundsPlaying,g_maxSoundPos = 0; //int32
+var g_numEnvSoundsPlaying: number,g_maxSoundPos = 0; //int32
 
 //static int32_t MusicIsWaveform = 0;
 //static char *MusicPtr = 0;

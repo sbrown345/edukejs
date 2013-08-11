@@ -473,7 +473,7 @@ var BSEEK_END = 2;//SEEK_END
 //#endif
 
 // Clamp <in> to [<min>..<max>]. The case in <= min is handled first.
-function clamp($in, min: number, max: number) : number //all int32
+function clamp($in: number, min: number, max: number) : number //all int32
 {
     return $in <= min ? min : ($in >= max ? max : $in);
 }

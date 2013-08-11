@@ -87,9 +87,10 @@ var YAX_MAXDRAWS  = 8;
 
 //void set_globalang(int16_t ang);
 
-function DO_TILE_ANIM(Picnum, Fakevar) { do { 
+function DO_TILE_ANIM(Picnum: number, Fakevar):void {// do { 
+    todoThrow("Picnum - inline this!!!!! Picnum is a value");
         if (picanm[Picnum].sf&PICANM_ANIMTYPE_MASK) Picnum += animateoffs(Picnum, Fakevar); 
-    } while (0); 
+   // } while (0); 
 }
 
 //static inline int32_t bad_tspr(const spritetype *tspr)

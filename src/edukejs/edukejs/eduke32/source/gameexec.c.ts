@@ -380,9 +380,9 @@ function A_Fall(/*int32_t*/ iActor: number): void
 {
     debugger;
     var s = sprite[iActor];
-    var hz,lz,c = g_spriteGravity;
+    var hz: number,lz: number,c = g_spriteGravity;
 //#ifdef YAX_ENABLE
-    var fbunch;
+    var fbunch: number;
 //#endif
     if (G_CheckForSpaceFloor(s.sectnum))
         c = 0;

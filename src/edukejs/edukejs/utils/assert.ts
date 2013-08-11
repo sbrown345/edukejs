@@ -35,7 +35,7 @@
             return assert;
         },
 
-        isType: function (type, v) {
+        isType: function (type, v: any) {
             assertType(assert.test.isType, type, v);
             return assert;
         },
@@ -75,7 +75,7 @@
         },
 
         argumentsAre: {
-            int32: function (array) {
+            int32: function (array: number[]) {
                 assertArray(assert.test.isInt32, array);
                 return assert;
             }
@@ -131,7 +131,7 @@
 
     var runAssertionCounts = {};
 
-    function checkArray(testFn, value) {
+    function checkArray(testFn, value: any[]) {
         for (var i = 0; i < value.length; i++) {
             if (!testFn(value[i])) {
                 return false;
@@ -179,7 +179,7 @@
         console.log(fnName, hash);
     }
 
-    function assertArray(testFn, value) {
+    function assertArray(testFn, value: any[]) {
         trackAssert(checkArray(testFn, value), ["array failed", testFn.toString(), value]);
     }
 
@@ -191,7 +191,7 @@
         trackAssert(testFn(type, value), "value is not of type " + type);
     }
 
-    function trackAssert(result, message) {
+    function trackAssert(result, message: string) {
         console.assert(result, message);
         if (!result) {
             assert.failedCount++;
