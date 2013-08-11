@@ -7846,7 +7846,7 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //                    mylight.color[2] = sprite[i].zvel;
 //                    mylight.radius = 0;
 //                    mylight.angle = sprite[i].ang;
-//                    mylight.horiz = SH;
+//                    mylight.horiz = sprite[i].extra;
 //                    mylight.minshade = sprite[i].xoffset;
 //                    mylight.maxshade = sprite[i].yoffset;
 //                    mylight.tilenum = 0;
@@ -7914,7 +7914,7 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //                    mylight.radius = (256-(sprite[i].shade+128))<<1;
 //                    mylight.faderadius = (int16_t)(mylight.radius * 0.75f);
 //                    mylight.angle = sprite[i].ang;
-//                    mylight.horiz = SH;
+//                    mylight.horiz = sprite[i].extra;
 //                    mylight.minshade = sprite[i].xoffset;
 //                    mylight.maxshade = sprite[i].yoffset;
 //                    mylight.tilenum = actor[i].picnum;
@@ -7937,8 +7937,8 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //                        actor[i].lightptr = &prlights[actor[i].lightId];
 
 //                        // Hack in case polymer_addlight tweaked the horiz value
-//                        if (actor[i].lightptr.horiz != SH)
-//                            SH = actor[i].lightptr.horiz;
+//                        if (actor[i].lightptr.horiz != sprite[i].extra)
+//                            sprite[i].extra = actor[i].lightptr.horiz;
 //                    }
 //                    break;
 //                }
@@ -7973,9 +7973,9 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //                    actor[i].lightptr.angle = sprite[i].ang;
 //                    actor[i].lightptr.flags.invalidate = 1;
 //                }
-//                if (SH != actor[i].lightptr.horiz)
+//                if (sprite[i].extra != actor[i].lightptr.horiz)
 //                {
-//                    actor[i].lightptr.horiz = SH;
+//                    actor[i].lightptr.horiz = sprite[i].extra;
 //                    actor[i].lightptr.flags.invalidate = 1;
 //                }
 //                if ((int)!(sprite[i].cstat & 64) != actor[i].lightptr.publicflags.emitshadow) {

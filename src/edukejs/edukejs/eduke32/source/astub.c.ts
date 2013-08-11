@@ -338,7 +338,7 @@ g_sounds = newStructArray(sound_t, MAXSOUNDS);
 //    mylightptr->range = SHT;
 //    copy_prlight_colors(mylightptr, i);
 //    mylightptr->angle = sprite[i].ang;
-//    mylightptr->horiz = SH;
+//    mylightptr->horiz = sprite[i].extra;
 //    mylightptr->minshade = sprite[i].xoffset;
 //    mylightptr->maxshade = sprite[i].yoffset;
 
@@ -10753,9 +10753,9 @@ g_sounds = newStructArray(sound_t, MAXSOUNDS);
 //                                    spritelightptr[i]->angle = sprite[i].ang;
 //                                    spritelightptr[i]->flags.invalidate = 1;
 //                                }
-//                                if (SH != spritelightptr[i]->horiz)
+//                                if (sprite[i].extra != spritelightptr[i]->horiz)
 //                                {
-//                                    spritelightptr[i]->horiz = SH;
+//                                    spritelightptr[i]->horiz = sprite[i].extra;
 //                                    spritelightptr[i]->flags.invalidate = 1;
 //                                }
 //                                if ((int)!(sprite[i].cstat & 64) != spritelightptr[i]->publicflags.emitshadow)
