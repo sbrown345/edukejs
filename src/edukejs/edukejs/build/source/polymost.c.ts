@@ -383,7 +383,7 @@ function gltexinvalidatetype(type: number): void
 
 //--------------------------------------------------------------------------------------------------
 
-var glox1, gloy1, glox2, gloy2;//float 
+var glox1: number, gloy1: number, glox2: number, gloy2: number;//float 
 
 //Use this for both initialization and uninitialization of OpenGL_
 var gltexcacnum = -1;
@@ -1316,7 +1316,7 @@ var alpha = 0.0;
 function drawpoly(dpx: Float64Array, dpy: Float64Array, n:number, method: number): void
 {
     var ngdx = 0.0, ngdy = 0.0, ngdo = 0.0, ngux = 0.0, nguy = 0.0, nguo = 0.0;             //double 
-    var ngvx = 0.0, ngvy = 0.0, ngvo = 0.0, dp, up, vp, du0 = 0.0, du1 = 0.0, dui, duj;     //double 
+    var ngvx = 0.0, ngvy = 0.0, ngvo = 0.0, dp, up, vp, du0 = 0.0, du1 = 0.0, dui = 0.0, duj = 0.0;     //double 
     var f = 0.0, r = 0.0, ox = 0.0, oy = 0.0, oz = 0.0, ox2 = 0.0, oy2 = 0.0, oz2 = 0.0, dd = new Float64Array(16), uu = new Float64Array(16), vv = new Float64Array(16), px = new Float64Array(16), py = new Float64Array(16), uoffs=0.0;     //double 
     var i=0, j=0, k=0, nn=0, ix0=0, ix1=0, tsizx=0, tsizy=0; //int32_t
     var xx=0, yy=0, dorot=0; //int32_t

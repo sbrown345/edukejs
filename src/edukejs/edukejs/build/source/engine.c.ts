@@ -1307,11 +1307,17 @@ function yax_getneighborsect(/*int32_t */x: number, /*int32_t */y: number, /*int
 
 //////// sector-like clipping for sprites //////
 //#ifdef HAVE_CLIPSHAPE_FEATURE
-function mapinfo_t()
+class mapinfo_t
 {
-    this.numsectors = 0, this.numwalls = 0;//int16_t
-    this.sector = null;//  sectortype *
-    this.wall = null;//   walltype *
+    numsectors: number; numwalls:number;//int16_t
+    sector:sectortype;//  sectortype *
+    wall:walltype;//   walltype *
+
+    constructor() {
+        this.numsectors = 0, this.numwalls = 0;//int16_t
+        this.sector = null;//  sectortype *
+        this.wall = null;//   walltype *
+    }
 } //mapinfo_t;
 
 //static void mapinfo_set(mapinfo_t *bak, mapinfo_t *newmap)
@@ -1349,14 +1355,14 @@ var quickloadboard=0;
 var numclipmaps; //static int32_t 
 //static clipinfo_t clipinfo[CM_MAX];
 
-var numclipsects;  // number in sectq[] ////static int32_t
+var numclipsects: number;  // number in sectq[] ////static int32_t
 var sectoidx, sectq;  // [numsectors] ////static int16_t *
 var pictoidx = new Int16Array(MAXTILES);  // maps tile num to clipinfo[] index
 var tempictoidx; ////static int16_t *
 
-var loadsector;//static sectortype *
-var loadwall, loadwallinv;//static walltype *
-var loadsprite;//static spritetype *
+var loadsector: sectortype;//static sectortype *
+var loadwall: walltype, loadwallinv: walltype;//static walltype *
+var loadsprite: spritetype;//static spritetype *
 
 //// sectoidx bits
 //#undef CM_NONE

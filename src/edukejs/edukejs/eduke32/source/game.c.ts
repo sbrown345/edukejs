@@ -6835,7 +6835,7 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 
                         if (uppersect >= 0)
                         {
-                            var /*int32_t */jj;
+                            var /*int32_t */jj: number;
                             for (jj=headspritesect[uppersect]; jj>=0; jj=nextspritesect[jj])
                                 if (sprite[jj].picnum==SECTOREFFECTOR && sprite[jj].lotag==sp.lotag)
                                     break;
@@ -9548,7 +9548,7 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //    return 0;
 //}
 
-function loaddefinitions_game(/*const char **/fn, /*int32_t*/ preload) : number
+function loaddefinitions_game(/*const char **/fn: string, /*int32_t*/ preload: number) : number
 {
     todo("loaddefinitions_game, maybe not important early on");
     //var script; //scriptfile 

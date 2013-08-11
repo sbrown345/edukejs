@@ -233,11 +233,11 @@ class hudtyp{ /*float */xadd: number; yadd: number; zadd: number; /*int16_t */an
     }
 }
 
-var hudmem = [newStructArray(hudtyp, MAXTILES), newStructArray(hudtyp, MAXTILES)];
+var hudmem = [newStructArray(hudtyp, MAXTILES), newStructArray<hudtyp>(hudtyp, MAXTILES)];
 
-var mdpause; //EXTERN int32_t 
-var nextmodelid; //EXTERN int32_t 
-var voxmodels: voxmodel_t[] = newStructArray(voxmodel_t, MAXVOXELS);
+var mdpause: number; //EXTERN int32_t 
+var nextmodelid: number; //EXTERN int32_t 
+var voxmodels: voxmodel_t[] = newStructArray<voxmodel_t>(voxmodel_t, MAXVOXELS);
 
 //void voxfree(voxmodel_t *m);
 //voxmodel_t *voxload(const char *filnam);

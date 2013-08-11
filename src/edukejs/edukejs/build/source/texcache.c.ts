@@ -49,9 +49,9 @@ texcache = new globaltexcache();
 
 function texcache_fetch(dapicnum: number, dapalnum: number, dashade: number, dameth: number): pthtyp
 {
-    var i, j;
-    var si;
-    var pth, pth2;
+    var i: number, j: number;
+    var si: hicreplctyp;
+    var pth: pthtyp, pth2: pthtyp;
 
     j = (dapicnum&(GLTEXCACHEADSIZ-1));
     
