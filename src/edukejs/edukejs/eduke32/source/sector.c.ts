@@ -50,7 +50,7 @@ function /*int32_t */A_CallSound(/*int32_t */sn: number,/*int32_t */whatsprite: 
         {
             if (whatsprite == -1) whatsprite = i;
 
-            if (T1 == 0)
+            if (actor[i].t_data[0] == 0)
             {
                 if ((g_sounds[sprite[i].lotag].m&16) == 0)
                 {
@@ -58,21 +58,21 @@ function /*int32_t */A_CallSound(/*int32_t */sn: number,/*int32_t */whatsprite: 
                     {
                         A_PlaySound(sprite[i].lotag,whatsprite);
                         if (sprite[i].hitag && sprite[i].lotag != sprite[i].hitag && sprite[i].hitag < MAXSOUNDS)
-                            S_StopEnvSound(sprite[i].hitag,T6);
-                        T6 = whatsprite;
+                            S_StopEnvSound(sprite[i].hitag,actor[i].t_data[5]);
+                        actor[i].t_data[5] = whatsprite;
                     }
 
                     if ((sector[sprite[i].sectnum].lotag&0xff) != ST_22_SPLITTING_DOOR)
-                        T1 = 1;
+                        actor[i].t_data[0] = 1;
                 }
             }
             else if (sprite[i].hitag < MAXSOUNDS)
             {
                 if (sprite[i].hitag) A_PlaySound(sprite[i].hitag,whatsprite);
                 if ((g_sounds[sprite[i].lotag].m&1) || (sprite[i].hitag && sprite[i].hitag != sprite[i].lotag))
-                    S_StopEnvSound(sprite[i].lotag,T6);
-                T6 = whatsprite;
-                T1 = 0;
+                    S_StopEnvSound(sprite[i].lotag,actor[i].t_data[5]);
+                actor[i].t_data[5] = whatsprite;
+                actor[i].t_data[0] = 0;
             }
             return sprite[i].lotag;
         }
@@ -353,9 +353,9 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //    if (camsprite < 0)
 //        return;
 
-//    if (T1 >= 4)
+//    if (actor[i].t_data[0] >= 4)
 //    {
-//        T1 = 0;
+//        actor[i].t_data[0] = 0;
 
 //        if (g_player[screenpeek].ps.newowner >= 0)
 //            sprite[i].owner = g_player[screenpeek].ps.newowner;
@@ -372,7 +372,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //#endif
 //        }
 //    }
-//    else T1++;
+//    else actor[i].t_data[0]++;
 //}
 
 //void G_AnimateWalls(void)
@@ -487,7 +487,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //    do
 //    {
 //        if (sprite[i].lotag == SE_17_WARP_ELEVATOR && sprite[i].hitag == sprite[s].hitag)
-//            T1 = T2 = d; //Make all check warp
+//            actor[i].t_data[0] = actor[i].t_data[1] = d; //Make all check warp
 //        i = nextspritestat[i];
 //    }
 //    while (i >= 0);
@@ -708,8 +708,8 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //            {
 //                sector[sprite[i].sectnum].extra = -sector[sprite[i].sectnum].extra;
 
-//                T1 = sn;
-//                T2 = 1;
+//                actor[i].t_data[0] = sn;
+//                actor[i].t_data[1] = 1;
 //            }
 //            i = nextspritestat[i];
 //        }
@@ -847,7 +847,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //        i = headspritestat[STAT_EFFECTOR];
 //        while (i >= 0)
 //        {
-//            if (sprite[i].lotag == SE_11_SWINGING_DOOR && sprite[i].sectnum == sn && !T5)
+//            if (sprite[i].lotag == SE_11_SWINGING_DOOR && sprite[i].sectnum == sn && !actor[i].t_data[4])
 //            {
 //                j = i;
 //                break;
@@ -866,12 +866,12 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //            i = headspritestat[STAT_EFFECTOR];
 //            while (i >= 0)
 //            {
-//                if (l == (sector[sprite[i].sectnum].lotag&0x8000) && sprite[i].lotag == SE_11_SWINGING_DOOR && sprite[j].hitag == sprite[i].hitag && !T5)
+//                if (l == (sector[sprite[i].sectnum].lotag&0x8000) && sprite[i].lotag == SE_11_SWINGING_DOOR && sprite[j].hitag == sprite[i].hitag && !actor[i].t_data[4])
 //                {
 //                    if (sector[sprite[i].sectnum].lotag&0x8000) sector[sprite[i].sectnum].lotag &= 0x7fff;
 //                    else sector[sprite[i].sectnum].lotag |= 0x8000;
-//                    T5 = 1;
-//                    T4 = -T4;
+//                    actor[i].t_data[4] = 1;
+//                    actor[i].t_data[3] = -actor[i].t_data[3];
 //                    if (q == 0)
 //                    {
 //                        A_CallSound(sn,i);
@@ -905,10 +905,10 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //                {
 //                    sector[sprite[i].sectnum].lotag ^= 0x8000; // Toggle the open or close
 //                    sprite[i].ang += 1024;
-//                    if (T5) A_CallSound(sprite[i].sectnum,i);
+//                    if (actor[i].t_data[4]) A_CallSound(sprite[i].sectnum,i);
 //                    A_CallSound(sprite[i].sectnum,i);
-//                    if (sector[sprite[i].sectnum].lotag&0x8000) T5 = 1;
-//                    else T5 = 2;
+//                    if (sector[sprite[i].sectnum].lotag&0x8000) actor[i].t_data[4] = 1;
+//                    else actor[i].t_data[4] = 2;
 //                }
 //            }
 //            i = nextspritestat[i];
@@ -1708,8 +1708,8 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 
 //                    i = A_InsertSprite(sn,pos.x,pos.y,pos.z,SECTOREFFECTOR,0,0,0,g_player[0].ps.ang,0,0,spr,3);
 //                    sprite[i].lotag = 128;
-//                    T2 = 5;
-//                    T3 = dawallnum;
+//                    actor[i].t_data[1] = 5;
+//                    actor[i].t_data[2] = dawallnum;
 //                    A_PlaySound(GLASS_BREAKING,i);
 //                    return;
 //                case STAINGLASS1__STATIC:
@@ -1861,9 +1861,9 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //        {
 //            if (sprite[i].hitag == wall[dawallnum].lotag && sprite[i].lotag == SE_3_RANDOM_LIGHTS_AFTER_SHOT_OUT)
 //            {
-//                T3 = j;
-//                T4 = darkestwall;
-//                T5 = 1;
+//                actor[i].t_data[2] = j;
+//                actor[i].t_data[3] = darkestwall;
+//                actor[i].t_data[4] = 1;
 //            }
 //            i = nextspritestat[i];
 //        }
@@ -1932,8 +1932,8 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //        {
 //            if (sprite[i].hitag == (sector[sn].hitag) && sprite[i].lotag == SE_3_RANDOM_LIGHTS_AFTER_SHOT_OUT)
 //            {
-//                T3 = j;
-//                T5 = 1;
+//                actor[i].t_data[2] = j;
+//                actor[i].t_data[4] = 1;
 //            }
 //            i = nextspritestat[i];
 //        }
@@ -2011,10 +2011,10 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //    case BOX__STATIC:
 //    {
 //        if (rpg == 1)
-//            if (T1 == 0)
+//            if (actor[i].t_data[0] == 0)
 //            {
 //                sprite[i].cstat &= ~257;
-//                T1 = 1;
+//                actor[i].t_data[0] = 1;
 //                A_Spawn(i,BURNING);
 //            }
 //        switch (DYNAMICTILEMAP(sprite[sn].picnum))
@@ -2024,10 +2024,10 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //        case FIRELASER__STATIC:
 //        case HYDRENT__STATIC:
 //        case HEAVYHBOMB__STATIC:
-//            if (T1 == 0)
+//            if (actor[i].t_data[0] == 0)
 //            {
 //                sprite[i].cstat &= ~257;
-//                T1 = 1;
+//                actor[i].t_data[0] = 1;
 //                A_Spawn(i,BURNING);
 //            }
 //            break;
@@ -2864,7 +2864,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //                        {
 //                            p.holoduke_on = i = A_InsertSprite(p.cursectnum,p.pos.x,p.pos.y,
 //                                                                p.pos.z+(30<<8),APLAYER,-64,0,0,p.ang,0,0,-1,10);
-//                            T4 = T5 = 0;
+//                            actor[i].t_data[3] = actor[i].t_data[4] = 0;
 //                            sprite[i].yvel = snum;
 //                            sprite[i].extra = 0;
 //                            P_DoQuote(QUOTE_HOLODUKE_ON,p);

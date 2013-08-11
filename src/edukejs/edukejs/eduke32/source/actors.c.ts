@@ -831,11 +831,11 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 
 //static void A_MoveSector(int32_t i)
 //{
-//    //T1,T2 and T3 are used for all the sector moving stuff!!!
+//    //actor[i].t_data[0],actor[i].t_data[1] and actor[i].t_data[2] are used for all the sector moving stuff!!!
 
 //    int32_t tx,ty;
 //    spritetype *s = &sprite[i];
-//    int32_t j = T2, k = T3;
+//    int32_t j = actor[i].t_data[1], k = actor[i].t_data[2];
 
 //    s.x += (s.xvel*(sintable[(s.ang+512)&2047]))>>14;
 //    s.y += (s.xvel*(sintable[s.ang&2047]))>>14;
@@ -854,8 +854,8 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //}
 
 //#if !defined LUNATIC
-//// NOTE: T5 is AC_ACTION_ID
-//# define LIGHTRAD_PICOFS (T5 ? *(script+T5) + (*(script+T5+2))*AC_CURFRAME(actor[i].t_data) : 0)
+//// NOTE: actor[i].t_data[4] is AC_ACTION_ID
+//# define LIGHTRAD_PICOFS (actor[i].t_data[4] ? *(script+actor[i].t_data[4]) + (*(script+actor[i].t_data[4]+2))*AC_CURFRAME(actor[i].t_data) : 0)
 //#else
 //// startframe + viewtype*[cyclic counter]
 //# define LIGHTRAD_PICOFS (actor[i].ac.startframe + actor[i].ac.viewtype*AC_CURFRAME(actor[i].t_data))
@@ -1200,9 +1200,9 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //                sprite[i].cstat = 257;
 //                sprite[i].z = sector[sprite[i].sectnum].ceilingz+(27<<8);
 //                sprite[i].ang = ps.ang;
-//                if (T1 == 8)
-//                    T1 = 0;
-//                else T1++;
+//                if (actor[i].t_data[0] == 8)
+//                    actor[i].t_data[0] = 0;
+//                else actor[i].t_data[0]++;
 //            }
 //            else
 //            {
@@ -1405,11 +1405,11 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //            const int32_t ht = s.hitag;
 //            DukePlayer_t *const peekps = g_player[screenpeek].ps;
 
-//            if (T2 != ud.config.SoundToggle)
+//            if (actor[i].t_data[1] != ud.config.SoundToggle)
 //            {
 //                // If sound playback was toggled, restart.
-//                T2 = ud.config.SoundToggle;
-//                T1 = 0;
+//                actor[i].t_data[1] = ud.config.SoundToggle;
+//                actor[i].t_data[0] = 0;
 //            }
 
 //            if (s.lotag >= 1000 && s.lotag < 2000)
@@ -1423,16 +1423,16 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //                    x = min(x, otherdist);
 //                }
 
-//                if (x < ht && T1 == 0)
+//                if (x < ht && actor[i].t_data[0] == 0)
 //                {
 //                    FX_SetReverb(s.lotag - 1000);
-//                    T1 = 1;
+//                    actor[i].t_data[0] = 1;
 //                }
-//                if (x >= ht && T1 == 1)
+//                if (x >= ht && actor[i].t_data[0] == 1)
 //                {
 //                    FX_SetReverb(0);
 //                    FX_SetReverbDelay(0);
-//                    T1 = 0;
+//                    actor[i].t_data[0] = 0;
 //                }
 //            }
 //            else if (s.lotag < 999 && (unsigned)sector[s.sectnum].lotag < 9 &&  // ST_9_SLIDING_ST_DOOR
@@ -1449,7 +1449,7 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //                        x = min(x, otherdist);
 //                    }
 
-//                    if (x < ht && T1 == 0 && FX_VoiceAvailable(g_sounds[s.lotag].pr-1))
+//                    if (x < ht && actor[i].t_data[0] == 0 && FX_VoiceAvailable(g_sounds[s.lotag].pr-1))
 //                    {
 //                        // Start playing an ambience sound.
 
@@ -1473,15 +1473,15 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //                        g_sounds[s.lotag].m |= 1;
 //                        A_PlaySound(s.lotag,i);
 //                        g_sounds[s.lotag].m = om;
-//                        T1 = 1;
-//                        T9 = 1;  // AMBIENT_SFX_PLAYING
+//                        actor[i].t_data[0] = 1;
+//                        actor[i].t_data[8] = 1;  // AMBIENT_SFX_PLAYING
 //                    }
-//                    else if (x >= ht && T1 == 1)
+//                    else if (x >= ht && actor[i].t_data[0] == 1)
 //                    {
 //                        // Stop playing ambience sound because we're out of its range.
 
-//                        // T1 = 0;
-//                        T9 = 0;
+//                        // actor[i].t_data[0] = 0;
+//                        actor[i].t_data[8] = 0;
 //                        S_StopEnvSound(s.lotag,i);
 //                    }
 //                }
@@ -1490,8 +1490,8 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //                {
 //                    // Randomly playing global sounds (flyby of planes, screams, ...)
 
-//                    if (T5 > 0)
-//                        T5--;
+//                    if (actor[i].t_data[4] > 0)
+//                        actor[i].t_data[4]--;
 //                    else
 //                    {
 //                        int32_t p;
@@ -1499,7 +1499,7 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //                            if (p == myconnectindex && g_player[p].ps.cursectnum == s.sectnum)
 //                            {
 //                                S_PlaySound(s.lotag + (unsigned)g_globalRandom % (s.hitag+1));
-//                                T5 = GAMETICSPERSEC*40 + g_globalRandom%(GAMETICSPERSEC*40);
+//                                actor[i].t_data[4] = GAMETICSPERSEC*40 + g_globalRandom%(GAMETICSPERSEC*40);
 //                            }
 //                    }
 //                }
@@ -1523,20 +1523,20 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 
 //        const int32_t sect = s.sectnum;
 
-//        if (T1 == 0)
+//        if (actor[i].t_data[0] == 0)
 //        {
 //            int32_t j;
 //            const int32_t oextra = s.extra;
 
 //            s.z -= (16<<8);
-//            T2 = s.ang;
+//            actor[i].t_data[1] = s.ang;
 //            if ((j = A_IncurDamage(i)) >= 0)
 //            {
 //                if (j == FIREEXT || j == RPG || j == RADIUSEXPLOSION || j == SEENINE || j == OOZFILTER)
 //                {
 //                    if (s.extra <= 0)
 //                    {
-//                        T1 = 1;
+//                        actor[i].t_data[0] = 1;
 
 //                        for (SPRITES_OF(STAT_FALLER, j))
 //                        {
@@ -1556,10 +1556,10 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //                    s.extra = oextra;
 //                }
 //            }
-//            s.ang = T2;
+//            s.ang = actor[i].t_data[1];
 //            s.z += (16<<8);
 //        }
-//        else if (T1 == 1)
+//        else if (actor[i].t_data[0] == 1)
 //        {
 //            if ((int16_t)s.lotag > 0)
 //            {
@@ -1849,12 +1849,12 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 
 //        if (AFLAMABLE(s.picnum))
 //        {
-//            if (T1 == 1)
+//            if (actor[i].t_data[0] == 1)
 //            {
-//                T2++;
-//                if ((T2&3) > 0) goto BOLT;
+//                actor[i].t_data[1]++;
+//                if ((actor[i].t_data[1]&3) > 0) goto BOLT;
 
-//                if (s.picnum == TIRE && T2 == 32)
+//                if (s.picnum == TIRE && actor[i].t_data[1] == 32)
 //                {
 //                    s.cstat = 0;
 //                    j = A_Spawn(i,BLOODPOOL);
@@ -1898,17 +1898,17 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 
 //                if (actor[i].t_data[7] <= 0)
 //                {
-//                    T3=16;
+//                    actor[i].t_data[2]=16;
 //                    actor[i].t_data[6]=3;
 //                    A_PlaySound(LASERTRIP_ARMING,i);
 //                }
 //                // we're on a timer....
 //            }
-//            if (T3 > 0 && actor[i].t_data[6] == 3)
+//            if (actor[i].t_data[2] > 0 && actor[i].t_data[6] == 3)
 //            {
-//                T3--;
+//                actor[i].t_data[2]--;
 
-//                if (T3 == 8)
+//                if (actor[i].t_data[2] == 8)
 //                {
 //                    for (j=0; j<5; j++) RANDOMSCRAP;
 //                    x = s.extra;
@@ -1938,17 +1938,17 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //                if (A_IncurDamage(i) >= 0)
 //                {
 //                    actor[i].t_data[6] = 3;
-//                    T3 = 16;
+//                    actor[i].t_data[2] = 16;
 //                }
 //                s.extra = oextra;
 //                s.ang = l;
 //            }
 
-//            switch (T1)
+//            switch (actor[i].t_data[0])
 //            {
 //            default:
 //                A_FindPlayer(s,&x);
-//                if (x > 768 || T1 > 16) T1++;
+//                if (x > 768 || actor[i].t_data[0] > 16) actor[i].t_data[0]++;
 //                break;
 
 //            case 32:
@@ -1956,13 +1956,13 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //                int16_t m;
 
 //                l = s.ang;
-//                s.ang = T6;
+//                s.ang = actor[i].t_data[5];
 
-//                T4 = s.x;
-//                T5 = s.y;
+//                actor[i].t_data[3] = s.x;
+//                actor[i].t_data[4] = s.y;
 
-//                s.x += sintable[(T6+512)&2047]>>9;
-//                s.y += sintable[(T6)&2047]>>9;
+//                s.x += sintable[(actor[i].t_data[5]+512)&2047]>>9;
+//                s.y += sintable[(actor[i].t_data[5])&2047]>>9;
 //                s.z -= (3<<8);
 
 //                setsprite(i,(vec3_t *)s);
@@ -1986,8 +1986,8 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //                        sprite[j].hitag = s.hitag;
 //                        actor[j].t_data[1] = sprite[j].z;
 
-//                        s.x += sintable[(T6+512)&2047]>>4;
-//                        s.y += sintable[(T6)&2047]>>4;
+//                        s.x += sintable[(actor[i].t_data[5]+512)&2047]>>4;
+//                        s.y += sintable[(actor[i].t_data[5])&2047]>>4;
 
 //                        if (x < 1024)
 //                        {
@@ -2003,40 +2003,40 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //                    }
 //                }
 
-//                T1++;
+//                actor[i].t_data[0]++;
 
-//                s.x = T4;
-//                s.y = T5;
+//                s.x = actor[i].t_data[3];
+//                s.y = actor[i].t_data[4];
 //                s.z += (3<<8);
 
 //                setsprite(i,(vec3_t *)s);
-//                T4 = T3 = 0;
+//                actor[i].t_data[3] = actor[i].t_data[2] = 0;
 
 //                if (m >= 0 && actor[i].t_data[6] != 1)
 //                {
 //                    actor[i].t_data[6] = 3;
-//                    T3 = 13;
+//                    actor[i].t_data[2] = 13;
 //                    A_PlaySound(LASERTRIP_ARMING,i);
 //                }
 //                break;
 //            }
 
 //            case 33:
-//                T2++;
+//                actor[i].t_data[1]++;
 
-//                T4 = s.x;
-//                T5 = s.y;
+//                actor[i].t_data[3] = s.x;
+//                actor[i].t_data[4] = s.y;
 
-//                s.x += sintable[(T6+512)&2047]>>9;
-//                s.y += sintable[(T6)&2047]>>9;
+//                s.x += sintable[(actor[i].t_data[5]+512)&2047]>>9;
+//                s.y += sintable[(actor[i].t_data[5])&2047]>>9;
 //                s.z -= (3<<8);
 
 //                setsprite(i,(vec3_t *)s);
 
 //                x = A_CheckHitSprite(i, NULL);
 
-//                s.x = T4;
-//                s.y = T5;
+//                s.x = actor[i].t_data[3];
+//                s.y = actor[i].t_data[4];
 //                s.z += (3<<8);
 //                setsprite(i,(vec3_t *)s);
 
@@ -2044,7 +2044,7 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //                if (actor[i].lastvx != x && actor[i].t_data[6] != 1)
 //                {
 //                    actor[i].t_data[6] = 3;
-//                    T3 = 13;
+//                    actor[i].t_data[2] = 13;
 //                    A_PlaySound(LASERTRIP_ARMING,i);
 //                }
 //                break;
@@ -2175,18 +2175,18 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //                {
 //                    if (s.xrepeat > 0)
 //                    {
-//                        T3++;
-//                        if (T3 == 3)
+//                        actor[i].t_data[2]++;
+//                        if (actor[i].t_data[2] == 3)
 //                        {
 //                            if (s.picnum == OOZFILTER)
 //                            {
-//                                T3 = 0;
+//                                actor[i].t_data[2] = 0;
 //                                goto DETONATE;
 //                            }
 
 //                            if (s.picnum != (SEENINEDEAD+1))
 //                            {
-//                                T3 = 0;
+//                                actor[i].t_data[2] = 0;
 
 //                                if (s.picnum == SEENINEDEAD)
 //                                    s.picnum++;
@@ -2308,10 +2308,10 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //                if (sprite[i].yvel == 1)
 //                    camsprite = i;
 //            }
-//            else if (camsprite != -1 && T1 == 1)
+//            else if (camsprite != -1 && actor[i].t_data[0] == 1)
 //            {
 //                camsprite = -1;
-//                T1 = 0;
+//                actor[i].t_data[0] = 0;
 //                //loadtile(s.picnum);
 //                //invalidatetile(s.picnum,-1,255);
 //                walock[TILE_VIEWSCR] = 199;
@@ -2998,9 +2998,9 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //        case KNEE__STATIC:
 //            KILLIT(i);
 //        case TONGUE__STATIC:
-//            T1 = sintable[(T2)&2047]>>9;
-//            T2 += 32;
-//            if (T2 > 2047)
+//            actor[i].t_data[0] = sintable[(actor[i].t_data[1])&2047]>>9;
+//            actor[i].t_data[1] += 32;
+//            if (actor[i].t_data[1] > 2047)
 //                KILLIT(i);
 
 //            if (sprite[s.owner].statnum == MAXSTATUS)
@@ -3012,7 +3012,7 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //            s.y = sprite[s.owner].y;
 //            if (sprite[s.owner].picnum == APLAYER)
 //                s.z = sprite[s.owner].z-(34<<8);
-//            for (k=0; k<T1; k++)
+//            for (k=0; k<actor[i].t_data[0]; k++)
 //            {
 //                q = A_InsertSprite(s.sectnum,
 //                    s.x+((k*sintable[(s.ang+512)&2047])>>9),
@@ -3028,7 +3028,7 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //                s.z+((k*ksgn(s.zvel))*klabs(s.zvel/12)),INNERJAW,-40,
 //                32,32,0,0,0,i,5);
 //            sprite[q].cstat = 128;
-//            if (T2 > 512 && T2 < (1024))
+//            if (actor[i].t_data[1] > 512 && actor[i].t_data[1] < (1024))
 //                sprite[q].picnum = INNERJAW+1;
 
 //            goto BOLT;
@@ -3406,7 +3406,7 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //        const int32_t nexti = nextspritestat[i];
 //        int32_t j, k;
 
-//        const int32_t onfloorz = T5;  // ONFLOORZ
+//        const int32_t onfloorz = actor[i].t_data[4];  // ONFLOORZ
 
 //        if (sprite[i].owner == i)
 //        {
@@ -3414,7 +3414,7 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //            continue;
 //        }
 
-//        if (T1 > 0) T1--;
+//        if (actor[i].t_data[0] > 0) actor[i].t_data[0]--;
 
 //        j = headspritesect[sect];
 //        while (j >= 0)
@@ -3452,7 +3452,7 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 
 //                            if (sprite[sprite[i].owner].owner != sprite[i].owner)
 //                            {
-//                                T1 = 13;
+//                                actor[i].t_data[0] = 13;
 //                                actor[sprite[i].owner].t_data[0] = 13;
 //                                ps.transporter_hold = 13;
 //                            }
@@ -3545,9 +3545,9 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 
 //                    if (sectlotag == 0 && (onfloorz || klabs(sprite[j].z-sprite[i].z) < 4096))
 //                    {
-//                        if (sprite[sprite[i].owner].owner != sprite[i].owner && onfloorz && T1 > 0 && sprite[j].statnum != STAT_MISC)
+//                        if (sprite[sprite[i].owner].owner != sprite[i].owner && onfloorz && actor[i].t_data[0] > 0 && sprite[j].statnum != STAT_MISC)
 //                        {
-//                            T1++;
+//                            actor[i].t_data[0]++;
 //                            goto BOLT;
 //                        }
 //                        warpspriteto = 1;
@@ -3642,7 +3642,7 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 
 //                                        if (sprite[sprite[i].owner].owner != sprite[i].owner)
 //                                        {
-//                                            T1 = 13;
+//                                            actor[i].t_data[0] = 13;
 //                                            actor[sprite[i].owner].t_data[0] = 13;
 //                                        }
 
@@ -3765,12 +3765,12 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //        case RESPAWNMARKERRED__STATIC:
 //        case RESPAWNMARKERYELLOW__STATIC:
 //        case RESPAWNMARKERGREEN__STATIC:
-//            if (++T1 > g_itemRespawnTime)
+//            if (++actor[i].t_data[0] > g_itemRespawnTime)
 //                KILLIT(i);
 
-//            if (T1 >= (g_itemRespawnTime>>1) && T1 < ((g_itemRespawnTime>>1)+(g_itemRespawnTime>>2)))
+//            if (actor[i].t_data[0] >= (g_itemRespawnTime>>1) && actor[i].t_data[0] < ((g_itemRespawnTime>>1)+(g_itemRespawnTime>>2)))
 //                sprite[i].picnum = RESPAWNMARKERYELLOW;
-//            else if (T1 > ((g_itemRespawnTime>>1)+(g_itemRespawnTime>>2)))
+//            else if (actor[i].t_data[0] > ((g_itemRespawnTime>>1)+(g_itemRespawnTime>>2)))
 //                sprite[i].picnum = RESPAWNMARKERGREEN;
 
 //            A_Fall(i);
@@ -3804,8 +3804,8 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //            }
 //            else
 //            {
-//                T1++;
-//                if (T1 > 1)
+//                actor[i].t_data[0]++;
+//                if (actor[i].t_data[0] > 1)
 //                {
 //                    KILLIT(i);
 //                }
@@ -5205,9 +5205,9 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //            case MAIL__STATIC:
 //            case PAPER__STATIC:
 
-//                s.xvel = (krand()&7)+(sintable[T1&2047]>>9);
-//                T1 += (krand()&63);
-//                if ((T1&2047) > 512 && (T1&2047) < 1596)
+//                s.xvel = (krand()&7)+(sintable[actor[i].t_data[0]&2047]>>9);
+//                actor[i].t_data[0] += (krand()&63);
+//                if ((actor[i].t_data[0]&2047) > 512 && (actor[i].t_data[0]&2047) < 1596)
 //                {
 //                    if (sector[sect].lotag == ST_2_UNDERWATER)
 //                    {
@@ -5761,19 +5761,19 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //                    }
 //                    else actor[i].tempang = 0;
 
-//                    if (sc.floorz > T4)   //z's are touching
+//                    if (sc.floorz > actor[i].t_data[3])   //z's are touching
 //                    {
 //                        sc.floorz -= 512;
 //                        zchange = -512;
-//                        if (sc.floorz < T4)
-//                            sc.floorz = T4;
+//                        if (sc.floorz < actor[i].t_data[3])
+//                            sc.floorz = actor[i].t_data[3];
 //                    }
-//                    else if (sc.floorz < T4)   //z's are touching
+//                    else if (sc.floorz < actor[i].t_data[3])   //z's are touching
 //                    {
 //                        sc.floorz += 512;
 //                        zchange = 512;
-//                        if (sc.floorz > T4)
-//                            sc.floorz = T4;
+//                        if (sc.floorz > actor[i].t_data[3])
+//                            sc.floorz = actor[i].t_data[3];
 //                    }
 //                }
 //            }
@@ -7530,41 +7530,41 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //                break;
 //            }
 
-//            if (T1 == 0)
+//            if (actor[i].t_data[0] == 0)
 //            {
 //                A_FindPlayer(s,&x);
 //                if (x > 15500)
 //                    break;
-//                T1 = 1;
-//                T2 = 64 + (krand()&511);
-//                T3 = 0;
+//                actor[i].t_data[0] = 1;
+//                actor[i].t_data[1] = 64 + (krand()&511);
+//                actor[i].t_data[2] = 0;
 //            }
 //            else
 //            {
-//                T3++;
-//                if (T3 > T2)
+//                actor[i].t_data[2]++;
+//                if (actor[i].t_data[2] > actor[i].t_data[1])
 //                {
-//                    T1 = 0;
+//                    actor[i].t_data[0] = 0;
 //                    g_player[screenpeek].ps.visibility = ud.const_visibility;
 //                    break;
 //                }
-//                else if (T3 == (T2>>1))
+//                else if (actor[i].t_data[2] == (actor[i].t_data[1]>>1))
 //                    A_PlaySound(THUNDER,i);
-//                else if (T3 == (T2>>3))
+//                else if (actor[i].t_data[2] == (actor[i].t_data[1]>>3))
 //                    A_PlaySound(LIGHTNING_SLAP,i);
-//                else if (T3 == (T2>>2))
+//                else if (actor[i].t_data[2] == (actor[i].t_data[1]>>2))
 //                {
 //                    for (SPRITES_OF(STAT_DEFAULT, j))
 //                        if (sprite[j].picnum == NATURALLIGHTNING && sprite[j].hitag == s.hitag)
 //                            sprite[j].cstat |= 32768;
 //                }
-//                else if (T3 > (T2>>3) && T3 < (T2>>2))
+//                else if (actor[i].t_data[2] > (actor[i].t_data[1]>>3) && actor[i].t_data[2] < (actor[i].t_data[1]>>2))
 //                {
 //                    if (cansee(s.x,s.y,s.z,s.sectnum,g_player[screenpeek].ps.pos.x,g_player[screenpeek].ps.pos.y,g_player[screenpeek].ps.pos.z,g_player[screenpeek].ps.cursectnum))
 //                        j = 1;
 //                    else j = 0;
 
-//                    if (rnd(192) && (T3&1))
+//                    if (rnd(192) && (actor[i].t_data[2]&1))
 //                    {
 //                        if (j)
 //                            g_player[screenpeek].ps.visibility = 0;
@@ -7576,7 +7576,7 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //                    {
 //                        if (sprite[j].picnum == NATURALLIGHTNING && sprite[j].hitag == s.hitag)
 //                        {
-//                            if (rnd(32) && (T3&1))
+//                            if (rnd(32) && (actor[i].t_data[2]&1))
 //                            {
 //                                int32_t p;
 //                                DukePlayer_t *ps;

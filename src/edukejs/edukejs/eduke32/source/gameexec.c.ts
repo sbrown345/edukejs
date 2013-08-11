@@ -2240,7 +2240,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //                    a.movflag = 0;
 //                    a.tempang = 0;
 //                    a.dispicnum = 0;
-//                    T1=T2=T3=T4=T5=T6=T7=T8=T9=0;
+//                    actor[i].t_data[0]=actor[i].t_data[1]=actor[i].t_data[2]=actor[i].t_data[3]=actor[i].t_data[4]=actor[i].t_data[5]= actor[i].t_data[6]=actor[i].t_data[7]=actor[i].t_data[8]=0;
 //                    a.flags = 0;
 //                    sprite[i].hitag = 0;
 

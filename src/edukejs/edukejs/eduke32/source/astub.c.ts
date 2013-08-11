@@ -2604,8 +2604,8 @@ g_sounds = newStructArray(sound_t, MAXSOUNDS);
 
 //int32_t AmbienceToggle = 1;
 //int32_t ParentalLock = 0;
-//#undef T1
-//#define T1 (s->filler)
+//#undef actor[i].t_data[0]
+//#define actor[i].t_data[0] (s->filler)
 
 //// adapted from actors.c
 //static void M32_MoveFX(void)
@@ -2620,9 +2620,9 @@ g_sounds = newStructArray(sound_t, MAXSOUNDS);
 
 //        if (s->picnum != MUSICANDSFX)
 //        {
-//            if (T1&1)
+//            if (actor[i].t_data[0]&1)
 //            {
-//                T1 &= (~1);
+//                actor[i].t_data[0] &= (~1);
 //                S_StopEnvSound(s->lotag, i);
 //            }
 //        }
@@ -2636,7 +2636,7 @@ g_sounds = newStructArray(sound_t, MAXSOUNDS);
 //                if ((g_sounds[s->lotag].m&2))
 //                {
 //                    x = dist((spritetype *)&pos,s);
-//                    if (x < ht && (T1&1) == 0 && FX_VoiceAvailable(g_sounds[s->lotag].pr-1))
+//                    if (x < ht && (actor[i].t_data[0]&1) == 0 && FX_VoiceAvailable(g_sounds[s->lotag].pr-1))
 //                    {
 //                        char om = g_sounds[s->lotag].m;
 //                        if (g_numEnvSoundsPlaying == NumVoices)
@@ -2656,11 +2656,11 @@ g_sounds = newStructArray(sound_t, MAXSOUNDS);
 //                        g_sounds[s->lotag].m |= 1;
 //                        A_PlaySound(s->lotag,i);
 //                        g_sounds[s->lotag].m = om;
-//                        T1 |= 1;
+//                        actor[i].t_data[0] |= 1;
 //                    }
-//                    if (x >= ht && (T1&1) == 1)
+//                    if (x >= ht && (actor[i].t_data[0]&1) == 1)
 //                    {
-//                        T1 &= (~1);
+//                        actor[i].t_data[0] &= (~1);
 //                        S_StopEnvSound(s->lotag,i);
 //                    }
 //                }
@@ -2668,7 +2668,7 @@ g_sounds = newStructArray(sound_t, MAXSOUNDS);
 //        }
 //    }
 //}
-//#undef T1
+//#undef actor[i].t_data[0]
 
 
 /////__ShowHelpText__
