@@ -512,7 +512,7 @@ var g_numEnvSoundsPlaying,g_maxSoundPos = 0; //int32
 //    }
 
 //    if ((g_sounds[num].m&16) == 0 && S_IsAmbientSFX(i) && (sector[SECT].lotag&0xff) < 9)  // ST_9_SLIDING_ST_DOOR
-//        sndist = divscale14(sndist, SHT+1);
+//        sndist = divscale14(sndist, sprite[i].hitag+1);
 
 //sound_further_processing:
 //    sndist += g_sounds[num].vo;

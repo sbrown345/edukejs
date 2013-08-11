@@ -57,8 +57,8 @@ function /*int32_t */A_CallSound(/*int32_t */sn: number,/*int32_t */whatsprite: 
                     if (sprite[i].lotag)
                     {
                         A_PlaySound(sprite[i].lotag,whatsprite);
-                        if (SHT && sprite[i].lotag != SHT && SHT < MAXSOUNDS)
-                            S_StopEnvSound(SHT,T6);
+                        if (sprite[i].hitag && sprite[i].lotag != sprite[i].hitag && sprite[i].hitag < MAXSOUNDS)
+                            S_StopEnvSound(sprite[i].hitag,T6);
                         T6 = whatsprite;
                     }
 
@@ -66,10 +66,10 @@ function /*int32_t */A_CallSound(/*int32_t */sn: number,/*int32_t */whatsprite: 
                         T1 = 1;
                 }
             }
-            else if (SHT < MAXSOUNDS)
+            else if (sprite[i].hitag < MAXSOUNDS)
             {
-                if (SHT) A_PlaySound(SHT,whatsprite);
-                if ((g_sounds[sprite[i].lotag].m&1) || (SHT && SHT != sprite[i].lotag))
+                if (sprite[i].hitag) A_PlaySound(sprite[i].hitag,whatsprite);
+                if ((g_sounds[sprite[i].lotag].m&1) || (sprite[i].hitag && sprite[i].hitag != sprite[i].lotag))
                     S_StopEnvSound(sprite[i].lotag,T6);
                 T6 = whatsprite;
                 T1 = 0;
@@ -471,7 +471,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 
 //    while (i >= 0)
 //    {
-//        if (sprite[i].lotag == SE_17_WARP_ELEVATOR && SHT == sprite[s].hitag)
+//        if (sprite[i].lotag == SE_17_WARP_ELEVATOR && sprite[i].hitag == sprite[s].hitag)
 //            if ((klabs(sector[sn].floorz-actor[s].t_data[2]) > sprite[i].yvel) ||
 //                (sector[SECT].hitag == (sector[sn].hitag-d)))
 //                break;
@@ -486,7 +486,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //    i = headspritestat[STAT_EFFECTOR];
 //    do
 //    {
-//        if (sprite[i].lotag == SE_17_WARP_ELEVATOR && SHT == sprite[s].hitag)
+//        if (sprite[i].lotag == SE_17_WARP_ELEVATOR && sprite[i].hitag == sprite[s].hitag)
 //            T1 = T2 = d; //Make all check warp
 //        i = nextspritestat[i];
 //    }
@@ -704,7 +704,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //        while (i >= 0)
 //        {
 //            if ((sprite[i].lotag == SE_22_TEETH_DOOR) &&
-//                    (SHT == sptr.hitag))
+//                    (sprite[i].hitag == sptr.hitag))
 //            {
 //                sector[SECT].extra = -sector[SECT].extra;
 
@@ -866,7 +866,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //            i = headspritestat[STAT_EFFECTOR];
 //            while (i >= 0)
 //            {
-//                if (l == (sector[SECT].lotag&0x8000) && sprite[i].lotag == SE_11_SWINGING_DOOR && sprite[j].hitag == SHT && !T5)
+//                if (l == (sector[SECT].lotag&0x8000) && sprite[i].lotag == SE_11_SWINGING_DOOR && sprite[j].hitag == sprite[i].hitag && !T5)
 //                {
 //                    if (sector[SECT].lotag&0x8000) sector[SECT].lotag &= 0x7fff;
 //                    else sector[SECT].lotag |= 0x8000;
@@ -899,7 +899,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //        i = headspritestat[STAT_EFFECTOR];
 //        while (i >= 0)
 //        {
-//            if (SHT==sprite[j].hitag)
+//            if (sprite[i].hitag==sprite[j].hitag)
 //            {
 //                if (sprite[i].lotag == SE_15_SLIDING_DOOR)
 //                {
@@ -975,7 +975,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //        nexti = nextspritestat[i];
 //        if ((sprite[i].lotag == low) && (sprite[i].picnum == RESPAWN))
 //        {
-//            if (A_CheckEnemyTile(SHT) && ud.monsters_off) break;
+//            if (A_CheckEnemyTile(sprite[i].hitag) && ud.monsters_off) break;
 
 //            j = A_Spawn(i,TRANSPORTERSTAR);
 //            sprite[j].z -= (32<<8);
@@ -1030,7 +1030,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //            }
 //            else
 //            {
-//                switch (SHT)
+//                switch (sprite[i].hitag)
 //                {
 //                case 0:
 //                    break;
@@ -1283,7 +1283,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //            case TECHSWITCH__STATIC:
 //            case ALIENSWITCH__STATIC:
 //                if (switchissprite == 1 && w == i) sprite[i].picnum++;
-//                else if (SHT == 0) correctdips++;
+//                else if (sprite[i].hitag == 0) correctdips++;
 //                numdips++;
 //                break;
 //            case ACCESSSWITCH__STATIC:
@@ -1313,7 +1313,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //                case DIPSWITCH__STATIC:
 //                case ALIENSWITCH__STATIC:
 //                    if (switchissprite == 1 && w == i) sprite[i].picnum--;
-//                    else if (SHT == 1) correctdips++;
+//                    else if (sprite[i].hitag == 1) correctdips++;
 //                    numdips++;
 //                    break;
 //                case PULLSWITCH__STATIC:
@@ -1859,7 +1859,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //        i= headspritestat[STAT_EFFECTOR];
 //        while (i >= 0)
 //        {
-//            if (SHT == wall[dawallnum].lotag && sprite[i].lotag == SE_3_RANDOM_LIGHTS_AFTER_SHOT_OUT)
+//            if (sprite[i].hitag == wall[dawallnum].lotag && sprite[i].lotag == SE_3_RANDOM_LIGHTS_AFTER_SHOT_OUT)
 //            {
 //                T3 = j;
 //                T4 = darkestwall;
@@ -1916,7 +1916,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //                    j = headspritestat[STAT_EFFECTOR];
 //                    while (j >= 0)
 //                    {
-//                        if (sprite[j].hitag == SHT)
+//                        if (sprite[j].hitag == sprite[i].hitag)
 //                            actor[j].t_data[3] = 1;
 //                        j = nextspritestat[j];
 //                    }
@@ -1930,7 +1930,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //        j = krand()&1;
 //        while (i >= 0)
 //        {
-//            if (SHT == (sector[sn].hitag) && sprite[i].lotag == SE_3_RANDOM_LIGHTS_AFTER_SHOT_OUT)
+//            if (sprite[i].hitag == (sector[sn].hitag) && sprite[i].lotag == SE_3_RANDOM_LIGHTS_AFTER_SHOT_OUT)
 //            {
 //                T3 = j;
 //                T5 = 1;
@@ -2272,7 +2272,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //    case INDY__STATIC:
 //    case JURYGUY__STATIC:
 //        A_PlaySound(sprite[i].lotag,i);
-//        A_Spawn(i,SHT);
+//        A_Spawn(i,sprite[i].hitag);
 //    case SPACEMARINE__STATIC:
 //        sprite[i].extra -= sprite[sn].extra;
 //        if (sprite[i].extra > 0) break;
@@ -2324,7 +2324,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //    case PLAYERONWATER__STATIC:
 //        i = sprite[i].owner;
 //    default:
-//        if ((sprite[i].cstat&16) && SHT == 0 && sprite[i].lotag == 0 && sprite[i].statnum == STAT_DEFAULT)
+//        if ((sprite[i].cstat&16) && sprite[i].hitag == 0 && sprite[i].lotag == 0 && sprite[i].statnum == STAT_DEFAULT)
 //            break;
 
 //        if ((sprite[sn].picnum == FREEZEBLAST || sprite[sn].owner != i) && sprite[i].statnum != STAT_PROJECTILE)
@@ -2423,7 +2423,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //            while (j >= 0)
 //            {
 //                if ((sprite[j].lotag) == SE_17_WARP_ELEVATOR && i != j &&
-//                        (SHT) == (sprite[j].hitag))
+//                        (sprite[i].hitag) == (sprite[j].hitag))
 //                {
 //                    sector[sprite[j].sectnum].floorz =
 //                        sector[SECT].floorz;

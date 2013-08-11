@@ -335,7 +335,7 @@ g_sounds = newStructArray(sound_t, MAXSOUNDS);
 //{
 //    mylightptr->sector = SECT;
 //    Bmemcpy(mylightptr, &sprite[i], sizeof(vec3_t));
-//    mylightptr->range = SHT;
+//    mylightptr->range = sprite[i].hitag;
 //    copy_prlight_colors(mylightptr, i);
 //    mylightptr->angle = sprite[i].ang;
 //    mylightptr->horiz = sprite[i].extra;
@@ -10697,9 +10697,9 @@ g_sounds = newStructArray(sound_t, MAXSOUNDS);
 //                                    spritelightptr[i]->sector = sprite[i].sectnum;
 //                                    spritelightptr[i]->flags.invalidate = 1;
 //                                }
-//                                if (SHT != spritelightptr[i]->range)
+//                                if (sprite[i].hitag != spritelightptr[i]->range)
 //                                {
-//                                    spritelightptr[i]->range = SHT;
+//                                    spritelightptr[i]->range = sprite[i].hitag;
 //                                    spritelightptr[i]->flags.invalidate = 1;
 //                                }
 //                                if (check_prlight_colors(i))
@@ -10735,9 +10735,9 @@ g_sounds = newStructArray(sound_t, MAXSOUNDS);
 //                                    spritelightptr[i]->sector = sprite[i].sectnum;
 //                                    spritelightptr[i]->flags.invalidate = 1;
 //                                }
-//                                if (SHT != spritelightptr[i]->range)
+//                                if (sprite[i].hitag != spritelightptr[i]->range)
 //                                {
-//                                    spritelightptr[i]->range = SHT;
+//                                    spritelightptr[i]->range = sprite[i].hitag;
 //                                    spritelightptr[i]->flags.invalidate = 1;
 //                                }
 //                                if (check_prlight_colors(i))

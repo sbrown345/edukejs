@@ -1392,7 +1392,7 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //        case RESPAWN__STATIC:
 //            if (sprite[i].extra == 66)
 //            {
-//                /*int32_t j =*/ A_Spawn(i,SHT);
+//                /*int32_t j =*/ A_Spawn(i,sprite[i].hitag);
 //                //                    sprite[j].pal = sprite[i].pal;
 //                KILLIT(i);
 //            }
@@ -1540,7 +1540,7 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 
 //                        for (SPRITES_OF(STAT_FALLER, j))
 //                        {
-//                            if (sprite[j].hitag == SHT)
+//                            if (sprite[j].hitag == sprite[i].hitag)
 //                            {
 //                                actor[j].t_data[0] = 1;
 //                                sprite[j].cstat &= (65535-64);
@@ -7840,7 +7840,7 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //#pragma pack(pop)
 //                    mylight.sector = SECT;
 //                    Bmemcpy(&mylight, &sprite[i], sizeof(int32_t) * 3);
-//                    mylight.range = SHT;
+//                    mylight.range = sprite[i].hitag;
 //                    mylight.color[0] = sprite[i].xvel;
 //                    mylight.color[1] = sprite[i].yvel;
 //                    mylight.color[2] = sprite[i].zvel;
@@ -7875,9 +7875,9 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //                    actor[i].lightptr.sector = sprite[i].sectnum;
 //                    actor[i].lightptr.flags.invalidate = 1;
 //                }
-//                if (SHT != actor[i].lightptr.range)
+//                if (sprite[i].hitag != actor[i].lightptr.range)
 //                {
-//                    actor[i].lightptr.range = SHT;
+//                    actor[i].lightptr.range = sprite[i].hitag;
 //                    actor[i].lightptr.flags.invalidate = 1;
 //                }
 //                if ((sprite[i].xvel != actor[i].lightptr.color[0]) ||
@@ -7907,7 +7907,7 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 
 //                    mylight.sector = SECT;
 //                    Bmemcpy(&mylight, &sprite[i], sizeof(int32_t) * 3);
-//                    mylight.range = SHT;
+//                    mylight.range = sprite[i].hitag;
 //                    mylight.color[0] = sprite[i].xvel;
 //                    mylight.color[1] = sprite[i].yvel;
 //                    mylight.color[2] = sprite[i].zvel;
@@ -7949,9 +7949,9 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //                    actor[i].lightptr.sector = sprite[i].sectnum;
 //                    actor[i].lightptr.flags.invalidate = 1;
 //                }
-//                if (SHT != actor[i].lightptr.range)
+//                if (sprite[i].hitag != actor[i].lightptr.range)
 //                {
-//                    actor[i].lightptr.range = SHT;
+//                    actor[i].lightptr.range = sprite[i].hitag;
 //                    actor[i].lightptr.flags.invalidate = 1;
 //                }
 //                if ((sprite[i].xvel != actor[i].lightptr.color[0]) ||
