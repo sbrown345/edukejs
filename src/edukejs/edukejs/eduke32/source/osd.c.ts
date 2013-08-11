@@ -1493,11 +1493,11 @@ function OSD_SetParameters(
 //
 function OSD_ResizeDisplay(w: number, h: number): void
 {
-    var newcols;        //int32_t
-    var newmaxlines;    //int32_t
+    var newcols: number;        //int32_t
+    var newmaxlines: number;    //int32_t
     var newtext = new Uint8Array(TEXTSIZE);
     var newfmt  = new Uint8Array(TEXTSIZE);
-    var i,j,k;
+    var i: number,j: number,k: number;
 
     newcols = getcolumnwidth(w);
     newmaxlines = TEXTSIZE / newcols | 0;

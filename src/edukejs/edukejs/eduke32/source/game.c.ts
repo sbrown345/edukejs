@@ -4872,7 +4872,6 @@ function G_InitActor(/*int32_t*/ i: number, /*int32_t*/ tilenum: number, /*int32
 //#if !defined LUNATIC
     if (g_tile[tilenum].execPtr)
     {
-        debugger; //check execPtr values
         sprite[i].extra = script[(g_tile[tilenum].execPtr)];//*(g_tile[tilenum].execPtr);
         AC_ACTION_ID_SET(actor[i].t_data, script[g_tile[tilenum].execPtr+1]);
         AC_MOVE_ID_SET(actor[i].t_data, script[g_tile[tilenum].execPtr+2]);
