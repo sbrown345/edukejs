@@ -232,7 +232,7 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //            continue;
 
 //        bx = sprite[i].x-mx;
-//        by = SY-my;
+//        by = sprite[i].y-my;
 //        bxvect = sintable[(SA+512)&2047];
 //        byvect = sintable[SA&2047];
 

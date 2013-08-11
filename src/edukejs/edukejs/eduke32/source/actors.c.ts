@@ -380,7 +380,7 @@ function G_SetInterpolation(/*int32_t * */posptr: R<number>): number
 //        actor[spritenum].lasttransport = totalclock + (TICSPERFRAME<<2);
 
 //        spr.x += (otherse.x-sprite[i].x);
-//        spr.y += (otherse.y-SY);
+//        spr.y += (otherse.y-sprite[i].y);
 //        if (!fromunderp)  // above.below
 //            spr.z = sector[otherse.sectnum].ceilingz - daz + sector[sprite[i].sectnum].floorz;
 //        else  // below.above
@@ -1212,7 +1212,7 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //        }
 
 //        sprite[i].x += (ps.pos.x-ps.opos.x);
-//        SY += (ps.pos.y-ps.opos.y);
+//        sprite[i].y += (ps.pos.y-ps.opos.y);
 //        setsprite(i, (vec3_t *)&sprite[i]);
 
 //BOLT:
@@ -2103,7 +2103,7 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 
 //            for (k=0; k<16; k++)
 //            {
-//                j = A_InsertSprite(SECT,sprite[i].x,SY,SZ-(krand()%(48<<8)),SCRAP3+(krand()&3),-8,48,48,krand()&2047,(krand()&63)+64,-(krand()&4095)-(sprite[i].zvel>>2),i,5);
+//                j = A_InsertSprite(SECT,sprite[i].x,sprite[i].y,SZ-(krand()%(48<<8)),SCRAP3+(krand()&3),-8,48,48,krand()&2047,(krand()&63)+64,-(krand()&4095)-(sprite[i].zvel>>2),i,5);
 //                sprite[j].pal = 2;
 //            }
 
@@ -3480,7 +3480,7 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //                                TEST_SYNC_KEY(g_player[p].sync.bits, SK_CROUCH))
 //                        {
 //                            ps.bobposx = ps.opos.x = ps.pos.x += sprite[OW].x-sprite[i].x;
-//                            ps.bobposy = ps.opos.y = ps.pos.y += sprite[OW].y-SY;
+//                            ps.bobposy = ps.opos.y = ps.pos.y += sprite[OW].y-sprite[i].y;
 
 //                            if (ps.jetpack_on && (TEST_SYNC_KEY(g_player[p].sync.bits, SK_JUMP) || ps.jetpack_on < 11))
 //                                ps.pos.z = sprite[OW].z-6144;
@@ -3509,7 +3509,7 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //                    if (k == 1)
 //                    {
 //                        ps.pos.x += sprite[OW].x-sprite[i].x;
-//                        ps.pos.y += sprite[OW].y-SY;
+//                        ps.pos.y += sprite[OW].y-sprite[i].y;
 
 //                        P_FinishWaterChange(j, ps, sectlotag, OW, sprite[OW].sectnum);
 //                    }
@@ -3607,7 +3607,7 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //                                actor[j].lasttransport = totalclock + (TICSPERFRAME<<2);
 
 //                                sprite[j].x += (sprite[OW].x-sprite[i].x);
-//                                sprite[j].y += (sprite[OW].y-SY);
+//                                sprite[j].y += (sprite[OW].y-sprite[i].y);
 //                                sprite[j].z = sectlotag==ST_1_ABOVE_WATER ?
 //                                    sector[osect].ceilingz : sector[osect].floorz;
 
@@ -3625,7 +3625,7 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //                                            (G_CheckPlayerInSector(sect) == -1 && G_CheckPlayerInSector(sprite[OW].sectnum) == -1))
 //                                    {
 //                                        sprite[j].x += (sprite[OW].x-sprite[i].x);
-//                                        sprite[j].y += (sprite[OW].y-SY);
+//                                        sprite[j].y += (sprite[OW].y-sprite[i].y);
 //                                        sprite[j].z -= SZ - sector[sprite[OW].sectnum].floorz;
 //                                        sprite[j].ang = sprite[OW].ang;
 
@@ -3652,7 +3652,7 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //                                else
 //                                {
 //                                    sprite[j].x += (sprite[OW].x-sprite[i].x);
-//                                    sprite[j].y += (sprite[OW].y-SY);
+//                                    sprite[j].y += (sprite[OW].y-sprite[i].y);
 //                                    sprite[j].z = sprite[OW].z+4096;
 
 //                                    Bmemcpy(&actor[j].bpos.x, &sprite[j], sizeof(vec3_t));
@@ -4244,7 +4244,7 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //                    if (j == FREEZEBLAST) goto BOLT;
 //                    for (j=16; j >= 0 ; j--)
 //                    {
-//                        int32_t k = A_InsertSprite(SECT,sprite[i].x,SY,SZ,GLASSPIECES+(j%3),-32,36,36,krand()&2047,32+(krand()&63),1024-(krand()&1023),i,5);
+//                        int32_t k = A_InsertSprite(SECT,sprite[i].x,sprite[i].y,SZ,GLASSPIECES+(j%3),-32,36,36,krand()&2047,32+(krand()&63),1024-(krand()&1023),i,5);
 //                        sprite[k].pal = 1;
 //                    }
 //                    A_PlaySound(GLASS_BREAKING,i);
@@ -4252,7 +4252,7 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //                }
 //                else if (x < 1024 && ps.quick_kick == 0)
 //                {
-//                    j = G_GetAngleDelta(ps.ang,getangle(sprite[i].x-ps.pos.x,SY-ps.pos.y));
+//                    j = G_GetAngleDelta(ps.ang,getangle(sprite[i].x-ps.pos.x,sprite[i].y-ps.pos.y));
 //                    if (j > -128 && j < 128)
 //                        ps.quick_kick = 14;
 //                }

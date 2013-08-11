@@ -186,7 +186,7 @@ var g_numSelfObituaries = 0;
 //            0,&hit,CLIPMASK1);
 //    SZ += zoff;
 
-//    return (FindDistance2D(hit.pos.x-sprite[i].x,hit.pos.y-SY));
+//    return (FindDistance2D(hit.pos.x-sprite[i].x,hit.pos.y-sprite[i].y));
 //}
 
 //static int32_t A_FindTargetSprite(spritetype *s,int32_t aang,int32_t atwith)
@@ -272,7 +272,7 @@ var g_numSelfObituaries = 0;
 //                    }
 
 //                    xv = (sprite[i].x-s->x);
-//                    yv = (SY-s->y);
+//                    yv = (sprite[i].y-s->y);
 
 //                    if ((dy1*xv <= dx1*yv) && (dy2*xv >= dx2*yv))
 //                    {
@@ -285,8 +285,8 @@ var g_numSelfObituaries = 0;
 //                            else a = 1;
 
 //                            if (PN == ORGANTIC || PN == ROTATEGUN)
-//                                cans = cansee(sprite[i].x,SY,SZ,SECT,s->x,s->y,s->z-(32<<8),s->sectnum);
-//                            else cans = cansee(sprite[i].x,SY,SZ-(32<<8),SECT,s->x,s->y,s->z-(32<<8),s->sectnum);
+//                                cans = cansee(sprite[i].x,sprite[i].y,SZ,SECT,s->x,s->y,s->z-(32<<8),s->sectnum);
+//                            else cans = cansee(sprite[i].x,sprite[i].y,SZ-(32<<8),SECT,s->x,s->y,s->z-(32<<8),s->sectnum);
 
 //                            if (a && cans)
 //                            {
@@ -4228,7 +4228,7 @@ var WeaponPickupSprites = new Int16Array([ KNEE__STATIC, FIRSTGUNSPRITE__STATIC,
 //    int32_t i = p->newowner;
 
 //    p->pos.x = sprite[i].x;
-//    p->pos.y = SY;
+//    p->pos.y = sprite[i].y;
 //    p->pos.z = SZ;
 //    p->ang =  SA;
 //    p->vel.x = p->vel.y = sprite[p->i].xvel = 0;
