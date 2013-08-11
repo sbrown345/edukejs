@@ -367,7 +367,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //            G_SetupCamTile(OW, TILE_VIEWSCR);
 //#ifdef POLYMER
 //            // HACK: force texture update on viewscreen sprite in Polymer!
-//            if (getrendermode() == REND_POLYMER)
+//            if (getrendermode() == REND_POLYMER)  
 //                sprite[i].filler ^= (1<<1);
 //#endif
 //        }

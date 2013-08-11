@@ -474,7 +474,7 @@ var g_numEnvSoundsPlaying,g_maxSoundPos = 0; //int32
 //    int32_t sndang, sndist;
 //    int32_t explosion = 0;
 
-//    if (PN == APLAYER && sprite[i].yvel == screenpeek)
+//    if (sprite[i].picnum == APLAYER && sprite[i].yvel == screenpeek)
 //    {
 //        sndang = sndist = 0;
 //        goto sound_further_processing;
@@ -489,7 +489,7 @@ var g_numEnvSoundsPlaying,g_maxSoundPos = 0; //int32
 //        // HACK for splitscreen mod: take the min of sound distances
 //        // to 1st and 2nd player.
 
-//        if (PN == APLAYER && sprite[i].yvel==1)
+//        if (sprite[i].picnum == APLAYER && sprite[i].yvel==1)
 //        {
 //            sndist = sndang = 0;
 //            goto sound_further_processing;
@@ -519,7 +519,7 @@ var g_numEnvSoundsPlaying,g_maxSoundPos = 0; //int32
 //    if (sndist < 0)
 //        sndist = 0;
 
-//    if (camsect > -1 && sndist && PN != MUSICANDSFX &&
+//    if (camsect > -1 && sndist && sprite[i].picnum != MUSICANDSFX &&
 //            !cansee(cam->x,cam->y,cam->z-(24<<8),camsect, sprite[i].x,sprite[i].y,sprite[i].z-(24<<8),SECT))
 //        sndist += sndist>>5;
 
@@ -588,7 +588,7 @@ var g_numEnvSoundsPlaying,g_maxSoundPos = 0; //int32
 //    // Duke talk
 //    if (g_sounds[num].m&4)
 //    {
-//        if ((g_netServer || ud.multimode > 1) && PN == APLAYER && sprite[i].yvel != screenpeek) // other player sound
+//        if ((g_netServer || ud.multimode > 1) && sprite[i].picnum == APLAYER && sprite[i].yvel != screenpeek) // other player sound
 //        {
 //            if (!(ud.config.VoiceToggle&4))
 //                return -1;
@@ -624,14 +624,14 @@ var g_numEnvSoundsPlaying,g_maxSoundPos = 0; //int32
 //    }
 //    else
 //    {
-//        if (sndist > 32767 && PN != MUSICANDSFX && (g_sounds[num].m & 3) == 0)
+//        if (sndist > 32767 && sprite[i].picnum != MUSICANDSFX && (g_sounds[num].m & 3) == 0)
 //            return -1;
 
 //        if (peekps->cursectnum > -1 && sector[peekps->cursectnum].lotag == ST_2_UNDERWATER && (g_sounds[num].m&4) == 0)
 //            pitch = -768;
 //    }
 
-//    if (g_sounds[num].num > 0 && PN != MUSICANDSFX)
+//    if (g_sounds[num].num > 0 && sprite[i].picnum != MUSICANDSFX)
 //        S_StopEnvSound(num, i);
 
 //    if (g_sounds[num].ptr == 0)

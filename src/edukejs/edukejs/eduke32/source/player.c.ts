@@ -176,7 +176,7 @@ var g_numSelfObituaries = 0;
 
 //int32_t A_GetHitscanRange(int32_t i)
 //{
-//    int32_t zoff = (PN == APLAYER) ? PHEIGHT : 0;
+//    int32_t zoff = (sprite[i].picnum == APLAYER) ? PHEIGHT : 0;
 //    hitdata_t hit;
 
 //    sprite[i].z -= zoff;
@@ -248,9 +248,9 @@ var g_numSelfObituaries = 0;
 //            if (sprite[i].xrepeat > 0 && sprite[i].extra >= 0 && (sprite[i].cstat&(257+32768)) == 257)
 //                if (A_CheckEnemySprite(&sprite[i]) || k < 2)
 //                {
-//                    if (A_CheckEnemySprite(&sprite[i]) || PN == APLAYER || PN == SHARK)
+//                    if (A_CheckEnemySprite(&sprite[i]) || sprite[i].picnum == APLAYER || sprite[i].picnum == SHARK)
 //                    {
-//                        if (PN == APLAYER &&
+//                        if (sprite[i].picnum == APLAYER &&
 //                                //                        ud.ffire == 0 &&
 //                                (GTFLAGS(GAMETYPE_PLAYERSFRIENDLY) || (GTFLAGS(GAMETYPE_TDM) &&
 //                                        g_player[sprite[i].yvel].ps->team == g_player[s->yvel].ps->team)) &&
@@ -260,12 +260,12 @@ var g_numSelfObituaries = 0;
 
 //                        if (gotshrinker && sprite[i].xrepeat < 30)
 //                        {
-//                            if (PN == SHARK)
+//                            if (sprite[i].picnum == SHARK)
 //                            {
 //                                if (sprite[i].xrepeat < 20) continue;
 //                                continue;
 //                            }
-//                            else if (!(PN >= GREENSLIME && PN <= GREENSLIME+7))
+//                            else if (!(sprite[i].picnum >= GREENSLIME && sprite[i].picnum <= GREENSLIME+7))
 //                                continue;
 //                        }
 //                        if (gotfreezer && sprite[i].pal == 1) continue;
@@ -284,7 +284,7 @@ var g_numSelfObituaries = 0;
 //                                a = (klabs(scale(sprite[i].z-s->z,10,sdist)-(g_player[s->yvel].ps->horiz+g_player[s->yvel].ps->horizoff-100)) < 100);
 //                            else a = 1;
 
-//                            if (PN == ORGANTIC || PN == ROTATEGUN)
+//                            if (sprite[i].picnum == ORGANTIC || sprite[i].picnum == ROTATEGUN)
 //                                cans = cansee(sprite[i].x,sprite[i].y,sprite[i].z,SECT,s->x,s->y,s->z-(32<<8),s->sectnum);
 //                            else cans = cansee(sprite[i].x,sprite[i].y,sprite[i].z-(32<<8),SECT,s->x,s->y,s->z-(32<<8),s->sectnum);
 
@@ -859,7 +859,7 @@ var g_numSelfObituaries = 0;
 //        {
 //            srcvect.z -= (7<<8);
 
-//            if (A_CheckEnemySprite(s) && PN != COMMANDER)
+//            if (A_CheckEnemySprite(s) && sprite[i].picnum != COMMANDER)
 //            {
 //                srcvect.x += (sintable[(sa+1024+96)&2047]>>7);
 //                srcvect.y += (sintable[(sa+512+96)&2047]>>7);
@@ -1193,7 +1193,7 @@ var g_numSelfObituaries = 0;
 //                        sprite[k].cstat |= (krand()&4);
 //                        A_SetSprite(k,CLIPMASK0);
 //                        setsprite(k, (vec3_t *)&sprite[k]);
-//                        if (PN == OOZFILTER || PN == NEWBEAST)
+//                        if (sprite[i].picnum == OOZFILTER || sprite[i].picnum == NEWBEAST)
 //                            sprite[k].pal = 6;
 //                    }
 //                }
@@ -1317,7 +1317,7 @@ var g_numSelfObituaries = 0;
 //            if (atwith == COOLEXPLOSION1)
 //            {
 //                sprite[j].shade = 0;
-//                if (PN == BOSS2)
+//                if (sprite[i].picnum == BOSS2)
 //                {
 //                    l = sprite[j].xvel;
 //                    sprite[j].xvel = MinibossScale(1024);
@@ -1360,9 +1360,9 @@ var g_numSelfObituaries = 0;
 //            {
 //                j = A_FindPlayer(s, NULL);
 //                sa = getangle(g_player[j].ps->opos.x-srcvect.x,g_player[j].ps->opos.y-srcvect.y);
-//                if (PN == BOSS3)
+//                if (sprite[i].picnum == BOSS3)
 //                    srcvect.z -= MinibossScale(32<<8);
-//                else if (PN == BOSS2)
+//                else if (sprite[i].picnum == BOSS2)
 //                {
 //                    vel += 128;
 //                    srcvect.z += MinibossScale(24<<8);
@@ -1400,7 +1400,7 @@ var g_numSelfObituaries = 0;
 
 //            if (p == -1)
 //            {
-//                if (PN == BOSS3)
+//                if (sprite[i].picnum == BOSS3)
 //                {
 //                    if (krand()&1)
 //                    {
@@ -1417,7 +1417,7 @@ var g_numSelfObituaries = 0;
 //                    sprite[j].xrepeat = MinibossScale(42);
 //                    sprite[j].yrepeat = MinibossScale(42);
 //                }
-//                else if (PN == BOSS2)
+//                else if (sprite[i].picnum == BOSS2)
 //                {
 //                    sprite[j].x -= MinibossScale(sintable[sa&2047]/56);
 //                    sprite[j].y -= MinibossScale(sintable[(sa+1024+512)&2047]/56);
