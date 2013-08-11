@@ -10722,7 +10722,7 @@ g_sounds = newStructArray(sound_t, MAXSOUNDS);
 //#pragma pack(pop)
 //                                mylight.radius = (256-(sprite[i].shade+128))<<1;
 //                                mylight.faderadius = (int16_t)(mylight.radius * 0.75f);
-//                                mylight.tilenum = OW;
+//                                mylight.tilenum = sprite[i].owner;
 //                                mylight.publicflags.emitshadow = !(CS & 64);
 
 //                                addprlight_common1(&mylight, i);
@@ -10766,7 +10766,7 @@ g_sounds = newStructArray(sound_t, MAXSOUNDS);
 //                                {
 //                                    spritelightptr[i]->publicflags.negative = !!(CS & 128);
 //                                }
-//                                spritelightptr[i]->tilenum = OW;
+//                                spritelightptr[i]->tilenum = sprite[i].owner;
 //                            }
 //                        }
 //                    }

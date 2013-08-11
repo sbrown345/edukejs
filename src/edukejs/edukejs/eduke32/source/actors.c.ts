@@ -375,7 +375,7 @@ function G_SetInterpolation(/*int32_t * */posptr: R<number>): number
 //    if (totalclock > actor[spritenum].lasttransport)
 //    {
 //        spritetype *const spr = &sprite[spritenum];
-//        const spritetype *const otherse = &sprite[OW];
+//        const spritetype *const otherse = &sprite[sprite[i].owner];
 
 //        actor[spritenum].lasttransport = totalclock + (TICSPERFRAME<<2);
 
@@ -1182,7 +1182,7 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 
 //    while (i >= 0)
 //    {
-//        const int32_t p = sprite[OW].yvel;
+//        const int32_t p = sprite[sprite[i].owner].yvel;
 //        DukePlayer_t *const ps = g_player[p].ps;
 
 //        const int32_t nexti = nextspritestat[i];
@@ -3408,7 +3408,7 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 
 //        const int32_t onfloorz = T5;  // ONFLOORZ
 
-//        if (OW == i)
+//        if (sprite[i].owner == i)
 //        {
 //            i = nexti;
 //            continue;
@@ -3442,31 +3442,31 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //                            }
 
 //                            for (TRAVERSE_CONNECT(k))
-//                                if (g_player[k].ps.cursectnum == sprite[OW].sectnum)
+//                                if (g_player[k].ps.cursectnum == sprite[sprite[i].owner].sectnum)
 //                                {
 //                                    g_player[k].ps.frag_ps = p;
 //                                    sprite[g_player[k].ps.i].extra = 0;
 //                                }
 
-//                            ps.ang = sprite[OW].ang;
+//                            ps.ang = sprite[sprite[i].owner].ang;
 
-//                            if (sprite[OW].owner != OW)
+//                            if (sprite[sprite[i].owner].owner != sprite[i].owner)
 //                            {
 //                                T1 = 13;
-//                                actor[OW].t_data[0] = 13;
+//                                actor[sprite[i].owner].t_data[0] = 13;
 //                                ps.transporter_hold = 13;
 //                            }
 
-//                            ps.bobposx = ps.opos.x = ps.pos.x = sprite[OW].x;
-//                            ps.bobposy = ps.opos.y = ps.pos.y = sprite[OW].y;
-//                            ps.opos.z = ps.pos.z = sprite[OW].z-PHEIGHT;
+//                            ps.bobposx = ps.opos.x = ps.pos.x = sprite[sprite[i].owner].x;
+//                            ps.bobposy = ps.opos.y = ps.pos.y = sprite[sprite[i].owner].y;
+//                            ps.opos.z = ps.pos.z = sprite[sprite[i].owner].z-PHEIGHT;
 
-//                            changespritesect(j,sprite[OW].sectnum);
+//                            changespritesect(j,sprite[sprite[i].owner].sectnum);
 //                            ps.cursectnum = sprite[j].sectnum;
 
 //                            if (sprite[i].pal == 0)
 //                            {
-//                                k = A_Spawn(OW,TRANSPORTERBEAM);
+//                                k = A_Spawn(sprite[i].owner,TRANSPORTERBEAM);
 //                                A_PlaySound(TELEPORTER,k);
 //                            }
 
@@ -3479,20 +3479,20 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //                        if (!ps.jetpack_on || TEST_SYNC_KEY(g_player[p].sync.bits, SK_JUMP) ||
 //                                TEST_SYNC_KEY(g_player[p].sync.bits, SK_CROUCH))
 //                        {
-//                            ps.bobposx = ps.opos.x = ps.pos.x += sprite[OW].x-sprite[i].x;
-//                            ps.bobposy = ps.opos.y = ps.pos.y += sprite[OW].y-sprite[i].y;
+//                            ps.bobposx = ps.opos.x = ps.pos.x += sprite[sprite[i].owner].x-sprite[i].x;
+//                            ps.bobposy = ps.opos.y = ps.pos.y += sprite[sprite[i].owner].y-sprite[i].y;
 
 //                            if (ps.jetpack_on && (TEST_SYNC_KEY(g_player[p].sync.bits, SK_JUMP) || ps.jetpack_on < 11))
-//                                ps.pos.z = sprite[OW].z-6144;
-//                            else ps.pos.z = sprite[OW].z+6144;
+//                                ps.pos.z = sprite[sprite[i].owner].z-6144;
+//                            else ps.pos.z = sprite[sprite[i].owner].z+6144;
 //                            ps.opos.z = ps.pos.z;
 
 //                            actor[ps.i].bpos.x = ps.pos.x;
 //                            actor[ps.i].bpos.y = ps.pos.y;
 //                            actor[ps.i].bpos.z = ps.pos.z;
 
-//                            changespritesect(j,sprite[OW].sectnum);
-//                            ps.cursectnum = sprite[OW].sectnum;
+//                            changespritesect(j,sprite[sprite[i].owner].sectnum);
+//                            ps.cursectnum = sprite[sprite[i].owner].sectnum;
 
 //                            break;
 //                        }
@@ -3501,17 +3501,17 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //                    if (onfloorz)
 //                    {
 //                        if (sectlotag==ST_1_ABOVE_WATER)
-//                            k = P_Submerge(j, p, ps, sect, sprite[OW].sectnum);
+//                            k = P_Submerge(j, p, ps, sect, sprite[sprite[i].owner].sectnum);
 //                        else if (sectlotag==ST_2_UNDERWATER)
-//                            k = P_Emerge(j, p, ps, sect, sprite[OW].sectnum);
+//                            k = P_Emerge(j, p, ps, sect, sprite[sprite[i].owner].sectnum);
 //                    }
 
 //                    if (k == 1)
 //                    {
-//                        ps.pos.x += sprite[OW].x-sprite[i].x;
-//                        ps.pos.y += sprite[OW].y-sprite[i].y;
+//                        ps.pos.x += sprite[sprite[i].owner].x-sprite[i].x;
+//                        ps.pos.y += sprite[sprite[i].owner].y-sprite[i].y;
 
-//                        P_FinishWaterChange(j, ps, sectlotag, OW, sprite[OW].sectnum);
+//                        P_FinishWaterChange(j, ps, sectlotag, sprite[i].owner, sprite[sprite[i].owner].sectnum);
 //                    }
 //                }
 //                break;
@@ -3545,7 +3545,7 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 
 //                    if (sectlotag == 0 && (onfloorz || klabs(sprite[j].z-sprite[i].z) < 4096))
 //                    {
-//                        if (sprite[OW].owner != OW && onfloorz && T1 > 0 && sprite[j].statnum != STAT_MISC)
+//                        if (sprite[sprite[i].owner].owner != sprite[i].owner && onfloorz && T1 > 0 && sprite[j].statnum != STAT_MISC)
 //                        {
 //                            T1++;
 //                            goto BOLT;
@@ -3591,7 +3591,7 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //                            if (sectlotag > 0)
 //                            {
 //                                // Water SE7 teleportation.
-//                                const int32_t osect = sprite[OW].sectnum;
+//                                const int32_t osect = sprite[sprite[i].owner].sectnum;
 
 //                                Bassert(sectlotag==ST_1_ABOVE_WATER || sectlotag==ST_2_UNDERWATER);
 
@@ -3606,14 +3606,14 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //                                //
 //                                actor[j].lasttransport = totalclock + (TICSPERFRAME<<2);
 
-//                                sprite[j].x += (sprite[OW].x-sprite[i].x);
-//                                sprite[j].y += (sprite[OW].y-sprite[i].y);
+//                                sprite[j].x += (sprite[sprite[i].owner].x-sprite[i].x);
+//                                sprite[j].y += (sprite[sprite[i].owner].y-sprite[i].y);
 //                                sprite[j].z = sectlotag==ST_1_ABOVE_WATER ?
 //                                    sector[osect].ceilingz : sector[osect].floorz;
 
 //                                Bmemcpy(&actor[j].bpos.x, &sprite[j], sizeof(vec3_t));
 
-//                                changespritesect(j, sprite[OW].sectnum);
+//                                changespritesect(j, sprite[sprite[i].owner].sectnum);
 //                            }
 //                            else if (Bassert(sectlotag==0), 1)
 //                            {
@@ -3622,12 +3622,12 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //                                if (onfloorz)
 //                                {
 //                                    if (sprite[j].statnum == STAT_PROJECTILE ||
-//                                            (G_CheckPlayerInSector(sect) == -1 && G_CheckPlayerInSector(sprite[OW].sectnum) == -1))
+//                                            (G_CheckPlayerInSector(sect) == -1 && G_CheckPlayerInSector(sprite[sprite[i].owner].sectnum) == -1))
 //                                    {
-//                                        sprite[j].x += (sprite[OW].x-sprite[i].x);
-//                                        sprite[j].y += (sprite[OW].y-sprite[i].y);
-//                                        sprite[j].z -= sprite[i].z - sector[sprite[OW].sectnum].floorz;
-//                                        sprite[j].ang = sprite[OW].ang;
+//                                        sprite[j].x += (sprite[sprite[i].owner].x-sprite[i].x);
+//                                        sprite[j].y += (sprite[sprite[i].owner].y-sprite[i].y);
+//                                        sprite[j].z -= sprite[i].z - sector[sprite[sprite[i].owner].sectnum].floorz;
+//                                        sprite[j].ang = sprite[sprite[i].owner].ang;
 
 //                                        Bmemcpy(&actor[j].bpos.x, &sprite[j], sizeof(vec3_t));
 
@@ -3636,28 +3636,28 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //                                            k = A_Spawn(i,TRANSPORTERBEAM);
 //                                            A_PlaySound(TELEPORTER,k);
 
-//                                            k = A_Spawn(OW,TRANSPORTERBEAM);
+//                                            k = A_Spawn(sprite[i].owner,TRANSPORTERBEAM);
 //                                            A_PlaySound(TELEPORTER,k);
 //                                        }
 
-//                                        if (sprite[OW].owner != OW)
+//                                        if (sprite[sprite[i].owner].owner != sprite[i].owner)
 //                                        {
 //                                            T1 = 13;
-//                                            actor[OW].t_data[0] = 13;
+//                                            actor[sprite[i].owner].t_data[0] = 13;
 //                                        }
 
-//                                        changespritesect(j,sprite[OW].sectnum);
+//                                        changespritesect(j,sprite[sprite[i].owner].sectnum);
 //                                    }
 //                                }
 //                                else
 //                                {
-//                                    sprite[j].x += (sprite[OW].x-sprite[i].x);
-//                                    sprite[j].y += (sprite[OW].y-sprite[i].y);
-//                                    sprite[j].z = sprite[OW].z+4096;
+//                                    sprite[j].x += (sprite[sprite[i].owner].x-sprite[i].x);
+//                                    sprite[j].y += (sprite[sprite[i].owner].y-sprite[i].y);
+//                                    sprite[j].z = sprite[sprite[i].owner].z+4096;
 
 //                                    Bmemcpy(&actor[j].bpos.x, &sprite[j], sizeof(vec3_t));
 
-//                                    changespritesect(j,sprite[OW].sectnum);
+//                                    changespritesect(j,sprite[sprite[i].owner].sectnum);
 //                                }
 //                            }
 
@@ -5662,7 +5662,7 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //// i: SE spritenum
 //static void MaybeTrainKillEnemies(int32_t i, int32_t numguts)
 //{
-//    int32_t j = headspritesect[sprite[OW].sectnum];
+//    int32_t j = headspritesect[sprite[sprite[i].owner].sectnum];
 
 //    while (j >= 0)
 //    {

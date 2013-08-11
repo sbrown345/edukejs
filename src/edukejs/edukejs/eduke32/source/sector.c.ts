@@ -358,13 +358,13 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //        T1 = 0;
 
 //        if (g_player[screenpeek].ps.newowner >= 0)
-//            OW = g_player[screenpeek].ps.newowner;
-//        else if (OW >= 0 && dist(&sprite[g_player[screenpeek].ps.i],&sprite[i]) < 8192)
+//            sprite[i].owner = g_player[screenpeek].ps.newowner;
+//        else if (sprite[i].owner >= 0 && dist(&sprite[g_player[screenpeek].ps.i],&sprite[i]) < 8192)
 //        {
 //            if (waloff[TILE_VIEWSCR] == 0)
 //                allocatepermanenttile(TILE_VIEWSCR,tilesizx[sprite[i].picnum],tilesizy[sprite[i].picnum]);
 //            else walock[TILE_VIEWSCR] = 255;
-//            G_SetupCamTile(OW, TILE_VIEWSCR);
+//            G_SetupCamTile(sprite[i].owner, TILE_VIEWSCR);
 //#ifdef POLYMER
 //            // HACK: force texture update on viewscreen sprite in Polymer!
 //            if (getrendermode() == REND_POLYMER)  
@@ -2173,9 +2173,9 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 
 //    case FORCESPHERE__STATIC:
 //        sprite[i].xrepeat = 0;
-//        actor[OW].t_data[0] = 32;
-//        actor[OW].t_data[1] = !actor[OW].t_data[1];
-//        actor[OW].t_data[2] ++;
+//        actor[sprite[i].owner].t_data[0] = 32;
+//        actor[sprite[i].owner].t_data[1] = !actor[sprite[i].owner].t_data[1];
+//        actor[sprite[i].owner].t_data[2] ++;
 //        A_Spawn(i,EXPLOSION2);
 //        break;
 
@@ -2322,7 +2322,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //        A_DeleteSprite(i);
 //        break;
 //    case PLAYERONWATER__STATIC:
-//        i = OW;
+//        i = sprite[i].owner;
 //    default:
 //        if ((sprite[i].cstat&16) && SHT == 0 && SLT == 0 && sprite[i].statnum == STAT_DEFAULT)
 //            break;

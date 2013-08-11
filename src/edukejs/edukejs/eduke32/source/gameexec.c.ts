@@ -228,7 +228,7 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 
 //    for (i=headspritestat[STAT_PROJECTILE]; i>=0; i=nextspritestat[i]) //weapons list
 //    {
-//        if (OW == i)
+//        if (sprite[i].owner == i)
 //            continue;
 
 //        bx = sprite[i].x-mx;
