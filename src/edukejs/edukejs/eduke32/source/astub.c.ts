@@ -333,7 +333,7 @@ g_sounds = newStructArray(sound_t, MAXSOUNDS);
 
 //static void addprlight_common1(_prlight *mylightptr, int32_t i)
 //{
-//    mylightptr->sector = SECT;
+//    mylightptr->sector = sprite[i].sectnum;
 //    Bmemcpy(mylightptr, &sprite[i], sizeof(vec3_t));
 //    mylightptr->range = sprite[i].hitag;
 //    copy_prlight_colors(mylightptr, i);

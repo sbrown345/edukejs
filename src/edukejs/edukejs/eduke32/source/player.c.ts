@@ -180,7 +180,7 @@ var g_numSelfObituaries = 0;
 //    hitdata_t hit;
 
 //    sprite[i].z -= zoff;
-//    hitscan((const vec3_t *)&sprite[i],SECT,
+//    hitscan((const vec3_t *)&sprite[i],sprite[i].sectnum,
 //            sintable[(sprite[i].ang+512)&2047],
 //            sintable[sprite[i].ang&2047],
 //            0,&hit,CLIPMASK1);
@@ -285,8 +285,8 @@ var g_numSelfObituaries = 0;
 //                            else a = 1;
 
 //                            if (sprite[i].picnum == ORGANTIC || sprite[i].picnum == ROTATEGUN)
-//                                cans = cansee(sprite[i].x,sprite[i].y,sprite[i].z,SECT,s->x,s->y,s->z-(32<<8),s->sectnum);
-//                            else cans = cansee(sprite[i].x,sprite[i].y,sprite[i].z-(32<<8),SECT,s->x,s->y,s->z-(32<<8),s->sectnum);
+//                                cans = cansee(sprite[i].x,sprite[i].y,sprite[i].z,sprite[i].sectnum,s->x,s->y,s->z-(32<<8),s->sectnum);
+//                            else cans = cansee(sprite[i].x,sprite[i].y,sprite[i].z-(32<<8),sprite[i].sectnum,s->x,s->y,s->z-(32<<8),s->sectnum);
 
 //                            if (a && cans)
 //                            {

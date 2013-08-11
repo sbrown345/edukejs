@@ -1051,7 +1051,7 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //    int32_t i;
 
 //    for (SPRITES_OF(STAT_MISC, i))
-//        if (sprite[i].picnum == EXPLOSION2 && sectnum == SECT)
+//        if (sprite[i].picnum == EXPLOSION2 && sectnum == sprite[i].sectnum)
 //            return i;
 
 //    return -1;
@@ -1198,7 +1198,7 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //            if (ps.on_ground && ps.on_warping_sector == 1 && psectnum >= 0 && sector[psectnum].lotag == ST_1_ABOVE_WATER)
 //            {
 //                sprite[i].cstat = 257;
-//                sprite[i].z = sector[SECT].ceilingz+(27<<8);
+//                sprite[i].z = sector[sprite[i].sectnum].ceilingz+(27<<8);
 //                sprite[i].ang = ps.ang;
 //                if (T1 == 8)
 //                    T1 = 0;
@@ -1206,7 +1206,7 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //            }
 //            else
 //            {
-//                if (sector[SECT].lotag != ST_2_UNDERWATER) sprite[i].z = sector[SECT].floorz;
+//                if (sector[sprite[i].sectnum].lotag != ST_2_UNDERWATER) sprite[i].z = sector[sprite[i].sectnum].floorz;
 //                sprite[i].cstat = 32768;
 //            }
 //        }
@@ -1436,7 +1436,7 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //                }
 //            }
 //            else if (s.lotag < 999 && (unsigned)sector[s.sectnum].lotag < 9 &&  // ST_9_SLIDING_ST_DOOR
-//                         ud.config.AmbienceToggle && sector[SECT].floorz != sector[SECT].ceilingz)
+//                         ud.config.AmbienceToggle && sector[sprite[i].sectnum].floorz != sector[sprite[i].sectnum].ceilingz)
 //            {
 //                if (g_sounds[s.lotag].m&2)
 //                {
@@ -2103,7 +2103,7 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 
 //            for (k=0; k<16; k++)
 //            {
-//                j = A_InsertSprite(SECT,sprite[i].x,sprite[i].y,sprite[i].z-(krand()%(48<<8)),SCRAP3+(krand()&3),-8,48,48,krand()&2047,(krand()&63)+64,-(krand()&4095)-(sprite[i].zvel>>2),i,5);
+//                j = A_InsertSprite(sprite[i].sectnum,sprite[i].x,sprite[i].y,sprite[i].z-(krand()%(48<<8)),SCRAP3+(krand()&3),-8,48,48,krand()&2047,(krand()&63)+64,-(krand()&4095)-(sprite[i].zvel>>2),i,5);
 //                sprite[j].pal = 2;
 //            }
 
@@ -3400,7 +3400,7 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 
 //    while (i >= 0)
 //    {
-//        const int32_t sect = SECT;
+//        const int32_t sect = sprite[i].sectnum;
 //        const int32_t sectlotag = sector[sect].lotag;
 
 //        const int32_t nexti = nextspritestat[i];
@@ -3684,7 +3684,7 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 
 //    for (SPRITES_OF(STAT_LOCATOR, i))
 //    {
-//        if ((sn == -1 || sn == SECT) && n == sprite[i].lotag)
+//        if ((sn == -1 || sn == sprite[i].sectnum) && n == sprite[i].lotag)
 //            return i;
 //    }
 
@@ -4244,7 +4244,7 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //                    if (j == FREEZEBLAST) goto BOLT;
 //                    for (j=16; j >= 0 ; j--)
 //                    {
-//                        int32_t k = A_InsertSprite(SECT,sprite[i].x,sprite[i].y,sprite[i].z,GLASSPIECES+(j%3),-32,36,36,krand()&2047,32+(krand()&63),1024-(krand()&1023),i,5);
+//                        int32_t k = A_InsertSprite(sprite[i].sectnum,sprite[i].x,sprite[i].y,sprite[i].z,GLASSPIECES+(j%3),-32,36,36,krand()&2047,32+(krand()&63),1024-(krand()&1023),i,5);
 //                        sprite[k].pal = 1;
 //                    }
 //                    A_PlaySound(GLASS_BREAKING,i);
@@ -4640,7 +4640,7 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 
 //            actor[i].movflag = j;
 
-//            if (sector[SECT].lotag == ST_1_ABOVE_WATER && s.zvel == 0 && actor[i].floorz == sector[sect].floorz)
+//            if (sector[sprite[i].sectnum].lotag == ST_1_ABOVE_WATER && s.zvel == 0 && actor[i].floorz == sector[sect].floorz)
 //            {
 //                s.z += (32<<8);
 //                if (t[5] == 0)
@@ -6404,7 +6404,7 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //                }
 //            }
 
-//            for (SPRITES_OF_SECT(SECT, j))
+//            for (SPRITES_OF_SECT(sprite[i].sectnum, j))
 //            {
 //                if (sprite[j].cstat&16 && A_CheckSpriteFlags(j,SPRITE_NOSHADE) == 0)
 //                {
@@ -6680,7 +6680,7 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //                sc.ceilingshade = t[2];
 //                t[0]=0;
 
-//                for (SPRITES_OF_SECT(SECT, j))
+//                for (SPRITES_OF_SECT(sprite[i].sectnum, j))
 //                {
 //                    if (sprite[j].cstat&16 && A_CheckSpriteFlags(j,SPRITE_NOSHADE) == 0)
 //                    {
@@ -6713,7 +6713,7 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //                }
 //                else t[0] = 2;
 
-//                for (SPRITES_OF_SECT(SECT, j))
+//                for (SPRITES_OF_SECT(sprite[i].sectnum, j))
 //                {
 //                    if (sprite[j].cstat&16)
 //                    {
@@ -7486,7 +7486,7 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //                }
 //                else if (ud.recstat == 2 && ps.newowner == -1)
 //                {
-//                    if (cansee(s.x,s.y,s.z,SECT,ps.pos.x,ps.pos.y,ps.pos.z,ps.cursectnum))
+//                    if (cansee(s.x,s.y,s.z,sprite[i].sectnum,ps.pos.x,ps.pos.y,ps.pos.z,ps.cursectnum))
 //                    {
 //                        if (x < (int32_t)((unsigned)sh))
 //                        {
@@ -7838,7 +7838,7 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //#pragma pack(push,1)
 //                    _prlight mylight;
 //#pragma pack(pop)
-//                    mylight.sector = SECT;
+//                    mylight.sector = sprite[i].sectnum;
 //                    Bmemcpy(&mylight, &sprite[i], sizeof(int32_t) * 3);
 //                    mylight.range = sprite[i].hitag;
 //                    mylight.color[0] = sprite[i].xvel;
@@ -7905,7 +7905,7 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //                    _prlight mylight;
 //#pragma pack(pop)
 
-//                    mylight.sector = SECT;
+//                    mylight.sector = sprite[i].sectnum;
 //                    Bmemcpy(&mylight, &sprite[i], sizeof(int32_t) * 3);
 //                    mylight.range = sprite[i].hitag;
 //                    mylight.color[0] = sprite[i].xvel;

@@ -62,7 +62,7 @@ function /*int32_t */A_CallSound(/*int32_t */sn: number,/*int32_t */whatsprite: 
                         T6 = whatsprite;
                     }
 
-                    if ((sector[SECT].lotag&0xff) != ST_22_SPLITTING_DOOR)
+                    if ((sector[sprite[i].sectnum].lotag&0xff) != ST_22_SPLITTING_DOOR)
                         T1 = 1;
                 }
             }
@@ -473,7 +473,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //    {
 //        if (sprite[i].lotag == SE_17_WARP_ELEVATOR && sprite[i].hitag == sprite[s].hitag)
 //            if ((klabs(sector[sn].floorz-actor[s].t_data[2]) > sprite[i].yvel) ||
-//                (sector[SECT].hitag == (sector[sn].hitag-d)))
+//                (sector[sprite[i].sectnum].hitag == (sector[sn].hitag-d)))
 //                break;
 //        i = nextspritestat[i];
 //    }
@@ -706,7 +706,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //            if ((sprite[i].lotag == SE_22_TEETH_DOOR) &&
 //                    (sprite[i].hitag == sptr.hitag))
 //            {
-//                sector[SECT].extra = -sector[SECT].extra;
+//                sector[sprite[i].sectnum].extra = -sector[sprite[i].sectnum].extra;
 
 //                T1 = sn;
 //                T2 = 1;
@@ -847,7 +847,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //        i = headspritestat[STAT_EFFECTOR];
 //        while (i >= 0)
 //        {
-//            if (sprite[i].lotag == SE_11_SWINGING_DOOR && SECT == sn && !T5)
+//            if (sprite[i].lotag == SE_11_SWINGING_DOOR && sprite[i].sectnum == sn && !T5)
 //            {
 //                j = i;
 //                break;
@@ -859,17 +859,17 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //            OSD_Printf("WARNING: SE23 i<0!\n");
 //            return;
 //        }    // JBF
-//        l = sector[SECT].lotag&0x8000;
+//        l = sector[sprite[i].sectnum].lotag&0x8000;
 
 //        if (j >= 0)
 //        {
 //            i = headspritestat[STAT_EFFECTOR];
 //            while (i >= 0)
 //            {
-//                if (l == (sector[SECT].lotag&0x8000) && sprite[i].lotag == SE_11_SWINGING_DOOR && sprite[j].hitag == sprite[i].hitag && !T5)
+//                if (l == (sector[sprite[i].sectnum].lotag&0x8000) && sprite[i].lotag == SE_11_SWINGING_DOOR && sprite[j].hitag == sprite[i].hitag && !T5)
 //                {
-//                    if (sector[SECT].lotag&0x8000) sector[SECT].lotag &= 0x7fff;
-//                    else sector[SECT].lotag |= 0x8000;
+//                    if (sector[sprite[i].sectnum].lotag&0x8000) sector[sprite[i].sectnum].lotag &= 0x7fff;
+//                    else sector[sprite[i].sectnum].lotag |= 0x8000;
 //                    T5 = 1;
 //                    T4 = -T4;
 //                    if (q == 0)
@@ -903,11 +903,11 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //            {
 //                if (sprite[i].lotag == SE_15_SLIDING_DOOR)
 //                {
-//                    sector[SECT].lotag ^= 0x8000; // Toggle the open or close
+//                    sector[sprite[i].sectnum].lotag ^= 0x8000; // Toggle the open or close
 //                    sprite[i].ang += 1024;
-//                    if (T5) A_CallSound(SECT,i);
-//                    A_CallSound(SECT,i);
-//                    if (sector[SECT].lotag&0x8000) T5 = 1;
+//                    if (T5) A_CallSound(sprite[i].sectnum,i);
+//                    A_CallSound(sprite[i].sectnum,i);
+//                    if (sector[sprite[i].sectnum].lotag&0x8000) T5 = 1;
 //                    else T5 = 2;
 //                }
 //            }
@@ -1016,14 +1016,14 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //        {
 //            if (sprite[i].picnum == ACTIVATORLOCKED)
 //            {
-//                if (sector[SECT].lotag&16384)
-//                    sector[SECT].lotag &= ~16384;
+//                if (sector[sprite[i].sectnum].lotag&16384)
+//                    sector[sprite[i].sectnum].lotag &= ~16384;
 //                else
-//                    sector[SECT].lotag |= 16384;
+//                    sector[sprite[i].sectnum].lotag |= 16384;
 
 //                if (snum >= 0 && snum < ud.multimode)
 //                {
-//                    if (sector[SECT].lotag&16384)
+//                    if (sector[sprite[i].sectnum].lotag&16384)
 //                        P_DoQuote(QUOTE_LOCKED,g_player[snum].ps);
 //                    else P_DoQuote(QUOTE_UNLOCKED,g_player[snum].ps);
 //                }
@@ -1035,14 +1035,14 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //                case 0:
 //                    break;
 //                case 1:
-//                    if (sector[SECT].floorz != sector[SECT].ceilingz)
+//                    if (sector[sprite[i].sectnum].floorz != sector[sprite[i].sectnum].ceilingz)
 //                    {
 //                        i = nextspritestat[i];
 //                        continue;
 //                    }
 //                    break;
 //                case 2:
-//                    if (sector[SECT].floorz == sector[SECT].ceilingz)
+//                    if (sector[sprite[i].sectnum].floorz == sector[sprite[i].sectnum].ceilingz)
 //                    {
 //                        i = nextspritestat[i];
 //                        continue;
@@ -1063,17 +1063,17 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //                            case SE_32_CEILING_RISE_FALL:
 //                            case SE_18_INCREMENTAL_SECTOR_RISE_FALL:
 //                                actor[j].t_data[0] = 1-actor[j].t_data[0];
-//                                A_CallSound(SECT,j);
+//                                A_CallSound(sprite[i].sectnum,j);
 //                                break;
 //                            }
 //                        j = nextspritesect[j];
 //                    }
 //                }
 
-//                if (k == -1 && (sector[SECT].lotag&0xff) == ST_22_SPLITTING_DOOR)
-//                    k = A_CallSound(SECT,i);
+//                if (k == -1 && (sector[sprite[i].sectnum].lotag&0xff) == ST_22_SPLITTING_DOOR)
+//                    k = A_CallSound(sprite[i].sectnum,i);
 
-//                G_OperateSectors(SECT,i);
+//                G_OperateSectors(sprite[i].sectnum,i);
 //            }
 //        }
 //        i = nextspritestat[i];
@@ -2039,7 +2039,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //        if (rpg == 1)
 //            for (k=64; k>0; k--)
 //            {
-//                j = A_InsertSprite(SECT,sprite[i].x,sprite[i].y,sprite[i].z-(krand()%(48<<8)),SCRAP3+(krand()&3),-8,48,48,krand()&2047,(krand()&63)+64,-(krand()&4095)-(sprite[i].zvel>>2),i,5);
+//                j = A_InsertSprite(sprite[i].sectnum,sprite[i].x,sprite[i].y,sprite[i].z-(krand()%(48<<8)),SCRAP3+(krand()&3),-8,48,48,krand()&2047,(krand()&63)+64,-(krand()&4095)-(sprite[i].zvel>>2),i,5);
 //                sprite[j].pal = 8;
 //            }
 //        //        case CACTUSBROKE:
@@ -2052,7 +2052,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //        case HEAVYHBOMB__STATIC:
 //            for (k=64; k>0; k--)
 //            {
-//                j = A_InsertSprite(SECT,sprite[i].x,sprite[i].y,sprite[i].z-(krand()%(48<<8)),SCRAP3+(krand()&3),-8,48,48,krand()&2047,(krand()&63)+64,-(krand()&4095)-(sprite[i].zvel>>2),i,5);
+//                j = A_InsertSprite(sprite[i].sectnum,sprite[i].x,sprite[i].y,sprite[i].z-(krand()%(48<<8)),SCRAP3+(krand()&3),-8,48,48,krand()&2047,(krand()&63)+64,-(krand()&4095)-(sprite[i].zvel>>2),i,5);
 //                sprite[j].pal = 8;
 //            }
 
@@ -2067,7 +2067,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //    case HANGLIGHT__STATIC:
 //    case GENERICPOLE2__STATIC:
 //        for (k=6; k>0; k--)
-//            A_InsertSprite(SECT,sprite[i].x,sprite[i].y,sprite[i].z-(8<<8),SCRAP1+(krand()&15),-8,48,48,krand()&2047,(krand()&63)+64,-(krand()&4095)-(sprite[i].zvel>>2),i,5);
+//            A_InsertSprite(sprite[i].sectnum,sprite[i].x,sprite[i].y,sprite[i].z-(8<<8),SCRAP1+(krand()&15),-8,48,48,krand()&2047,(krand()&63)+64,-(krand()&4095)-(sprite[i].zvel>>2),i,5);
 //        A_PlaySound(GLASS_HEAVYBREAK,i);
 //        A_DeleteSprite(i);
 //        break;
@@ -2076,8 +2076,8 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //    case FANSPRITE__STATIC:
 //        sprite[i].picnum = FANSPRITEBROKE;
 //        sprite[i].cstat &= (65535-257);
-//        if (sector[SECT].floorpicnum == FANSHADOW)
-//            sector[SECT].floorpicnum = FANSHADOWBROKE;
+//        if (sector[sprite[i].sectnum].floorpicnum == FANSHADOW)
+//            sector[sprite[i].sectnum].floorpicnum = FANSHADOWBROKE;
 
 //        A_PlaySound(GLASS_HEAVYBREAK,i);
 //        s = &sprite[i];
@@ -2098,7 +2098,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //        if (sprite[sn].extra != G_InitialActorStrength(SHOTSPARK1))
 //        {
 //            for (j=15; j>0; j--)
-//                A_InsertSprite(SECT,sprite[i].x,sprite[i].y,sector[SECT].floorz-(12<<8)-(j<<9),SCRAP1+(krand()&15),-8,64,64,
+//                A_InsertSprite(sprite[i].sectnum,sprite[i].x,sprite[i].y,sector[sprite[i].sectnum].floorz-(12<<8)-(j<<9),SCRAP1+(krand()&15),-8,64,64,
 //                               krand()&2047,(krand()&127)+64,-(krand()&511)-256,i,5);
 //            A_Spawn(i,EXPLOSION2);
 //            A_DeleteSprite(i);
@@ -2207,7 +2207,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 
 //        //            for(k=0;k<5;k++)
 //        //          {
-//        //            j = A_InsertSprite(SECT,sprite[i].x,sprite[i].y,sprite[i].z-(krand()%(48<<8)),SCRAP3+(krand()&3),-8,48,48,krand()&2047,(krand()&63)+64,-(krand()&4095)-(sprite[i].zvel>>2),i,5);
+//        //            j = A_InsertSprite(sprite[i].sectnum,sprite[i].x,sprite[i].y,sprite[i].z-(krand()%(48<<8)),SCRAP3+(krand()&3),-8,48,48,krand()&2047,(krand()&63)+64,-(krand()&4095)-(sprite[i].zvel>>2),i,5);
 //        //          sprite[j].pal = 2;
 //        //    }
 //        A_PlaySound(GLASS_HEAVYBREAK,i);
@@ -2264,7 +2264,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //        }
 
 //        j = A_Spawn(i,STEAM);
-//        sprite[j].z = sector[SECT].floorz-(32<<8);
+//        sprite[j].z = sector[sprite[i].sectnum].floorz-(32<<8);
 //        break;
 
 //    case MONK__STATIC:
@@ -2364,9 +2364,9 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //                        if ((sprite[i].cstat&48) == 0)
 //                            sprite[i].ang = (sprite[sn].ang+1024)&2047;
 //                        sprite[i].xvel = -(sprite[sn].extra<<2);
-//                        j = SECT;
+//                        j = sprite[i].sectnum;
 //                        pushmove((vec3_t *)&sprite[i],&j,128L,(4L<<8),(4L<<8),CLIPMASK0);
-//                        if (j != SECT && (unsigned)j < MAXSECTORS)
+//                        if (j != sprite[i].sectnum && (unsigned)j < MAXSECTORS)
 //                            changespritesect(i,j);
 //                    }
 //                }
@@ -2426,9 +2426,9 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //                        (sprite[i].hitag) == (sprite[j].hitag))
 //                {
 //                    sector[sprite[j].sectnum].floorz =
-//                        sector[SECT].floorz;
+//                        sector[sprite[i].sectnum].floorz;
 //                    sector[sprite[j].sectnum].ceilingz =
-//                        sector[SECT].ceilingz;
+//                        sector[sprite[i].sectnum].ceilingz;
 //                }
 
 //                j = nextspritestat[j];
@@ -2961,7 +2961,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //        zoff = (39<<8);
 
 //    sprite[i].z -= zoff;
-//    hitscan((const vec3_t *)&sprite[i],SECT,
+//    hitscan((const vec3_t *)&sprite[i],sprite[i].sectnum,
 //            sintable[(sprite[i].ang+512)&2047],
 //            sintable[sprite[i].ang&2047],
 //            0,&hit,CLIPMASK1);
@@ -3253,7 +3253,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 
 
 //                        j = p.cursectnum;
-//                        p.cursectnum = SECT;
+//                        p.cursectnum = sprite[i].sectnum;
 //                        P_UpdateScreenPal(p);
 //                        p.cursectnum = j;
 

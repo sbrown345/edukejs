@@ -511,7 +511,7 @@ var g_numEnvSoundsPlaying,g_maxSoundPos = 0; //int32
 //        }
 //    }
 
-//    if ((g_sounds[num].m&16) == 0 && S_IsAmbientSFX(i) && (sector[SECT].lotag&0xff) < 9)  // ST_9_SLIDING_ST_DOOR
+//    if ((g_sounds[num].m&16) == 0 && S_IsAmbientSFX(i) && (sector[sprite[i].sectnum].lotag&0xff) < 9)  // ST_9_SLIDING_ST_DOOR
 //        sndist = divscale14(sndist, sprite[i].hitag+1);
 
 //sound_further_processing:
@@ -520,7 +520,7 @@ var g_numEnvSoundsPlaying,g_maxSoundPos = 0; //int32
 //        sndist = 0;
 
 //    if (camsect > -1 && sndist && sprite[i].picnum != MUSICANDSFX &&
-//            !cansee(cam->x,cam->y,cam->z-(24<<8),camsect, sprite[i].x,sprite[i].y,sprite[i].z-(24<<8),SECT))
+//            !cansee(cam->x,cam->y,cam->z-(24<<8),camsect, sprite[i].x,sprite[i].y,sprite[i].z-(24<<8),sprite[i].sectnum))
 //        sndist += sndist>>5;
 
 //    switch (DYNAMICSOUNDMAP(num))
