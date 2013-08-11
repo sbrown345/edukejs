@@ -472,7 +472,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //    while (i >= 0)
 //    {
 //        if (SLT == SE_17_WARP_ELEVATOR && SHT == sprite[s].hitag)
-//            if ((klabs(sector[sn].floorz-actor[s].t_data[2]) > SP) ||
+//            if ((klabs(sector[sn].floorz-actor[s].t_data[2]) > sprite[i].yvel) ||
 //                (sector[SECT].hitag == (sector[sn].hitag-d)))
 //                break;
 //        i = nextspritestat[i];
@@ -1087,8 +1087,8 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //    int32_t i = headspritestat[STAT_STANDABLE];
 //    while (i >= 0)
 //    {
-//        if (sprite[i].picnum == MASTERSWITCH && SLT == low && SP == 0)
-//            SP = 1;
+//        if (sprite[i].picnum == MASTERSWITCH && SLT == low && sprite[i].yvel == 0)
+//            sprite[i].yvel = 1;
 //        i = nextspritestat[i];
 //    }
 //}
@@ -2865,7 +2865,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //                            p.holoduke_on = i = A_InsertSprite(p.cursectnum,p.pos.x,p.pos.y,
 //                                                                p.pos.z+(30<<8),APLAYER,-64,0,0,p.ang,0,0,-1,10);
 //                            T4 = T5 = 0;
-//                            SP = snum;
+//                            sprite[i].yvel = snum;
 //                            sprite[i].extra = 0;
 //                            P_DoQuote(QUOTE_HOLODUKE_ON,p);
 //                            A_PlaySound(TELEPORTER,p.holoduke_on);
@@ -3243,9 +3243,9 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //                // Try to find a camera sprite for the viewscreen.
 //                for (SPRITES_OF(STAT_ACTOR, i))
 //                {
-//                    if (sprite[i].picnum == CAMERA1 && SP == 0 && sprite[neartagsprite].hitag == SLT)
+//                    if (sprite[i].picnum == CAMERA1 && sprite[i].yvel == 0 && sprite[neartagsprite].hitag == SLT)
 //                    {
-//                        SP = 1; //Using this camera
+//                        sprite[i].yvel = 1; //Using this camera
 //                        A_PlaySound(MONITOR_ACTIVE,p.i);
 
 //                        sprite[neartagsprite].owner = i;

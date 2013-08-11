@@ -2305,7 +2305,7 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 
 //            if (x < 2048)
 //            {
-//                if (SP == 1)
+//                if (sprite[i].yvel == 1)
 //                    camsprite = i;
 //            }
 //            else if (camsprite != -1 && T1 == 1)
@@ -5593,7 +5593,7 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //    sectortype *const sc = &sector[sprite[i].sectnum];
 //    int32_t *const t = actor[i].t_data;
 
-//    if (klabs(sc.floorz - zref) < SP)
+//    if (klabs(sc.floorz - zref) < sprite[i].yvel)
 //    {
 //        if (setfloorzp)
 //            sc.floorz = zref;
@@ -5606,7 +5606,7 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //    else
 //    {
 //        int32_t j;
-//        int32_t l = ksgn(movesignexp)*SP;
+//        int32_t l = ksgn(movesignexp)*sprite[i].yvel;
 
 //        sc.floorz += l;
 
@@ -6635,7 +6635,7 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //                        if (sprite[k].owner >= 0 && clipinsidebox(sprite[k].x, sprite[k].y, j, 144) == 1)
 //                        {
 //                            t[5] = 8; // Delay
-//                            k = (SP>>3)*t[3];
+//                            k = (sprite[i].yvel>>3)*t[3];
 //                            t[2] -= k;
 //                            t[4] -= k;
 //                            A_MoveSector(i);
@@ -6645,7 +6645,7 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //                    }
 //                }
 
-//                k = (SP>>3)*t[3];
+//                k = (sprite[i].yvel>>3)*t[3];
 //                t[2]+=k;
 //                t[4]+=k;
 //                A_MoveSector(i);
@@ -6734,7 +6734,7 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //                // s.owner: 1 if affect ceiling, 0 if affect floor
 //                // t[3]: 1 if ceiling was parallaxed at premap, 0 else
 
-//                j = (SP<<5)|1;
+//                j = (sprite[i].yvel<<5)|1;
 
 //                if (s.ang == 512)
 //                {
@@ -6824,7 +6824,7 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 
 //                if (t[4] == 1) //Opening
 //                {
-//                    if (t[3] >= (SP>>3))
+//                    if (t[3] >= (sprite[i].yvel>>3))
 //                    {
 //                        t[4] = 0; //Turn off the sliders
 //                        A_CallSound(s.sectnum,i);
@@ -6885,7 +6885,7 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //        {
 //            int32_t nextk;
 
-//            q = t[0]*(SP<<2);
+//            q = t[0]*(sprite[i].yvel<<2);
 
 //            sc.ceilingz += q;
 //            sc.floorz += q;
@@ -6917,7 +6917,7 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 
 //            if (t[0]) //If in motion
 //            {
-//                if (klabs(sc.floorz-t[2]) <= SP)
+//                if (klabs(sc.floorz-t[2]) <= sprite[i].yvel)
 //                {
 //                    G_ActivateWarpElevators(i,0);
 //                    break;
@@ -7095,7 +7095,7 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //                }
 
 //                if (sc.ceilingz < sc.floorz)
-//                    sc.ceilingz += SP;
+//                    sc.ceilingz += sprite[i].yvel;
 //                else
 //                {
 //                    sc.ceilingz = sc.floorz;
@@ -7174,7 +7174,7 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //                s.x += x;
 //                s.y += l;
 
-//                if (t[3] <= 0 || (t[3]>>6) >= (SP>>6))
+//                if (t[3] <= 0 || (t[3]>>6) >= (sprite[i].yvel>>6))
 //                {
 //                    s.x -= x;
 //                    s.y -= l;
@@ -7239,7 +7239,7 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 
 //            if (t[0] == 1)   //Decide if the s.sectnum should go up or down
 //            {
-//                s.zvel = ksgn(s.z-*zptr) * (SP<<4);
+//                s.zvel = ksgn(s.z-*zptr) * (sprite[i].yvel<<4);
 //                t[0]++;
 //            }
 
@@ -7274,8 +7274,8 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //            if (t[4])
 //                break;
 
-//            x = (SP*sintable[(s.ang+512)&2047])>>18;
-//            l = (SP*sintable[s.ang&2047])>>18;
+//            x = (sprite[i].yvel*sintable[(s.ang+512)&2047])>>18;
+//            l = (sprite[i].yvel*sintable[s.ang&2047])>>18;
 
 //            k = 0;
 
@@ -7353,7 +7353,7 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //                    fricyv += l<<3;
 //                }
 
-//            sc.floorxpanning += SP>>7;
+//            sc.floorxpanning += sprite[i].yvel>>7;
 
 //            break;
 //        }
@@ -7401,13 +7401,13 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 
 //            if (s.shade)
 //            {
-//                sc.ceilingz += SP<<4;
+//                sc.ceilingz += sprite[i].yvel<<4;
 //                if (sc.ceilingz > sc.floorz)
 //                    sc.ceilingz = sc.floorz;
 //            }
 //            else
 //            {
-//                sc.ceilingz   -= SP<<4;
+//                sc.ceilingz   -= sprite[i].yvel<<4;
 //                if (sc.ceilingz < t[3])
 //                    sc.ceilingz = t[3];
 //            }
@@ -7493,7 +7493,7 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //                            ud.camerasprite = i;
 //                            t[0] = 999;
 //                            s.ang += G_GetAngleDelta(s.ang,getangle(ps.pos.x-s.x,ps.pos.y-s.y))>>3;
-//                            SP = 100+((s.z-ps.pos.z)/257);
+//                            sprite[i].yvel = 100+((s.z-ps.pos.z)/257);
 
 //                        }
 //                        else if (t[0] == 999)
@@ -7654,25 +7654,25 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //                {
 //                    if (SA != 1536)
 //                    {
-//                        if (klabs(sc.ceilingz - s.z) < (SP<<1))
+//                        if (klabs(sc.ceilingz - s.z) < (sprite[i].yvel<<1))
 //                        {
 //                            sc.ceilingz = s.z;
 //                            A_CallSound(s.sectnum,i);
 //                            t[2] = 0;
 //                            t[0] = 0;
 //                        }
-//                        else sc.ceilingz += ksgn(s.z-sc.ceilingz)*SP;
+//                        else sc.ceilingz += ksgn(s.z-sc.ceilingz)*sprite[i].yvel;
 //                    }
 //                    else
 //                    {
-//                        if (klabs(sc.ceilingz - t[1]) < (SP<<1))
+//                        if (klabs(sc.ceilingz - t[1]) < (sprite[i].yvel<<1))
 //                        {
 //                            sc.ceilingz = t[1];
 //                            A_CallSound(s.sectnum,i);
 //                            t[2] = 0;
 //                            t[0] = 0;
 //                        }
-//                        else sc.ceilingz += ksgn(t[1]-sc.ceilingz)*SP;
+//                        else sc.ceilingz += ksgn(t[1]-sc.ceilingz)*sprite[i].yvel;
 //                    }
 
 //                    Yax_SetBunchZs(sc-sector, YAX_CEILING, sc.ceilingz);
@@ -7682,24 +7682,24 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 
 //                if ((s.ang&2047) == 1536)
 //                {
-//                    if (klabs(sc.ceilingz-s.z) < (SP<<1))
+//                    if (klabs(sc.ceilingz-s.z) < (sprite[i].yvel<<1))
 //                    {
 //                        t[0] = 0;
 //                        t[2] = !t[2];
 //                        A_CallSound(s.sectnum,i);
 //                        sc.ceilingz = s.z;
 //                    }
-//                    else sc.ceilingz += ksgn(s.z-sc.ceilingz)*SP;
+//                    else sc.ceilingz += ksgn(s.z-sc.ceilingz)*sprite[i].yvel;
 //                }
 //                else
 //                {
-//                    if (klabs(sc.ceilingz-t[1]) < (SP<<1))
+//                    if (klabs(sc.ceilingz-t[1]) < (sprite[i].yvel<<1))
 //                    {
 //                        t[0] = 0;
 //                        t[2] = !t[2];
 //                        A_CallSound(s.sectnum,i);
 //                    }
-//                    else sc.ceilingz -= ksgn(s.z-t[1])*SP;
+//                    else sc.ceilingz -= ksgn(s.z-t[1])*sprite[i].yvel;
 //                }
 
 //                Yax_SetBunchZs(sc-sector, YAX_CEILING, sc.ceilingz);
