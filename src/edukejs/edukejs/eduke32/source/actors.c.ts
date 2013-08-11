@@ -1198,7 +1198,7 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //            if (ps.on_ground && ps.on_warping_sector == 1 && psectnum >= 0 && sector[psectnum].lotag == ST_1_ABOVE_WATER)
 //            {
 //                CS = 257;
-//                SZ = sector[SECT].ceilingz+(27<<8);
+//                sprite[i].z = sector[SECT].ceilingz+(27<<8);
 //                SA = ps.ang;
 //                if (T1 == 8)
 //                    T1 = 0;
@@ -1206,7 +1206,7 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //            }
 //            else
 //            {
-//                if (sector[SECT].lotag != ST_2_UNDERWATER) SZ = sector[SECT].floorz;
+//                if (sector[SECT].lotag != ST_2_UNDERWATER) sprite[i].z = sector[SECT].floorz;
 //                CS = 32768;
 //            }
 //        }
@@ -2103,7 +2103,7 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 
 //            for (k=0; k<16; k++)
 //            {
-//                j = A_InsertSprite(SECT,sprite[i].x,sprite[i].y,SZ-(krand()%(48<<8)),SCRAP3+(krand()&3),-8,48,48,krand()&2047,(krand()&63)+64,-(krand()&4095)-(sprite[i].zvel>>2),i,5);
+//                j = A_InsertSprite(SECT,sprite[i].x,sprite[i].y,sprite[i].z-(krand()%(48<<8)),SCRAP3+(krand()&3),-8,48,48,krand()&2047,(krand()&63)+64,-(krand()&4095)-(sprite[i].zvel>>2),i,5);
 //                sprite[j].pal = 2;
 //            }
 
@@ -3475,7 +3475,7 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //                    }
 //                    else if (!(sectlotag == ST_1_ABOVE_WATER && ps.on_ground == 1)) break;
 
-//                    if (onfloorz == 0 && klabs(SZ-ps.pos.z) < 6144)
+//                    if (onfloorz == 0 && klabs(sprite[i].z-ps.pos.z) < 6144)
 //                        if (!ps.jetpack_on || TEST_SYNC_KEY(g_player[p].sync.bits, SK_JUMP) ||
 //                                TEST_SYNC_KEY(g_player[p].sync.bits, SK_CROUCH))
 //                        {
@@ -3543,7 +3543,7 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //                            warpspriteto = 1;
 //                    }
 
-//                    if (sectlotag == 0 && (onfloorz || klabs(sprite[j].z-SZ) < 4096))
+//                    if (sectlotag == 0 && (onfloorz || klabs(sprite[j].z-sprite[i].z) < 4096))
 //                    {
 //                        if (sprite[OW].owner != OW && onfloorz && T1 > 0 && sprite[j].statnum != STAT_MISC)
 //                        {
@@ -3626,7 +3626,7 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //                                    {
 //                                        sprite[j].x += (sprite[OW].x-sprite[i].x);
 //                                        sprite[j].y += (sprite[OW].y-sprite[i].y);
-//                                        sprite[j].z -= SZ - sector[sprite[OW].sectnum].floorz;
+//                                        sprite[j].z -= sprite[i].z - sector[sprite[OW].sectnum].floorz;
 //                                        sprite[j].ang = sprite[OW].ang;
 
 //                                        Bmemcpy(&actor[j].bpos.x, &sprite[j], sizeof(vec3_t));
@@ -4244,7 +4244,7 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //                    if (j == FREEZEBLAST) goto BOLT;
 //                    for (j=16; j >= 0 ; j--)
 //                    {
-//                        int32_t k = A_InsertSprite(SECT,sprite[i].x,sprite[i].y,SZ,GLASSPIECES+(j%3),-32,36,36,krand()&2047,32+(krand()&63),1024-(krand()&1023),i,5);
+//                        int32_t k = A_InsertSprite(SECT,sprite[i].x,sprite[i].y,sprite[i].z,GLASSPIECES+(j%3),-32,36,36,krand()&2047,32+(krand()&63),1024-(krand()&1023),i,5);
 //                        sprite[k].pal = 1;
 //                    }
 //                    A_PlaySound(GLASS_BREAKING,i);

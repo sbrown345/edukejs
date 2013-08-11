@@ -635,7 +635,7 @@ function G_DoLoadScreen(statustext: string, percent: number): void
 //    setviewtotile(wn,tilesizy[wn],tilesizx[wn]);
 
 //    yax_preparedrawrooms();
-//    drawrooms(sprite[i].x,sprite[i].y,SZ,sprite[i].ang,100+sprite[i].shade,sprite[i].sectnum);
+//    drawrooms(sprite[i].x,sprite[i].y,sprite[i].z,sprite[i].ang,100+sprite[i].shade,sprite[i].sectnum);
 //    yax_drawrooms(G_DoSpriteAnimations, sprite[i].sectnum, 0, 65536);
 
 //    display_mirror = 1;

@@ -646,7 +646,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //        }
 //        else
 //        {
-//            if (sptr.floorz > SZ)
+//            if (sptr.floorz > sprite[i].z)
 //                G_ActivateWarpElevators(i,-1);
 //            else
 //                G_ActivateWarpElevators(i,1);
@@ -756,7 +756,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //            {
 //                if (sprite[i].statnum == STAT_EFFECTOR && SLT==SE_9_DOWN_OPEN_DOOR_LIGHTS)
 //                {
-//                    j = SZ;
+//                    j = sprite[i].z;
 //                    break;
 //                }
 //                i = nextspritesect[i];
@@ -2039,7 +2039,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //        if (rpg == 1)
 //            for (k=64; k>0; k--)
 //            {
-//                j = A_InsertSprite(SECT,sprite[i].x,sprite[i].y,SZ-(krand()%(48<<8)),SCRAP3+(krand()&3),-8,48,48,krand()&2047,(krand()&63)+64,-(krand()&4095)-(sprite[i].zvel>>2),i,5);
+//                j = A_InsertSprite(SECT,sprite[i].x,sprite[i].y,sprite[i].z-(krand()%(48<<8)),SCRAP3+(krand()&3),-8,48,48,krand()&2047,(krand()&63)+64,-(krand()&4095)-(sprite[i].zvel>>2),i,5);
 //                sprite[j].pal = 8;
 //            }
 //        //        case CACTUSBROKE:
@@ -2052,7 +2052,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //        case HEAVYHBOMB__STATIC:
 //            for (k=64; k>0; k--)
 //            {
-//                j = A_InsertSprite(SECT,sprite[i].x,sprite[i].y,SZ-(krand()%(48<<8)),SCRAP3+(krand()&3),-8,48,48,krand()&2047,(krand()&63)+64,-(krand()&4095)-(sprite[i].zvel>>2),i,5);
+//                j = A_InsertSprite(SECT,sprite[i].x,sprite[i].y,sprite[i].z-(krand()%(48<<8)),SCRAP3+(krand()&3),-8,48,48,krand()&2047,(krand()&63)+64,-(krand()&4095)-(sprite[i].zvel>>2),i,5);
 //                sprite[j].pal = 8;
 //            }
 
@@ -2067,7 +2067,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //    case HANGLIGHT__STATIC:
 //    case GENERICPOLE2__STATIC:
 //        for (k=6; k>0; k--)
-//            A_InsertSprite(SECT,sprite[i].x,sprite[i].y,SZ-(8<<8),SCRAP1+(krand()&15),-8,48,48,krand()&2047,(krand()&63)+64,-(krand()&4095)-(sprite[i].zvel>>2),i,5);
+//            A_InsertSprite(SECT,sprite[i].x,sprite[i].y,sprite[i].z-(8<<8),SCRAP1+(krand()&15),-8,48,48,krand()&2047,(krand()&63)+64,-(krand()&4095)-(sprite[i].zvel>>2),i,5);
 //        A_PlaySound(GLASS_HEAVYBREAK,i);
 //        A_DeleteSprite(i);
 //        break;
@@ -2207,7 +2207,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 
 //        //            for(k=0;k<5;k++)
 //        //          {
-//        //            j = A_InsertSprite(SECT,sprite[i].x,sprite[i].y,SZ-(krand()%(48<<8)),SCRAP3+(krand()&3),-8,48,48,krand()&2047,(krand()&63)+64,-(krand()&4095)-(sprite[i].zvel>>2),i,5);
+//        //            j = A_InsertSprite(SECT,sprite[i].x,sprite[i].y,sprite[i].z-(krand()%(48<<8)),SCRAP3+(krand()&3),-8,48,48,krand()&2047,(krand()&63)+64,-(krand()&4095)-(sprite[i].zvel>>2),i,5);
 //        //          sprite[j].pal = 2;
 //        //    }
 //        A_PlaySound(GLASS_HEAVYBREAK,i);
@@ -2960,12 +2960,12 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //    else if (sprite[i].picnum == APLAYER)
 //        zoff = (39<<8);
 
-//    SZ -= zoff;
+//    sprite[i].z -= zoff;
 //    hitscan((const vec3_t *)&sprite[i],SECT,
 //            sintable[(SA+512)&2047],
 //            sintable[SA&2047],
 //            0,&hit,CLIPMASK1);
-//    SZ += zoff;
+//    sprite[i].z += zoff;
 
 //    if (hitsp)
 //        *hitsp = hit.sprite;
