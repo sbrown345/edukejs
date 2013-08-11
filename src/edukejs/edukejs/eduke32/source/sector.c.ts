@@ -1986,7 +1986,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //        {
 //            sprite[sn].xvel = (sprite[i].xvel>>1)+(sprite[i].xvel>>2);
 //            sprite[sn].ang -= (SA<<1)+1024;
-//            SA = getangle(SX-sprite[sn].x,SY-sprite[sn].y)-512;
+//            SA = getangle(sprite[i].x-sprite[sn].x,SY-sprite[sn].y)-512;
 //            if (S_CheckSoundPlaying(i,POOLBALLHIT) < 2)
 //                A_PlaySound(POOLBALLHIT,i);
 //        }
@@ -2039,7 +2039,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //        if (rpg == 1)
 //            for (k=64; k>0; k--)
 //            {
-//                j = A_InsertSprite(SECT,SX,SY,SZ-(krand()%(48<<8)),SCRAP3+(krand()&3),-8,48,48,krand()&2047,(krand()&63)+64,-(krand()&4095)-(sprite[i].zvel>>2),i,5);
+//                j = A_InsertSprite(SECT,sprite[i].x,SY,SZ-(krand()%(48<<8)),SCRAP3+(krand()&3),-8,48,48,krand()&2047,(krand()&63)+64,-(krand()&4095)-(sprite[i].zvel>>2),i,5);
 //                sprite[j].pal = 8;
 //            }
 //        //        case CACTUSBROKE:
@@ -2052,7 +2052,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //        case HEAVYHBOMB__STATIC:
 //            for (k=64; k>0; k--)
 //            {
-//                j = A_InsertSprite(SECT,SX,SY,SZ-(krand()%(48<<8)),SCRAP3+(krand()&3),-8,48,48,krand()&2047,(krand()&63)+64,-(krand()&4095)-(sprite[i].zvel>>2),i,5);
+//                j = A_InsertSprite(SECT,sprite[i].x,SY,SZ-(krand()%(48<<8)),SCRAP3+(krand()&3),-8,48,48,krand()&2047,(krand()&63)+64,-(krand()&4095)-(sprite[i].zvel>>2),i,5);
 //                sprite[j].pal = 8;
 //            }
 
@@ -2067,7 +2067,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //    case HANGLIGHT__STATIC:
 //    case GENERICPOLE2__STATIC:
 //        for (k=6; k>0; k--)
-//            A_InsertSprite(SECT,SX,SY,SZ-(8<<8),SCRAP1+(krand()&15),-8,48,48,krand()&2047,(krand()&63)+64,-(krand()&4095)-(sprite[i].zvel>>2),i,5);
+//            A_InsertSprite(SECT,sprite[i].x,SY,SZ-(8<<8),SCRAP1+(krand()&15),-8,48,48,krand()&2047,(krand()&63)+64,-(krand()&4095)-(sprite[i].zvel>>2),i,5);
 //        A_PlaySound(GLASS_HEAVYBREAK,i);
 //        A_DeleteSprite(i);
 //        break;
@@ -2098,7 +2098,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //        if (sprite[sn].extra != G_InitialActorStrength(SHOTSPARK1))
 //        {
 //            for (j=15; j>0; j--)
-//                A_InsertSprite(SECT,SX,SY,sector[SECT].floorz-(12<<8)-(j<<9),SCRAP1+(krand()&15),-8,64,64,
+//                A_InsertSprite(SECT,sprite[i].x,SY,sector[SECT].floorz-(12<<8)-(j<<9),SCRAP1+(krand()&15),-8,64,64,
 //                               krand()&2047,(krand()&127)+64,-(krand()&511)-256,i,5);
 //            A_Spawn(i,EXPLOSION2);
 //            A_DeleteSprite(i);
@@ -2207,7 +2207,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 
 //        //            for(k=0;k<5;k++)
 //        //          {
-//        //            j = A_InsertSprite(SECT,SX,SY,SZ-(krand()%(48<<8)),SCRAP3+(krand()&3),-8,48,48,krand()&2047,(krand()&63)+64,-(krand()&4095)-(sprite[i].zvel>>2),i,5);
+//        //            j = A_InsertSprite(SECT,sprite[i].x,SY,SZ-(krand()%(48<<8)),SCRAP3+(krand()&3),-8,48,48,krand()&2047,(krand()&63)+64,-(krand()&4095)-(sprite[i].zvel>>2),i,5);
 //        //          sprite[j].pal = 2;
 //        //    }
 //        A_PlaySound(GLASS_HEAVYBREAK,i);
@@ -2973,7 +2973,7 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //    if (hit.wall >= 0 && (wall[hit.wall].cstat&16) && A_CheckEnemySprite(&sprite[i]))
 //        return 1<<30;
 
-//    return FindDistance2D(hit.pos.x-SX,hit.pos.y-SY);
+//    return FindDistance2D(hit.pos.x-sprite[i].x,hit.pos.y-SY);
 //}
 
 //static int32_t P_FindWall(DukePlayer_t *p,int16_t *hitw)

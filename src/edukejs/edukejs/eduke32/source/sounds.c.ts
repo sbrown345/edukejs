@@ -520,7 +520,7 @@ var g_numEnvSoundsPlaying,g_maxSoundPos = 0; //int32
 //        sndist = 0;
 
 //    if (camsect > -1 && sndist && PN != MUSICANDSFX &&
-//            !cansee(cam->x,cam->y,cam->z-(24<<8),camsect, SX,SY,SZ-(24<<8),SECT))
+//            !cansee(cam->x,cam->y,cam->z-(24<<8),camsect, sprite[i].x,SY,SZ-(24<<8),SECT))
 //        sndist += sndist>>5;
 
 //    switch (DYNAMICSOUNDMAP(num))

@@ -231,7 +231,7 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //        if (OW == i)
 //            continue;
 
-//        bx = SX-mx;
+//        bx = sprite[i].x-mx;
 //        by = SY-my;
 //        bxvect = sintable[(SA+512)&2047];
 //        byvect = sintable[SA&2047];
