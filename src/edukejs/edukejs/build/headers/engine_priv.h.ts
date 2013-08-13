@@ -89,6 +89,7 @@ var YAX_MAXDRAWS  = 8;
 
 function DO_TILE_ANIM(Picnum: number, Fakevar):void {// do { 
     todoThrow("Picnum - inline this!!!!! Picnum is a value");
+    // maybe try http://www.codeproject.com/Articles/3853/Wave-a-Standard-conformant-C-preprocessor-library
         if (picanm[Picnum].sf&PICANM_ANIMTYPE_MASK) Picnum += animateoffs(Picnum, Fakevar); 
    // } while (0); 
 }

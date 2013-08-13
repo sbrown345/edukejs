@@ -1082,7 +1082,7 @@ function G_SetupBackdrop(/*int16_t */sky: number): void
 }
 
 //// tweak moving sectors with these SE lotags
-//#define FIXSPR_SELOTAGP(k) ((k==0) || (k==6) || (k==14))
+function FIXSPR_SELOTAGP(k: number): boolean { return (k==0) || (k==6) || (k==14) ;}
 
 // Set up sprites in moving sectors that are to be fixed wrt a certain pivot
 // position and should not diverge from it due to roundoff error in the future.
@@ -1090,50 +1090,49 @@ function G_SetupBackdrop(/*int16_t */sky: number): void
 function G_SetupRotfixedSprites(): void
 {
     var i: number;
-    throw "todo";
-//    for (i=headspritestat[STAT_EFFECTOR]; i>=0; i=nextspritestat[i])
-//    {
-//        if (FIXSPR_SELOTAGP(sprite[i].lotag))
-//        {
-////#ifdef YAX_ENABLE
-//            var firstrun = 1;
-////#endif
-//            var /*int32_t */j = headspritesect[sprite[i].sectnum];
-//            while (j>=0)
-//            {
-//                // TRIPBOMB uses t_data[7] for its own purposes. Wouldn't be
-//                // too useful with moving sectors anyway
-//                if ((ROTFIXSPR_STATNUMP(sprite[j].statnum) && sprite[j].picnum!=TRIPBOMB) ||
-//                    ((sprite[j].statnum==STAT_ACTOR || sprite[j].statnum==STAT_ZOMBIEACTOR) &&
-//                     A_CheckSpriteTileFlags(sprite[j].picnum, SPRITE_ROTFIXED)))
-//                {
-//                    var /*int32_t */pivot = i;
+    for (i=headspritestat[STAT_EFFECTOR]; i>=0; i=nextspritestat[i])
+    {
+        if (FIXSPR_SELOTAGP(sprite[i].lotag))
+        {
+//#ifdef YAX_ENABLE
+            var firstrun = 1;
+//#endif
+            var /*int32_t */j = headspritesect[sprite[i].sectnum];
+            while (j>=0)
+            {
+                // TRIPBOMB uses t_data[7] for its own purposes. Wouldn't be
+                // too useful with moving sectors anyway
+                if ((ROTFIXSPR_STATNUMP(sprite[j].statnum) && sprite[j].picnum!=TRIPBOMB) ||
+                    ((sprite[j].statnum==STAT_ACTOR || sprite[j].statnum==STAT_ZOMBIEACTOR) &&
+                     A_CheckSpriteTileFlags(sprite[j].picnum, SPRITE_ROTFIXED)))
+                {
+                    var /*int32_t */pivot = i;
 
-//                    if (sprite[i].lotag==0)
-//                        pivot = sprite[i].owner;
-//                    if (j!=i && j!=pivot && pivot>=0 && pivot<MAXSPRITES)
-//                    {
-//                        // let's hope we don't step on anyone's toes here
-//                        actor[j].t_data[7] = ROTFIXSPR_MAGIC | pivot; // 'rs' magic + pivot SE sprite index
-//                        actor[j].t_data[8] = sprite[j].x - sprite[pivot].x;
-//                        actor[j].t_data[9] = sprite[j].y - sprite[pivot].y;
-//                    }
-//                }
+                    if (sprite[i].lotag==0)
+                        pivot = sprite[i].owner;
+                    if (j!=i && j!=pivot && pivot>=0 && pivot<MAXSPRITES)
+                    {
+                        // let's hope we don't step on anyone's toes here
+                        actor[j].t_data[7] = ROTFIXSPR_MAGIC | pivot; // 'rs' magic + pivot SE sprite index
+                        actor[j].t_data[8] = sprite[j].x - sprite[pivot].x;
+                        actor[j].t_data[9] = sprite[j].y - sprite[pivot].y;
+                    }
+                }
 
-//                j = nextspritesect[j];
-////#ifdef YAX_ENABLE
-//                if (j<0 && firstrun)
-//                    if (sprite[i].lotag==SE_6_SUBWAY || sprite[i].lotag==SE_14_SUBWAY_CAR)
-//                    {
-//                        firstrun = 0;
-//                        j = actor[i].t_data[9];
-//                        if (j >= 0)
-//                            j = headspritesect[j];
-//                    }
-////#endif
-//            }
-//        }
-//    }
+                j = nextspritesect[j];
+//#ifdef YAX_ENABLE
+                if (j<0 && firstrun)
+                    if (sprite[i].lotag==SE_6_SUBWAY || sprite[i].lotag==SE_14_SUBWAY_CAR)
+                    {
+                        firstrun = 0;
+                        j = actor[i].t_data[9];
+                        if (j >= 0)
+                            j = headspritesect[j];
+                    }
+//#endif
+            }
+        }
+    }
 }
 
 function prelevel(/*char*/ g: number): void
@@ -1578,163 +1577,163 @@ function G_NewGame(vn: number,ln: number,sk: number): void
     VM_OnEvent(EVENT_NEWGAME, g_player[myconnectindex].ps.i, myconnectindex, -1, 0);
 }
 
-//static void resetpspritevars(char g)
-//{
-//    int16_t i, j; //circ;
+function resetpspritevars(/*char */g: number): void
+{
+    var /*int16_t */i: number, j: number; //circ;
 
-//    uint8_t aimmode[MAXPLAYERS],autoaim[MAXPLAYERS],weaponswitch[MAXPLAYERS];
-//    DukeStatus_t tsbar[MAXPLAYERS];
+    var aimmode = new Uint8Array(MAXPLAYERS),autoaim= new Uint8Array(MAXPLAYERS),weaponswitch= new Uint8Array(MAXPLAYERS);
+    var tsbar = newStructArray<DukeStatus_t>(DukeStatus_t , MAXPLAYERS);
 
-//    if (g_player[0].ps.cursectnum >= 0)  // < 0 may happen if we start a map in void space (e.g. testing it)
-//    {
-//        A_InsertSprite(g_player[0].ps.cursectnum,g_player[0].ps.pos.x,g_player[0].ps.pos.y,g_player[0].ps.pos.z,
-//                       APLAYER,0,0,0,g_player[0].ps.ang,0,0,0,10);
-//    }
+    if (g_player[0].ps.cursectnum >= 0)  // < 0 may happen if we start a map in void space (e.g. testing it)
+    {
+        A_InsertSprite(g_player[0].ps.cursectnum,g_player[0].ps.pos.x,g_player[0].ps.pos.y,g_player[0].ps.pos.z,
+                       APLAYER,0,0,0,g_player[0].ps.ang,0,0,0,10);
+    }
 
-//    if (ud.recstat != 2)
-//        for (TRAVERSE_CONNECT(i))
-//        {
-//            aimmode[i] = g_player[i].ps.aim_mode;
-//            autoaim[i] = g_player[i].ps.auto_aim;
-//            weaponswitch[i] = g_player[i].ps.weaponswitch;
-//            if ((g_netServer || ud.multimode > 1) && (GametypeFlags[ud.coop]&GAMETYPE_PRESERVEINVENTORYDEATH) && ud.last_level >= 0)
-//            {
-//                for (j=0; j<MAX_WEAPONS; j++)
-//                    tsbar[i].ammo_amount[j] = g_player[i].ps.ammo_amount[j];
+    if (ud.recstat != 2)
+        for (TRAVERSE_CONNECT(i))
+        {
+            aimmode[i] = g_player[i].ps.aim_mode;
+            autoaim[i] = g_player[i].ps.auto_aim;
+            weaponswitch[i] = g_player[i].ps.weaponswitch;
+            if ((g_netServer || ud.multimode > 1) && (GametypeFlags[ud.coop]&GAMETYPE_PRESERVEINVENTORYDEATH) && ud.last_level >= 0)
+            {
+                for (j=0; j<MAX_WEAPONS; j++)
+                    tsbar[i].ammo_amount[j] = g_player[i].ps.ammo_amount[j];
 
-//                tsbar[i].gotweapon = g_player[i].ps.gotweapon;
-//                Bmemcpy(tsbar[i].inv_amount, g_player[i].ps.inv_amount, sizeof(tsbar[i].inv_amount));
-//                tsbar[i].curr_weapon = g_player[i].ps.curr_weapon;
-//                tsbar[i].inven_icon = g_player[i].ps.inven_icon;
-//            }
-//        }
+                tsbar[i].gotweapon = g_player[i].ps.gotweapon;
+                Bmemcpy(tsbar[i].inv_amount, g_player[i].ps.inv_amount, sizeof(tsbar[i].inv_amount));
+                tsbar[i].curr_weapon = g_player[i].ps.curr_weapon;
+                tsbar[i].inven_icon = g_player[i].ps.inven_icon;
+            }
+        }
 
-//    P_ResetStatus(0);
+    P_ResetStatus(0);
 
-//    for (TRAVERSE_CONNECT(i))
-//        if (i) Bmemcpy(g_player[i].ps,g_player[0].ps,sizeof(DukePlayer_t));
+    for (TRAVERSE_CONNECT(i))
+        if (i) Bmemcpy(g_player[i].ps,g_player[0].ps,sizeof(DukePlayer_t));
 
-//    if (ud.recstat != 2)
-//        for (TRAVERSE_CONNECT(i))
-//        {
-//            g_player[i].ps.aim_mode = aimmode[i];
-//            g_player[i].ps.auto_aim = autoaim[i];
-//            g_player[i].ps.weaponswitch = weaponswitch[i];
-//            if ((g_netServer || ud.multimode > 1) && (GametypeFlags[ud.coop]&GAMETYPE_PRESERVEINVENTORYDEATH) && ud.last_level >= 0)
-//            {
-//                for (j=0; j<MAX_WEAPONS; j++)
-//                    g_player[i].ps.ammo_amount[j] = tsbar[i].ammo_amount[j];
+    if (ud.recstat != 2)
+        for (TRAVERSE_CONNECT(i))
+        {
+            g_player[i].ps.aim_mode = aimmode[i];
+            g_player[i].ps.auto_aim = autoaim[i];
+            g_player[i].ps.weaponswitch = weaponswitch[i];
+            if ((g_netServer || ud.multimode > 1) && (GametypeFlags[ud.coop]&GAMETYPE_PRESERVEINVENTORYDEATH) && ud.last_level >= 0)
+            {
+                for (j=0; j<MAX_WEAPONS; j++)
+                    g_player[i].ps.ammo_amount[j] = tsbar[i].ammo_amount[j];
 
-//                g_player[i].ps.gotweapon = tsbar[i].gotweapon;
-//                g_player[i].ps.curr_weapon = tsbar[i].curr_weapon;
-//                g_player[i].ps.inven_icon = tsbar[i].inven_icon;
-//                Bmemcpy(g_player[i].ps.inv_amount, tsbar[i].inv_amount, sizeof(tsbar[i].inv_amount));
-//            }
-//        }
+                g_player[i].ps.gotweapon = tsbar[i].gotweapon;
+                g_player[i].ps.curr_weapon = tsbar[i].curr_weapon;
+                g_player[i].ps.inven_icon = tsbar[i].inven_icon;
+                Bmemcpy(g_player[i].ps.inv_amount, tsbar[i].inv_amount, sizeof(tsbar[i].inv_amount));
+            }
+        }
 
-//    g_numPlayerSprites = 0;
-////    circ = 2048/ud.multimode;
+    g_numPlayerSprites = 0;
+//    circ = 2048/ud.multimode;
 
-//    g_whichPalForPlayer = 9;
-//    j = 0;
-//    i = headspritestat[STAT_PLAYER];
-//    while (i >= 0)
-//    {
-//        const int32_t nexti = nextspritestat[i];
-//        spritetype *const s = &sprite[i];
+    g_whichPalForPlayer = 9;
+    j = 0;
+    i = headspritestat[STAT_PLAYER];
+    while (i >= 0)
+    {
+        const int32_t nexti = nextspritestat[i];
+        spritetype *const s = &sprite[i];
 
-//        if (g_numPlayerSprites == MAXPLAYERS)
-//            G_GameExit("\nToo many player sprites (max 16.)");
+        if (g_numPlayerSprites == MAXPLAYERS)
+            G_GameExit("\nToo many player sprites (max 16.)");
 
-//        g_playerSpawnPoints[g_numPlayerSprites].ox = s.x;
-//        g_playerSpawnPoints[g_numPlayerSprites].oy = s.y;
-//        g_playerSpawnPoints[g_numPlayerSprites].oz = s.z;
-//        g_playerSpawnPoints[g_numPlayerSprites].oa = s.ang;
-//        g_playerSpawnPoints[g_numPlayerSprites].os = s.sectnum;
+        g_playerSpawnPoints[g_numPlayerSprites].ox = s.x;
+        g_playerSpawnPoints[g_numPlayerSprites].oy = s.y;
+        g_playerSpawnPoints[g_numPlayerSprites].oz = s.z;
+        g_playerSpawnPoints[g_numPlayerSprites].oa = s.ang;
+        g_playerSpawnPoints[g_numPlayerSprites].os = s.sectnum;
 
-//        g_numPlayerSprites++;
+        g_numPlayerSprites++;
 
-//        if (j < MAXPLAYERS)
-//        {
-//            s.owner = i;
-//            s.shade = 0;
-//            s.xrepeat = 42;
-//            s.yrepeat = 36;
-//            if (!g_fakeMultiMode)
-//                s.cstat = j < numplayers ? 1+256 : 32768;
-//            else
-//                s.cstat = j < ud.multimode ? 1+256 : 32768;
-//            s.xoffset = 0;
-//            s.clipdist = 64;
+        if (j < MAXPLAYERS)
+        {
+            s.owner = i;
+            s.shade = 0;
+            s.xrepeat = 42;
+            s.yrepeat = 36;
+            if (!g_fakeMultiMode)
+                s.cstat = j < numplayers ? 1+256 : 32768;
+            else
+                s.cstat = j < ud.multimode ? 1+256 : 32768;
+            s.xoffset = 0;
+            s.clipdist = 64;
 
-////            if (j < playerswhenstarted)
-//            {
-//                if ((g&MODE_EOL) != MODE_EOL || g_player[j].ps.last_extra == 0)
-//                {
-//                    g_player[j].ps.last_extra = g_player[j].ps.max_player_health;
-//                    s.extra = g_player[j].ps.max_player_health;
-//                    g_player[j].ps.runspeed = g_playerFriction;
-//                }
-//                else s.extra = g_player[j].ps.last_extra;
+//            if (j < playerswhenstarted)
+            {
+                if ((g&MODE_EOL) != MODE_EOL || g_player[j].ps.last_extra == 0)
+                {
+                    g_player[j].ps.last_extra = g_player[j].ps.max_player_health;
+                    s.extra = g_player[j].ps.max_player_health;
+                    g_player[j].ps.runspeed = g_playerFriction;
+                }
+                else s.extra = g_player[j].ps.last_extra;
 
-//                s.yvel = j;
+                s.yvel = j;
 
-//                if (!g_player[j].pcolor && (g_netServer || ud.multimode > 1) && !(GametypeFlags[ud.coop] & GAMETYPE_TDM))
-//                {
-//                    if (s.pal == 0)
-//                    {
-//                        int32_t k = 0;
+                if (!g_player[j].pcolor && (g_netServer || ud.multimode > 1) && !(GametypeFlags[ud.coop] & GAMETYPE_TDM))
+                {
+                    if (s.pal == 0)
+                    {
+                        int32_t k = 0;
 
-//                        for (; k<ud.multimode; k++)
-//                        {
-//                            if (g_whichPalForPlayer == g_player[k].ps.palookup)
-//                            {
-//                                g_whichPalForPlayer++;
-//                                if (g_whichPalForPlayer >= 17)
-//                                    g_whichPalForPlayer = 9;
-//                                k=0;
-//                            }
-//                        }
-//                        g_player[j].pcolor = s.pal = g_player[j].ps.palookup = g_whichPalForPlayer++;
-//                        if (g_whichPalForPlayer >= 17)
-//                            g_whichPalForPlayer = 9;
-//                    }
-//                    else g_player[j].pcolor = g_player[j].ps.palookup = s.pal;
-//                }
-//                else
-//                {
-//                    int32_t k = g_player[j].pcolor;
+                        for (; k<ud.multimode; k++)
+                        {
+                            if (g_whichPalForPlayer == g_player[k].ps.palookup)
+                            {
+                                g_whichPalForPlayer++;
+                                if (g_whichPalForPlayer >= 17)
+                                    g_whichPalForPlayer = 9;
+                                k=0;
+                            }
+                        }
+                        g_player[j].pcolor = s.pal = g_player[j].ps.palookup = g_whichPalForPlayer++;
+                        if (g_whichPalForPlayer >= 17)
+                            g_whichPalForPlayer = 9;
+                    }
+                    else g_player[j].pcolor = g_player[j].ps.palookup = s.pal;
+                }
+                else
+                {
+                    int32_t k = g_player[j].pcolor;
 
-//                    if (GametypeFlags[ud.coop] & GAMETYPE_TDM)
-//                    {
-//                        k = G_GetTeamPalette(g_player[j].pteam);
-//                        g_player[j].ps.team = g_player[j].pteam;
-//                    }
-//                    s.pal = g_player[j].ps.palookup = k;
-//                }
+                    if (GametypeFlags[ud.coop] & GAMETYPE_TDM)
+                    {
+                        k = G_GetTeamPalette(g_player[j].pteam);
+                        g_player[j].ps.team = g_player[j].pteam;
+                    }
+                    s.pal = g_player[j].ps.palookup = k;
+                }
 
-//                g_player[j].ps.i = i;
-//                g_player[j].ps.frag_ps = j;
-//                actor[i].owner = i;
+                g_player[j].ps.i = i;
+                g_player[j].ps.frag_ps = j;
+                actor[i].owner = i;
 
-//                g_player[j].ps.autostep = (20L<<8);
-//                g_player[j].ps.autostep_sbw = (4L<<8);
+                g_player[j].ps.autostep = (20L<<8);
+                g_player[j].ps.autostep_sbw = (4L<<8);
 
-//                actor[i].bpos.x = g_player[j].ps.bobposx = g_player[j].ps.opos.x = g_player[j].ps.pos.x =        s.x;
-//                actor[i].bpos.y = g_player[j].ps.bobposy = g_player[j].ps.opos.y = g_player[j].ps.pos.y =        s.y;
-//                actor[i].bpos.z = g_player[j].ps.opos.z = g_player[j].ps.pos.z =        s.z;
-//                g_player[j].ps.oang  = g_player[j].ps.ang  =        s.ang;
+                actor[i].bpos.x = g_player[j].ps.bobposx = g_player[j].ps.opos.x = g_player[j].ps.pos.x =        s.x;
+                actor[i].bpos.y = g_player[j].ps.bobposy = g_player[j].ps.opos.y = g_player[j].ps.pos.y =        s.y;
+                actor[i].bpos.z = g_player[j].ps.opos.z = g_player[j].ps.pos.z =        s.z;
+                g_player[j].ps.oang  = g_player[j].ps.ang  =        s.ang;
 
-//                updatesector(s.x,s.y,&g_player[j].ps.cursectnum);
-//            }
+                updatesector(s.x,s.y,&g_player[j].ps.cursectnum);
+            }
 
-//            j++;
-//        }
-//        else A_DeleteSprite(i);
+            j++;
+        }
+        else A_DeleteSprite(i);
 
-//        i = nexti;
-//    }
-//}
+        i = nexti;
+    }
+}
 
 //static inline void clearfrags(void)
 //{
@@ -2044,10 +2043,10 @@ function G_EnterLevel(g: number): number
     //clearbufbyte(Actor,sizeof(Actor),0l); // JBF 20040531: yes? no?
 
     prelevel(g);
-    debugger;
-//    G_AlignWarpElevators();
-//    resetpspritevars(g);
-
+   
+    G_AlignWarpElevators();
+    resetpspritevars(g);
+     debugger;
 //    G_FadeLoad(0,0,0, 63,0, -7, 4);
 //    G_CacheMapData();
 //    G_FadeLoad(0,0,0, 0,63, 7, 4);

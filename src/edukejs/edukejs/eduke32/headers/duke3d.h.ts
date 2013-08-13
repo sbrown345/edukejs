@@ -110,9 +110,9 @@ var PACKBUF_SIZE        = 32768;
 //#define TILE_VIEWSCR        (MAXTILES-5)
 
 //// sprites with these statnums should be considered for fixing (bitmap)
-//#define ROTFIXSPR_STATNUMP(k) ((k)==STAT_DEFAULT || (k)==STAT_STANDABLE || (k)==STAT_FX || \
-//                            (k)==STAT_FALLER || (k)==STAT_LIGHT)
-//#define ROTFIXSPR_MAGIC 0x18190000
+function ROTFIXSPR_STATNUMP(k: number ): boolean {return (k)==STAT_DEFAULT || (k)==STAT_STANDABLE || (k)==STAT_FX || 
+                              (k)==STAT_FALLER || (k)==STAT_LIGHT;}
+var ROTFIXSPR_MAGIC = 0x18190000;
 
 //// JBF 20040604: sync is a function on some platforms
 //#define sync                dsync

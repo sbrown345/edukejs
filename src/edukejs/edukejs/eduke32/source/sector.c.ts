@@ -2411,32 +2411,32 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //    }
 //}
 
-//void G_AlignWarpElevators(void)
-//{
-//    int32_t j, i = headspritestat[STAT_EFFECTOR];
+function G_AlignWarpElevators(): void
+{
+    var /*int32_t */j: number, i = headspritestat[STAT_EFFECTOR];
 
-//    while (i >= 0)
-//    {
-//        if (sprite[i].lotag == SE_17_WARP_ELEVATOR && sprite[i].shade > 16)
-//        {
-//            j = headspritestat[STAT_EFFECTOR];
-//            while (j >= 0)
-//            {
-//                if ((sprite[j].lotag) == SE_17_WARP_ELEVATOR && i != j &&
-//                        (sprite[i].hitag) == (sprite[j].hitag))
-//                {
-//                    sector[sprite[j].sectnum].floorz =
-//                        sector[sprite[i].sectnum].floorz;
-//                    sector[sprite[j].sectnum].ceilingz =
-//                        sector[sprite[i].sectnum].ceilingz;
-//                }
+    while (i >= 0)
+    {
+        if (sprite[i].lotag == SE_17_WARP_ELEVATOR && sprite[i].shade > 16)
+        {
+            j = headspritestat[STAT_EFFECTOR];
+            while (j >= 0)
+            {
+                if ((sprite[j].lotag) == SE_17_WARP_ELEVATOR && i != j &&
+                        (sprite[i].hitag) == (sprite[j].hitag))
+                {
+                    sector[sprite[j].sectnum].floorz =
+                        sector[sprite[i].sectnum].floorz;
+                    sector[sprite[j].sectnum].ceilingz =
+                        sector[sprite[i].sectnum].ceilingz;
+                }
 
-//                j = nextspritestat[j];
-//            }
-//        }
-//        i = nextspritestat[i];
-//    }
-//}
+                j = nextspritestat[j];
+            }
+        }
+        i = nextspritestat[i];
+    }
+}
 
 //void P_HandleSharedKeys(int32_t snum)
 //{

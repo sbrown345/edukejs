@@ -14348,7 +14348,7 @@ function rotatesprite_(sx: number, sy: number, z: number, a: number, picnum: num
 
     if ((cx1 > cx2) || (cy1 > cy2)) return;
     if (z <= 16) return;
-    DO_TILE_ANIM(picnum, 0xc000);
+    if (picanm[picnum].sf&PICANM_ANIMTYPE_MASK) picnum += animateoffs(picnum, 0xc000);//DO_TILE_ANIM(picnum, 0xc000);
     if ((tilesizx[picnum] <= 0) || (tilesizy[picnum] <= 0)) return;
    
     // Experimental / development bits. ONLY FOR INTERNAL USE!
