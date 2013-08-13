@@ -1,7 +1,7 @@
 ﻿/// <reference path="../build/headers/compat.h.ts" />
 /// <reference path="assert.ts" />
 
-var NULL = null; // ""==null = false,  ""==0 = true           (todo: would be wise to check all these later on)
+var NULL: any = null; // ""==null = false,  ""==0 = true           (todo: would be wise to check all these later on)
 var TRUE:number = 1;
 var FALSE:number = 0;
 

@@ -56,7 +56,7 @@ function newStructArray<T>($class: any, count: number): T[] {
 ////    }
 ////}
 
-function multiDimArray <T>(arrayClass, num: number, arrLength: number): T[] {
+function multiDimArray <T>(arrayClass: any, num: number, arrLength: number): T[] {
     var multiDimArray = new Array(num);
     for (var i = 0; i < num; i++) {
         multiDimArray[i] = new arrayClass(arrLength);

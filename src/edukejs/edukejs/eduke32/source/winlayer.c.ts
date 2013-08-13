@@ -381,7 +381,7 @@ function wm_ynbox(name: string, fmt : string, ...args: any[]): number
 //
 // WinMain() -- main Windows entry point
 //
-function WinMain(hInst, hPrevInst, lpCmdLine: number, nCmdShow: number)
+function WinMain(hInst: any, hPrevInst: any, lpCmdLine: number, nCmdShow: number)
 {
     path("WinMain");
     var r: number;
@@ -424,7 +424,7 @@ function WinMain(hInst, hPrevInst, lpCmdLine: number, nCmdShow: number)
     if (argvbuf)
     {
         var quoted = 0, instring = 0, swallownext = 0;
-        var p: string,wp: Uint8Array; var i;
+        var p: string,wp: Uint8Array; var i: number;
         var pIdx: number = 0, wpIdx: number = 0;
         wp = argvbuf.toUint8Array();
         for (p=argvbuf; p.charCodeAt(pIdx); pIdx++)
