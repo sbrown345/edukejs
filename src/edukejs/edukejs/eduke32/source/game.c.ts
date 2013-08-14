@@ -52,6 +52,7 @@
 /// <reference path="../../eduke32/source/namesdyn.c.ts" />
 /// <reference path="../../eduke32/source/net.c.ts" />
 /// <reference path="../../eduke32/source/osd.c.ts" />
+/// <reference path="../../eduke32/source/osdcmds.c.ts" />
 /// <reference path="../../eduke32/source/player.c.ts" />
 /// <reference path="../../eduke32/source/premap.c.ts" />
 /// <reference path="../../eduke32/source/rts.c.ts" />
@@ -2543,7 +2544,7 @@ var minitext_lowercase = 0;         //static int32_t
 //}
 
 //// yxaspect and viewingrange just before the 'main' drawrooms call
-//static int32_t dr_yxaspect, dr_viewingrange;
+var /*int32_t */dr_yxaspect: number, dr_viewingrange: number;
 
 //#ifdef DEBUGGINGAIDS
 var g_spriteStat =  {
@@ -3976,9 +3977,9 @@ function G_SetCrosshairColor(r: number, g: number, b: number): void
 //    sp.cstat = bakcstat;
 //}
 
-////REPLACE FULLY
-//void G_DrawBackground(void)
-//{
+//REPLACE FULLY
+function G_DrawBackground(): void 
+{todo("G_DrawBackground");
 //    const int32_t dapicnum = BIGHOLE;
 //    int32_t x,y,x1,y1,x2,y2,rx;
 
@@ -4098,14 +4099,14 @@ function G_SetCrosshairColor(r: number, g: number, b: number): void
 //    }
 
 //    pus = pub = NUMPAGES;
-//}
+}
 
 //static int32_t ror_sprite = -1;
 
 //extern float r_ambientlight;
 
 var ror_protectedsectors = new Uint8Array(MAXSECTORS);
-//static int32_t drawing_ror = 0;
+var /*static int32_t */drawing_ror = 0;
 
 //static void G_SE40(int32_t smoothratio)
 //{
@@ -4120,9 +4121,9 @@ var ror_protectedsectors = new Uint8Array(MAXSECTORS);
 //        if (klabs(sector[sp.sectnum].floorz - sp.z) < klabs(sector[sprite[sprite2].sectnum].floorz - sprite[sprite2].z))
 //            level = 1;
 
-//        x = CAMERA(pos.x) - sp.x;
-//        y = CAMERA(pos.y) - sp.y;
-//        z = CAMERA(pos.z) - (level ? sector[sp.sectnum].floorz : sector[sp.sectnum].ceilingz);
+//        x = ud.camerapos.x - sp.x;
+//        y = ud.camerapos.y - sp.y;
+//        z = ud.camerapos.z - (level ? sector[sp.sectnum].floorz : sector[sp.sectnum].ceilingz);
 
 //        sect = sprite[sprite2].sectnum;
 //        updatesector(sprite[sprite2].x + x, sprite[sprite2].y + y, &sect);
@@ -4183,11 +4184,11 @@ var ror_protectedsectors = new Uint8Array(MAXSECTORS);
 
 //#ifdef POLYMER
 //            if (getrendermode() == REND_POLYMER)
-//                polymer_setanimatesprites(G_DoSpriteAnimations, CAMERA(pos.x), CAMERA(pos.y), CAMERA(ang), smoothratio);
+//                polymer_setanimatesprites(G_DoSpriteAnimations, ud.camerapos.x, ud.camerapos.y, ud.cameraang, smoothratio);
 //#endif
 
 //            drawrooms(sprite[sprite2].x + x, sprite[sprite2].y + y,
-//                      z + renderz, CAMERA(ang), CAMERA(horiz), sect);
+//                      z + renderz, ud.cameraang, ud.camerahoriz, sect);
 //            drawing_ror = 1 + level;
 
 //            // dupe the sprites touching the portal to the other sector
@@ -4215,7 +4216,7 @@ var ror_protectedsectors = new Uint8Array(MAXSECTORS);
 //                }
 //            }
 
-//            G_DoSpriteAnimations(CAMERA(pos.x),CAMERA(pos.y),CAMERA(ang),smoothratio);
+//            G_DoSpriteAnimations(ud.camerapos.x,ud.camerapos.y,ud.cameraang,smoothratio);
 //            drawmasks();
 
 //            if (level)
@@ -4405,307 +4406,317 @@ var ror_protectedsectors = new Uint8Array(MAXSECTORS);
 //}
 //#endif
 
-//void G_DrawRooms(int32_t snum, int32_t smoothratio)
-//{
-//    int32_t i, dont_draw;
-//    DukePlayer_t *const p = g_player[snum].ps;
+function G_DrawRooms(/*int32_t*/ snum: number, /*int32_t */smoothratio: number): void
+{
+    var /*int32_t */i: number, dont_draw: number;
+    var p = g_player[snum].ps;
 
-//    int32_t tmpyx=yxaspect, tmpvr=viewingrange;
+    var /*int32_t */tmpyx=yxaspect, tmpvr=viewingrange;
 
-//    if (g_networkMode == NET_DEDICATED_SERVER) return;
+    if (g_networkMode == NET_DEDICATED_SERVER) return;
 
-//    if (pub > 0 || getrendermode() >= REND_POLYMOST) // JBF 20040101: redraw background always
-//    {
-//        if (ud.screen_size >= 8)
-//            G_DrawBackground();
-//        pub = 0;
-//    }
+    if (pub > 0 || getrendermode() >= REND_POLYMOST) // JBF 20040101: redraw background always
+    {
+        if (ud.screen_size >= 8)
+            G_DrawBackground();
+        pub = 0;
+    }
+ 
+    if (ud.overhead_on == 2 || ud.show_help || (p.cursectnum == -1 && getrendermode() != REND_CLASSIC))
+        return;
 
-//    if (ud.overhead_on == 2 || ud.show_help || (p.cursectnum == -1 && getrendermode() != REND_CLASSIC))
-//        return;
+    if (r_usenewaspect)
+    {
+        newaspect_enable = 1;
+        setaspect_new();
+    }
 
-//    if (r_usenewaspect)
-//    {
-//        newaspect_enable = 1;
-//        setaspect_new();
-//    }
+    if (ud.pause_on || g_player[snum].ps.on_crane > -1)
+        smoothratio = 65536;
+    else
+        smoothratio = calc_smoothratio(totalclock, ototalclock);
 
-//    if (ud.pause_on || g_player[snum].ps.on_crane > -1)
-//        smoothratio = 65536;
-//    else
-//        smoothratio = calc_smoothratio(totalclock, ototalclock);
+    g_visibility = int32(p.visibility * (numplayers > 1 ? 1.0 : r_ambientlightrecip));
 
-//    g_visibility = (int32_t)(p.visibility * (numplayers > 1 ? 1.f : r_ambientlightrecip));
+    ud.camerasect = p.cursectnum;
 
-//    CAMERA(sect) = p.cursectnum;
-
-//    G_DoInterpolations(smoothratio);
-//    G_AnimateCamSprite();
-
-//    if (ud.camerasprite >= 0)
-//    {
+    G_DoInterpolations(smoothratio);
+    G_AnimateCamSprite();
+       debugger;
+    if (ud.camerasprite >= 0)
+    {todoThrow();
 //        spritetype *const s = &sprite[ud.camerasprite];
 
 //        // XXX: what?
 //        if (s.yvel < 0) s.yvel = -100;
 //        else if (s.yvel > 199) s.yvel = 300;
 
-//        CAMERA(ang) = actor[ud.camerasprite].tempang +
+//        ud.cameraang = actor[ud.camerasprite].tempang +
 //            mulscale16(((s.ang+1024-actor[ud.camerasprite].tempang)&2047)-1024, smoothratio);
 
 //        G_SE40(smoothratio);
 
 //#ifdef POLYMER
 //        if (getrendermode() == REND_POLYMER)
-//            polymer_setanimatesprites(G_DoSpriteAnimations, s.x, s.y, CAMERA(ang), smoothratio);
+//            polymer_setanimatesprites(G_DoSpriteAnimations, s.x, s.y, ud.cameraang, smoothratio);
 //#endif
 //        yax_preparedrawrooms();
-//        drawrooms(s.x,s.y,s.z-(4<<8),CAMERA(ang),s.yvel,s.sectnum);
+//        drawrooms(s.x,s.y,s.z-(4<<8),ud.cameraang,s.yvel,s.sectnum);
 //        yax_drawrooms(G_DoSpriteAnimations, s.sectnum, 0, smoothratio);
-//        G_DoSpriteAnimations(s.x,s.y,CAMERA(ang),smoothratio);
+//        G_DoSpriteAnimations(s.x,s.y,ud.cameraang,smoothratio);
 //        drawmasks();
-//    }
-//    else
-//    {
-//        int32_t j,fz,cz;
-//        int32_t tiltcx, tiltcy, tiltcs=0;    // JBF 20030807
+    }
+    else
+    { 
+        var /*int32_t */j:number,fz:number,cz:number;
+        var /*int32_t */tiltcx:number, tiltcy:number, tiltcs=0;    // JBF 20030807
 
-//        const int32_t vr = divscale22(1,sprite[p.i].yrepeat+28);
-//        const int32_t software_screen_tilting =
-//            (getrendermode() == REND_CLASSIC && ((ud.screen_tilting && p.rotscrnang && !g_fakeMultiMode)));
-//        int32_t pixelDoubling = 0;
+        var /*const int32_t */vr = divscale22(1,sprite[p.i].yrepeat+28);
+        var /*const int32_t */software_screen_tilting =
+            (getrendermode() == REND_CLASSIC && ((ud.screen_tilting && p.rotscrnang && !g_fakeMultiMode)));
+        var /*int32_t */pixelDoubling = 0;
 
-//        if (!r_usenewaspect)
-//        {
-//            setaspect(vr, yxaspect);
-//        }
-//        else
-//        {
-//            tmpvr = vr;
-//            tmpyx = (65536*ydim*8)/(xdim*5);
+        if (!r_usenewaspect)
+        {
+            setaspect(vr, yxaspect);
+        }
+        else
+        {
+            tmpvr = vr;
+            tmpyx = (65536*ydim*8)/(xdim*5);
 
-//            setaspect(mulscale16(tmpvr,viewingrange), yxaspect);
-//        }
+            setaspect(mulscale16(tmpvr,viewingrange), yxaspect);
+        }
 
-//        if (g_screenCapture)
-//        {
-//            walock[TILE_SAVESHOT] = 199;
-//            if (waloff[TILE_SAVESHOT] == 0)
-//                allocache(&waloff[TILE_SAVESHOT],200*320,&walock[TILE_SAVESHOT]);
+        if (g_screenCapture)
+        {todoThrow();
+            //walock[TILE_SAVESHOT] = 199;
+            //if (waloff[TILE_SAVESHOT] == 0)
+            //    allocache(&waloff[TILE_SAVESHOT],200*320,&walock[TILE_SAVESHOT]);
 
-//            if (getrendermode() == REND_CLASSIC)
-//                setviewtotile(TILE_SAVESHOT, 200, 320);
-//        }
-//        else if (software_screen_tilting)
-//        {
-//            int32_t oviewingrange = viewingrange;  // save it from setaspect()
-//            const int16_t tang = (ud.screen_tilting) ? p.rotscrnang : 0;
+            //if (getrendermode() == REND_CLASSIC)
+            //    setviewtotile(TILE_SAVESHOT, 200, 320);
+        }
+        else if (software_screen_tilting)
+        {todoThrow();
+            var /*int32_t */oviewingrange = viewingrange;  // save it from setaspect()
+            var /*const int16_t */tang = (ud.screen_tilting) ? p.rotscrnang : 0;
 
-//            // To render a tilted screen in high quality, we need at least
-//            // 640 pixels of *Y* dimension.
+            // To render a tilted screen in high quality, we need at least
+            // 640 pixels of *Y* dimension.
 //#if MAXYDIM >= 640
-//            if (xres > 320 || yres > 240)
-//            {
-//                tiltcs = 2;
-//                tiltcx = 640;
-//                tiltcy = 400;
-//            }
-//            else
+            if (xres > 320 || yres > 240)
+            {
+                tiltcs = 2;
+                tiltcx = 640;
+                tiltcy = 400;
+            }
+            else
 //#endif
-//            {
-//                // JBF 20030807: Increased tilted-screen quality
-//                tiltcs = 1;
-//                tiltcx = 320;
-//                tiltcy = 200;
-//            }
+            {
+                // JBF 20030807: Increased tilted-screen quality
+                tiltcs = 1;
+                tiltcx = 320;
+                tiltcy = 200;
+            }
 
-//            {
-//                // If the view is rotated (not 0 or 180 degrees modulo 360 degrees),
-//                // we render onto a square tile and display a portion of that
-//                // rotated on-screen later on.
-//                const int32_t viewtilexsiz = (tang&1023) ? tiltcx : tiltcy;
-//                const int32_t viewtileysiz = tiltcx;
+            {
+                // If the view is rotated (not 0 or 180 degrees modulo 360 degrees),
+                // we render onto a square tile and display a portion of that
+                // rotated on-screen later on.
+                var/*const int32_t */viewtilexsiz = (tang&1023) ? tiltcx : tiltcy;
+                var /*const int32_t */viewtileysiz = tiltcx;
 
-//                walock[TILE_TILT] = 255;
-//                if (waloff[TILE_TILT] == 0)
-//                    allocache(&waloff[TILE_TILT], viewtilexsiz*viewtileysiz, &walock[TILE_TILT]);
+                walock[TILE_TILT] = 255;
+                if (waloff[TILE_TILT] == null)
+                    allocache(waloff[TILE_TILT], viewtilexsiz*viewtileysiz, walock[TILE_TILT]);
 
-//                setviewtotile(TILE_TILT, viewtilexsiz, viewtileysiz);
-//            }
+                setviewtotile(TILE_TILT, viewtilexsiz, viewtileysiz);
+            }
 
-//            if ((tang&1023) == 512)
-//            {
-//                //Block off unscreen section of 90ø tilted screen
-//                j = tiltcx-(60*tiltcs);
-//                for (i=(60*tiltcs)-1; i>=0; i--)
-//                {
-//                    startumost[i] = 1;
-//                    startumost[i+j] = 1;
-//                    startdmost[i] = 0;
-//                    startdmost[i+j] = 0;
-//                }
-//            }
+            if ((tang&1023) == 512)
+            {
+                //Block off unscreen section of 90ø tilted screen
+                j = tiltcx-(60*tiltcs);
+                for (i=(60*tiltcs)-1; i>=0; i--)
+                {
+                    startumost[i] = 1;
+                    startumost[i+j] = 1;
+                    startdmost[i] = 0;
+                    startdmost[i+j] = 0;
+                }
+            }
 
-//            i = (tang&511);
-//            if (i > 256)
-//                i = 512-i;
-//            i = sintable[i+512]*8 + sintable[i]*5;
+            i = (tang&511);
+            if (i > 256)
+                i = 512-i;
+            i = sintable[i+512]*8 + sintable[i]*5;
 
-////            setaspect(i>>1, yxaspect);
-//            setaspect(mulscale16(oviewingrange,i>>1), yxaspect);
+//            setaspect(i>>1, yxaspect);
+            setaspect(mulscale16(oviewingrange,i>>1), yxaspect);
 
-//            tmpvr = i>>1;
-//            tmpyx = (65536*ydim*8)/(xdim*5);
-//        }
-//        else if (getrendermode() >= REND_POLYMOST && (ud.screen_tilting && !g_fakeMultiMode))
-//        {
+            tmpvr = i>>1;
+            tmpyx = (65536*ydim*8)/(xdim*5)|0;
+        }
+        else if (getrendermode() >= REND_POLYMOST && (ud.screen_tilting && !g_fakeMultiMode))
+        {
 //#ifdef USE_OPENGL
-//            setrollangle(p.orotscrnang + mulscale16(((p.rotscrnang - p.orotscrnang + 1024)&2047)-1024, smoothratio));
+            setrollangle(p.orotscrnang + mulscale16(((p.rotscrnang - p.orotscrnang + 1024)&2047)-1024, smoothratio));
 //#endif
-//            p.orotscrnang = p.rotscrnang; // JBF: save it for next time
-//        }
-//        else if (!ud.detail && getrendermode()==REND_CLASSIC)
-//        {
-//            pixelDoubling = 1;
-//            g_halveScreenArea = 1;
-//            G_UpdateScreenArea();
-//        }
+            p.orotscrnang = p.rotscrnang; // JBF: save it for next time
+        }
+        else if (!ud.detail && getrendermode()==REND_CLASSIC)
+        {
+            pixelDoubling = 1;
+            g_halveScreenArea = 1;
+            G_UpdateScreenArea();
+        }
 
-//        if (p.newowner < 0)
-//        {
-//            vec3_t cam = { p.opos.x+mulscale16(p.pos.x-p.opos.x, smoothratio),
-//                           p.opos.y+mulscale16(p.pos.y-p.opos.y, smoothratio),
-//                           p.opos.z+mulscale16(p.pos.z-p.opos.z, smoothratio)
-//                         };
+        if (p.newowner < 0)
+        {
+            var cam =  new vec3_t( p.opos.x+mulscale16(p.pos.x-p.opos.x, smoothratio),
+                           p.opos.y+mulscale16(p.pos.y-p.opos.y, smoothratio),
+                           p.opos.z+mulscale16(p.pos.z-p.opos.z, smoothratio)
+                         );
 
-//            Bmemcpy(&CAMERA(pos), &cam, sizeof(vec3_t));
-//            CAMERA(ang) = p.oang + mulscale16(((p.ang+1024-p.oang)&2047)-1024, smoothratio);
-//            CAMERA(ang) += p.look_ang;
-//            CAMERA(horiz) = p.ohoriz+p.ohorizoff
-//                + mulscale16((p.horiz+p.horizoff-p.ohoriz-p.ohorizoff), smoothratio);
+            ud.camerapos.copyFrom(cam);
+            ud.cameraang = p.oang + mulscale16(((p.ang+1024-p.oang)&2047)-1024, smoothratio);
+            ud.cameraang += p.look_ang;
+            ud.camerahoriz = p.ohoriz+p.ohorizoff
+                + mulscale16((p.horiz+p.horizoff-p.ohoriz-p.ohorizoff), smoothratio);
 
-//            if (ud.viewbob)
-//            {
-//                int32_t addz = (p.opyoff + mulscale16(p.pyoff-p.opyoff, smoothratio));
-//                if (p.over_shoulder_on)
-//                    addz >>= 3;
+            if (ud.viewbob)
+            {
+                var /*int32_t */addz = (p.opyoff + mulscale16(p.pyoff-p.opyoff, smoothratio));
+                if (p.over_shoulder_on)
+                    addz >>= 3;
 
-//                CAMERA(pos.z) += addz;
-//            }
+                ud.camerapos.z += addz;
+            }
 
-//            if (p.over_shoulder_on)
-//            {
-//                CAMERA(pos.z) -= 3072;
-//                G_DoThirdPerson(p,&CAMERA(pos),&CAMERA(sect),CAMERA(ang),CAMERA(horiz));
-//            }
-//        }
-//        else
-//        {
-//            // looking through viewscreen
-//            Bmemcpy(&CAMERA(pos), &p.pos, sizeof(vec3_t));
-//            CAMERA(ang) = p.ang + p.look_ang;
-//            CAMERA(horiz) = 100+sprite[p.newowner].shade;
-//            CAMERA(sect) = sprite[p.newowner].sectnum;
-//            smoothratio = 65536;
-//        }
+            if (p.over_shoulder_on)
+            {todoThrow();
+                //ud.camerapos.z -= 3072;
+                //G_DoThirdPerson(p,&CAMERA(pos),&ud.camerasect,ud.cameraang,ud.camerahoriz);
+            }
+        }
+        else
+        {
+            todoThrow();
+            //// looking through viewscreen
+            //Bmemcpy(&CAMERA(pos), &p.pos, sizeof(vec3_t));
+            //ud.cameraang = p.ang + p.look_ang;
+            //ud.camerahoriz = 100+sprite[p.newowner].shade;
+            //ud.camerasect = sprite[p.newowner].sectnum;
+            //smoothratio = 65536;
+        }
 
-//        cz = actor[p.i].ceilingz;
-//        fz = actor[p.i].floorz;
+        cz = actor[p.i].ceilingz;
+        fz = actor[p.i].floorz;
 
-//        if (g_earthquakeTime > 0 && p.on_ground == 1)
-//        {
-//            CAMERA(pos.z) += 256-(((g_earthquakeTime)&1)<<9);
-//            CAMERA(ang) += (2-((g_earthquakeTime)&2))<<2;
-//        }
+        if (g_earthquakeTime > 0 && p.on_ground == 1)
+        {
+            ud.camerapos.z += 256-(((g_earthquakeTime)&1)<<9);
+            ud.cameraang += (2-((g_earthquakeTime)&2))<<2;
+        }
 
-//        if (sprite[p.i].pal == 1)
-//            CAMERA(pos.z) -= (18<<8);
+        if (sprite[p.i].pal == 1)
+            ud.camerapos.z -= (18<<8);
 
-//        if (p.newowner < 0 && p.spritebridge == 0)
-//        {
-//            // NOTE: when shrunk, p.pos.z can be below the floor.  This puts the
-//            // camera into the sector again then.
+        if (p.newowner < 0 && p.spritebridge == 0)
+        {
+            // NOTE: when shrunk, p.pos.z can be below the floor.  This puts the
+            // camera into the sector again then.
 
-//            if (CAMERA(pos.z) < (p.truecz + (4<<8)))
-//                CAMERA(pos.z) = cz + (4<<8);
-//            else if (CAMERA(pos.z) > (p.truefz - (4<<8)))
-//                CAMERA(pos.z) = fz - (4<<8);
-//        }
+            if (ud.camerapos.z < (p.truecz + (4<<8)))
+                ud.camerapos.z = cz + (4<<8);
+            else if (ud.camerapos.z > (p.truefz - (4<<8)))
+                ud.camerapos.z = fz - (4<<8);
+        }
 
-//        while (CAMERA(sect) >= 0)  // if, really
-//        {
-//            getzsofslope(CAMERA(sect),CAMERA(pos.x),CAMERA(pos.y),&cz,&fz);
+        while (ud.camerasect >= 0)  // if, really
+        {
+            var $cz = new R(cz);
+            var $fz = new R(fz);
+            getzsofslope(ud.camerasect,ud.camerapos.x,ud.camerapos.y,$cz,$fz);
+            cz = $cz.$;
+            fz = $fz.$;
 //#ifdef YAX_ENABLE
-//            if (yax_getbunch(CAMERA(sect), YAX_CEILING) >= 0)
-//            {
-//                if (CAMERA(pos.z) < cz)
-//                {
-//                    updatesectorz(CAMERA(pos.x), CAMERA(pos.y), CAMERA(pos.z), &CAMERA(sect));
-//                    break;  // since CAMERA(sect) might have been updated to -1
-//                    // NOTE: fist discovered in WGR2 SVN r134, til' death level 1
-//                    //  (Lochwood Hollow).  A problem REMAINS with Polymost, maybe classic!
-//                }
-//            }
-//            else
+            if (yax_getbunch(ud.camerasect, YAX_CEILING) >= 0)
+            {
+                if (ud.camerapos.z < cz)
+                {
+                    var $camerasect = new R(ud.camerasect);
+                    updatesectorz(ud.camerapos.x, ud.camerapos.y, ud.camerapos.z, $camerasect);
+                    ud.camerasect = $camerasect.$;
+                    break;  // since ud.camerasect might have been updated to -1
+                    // NOTE: fist discovered in WGR2 SVN r134, til' death level 1
+                    //  (Lochwood Hollow).  A problem REMAINS with Polymost, maybe classic!
+                }
+            }
+            else
 //#endif
-//                if (CAMERA(pos.z) < cz+(4<<8))
-//                    CAMERA(pos.z) = cz+(4<<8);
+                if (ud.camerapos.z < cz+(4<<8))
+                    ud.camerapos.z = cz+(4<<8);
 
 //#ifdef YAX_ENABLE
-//            if (yax_getbunch(CAMERA(sect), YAX_FLOOR) >= 0)
-//            {
-//                if (CAMERA(pos.z) > fz)
-//                    updatesectorz(CAMERA(pos.x), CAMERA(pos.y), CAMERA(pos.z), &CAMERA(sect));
-//            }
-//            else
+            if (yax_getbunch(ud.camerasect, YAX_FLOOR) >= 0)
+            {
+                if (ud.camerapos.z > fz) {
+                    var $camerasect = new R(ud.camerasect);
+                    updatesectorz(ud.camerapos.x, ud.camerapos.y, ud.camerapos.z, $camerasect);
+                    ud.camerasect = $camerasect.$;
+                }
+            }
+            else
 //#endif
-//                if (CAMERA(pos.z) > fz-(4<<8))
-//                    CAMERA(pos.z) = fz-(4<<8);
+                if (ud.camerapos.z > fz-(4<<8))
+                    ud.camerapos.z = fz-(4<<8);
 
-//            break;
-//        }
+            break;
+        }
+   
+        dont_draw = 0;
+        // NOTE: might be rendering off-screen here, so CON commands that draw stuff
+        //  like showview must cope with that situation or bail out!
+        if (G_HaveEvent(EVENT_DISPLAYROOMS))
+            dont_draw = VM_OnEvent(EVENT_DISPLAYROOMS, g_player[screenpeek].ps.i, screenpeek, -1, 0);
 
-//        dont_draw = 0;
-//        // NOTE: might be rendering off-screen here, so CON commands that draw stuff
-//        //  like showview must cope with that situation or bail out!
-//        if (G_HaveEvent(EVENT_DISPLAYROOMS))
-//            dont_draw = VM_OnEvent(EVENT_DISPLAYROOMS, g_player[screenpeek].ps.i, screenpeek, -1, 0);
+        ud.camerahoriz = clamp(ud.camerahoriz, HORIZ_MIN, HORIZ_MAX);
 
-//        CAMERA(horiz) = clamp(CAMERA(horiz), HORIZ_MIN, HORIZ_MAX);
+        if (dont_draw != 1)  // event return values other than 0 and 1 are reserved
+        {
+            if (dont_draw != 0)
+                OSD_Printf(OSD_ERROR + "ERROR: EVENT_DISPLAYROOMS return value must be 0 or 1, " +
+                           "other values are reserved.\n");
 
-//        if (dont_draw != 1)  // event return values other than 0 and 1 are reserved
-//        {
-//            if (dont_draw != 0)
-//                OSD_Printf(OSD_ERROR "ERROR: EVENT_DISPLAYROOMS return value must be 0 or 1, "
-//                           "other values are reserved.\n");
+            todo("G_HandleMirror(ud.camerapos.x, ud.camerapos.y, ud.camerapos.z, ud.cameraang, ud.camerahoriz, smoothratio);");
 
-//            G_HandleMirror(CAMERA(pos.x), CAMERA(pos.y), CAMERA(pos.z), CAMERA(ang), CAMERA(horiz), smoothratio);
-
-//            G_SE40(smoothratio);
+            todo("G_SE40(smoothratio);");
 
 //#ifdef POLYMER
-//            if (getrendermode() == REND_POLYMER)
-//                polymer_setanimatesprites(G_DoSpriteAnimations, CAMERA(pos.x),CAMERA(pos.y),CAMERA(ang),smoothratio);
+            if (getrendermode() == REND_POLYMER)
+                todo("polymer_setanimatesprites(G_DoSpriteAnimations, ud.camerapos.x,ud.camerapos.y,ud.cameraang,smoothratio);");
 //#endif
-//            // for G_PrintCoords
-//            dr_viewingrange = viewingrange;
-//            dr_yxaspect = yxaspect;
+            // for G_PrintCoords
+            dr_viewingrange = viewingrange;
+            dr_yxaspect = yxaspect;
 //#ifdef DEBUG_MIRRORS_ONLY
 //            gotpic[MIRROR>>3] |= (1<<(MIRROR&7));
 //#else
-//            yax_preparedrawrooms();
-//            drawrooms(CAMERA(pos.x),CAMERA(pos.y),CAMERA(pos.z),CAMERA(ang),CAMERA(horiz),CAMERA(sect));
-//            yax_drawrooms(G_DoSpriteAnimations, CAMERA(sect), 0, smoothratio);
+            todo("yax_preparedrawrooms();");
+            drawrooms(ud.camerapos.x,ud.camerapos.y,ud.camerapos.z,ud.cameraang,ud.camerahoriz,ud.camerasect);
+            todo("yax_drawrooms(G_DoSpriteAnimations, ud.camerasect, 0, smoothratio);");
 
-//            G_OROR_DupeSprites();
+            todo("G_OROR_DupeSprites();");
 
-//            G_DoSpriteAnimations(CAMERA(pos.x),CAMERA(pos.y),CAMERA(ang),smoothratio);
+            todo("G_DoSpriteAnimations(ud.camerapos.x,ud.camerapos.y,ud.cameraang,smoothratio);");
 
-//            drawing_ror = 0;
-//            drawmasks();
+            drawing_ror = 0;
+            todo("drawmasks();");
 //#endif
-//        }
-
+        }
+     debugger;todoThrow()
 //        if (g_screenCapture)
 //        {
 //            g_screenCapture = 0;
@@ -4769,23 +4780,23 @@ var ror_protectedsectors = new Uint8Array(MAXSECTORS);
 //            }
 //            enddrawing();
 //        }
-//    }
+    }
 
-//    G_RestoreInterpolations();
+    G_RestoreInterpolations();
 
-//    if (totalclock < lastvisinc)
-//    {
-//        if (klabs(p.visibility-ud.const_visibility) > 8)
-//            p.visibility += (ud.const_visibility-p.visibility)>>2;
-//    }
-//    else p.visibility = ud.const_visibility;
+    if (totalclock < lastvisinc)
+    {
+        if (klabs(p.visibility-ud.const_visibility) > 8)
+            p.visibility += (ud.const_visibility-p.visibility)>>2;
+    }
+    else p.visibility = ud.const_visibility;
 
-//    if (r_usenewaspect)
-//    {
-//        newaspect_enable = 0;
-//        setaspect(tmpvr, tmpyx);
-//    }
-//}
+    if (r_usenewaspect)
+    {
+        newaspect_enable = 0;
+        setaspect(tmpvr, tmpyx);
+    }
+}
 
 function G_DumpDebugInfo(): void
 {

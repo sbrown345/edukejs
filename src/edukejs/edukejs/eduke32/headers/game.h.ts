@@ -145,7 +145,7 @@ function G_GetLogoFlags(): number
 
 class user_defs {
     //#if !defined LUNATIC
-    //vec3_t camerapos;
+    camerapos: vec3_t;
     //#endif
     const_visibility: number; uw_framerate: number;
     camera_time: number; folfvel: number; folavel: number; folx: number; foly: number; fola: number;
@@ -186,7 +186,7 @@ class user_defs {
 
     constructor() {
     //#if !defined LUNATIC
-    //    vec3_t camerapos;
+        this.camerapos = new vec3_t();
     //#endif
         this.const_visibility=0,this.uw_framerate=0;
         this.camera_time=0,this.folfvel=0,this.folavel=0,this.folx=0,this.foly=0,this.fola=0;
@@ -479,10 +479,10 @@ function G_HandleAsync()
     //Net_GetPackets();
 }
 
-//static inline int32_t calc_smoothratio(int32_t totalclk, int32_t ototalclk)
-//{
-//    return clamp((totalclk-ototalclk)*(65536/TICSPERFRAME), 0, 65536);
-//}
+function /* int32_t */calc_smoothratio(/*int32_t */totalclk: number, /*int32_t */ototalclk: number): number
+{
+    return clamp((totalclk-ototalclk)*(65536/TICSPERFRAME), 0, 65536);
+}
 
 //// sector effector lotags
 //enum {

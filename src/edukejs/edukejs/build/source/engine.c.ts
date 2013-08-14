@@ -14843,27 +14843,27 @@ function clearallviews(dacol: number): void
 //}
 
 
-////MUST USE RESTOREFORDRAWROOMS AFTER DRAWING
+//MUST USE RESTOREFORDRAWROOMS AFTER DRAWING
 
-////
-//// setviewtotile
-////
-//void setviewtotile(int16_t tilenume, int32_t xsiz, int32_t ysiz)
-//{
-//    //DRAWROOMS TO TILE BACKUP&SET CODE
-//    tilesizx[tilenume] = xsiz; tilesizy[tilenume] = ysiz;
+//
+// setviewtotile
+//
+function setviewtotile(/*int16_t*/ tilenume: number, /*int32_t */xsiz: number, /*int32_t */ysiz: number): void
+{debugger;todoThrow();
+    //DRAWROOMS TO TILE BACKUP&SET CODE
+    tilesizx[tilenume] = xsiz; tilesizy[tilenume] = ysiz;
 //    bakxsiz[setviewcnt] = xsiz; bakysiz[setviewcnt] = ysiz;
 //    bakframeplace[setviewcnt] = frameplace; frameplace = waloff[tilenume];
 //    bakwindowx1[setviewcnt] = windowx1; bakwindowy1[setviewcnt] = windowy1;
 //    bakwindowx2[setviewcnt] = windowx2; bakwindowy2[setviewcnt] = windowy2;
-//#ifdef USE_OPENGL
+////#ifdef USE_OPENGL
 //    if (setviewcnt == 0)
 //    {
 //        bakrendmode = rendmode;
 //        baktile = tilenume;
 //    }
 //    rendmode = REND_CLASSIC;//2;
-//#endif
+////#endif
 //    copybufbyte(&startumost[windowx1],&bakumost[windowx1],(windowx2-windowx1+1)*sizeof(bakumost[0]));
 //    copybufbyte(&startdmost[windowx1],&bakdmost[windowx1],(windowx2-windowx1+1)*sizeof(bakdmost[0]));
 //    setviewcnt++;
@@ -14873,7 +14873,7 @@ function clearallviews(dacol: number): void
 //    setaspect(65536,65536);
 
 //    calc_ylookup(ysiz, xsiz);
-//}
+}
 
 
 ////
@@ -17073,16 +17073,16 @@ function getzsofslopeptr(/*const sectortype **/sec: sectortype, /*int32_t */dax:
 //    return 0;
 //}
 
-////
-//// setrollangle
-////
+//
+// setrollangle
+//
 //#ifdef USE_OPENGL
-//void setrollangle(int32_t rolla)
-//{
-//    UNREFERENCED_PARAMETER(rolla);
-//    if (rolla == 0) gtang = 0.0;
-//    else gtang = PI * (double)rolla / 1024.0;
-//}
+function setrollangle(/*int32_t*/ rolla: number): void
+{
+    //UNREFERENCED_PARAMETER(rolla);
+    if (rolla == 0) gtang = 0.0;
+    else gtang = PI * rolla / 1024.0;
+}
 //#endif
 
 

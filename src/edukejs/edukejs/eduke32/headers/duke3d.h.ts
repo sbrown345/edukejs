@@ -95,7 +95,7 @@ var REALGAMETICSPERSEC = 30;
 //// NOTE: calling a game state update a 'frame' is really weird.
 //// (This used to be TICRATE/GAMETICSPERSEC, which was 120/26 = 4.615~ truncated
 //// to 4 by integer division.)
-//#define TICSPERFRAME        (TICRATE/REALGAMETICSPERSEC)
+var TICSPERFRAME =(TICRATE/REALGAMETICSPERSEC)/0;
 //// Used as a constant to satisfy all of the calculations written with ticrate =
 //// 26 in mind:
 var GAMETICSPERSEC     =26;
@@ -103,11 +103,11 @@ var GAMETICSPERSEC     =26;
 
 var PACKBUF_SIZE        = 32768;
 
-//#define TILE_SAVESHOT       (MAXTILES-1)
-//#define TILE_LOADSHOT       (MAXTILES-3)
-//#define TILE_TILT           (MAXTILES-2)
-//#define TILE_ANIM           (MAXTILES-4)
-//#define TILE_VIEWSCR        (MAXTILES-5)
+var TILE_SAVESHOT      =(MAXTILES-1);
+var TILE_LOADSHOT      =(MAXTILES-3);
+var TILE_TILT          =(MAXTILES-2);
+var TILE_ANIM          =(MAXTILES-4);
+var TILE_VIEWSCR       =(MAXTILES-5);
 
 //// sprites with these statnums should be considered for fixing (bitmap)
 function ROTFIXSPR_STATNUMP(k: number ): boolean {return (k)==STAT_DEFAULT || (k)==STAT_STANDABLE || (k)==STAT_FX || 

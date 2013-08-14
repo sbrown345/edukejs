@@ -27,7 +27,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //#include "demo.h"
 //#include "enet/enet.h"
 
-//int32_t lastvisinc;
+var /*int32_t */lastvisinc = 0;
 //hudweapon_t hudweap;
 
 //static int32_t g_snum;

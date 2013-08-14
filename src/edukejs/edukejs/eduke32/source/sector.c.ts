@@ -343,16 +343,17 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //    return(j);
 //}
 
-//void G_AnimateCamSprite(void)
-//{
-//    int32_t i = camsprite;
+function G_AnimateCamSprite(): void
+{
+    var /*int32_t */i = camsprite;
 
 //#ifdef DEBUG_VALGRIND_NO_SMC
 //    return;
 //#endif
-//    if (camsprite < 0)
-//        return;
+    if (camsprite < 0)
+        return;
 
+    todo("G_AnimateCamSprite");
 //    if (actor[i].t_data[0] >= 4)
 //    {
 //        actor[i].t_data[0] = 0;
@@ -365,15 +366,15 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //                allocatepermanenttile(TILE_VIEWSCR,tilesizx[sprite[i].picnum],tilesizy[sprite[i].picnum]);
 //            else walock[TILE_VIEWSCR] = 255;
 //            G_SetupCamTile(sprite[i].owner, TILE_VIEWSCR);
-//#ifdef POLYMER
+////#ifdef POLYMER
 //            // HACK: force texture update on viewscreen sprite in Polymer!
 //            if (getrendermode() == REND_POLYMER)  
 //                sprite[i].filler ^= (1<<1);
-//#endif
+////#endif
 //        }
 //    }
 //    else actor[i].t_data[0]++;
-//}
+}
 
 //void G_AnimateWalls(void)
 //{

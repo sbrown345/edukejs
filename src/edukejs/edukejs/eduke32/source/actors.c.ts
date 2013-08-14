@@ -50,6 +50,7 @@
 /// <reference path="../../eduke32/source/namesdyn.c.ts" />
 /// <reference path="../../eduke32/source/net.c.ts" />
 /// <reference path="../../eduke32/source/osd.c.ts" />
+/// <reference path="../../eduke32/source/osdcmds.c.ts" />
 /// <reference path="../../eduke32/source/player.c.ts" />
 /// <reference path="../../eduke32/source/premap.c.ts" />
 /// <reference path="../../eduke32/source/rts.c.ts" />
@@ -135,24 +136,24 @@ function G_SetInterpolation(/*int32_t * */posptr: R<number>): number
 //        }
 //}
 
-//void G_DoInterpolations(int32_t smoothratio)       //Stick at beginning of drawscreen
-//{
-//    int32_t i=g_numInterpolations-1, j = 0, odelta, ndelta = 0;
+function G_DoInterpolations(/*int32_t*/ smoothratio: number): void       //Stick at beginning of drawscreen
+{
+    var /*int32_t */i=g_numInterpolations-1, j = 0, odelta, ndelta = 0;
 
-//    if (g_interpolationLock++)
-//    {
-//        return;
-//    }
-
-//    for (; i>=0; i--)
-//    {
-//        bakipos[i] = *curipos[i];
-//        odelta = ndelta;
-//        ndelta = (*curipos[i])-oldipos[i];
-//        if (odelta != ndelta) j = mulscale16(ndelta,smoothratio);
-//        *curipos[i] = oldipos[i]+j;
-//    }
-//}
+    if (g_interpolationLock++)
+    {
+        return;
+    }
+    todo("G_DoInterpolations");
+    //for (; i>=0; i--)
+    //{
+    //    bakipos[i] = *curipos[i];
+    //    odelta = ndelta;
+    //    ndelta = (*curipos[i])-oldipos[i];
+    //    if (odelta != ndelta) j = mulscale16(ndelta,smoothratio);
+    //    *curipos[i] = oldipos[i]+j;
+    //}
+}
 
 //void G_ClearCameraView(DukePlayer_t *ps)
 //{

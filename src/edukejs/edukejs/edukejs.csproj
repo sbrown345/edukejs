@@ -114,6 +114,7 @@
     <Content Include="eduke32\source\music.c.ts" />
     <Content Include="eduke32\source\namesdyn.c.ts" />
     <Content Include="eduke32\source\net.c.ts" />
+    <Content Include="eduke32\source\osdcmds.c.ts" />
     <Content Include="eduke32\source\player.c.ts" />
     <Content Include="eduke32\source\premap.c.ts" />
     <Content Include="eduke32\headers\premap.h.ts" />

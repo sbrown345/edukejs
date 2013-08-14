@@ -3911,6 +3911,7 @@ static void G_DoThirdPerson(const DukePlayer_t *pp, vec3_t *vect, int16_t *vsect
 //REPLACE FULLY
 void G_DrawBackground(void)
 {
+#ifdef DEBUG_GL_SIMPLE_OFF
     const int32_t dapicnum = BIGHOLE;
     int32_t x,y,x1,y1,x2,y2,rx;
 
@@ -4030,6 +4031,7 @@ void G_DrawBackground(void)
     }
 
     pus = pub = NUMPAGES;
+#endif
 }
 
 static int32_t ror_sprite = -1;
@@ -4625,16 +4627,16 @@ void G_DrawRooms(int32_t snum, int32_t smoothratio)
 #ifdef DEBUG_MIRRORS_ONLY
             gotpic[MIRROR>>3] |= (1<<(MIRROR&7));
 #else
-            yax_preparedrawrooms();
+            //yax_preparedrawrooms();
             drawrooms(CAMERA(pos.x),CAMERA(pos.y),CAMERA(pos.z),CAMERA(ang),CAMERA(horiz),CAMERA(sect));
-            yax_drawrooms(G_DoSpriteAnimations, CAMERA(sect), 0, smoothratio);
+            //yax_drawrooms(G_DoSpriteAnimations, CAMERA(sect), 0, smoothratio);
 
-            G_OROR_DupeSprites();
+		/**S	G_OROR_Dupe/prites();
 
-            G_DoSpriteAnimations(CAMERA(pos.x),CAMERA(pos.y),CAMERA(ang),smoothratio);
+					   G_DoSpriteAnimations(CAMERA(pos.x),CAMERA(pos.y),CAMERA(ang),smoothratio);
 
-            drawing_ror = 0;
-            drawmasks();
+					   drawing_ror = 0;
+					   drawmasks()*/;
 #endif
         }
 
