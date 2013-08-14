@@ -37,70 +37,70 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 var g_numObituaries = 0;
 var g_numSelfObituaries = 0;
 
-//void P_UpdateScreenPal(DukePlayer_t *p)
-//{
-//    int32_t intowater = 0;
-//    const int32_t sect = p->cursectnum;
+function P_UpdateScreenPal(p: DukePlayer_t ): void
+{
+    int32_t intowater = 0;
+    const int32_t sect = p.cursectnum;
 
-//    if (p->heat_on) p->palette = SLIMEPAL;
-//    else if (sect < 0) p->palette = BASEPAL;
-//    else if (sector[sect].ceilingpicnum >= FLOORSLIME && sector[sect].ceilingpicnum <= FLOORSLIME+2)
-//    {
-//        p->palette = SLIMEPAL;
-//        intowater = 1;
-//    }
-//    else
-//    {
-//        if (sector[p->cursectnum].lotag == ST_2_UNDERWATER) p->palette = WATERPAL;
-//        else p->palette = BASEPAL;
-//        intowater = 1;
-//    }
+    if (p.heat_on) p.palette = SLIMEPAL;
+    else if (sect < 0) p.palette = BASEPAL;
+    else if (sector[sect].ceilingpicnum >= FLOORSLIME && sector[sect].ceilingpicnum <= FLOORSLIME+2)
+    {
+        p.palette = SLIMEPAL;
+        intowater = 1;
+    }
+    else
+    {
+        if (sector[p.cursectnum].lotag == ST_2_UNDERWATER) p.palette = WATERPAL;
+        else p.palette = BASEPAL;
+        intowater = 1;
+    }
 
-//    g_restorePalette = 1+intowater;
-//}
+    g_restorePalette = 1+intowater;
+}
 
 //static void P_IncurDamage(DukePlayer_t *p)
 //{
 //    int32_t damage;
 
-//    if (VM_OnEvent(EVENT_INCURDAMAGE, p->i, sprite[p->i].yvel, -1, 0) != 0)
+//    if (VM_OnEvent(EVENT_INCURDAMAGE, p.i, sprite[p.i].yvel, -1, 0) != 0)
 //        return;
 
-//    sprite[p->i].extra -= p->extra_extra8>>8;
+//    sprite[p.i].extra -= p.extra_extra8>>8;
 
-//    damage = sprite[p->i].extra - p->last_extra;
+//    damage = sprite[p.i].extra - p.last_extra;
 
 //    if (damage >= 0)
 //        return;
 
-//    p->extra_extra8 = 0;
+//    p.extra_extra8 = 0;
 
-//    if (p->inv_amount[GET_SHIELD] > 0)
+//    if (p.inv_amount[GET_SHIELD] > 0)
 //    {
 //        int32_t shield_damage =  damage * (20 + (krand()%30)) / 100;
 //        damage -= shield_damage;
 
-//        p->inv_amount[GET_SHIELD] += shield_damage;
+//        p.inv_amount[GET_SHIELD] += shield_damage;
 
-//        if (p->inv_amount[GET_SHIELD] < 0)
+//        if (p.inv_amount[GET_SHIELD] < 0)
 //        {
-//            damage += p->inv_amount[GET_SHIELD];
-//            p->inv_amount[GET_SHIELD] = 0;
+//            damage += p.inv_amount[GET_SHIELD];
+//            p.inv_amount[GET_SHIELD] = 0;
 //        }
 //    }
 
-//    sprite[p->i].extra = p->last_extra + damage;
+//    sprite[p.i].extra = p.last_extra + damage;
 //}
 
 //void P_QuickKill(DukePlayer_t *p)
 //{
 //    P_PalFrom(p, 48, 48,48,48);
 
-//    sprite[p->i].extra = 0;
-//    sprite[p->i].cstat |= 32768;
+//    sprite[p.i].extra = 0;
+//    sprite[p.i].cstat |= 32768;
 
 //    if (ud.god == 0)
-//        A_DoGuts(p->i,JIBS6,8);
+//        A_DoGuts(p.i,JIBS6,8);
 //}
 
 //static void A_DoWaterTracers(int32_t x1,int32_t y1,int32_t z1,int32_t x2,int32_t y2,int32_t z2,int32_t n)
@@ -126,9 +126,9 @@ var g_numSelfObituaries = 0;
 //            break;
 
 //        if (sector[sect].lotag == ST_2_UNDERWATER)
-//            A_InsertSprite(sect,x1,y1,z1,WATERBUBBLE,-32,4+(krand()&3),4+(krand()&3),krand()&2047,0,0,g_player[0].ps->i,5);
+//            A_InsertSprite(sect,x1,y1,z1,WATERBUBBLE,-32,4+(krand()&3),4+(krand()&3),krand()&2047,0,0,g_player[0].ps.i,5);
 //        else
-//            A_InsertSprite(sect,x1,y1,z1,SMALLSMOKE,-32,14,14,0,0,0,g_player[0].ps->i,5);
+//            A_InsertSprite(sect,x1,y1,z1,SMALLSMOKE,-32,14,14,0,0,0,g_player[0].ps.i,5);
 //    }
 //}
 
@@ -143,9 +143,9 @@ var g_numSelfObituaries = 0;
 
 //    Bmemcpy(&destvect, dv, sizeof(vec3_t));
 
-//    srcvect.x = sv->x + (sintable[(348+ang+512)&2047]/proj->offset);
-//    srcvect.y = sv->y + (sintable[(ang+348)&2047]/proj->offset);
-//    srcvect.z = sv->z + 1024+(proj->toffset<<8);
+//    srcvect.x = sv.x + (sintable[(348+ang+512)&2047]/proj.offset);
+//    srcvect.y = sv.y + (sintable[(ang+348)&2047]/proj.offset);
+//    srcvect.z = sv.z + 1024+(proj.toffset<<8);
 
 //    n = ((FindDistance2D(srcvect.x-destvect.x,srcvect.y-destvect.y))>>8)+1;
 
@@ -157,7 +157,7 @@ var g_numSelfObituaries = 0;
 //    srcvect.y += destvect.y>>2;
 //    srcvect.z += (destvect.z>>2);
 
-//    for (i=proj->tnum; i>0; i--)
+//    for (i=proj.tnum; i>0; i--)
 //    {
 //        srcvect.x += destvect.x;
 //        srcvect.y += destvect.y;
@@ -168,8 +168,8 @@ var g_numSelfObituaries = 0;
 //        getzsofslope(sect,srcvect.x,srcvect.y,&n,&j);
 //        if (srcvect.z > j || srcvect.z < n)
 //            break;
-//        j = A_InsertSprite(sect,srcvect.x,srcvect.y,srcvect.z,proj->trail,-32,
-//                           proj->txrepeat,proj->tyrepeat,ang,0,0,g_player[0].ps->i,0);
+//        j = A_InsertSprite(sect,srcvect.x,srcvect.y,srcvect.z,proj.trail,-32,
+//                           proj.txrepeat,proj.tyrepeat,ang,0,0,g_player[0].ps.i,0);
 //        changespritestat(j, STAT_ACTOR);
 //    }
 //}
@@ -197,12 +197,12 @@ var g_numSelfObituaries = 0;
 //    int32_t dx1, dy1, dx2, dy2, dx3, dy3, smax, sdist;
 //    int32_t xv, yv;
 
-//    if (s->picnum == APLAYER)
+//    if (s.picnum == APLAYER)
 //    {
-//        if (!g_player[s->yvel].ps->auto_aim)
+//        if (!g_player[s.yvel].ps.auto_aim)
 //            return -1;
 
-//        if (g_player[s->yvel].ps->auto_aim == 2)
+//        if (g_player[s.yvel].ps.auto_aim == 2)
 //        {
 //            if (A_CheckSpriteTileFlags(atwith,SPRITE_PROJECTILE) && (ProjectileData[atwith].workslike & PROJECTILE_RPG))
 //                return -1;
@@ -223,12 +223,12 @@ var g_numSelfObituaries = 0;
 //        }
 //    }
 
-//    a = s->ang;
+//    a = s.ang;
 
 //    j = -1;
 
-//    gotshrinker = (s->picnum == APLAYER && PWEAPON(0, g_player[s->yvel].ps->curr_weapon, WorksLike) == SHRINKER_WEAPON);
-//    gotfreezer = (s->picnum == APLAYER && PWEAPON(0, g_player[s->yvel].ps->curr_weapon, WorksLike) == FREEZE_WEAPON);
+//    gotshrinker = (s.picnum == APLAYER && PWEAPON(0, g_player[s.yvel].ps.curr_weapon, WorksLike) == SHRINKER_WEAPON);
+//    gotfreezer = (s.picnum == APLAYER && PWEAPON(0, g_player[s.yvel].ps.curr_weapon, WorksLike) == FREEZE_WEAPON);
 
 //    smax = INT32_MAX;
 
@@ -253,8 +253,8 @@ var g_numSelfObituaries = 0;
 //                        if (sprite[i].picnum == APLAYER &&
 //                                //                        ud.ffire == 0 &&
 //                                (GTFLAGS(GAMETYPE_PLAYERSFRIENDLY) || (GTFLAGS(GAMETYPE_TDM) &&
-//                                        g_player[sprite[i].yvel].ps->team == g_player[s->yvel].ps->team)) &&
-//                                s->picnum == APLAYER &&
+//                                        g_player[sprite[i].yvel].ps.team == g_player[s.yvel].ps.team)) &&
+//                                s.picnum == APLAYER &&
 //                                s != &sprite[i])
 //                            continue;
 
@@ -271,8 +271,8 @@ var g_numSelfObituaries = 0;
 //                        if (gotfreezer && sprite[i].pal == 1) continue;
 //                    }
 
-//                    xv = (sprite[i].x-s->x);
-//                    yv = (sprite[i].y-s->y);
+//                    xv = (sprite[i].x-s.x);
+//                    yv = (sprite[i].y-s.y);
 
 //                    if ((dy1*xv <= dx1*yv) && (dy2*xv >= dx2*yv))
 //                    {
@@ -280,13 +280,13 @@ var g_numSelfObituaries = 0;
 
 //                        if (sdist > 512 && sdist < smax)
 //                        {
-//                            if (s->picnum == APLAYER)
-//                                a = (klabs(scale(sprite[i].z-s->z,10,sdist)-(g_player[s->yvel].ps->horiz+g_player[s->yvel].ps->horizoff-100)) < 100);
+//                            if (s.picnum == APLAYER)
+//                                a = (klabs(scale(sprite[i].z-s.z,10,sdist)-(g_player[s.yvel].ps.horiz+g_player[s.yvel].ps.horizoff-100)) < 100);
 //                            else a = 1;
 
 //                            if (sprite[i].picnum == ORGANTIC || sprite[i].picnum == ROTATEGUN)
-//                                cans = cansee(sprite[i].x,sprite[i].y,sprite[i].z,sprite[i].sectnum,s->x,s->y,s->z-(32<<8),s->sectnum);
-//                            else cans = cansee(sprite[i].x,sprite[i].y,sprite[i].z-(32<<8),sprite[i].sectnum,s->x,s->y,s->z-(32<<8),s->sectnum);
+//                                cans = cansee(sprite[i].x,sprite[i].y,sprite[i].z,sprite[i].sectnum,s.x,s.y,s.z-(32<<8),s.sectnum);
+//                            else cans = cansee(sprite[i].x,sprite[i].y,sprite[i].z-(32<<8),sprite[i].sectnum,s.x,s.y,s.z-(32<<8),s.sectnum);
 
 //                            if (a && cans)
 //                            {
@@ -303,9 +303,9 @@ var g_numSelfObituaries = 0;
 
 //static void A_SetHitData(int32_t i, const hitdata_t *hit)
 //{
-//    actor[i].t_data[6] = hit->wall;
-//    actor[i].t_data[7] = hit->sect;
-//    actor[i].t_data[8] = hit->sprite;
+//    actor[i].t_data[6] = hit.wall;
+//    actor[i].t_data[7] = hit.sect;
+//    actor[i].t_data[8] = hit.sprite;
 //}
 
 //static int32_t CheckShootSwitchTile(int32_t pn)
@@ -335,7 +335,7 @@ var g_numSelfObituaries = 0;
 //    Bassert((unsigned)p < MAXPLAYERS);
 
 //#ifdef LUNATIC
-//    g_player[p].ps->autoaimang = AUTO_AIM_ANGLE;
+//    g_player[p].ps.autoaimang = AUTO_AIM_ANGLE;
 //#else
 //    Gv_SetVar(g_iAimAngleVarID, AUTO_AIM_ANGLE, i, p);
 //#endif
@@ -345,7 +345,7 @@ var g_numSelfObituaries = 0;
 
 //    {
 //#ifdef LUNATIC
-//        int32_t aimang = g_player[p].ps->autoaimang;
+//        int32_t aimang = g_player[p].ps.autoaimang;
 //#else
 //        int32_t aimang = Gv_GetVar(g_iAimAngleVarID, i, p);
 //#endif
@@ -356,23 +356,23 @@ var g_numSelfObituaries = 0;
 //    if (j >= 0)
 //    {
 //        const spritetype *const spr = &sprite[j];
-//        int32_t cen = 2*(spr->yrepeat*tilesizy[spr->picnum]) + cen_add;
+//        int32_t cen = 2*(spr.yrepeat*tilesizy[spr.picnum]) + cen_add;
 //        int32_t dst;
 
 //        if (flags)
 //        {
-//            int32_t pn = spr->picnum;
-//            if ((pn >= GREENSLIME && pn <= GREENSLIME+7) || spr->picnum==ROTATEGUN)
+//            int32_t pn = spr.picnum;
+//            if ((pn >= GREENSLIME && pn <= GREENSLIME+7) || spr.picnum==ROTATEGUN)
 //            {
 //                cen -= (8<<8);
 //            }
 //        }
 
-//        dst = safeldist(g_player[p].ps->i, &sprite[j]);
-//        *zvel = ((spr->z - srcvect->z - cen)*vel) / dst;
+//        dst = safeldist(g_player[p].ps.i, &sprite[j]);
+//        *zvel = ((spr.z - srcvect.z - cen)*vel) / dst;
 
 //        if (!(flags&2) || sprite[j].picnum != RECON)
-//            *sa = getangle(spr->x-srcvect->x, spr->y-srcvect->y);
+//            *sa = getangle(spr.x-srcvect.x, spr.y-srcvect.y);
 //    }
 
 //    return j;
@@ -403,7 +403,7 @@ var g_numSelfObituaries = 0;
 //static int32_t Proj_InsertShotspark(const hitdata_t *hit, int32_t i, int32_t atwith,
 //                                    int32_t xyrepeat, int32_t ang, int32_t extra)
 //{
-//    int32_t k = A_InsertSprite(hit->sect, hit->pos.x, hit->pos.y, hit->pos.z,
+//    int32_t k = A_InsertSprite(hit.sect, hit.pos.x, hit.pos.y, hit.pos.z,
 //                               SHOTSPARK1,-15, xyrepeat,xyrepeat, ang,0,0,i,4);
 //    sprite[k].extra = extra;
 //    // This is a hack to allow you to detect which weapon spawned a SHOTSPARK1:
@@ -456,8 +456,8 @@ var g_numSelfObituaries = 0;
 //    DukePlayer_t *const ps = g_player[p].ps;
 
 //#ifdef LUNATIC
-//    ps->angrange = angRange;
-//    ps->zrange = zRange;
+//    ps.angrange = angRange;
+//    ps.zrange = zRange;
 //#else
 //    Gv_SetVar(g_iAngRangeVarID,angRange, i,p);
 //    Gv_SetVar(g_iZRangeVarID,zRange,i,p);
@@ -467,8 +467,8 @@ var g_numSelfObituaries = 0;
 //        VM_OnEvent(EVENT_GETSHOTRANGE, i,p, -1, 0);
 
 //#ifdef LUNATIC
-//    angRange = ps->angrange;
-//    zRange = ps->zrange;
+//    angRange = ps.angrange;
+//    zRange = ps.zrange;
 //#else
 //    angRange=Gv_GetVar(g_iAngRangeVarID,i,p);
 //    zRange=Gv_GetVar(g_iZRangeVarID,i,p);
@@ -476,11 +476,11 @@ var g_numSelfObituaries = 0;
 
 //    if (accurate_autoaim_p)
 //    {
-//        if (!ps->auto_aim)
+//        if (!ps.auto_aim)
 //        {
 //            hitdata_t hit;
 
-//            *zvel = A_GetShootZvel((100-ps->horiz-ps->horizoff)<<5);
+//            *zvel = A_GetShootZvel((100-ps.horiz-ps.horizoff)<<5);
 
 //            hitscan(srcvect, sprite[i].sectnum, sintable[(*sa+512)&2047], sintable[*sa&2047],
 //                    *zvel<<6,&hit,CLIPMASK1);
@@ -498,18 +498,18 @@ var g_numSelfObituaries = 0;
 
 //        if (j == -1)
 //        {
-//            *zvel = (100-ps->horiz-ps->horizoff)<<5;
+//            *zvel = (100-ps.horiz-ps.horizoff)<<5;
 //            Proj_MaybeAddSpread(not_accurate_p, zvel, sa, zRange, angRange);
 //        }
 //    }
 //    else
 //    {
 //        if (j == -1)  // no target
-//            *zvel = (100-ps->horiz-ps->horizoff)<<5;
+//            *zvel = (100-ps.horiz-ps.horizoff)<<5;
 //        Proj_MaybeAddSpread(not_accurate_p, zvel, sa, zRange, angRange);
 //    }
 
-//    srcvect->z -= (2<<8);
+//    srcvect.z -= (2<<8);
 //}
 
 //// Hitscan weapon fired from actor (sprite s);
@@ -519,18 +519,18 @@ var g_numSelfObituaries = 0;
 //    const int32_t j = A_FindPlayer(s, NULL);
 //    const DukePlayer_t *targetps = g_player[j].ps;
 
-//    const int32_t d = safeldist(targetps->i, s);
-//    *zvel = ((targetps->pos.z-srcvect->z)<<8) / d;
+//    const int32_t d = safeldist(targetps.i, s);
+//    *zvel = ((targetps.pos.z-srcvect.z)<<8) / d;
 
-//    srcvect->z -= (4<<8);
+//    srcvect.z -= (4<<8);
 
-//    if (s->picnum != BOSS1)
+//    if (s.picnum != BOSS1)
 //    {
 //        Proj_MaybeAddSpread(not_accurate_p, zvel, sa, 256, 64);
 //    }
 //    else
 //    {
-//        *sa = getangle(targetps->pos.x-srcvect->x, targetps->pos.y-srcvect->y);
+//        *sa = getangle(targetps.pos.x-srcvect.x, targetps.pos.y-srcvect.y);
 
 //        Proj_MaybeAddSpread(not_accurate_p, zvel, sa, 256, 128);
 //    }
@@ -542,36 +542,36 @@ var g_numSelfObituaries = 0;
 //{
 //    spritetype *const s = &sprite[i];
 
-//    s->cstat &= ~cstatmask;
+//    s.cstat &= ~cstatmask;
 
 //    zvel = A_GetShootZvel(zvel);
 
-//    hitscan(srcvect, s->sectnum,
+//    hitscan(srcvect, s.sectnum,
 //            sintable[(sa+512)&2047],
 //            sintable[sa&2047],
 //            zvel<<6, hit, CLIPMASK1);
 
-//    s->cstat |= cstatmask;
+//    s.cstat |= cstatmask;
 
-//    return (hit->sect < 0);
+//    return (hit.sect < 0);
 //}
 
 //static void Proj_DoRandDecalSize(int32_t spritenum, int32_t atwith)
 //{
 //    const projectile_t *const proj = &ProjectileData[atwith];
 
-//    if (proj->workslike & PROJECTILE_RANDDECALSIZE)
+//    if (proj.workslike & PROJECTILE_RANDDECALSIZE)
 //    {
-//        int32_t wh = (krand()&proj->xrepeat);
-//        if (wh < proj->yrepeat)
-//            wh = proj->yrepeat;
+//        int32_t wh = (krand()&proj.xrepeat);
+//        if (wh < proj.yrepeat)
+//            wh = proj.yrepeat;
 //        sprite[spritenum].xrepeat = wh;
 //        sprite[spritenum].yrepeat = wh;
 //    }
 //    else
 //    {
-//        sprite[spritenum].xrepeat = proj->xrepeat;
-//        sprite[spritenum].yrepeat = proj->yrepeat;
+//        sprite[spritenum].xrepeat = proj.xrepeat;
+//        sprite[spritenum].yrepeat = proj.yrepeat;
 //    }
 //}
 
@@ -589,11 +589,11 @@ var g_numSelfObituaries = 0;
 //// (in that case walltype *hitwal may be stale)
 //static void HandleHitWall(hitdata_t *hit)
 //{
-//    const walltype *const hitwal = &wall[hit->wall];
+//    const walltype *const hitwal = &wall[hit.wall];
 
-//    if ((hitwal->cstat&2) && redwallp(hitwal))
-//        if (hit->pos.z >= sector[hitwal->nextsector].floorz)
-//            hit->wall = hitwal->nextwall;
+//    if ((hitwal.cstat&2) && redwallp(hitwal))
+//        if (hit.pos.z >= sector[hitwal.nextsector].floorz)
+//            hit.wall = hitwal.nextwall;
 //}
 
 //// Finish shooting hitscan weapon from player <p>. <k> is the inserted SHOTSPARK1.
@@ -609,29 +609,29 @@ var g_numSelfObituaries = 0;
 //                                 int32_t spawnatimpacttile, int32_t decaltile, int32_t damagewalltile,
 //                                 int32_t flags)
 //{
-//    if (hit->wall == -1 && hit->sprite == -1)
+//    if (hit.wall == -1 && hit.sprite == -1)
 //    {
 //        if (zvel < 0)
 //        {
-//            if (sector[hit->sect].ceilingstat&1)
+//            if (sector[hit.sect].ceilingstat&1)
 //            {
 //                sprite[k].xrepeat = 0;
 //                sprite[k].yrepeat = 0;
 //                return -1;
 //            }
 //            else
-//                Sect_DamageCeiling(hit->sect);
+//                Sect_DamageCeiling(hit.sect);
 //        }
 
 //        Proj_MaybeSpawn(k, spawnatimpacttile, hit);
 //    }
-//    else if (hit->sprite >= 0)
+//    else if (hit.sprite >= 0)
 //    {
-//        A_DamageObject(hit->sprite, k);
+//        A_DamageObject(hit.sprite, k);
 
-//        if (sprite[hit->sprite].picnum == APLAYER &&
+//        if (sprite[hit.sprite].picnum == APLAYER &&
 //            (ud.ffire == 1 || (!GTFLAGS(GAMETYPE_PLAYERSFRIENDLY) && GTFLAGS(GAMETYPE_TDM) &&
-//                               g_player[sprite[hit->sprite].yvel].ps->team != g_player[sprite[i].yvel].ps->team)))
+//                               g_player[sprite[hit.sprite].yvel].ps.team != g_player[sprite[i].yvel].ps.team)))
 //        {
 //            int32_t l = A_Spawn(k, JIBS6);
 //            sprite[k].xrepeat = sprite[k].yrepeat = 0;
@@ -645,38 +645,38 @@ var g_numSelfObituaries = 0;
 //            Proj_MaybeSpawn(k, spawnatimpacttile, hit);
 //        }
 
-//        if (p >= 0 && CheckShootSwitchTile(sprite[hit->sprite].picnum))
+//        if (p >= 0 && CheckShootSwitchTile(sprite[hit.sprite].picnum))
 //        {
-//            P_ActivateSwitch(p, hit->sprite, 1);
+//            P_ActivateSwitch(p, hit.sprite, 1);
 //            return -1;
 //        }
 //    }
-//    else if (hit->wall >= 0)
+//    else if (hit.wall >= 0)
 //    {
-//        const walltype *const hitwal = &wall[hit->wall];
+//        const walltype *const hitwal = &wall[hit.wall];
 
 //        Proj_MaybeSpawn(k, spawnatimpacttile, hit);
 
-//        if (CheckDoorTile(hitwal->picnum) == 1)
+//        if (CheckDoorTile(hitwal.picnum) == 1)
 //            goto SKIPBULLETHOLE;
 
-//        if (p >= 0 && CheckShootSwitchTile(hitwal->picnum))
+//        if (p >= 0 && CheckShootSwitchTile(hitwal.picnum))
 //        {
-//            P_ActivateSwitch(p, hit->wall, 0);
+//            P_ActivateSwitch(p, hit.wall, 0);
 //            return -1;
 //        }
 
-//        if (hitwal->hitag != 0 || (hitwal->nextwall >= 0 && wall[hitwal->nextwall].hitag != 0))
+//        if (hitwal.hitag != 0 || (hitwal.nextwall >= 0 && wall[hitwal.nextwall].hitag != 0))
 //            goto SKIPBULLETHOLE;
 
-//        if (hit->sect >= 0 && sector[hit->sect].lotag == 0)
-//            if (hitwal->overpicnum != BIGFORCE && (hitwal->cstat&16) == 0)
-//                if ((hitwal->nextsector >= 0 && sector[hitwal->nextsector].lotag == 0) ||
-//                    (hitwal->nextsector == -1 && sector[hit->sect].lotag == 0))
+//        if (hit.sect >= 0 && sector[hit.sect].lotag == 0)
+//            if (hitwal.overpicnum != BIGFORCE && (hitwal.cstat&16) == 0)
+//                if ((hitwal.nextsector >= 0 && sector[hitwal.nextsector].lotag == 0) ||
+//                    (hitwal.nextsector == -1 && sector[hit.sect].lotag == 0))
 //                {
 //                    int32_t l;
 
-//                    if (SectorContainsSE13(hitwal->nextsector))
+//                    if (SectorContainsSE13(hitwal.nextsector))
 //                        goto SKIPBULLETHOLE;
 
 //                    for (SPRITES_OF(STAT_MISC, l))
@@ -692,8 +692,8 @@ var g_numSelfObituaries = 0;
 //                            actor[l].flags |= SPRITE_DECAL;
 
 //                        sprite[l].xvel = -1;
-//                        sprite[l].ang = getangle(hitwal->x-wall[hitwal->point2].x,
-//                                                 hitwal->y-wall[hitwal->point2].y)+512;
+//                        sprite[l].ang = getangle(hitwal.x-wall[hitwal.point2].x,
+//                                                 hitwal.y-wall[hitwal.point2].y)+512;
 //                        if (flags&1)
 //                            Proj_DoRandDecalSize(l, atwith);
 
@@ -715,7 +715,7 @@ var g_numSelfObituaries = 0;
 //SKIPBULLETHOLE:
 //        HandleHitWall(hit);
 
-//        A_DamageWall(k, hit->wall, &hit->pos, damagewalltile);
+//        A_DamageWall(k, hit.wall, &hit.pos, damagewalltile);
 //    }
 
 //    return 0;
@@ -727,17 +727,17 @@ var g_numSelfObituaries = 0;
 //{
 //    int32_t k = Proj_InsertShotspark(hit, i, atwith, 24, sa, extra);
 
-//    if (hit->sprite >= 0)
+//    if (hit.sprite >= 0)
 //    {
-//        A_DamageObject(hit->sprite, k);
+//        A_DamageObject(hit.sprite, k);
 
-//        if (sprite[hit->sprite].picnum != APLAYER)
+//        if (sprite[hit.sprite].picnum != APLAYER)
 //            Proj_MaybeSpawn(k, spawnatimpacttile, hit);
 //        else
 //            sprite[k].xrepeat = sprite[k].yrepeat = 0;
 //    }
-//    else if (hit->wall >= 0)
-//        A_DamageWall(k, hit->wall, &hit->pos, damagewalltile);
+//    else if (hit.wall >= 0)
+//        A_DamageWall(k, hit.wall, &hit.pos, damagewalltile);
 
 //    return k;
 //}
@@ -747,16 +747,16 @@ var g_numSelfObituaries = 0;
 //static int32_t Proj_CheckBlood(const vec3_t *srcvect, const hitdata_t *hit,
 //                               int32_t projrange, int32_t minzdiff)
 //{
-//    if (hit->wall >= 0 && hit->sect >= 0)
+//    if (hit.wall >= 0 && hit.sect >= 0)
 //    {
-//        const walltype *const hitwal = &wall[hit->wall];
+//        const walltype *const hitwal = &wall[hit.wall];
 
-//        if (FindDistance2D(srcvect->x-hit->pos.x, srcvect->y-hit->pos.y) < projrange)
-//            if (hitwal->overpicnum != BIGFORCE && (hitwal->cstat&16) == 0)
-//                if (sector[hit->sect].lotag == 0)
-//                    if (hitwal->nextsector < 0 ||
-//                        (sector[hitwal->nextsector].lotag == 0 && sector[hit->sect].lotag == 0 &&
-//                         sector[hit->sect].floorz-sector[hitwal->nextsector].floorz > minzdiff))
+//        if (FindDistance2D(srcvect.x-hit.pos.x, srcvect.y-hit.pos.y) < projrange)
+//            if (hitwal.overpicnum != BIGFORCE && (hitwal.cstat&16) == 0)
+//                if (sector[hit.sect].lotag == 0)
+//                    if (hitwal.nextsector < 0 ||
+//                        (sector[hitwal.nextsector].lotag == 0 && sector[hit.sect].lotag == 0 &&
+//                         sector[hit.sect].floorz-sector[hitwal.nextsector].floorz > minzdiff))
 //                    return 1;
 //    }
 
@@ -769,14 +769,14 @@ var g_numSelfObituaries = 0;
 //{
 //    const DukePlayer_t *const ps = p >= 0 ? g_player[p].ps : NULL;
 
-//    int32_t j = A_InsertSprite(hit->sect,hit->pos.x,hit->pos.y,hit->pos.z,
+//    int32_t j = A_InsertSprite(hit.sect,hit.pos.x,hit.pos.y,hit.pos.z,
 //                               inserttile,-15,0,0,sa,32,0,i,4);
 
 //    if (proj != NULL)
 //    {
 //        // Custom projectiles.
 //        SpriteProjectile[j].workslike = ProjectileData[sprite[j].picnum].workslike;
-//        sprite[j].extra = proj->extra;
+//        sprite[j].extra = proj.extra;
 //    }
 
 //    if (addrandextra > 0)
@@ -795,24 +795,24 @@ var g_numSelfObituaries = 0;
 //            A_PlaySound(soundnum, j);
 //    }
 
-//    if (p >= 0 && ps->inv_amount[GET_STEROIDS] > 0 && ps->inv_amount[GET_STEROIDS] < 400)
-//        sprite[j].extra += (ps->max_player_health>>2);
+//    if (p >= 0 && ps.inv_amount[GET_STEROIDS] > 0 && ps.inv_amount[GET_STEROIDS] < 400)
+//        sprite[j].extra += (ps.max_player_health>>2);
 
-//    if (hit->sprite >= 0 && sprite[hit->sprite].picnum != ACCESSSWITCH && sprite[hit->sprite].picnum != ACCESSSWITCH2)
+//    if (hit.sprite >= 0 && sprite[hit.sprite].picnum != ACCESSSWITCH && sprite[hit.sprite].picnum != ACCESSSWITCH2)
 //    {
-//        A_DamageObject(hit->sprite, j);
+//        A_DamageObject(hit.sprite, j);
 //        if (p >= 0)
-//            P_ActivateSwitch(p, hit->sprite,1);
+//            P_ActivateSwitch(p, hit.sprite,1);
 //    }
-//    else if (hit->wall >= 0)
+//    else if (hit.wall >= 0)
 //    {
 //        HandleHitWall(hit);
 
-//        if (wall[hit->wall].picnum != ACCESSSWITCH && wall[hit->wall].picnum != ACCESSSWITCH2)
+//        if (wall[hit.wall].picnum != ACCESSSWITCH && wall[hit.wall].picnum != ACCESSSWITCH2)
 //        {
-//            A_DamageWall(j, hit->wall, &hit->pos, atwith);
+//            A_DamageWall(j, hit.wall, &hit.pos, atwith);
 //            if (p >= 0)
-//                P_ActivateSwitch(p, hit->wall,0);
+//                P_ActivateSwitch(p, hit.wall,0);
 //        }
 //    }
 //}
@@ -826,9 +826,9 @@ var g_numSelfObituaries = 0;
 //    hitdata_t hit;
 //    vec3_t srcvect;
 //    spritetype *const s = &sprite[i];
-//    const int16_t sect = s->sectnum;
+//    const int16_t sect = s.sectnum;
 
-//    const int32_t p = (s->picnum == APLAYER) ? s->yvel : -1;
+//    const int32_t p = (s.picnum == APLAYER) ? s.yvel : -1;
 //    DukePlayer_t *const ps = p >= 0 ? g_player[p].ps : NULL;
 
 //    if (override_zvel != SHOOT_HARDCODED_ZVEL)
@@ -841,21 +841,21 @@ var g_numSelfObituaries = 0;
 //        g_overrideShootZvel = 0;
 //    }
 
-//    if (s->picnum == APLAYER)
+//    if (s.picnum == APLAYER)
 //    {
 //        Bmemcpy(&srcvect,ps,sizeof(vec3_t));
-//        srcvect.z += ps->pyoff+(4<<8);
-//        sa = ps->ang;
+//        srcvect.z += ps.pyoff+(4<<8);
+//        sa = ps.ang;
 
-//        ps->crack_time = 777;
+//        ps.crack_time = 777;
 //    }
 //    else
 //    {
-//        sa = s->ang;
+//        sa = s.ang;
 //        Bmemcpy(&srcvect,s,sizeof(vec3_t));
-//        srcvect.z -= (((s->yrepeat*tilesizy[s->picnum])<<1)-(4<<8));
+//        srcvect.z -= (((s.yrepeat*tilesizy[s.picnum])<<1)-(4<<8));
 
-//        if (s->picnum != ROTATEGUN)
+//        if (s.picnum != ROTATEGUN)
 //        {
 //            srcvect.z -= (7<<8);
 
@@ -877,13 +877,13 @@ var g_numSelfObituaries = 0;
 //            case RPG__STATIC:
 //            case MORTER__STATIC:
 //            {
-//                int32_t x = ((sintable[(s->ang+512)&2047])>>7), y = ((sintable[(s->ang)&2047])>>7);
-//                s-> x += x;
-//                s-> y += y;
+//                int32_t x = ((sintable[(s.ang+512)&2047])>>7), y = ((sintable[(s.ang)&2047])>>7);
+//                s. x += x;
+//                s. y += y;
 //                G_AddGameLight(0, i, PHEIGHT, 8192, 255+(95<<8),PR_LIGHT_PRIO_MAX_GAME);
 //                actor[i].lightcount = 2;
-//                s-> x -= x;
-//                s-> y -= y;
+//                s. x -= x;
+//                s. y -= y;
 //            }
 
 //            break;
@@ -897,43 +897,43 @@ var g_numSelfObituaries = 0;
 //        projectile_t *const proj = (Bassert(atwith >= 0), &ProjectileData[atwith]);
 
 //#ifdef POLYMER
-//        if (proj->flashcolor)
+//        if (proj.flashcolor)
 //        {
-//            int32_t x = ((sintable[(s->ang+512)&2047])>>7), y = ((sintable[(s->ang)&2047])>>7);
+//            int32_t x = ((sintable[(s.ang+512)&2047])>>7), y = ((sintable[(s.ang)&2047])>>7);
 
-//            s-> x += x;
-//            s-> y += y;
-//            G_AddGameLight(0, i, PHEIGHT, 8192, proj->flashcolor,PR_LIGHT_PRIO_MAX_GAME);
+//            s. x += x;
+//            s. y += y;
+//            G_AddGameLight(0, i, PHEIGHT, 8192, proj.flashcolor,PR_LIGHT_PRIO_MAX_GAME);
 //            actor[i].lightcount = 2;
-//            s-> x -= x;
-//            s-> y -= y;
+//            s. x -= x;
+//            s. y -= y;
 //        }
 //#endif // POLYMER
 
-//        if (proj->offset == 0)
-//            proj->offset = 1;
+//        if (proj.offset == 0)
+//            proj.offset = 1;
 
-//        if (proj->workslike & PROJECTILE_BLOOD || proj->workslike & PROJECTILE_KNEE)
+//        if (proj.workslike & PROJECTILE_BLOOD || proj.workslike & PROJECTILE_KNEE)
 //        {
-//            if (proj->workslike & PROJECTILE_BLOOD)
+//            if (proj.workslike & PROJECTILE_BLOOD)
 //            {
 //                sa += 64 - (krand()&127);
 //                if (p < 0) sa += 1024;
 //                zvel = 1024-(krand()&2047);
 //            }
 
-//            if (proj->workslike & PROJECTILE_KNEE)
+//            if (proj.workslike & PROJECTILE_KNEE)
 //            {
 //                if (p >= 0)
 //                {
-//                    zvel = (100-ps->horiz-ps->horizoff)<<5;
+//                    zvel = (100-ps.horiz-ps.horizoff)<<5;
 //                    srcvect.z += (6<<8);
 //                    sa += 15;
 //                }
-//                else if (!(proj->workslike & PROJECTILE_NOAIM))
+//                else if (!(proj.workslike & PROJECTILE_NOAIM))
 //                {
 //                    int32_t x;
-//                    j = g_player[A_FindPlayer(s,&x)].ps->i;
+//                    j = g_player[A_FindPlayer(s,&x)].ps.i;
 //                    zvel = ((sprite[j].z-srcvect.z)<<8) / (x+1);
 //                    sa = getangle(sprite[j].x-srcvect.x,sprite[j].y-srcvect.y);
 //                }
@@ -941,37 +941,37 @@ var g_numSelfObituaries = 0;
 
 //            Proj_DoHitscan(i, 0, &srcvect, zvel, sa, &hit);
 
-//            if (proj->workslike & PROJECTILE_BLOOD)
+//            if (proj.workslike & PROJECTILE_BLOOD)
 //            {
-//                if (proj->range == 0)
-//                    proj->range = 1024;
+//                if (proj.range == 0)
+//                    proj.range = 1024;
 
-//                if (Proj_CheckBlood(&srcvect, &hit, proj->range,
-//                                    mulscale3(proj->yrepeat, tilesizy[proj->decal])<<8))
+//                if (Proj_CheckBlood(&srcvect, &hit, proj.range,
+//                                    mulscale3(proj.yrepeat, tilesizy[proj.decal])<<8))
 //                {
 //                    const walltype *const hitwal = &wall[hit.wall];
 
-//                    if (FindDistance2D(hitwal->x-wall[hitwal->point2].x, hitwal->y-wall[hitwal->point2].y) >
-//                        (mulscale3(proj->xrepeat+8, tilesizx[proj->decal])))
+//                    if (FindDistance2D(hitwal.x-wall[hitwal.point2].x, hitwal.y-wall[hitwal.point2].y) >
+//                        (mulscale3(proj.xrepeat+8, tilesizx[proj.decal])))
 //                    {
-//                        if (SectorContainsSE13(hitwal->nextsector))
+//                        if (SectorContainsSE13(hitwal.nextsector))
 //                            return -1;
 
-//                        if (hitwal->nextwall >= 0 && wall[hitwal->nextwall].hitag != 0)
+//                        if (hitwal.nextwall >= 0 && wall[hitwal.nextwall].hitag != 0)
 //                            return -1;
 
-//                        if (hitwal->hitag == 0)
+//                        if (hitwal.hitag == 0)
 //                        {
-//                            if (proj->decal >= 0)
+//                            if (proj.decal >= 0)
 //                            {
-//                                k = A_Spawn(i,proj->decal);
+//                                k = A_Spawn(i,proj.decal);
 
 //                                if (!A_CheckSpriteFlags(k, SPRITE_DECAL))
 //                                    actor[k].flags |= SPRITE_DECAL;
 
 //                                sprite[k].xvel = -1;
-//                                sprite[k].ang = getangle(hitwal->x-wall[hitwal->point2].x,
-//                                                         hitwal->y-wall[hitwal->point2].y)+512;
+//                                sprite[k].ang = getangle(hitwal.x-wall[hitwal.point2].x,
+//                                                         hitwal.y-wall[hitwal.point2].y)+512;
 //                                Bmemcpy(&sprite[k], &hit.pos, sizeof(vec3_t));
 
 //                                Proj_DoRandDecalSize(k, atwith);
@@ -1003,42 +1003,42 @@ var g_numSelfObituaries = 0;
 
 //            if (hit.sect < 0) return -1;
 
-//            if (proj->range == 0 && (proj->workslike & PROJECTILE_KNEE))
-//                proj->range = 1024;
+//            if (proj.range == 0 && (proj.workslike & PROJECTILE_KNEE))
+//                proj.range = 1024;
 
-//            if (proj->range > 0 && klabs(srcvect.x-hit.pos.x)+klabs(srcvect.y-hit.pos.y) > proj->range)
+//            if (proj.range > 0 && klabs(srcvect.x-hit.pos.x)+klabs(srcvect.y-hit.pos.y) > proj.range)
 //                return -1;
 
 //            Proj_HandleKnee(&hit, i, p, atwith, sa,
 //                            proj, atwith,
-//                            proj->extra_rand,
-//                            proj->spawns, proj->sound);
+//                            proj.extra_rand,
+//                            proj.spawns, proj.sound);
 //            return -1;
 //        }
 
-//        if (proj->workslike & PROJECTILE_HITSCAN)
+//        if (proj.workslike & PROJECTILE_HITSCAN)
 //        {
-//            if (s->extra >= 0) s->shade = proj->shade;
+//            if (s.extra >= 0) s.shade = proj.shade;
 
 //            if (p >= 0)
 //                P_PreFireHitscan(i, p, atwith, &srcvect, &zvel, &sa,
-//                              proj->workslike & PROJECTILE_ACCURATE_AUTOAIM,
-//                              !(proj->workslike & PROJECTILE_ACCURATE));
+//                              proj.workslike & PROJECTILE_ACCURATE_AUTOAIM,
+//                              !(proj.workslike & PROJECTILE_ACCURATE));
 //            else
 //                A_PreFireHitscan(s, &srcvect, &zvel, &sa,
-//                                 !(proj->workslike & PROJECTILE_ACCURATE));
+//                                 !(proj.workslike & PROJECTILE_ACCURATE));
 
-//            if (Proj_DoHitscan(i, (proj->cstat >= 0) ? proj->cstat : 256+1,
+//            if (Proj_DoHitscan(i, (proj.cstat >= 0) ? proj.cstat : 256+1,
 //                               &srcvect, zvel, sa, &hit))
 //                return -1;
 
-//            if (proj->range > 0 && klabs(srcvect.x-hit.pos.x)+klabs(srcvect.y-hit.pos.y) > proj->range)
+//            if (proj.range > 0 && klabs(srcvect.x-hit.pos.x)+klabs(srcvect.y-hit.pos.y) > proj.range)
 //                return -1;
 
-//            if (proj->trail >= 0)
+//            if (proj.trail >= 0)
 //                A_HitscanProjTrail(&srcvect,&hit.pos,sa,atwith);
 
-//            if (proj->workslike & PROJECTILE_WATERBUBBLES)
+//            if (proj.workslike & PROJECTILE_WATERBUBBLES)
 //            {
 //                if ((krand()&15) == 0 && sector[hit.sect].lotag == ST_2_UNDERWATER)
 //                    A_DoWaterTracers(hit.pos.x,hit.pos.y,hit.pos.z,
@@ -1050,7 +1050,7 @@ var g_numSelfObituaries = 0;
 //                k = Proj_InsertShotspark(&hit, i, atwith, 10, sa, Proj_GetExtra(atwith));
 
 //                if (P_PostFireHitscan(p, k, &hit, i, atwith, zvel,
-//                                      atwith, proj->decal, atwith, 1+2) < 0)
+//                                      atwith, proj.decal, atwith, 1+2) < 0)
 //                    return -1;
 //            }
 //            else
@@ -1059,17 +1059,17 @@ var g_numSelfObituaries = 0;
 //                                      atwith, atwith);
 //            }
 
-//            if ((krand()&255) < 4 && proj->isound >= 0)
-//                S_PlaySound3D(proj->isound, k, &hit.pos);
+//            if ((krand()&255) < 4 && proj.isound >= 0)
+//                S_PlaySound3D(proj.isound, k, &hit.pos);
 
 //            return -1;
 //        }
 
-//        if (proj->workslike & PROJECTILE_RPG)
+//        if (proj.workslike & PROJECTILE_RPG)
 //        {
-//            if (s->extra >= 0) s->shade = proj->shade;
+//            if (s.extra >= 0) s.shade = proj.shade;
 
-//            vel = proj->vel;
+//            vel = proj.vel;
 
 //            j = -1;
 
@@ -1078,23 +1078,23 @@ var g_numSelfObituaries = 0;
 //                j = GetAutoAimAngle(i, p, atwith, 8<<8, 0+2, &srcvect, vel, &zvel, &sa);
 
 //                if (j < 0)
-//                    zvel = (100-ps->horiz-ps->horizoff)*(proj->vel/8);
+//                    zvel = (100-ps.horiz-ps.horizoff)*(proj.vel/8);
 
-//                if (proj->sound >= 0)
-//                    A_PlaySound(proj->sound,i);
+//                if (proj.sound >= 0)
+//                    A_PlaySound(proj.sound,i);
 //            }
 //            else
 //            {
-//                if (!(proj->workslike & PROJECTILE_NOAIM))
+//                if (!(proj.workslike & PROJECTILE_NOAIM))
 //                {
 //                    j = A_FindPlayer(s, NULL);
-//                    sa = getangle(g_player[j].ps->opos.x-srcvect.x,g_player[j].ps->opos.y-srcvect.y);
+//                    sa = getangle(g_player[j].ps.opos.x-srcvect.x,g_player[j].ps.opos.y-srcvect.y);
 
-//                    l = safeldist(g_player[j].ps->i, s);
-//                    zvel = ((g_player[j].ps->opos.z-srcvect.z)*vel) / l;
+//                    l = safeldist(g_player[j].ps.i, s);
+//                    zvel = ((g_player[j].ps.opos.z-srcvect.z)*vel) / l;
 
-//                    if (A_CheckEnemySprite(s) && (s->hitag&face_player_smart))
-//                        sa = s->ang+(krand()&31)-16;
+//                    if (A_CheckEnemySprite(s) && (s.hitag&face_player_smart))
+//                        sa = s.ang+(krand()&31)-16;
 //                }
 //            }
 
@@ -1106,27 +1106,27 @@ var g_numSelfObituaries = 0;
 
 //            zvel = A_GetShootZvel(zvel);
 //            j = A_InsertSprite(sect,
-//                               srcvect.x+(sintable[(348+sa+512)&2047]/proj->offset),
-//                               srcvect.y+(sintable[(sa+348)&2047]/proj->offset),
+//                               srcvect.x+(sintable[(348+sa+512)&2047]/proj.offset),
+//                               srcvect.y+(sintable[(sa+348)&2047]/proj.offset),
 //                               srcvect.z-(1<<8),atwith,0,14,14,sa,vel,zvel,i,4);
 
-//            sprite[j].xrepeat=proj->xrepeat;
-//            sprite[j].yrepeat=proj->yrepeat;
+//            sprite[j].xrepeat=proj.xrepeat;
+//            sprite[j].yrepeat=proj.yrepeat;
 
-//            if (proj->extra_rand > 0)
-//                sprite[j].extra += (krand()&proj->extra_rand);
-//            if (!(proj->workslike & PROJECTILE_BOUNCESOFFWALLS))
+//            if (proj.extra_rand > 0)
+//                sprite[j].extra += (krand()&proj.extra_rand);
+//            if (!(proj.workslike & PROJECTILE_BOUNCESOFFWALLS))
 //                sprite[j].yvel = l;
 //            else
 //            {
-//                if (proj->bounces >= 1) sprite[j].yvel = proj->bounces;
+//                if (proj.bounces >= 1) sprite[j].yvel = proj.bounces;
 //                else sprite[j].yvel = g_numFreezeBounces;
 //                sprite[j].zvel -= (2<<4);
 //            }
 
-//            if (proj->cstat >= 0) sprite[j].cstat = proj->cstat;
+//            if (proj.cstat >= 0) sprite[j].cstat = proj.cstat;
 //            else sprite[j].cstat = 128;
-//            if (proj->clipdist != 255) sprite[j].clipdist = proj->clipdist;
+//            if (proj.clipdist != 255) sprite[j].clipdist = proj.clipdist;
 //            else sprite[j].clipdist = 40;
 
 //            {
@@ -1155,14 +1155,14 @@ var g_numSelfObituaries = 0;
 //            {
 //                if (p >= 0)
 //                {
-//                    zvel = (100-ps->horiz-ps->horizoff)<<5;
+//                    zvel = (100-ps.horiz-ps.horizoff)<<5;
 //                    srcvect.z += (6<<8);
 //                    sa += 15;
 //                }
 //                else
 //                {
 //                    int32_t x;
-//                    j = g_player[A_FindPlayer(s,&x)].ps->i;
+//                    j = g_player[A_FindPlayer(s,&x)].ps.i;
 //                    zvel = ((sprite[j].z-srcvect.z)<<8) / (x+1);
 //                    sa = getangle(sprite[j].x-srcvect.x,sprite[j].y-srcvect.y);
 //                }
@@ -1176,18 +1176,18 @@ var g_numSelfObituaries = 0;
 //                {
 //                    const walltype *const hitwal = &wall[hit.wall];
 
-//                    if (SectorContainsSE13(hitwal->nextsector))
+//                    if (SectorContainsSE13(hitwal.nextsector))
 //                        return -1;
 
-//                    if (hitwal->nextwall >= 0 && wall[hitwal->nextwall].hitag != 0)
+//                    if (hitwal.nextwall >= 0 && wall[hitwal.nextwall].hitag != 0)
 //                        return -1;
 
-//                    if (hitwal->hitag == 0)
+//                    if (hitwal.hitag == 0)
 //                    {
 //                        k = A_Spawn(i,atwith);
 //                        sprite[k].xvel = -12;
-//                        sprite[k].ang = getangle(hitwal->x-wall[hitwal->point2].x,
-//                                                 hitwal->y-wall[hitwal->point2].y)+512;
+//                        sprite[k].ang = getangle(hitwal.x-wall[hitwal.point2].x,
+//                                                 hitwal.y-wall[hitwal.point2].y)+512;
 //                        Bmemcpy(&sprite[k], &hit.pos, sizeof(vec3_t));
 
 //                        sprite[k].cstat |= (krand()&4);
@@ -1212,7 +1212,7 @@ var g_numSelfObituaries = 0;
 //        case SHOTGUN__STATIC:
 //        case CHAINGUN__STATIC:
 
-//            if (s->extra >= 0) s->shade = -96;
+//            if (s.extra >= 0) s.shade = -96;
 
 //            if (p >= 0)
 //                P_PreFireHitscan(i, p, atwith, &srcvect, &zvel, &sa,
@@ -1254,14 +1254,14 @@ var g_numSelfObituaries = 0;
 //        {
 //            int32_t tsiz;
 
-//            if (s->extra >= 0) s->shade = -96;
+//            if (s.extra >= 0) s.shade = -96;
 
 //            if (atwith == SPIT) vel = 292;
 //            else
 //            {
 //                if (atwith == COOLEXPLOSION1)
 //                {
-//                    if (s->picnum == BOSS2) vel = 644;
+//                    if (s.picnum == BOSS2) vel = 644;
 //                    else vel = 348;
 //                    srcvect.z -= (4<<7);
 //                }
@@ -1277,15 +1277,15 @@ var g_numSelfObituaries = 0;
 //                j = GetAutoAimAngle(i, p, atwith, -(12<<8), 0, &srcvect, vel, &zvel, &sa);
 
 //                if (j < 0)
-//                    zvel = (100-ps->horiz-ps->horizoff)*98;
+//                    zvel = (100-ps.horiz-ps.horizoff)*98;
 //            }
 //            else
 //            {
 //                j = A_FindPlayer(s, NULL);
-//                //                sa = getangle(g_player[j].ps->opos.x-sx,g_player[j].ps->opos.y-sy);
+//                //                sa = getangle(g_player[j].ps.opos.x-sx,g_player[j].ps.opos.y-sy);
 //                sa += 16-(krand()&31);
-//                hit.pos.x = safeldist(g_player[j].ps->i, s);
-//                zvel = ((g_player[j].ps->opos.z - srcvect.z + (3<<8))*vel) / hit.pos.x;
+//                hit.pos.x = safeldist(g_player[j].ps.i, s);
+//                zvel = ((g_player[j].ps.opos.z - srcvect.z + (3<<8))*vel) / hit.pos.x;
 //            }
 
 //            zvel = A_GetShootZvel(zvel);
@@ -1330,7 +1330,7 @@ var g_numSelfObituaries = 0;
 //            sprite[j].cstat = 128;
 //            sprite[j].clipdist = 4;
 
-//            sa = s->ang+32-(krand()&63);
+//            sa = s.ang+32-(krand()&63);
 //            zvel += 512-(krand()&1023);
 
 //            return j;
@@ -1340,7 +1340,7 @@ var g_numSelfObituaries = 0;
 //            srcvect.z += (3<<8);
 //        case RPG__STATIC:
 //            // XXX: "CODEDUP"
-//            if (s->extra >= 0) s->shade = -96;
+//            if (s.extra >= 0) s.shade = -96;
 
 //            vel = 644;
 
@@ -1351,7 +1351,7 @@ var g_numSelfObituaries = 0;
 //                j = GetAutoAimAngle(i, p, atwith, 8<<8, 0+2, &srcvect, vel, &zvel, &sa);
 
 //                if (j < 0)
-//                    zvel = (100-ps->horiz-ps->horizoff)*81;
+//                    zvel = (100-ps.horiz-ps.horizoff)*81;
 
 //                if (atwith == RPG)
 //                    A_PlaySound(RPG_SHOOT,i);
@@ -1359,7 +1359,7 @@ var g_numSelfObituaries = 0;
 //            else
 //            {
 //                j = A_FindPlayer(s, NULL);
-//                sa = getangle(g_player[j].ps->opos.x-srcvect.x,g_player[j].ps->opos.y-srcvect.y);
+//                sa = getangle(g_player[j].ps.opos.x-srcvect.x,g_player[j].ps.opos.y-srcvect.y);
 //                if (sprite[i].picnum == BOSS3)
 //                    srcvect.z -= MinibossScale(32<<8);
 //                else if (sprite[i].picnum == BOSS2)
@@ -1368,11 +1368,11 @@ var g_numSelfObituaries = 0;
 //                    srcvect.z += MinibossScale(24<<8);
 //                }
 
-//                l = safeldist(g_player[j].ps->i, s);
-//                zvel = ((g_player[j].ps->opos.z-srcvect.z)*vel) / l;
+//                l = safeldist(g_player[j].ps.i, s);
+//                zvel = ((g_player[j].ps.opos.z-srcvect.z)*vel) / l;
 
-//                if (A_CheckEnemySprite(s) && (s->hitag&face_player_smart))
-//                    sa = s->ang+(krand()&31)-16;
+//                if (A_CheckEnemySprite(s) && (s.hitag&face_player_smart))
+//                    sa = s.ang+(krand()&31)-16;
 //            }
 
 //            if (p >= 0 && j >= 0)
@@ -1433,13 +1433,13 @@ var g_numSelfObituaries = 0;
 //                }
 //            }
 
-//            else if (PWEAPON(0, g_player[p].ps->curr_weapon, WorksLike) == DEVISTATOR_WEAPON)
+//            else if (PWEAPON(0, g_player[p].ps.curr_weapon, WorksLike) == DEVISTATOR_WEAPON)
 //            {
 //                sprite[j].extra >>= 2;
 //                sprite[j].ang += 16-(krand()&31);
 //                sprite[j].zvel += 256-(krand()&511);
 
-//                if (g_player[p].ps->hbomb_hold_delay)
+//                if (g_player[p].ps.hbomb_hold_delay)
 //                {
 //                    sprite[j].x -= sintable[sa&2047]/644;
 //                    sprite[j].y -= sintable[(sa+1024+512)&2047]/644;
@@ -1463,9 +1463,9 @@ var g_numSelfObituaries = 0;
 
 //        case HANDHOLDINGLASER__STATIC:
 //        {
-//            const int32_t zoff = (p>=0) ? g_player[p].ps->pyoff : 0;
+//            const int32_t zoff = (p>=0) ? g_player[p].ps.pyoff : 0;
 //            if (p >= 0)
-//                zvel = (100-ps->horiz-ps->horizoff)*32;
+//                zvel = (100-ps.horiz-ps.horizoff)*32;
 //            else zvel = 0;
 
 //            srcvect.z -= zoff;
@@ -1492,19 +1492,19 @@ var g_numSelfObituaries = 0;
 //            {
 //                int32_t lTripBombControl = (p < 0) ? 0 :
 //#ifdef LUNATIC
-//                    g_player[p].ps->tripbombControl;
+//                    g_player[p].ps.tripbombControl;
 //#else
-//                    Gv_GetVarByLabel("TRIPBOMB_CONTROL", TRIPBOMB_TRIPWIRE, g_player[p].ps->i, p);
+//                    Gv_GetVarByLabel("TRIPBOMB_CONTROL", TRIPBOMB_TRIPWIRE, g_player[p].ps.i, p);
 //#endif
 //                k = A_InsertSprite(hit.sect,hit.pos.x,hit.pos.y,hit.pos.z,TRIPBOMB,-16,4,5,sa,0,0,i,6);
 //                if (lTripBombControl & TRIPBOMB_TIMER)
 //                {
 //#ifdef LUNATIC
-//                    int32_t lLifetime = g_player[p].ps->tripbombLifetime;
-//                    int32_t lLifetimeVar = g_player[p].ps->tripbombLifetimeVar;
+//                    int32_t lLifetime = g_player[p].ps.tripbombLifetime;
+//                    int32_t lLifetimeVar = g_player[p].ps.tripbombLifetimeVar;
 //#else
-//                    int32_t lLifetime=Gv_GetVarByLabel("STICKYBOMB_LIFETIME", NAM_GRENADE_LIFETIME, g_player[p].ps->i, p);
-//                    int32_t lLifetimeVar=Gv_GetVarByLabel("STICKYBOMB_LIFETIME_VAR", NAM_GRENADE_LIFETIME_VAR, g_player[p].ps->i, p);
+//                    int32_t lLifetime=Gv_GetVarByLabel("STICKYBOMB_LIFETIME", NAM_GRENADE_LIFETIME, g_player[p].ps.i, p);
+//                    int32_t lLifetimeVar=Gv_GetVarByLabel("STICKYBOMB_LIFETIME_VAR", NAM_GRENADE_LIFETIME_VAR, g_player[p].ps.i, p);
 //#endif
 //                    // set timer.  blows up when at zero....
 //                    actor[k].t_data[7]=lLifetime
@@ -1534,9 +1534,9 @@ var g_numSelfObituaries = 0;
 //        {
 //            int32_t x;
 
-//            if (s->extra >= 0) s->shade = -96;
+//            if (s.extra >= 0) s.shade = -96;
 
-//            j = g_player[A_FindPlayer(s, NULL)].ps->i;
+//            j = g_player[A_FindPlayer(s, NULL)].ps.i;
 //            x = ldist(&sprite[j],s);
 
 //            zvel = -x>>1;
@@ -1562,7 +1562,7 @@ var g_numSelfObituaries = 0;
 //                if (j < 0)
 //                {
 //                    sa += 16-(krand()&31);
-//                    zvel = (100-ps->horiz-ps->horizoff)<<5;
+//                    zvel = (100-ps.horiz-ps.horizoff)<<5;
 //                    zvel += 128-(krand()&255);
 //                }
 
@@ -1572,8 +1572,8 @@ var g_numSelfObituaries = 0;
 //            {
 //                j = A_FindPlayer(s, NULL);
 //                srcvect.z -= (4<<8);
-//                hit.pos.x = safeldist(g_player[j].ps->i, s);
-//                zvel = ((g_player[j].ps->pos.z-srcvect.z) <<8) / hit.pos.x;
+//                hit.pos.x = safeldist(g_player[j].ps.i, s);
+//                zvel = ((g_player[j].ps.pos.z-srcvect.z) <<8) / hit.pos.x;
 //                zvel += 128-(krand()&255);
 //                sa += 32-(krand()&63);
 //            }
@@ -1623,19 +1623,19 @@ var g_numSelfObituaries = 0;
 //            break;
 
 //        case SHRINKER__STATIC:
-//            if (s->extra >= 0) s->shade = -96;
+//            if (s.extra >= 0) s.shade = -96;
 //            if (p >= 0)
 //            {
 //                j = GetAutoAimAngle(i, p, atwith, 4<<8, 0, &srcvect, 768, &zvel, &sa);
 
 //                if (j < 0)
-//                    zvel = (100-ps->horiz-ps->horizoff)*98;
+//                    zvel = (100-ps.horiz-ps.horizoff)*98;
 //            }
-//            else if (s->statnum != STAT_EFFECTOR)
+//            else if (s.statnum != STAT_EFFECTOR)
 //            {
 //                j = A_FindPlayer(s, NULL);
-//                l = safeldist(g_player[j].ps->i, s);
-//                zvel = ((g_player[j].ps->opos.z-srcvect.z)*512) / l ;
+//                l = safeldist(g_player[j].ps.i, s);
+//                zvel = ((g_player[j].ps.opos.z-srcvect.z)*512) / l ;
 //            }
 //            else zvel = 0;
 
@@ -1663,31 +1663,31 @@ var g_numSelfObituaries = 0;
 //    int32_t i, a, x, y, z;
 //    DukePlayer_t *const ps = g_player[snum].ps;
 
-//    if (ps->loogcnt == 0)
+//    if (ps.loogcnt == 0)
 //        return;
 
-//    y = (ps->loogcnt<<2);
+//    y = (ps.loogcnt<<2);
 
-//    for (i=0; i<ps->numloogs; i++)
+//    for (i=0; i<ps.numloogs; i++)
 //    {
-//        a = klabs(sintable[((ps->loogcnt+i)<<5)&2047])>>5;
-//        z = 4096+((ps->loogcnt+i)<<9);
-//        x = (-g_player[snum].sync->avel)+(sintable[((ps->loogcnt+i)<<6)&2047]>>10);
+//        a = klabs(sintable[((ps.loogcnt+i)<<5)&2047])>>5;
+//        z = 4096+((ps.loogcnt+i)<<9);
+//        x = (-g_player[snum].sync.avel)+(sintable[((ps.loogcnt+i)<<6)&2047]>>10);
 
 //        rotatesprite_fs(
-//            (ps->loogiex[i]+x)<<16,(200+ps->loogiey[i]-y)<<16,z-(i<<8),256-a,
+//            (ps.loogiex[i]+x)<<16,(200+ps.loogiey[i]-y)<<16,z-(i<<8),256-a,
 //            LOOGIE,0,0,2);
 //    }
 //}
 
 //static int32_t P_GetHudPal(const DukePlayer_t *p)
 //{
-//    if (sprite[p->i].pal == 1)
+//    if (sprite[p.i].pal == 1)
 //        return 1;
 
-//    if (p->cursectnum >= 0)
+//    if (p.cursectnum >= 0)
 //    {
-//        int32_t dapal = sector[p->cursectnum].floorpal;
+//        int32_t dapal = sector[p.cursectnum].floorpal;
 //        if (!g_noFloorPal[dapal])
 //            return dapal;
 //    }
@@ -1704,11 +1704,11 @@ var g_numSelfObituaries = 0;
 
 //    const DukePlayer_t *const ps = g_player[snum].ps;
 
-//    fisti = ps->fist_incs;
+//    fisti = ps.fist_incs;
 //    if (fisti > 32) fisti = 32;
 //    if (fisti <= 0) return 0;
 
-//    looking_arc = klabs(ps->look_ang)/9;
+//    looking_arc = klabs(ps.look_ang)/9;
 
 //    fistzoom = 65536 - (sintable[(512+(fisti<<6))&2047]<<2);
 //    fistzoom = clamp(fistzoom, 40920, 90612);
@@ -1722,7 +1722,7 @@ var g_numSelfObituaries = 0;
 //        wx[(g_snum==0)] = (wx[0]+wx[1])/2+1;
 
 //    rotatesprite(
-//        (-fisti+222+(g_player[snum].sync->avel>>4))<<16,
+//        (-fisti+222+(g_player[snum].sync.avel>>4))<<16,
 //        (looking_arc+fistz)<<16,
 //        fistzoom,0,FIST,gs,fistpal,2,
 //        wx[0],windowy1,wx[1],windowy2);
@@ -1849,7 +1849,7 @@ var g_numSelfObituaries = 0;
 //        const int32_t sc = scale(65536,ud.statusbarscale,100);
 
 //        if ((unsigned)hudweap.cur < MAX_WEAPONS && hudweap.cur != KNEE_WEAPON)
-//            rotatesprite_win(160<<16,(180+(ps->weapon_pos*ps->weapon_pos))<<16,
+//            rotatesprite_win(160<<16,(180+(ps.weapon_pos*ps.weapon_pos))<<16,
 //                             sc,0,hudweap.cur==GROW_WEAPON?GROWSPRITEICON:WeaponPickupSprites[hudweap.cur],
 //                             0,0,2);
 //        return;
@@ -1866,19 +1866,19 @@ var g_numSelfObituaries = 0;
 
 //    const DukePlayer_t *const ps = g_player[snum].ps;
 
-//    if (ps->knee_incs == 0 || ps->knee_incs >= ARRAY_SIZE(knee_y) || sprite[ps->i].extra <= 0)
+//    if (ps.knee_incs == 0 || ps.knee_incs >= ARRAY_SIZE(knee_y) || sprite[ps.i].extra <= 0)
 //        return 0;
 
-//    looking_arc = knee_y[ps->knee_incs] + klabs(ps->look_ang)/9;
+//    looking_arc = knee_y[ps.knee_incs] + klabs(ps.look_ang)/9;
 
-//    looking_arc -= (ps->hard_landing<<3);
+//    looking_arc -= (ps.hard_landing<<3);
 
 //    pal = P_GetHudPal(ps);
 //    if (pal == 0)
-//        pal = ps->palookup;
+//        pal = ps.palookup;
 
-//    G_DrawTileScaled(105+(g_player[snum].sync->avel>>4)-(ps->look_ang>>1)+(knee_y[ps->knee_incs]>>2),
-//                     looking_arc+280-((ps->horiz-ps->horizoff)>>4),KNEE,gs,4+DRAWEAP_CENTER,pal);
+//    G_DrawTileScaled(105+(g_player[snum].sync.avel>>4)-(ps.look_ang>>1)+(knee_y[ps.knee_incs]>>2),
+//                     looking_arc+280-((ps.horiz-ps.horizoff)>>4),KNEE,gs,4+DRAWEAP_CENTER,pal);
 
 //    return 1;
 //}
@@ -1890,18 +1890,18 @@ var g_numSelfObituaries = 0;
 
 //    const DukePlayer_t *const ps = g_player[snum].ps;
 
-//    if (ps->knuckle_incs == 0 || (unsigned) (ps->knuckle_incs>>1) >= ARRAY_SIZE(knuckle_frames) || sprite[ps->i].extra <= 0)
+//    if (ps.knuckle_incs == 0 || (unsigned) (ps.knuckle_incs>>1) >= ARRAY_SIZE(knuckle_frames) || sprite[ps.i].extra <= 0)
 //        return 0;
 
-//    looking_arc = klabs(ps->look_ang)/9;
+//    looking_arc = klabs(ps.look_ang)/9;
 
-//    looking_arc -= (ps->hard_landing<<3);
+//    looking_arc -= (ps.hard_landing<<3);
 
 //    pal = P_GetHudPal(ps);
 
-//    G_DrawTileScaled(160+(g_player[snum].sync->avel>>4)-(ps->look_ang>>1),
-//                     looking_arc+180-((ps->horiz-ps->horizoff)>>4),
-//                     CRACKKNUCKLES+knuckle_frames[ps->knuckle_incs>>1],gs,4+DRAWEAP_CENTER,pal);
+//    G_DrawTileScaled(160+(g_player[snum].sync.avel>>4)-(ps.look_ang>>1),
+//                     looking_arc+180-((ps.horiz-ps.horizoff)>>4),
+//                     CRACKKNUCKLES+knuckle_frames[ps.knuckle_incs>>1],gs,4+DRAWEAP_CENTER,pal);
 
 //    return 1;
 //}
@@ -1912,81 +1912,81 @@ var g_numSelfObituaries = 0;
 //    UNREFERENCED_PARAMETER(snum);
 //    UNREFERENCED_PARAMETER(p);
 //#else
-//    Gv_SetVar(g_iWeaponVarID, p->curr_weapon, p->i, snum);
+//    Gv_SetVar(g_iWeaponVarID, p.curr_weapon, p.i, snum);
 //    Gv_SetVar(g_iWorksLikeVarID,
-//              ((unsigned)p->curr_weapon < MAX_WEAPONS) ? PWEAPON(snum, p->curr_weapon, WorksLike) : -1,
-//              p->i, snum);
+//              ((unsigned)p.curr_weapon < MAX_WEAPONS) ? PWEAPON(snum, p.curr_weapon, WorksLike) : -1,
+//              p.i, snum);
 //#endif
 //}
 
 
 //static void P_FireWeapon(DukePlayer_t *p)
 //{
-//    int32_t i, snum = sprite[p->i].yvel;
+//    int32_t i, snum = sprite[p.i].yvel;
 
-//    if (VM_OnEvent(EVENT_DOFIRE, p->i, snum, -1, 0) == 0)
+//    if (VM_OnEvent(EVENT_DOFIRE, p.i, snum, -1, 0) == 0)
 //    {
-//        if (p->weapon_pos != 0) return;
+//        if (p.weapon_pos != 0) return;
 
-//        if (PWEAPON(snum, p->curr_weapon, WorksLike) != KNEE_WEAPON)
-//            p->ammo_amount[p->curr_weapon]--;
+//        if (PWEAPON(snum, p.curr_weapon, WorksLike) != KNEE_WEAPON)
+//            p.ammo_amount[p.curr_weapon]--;
 
-//        if (PWEAPON(snum, p->curr_weapon, FireSound) > 0)
-//            A_PlaySound(PWEAPON(snum, p->curr_weapon, FireSound),p->i);
+//        if (PWEAPON(snum, p.curr_weapon, FireSound) > 0)
+//            A_PlaySound(PWEAPON(snum, p.curr_weapon, FireSound),p.i);
 
 //        P_SetWeaponGamevars(snum, p);
-////        OSD_Printf("doing %d %d %d\n",PWEAPON(snum, p->curr_weapon, Shoots),p->curr_weapon,snum);
-//        A_Shoot(p->i,PWEAPON(snum, p->curr_weapon, Shoots));
+////        OSD_Printf("doing %d %d %d\n",PWEAPON(snum, p.curr_weapon, Shoots),p.curr_weapon,snum);
+//        A_Shoot(p.i,PWEAPON(snum, p.curr_weapon, Shoots));
 
-//        for (i=PWEAPON(snum, p->curr_weapon, ShotsPerBurst)-1; i > 0; i--)
+//        for (i=PWEAPON(snum, p.curr_weapon, ShotsPerBurst)-1; i > 0; i--)
 //        {
-//            if (PWEAPON(snum, p->curr_weapon, Flags) & WEAPON_FIREEVERYOTHER)
+//            if (PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_FIREEVERYOTHER)
 //            {
 //                // this makes the projectiles fire on a delay from player code
-//                actor[p->i].t_data[7] = (PWEAPON(snum, p->curr_weapon, ShotsPerBurst))<<1;
+//                actor[p.i].t_data[7] = (PWEAPON(snum, p.curr_weapon, ShotsPerBurst))<<1;
 //            }
 //            else
 //            {
-//                if (PWEAPON(snum, p->curr_weapon, Flags) & WEAPON_AMMOPERSHOT &&
-//                        PWEAPON(snum, p->curr_weapon, WorksLike) != KNEE_WEAPON)
+//                if (PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_AMMOPERSHOT &&
+//                        PWEAPON(snum, p.curr_weapon, WorksLike) != KNEE_WEAPON)
 //                {
-//                    if (p->ammo_amount[p->curr_weapon] > 0)
-//                        p->ammo_amount[p->curr_weapon]--;
+//                    if (p.ammo_amount[p.curr_weapon] > 0)
+//                        p.ammo_amount[p.curr_weapon]--;
 //                    else break;
 //                }
-//                A_Shoot(p->i,PWEAPON(snum, p->curr_weapon, Shoots));
+//                A_Shoot(p.i,PWEAPON(snum, p.curr_weapon, Shoots));
 //            }
 //        }
 
-//        if (!(PWEAPON(snum, p->curr_weapon, Flags) & WEAPON_NOVISIBLE))
+//        if (!(PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_NOVISIBLE))
 //        {
 //#ifdef POLYMER
-//            spritetype *s = &sprite[p->i];
-//            int32_t x = ((sintable[(s->ang+512)&2047])>>7), y = ((sintable[(s->ang)&2047])>>7);
+//            spritetype *s = &sprite[p.i];
+//            int32_t x = ((sintable[(s.ang+512)&2047])>>7), y = ((sintable[(s.ang)&2047])>>7);
 
-//            s->x += x;
-//            s->y += y;
-//            G_AddGameLight(0, p->i, PHEIGHT, 8192, PWEAPON(snum, p->curr_weapon, FlashColor),PR_LIGHT_PRIO_MAX_GAME);
-//            actor[p->i].lightcount = 2;
-//            s->x -= x;
-//            s->y -= y;
+//            s.x += x;
+//            s.y += y;
+//            G_AddGameLight(0, p.i, PHEIGHT, 8192, PWEAPON(snum, p.curr_weapon, FlashColor),PR_LIGHT_PRIO_MAX_GAME);
+//            actor[p.i].lightcount = 2;
+//            s.x -= x;
+//            s.y -= y;
 //#endif // POLYMER
 //            lastvisinc = totalclock+32;
-//            p->visibility = 0;
+//            p.visibility = 0;
 //        }
 //    }
 //}
 
 //static void P_DoWeaponSpawn(const DukePlayer_t *p)
 //{
-//    int32_t j, snum = sprite[p->i].yvel;
+//    int32_t j, snum = sprite[p.i].yvel;
 
-//    if (PWEAPON(snum, p->curr_weapon, Spawn) <= 0)  // <=0 : AMC TC beta/RC2 has WEAPONx_SPAWN -1
+//    if (PWEAPON(snum, p.curr_weapon, Spawn) <= 0)  // <=0 : AMC TC beta/RC2 has WEAPONx_SPAWN -1
 //        return;
 
-//    j = A_Spawn(p->i, PWEAPON(snum, p->curr_weapon, Spawn));
+//    j = A_Spawn(p.i, PWEAPON(snum, p.curr_weapon, Spawn));
 
-//    if ((PWEAPON(snum, p->curr_weapon, Flags) & WEAPON_SPAWNTYPE3))
+//    if ((PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_SPAWNTYPE3))
 //    {
 //        // like chaingun shells
 //        sprite[j].ang += 1024;
@@ -2001,7 +2001,7 @@ var g_numSelfObituaries = 0;
 
 //void P_DisplayScuba(int32_t snum)
 //{
-//    if (g_player[snum].ps->scuba_on)
+//    if (g_player[snum].ps.scuba_on)
 //    {
 //        int32_t p = P_GetHudPal(g_player[snum].ps);
 
@@ -2030,24 +2030,24 @@ var g_numSelfObituaries = 0;
 
 //    const DukePlayer_t *const ps = g_player[snum].ps;
 
-//    if (ps->tipincs == 0)
+//    if (ps.tipincs == 0)
 //        return 0;
 
 //    // Report that the tipping hand has been drawn so that the otherwise
 //    // selected weapon is not drawn.
-//    if (ps->tipincs >= ARRAY_SIZE(tip_y))
+//    if (ps.tipincs >= ARRAY_SIZE(tip_y))
 //        return 1;
 
-//    looking_arc = klabs(ps->look_ang)/9;
-//    looking_arc -= (ps->hard_landing<<3);
+//    looking_arc = klabs(ps.look_ang)/9;
+//    looking_arc -= (ps.hard_landing<<3);
 
 //    p = P_GetHudPal(ps);
 
-//    tipy = tip_y[ps->tipincs]>>1;
+//    tipy = tip_y[ps.tipincs]>>1;
 
-//    G_DrawTileScaled(170+(g_player[snum].sync->avel>>4)-(ps->look_ang>>1),
-//                     tipy+looking_arc+240-((ps->horiz-ps->horizoff)>>4),
-//                     TIP+((26-ps->tipincs)>>4),gs,DRAWEAP_CENTER,p);
+//    G_DrawTileScaled(170+(g_player[snum].sync.avel>>4)-(ps.look_ang>>1),
+//                     tipy+looking_arc+240-((ps.horiz-ps.horizoff)>>4),
+//                     TIP+((26-ps.tipincs)>>4),gs,DRAWEAP_CENTER,p);
 
 //    return 1;
 //}
@@ -2065,28 +2065,28 @@ var g_numSelfObituaries = 0;
 //    int32_t looking_arc, p = 0;
 //    const DukePlayer_t *const ps = g_player[snum].ps;
 
-//    if (ps->access_incs == 0 || ps->access_incs >= ARRAY_SIZE(access_y) || sprite[ps->i].extra <= 0)
+//    if (ps.access_incs == 0 || ps.access_incs >= ARRAY_SIZE(access_y) || sprite[ps.i].extra <= 0)
 //        return 0;
 
-//    looking_arc = access_y[ps->access_incs] + klabs(ps->look_ang)/9 -
-//                  (ps->hard_landing<<3);
+//    looking_arc = access_y[ps.access_incs] + klabs(ps.look_ang)/9 -
+//                  (ps.hard_landing<<3);
 
-//    if (ps->access_spritenum >= 0)
-//        p = sprite[ps->access_spritenum].pal;
+//    if (ps.access_spritenum >= 0)
+//        p = sprite[ps.access_spritenum].pal;
 
-//    if ((ps->access_incs-3) > 0 && (ps->access_incs-3)>>3)
+//    if ((ps.access_incs-3) > 0 && (ps.access_incs-3)>>3)
 //    {
 //        guniqhudid = 200;
-//        G_DrawTileScaled(170+(g_player[snum].sync->avel>>4)-(ps->look_ang>>1)+(access_y[ps->access_incs]>>2),
-//                         looking_arc+266-((ps->horiz-ps->horizoff)>>4),HANDHOLDINGLASER+(ps->access_incs>>3),
+//        G_DrawTileScaled(170+(g_player[snum].sync.avel>>4)-(ps.look_ang>>1)+(access_y[ps.access_incs]>>2),
+//                         looking_arc+266-((ps.horiz-ps.horizoff)>>4),HANDHOLDINGLASER+(ps.access_incs>>3),
 //                         gs,DRAWEAP_CENTER,p);
 //        guniqhudid = 0;
 //    }
 //    else
 //    {
 //        guniqhudid = 201;
-//        G_DrawTileScaled(170+(g_player[snum].sync->avel>>4)-(ps->look_ang>>1)+(access_y[ps->access_incs]>>2),
-//                         looking_arc+266-((ps->horiz-ps->horizoff)>>4),HANDHOLDINGACCESS,gs,4+DRAWEAP_CENTER,p);
+//        G_DrawTileScaled(170+(g_player[snum].sync.avel>>4)-(ps.look_ang>>1)+(access_y[ps.access_incs]>>2),
+//                         looking_arc+266-((ps.horiz-ps.horizoff)>>4),HANDHOLDINGACCESS,gs,4+DRAWEAP_CENTER,p);
 //        guniqhudid = 0;
 //    }
 
@@ -2102,43 +2102,43 @@ var g_numSelfObituaries = 0;
 //    int32_t weapon_xoffset, i, j;
 //    int32_t o = 0,pal = 0;
 //    DukePlayer_t *const p = g_player[snum].ps;
-//    const uint8_t *const kb = &p->kickback_pic;
+//    const uint8_t *const kb = &p.kickback_pic;
 //    int32_t gs;
 
 //    g_snum = snum;
 
-//    looking_arc = klabs(p->look_ang)/9;
+//    looking_arc = klabs(p.look_ang)/9;
 
-//    gs = sprite[p->i].shade;
+//    gs = sprite[p.i].shade;
 //    if (gs > 24) gs = 24;
 
-//    if (p->newowner >= 0 || ud.camerasprite >= 0 || p->over_shoulder_on > 0 || (sprite[p->i].pal != 1 && sprite[p->i].extra <= 0) ||
+//    if (p.newowner >= 0 || ud.camerasprite >= 0 || p.over_shoulder_on > 0 || (sprite[p.i].pal != 1 && sprite[p.i].extra <= 0) ||
 //            P_DisplayFist(gs,snum) || P_DisplayKnuckles(gs,snum) || P_DisplayTip(gs,snum) || P_DisplayAccess(gs,snum))
 //        return;
 
 //    P_DisplayKnee(gs,snum);
 
-//    gun_pos = 80-(p->weapon_pos*p->weapon_pos);
+//    gun_pos = 80-(p.weapon_pos*p.weapon_pos);
 
 //    weapon_xoffset = (160)-90;
 
 //    if (ud.weaponsway)
 //    {
-//        weapon_xoffset -= (sintable[((p->weapon_sway>>1)+512)&2047]/(1024+512));
+//        weapon_xoffset -= (sintable[((p.weapon_sway>>1)+512)&2047]/(1024+512));
 
-//        if (sprite[p->i].xrepeat < 32)
-//            gun_pos -= klabs(sintable[(p->weapon_sway<<2)&2047]>>9);
-//        else gun_pos -= klabs(sintable[(p->weapon_sway>>1)&2047]>>10);
+//        if (sprite[p.i].xrepeat < 32)
+//            gun_pos -= klabs(sintable[(p.weapon_sway<<2)&2047]>>9);
+//        else gun_pos -= klabs(sintable[(p.weapon_sway>>1)&2047]>>10);
 //    }
 //    else gun_pos -= 16;
 
-//    weapon_xoffset -= 58 + p->weapon_ang;
-//    gun_pos -= (p->hard_landing<<3);
+//    weapon_xoffset -= 58 + p.weapon_ang;
+//    gun_pos -= (p.hard_landing<<3);
 
-//    if (p->last_weapon >= 0)
-//        cw = PWEAPON(snum, p->last_weapon, WorksLike);
+//    if (p.last_weapon >= 0)
+//        cw = PWEAPON(snum, p.last_weapon, WorksLike);
 //    else
-//        cw = PWEAPON(snum, p->curr_weapon, WorksLike);
+//        cw = PWEAPON(snum, p.curr_weapon, WorksLike);
 
 //    hudweap.gunposy=gun_pos;
 //    hudweap.lookhoriz=looking_arc;
@@ -2146,68 +2146,68 @@ var g_numSelfObituaries = 0;
 //    hudweap.gunposx=weapon_xoffset;
 //    hudweap.shade=gs;
 //    hudweap.count=*kb;
-//    hudweap.lookhalfang=p->look_ang>>1;
+//    hudweap.lookhalfang=p.look_ang>>1;
 
-//    if (VM_OnEvent(EVENT_DISPLAYWEAPON, p->i, screenpeek, -1, 0) == 0)
+//    if (VM_OnEvent(EVENT_DISPLAYWEAPON, p.i, screenpeek, -1, 0) == 0)
 //    {
-//        j = 14-p->quick_kick;
-//        if (j != 14 || p->last_quick_kick)
+//        j = 14-p.quick_kick;
+//        if (j != 14 || p.last_quick_kick)
 //        {
 //            pal = P_GetHudPal(p);
 //            if (pal == 0)
-//                pal = p->palookup;
+//                pal = p.palookup;
 
 //            guniqhudid = 100;
 //            if (j < 6 || j > 12)
-//                G_DrawTileScaled(weapon_xoffset+80-(p->look_ang>>1),
+//                G_DrawTileScaled(weapon_xoffset+80-(p.look_ang>>1),
 //                                 looking_arc+250-gun_pos,KNEE,gs,o|4|DRAWEAP_CENTER,pal);
-//            else G_DrawTileScaled(weapon_xoffset+160-16-(p->look_ang>>1),
+//            else G_DrawTileScaled(weapon_xoffset+160-16-(p.look_ang>>1),
 //                                  looking_arc+214-gun_pos,KNEE+1,gs,o|4|DRAWEAP_CENTER,pal);
 //            guniqhudid = 0;
 //        }
 
-//        if (sprite[p->i].xrepeat < 40)
+//        if (sprite[p.i].xrepeat < 40)
 //        {
 //            pal = P_GetHudPal(p);
 
-//            if (p->jetpack_on == 0)
+//            if (p.jetpack_on == 0)
 //            {
-//                i = sprite[p->i].xvel;
+//                i = sprite[p.i].xvel;
 //                looking_arc += 32-(i>>3);
 //                fistsign += i>>3;
 //            }
 
 //            cw = weapon_xoffset;
 //            weapon_xoffset += sintable[(fistsign)&2047]>>10;
-//            G_DrawTileScaled(weapon_xoffset+250-(p->look_ang>>1),
+//            G_DrawTileScaled(weapon_xoffset+250-(p.look_ang>>1),
 //                             looking_arc+258-(klabs(sintable[(fistsign)&2047]>>8)),
 //                             FIST,gs,o, pal);
 //            weapon_xoffset = cw - (sintable[(fistsign)&2047]>>10);
-//            G_DrawTileScaled(weapon_xoffset+40-(p->look_ang>>1),
+//            G_DrawTileScaled(weapon_xoffset+40-(p.look_ang>>1),
 //                             looking_arc+200+(klabs(sintable[(fistsign)&2047]>>8)),
 //                             FIST,gs,o|4, pal);
 //        }
 //        else
 //        {
-//            int32_t doanim = !(sprite[p->i].pal == 1 || ud.pause_on || g_player[myconnectindex].ps->gm&MODE_MENU);
+//            int32_t doanim = !(sprite[p.i].pal == 1 || ud.pause_on || g_player[myconnectindex].ps.gm&MODE_MENU);
 //            pal = P_GetHudPal(p);
 
 //            switch (cw)
 //            {
 //            case KNEE_WEAPON:
-//                if (VM_OnEvent(EVENT_DRAWWEAPON,g_player[screenpeek].ps->i,screenpeek, -1, 0) == 0)
+//                if (VM_OnEvent(EVENT_DRAWWEAPON,g_player[screenpeek].ps.i,screenpeek, -1, 0) == 0)
 //                {
 //                    if ((*kb) > 0)
 //                    {
 //                        if (pal == 0)
-//                            pal = p->palookup;
+//                            pal = p.palookup;
 
 //                        guniqhudid = cw;
 //                        if ((*kb) < 5 || (*kb) > 9)
-//                            G_DrawTileScaled(weapon_xoffset+220-(p->look_ang>>1),
+//                            G_DrawTileScaled(weapon_xoffset+220-(p.look_ang>>1),
 //                            looking_arc+250-gun_pos,KNEE,gs,o,pal);
 //                        else
-//                            G_DrawTileScaled(weapon_xoffset+160-(p->look_ang>>1),
+//                            G_DrawTileScaled(weapon_xoffset+160-(p.look_ang>>1),
 //                            looking_arc+214-gun_pos,KNEE+1,gs,o,pal);
 //                        guniqhudid = 0;
 //                    }
@@ -2215,7 +2215,7 @@ var g_numSelfObituaries = 0;
 //                break;
 
 //            case TRIPBOMB_WEAPON:
-//                if (VM_OnEvent(EVENT_DRAWWEAPON,g_player[screenpeek].ps->i,screenpeek, -1, 0) == 0)
+//                if (VM_OnEvent(EVENT_DRAWWEAPON,g_player[screenpeek].ps.i,screenpeek, -1, 0) == 0)
 //                {
 //                    weapon_xoffset += 8;
 //                    gun_pos -= 10;
@@ -2225,17 +2225,17 @@ var g_numSelfObituaries = 0;
 //                    else if ((*kb) < 4)
 //                    {
 //                        guniqhudid = cw<<2;
-//                        G_DrawWeaponTile(weapon_xoffset+142-(p->look_ang>>1),
+//                        G_DrawWeaponTile(weapon_xoffset+142-(p.look_ang>>1),
 //                            looking_arc+234-gun_pos,HANDHOLDINGLASER+3,gs,o,pal,0);
 //                    }
 
 //                    guniqhudid = cw;
-//                    G_DrawWeaponTile(weapon_xoffset+130-(p->look_ang>>1),
+//                    G_DrawWeaponTile(weapon_xoffset+130-(p.look_ang>>1),
 //                        looking_arc+249-gun_pos,
 //                        HANDHOLDINGLASER+((*kb)>>2),gs,o,pal,0);
 
 //                    guniqhudid = cw<<1;
-//                    G_DrawWeaponTile(weapon_xoffset+152-(p->look_ang>>1),
+//                    G_DrawWeaponTile(weapon_xoffset+152-(p.look_ang>>1),
 //                        looking_arc+249-gun_pos,
 //                        HANDHOLDINGLASER+((*kb)>>2),gs,o|4,pal,0);
 //                    guniqhudid = 0;
@@ -2243,7 +2243,7 @@ var g_numSelfObituaries = 0;
 //                break;
 
 //            case RPG_WEAPON:
-//                if (VM_OnEvent(EVENT_DRAWWEAPON,g_player[screenpeek].ps->i,screenpeek, -1, 0) == 0)
+//                if (VM_OnEvent(EVENT_DRAWWEAPON,g_player[screenpeek].ps.i,screenpeek, -1, 0) == 0)
 //                {
 //                    weapon_xoffset -= sintable[(768+((*kb)<<7))&2047]>>11;
 //                    gun_pos += sintable[(768+((*kb)<<7))&2047]>>11;
@@ -2260,7 +2260,7 @@ var g_numSelfObituaries = 0;
 //                break;
 
 //            case SHOTGUN_WEAPON:
-//                if (VM_OnEvent(EVENT_DRAWWEAPON,g_player[screenpeek].ps->i,screenpeek, -1, 0) == 0)
+//                if (VM_OnEvent(EVENT_DRAWWEAPON,g_player[screenpeek].ps.i,screenpeek, -1, 0) == 0)
 //                {
 //                    weapon_xoffset -= 8;
 
@@ -2269,14 +2269,14 @@ var g_numSelfObituaries = 0;
 //                    case 1:
 //                    case 2:
 //                        guniqhudid = cw<<1;
-//                        G_DrawWeaponTile(weapon_xoffset+168-(p->look_ang>>1),looking_arc+201-gun_pos,
+//                        G_DrawWeaponTile(weapon_xoffset+168-(p.look_ang>>1),looking_arc+201-gun_pos,
 //                            SHOTGUN+2,-128,o,pal,0);
 //                    case 0:
 //                    case 6:
 //                    case 7:
 //                    case 8:
 //                        guniqhudid = cw;
-//                        G_DrawWeaponTile(weapon_xoffset+146-(p->look_ang>>1),looking_arc+202-gun_pos,
+//                        G_DrawWeaponTile(weapon_xoffset+146-(p.look_ang>>1),looking_arc+202-gun_pos,
 //                            SHOTGUN,gs,o,pal,0);
 //                        guniqhudid = 0;
 //                        break;
@@ -2293,11 +2293,11 @@ var g_numSelfObituaries = 0;
 //                            weapon_xoffset += 20;
 
 //                            guniqhudid = cw<<1;
-//                            G_DrawWeaponTile(weapon_xoffset+178-(p->look_ang>>1),looking_arc+194-gun_pos,
+//                            G_DrawWeaponTile(weapon_xoffset+178-(p.look_ang>>1),looking_arc+194-gun_pos,
 //                                SHOTGUN+1+((*(kb)-1)>>1),-128,o,pal,0);
 //                        }
 //                        guniqhudid = cw;
-//                        G_DrawWeaponTile(weapon_xoffset+158-(p->look_ang>>1),looking_arc+220-gun_pos,
+//                        G_DrawWeaponTile(weapon_xoffset+158-(p.look_ang>>1),looking_arc+220-gun_pos,
 //                            SHOTGUN+3,gs,o,pal,0);
 //                        guniqhudid = 0;
 //                        break;
@@ -2305,7 +2305,7 @@ var g_numSelfObituaries = 0;
 //                    case 14:
 //                    case 15:
 //                        guniqhudid = cw;
-//                        G_DrawWeaponTile(32+weapon_xoffset+166-(p->look_ang>>1),looking_arc+210-gun_pos,
+//                        G_DrawWeaponTile(32+weapon_xoffset+166-(p.look_ang>>1),looking_arc+210-gun_pos,
 //                            SHOTGUN+4,gs,o,pal,0);
 //                        guniqhudid = 0;
 //                        break;
@@ -2314,7 +2314,7 @@ var g_numSelfObituaries = 0;
 //                    case 18:
 //                    case 19:
 //                        guniqhudid = cw;
-//                        G_DrawWeaponTile(64+weapon_xoffset+170-(p->look_ang>>1),looking_arc+196-gun_pos,
+//                        G_DrawWeaponTile(64+weapon_xoffset+170-(p.look_ang>>1),looking_arc+196-gun_pos,
 //                            SHOTGUN+5,gs,o,pal,0);
 //                        guniqhudid = 0;
 //                        break;
@@ -2323,7 +2323,7 @@ var g_numSelfObituaries = 0;
 //                    case 22:
 //                    case 23:
 //                        guniqhudid = cw;
-//                        G_DrawWeaponTile(64+weapon_xoffset+176-(p->look_ang>>1),looking_arc+196-gun_pos,
+//                        G_DrawWeaponTile(64+weapon_xoffset+176-(p.look_ang>>1),looking_arc+196-gun_pos,
 //                            SHOTGUN+6,gs,o,pal,0);
 //                        guniqhudid = 0;
 //                        break;
@@ -2332,7 +2332,7 @@ var g_numSelfObituaries = 0;
 //                    case 26:
 //                    case 27:
 //                        guniqhudid = cw;
-//                        G_DrawWeaponTile(64+weapon_xoffset+170-(p->look_ang>>1),looking_arc+196-gun_pos,
+//                        G_DrawWeaponTile(64+weapon_xoffset+170-(p.look_ang>>1),looking_arc+196-gun_pos,
 //                            SHOTGUN+5,gs,o,pal,0);
 //                        guniqhudid = 0;
 //                        break;
@@ -2340,7 +2340,7 @@ var g_numSelfObituaries = 0;
 //                    case 29:
 //                    case 30:
 //                        guniqhudid = cw;
-//                        G_DrawWeaponTile(32+weapon_xoffset+156-(p->look_ang>>1),looking_arc+206-gun_pos,
+//                        G_DrawWeaponTile(32+weapon_xoffset+156-(p.look_ang>>1),looking_arc+206-gun_pos,
 //                            SHOTGUN+4,gs,o,pal,0);
 //                        guniqhudid = 0;
 //                        break;
@@ -2349,7 +2349,7 @@ var g_numSelfObituaries = 0;
 //                break;
 
 //            case CHAINGUN_WEAPON:
-//                if (VM_OnEvent(EVENT_DRAWWEAPON,g_player[screenpeek].ps->i,screenpeek, -1, 0) == 0)
+//                if (VM_OnEvent(EVENT_DRAWWEAPON,g_player[screenpeek].ps.i,screenpeek, -1, 0) == 0)
 //                {
 //                    if (*kb > 0)
 //                    {
@@ -2362,7 +2362,7 @@ var g_numSelfObituaries = 0;
 //                    switch (*kb)
 //                    {
 //                    case 0:
-//                        G_DrawWeaponTile(weapon_xoffset+178-(p->look_ang>>1),looking_arc+233-gun_pos,
+//                        G_DrawWeaponTile(weapon_xoffset+178-(p.look_ang>>1),looking_arc+233-gun_pos,
 //                            CHAINGUN+1,gs,o,pal,0);
 //                        break;
 
@@ -2371,10 +2371,10 @@ var g_numSelfObituaries = 0;
 //                        {
 //                            i = 0;
 //                            if (doanim) i = rand()&7;
-//                            G_DrawWeaponTile(i+weapon_xoffset-4+140-(p->look_ang>>1),i+looking_arc-((*kb)>>1)+208-gun_pos,
+//                            G_DrawWeaponTile(i+weapon_xoffset-4+140-(p.look_ang>>1),i+looking_arc-((*kb)>>1)+208-gun_pos,
 //                                CHAINGUN+5+((*kb-4)/5),gs,o,pal,0);
 //                            if (doanim) i = rand()&7;
-//                            G_DrawWeaponTile(i+weapon_xoffset-4+184-(p->look_ang>>1),i+looking_arc-((*kb)>>1)+208-gun_pos,
+//                            G_DrawWeaponTile(i+weapon_xoffset-4+184-(p.look_ang>>1),i+looking_arc-((*kb)>>1)+208-gun_pos,
 //                                CHAINGUN+5+((*kb-4)/5),gs,o,pal,0);
 //                        }
 
@@ -2382,24 +2382,24 @@ var g_numSelfObituaries = 0;
 //                        {
 //                            i = 0;
 //                            if (doanim) i = rand()&7;
-//                            G_DrawWeaponTile(i+weapon_xoffset-4+162-(p->look_ang>>1),i+looking_arc-((*kb)>>1)+208-gun_pos,
+//                            G_DrawWeaponTile(i+weapon_xoffset-4+162-(p.look_ang>>1),i+looking_arc-((*kb)>>1)+208-gun_pos,
 //                                CHAINGUN+5+((*kb-2)/5),gs,o,pal,0);
-//                            G_DrawWeaponTile(weapon_xoffset+178-(p->look_ang>>1),looking_arc+233-gun_pos,
+//                            G_DrawWeaponTile(weapon_xoffset+178-(p.look_ang>>1),looking_arc+233-gun_pos,
 //                                CHAINGUN+1+((*kb)>>1),gs,o,pal,0);
 //                        }
-//                        else G_DrawWeaponTile(weapon_xoffset+178-(p->look_ang>>1),looking_arc+233-gun_pos,
+//                        else G_DrawWeaponTile(weapon_xoffset+178-(p.look_ang>>1),looking_arc+233-gun_pos,
 //                            CHAINGUN+1,gs,o,pal,0);
 
 //                        break;
 //                    }
 
-//                    G_DrawWeaponTile(weapon_xoffset+168-(p->look_ang>>1),looking_arc+260-gun_pos,
+//                    G_DrawWeaponTile(weapon_xoffset+168-(p.look_ang>>1),looking_arc+260-gun_pos,
 //                        CHAINGUN,gs,o,pal,0);
 //                }
 //                break;
 
 //            case PISTOL_WEAPON:
-//                if (VM_OnEvent(EVENT_DRAWWEAPON,g_player[screenpeek].ps->i,screenpeek, -1, 0) == 0)
+//                if (VM_OnEvent(EVENT_DRAWWEAPON,g_player[screenpeek].ps.i,screenpeek, -1, 0) == 0)
 //                {
 //                    if ((*kb) < PWEAPON(0, PISTOL_WEAPON, TotalTime)+1)
 //                    {
@@ -2410,7 +2410,7 @@ var g_numSelfObituaries = 0;
 //                            l -= 3;
 
 //                        guniqhudid = cw;
-//                        G_DrawWeaponTile((l-(p->look_ang>>1)),(looking_arc+244-gun_pos),FIRSTGUN+kb_frames[*kb>2?0:*kb],gs,2,pal,0);
+//                        G_DrawWeaponTile((l-(p.look_ang>>1)),(looking_arc+244-gun_pos),FIRSTGUN+kb_frames[*kb>2?0:*kb],gs,2,pal,0);
 //                        guniqhudid = 0;
 //                    }
 //                    else
@@ -2419,42 +2419,42 @@ var g_numSelfObituaries = 0;
 //                        if ((*kb) < PWEAPON(0, PISTOL_WEAPON, Reload)-17)
 //                        {
 //                            guniqhudid = cw;
-//                            G_DrawWeaponTile(194-(p->look_ang>>1),looking_arc+230-gun_pos,FIRSTGUN+4,gs,o|512,pal,0);
+//                            G_DrawWeaponTile(194-(p.look_ang>>1),looking_arc+230-gun_pos,FIRSTGUN+4,gs,o|512,pal,0);
 //                            guniqhudid = 0;
 //                        }
 //                        else if ((*kb) < PWEAPON(0, PISTOL_WEAPON, Reload)-12)
 //                        {
-//                            G_DrawWeaponTile(244-((*kb)<<3)-(p->look_ang>>1),looking_arc+130-gun_pos+((*kb)<<4),FIRSTGUN+6,gs,o|512,pal,0);
+//                            G_DrawWeaponTile(244-((*kb)<<3)-(p.look_ang>>1),looking_arc+130-gun_pos+((*kb)<<4),FIRSTGUN+6,gs,o|512,pal,0);
 //                            guniqhudid = cw;
-//                            G_DrawWeaponTile(224-(p->look_ang>>1),looking_arc+220-gun_pos,FIRSTGUN+5,gs,o|512,pal,0);
+//                            G_DrawWeaponTile(224-(p.look_ang>>1),looking_arc+220-gun_pos,FIRSTGUN+5,gs,o|512,pal,0);
 //                            guniqhudid = 0;
 //                        }
 //                        else if ((*kb) < PWEAPON(0, PISTOL_WEAPON, Reload)-7)
 //                        {
-//                            G_DrawWeaponTile(124+((*kb)<<1)-(p->look_ang>>1),looking_arc+430-gun_pos-((*kb)<<3),FIRSTGUN+6,gs,o|512,pal,0);
+//                            G_DrawWeaponTile(124+((*kb)<<1)-(p.look_ang>>1),looking_arc+430-gun_pos-((*kb)<<3),FIRSTGUN+6,gs,o|512,pal,0);
 //                            guniqhudid = cw;
-//                            G_DrawWeaponTile(224-(p->look_ang>>1),looking_arc+220-gun_pos,FIRSTGUN+5,gs,o|512,pal,0);
+//                            G_DrawWeaponTile(224-(p.look_ang>>1),looking_arc+220-gun_pos,FIRSTGUN+5,gs,o|512,pal,0);
 //                            guniqhudid = 0;
 //                        }
 
 //                        else if ((*kb) < PWEAPON(0, PISTOL_WEAPON, Reload)-4)
 //                        {
-//                            G_DrawWeaponTile(184-(p->look_ang>>1),looking_arc+235-gun_pos,FIRSTGUN+8,gs,o|512,pal,0);
+//                            G_DrawWeaponTile(184-(p.look_ang>>1),looking_arc+235-gun_pos,FIRSTGUN+8,gs,o|512,pal,0);
 //                            guniqhudid = cw;
-//                            G_DrawWeaponTile(224-(p->look_ang>>1),looking_arc+210-gun_pos,FIRSTGUN+5,gs,o|512,pal,0);
+//                            G_DrawWeaponTile(224-(p.look_ang>>1),looking_arc+210-gun_pos,FIRSTGUN+5,gs,o|512,pal,0);
 //                            guniqhudid = 0;
 //                        }
 //                        else if ((*kb) < PWEAPON(0, PISTOL_WEAPON, Reload)-2)
 //                        {
-//                            G_DrawWeaponTile(164-(p->look_ang>>1),looking_arc+245-gun_pos,FIRSTGUN+8,gs,o|512,pal,0);
+//                            G_DrawWeaponTile(164-(p.look_ang>>1),looking_arc+245-gun_pos,FIRSTGUN+8,gs,o|512,pal,0);
 //                            guniqhudid = cw;
-//                            G_DrawWeaponTile(224-(p->look_ang>>1),looking_arc+220-gun_pos,FIRSTGUN+5,gs,o|512,pal,0);
+//                            G_DrawWeaponTile(224-(p.look_ang>>1),looking_arc+220-gun_pos,FIRSTGUN+5,gs,o|512,pal,0);
 //                            guniqhudid = 0;
 //                        }
 //                        else if ((*kb) < PWEAPON(0, PISTOL_WEAPON, Reload))
 //                        {
 //                            guniqhudid = cw;
-//                            G_DrawWeaponTile(194-(p->look_ang>>1),looking_arc+235-gun_pos,FIRSTGUN+5,gs,o|512,pal,0);
+//                            G_DrawWeaponTile(194-(p.look_ang>>1),looking_arc+235-gun_pos,FIRSTGUN+5,gs,o|512,pal,0);
 //                            guniqhudid = 0;
 //                        }
 
@@ -2463,12 +2463,12 @@ var g_numSelfObituaries = 0;
 //                break;
 
 //            case HANDBOMB_WEAPON:
-//                if (VM_OnEvent(EVENT_DRAWWEAPON,g_player[screenpeek].ps->i,screenpeek, -1, 0) == 0)
+//                if (VM_OnEvent(EVENT_DRAWWEAPON,g_player[screenpeek].ps.i,screenpeek, -1, 0) == 0)
 //                {
 //                    guniqhudid = cw;
 //                    if ((*kb))
 //                    {
-//                        if ((*kb) < (PWEAPON(0, p->curr_weapon, TotalTime)))
+//                        if ((*kb) < (PWEAPON(0, p.curr_weapon, TotalTime)))
 //                        {
 
 //                            static uint8_t throw_frames[] = {0,0,0,0,0,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2};
@@ -2483,17 +2483,17 @@ var g_numSelfObituaries = 0;
 //                            if (*kb >= ARRAY_SIZE(throw_frames))
 //                                break;
 
-//                            G_DrawWeaponTile(weapon_xoffset+190-(p->look_ang>>1),looking_arc+250-gun_pos,HANDTHROW+throw_frames[(*kb)],gs,o,pal,0);
+//                            G_DrawWeaponTile(weapon_xoffset+190-(p.look_ang>>1),looking_arc+250-gun_pos,HANDTHROW+throw_frames[(*kb)],gs,o,pal,0);
 //                        }
 //                    }
 //                    else
-//                        G_DrawWeaponTile(weapon_xoffset+190-(p->look_ang>>1),looking_arc+260-gun_pos,HANDTHROW,gs,o,pal,0);
+//                        G_DrawWeaponTile(weapon_xoffset+190-(p.look_ang>>1),looking_arc+260-gun_pos,HANDTHROW,gs,o,pal,0);
 //                    guniqhudid = 0;
 //                }
 //                break;
 
 //            case HANDREMOTE_WEAPON:
-//                if (VM_OnEvent(EVENT_DRAWWEAPON,g_player[screenpeek].ps->i,screenpeek, -1, 0) == 0)
+//                if (VM_OnEvent(EVENT_DRAWWEAPON,g_player[screenpeek].ps.i,screenpeek, -1, 0) == 0)
 //                {
 //                    static uint8_t remote_frames[] = {0,1,1,2,1,1,0,0,0,0,0};
 
@@ -2502,13 +2502,13 @@ var g_numSelfObituaries = 0;
 
 //                    weapon_xoffset = -48;
 //                    guniqhudid = cw;
-//                    G_DrawWeaponTile(weapon_xoffset+150-(p->look_ang>>1),looking_arc+258-gun_pos,HANDREMOTE+remote_frames[(*kb)],gs,o,pal,0);
+//                    G_DrawWeaponTile(weapon_xoffset+150-(p.look_ang>>1),looking_arc+258-gun_pos,HANDREMOTE+remote_frames[(*kb)],gs,o,pal,0);
 //                    guniqhudid = 0;
 //                }
 //                break;
 
 //            case DEVISTATOR_WEAPON:
-//                if (VM_OnEvent(EVENT_DRAWWEAPON,g_player[screenpeek].ps->i,screenpeek, -1, 0) == 0)
+//                if (VM_OnEvent(EVENT_DRAWWEAPON,g_player[screenpeek].ps.i,screenpeek, -1, 0) == 0)
 //                {
 //                    if ((*kb) < (PWEAPON(0, DEVISTATOR_WEAPON, TotalTime)+1) && (*kb) > 0)
 //                    {
@@ -2519,38 +2519,38 @@ var g_numSelfObituaries = 0;
 
 //                        i = ksgn((*kb)>>2);
 
-//                        if (p->hbomb_hold_delay)
+//                        if (p.hbomb_hold_delay)
 //                        {
 //                            guniqhudid = cw;
-//                            G_DrawWeaponTile((cycloidy[*kb]>>1)+weapon_xoffset+268-(p->look_ang>>1),cycloidy[*kb]+looking_arc+238-gun_pos,DEVISTATOR+i,-32,o,pal,0);
+//                            G_DrawWeaponTile((cycloidy[*kb]>>1)+weapon_xoffset+268-(p.look_ang>>1),cycloidy[*kb]+looking_arc+238-gun_pos,DEVISTATOR+i,-32,o,pal,0);
 //                            guniqhudid = cw<<1;
-//                            G_DrawWeaponTile(weapon_xoffset+30-(p->look_ang>>1),looking_arc+240-gun_pos,DEVISTATOR,gs,o|4,pal,0);
+//                            G_DrawWeaponTile(weapon_xoffset+30-(p.look_ang>>1),looking_arc+240-gun_pos,DEVISTATOR,gs,o|4,pal,0);
 //                            guniqhudid = 0;
 //                        }
 //                        else
 //                        {
 //                            guniqhudid = cw<<1;
-//                            G_DrawWeaponTile(-(cycloidy[*kb]>>1)+weapon_xoffset+30-(p->look_ang>>1),cycloidy[*kb]+looking_arc+240-gun_pos,DEVISTATOR+i,-32,o|4,pal,0);
+//                            G_DrawWeaponTile(-(cycloidy[*kb]>>1)+weapon_xoffset+30-(p.look_ang>>1),cycloidy[*kb]+looking_arc+240-gun_pos,DEVISTATOR+i,-32,o|4,pal,0);
 //                            guniqhudid = cw;
-//                            G_DrawWeaponTile(weapon_xoffset+268-(p->look_ang>>1),looking_arc+238-gun_pos,DEVISTATOR,gs,o,pal,0);
+//                            G_DrawWeaponTile(weapon_xoffset+268-(p.look_ang>>1),looking_arc+238-gun_pos,DEVISTATOR,gs,o,pal,0);
 //                            guniqhudid = 0;
 //                        }
 //                    }
 //                    else
 //                    {
 //                        guniqhudid = cw;
-//                        G_DrawWeaponTile(weapon_xoffset+268-(p->look_ang>>1),looking_arc+238-gun_pos,DEVISTATOR,gs,o,pal,0);
+//                        G_DrawWeaponTile(weapon_xoffset+268-(p.look_ang>>1),looking_arc+238-gun_pos,DEVISTATOR,gs,o,pal,0);
 //                        guniqhudid = cw<<1;
-//                        G_DrawWeaponTile(weapon_xoffset+30-(p->look_ang>>1),looking_arc+240-gun_pos,DEVISTATOR,gs,o|4,pal,0);
+//                        G_DrawWeaponTile(weapon_xoffset+30-(p.look_ang>>1),looking_arc+240-gun_pos,DEVISTATOR,gs,o|4,pal,0);
 //                        guniqhudid = 0;
 //                    }
 //                }
 //                break;
 
 //            case FREEZE_WEAPON:
-//                if (VM_OnEvent(EVENT_DRAWWEAPON,g_player[screenpeek].ps->i,screenpeek, -1, 0) == 0)
+//                if (VM_OnEvent(EVENT_DRAWWEAPON,g_player[screenpeek].ps.i,screenpeek, -1, 0) == 0)
 //                {
-//                    if ((*kb) < (PWEAPON(snum, p->curr_weapon, TotalTime)+1) && (*kb) > 0)
+//                    if ((*kb) < (PWEAPON(snum, p.curr_weapon, TotalTime)+1) && (*kb) > 0)
 //                    {
 //                        static uint8_t cat_frames[] = { 0,0,1,1,2,2 };
 
@@ -2564,27 +2564,27 @@ var g_numSelfObituaries = 0;
 //                        }
 //                        gun_pos -= 16;
 //                        guniqhudid = 0;
-//                        G_DrawWeaponTile(weapon_xoffset+210-(p->look_ang>>1),looking_arc+261-gun_pos,FREEZE+2,-32,o|512,pal,0);
+//                        G_DrawWeaponTile(weapon_xoffset+210-(p.look_ang>>1),looking_arc+261-gun_pos,FREEZE+2,-32,o|512,pal,0);
 //                        guniqhudid = cw;
-//                        G_DrawWeaponTile(weapon_xoffset+210-(p->look_ang>>1),looking_arc+235-gun_pos,FREEZE+3+cat_frames[*kb%6],-32,o|512,pal,0);
+//                        G_DrawWeaponTile(weapon_xoffset+210-(p.look_ang>>1),looking_arc+235-gun_pos,FREEZE+3+cat_frames[*kb%6],-32,o|512,pal,0);
 //                        guniqhudid = 0;
 //                    }
 //                    else
 //                    {
 //                        guniqhudid = cw;
-//                        G_DrawWeaponTile(weapon_xoffset+210-(p->look_ang>>1),looking_arc+261-gun_pos,FREEZE,gs,o|512,pal,0);
+//                        G_DrawWeaponTile(weapon_xoffset+210-(p.look_ang>>1),looking_arc+261-gun_pos,FREEZE,gs,o|512,pal,0);
 //                        guniqhudid = 0;
 //                    }
 //                }
 //                break;
 
 //            case GROW_WEAPON:
-//                if (VM_OnEvent(EVENT_DRAWWEAPON,g_player[screenpeek].ps->i,screenpeek, -1, 0) == 0)
+//                if (VM_OnEvent(EVENT_DRAWWEAPON,g_player[screenpeek].ps.i,screenpeek, -1, 0) == 0)
 //                {
 //                    weapon_xoffset += 28;
 //                    looking_arc += 18;
 
-//                    if ((*kb) < PWEAPON(snum, p->curr_weapon, TotalTime) && (*kb) > 0)
+//                    if ((*kb) < PWEAPON(snum, p.curr_weapon, TotalTime) && (*kb) > 0)
 //                    {
 //                        if (doanim)
 //                        {
@@ -2593,25 +2593,25 @@ var g_numSelfObituaries = 0;
 //                        }
 
 //                        guniqhudid = cw<<1;
-//                        G_DrawWeaponTile(weapon_xoffset+184-(p->look_ang>>1),
+//                        G_DrawWeaponTile(weapon_xoffset+184-(p.look_ang>>1),
 //                                         looking_arc+240-gun_pos,SHRINKER+3+((*kb)&3),-32,
 //                                         o,2,1);
 
 //                        guniqhudid = cw;
-//                        G_DrawWeaponTile(weapon_xoffset+188-(p->look_ang>>1),
+//                        G_DrawWeaponTile(weapon_xoffset+188-(p.look_ang>>1),
 //                                         looking_arc+240-gun_pos,SHRINKER-1,gs,o,pal,0);
 //                        guniqhudid = 0;
 //                    }
 //                    else
 //                    {
 //                        guniqhudid = cw<<1;
-//                        G_DrawWeaponTile(weapon_xoffset+184-(p->look_ang>>1),
+//                        G_DrawWeaponTile(weapon_xoffset+184-(p.look_ang>>1),
 //                                         looking_arc+240-gun_pos,SHRINKER+2,
-//                                         16-(sintable[p->random_club_frame&2047]>>10),
+//                                         16-(sintable[p.random_club_frame&2047]>>10),
 //                                         o,2,1);
 
 //                        guniqhudid = cw;
-//                        G_DrawWeaponTile(weapon_xoffset+188-(p->look_ang>>1),
+//                        G_DrawWeaponTile(weapon_xoffset+188-(p.look_ang>>1),
 //                                         looking_arc+240-gun_pos,SHRINKER-2,gs,o,pal,0);
 //                        guniqhudid = 0;
 //                    }
@@ -2619,12 +2619,12 @@ var g_numSelfObituaries = 0;
 //                break;
 
 //            case SHRINKER_WEAPON:
-//                if (VM_OnEvent(EVENT_DRAWWEAPON,g_player[screenpeek].ps->i,screenpeek, -1, 0) == 0)
+//                if (VM_OnEvent(EVENT_DRAWWEAPON,g_player[screenpeek].ps.i,screenpeek, -1, 0) == 0)
 //                {
 //                    weapon_xoffset += 28;
 //                    looking_arc += 18;
 
-//                    if (((*kb) > 0) && ((*kb) < PWEAPON(snum, p->curr_weapon, TotalTime)))
+//                    if (((*kb) > 0) && ((*kb) < PWEAPON(snum, p.curr_weapon, TotalTime)))
 //                    {
 //                        if (doanim)
 //                        {
@@ -2632,11 +2632,11 @@ var g_numSelfObituaries = 0;
 //                            gun_pos += (rand()&3);
 //                        }
 //                        guniqhudid = cw<<1;
-//                        G_DrawWeaponTile(weapon_xoffset+184-(p->look_ang>>1),
+//                        G_DrawWeaponTile(weapon_xoffset+184-(p.look_ang>>1),
 //                            looking_arc+240-gun_pos,SHRINKER+3+((*kb)&3),-32,
 //                            o,0,1);
 //                        guniqhudid = cw;
-//                        G_DrawWeaponTile(weapon_xoffset+188-(p->look_ang>>1),
+//                        G_DrawWeaponTile(weapon_xoffset+188-(p.look_ang>>1),
 //                            looking_arc+240-gun_pos,SHRINKER+1,gs,o,pal,0);
 //                        guniqhudid = 0;
 
@@ -2644,12 +2644,12 @@ var g_numSelfObituaries = 0;
 //                    else
 //                    {
 //                        guniqhudid = cw<<1;
-//                        G_DrawWeaponTile(weapon_xoffset+184-(p->look_ang>>1),
+//                        G_DrawWeaponTile(weapon_xoffset+184-(p.look_ang>>1),
 //                            looking_arc+240-gun_pos,SHRINKER+2,
-//                            16-(sintable[p->random_club_frame&2047]>>10),
+//                            16-(sintable[p.random_club_frame&2047]>>10),
 //                            o,0,1);
 //                        guniqhudid = cw;
-//                        G_DrawWeaponTile(weapon_xoffset+188-(p->look_ang>>1),
+//                        G_DrawWeaponTile(weapon_xoffset+188-(p.look_ang>>1),
 //                            looking_arc+240-gun_pos,SHRINKER,gs,o,pal,0);
 //                        guniqhudid = 0;
 //                    }
@@ -2689,15 +2689,15 @@ var g_myAimMode = 0, g_myAimStat = 0, g_oldAimStat = 0; //int32_t
 //    int32_t momx = 0,momy = 0;
 //    DukePlayer_t *p = g_player[snum].ps;
 
-//    if ((p->gm & (MODE_MENU|MODE_TYPE)) || (ud.pause_on && !KB_KeyPressed(sc_Pause)))
+//    if ((p.gm & (MODE_MENU|MODE_TYPE)) || (ud.pause_on && !KB_KeyPressed(sc_Pause)))
 //    {
-//        if (!(p->gm&MODE_MENU))
+//        if (!(p.gm&MODE_MENU))
 //            CONTROL_GetInput(&info[0]);
 
 //        Bmemset(&info[1], 0, sizeof(input_t));
 //        Bmemset(&loc, 0, sizeof(input_t));
 //        loc.bits = (((int32_t)g_gameQuit)<<SK_GAMEQUIT);
-//        loc.extbits = (g_player[snum].pteam != g_player[snum].ps->team)<<6;
+//        loc.extbits = (g_player[snum].pteam != g_player[snum].ps.team)<<6;
 //        loc.extbits |= (1<<7);
 
 //        return;
@@ -2809,9 +2809,9 @@ var g_myAimMode = 0, g_myAimStat = 0, g_oldAimStat = 0; //int32_t
 
 //    if (BUTTON(gamefunc_Strafe))
 //    {
-//        if (BUTTON(gamefunc_Turn_Left) && !(g_player[snum].ps->movement_lock&4))
+//        if (BUTTON(gamefunc_Turn_Left) && !(g_player[snum].ps.movement_lock&4))
 //            svel -= -keymove;
-//        if (BUTTON(gamefunc_Turn_Right) && !(g_player[snum].ps->movement_lock&8))
+//        if (BUTTON(gamefunc_Turn_Right) && !(g_player[snum].ps.movement_lock&8))
 //            svel -= keymove;
 //    }
 //    else
@@ -2836,13 +2836,13 @@ var g_myAimMode = 0, g_myAimStat = 0, g_oldAimStat = 0; //int32_t
 //            turnheldtime=0;
 //    }
 
-//    if (BUTTON(gamefunc_Strafe_Left) && !(g_player[snum].ps->movement_lock&4))
+//    if (BUTTON(gamefunc_Strafe_Left) && !(g_player[snum].ps.movement_lock&4))
 //        svel += keymove;
-//    if (BUTTON(gamefunc_Strafe_Right) && !(g_player[snum].ps->movement_lock&8))
+//    if (BUTTON(gamefunc_Strafe_Right) && !(g_player[snum].ps.movement_lock&8))
 //        svel += -keymove;
-//    if (BUTTON(gamefunc_Move_Forward) && !(g_player[snum].ps->movement_lock&1))
+//    if (BUTTON(gamefunc_Move_Forward) && !(g_player[snum].ps.movement_lock&1))
 //        vel += keymove;
-//    if (BUTTON(gamefunc_Move_Backward) && !(g_player[snum].ps->movement_lock&2))
+//    if (BUTTON(gamefunc_Move_Backward) && !(g_player[snum].ps.movement_lock&2))
 //        vel += -keymove;
 
 //    if (vel < -MAXVEL) vel = -MAXVEL;
@@ -2881,7 +2881,7 @@ var g_myAimMode = 0, g_myAimStat = 0, g_oldAimStat = 0; //int32_t
 //    if (BUTTON(gamefunc_Next_Weapon) || (BUTTON(gamefunc_Dpad_Select) && vel > 0))
 //        j = 12;
 
-//    if (BUTTON(gamefunc_Jump) && p->on_ground)
+//    if (BUTTON(gamefunc_Jump) && p.on_ground)
 //        g_emuJumpTics = 4;
 
 //    loc.bits = (g_emuJumpTics > 0 || BUTTON(gamefunc_Jump))<<SK_JUMP;
@@ -2924,7 +2924,7 @@ var g_myAimMode = 0, g_myAimStat = 0, g_oldAimStat = 0; //int32_t
 //    if (BUTTON(gamefunc_Dpad_Aiming))
 //        vel = 0;
 
-//    if (PWEAPON(snum, g_player[snum].ps->curr_weapon, Flags) & WEAPON_SEMIAUTO && BUTTON(gamefunc_Fire))
+//    if (PWEAPON(snum, g_player[snum].ps.curr_weapon, Flags) & WEAPON_SEMIAUTO && BUTTON(gamefunc_Fire))
 //        CONTROL_ClearButton(gamefunc_Fire);
 
 //    loc.extbits = 0;
@@ -2940,7 +2940,7 @@ var g_myAimMode = 0, g_myAimStat = 0, g_oldAimStat = 0; //int32_t
 //        loc.extbits |= BUTTON(gamefunc_Turn_Right)<<5;
 
 //    // used for changing team
-//    loc.extbits |= (g_player[snum].pteam != g_player[snum].ps->team)<<6;
+//    loc.extbits |= (g_player[snum].pteam != g_player[snum].ps.team)<<6;
 
 //    if (ud.scrollmode && ud.overhead_on)
 //    {
@@ -2950,7 +2950,7 @@ var g_myAimMode = 0, g_myAimStat = 0, g_oldAimStat = 0; //int32_t
 //        return;
 //    }
 
-//    daang = p->ang;
+//    daang = p.ang;
 
 //    momx = mulscale9(vel,sintable[(daang+2560)&2047]);
 //    momy = mulscale9(vel,sintable[(daang+2048)&2047]);
@@ -2970,200 +2970,200 @@ var g_myAimMode = 0, g_myAimStat = 0, g_oldAimStat = 0; //int32_t
 
 //static int32_t P_DoCounters(DukePlayer_t *p)
 //{
-//    int32_t snum = sprite[p->i].yvel;
+//    int32_t snum = sprite[p.i].yvel;
 
-////        j = g_player[snum].sync->avel;
-////        p->weapon_ang = -(j/5);
+////        j = g_player[snum].sync.avel;
+////        p.weapon_ang = -(j/5);
 
 //    if (snum < 0) return 1;
 
-//    if (p->invdisptime > 0)
-//        p->invdisptime--;
+//    if (p.invdisptime > 0)
+//        p.invdisptime--;
 
-//    if (p->tipincs > 0)
-//        p->tipincs--;
+//    if (p.tipincs > 0)
+//        p.tipincs--;
 
-//    if (p->last_pissed_time > 0)
+//    if (p.last_pissed_time > 0)
 //    {
-//        switch (--p->last_pissed_time)
+//        switch (--p.last_pissed_time)
 //        {
 //        case GAMETICSPERSEC*219:
 //            {
-//                A_PlaySound(FLUSH_TOILET,p->i);
+//                A_PlaySound(FLUSH_TOILET,p.i);
 //                if (snum == screenpeek || GTFLAGS(GAMETYPE_COOPSOUND))
-//                    A_PlaySound(DUKE_PISSRELIEF,p->i);
+//                    A_PlaySound(DUKE_PISSRELIEF,p.i);
 //            }
 //            break;
 //        case GAMETICSPERSEC*218:
 //            {
-//                p->holster_weapon = 0;
-//                p->weapon_pos = WEAPON_POS_RAISE;
+//                p.holster_weapon = 0;
+//                p.weapon_pos = WEAPON_POS_RAISE;
 //            }
 //            break;
 //        }
 //    }
 
-//    if (p->crack_time > 0)
+//    if (p.crack_time > 0)
 //    {
-//        if (--p->crack_time == 0)
+//        if (--p.crack_time == 0)
 //        {
-//            p->knuckle_incs = 1;
-//            p->crack_time = 777;
+//            p.knuckle_incs = 1;
+//            p.crack_time = 777;
 //        }
 //    }
 
-//    if (p->inv_amount[GET_STEROIDS] > 0 && p->inv_amount[GET_STEROIDS] < 400)
+//    if (p.inv_amount[GET_STEROIDS] > 0 && p.inv_amount[GET_STEROIDS] < 400)
 //    {
-//        if (--p->inv_amount[GET_STEROIDS] == 0)
+//        if (--p.inv_amount[GET_STEROIDS] == 0)
 //            P_SelectNextInvItem(p);
 
-//        if (!(p->inv_amount[GET_STEROIDS]&7))
+//        if (!(p.inv_amount[GET_STEROIDS]&7))
 //            if (snum == screenpeek || GTFLAGS(GAMETYPE_COOPSOUND))
-//                A_PlaySound(DUKE_HARTBEAT,p->i);
+//                A_PlaySound(DUKE_HARTBEAT,p.i);
 //    }
 
-//    if (p->heat_on && p->inv_amount[GET_HEATS] > 0)
+//    if (p.heat_on && p.inv_amount[GET_HEATS] > 0)
 //    {
-//        if (--p->inv_amount[GET_HEATS] == 0)
+//        if (--p.inv_amount[GET_HEATS] == 0)
 //        {
-//            p->heat_on = 0;
+//            p.heat_on = 0;
 //            P_SelectNextInvItem(p);
-//            A_PlaySound(NITEVISION_ONOFF,p->i);
+//            A_PlaySound(NITEVISION_ONOFF,p.i);
 //            P_UpdateScreenPal(p);
 //        }
 //    }
 
-//    if (p->holoduke_on >= 0)
+//    if (p.holoduke_on >= 0)
 //    {
-//        if (--p->inv_amount[GET_HOLODUKE] <= 0)
+//        if (--p.inv_amount[GET_HOLODUKE] <= 0)
 //        {
-//            A_PlaySound(TELEPORTER,p->i);
-//            p->holoduke_on = -1;
+//            A_PlaySound(TELEPORTER,p.i);
+//            p.holoduke_on = -1;
 //            P_SelectNextInvItem(p);
 //        }
 //    }
 
-//    if (p->jetpack_on && p->inv_amount[GET_JETPACK] > 0)
+//    if (p.jetpack_on && p.inv_amount[GET_JETPACK] > 0)
 //    {
-//        if (--p->inv_amount[GET_JETPACK] <= 0)
+//        if (--p.inv_amount[GET_JETPACK] <= 0)
 //        {
-//            p->jetpack_on = 0;
+//            p.jetpack_on = 0;
 //            P_SelectNextInvItem(p);
-//            A_PlaySound(DUKE_JETPACK_OFF,p->i);
-//            S_StopEnvSound(DUKE_JETPACK_IDLE,p->i);
-//            S_StopEnvSound(DUKE_JETPACK_ON,p->i);
+//            A_PlaySound(DUKE_JETPACK_OFF,p.i);
+//            S_StopEnvSound(DUKE_JETPACK_IDLE,p.i);
+//            S_StopEnvSound(DUKE_JETPACK_ON,p.i);
 //        }
 //    }
 
-//    if (p->quick_kick > 0 && sprite[p->i].pal != 1)
+//    if (p.quick_kick > 0 && sprite[p.i].pal != 1)
 //    {
-//        p->last_quick_kick = p->quick_kick+1;
+//        p.last_quick_kick = p.quick_kick+1;
 
-//        if (--p->quick_kick == 8)
-//            A_Shoot(p->i,KNEE);
+//        if (--p.quick_kick == 8)
+//            A_Shoot(p.i,KNEE);
 //    }
-//    else if (p->last_quick_kick > 0) p->last_quick_kick--;
+//    else if (p.last_quick_kick > 0) p.last_quick_kick--;
 
-//    if (p->access_incs && sprite[p->i].pal != 1)
+//    if (p.access_incs && sprite[p.i].pal != 1)
 //    {
-//        p->access_incs++;
-//        if (sprite[p->i].extra <= 0)
-//            p->access_incs = 12;
+//        p.access_incs++;
+//        if (sprite[p.i].extra <= 0)
+//            p.access_incs = 12;
 
-//        if (p->access_incs == 12)
+//        if (p.access_incs == 12)
 //        {
-//            if (p->access_spritenum >= 0)
+//            if (p.access_spritenum >= 0)
 //            {
-//                P_ActivateSwitch(snum,p->access_spritenum,1);
-//                switch (sprite[p->access_spritenum].pal)
+//                P_ActivateSwitch(snum,p.access_spritenum,1);
+//                switch (sprite[p.access_spritenum].pal)
 //                {
 //                case 0:
-//                    p->got_access &= (0xffff-0x1);
+//                    p.got_access &= (0xffff-0x1);
 //                    break;
 //                case 21:
-//                    p->got_access &= (0xffff-0x2);
+//                    p.got_access &= (0xffff-0x2);
 //                    break;
 //                case 23:
-//                    p->got_access &= (0xffff-0x4);
+//                    p.got_access &= (0xffff-0x4);
 //                    break;
 //                }
-//                p->access_spritenum = -1;
+//                p.access_spritenum = -1;
 //            }
 //            else
 //            {
-//                P_ActivateSwitch(snum,p->access_wallnum,0);
-//                switch (wall[p->access_wallnum].pal)
+//                P_ActivateSwitch(snum,p.access_wallnum,0);
+//                switch (wall[p.access_wallnum].pal)
 //                {
 //                case 0:
-//                    p->got_access &= (0xffff-0x1);
+//                    p.got_access &= (0xffff-0x1);
 //                    break;
 //                case 21:
-//                    p->got_access &= (0xffff-0x2);
+//                    p.got_access &= (0xffff-0x2);
 //                    break;
 //                case 23:
-//                    p->got_access &= (0xffff-0x4);
+//                    p.got_access &= (0xffff-0x4);
 //                    break;
 //                }
 //            }
 //        }
 
-//        if (p->access_incs > 20)
+//        if (p.access_incs > 20)
 //        {
-//            p->access_incs = 0;
-//            p->weapon_pos = WEAPON_POS_RAISE;
-//            p->kickback_pic = 0;
+//            p.access_incs = 0;
+//            p.weapon_pos = WEAPON_POS_RAISE;
+//            p.kickback_pic = 0;
 //        }
 //    }
 
-//    if (p->cursectnum >= 0 && p->scuba_on == 0 && sector[p->cursectnum].lotag == ST_2_UNDERWATER)
+//    if (p.cursectnum >= 0 && p.scuba_on == 0 && sector[p.cursectnum].lotag == ST_2_UNDERWATER)
 //    {
-//        if (p->inv_amount[GET_SCUBA] > 0)
+//        if (p.inv_amount[GET_SCUBA] > 0)
 //        {
-//            p->scuba_on = 1;
-//            p->inven_icon = ICON_SCUBA;
+//            p.scuba_on = 1;
+//            p.inven_icon = ICON_SCUBA;
 //            P_DoQuote(QUOTE_SCUBA_ON,p);
 //        }
 //        else
 //        {
-//            if (p->airleft > 0)
-//                p->airleft--;
+//            if (p.airleft > 0)
+//                p.airleft--;
 //            else
 //            {
-//                p->extra_extra8 += 32;
-//                if (p->last_extra < (p->max_player_health>>1) && (p->last_extra&3) == 0)
-//                    A_PlaySound(DUKE_LONGTERM_PAIN,p->i);
+//                p.extra_extra8 += 32;
+//                if (p.last_extra < (p.max_player_health>>1) && (p.last_extra&3) == 0)
+//                    A_PlaySound(DUKE_LONGTERM_PAIN,p.i);
 //            }
 //        }
 //    }
-//    else if (p->inv_amount[GET_SCUBA] > 0 && p->scuba_on)
+//    else if (p.inv_amount[GET_SCUBA] > 0 && p.scuba_on)
 //    {
-//        p->inv_amount[GET_SCUBA]--;
-//        if (p->inv_amount[GET_SCUBA] == 0)
+//        p.inv_amount[GET_SCUBA]--;
+//        if (p.inv_amount[GET_SCUBA] == 0)
 //        {
-//            p->scuba_on = 0;
+//            p.scuba_on = 0;
 //            P_SelectNextInvItem(p);
 //        }
 //    }
 
-//    if (p->knuckle_incs)
+//    if (p.knuckle_incs)
 //    {
-//        if (++p->knuckle_incs == 10)
+//        if (++p.knuckle_incs == 10)
 //        {
 //            if (totalclock > 1024)
 //                if (snum == screenpeek || GTFLAGS(GAMETYPE_COOPSOUND))
 //                {
 
 //                    if (rand()&1)
-//                        A_PlaySound(DUKE_CRACK,p->i);
-//                    else A_PlaySound(DUKE_CRACK2,p->i);
+//                        A_PlaySound(DUKE_CRACK,p.i);
+//                    else A_PlaySound(DUKE_CRACK2,p.i);
 
 //                }
 
-//            A_PlaySound(DUKE_CRACK_FIRST,p->i);
+//            A_PlaySound(DUKE_CRACK_FIRST,p.i);
 
 //        }
-//        else if (p->knuckle_incs == 22 || TEST_SYNC_KEY(g_player[snum].sync->bits, SK_FIRE))
-//            p->knuckle_incs=0;
+//        else if (p.knuckle_incs == 22 || TEST_SYNC_KEY(g_player[snum].sync.bits, SK_FIRE))
+//            p.knuckle_incs=0;
 
 //        return 1;
 //    }
@@ -3177,80 +3177,80 @@ var WeaponPickupSprites = new Int16Array([ KNEE__STATIC, FIRSTGUNSPRITE__STATIC,
 //// this is used for player deaths
 //void P_DropWeapon(DukePlayer_t *p)
 //{
-//    int32_t snum = sprite[p->i].yvel,
-//            cw = PWEAPON(snum, p->curr_weapon, WorksLike);
+//    int32_t snum = sprite[p.i].yvel,
+//            cw = PWEAPON(snum, p.curr_weapon, WorksLike);
 
 //    if ((unsigned)cw >= MAX_WEAPONS) return;
       
 //    if (krand()&1)
-//        A_Spawn(p->i, WeaponPickupSprites[cw]);
+//        A_Spawn(p.i, WeaponPickupSprites[cw]);
 //    else switch (cw)
 //        {
 //        case RPG_WEAPON:
 //        case HANDBOMB_WEAPON:
-//            A_Spawn(p->i, EXPLOSION2);
+//            A_Spawn(p.i, EXPLOSION2);
 //            break;
 //        }
 //}
 
 //void P_AddAmmo(int32_t weapon,DukePlayer_t *p,int32_t amount)
 //{
-//    p->ammo_amount[weapon] += amount;
+//    p.ammo_amount[weapon] += amount;
 
-//    if (p->ammo_amount[weapon] > p->max_ammo_amount[weapon])
-//        p->ammo_amount[weapon] = p->max_ammo_amount[weapon];
+//    if (p.ammo_amount[weapon] > p.max_ammo_amount[weapon])
+//        p.ammo_amount[weapon] = p.max_ammo_amount[weapon];
 //}
 
 //void P_AddWeaponNoSwitch(DukePlayer_t *p, int32_t weapon)
 //{
-//    int32_t snum = sprite[p->i].yvel;
+//    int32_t snum = sprite[p.i].yvel;
 
-//    if ((p->gotweapon & (1<<weapon)) == 0)
+//    if ((p.gotweapon & (1<<weapon)) == 0)
 //    {
-//        p->gotweapon |= (1<<weapon);
+//        p.gotweapon |= (1<<weapon);
 
 //        if (weapon == SHRINKER_WEAPON)
-//            p->gotweapon |= (1<<GROW_WEAPON);
+//            p.gotweapon |= (1<<GROW_WEAPON);
 //    }
 
-//    if (PWEAPON(snum, p->curr_weapon, SelectSound) > 0)
-//        S_StopEnvSound(PWEAPON(snum, p->curr_weapon, SelectSound),p->i);
+//    if (PWEAPON(snum, p.curr_weapon, SelectSound) > 0)
+//        S_StopEnvSound(PWEAPON(snum, p.curr_weapon, SelectSound),p.i);
 
 //    if (PWEAPON(snum, weapon, SelectSound) > 0)
-//        A_PlaySound(PWEAPON(snum, weapon, SelectSound),p->i);
+//        A_PlaySound(PWEAPON(snum, weapon, SelectSound),p.i);
 //}
 
 //void P_ChangeWeapon(DukePlayer_t *p,int32_t weapon)
 //{
-//    int32_t i = 0, snum = sprite[p->i].yvel;
-//    int8_t curr_weapon = p->curr_weapon;
+//    int32_t i = 0, snum = sprite[p.i].yvel;
+//    int8_t curr_weapon = p.curr_weapon;
 
-//    if (p->reloading) return;
+//    if (p.reloading) return;
 
-//    if (p->curr_weapon != weapon && G_HaveEvent(EVENT_CHANGEWEAPON))
-//        i = VM_OnEvent(EVENT_CHANGEWEAPON,p->i, snum, -1, weapon);
+//    if (p.curr_weapon != weapon && G_HaveEvent(EVENT_CHANGEWEAPON))
+//        i = VM_OnEvent(EVENT_CHANGEWEAPON,p.i, snum, -1, weapon);
 
 //    if (i == -1)
 //        return;
 //    else if (i != -2)
-//        p->curr_weapon = weapon;
+//        p.curr_weapon = weapon;
 
-//    p->last_weapon = curr_weapon;
+//    p.last_weapon = curr_weapon;
 
-//    p->random_club_frame = 0;
+//    p.random_club_frame = 0;
 
-//    if (p->weapon_pos == 0)
-//        p->weapon_pos = -1;
-//    else p->weapon_pos = WEAPON_POS_LOWER;
+//    if (p.weapon_pos == 0)
+//        p.weapon_pos = -1;
+//    else p.weapon_pos = WEAPON_POS_LOWER;
 
-//    if (p->holster_weapon)
+//    if (p.holster_weapon)
 //    {
-//        p->weapon_pos = WEAPON_POS_RAISE;
-//        p->holster_weapon = 0;
-//        p->last_weapon = -1;
+//        p.weapon_pos = WEAPON_POS_RAISE;
+//        p.holster_weapon = 0;
+//        p.last_weapon = -1;
 //    }
 
-//    p->kickback_pic = 0;
+//    p.kickback_pic = 0;
 
 //    P_SetWeaponGamevars(snum, p);
 //}
@@ -3263,48 +3263,48 @@ var WeaponPickupSprites = new Int16Array([ KNEE__STATIC, FIRSTGUNSPRITE__STATIC,
 
 //void P_SelectNextInvItem(DukePlayer_t *p)
 //{
-//    if (p->inv_amount[GET_FIRSTAID] > 0)
-//        p->inven_icon = ICON_FIRSTAID;
-//    else if (p->inv_amount[GET_STEROIDS] > 0)
-//        p->inven_icon = ICON_STEROIDS;
-//    else if (p->inv_amount[GET_JETPACK] > 0)
-//        p->inven_icon = ICON_JETPACK;
-//    else if (p->inv_amount[GET_HOLODUKE] > 0)
-//        p->inven_icon = ICON_HOLODUKE;
-//    else if (p->inv_amount[GET_HEATS] > 0)
-//        p->inven_icon = ICON_HEATS;
-//    else if (p->inv_amount[GET_SCUBA] > 0)
-//        p->inven_icon = ICON_SCUBA;
-//    else if (p->inv_amount[GET_BOOTS] > 0)
-//        p->inven_icon = ICON_BOOTS;
-//    else p->inven_icon = ICON_NONE;
+//    if (p.inv_amount[GET_FIRSTAID] > 0)
+//        p.inven_icon = ICON_FIRSTAID;
+//    else if (p.inv_amount[GET_STEROIDS] > 0)
+//        p.inven_icon = ICON_STEROIDS;
+//    else if (p.inv_amount[GET_JETPACK] > 0)
+//        p.inven_icon = ICON_JETPACK;
+//    else if (p.inv_amount[GET_HOLODUKE] > 0)
+//        p.inven_icon = ICON_HOLODUKE;
+//    else if (p.inv_amount[GET_HEATS] > 0)
+//        p.inven_icon = ICON_HEATS;
+//    else if (p.inv_amount[GET_SCUBA] > 0)
+//        p.inven_icon = ICON_SCUBA;
+//    else if (p.inv_amount[GET_BOOTS] > 0)
+//        p.inven_icon = ICON_BOOTS;
+//    else p.inven_icon = ICON_NONE;
 //}
 
 //void P_CheckWeapon(DukePlayer_t *p)
 //{
 //    int32_t i, snum, weapon;
 
-//    if (p->reloading) return;
+//    if (p.reloading) return;
 
-//    if (p->wantweaponfire >= 0)
+//    if (p.wantweaponfire >= 0)
 //    {
-//        weapon = p->wantweaponfire;
-//        p->wantweaponfire = -1;
+//        weapon = p.wantweaponfire;
+//        p.wantweaponfire = -1;
 
-//        if (weapon == p->curr_weapon) return;
-//        if ((p->gotweapon & (1<<weapon)) && p->ammo_amount[weapon] > 0)
+//        if (weapon == p.curr_weapon) return;
+//        if ((p.gotweapon & (1<<weapon)) && p.ammo_amount[weapon] > 0)
 //        {
 //            P_AddWeapon(p,weapon);
 //            return;
 //        }
 //    }
 
-//    weapon = p->curr_weapon;
+//    weapon = p.curr_weapon;
 
-//    if ((p->gotweapon & (1<<weapon)) && (p->ammo_amount[weapon] > 0 || !(p->weaponswitch & 2)))
+//    if ((p.gotweapon & (1<<weapon)) && (p.ammo_amount[weapon] > 0 || !(p.weaponswitch & 2)))
 //        return;
 
-//    snum = sprite[p->i].yvel;
+//    snum = sprite[p.i].yvel;
 
 //    for (i=0; i<10; i++)
 //    {
@@ -3314,7 +3314,7 @@ var WeaponPickupSprites = new Int16Array([ KNEE__STATIC, FIRSTGUNSPRITE__STATIC,
 //        if (weapon == 0) weapon = 9;
 //        else weapon--;
 
-//        if (weapon == 0 || ((p->gotweapon & (1<<weapon)) && p->ammo_amount[weapon] > 0))
+//        if (weapon == 0 || ((p.gotweapon & (1<<weapon)) && p.ammo_amount[weapon] > 0))
 //            break;
 //    }
 
@@ -3334,7 +3334,7 @@ var WeaponPickupSprites = new Int16Array([ KNEE__STATIC, FIRSTGUNSPRITE__STATIC,
 
 //static void P_CheckTouchDamage(DukePlayer_t *p, int32_t obj)
 //{
-//    if ((obj = VM_OnEvent(EVENT_CHECKTOUCHDAMAGE, p->i, sprite[p->i].yvel, -1, obj)) == -1)
+//    if ((obj = VM_OnEvent(EVENT_CHECKTOUCHDAMAGE, p.i, sprite[p.i].yvel, -1, obj)) == -1)
 //        return;
 
 //    if ((obj&49152) == 49152)
@@ -3343,13 +3343,13 @@ var WeaponPickupSprites = new Int16Array([ KNEE__STATIC, FIRSTGUNSPRITE__STATIC,
 
 //        if (sprite[obj].picnum == CACTUS)
 //        {
-//            if (p->hurt_delay < 8)
+//            if (p.hurt_delay < 8)
 //            {
-//                sprite[p->i].extra -= 5;
+//                sprite[p.i].extra -= 5;
 
-//                p->hurt_delay = 16;
+//                p.hurt_delay = 16;
 //                P_PalFrom(p, 32, 32,0,0);
-//                A_PlaySound(DUKE_LONGTERM_PAIN,p->i);
+//                A_PlaySound(DUKE_LONGTERM_PAIN,p.i);
 //            }
 //        }
 //        return;
@@ -3358,7 +3358,7 @@ var WeaponPickupSprites = new Int16Array([ KNEE__STATIC, FIRSTGUNSPRITE__STATIC,
 //    if ((obj&49152) != 32768) return;
 //    obj &= (MAXWALLS-1);
 
-//    if (p->hurt_delay > 0) p->hurt_delay--;
+//    if (p.hurt_delay > 0) p.hurt_delay--;
 //    else if (wall[obj].cstat&85)
 //    {
 //        int32_t switchpicnum = wall[obj].overpicnum;
@@ -3370,35 +3370,35 @@ var WeaponPickupSprites = new Int16Array([ KNEE__STATIC, FIRSTGUNSPRITE__STATIC,
 //        case W_FORCEFIELD__STATIC:
 //            //        case W_FORCEFIELD+1:
 //            //        case W_FORCEFIELD+2:
-//            sprite[p->i].extra -= 5;
+//            sprite[p.i].extra -= 5;
 
-//            p->hurt_delay = 16;
+//            p.hurt_delay = 16;
 //            P_PalFrom(p, 32, 32,0,0);
 
-//            p->vel.x = -(sintable[(p->ang+512)&2047]<<8);
-//            p->vel.y = -(sintable[(p->ang)&2047]<<8);
-//            A_PlaySound(DUKE_LONGTERM_PAIN,p->i);
+//            p.vel.x = -(sintable[(p.ang+512)&2047]<<8);
+//            p.vel.y = -(sintable[(p.ang)&2047]<<8);
+//            A_PlaySound(DUKE_LONGTERM_PAIN,p.i);
 
 //            {
 //                vec3_t davect;
 
-//                davect.x = p->pos.x+(sintable[(p->ang+512)&2047]>>9);
-//                davect.y = p->pos.y+(sintable[p->ang&2047]>>9);
-//                davect.z = p->pos.z;
-//                A_DamageWall(p->i,obj,&davect,-1);
+//                davect.x = p.pos.x+(sintable[(p.ang+512)&2047]>>9);
+//                davect.y = p.pos.y+(sintable[p.ang&2047]>>9);
+//                davect.z = p.pos.z;
+//                A_DamageWall(p.i,obj,&davect,-1);
 //            }
 
 //            break;
 
 //        case BIGFORCE__STATIC:
-//            p->hurt_delay = GAMETICSPERSEC;
+//            p.hurt_delay = GAMETICSPERSEC;
 //            {
 //                vec3_t davect;
 
-//                davect.x = p->pos.x+(sintable[(p->ang+512)&2047]>>9);
-//                davect.y = p->pos.y+(sintable[p->ang&2047]>>9);
-//                davect.z = p->pos.z;
-//                A_DamageWall(p->i,obj,&davect,-1);
+//                davect.x = p.pos.x+(sintable[(p.ang+512)&2047]>>9);
+//                davect.y = p.pos.y+(sintable[p.ang&2047]>>9);
+//                davect.z = p.pos.z;
+//                A_DamageWall(p.i,obj,&davect,-1);
 //            }
 //            break;
 
@@ -3408,9 +3408,9 @@ var WeaponPickupSprites = new Int16Array([ KNEE__STATIC, FIRSTGUNSPRITE__STATIC,
 
 //static int32_t P_CheckFloorDamage(DukePlayer_t *p, int32_t tex)
 //{
-//    spritetype *s = &sprite[p->i];
+//    spritetype *s = &sprite[p.i];
 
-//    if ((unsigned)(tex = VM_OnEvent(EVENT_CHECKFLOORDAMAGE, p->i, sprite[p->i].yvel, -1, tex)) >= MAXTILES)
+//    if ((unsigned)(tex = VM_OnEvent(EVENT_CHECKFLOORDAMAGE, p.i, sprite[p.i].yvel, -1, tex)) >= MAXTILES)
 //        return 0;
 
 //    switch (DYNAMICTILEMAP(tex))
@@ -3418,18 +3418,18 @@ var WeaponPickupSprites = new Int16Array([ KNEE__STATIC, FIRSTGUNSPRITE__STATIC,
 //    case HURTRAIL__STATIC:
 //        if (rnd(32))
 //        {
-//            if (p->inv_amount[GET_BOOTS] > 0)
+//            if (p.inv_amount[GET_BOOTS] > 0)
 //                return 1;
 //            else
 //            {
-//                if (!A_CheckSoundPlaying(p->i,DUKE_LONGTERM_PAIN))
-//                    A_PlaySound(DUKE_LONGTERM_PAIN,p->i);
+//                if (!A_CheckSoundPlaying(p.i,DUKE_LONGTERM_PAIN))
+//                    A_PlaySound(DUKE_LONGTERM_PAIN,p.i);
 
 //                P_PalFrom(p, 32, 64,64,64);
 
-//                s->extra -= 1+(krand()&3);
-//                if (!A_CheckSoundPlaying(p->i,SHORT_CIRCUIT))
-//                    A_PlaySound(SHORT_CIRCUIT,p->i);
+//                s.extra -= 1+(krand()&3);
+//                if (!A_CheckSoundPlaying(p.i,SHORT_CIRCUIT))
+//                    A_PlaySound(SHORT_CIRCUIT,p.i);
 
 //                return 0;
 //            }
@@ -3438,15 +3438,15 @@ var WeaponPickupSprites = new Int16Array([ KNEE__STATIC, FIRSTGUNSPRITE__STATIC,
 //    case FLOORSLIME__STATIC:
 //        if (rnd(16))
 //        {
-//            if (p->inv_amount[GET_BOOTS] > 0)
+//            if (p.inv_amount[GET_BOOTS] > 0)
 //                return 1;
 //            else
 //            {
-//                if (!A_CheckSoundPlaying(p->i,DUKE_LONGTERM_PAIN))
-//                    A_PlaySound(DUKE_LONGTERM_PAIN,p->i);
+//                if (!A_CheckSoundPlaying(p.i,DUKE_LONGTERM_PAIN))
+//                    A_PlaySound(DUKE_LONGTERM_PAIN,p.i);
 
 //                P_PalFrom(p, 32, 0,8,0);
-//                s->extra -= 1+(krand()&3);
+//                s.extra -= 1+(krand()&3);
 
 //                return 0;
 //            }
@@ -3455,15 +3455,15 @@ var WeaponPickupSprites = new Int16Array([ KNEE__STATIC, FIRSTGUNSPRITE__STATIC,
 //    case FLOORPLASMA__STATIC:
 //        if (rnd(32))
 //        {
-//            if (p->inv_amount[GET_BOOTS] > 0)
+//            if (p.inv_amount[GET_BOOTS] > 0)
 //                return 1;
 //            else
 //            {
-//                if (!A_CheckSoundPlaying(p->i,DUKE_LONGTERM_PAIN))
-//                    A_PlaySound(DUKE_LONGTERM_PAIN,p->i);
+//                if (!A_CheckSoundPlaying(p.i,DUKE_LONGTERM_PAIN))
+//                    A_PlaySound(DUKE_LONGTERM_PAIN,p.i);
 
 //                P_PalFrom(p, 32, 8,0,0);
-//                s->extra -= 1+(krand()&3);
+//                s.extra -= 1+(krand()&3);
 
 //                return 0;
 //            }
@@ -3481,11 +3481,11 @@ var WeaponPickupSprites = new Int16Array([ KNEE__STATIC, FIRSTGUNSPRITE__STATIC,
 //    int32_t x, closest = INT32_MAX;
 
 //    for (TRAVERSE_CONNECT(j))
-//        if (p != j && sprite[g_player[j].ps->i].extra > 0)
+//        if (p != j && sprite[g_player[j].ps.i].extra > 0)
 //        {
-//            x = klabs(g_player[j].ps->opos.x-g_player[p].ps->pos.x) +
-//                klabs(g_player[j].ps->opos.y-g_player[p].ps->pos.y) +
-//                (klabs(g_player[j].ps->opos.z-g_player[p].ps->pos.z)>>4);
+//            x = klabs(g_player[j].ps.opos.x-g_player[p].ps.pos.x) +
+//                klabs(g_player[j].ps.opos.y-g_player[p].ps.pos.y) +
+//                (klabs(g_player[j].ps.opos.z-g_player[p].ps.pos.z)>>4);
 
 //            if (x < closest)
 //            {
@@ -3501,28 +3501,28 @@ var WeaponPickupSprites = new Int16Array([ KNEE__STATIC, FIRSTGUNSPRITE__STATIC,
 //void P_FragPlayer(int32_t snum)
 //{
 //    DukePlayer_t *p = g_player[snum].ps;
-//    spritetype *s = &sprite[p->i];
+//    spritetype *s = &sprite[p.i];
 
 //    if (g_netServer || g_netClient)
 //        randomseed = ticrandomseed;
 
-//    if (s->pal != 1)
+//    if (s.pal != 1)
 //    {
 //        P_PalFrom(p, 63, 63,0,0);
 
-//        p->pos.z -= (16<<8);
-//        s->z -= (16<<8);
+//        p.pos.z -= (16<<8);
+//        s.z -= (16<<8);
 
-//        p->dead_flag = (512-((krand()&1)<<10)+(krand()&255)-512)&2047;
-//        if (p->dead_flag == 0)
-//            p->dead_flag++;
+//        p.dead_flag = (512-((krand()&1)<<10)+(krand()&255)-512)&2047;
+//        if (p.dead_flag == 0)
+//            p.dead_flag++;
 //#ifndef NETCODE_DISABLE
 //        if (g_netServer)
 //        {
 //            packbuf[0] = PACKET_FRAG;
 //            packbuf[1] = snum;
-//            packbuf[2] = p->frag_ps;
-//            packbuf[3] = actor[p->i].picnum;
+//            packbuf[2] = p.frag_ps;
+//            packbuf[3] = actor[p.i].picnum;
 //            *(int32_t *)&packbuf[4] = ticrandomseed;
 //            packbuf[8] = myconnectindex;
 
@@ -3531,48 +3531,48 @@ var WeaponPickupSprites = new Int16Array([ KNEE__STATIC, FIRSTGUNSPRITE__STATIC,
 //#endif
 //    }
 
-//    p->jetpack_on = 0;
-//    p->holoduke_on = -1;
+//    p.jetpack_on = 0;
+//    p.holoduke_on = -1;
 
-//    S_StopEnvSound(DUKE_JETPACK_IDLE,p->i);
-//    if (p->scream_voice > FX_Ok)
+//    S_StopEnvSound(DUKE_JETPACK_IDLE,p.i);
+//    if (p.scream_voice > FX_Ok)
 //    {
-//        FX_StopSound(p->scream_voice);
+//        FX_StopSound(p.scream_voice);
 //        S_Cleanup();
 //        //                S_TestSoundCallback(DUKE_SCREAM);
-//        p->scream_voice = -1;
+//        p.scream_voice = -1;
 //    }
 
-//    if (s->pal != 1 && (s->cstat&32768) == 0) s->cstat = 0;
+//    if (s.pal != 1 && (s.cstat&32768) == 0) s.cstat = 0;
 
-//    if ((g_netServer || ud.multimode > 1) && (s->pal != 1 || (s->cstat&32768)))
+//    if ((g_netServer || ud.multimode > 1) && (s.pal != 1 || (s.cstat&32768)))
 //    {
-//        if (p->frag_ps != snum)
+//        if (p.frag_ps != snum)
 //        {
-//            if (GTFLAGS(GAMETYPE_TDM) && g_player[p->frag_ps].ps->team == g_player[snum].ps->team)
-//                g_player[p->frag_ps].ps->fraggedself++;
+//            if (GTFLAGS(GAMETYPE_TDM) && g_player[p.frag_ps].ps.team == g_player[snum].ps.team)
+//                g_player[p.frag_ps].ps.fraggedself++;
 //            else
 //            {
-//                g_player[p->frag_ps].ps->frag++;
-//                g_player[p->frag_ps].frags[snum]++;
+//                g_player[p.frag_ps].ps.frag++;
+//                g_player[p.frag_ps].frags[snum]++;
 //                g_player[snum].frags[snum]++; // deaths
 //            }
 
 //            if (snum == screenpeek)
 //            {
-//                Bsprintf(ScriptQuotes[QUOTE_RESERVED],"Killed by %s",&g_player[p->frag_ps].user_name[0]);
+//                Bsprintf(ScriptQuotes[QUOTE_RESERVED],"Killed by %s",&g_player[p.frag_ps].user_name[0]);
 //                P_DoQuote(QUOTE_RESERVED,p);
 //            }
 //            else
 //            {
 //                Bsprintf(ScriptQuotes[QUOTE_RESERVED2],"Killed %s",&g_player[snum].user_name[0]);
-//                P_DoQuote(QUOTE_RESERVED2,g_player[p->frag_ps].ps);
+//                P_DoQuote(QUOTE_RESERVED2,g_player[p.frag_ps].ps);
 //            }
 
 //            if (ud.obituaries)
 //            {
 //                Bsprintf(tempbuf,ScriptQuotes[OBITQUOTEINDEX+(krand()%g_numObituaries)],
-//                         &g_player[p->frag_ps].user_name[0],
+//                         &g_player[p.frag_ps].user_name[0],
 //                         &g_player[snum].user_name[0]);
 //                G_AddUserQuote(tempbuf);
 //            }
@@ -3580,12 +3580,12 @@ var WeaponPickupSprites = new Int16Array([ KNEE__STATIC, FIRSTGUNSPRITE__STATIC,
 //        }
 //        else
 //        {
-//            if (actor[p->i].picnum != APLAYERTOP)
+//            if (actor[p.i].picnum != APLAYERTOP)
 //            {
-//                p->fraggedself++;
-//                if ((unsigned)p->wackedbyactor < MAXTILES && A_CheckEnemyTile(sprite[p->wackedbyactor].picnum))
+//                p.fraggedself++;
+//                if ((unsigned)p.wackedbyactor < MAXTILES && A_CheckEnemyTile(sprite[p.wackedbyactor].picnum))
 //                    Bsprintf(tempbuf,ScriptQuotes[OBITQUOTEINDEX+(krand()%g_numObituaries)],"A monster",&g_player[snum].user_name[0]);
-//                else if (actor[p->i].picnum == NUKEBUTTON)
+//                else if (actor[p.i].picnum == NUKEBUTTON)
 //                    Bsprintf(tempbuf,"^02%s^02 tried to leave",&g_player[snum].user_name[0]);
 //                else
 //                {
@@ -3593,18 +3593,18 @@ var WeaponPickupSprites = new Int16Array([ KNEE__STATIC, FIRSTGUNSPRITE__STATIC,
 //                    Bsprintf(tempbuf,ScriptQuotes[SUICIDEQUOTEINDEX+(krand()%g_numSelfObituaries)],&g_player[snum].user_name[0]);
 //                }
 //            }
-//            else Bsprintf(tempbuf,"^02%s^02 switched to team %d",&g_player[snum].user_name[0],p->team+1);
+//            else Bsprintf(tempbuf,"^02%s^02 switched to team %d",&g_player[snum].user_name[0],p.team+1);
 
 //            if (ud.obituaries)
 //                G_AddUserQuote(tempbuf);
 //        }
-//        p->frag_ps = snum;
+//        p.frag_ps = snum;
 //        pus = NUMPAGES;
 //    }
 //}
 
 //#ifdef LUNATIC
-//# define PIPEBOMB_CONTROL(snum) (g_player[snum].ps->pipebombControl)
+//# define PIPEBOMB_CONTROL(snum) (g_player[snum].ps.pipebombControl)
 //#else
 //# define PIPEBOMB_CONTROL(snum) (Gv_GetVarByLabel("PIPEBOMB_CONTROL", PIPEBOMB_REMOTE, -1, snum))
 //#endif
@@ -3612,26 +3612,26 @@ var WeaponPickupSprites = new Int16Array([ KNEE__STATIC, FIRSTGUNSPRITE__STATIC,
 //static void P_ProcessWeapon(int32_t snum)
 //{
 //    DukePlayer_t *const p = g_player[snum].ps;
-//    uint8_t *const kb = &p->kickback_pic;
-//    const int32_t shrunk = (sprite[p->i].yrepeat < 32);
-//    uint32_t sb_snum = g_player[snum].sync->bits;
+//    uint8_t *const kb = &p.kickback_pic;
+//    const int32_t shrunk = (sprite[p.i].yrepeat < 32);
+//    uint32_t sb_snum = g_player[snum].sync.bits;
 //    int32_t i, j, k;
 
-//    switch (p->weapon_pos)
+//    switch (p.weapon_pos)
 //    {
 //    case -9:
-//        if (p->last_weapon >= 0)
+//        if (p.last_weapon >= 0)
 //        {
-//            p->weapon_pos = WEAPON_POS_RAISE;
-//            p->last_weapon = -1;
+//            p.weapon_pos = WEAPON_POS_RAISE;
+//            p.last_weapon = -1;
 //        }
-//        else if (p->holster_weapon == 0)
-//            p->weapon_pos = WEAPON_POS_RAISE;
+//        else if (p.holster_weapon == 0)
+//            p.weapon_pos = WEAPON_POS_RAISE;
 //        break;
 //    case 0:
 //        break;
 //    default:
-//        p->weapon_pos--;
+//        p.weapon_pos--;
 //        break;
 //    }
 
@@ -3639,7 +3639,7 @@ var WeaponPickupSprites = new Int16Array([ KNEE__STATIC, FIRSTGUNSPRITE__STATIC,
 //    {
 //        P_SetWeaponGamevars(snum, p);
         
-//        if (VM_OnEvent(EVENT_PRESSEDFIRE, p->i, snum, -1, 0) != 0)
+//        if (VM_OnEvent(EVENT_PRESSEDFIRE, p.i, snum, -1, 0) != 0)
 //            sb_snum &= ~BIT(SK_FIRE);
 //    }
 
@@ -3647,32 +3647,32 @@ var WeaponPickupSprites = new Int16Array([ KNEE__STATIC, FIRSTGUNSPRITE__STATIC,
 //    {
 //        P_SetWeaponGamevars(snum, p);
         
-//        if (VM_OnEvent(EVENT_HOLSTER, p->i, snum, -1, 0) == 0)
+//        if (VM_OnEvent(EVENT_HOLSTER, p.i, snum, -1, 0) == 0)
 //        {
-//            if (PWEAPON(0, p->curr_weapon, WorksLike) != KNEE_WEAPON)
+//            if (PWEAPON(0, p.curr_weapon, WorksLike) != KNEE_WEAPON)
 //            {
-//                if (p->holster_weapon == 0 && p->weapon_pos == 0)
+//                if (p.holster_weapon == 0 && p.weapon_pos == 0)
 //                {
-//                    p->holster_weapon = 1;
-//                    p->weapon_pos = -1;
+//                    p.holster_weapon = 1;
+//                    p.weapon_pos = -1;
 //                    P_DoQuote(QUOTE_WEAPON_LOWERED,p);
 //                }
-//                else if (p->holster_weapon == 1 && p->weapon_pos == WEAPON_POS_LOWER)
+//                else if (p.holster_weapon == 1 && p.weapon_pos == WEAPON_POS_LOWER)
 //                {
-//                    p->holster_weapon = 0;
-//                    p->weapon_pos = WEAPON_POS_RAISE;
+//                    p.holster_weapon = 0;
+//                    p.weapon_pos = WEAPON_POS_RAISE;
 //                    P_DoQuote(QUOTE_WEAPON_RAISED,p);
 //                }
 //            }
 
-//            if (PWEAPON(snum, p->curr_weapon, Flags) & WEAPON_HOLSTER_CLEARS_CLIP)
+//            if (PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_HOLSTER_CLEARS_CLIP)
 //            {
-//                if (p->ammo_amount[p->curr_weapon] > PWEAPON(snum, p->curr_weapon, Clip)
-//                        && (p->ammo_amount[p->curr_weapon] % PWEAPON(snum, p->curr_weapon, Clip)) != 0)
+//                if (p.ammo_amount[p.curr_weapon] > PWEAPON(snum, p.curr_weapon, Clip)
+//                        && (p.ammo_amount[p.curr_weapon] % PWEAPON(snum, p.curr_weapon, Clip)) != 0)
 //                {
-//                    p->ammo_amount[p->curr_weapon]-=
-//                        p->ammo_amount[p->curr_weapon] % PWEAPON(snum, p->curr_weapon, Clip) ;
-//                    (*kb) = PWEAPON(snum, p->curr_weapon, TotalTime);
+//                    p.ammo_amount[p.curr_weapon]-=
+//                        p.ammo_amount[p.curr_weapon] % PWEAPON(snum, p.curr_weapon, Clip) ;
+//                    (*kb) = PWEAPON(snum, p.curr_weapon, TotalTime);
 //                    sb_snum &= ~BIT(SK_FIRE); // not firing...
 //                }
 //                return;
@@ -3680,67 +3680,67 @@ var WeaponPickupSprites = new Int16Array([ KNEE__STATIC, FIRSTGUNSPRITE__STATIC,
 //        }
 //    }
 
-//    if (PWEAPON(snum, p->curr_weapon, Flags) & WEAPON_GLOWS)
+//    if (PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_GLOWS)
 //    {
-//        p->random_club_frame += 64; // Glowing
+//        p.random_club_frame += 64; // Glowing
 
-//        if (p->kickback_pic == 0)
+//        if (p.kickback_pic == 0)
 //        {
-//            spritetype *s = &sprite[p->i];
-//            int32_t x = ((sintable[(s->ang+512)&2047])>>7), y = ((sintable[(s->ang)&2047])>>7);
-//            int32_t r = 1024+(sintable[p->random_club_frame&2047]>>3);
+//            spritetype *s = &sprite[p.i];
+//            int32_t x = ((sintable[(s.ang+512)&2047])>>7), y = ((sintable[(s.ang)&2047])>>7);
+//            int32_t r = 1024+(sintable[p.random_club_frame&2047]>>3);
 
-//            s->x += x;
-//            s->y += y;
-//            G_AddGameLight(0, p->i, PHEIGHT, max(r, 0), PWEAPON(snum, p->curr_weapon, FlashColor),PR_LIGHT_PRIO_HIGH_GAME);
-//            actor[p->i].lightcount = 2;
-//            s->x -= x;
-//            s->y -= y;
+//            s.x += x;
+//            s.y += y;
+//            G_AddGameLight(0, p.i, PHEIGHT, max(r, 0), PWEAPON(snum, p.curr_weapon, FlashColor),PR_LIGHT_PRIO_HIGH_GAME);
+//            actor[p.i].lightcount = 2;
+//            s.x -= x;
+//            s.y -= y;
 //        }
 
 //    }
 
 //    // this is a hack for WEAPON_FIREEVERYOTHER
-//    if (actor[p->i].t_data[7])
+//    if (actor[p.i].t_data[7])
 //    {
-//        actor[p->i].t_data[7]--;
-//        if (p->last_weapon == -1 && actor[p->i].t_data[7] != 0 && ((actor[p->i].t_data[7] & 1) == 0))
+//        actor[p.i].t_data[7]--;
+//        if (p.last_weapon == -1 && actor[p.i].t_data[7] != 0 && ((actor[p.i].t_data[7] & 1) == 0))
 //        {
-//            if (PWEAPON(snum, p->curr_weapon, Flags) & WEAPON_AMMOPERSHOT)
+//            if (PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_AMMOPERSHOT)
 //            {
-//                if (p->ammo_amount[p->curr_weapon] > 0)
-//                    p->ammo_amount[p->curr_weapon]--;
+//                if (p.ammo_amount[p.curr_weapon] > 0)
+//                    p.ammo_amount[p.curr_weapon]--;
 //                else
 //                {
-//                    actor[p->i].t_data[7] = 0;
+//                    actor[p.i].t_data[7] = 0;
 //                    P_CheckWeapon(p);
 //                }
 //            }
 
-//            if (actor[p->i].t_data[7] != 0)
-//                A_Shoot(p->i,PWEAPON(snum, p->curr_weapon, Shoots));
+//            if (actor[p.i].t_data[7] != 0)
+//                A_Shoot(p.i,PWEAPON(snum, p.curr_weapon, Shoots));
 //        }
 //    }
 
-//    if (p->rapid_fire_hold == 1)
+//    if (p.rapid_fire_hold == 1)
 //    {
 //        if (TEST_SYNC_KEY(sb_snum, SK_FIRE)) return;
-//        p->rapid_fire_hold = 0;
+//        p.rapid_fire_hold = 0;
 //    }
 
-//    if (shrunk || p->tipincs || p->access_incs)
+//    if (shrunk || p.tipincs || p.access_incs)
 //        sb_snum &= ~BIT(SK_FIRE);
-//    else if (shrunk == 0 && (sb_snum&(1<<2)) && (*kb) == 0 && p->fist_incs == 0 &&
-//             p->last_weapon == -1 && (p->weapon_pos == 0 || p->holster_weapon == 1))
+//    else if (shrunk == 0 && (sb_snum&(1<<2)) && (*kb) == 0 && p.fist_incs == 0 &&
+//             p.last_weapon == -1 && (p.weapon_pos == 0 || p.holster_weapon == 1))
 //    {
-//        p->crack_time = 777;
+//        p.crack_time = 777;
 
-//        if (p->holster_weapon == 1)
+//        if (p.holster_weapon == 1)
 //        {
-//            if (p->last_pissed_time <= (GAMETICSPERSEC*218) && p->weapon_pos == WEAPON_POS_LOWER)
+//            if (p.last_pissed_time <= (GAMETICSPERSEC*218) && p.weapon_pos == WEAPON_POS_LOWER)
 //            {
-//                p->holster_weapon = 0;
-//                p->weapon_pos = WEAPON_POS_RAISE;
+//                p.holster_weapon = 0;
+//                p.weapon_pos = WEAPON_POS_RAISE;
 //                P_DoQuote(QUOTE_WEAPON_RAISED,p);
 //            }
 //        }
@@ -3748,46 +3748,46 @@ var WeaponPickupSprites = new Int16Array([ KNEE__STATIC, FIRSTGUNSPRITE__STATIC,
 //        {
 //            P_SetWeaponGamevars(snum, p);
 
-//            if (VM_OnEvent(EVENT_FIRE, p->i, snum, -1, 0) == 0)
+//            if (VM_OnEvent(EVENT_FIRE, p.i, snum, -1, 0) == 0)
 //            {
 //                if (G_HaveEvent(EVENT_FIREWEAPON)) // this event is deprecated
-//                    VM_OnEvent(EVENT_FIREWEAPON, p->i, snum, -1, 0);
+//                    VM_OnEvent(EVENT_FIREWEAPON, p.i, snum, -1, 0);
 
-//                switch (PWEAPON(snum, p->curr_weapon, WorksLike))
+//                switch (PWEAPON(snum, p.curr_weapon, WorksLike))
 //                {
 //                case HANDBOMB_WEAPON:
-//                    p->hbomb_hold_delay = 0;
-//                    if (p->ammo_amount[p->curr_weapon] > 0)
+//                    p.hbomb_hold_delay = 0;
+//                    if (p.ammo_amount[p.curr_weapon] > 0)
 //                    {
 //                        (*kb)=1;
-//                        if (PWEAPON(snum, p->curr_weapon, InitialSound) > 0)
-//                            A_PlaySound(PWEAPON(snum, p->curr_weapon, InitialSound), p->i);
+//                        if (PWEAPON(snum, p.curr_weapon, InitialSound) > 0)
+//                            A_PlaySound(PWEAPON(snum, p.curr_weapon, InitialSound), p.i);
 //                    }
 //                    break;
 
 //                case HANDREMOTE_WEAPON:
-//                    p->hbomb_hold_delay = 0;
+//                    p.hbomb_hold_delay = 0;
 //                    (*kb) = 1;
-//                    if (PWEAPON(snum, p->curr_weapon, InitialSound) > 0)
-//                        A_PlaySound(PWEAPON(snum, p->curr_weapon, InitialSound), p->i);
+//                    if (PWEAPON(snum, p.curr_weapon, InitialSound) > 0)
+//                        A_PlaySound(PWEAPON(snum, p.curr_weapon, InitialSound), p.i);
 //                    break;
 
 //                case SHOTGUN_WEAPON:
-//                    if (p->ammo_amount[p->curr_weapon] > 0 && p->random_club_frame == 0)
+//                    if (p.ammo_amount[p.curr_weapon] > 0 && p.random_club_frame == 0)
 //                    {
 //                        (*kb)=1;
-//                        if (PWEAPON(snum, p->curr_weapon, InitialSound) > 0)
-//                            A_PlaySound(PWEAPON(snum, p->curr_weapon, InitialSound), p->i);
+//                        if (PWEAPON(snum, p.curr_weapon, InitialSound) > 0)
+//                            A_PlaySound(PWEAPON(snum, p.curr_weapon, InitialSound), p.i);
 //                    }
 //                    break;
 
 //                case TRIPBOMB_WEAPON:
-//                    if (p->ammo_amount[p->curr_weapon] > 0)
+//                    if (p.ammo_amount[p.curr_weapon] > 0)
 //                    {
 //                        hitdata_t hit;
 //                        hitscan((const vec3_t *)p,
-//                                p->cursectnum, sintable[(p->ang+512)&2047],
-//                                sintable[p->ang&2047], (100-p->horiz-p->horizoff)*32,
+//                                p.cursectnum, sintable[(p.ang+512)&2047],
+//                                sintable[p.ang&2047], (100-p.horiz-p.horizoff)*32,
 //                                &hit,CLIPMASK1);
 
 //                        if (hit.sect < 0 || hit.sprite >= 0)
@@ -3817,15 +3817,15 @@ var WeaponPickupSprites = new Int16Array([ KNEE__STATIC, FIRSTGUNSPRITE__STATIC,
 //                            if ((wall[hit.wall].nextsector >= 0 &&
 //                                    sector[wall[hit.wall].nextsector].lotag <= 2) ||
 //                                    (wall[hit.wall].nextsector == -1 && sector[hit.sect].lotag <= 2))
-//                                if (((hit.pos.x-p->pos.x)*(hit.pos.x-p->pos.x) +
-//                                        (hit.pos.y-p->pos.y)*(hit.pos.y-p->pos.y)) < (290*290))
+//                                if (((hit.pos.x-p.pos.x)*(hit.pos.x-p.pos.x) +
+//                                        (hit.pos.y-p.pos.y)*(hit.pos.y-p.pos.y)) < (290*290))
 //                                {
-//                                    p->pos.z = p->opos.z;
-//                                    p->vel.z = 0;
+//                                    p.pos.z = p.opos.z;
+//                                    p.vel.z = 0;
 //                                    (*kb) = 1;
-//                                    if (PWEAPON(snum, p->curr_weapon, InitialSound) > 0)
+//                                    if (PWEAPON(snum, p.curr_weapon, InitialSound) > 0)
 //                                    {
-//                                        A_PlaySound(PWEAPON(snum, p->curr_weapon, InitialSound), p->i);
+//                                        A_PlaySound(PWEAPON(snum, p.curr_weapon, InitialSound), p.i);
 //                                    }
 //                                }
 //                    }
@@ -3837,30 +3837,30 @@ var WeaponPickupSprites = new Int16Array([ KNEE__STATIC, FIRSTGUNSPRITE__STATIC,
 //                case GROW_WEAPON:
 //                case FREEZE_WEAPON:
 //                case RPG_WEAPON:
-//                    if (p->ammo_amount[p->curr_weapon] > 0)
+//                    if (p.ammo_amount[p.curr_weapon] > 0)
 //                    {
 //                        (*kb) = 1;
-//                        if (PWEAPON(snum, p->curr_weapon, InitialSound) > 0)
-//                            A_PlaySound(PWEAPON(snum, p->curr_weapon, InitialSound), p->i);
+//                        if (PWEAPON(snum, p.curr_weapon, InitialSound) > 0)
+//                            A_PlaySound(PWEAPON(snum, p.curr_weapon, InitialSound), p.i);
 //                    }
 //                    break;
 
 //                case DEVISTATOR_WEAPON:
-//                    if (p->ammo_amount[p->curr_weapon] > 0)
+//                    if (p.ammo_amount[p.curr_weapon] > 0)
 //                    {
 //                        (*kb) = 1;
-//                        p->hbomb_hold_delay = !p->hbomb_hold_delay;
-//                        if (PWEAPON(snum, p->curr_weapon, InitialSound) > 0)
-//                            A_PlaySound(PWEAPON(snum, p->curr_weapon, InitialSound), p->i);
+//                        p.hbomb_hold_delay = !p.hbomb_hold_delay;
+//                        if (PWEAPON(snum, p.curr_weapon, InitialSound) > 0)
+//                            A_PlaySound(PWEAPON(snum, p.curr_weapon, InitialSound), p.i);
 //                    }
 //                    break;
 
 //                case KNEE_WEAPON:
-//                    if (p->quick_kick == 0)
+//                    if (p.quick_kick == 0)
 //                    {
 //                        (*kb) = 1;
-//                        if (PWEAPON(snum, p->curr_weapon, InitialSound) > 0)
-//                            A_PlaySound(PWEAPON(snum, p->curr_weapon, InitialSound), p->i);
+//                        if (PWEAPON(snum, p.curr_weapon, InitialSound) > 0)
+//                            A_PlaySound(PWEAPON(snum, p.curr_weapon, InitialSound), p.i);
 //                    }
 //                    break;
 //                }
@@ -3869,46 +3869,46 @@ var WeaponPickupSprites = new Int16Array([ KNEE__STATIC, FIRSTGUNSPRITE__STATIC,
 //    }
 //    else if (*kb)
 //    {
-//        if (PWEAPON(snum, p->curr_weapon, WorksLike) == HANDBOMB_WEAPON)
+//        if (PWEAPON(snum, p.curr_weapon, WorksLike) == HANDBOMB_WEAPON)
 //        {
-//            if (PWEAPON(snum, p->curr_weapon, HoldDelay) && ((*kb) == PWEAPON(snum, p->curr_weapon, FireDelay)) && TEST_SYNC_KEY(sb_snum, SK_FIRE))
+//            if (PWEAPON(snum, p.curr_weapon, HoldDelay) && ((*kb) == PWEAPON(snum, p.curr_weapon, FireDelay)) && TEST_SYNC_KEY(sb_snum, SK_FIRE))
 //            {
-//                p->rapid_fire_hold = 1;
+//                p.rapid_fire_hold = 1;
 //                return;
 //            }
 
-//            if (++(*kb) == PWEAPON(snum, p->curr_weapon, HoldDelay))
+//            if (++(*kb) == PWEAPON(snum, p.curr_weapon, HoldDelay))
 //            {
-//                p->ammo_amount[p->curr_weapon]--;
+//                p.ammo_amount[p.curr_weapon]--;
 
 //                if (numplayers < 2 || g_netServer)
 //                {
 //                    int32_t lPipeBombControl;
 
-//                    if (p->on_ground && TEST_SYNC_KEY(sb_snum, SK_CROUCH))
+//                    if (p.on_ground && TEST_SYNC_KEY(sb_snum, SK_CROUCH))
 //                    {
 //                        k = 15;
-//                        i = ((p->horiz+p->horizoff-100)*20);
+//                        i = ((p.horiz+p.horizoff-100)*20);
 //                    }
 //                    else
 //                    {
 //                        k = 140;
-//                        i = -512-((p->horiz+p->horizoff-100)*20);
+//                        i = -512-((p.horiz+p.horizoff-100)*20);
 //                    }
 
-//                    j = A_InsertSprite(p->cursectnum,
-//                                       p->pos.x+(sintable[(p->ang+512)&2047]>>6),
-//                                       p->pos.y+(sintable[p->ang&2047]>>6),
-//                                       p->pos.z,PWEAPON(snum, p->curr_weapon, Shoots),-16,9,9,
-//                                       p->ang,(k+(p->hbomb_hold_delay<<5)),i,p->i,1);
+//                    j = A_InsertSprite(p.cursectnum,
+//                                       p.pos.x+(sintable[(p.ang+512)&2047]>>6),
+//                                       p.pos.y+(sintable[p.ang&2047]>>6),
+//                                       p.pos.z,PWEAPON(snum, p.curr_weapon, Shoots),-16,9,9,
+//                                       p.ang,(k+(p.hbomb_hold_delay<<5)),i,p.i,1);
 
 //                    lPipeBombControl = PIPEBOMB_CONTROL(snum);
 
 //                    if (lPipeBombControl & PIPEBOMB_TIMER)
 //                    {
 //#ifdef LUNATIC
-//                        int32_t ltime = g_player[snum].ps->pipebombLifetime;
-//                        int32_t lv = g_player[snum].ps->pipebombLifetimeVar;
+//                        int32_t ltime = g_player[snum].ps.pipebombLifetime;
+//                        int32_t lv = g_player[snum].ps.pipebombLifetimeVar;
 //#else
 //                        int32_t ltime = Gv_GetVarByLabel("GRENADE_LIFETIME", NAM_GRENADE_LIFETIME, -1, snum);
 //                        int32_t lv=Gv_GetVarByLabel("GRENADE_LIFETIME_VAR", NAM_GRENADE_LIFETIME_VAR, -1, snum);
@@ -3926,7 +3926,7 @@ var WeaponPickupSprites = new Int16Array([ KNEE__STATIC, FIRSTGUNSPRITE__STATIC,
 //                        sprite[j].z += (8<<8);
 //                    }
 
-//                    if (A_GetHitscanRange(p->i) < 512)
+//                    if (A_GetHitscanRange(p.i) < 512)
 //                    {
 //                        sprite[j].ang += 1024;
 //                        sprite[j].zvel /= 3;
@@ -3934,46 +3934,46 @@ var WeaponPickupSprites = new Int16Array([ KNEE__STATIC, FIRSTGUNSPRITE__STATIC,
 //                    }
 //                }
 
-//                p->hbomb_on = 1;
+//                p.hbomb_on = 1;
 //            }
-//            else if ((*kb) < PWEAPON(snum, p->curr_weapon, HoldDelay) && TEST_SYNC_KEY(sb_snum, SK_FIRE))
-//                p->hbomb_hold_delay++;
-//            else if ((*kb) > PWEAPON(snum, p->curr_weapon, TotalTime))
+//            else if ((*kb) < PWEAPON(snum, p.curr_weapon, HoldDelay) && TEST_SYNC_KEY(sb_snum, SK_FIRE))
+//                p.hbomb_hold_delay++;
+//            else if ((*kb) > PWEAPON(snum, p.curr_weapon, TotalTime))
 //            {
 //                (*kb) = 0;
-//                p->weapon_pos = WEAPON_POS_RAISE;
+//                p.weapon_pos = WEAPON_POS_RAISE;
 //                if (PIPEBOMB_CONTROL(snum) == PIPEBOMB_REMOTE)
 //                {
-//                    p->curr_weapon = HANDREMOTE_WEAPON;
-//                    p->last_weapon = -1;
+//                    p.curr_weapon = HANDREMOTE_WEAPON;
+//                    p.last_weapon = -1;
 //                }
 //                else P_CheckWeapon(p);
 //            }
 //        }
-//        else if (PWEAPON(snum, p->curr_weapon, WorksLike) == HANDREMOTE_WEAPON)
+//        else if (PWEAPON(snum, p.curr_weapon, WorksLike) == HANDREMOTE_WEAPON)
 //        {
-//            if (++(*kb) == PWEAPON(snum, p->curr_weapon, FireDelay))
+//            if (++(*kb) == PWEAPON(snum, p.curr_weapon, FireDelay))
 //            {
-//                if (PWEAPON(snum, p->curr_weapon, Flags) & WEAPON_BOMB_TRIGGER)
-//                    p->hbomb_on = 0;
+//                if (PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_BOMB_TRIGGER)
+//                    p.hbomb_on = 0;
 
-//                if (PWEAPON(snum, p->curr_weapon, Shoots) != 0)
+//                if (PWEAPON(snum, p.curr_weapon, Shoots) != 0)
 //                {
-//                    if (!(PWEAPON(snum, p->curr_weapon, Flags) & WEAPON_NOVISIBLE))
+//                    if (!(PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_NOVISIBLE))
 //                    {
 //                        lastvisinc = totalclock+32;
-//                        p->visibility = 0;
+//                        p.visibility = 0;
 //                    }
 
 //                    P_SetWeaponGamevars(snum, p);
-//                    A_Shoot(p->i, PWEAPON(snum, p->curr_weapon, Shoots));
+//                    A_Shoot(p.i, PWEAPON(snum, p.curr_weapon, Shoots));
 //                }
 //            }
 
-//            if ((*kb) >= PWEAPON(snum, p->curr_weapon, TotalTime))
+//            if ((*kb) >= PWEAPON(snum, p.curr_weapon, TotalTime))
 //            {
 //                (*kb) = 0;
-//                if ((p->ammo_amount[HANDBOMB_WEAPON] > 0) &&
+//                if ((p.ammo_amount[HANDBOMB_WEAPON] > 0) &&
 //                        PIPEBOMB_CONTROL(snum) == PIPEBOMB_REMOTE)
 //                    P_AddWeapon(p,HANDBOMB_WEAPON);
 //                else P_CheckWeapon(p);
@@ -3984,77 +3984,77 @@ var WeaponPickupSprites = new Int16Array([ KNEE__STATIC, FIRSTGUNSPRITE__STATIC,
 //            // the basic weapon...
 //            (*kb)++;
 
-//            if (PWEAPON(snum, p->curr_weapon, Flags) & WEAPON_CHECKATRELOAD)
+//            if (PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_CHECKATRELOAD)
 //            {
-//                if (PWEAPON(snum, p->curr_weapon, WorksLike) == TRIPBOMB_WEAPON)
+//                if (PWEAPON(snum, p.curr_weapon, WorksLike) == TRIPBOMB_WEAPON)
 //                {
-//                    if ((*kb) >= PWEAPON(snum, p->curr_weapon, TotalTime))
+//                    if ((*kb) >= PWEAPON(snum, p.curr_weapon, TotalTime))
 //                    {
 //                        (*kb) = 0;
 //                        P_CheckWeapon(p);
-//                        p->weapon_pos = WEAPON_POS_LOWER;
+//                        p.weapon_pos = WEAPON_POS_LOWER;
 //                    }
 //                }
-//                else if (*kb >= PWEAPON(snum, p->curr_weapon, Reload))
+//                else if (*kb >= PWEAPON(snum, p.curr_weapon, Reload))
 //                    P_CheckWeapon(p);
 //            }
-//            else if (PWEAPON(snum, p->curr_weapon, WorksLike)!=KNEE_WEAPON && *kb >= PWEAPON(snum, p->curr_weapon, FireDelay))
+//            else if (PWEAPON(snum, p.curr_weapon, WorksLike)!=KNEE_WEAPON && *kb >= PWEAPON(snum, p.curr_weapon, FireDelay))
 //                P_CheckWeapon(p);
 
-//            if (PWEAPON(snum, p->curr_weapon, Flags) & WEAPON_STANDSTILL
-//                    && *kb < (PWEAPON(snum, p->curr_weapon, FireDelay)+1))
+//            if (PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_STANDSTILL
+//                    && *kb < (PWEAPON(snum, p.curr_weapon, FireDelay)+1))
 //            {
-//                p->pos.z = p->opos.z;
-//                p->vel.z = 0;
+//                p.pos.z = p.opos.z;
+//                p.vel.z = 0;
 //            }
 
-//            if (*kb == PWEAPON(snum, p->curr_weapon, Sound2Time))
-//                if (PWEAPON(snum, p->curr_weapon, Sound2Sound) > 0)
-//                    A_PlaySound(PWEAPON(snum, p->curr_weapon, Sound2Sound),p->i);
+//            if (*kb == PWEAPON(snum, p.curr_weapon, Sound2Time))
+//                if (PWEAPON(snum, p.curr_weapon, Sound2Sound) > 0)
+//                    A_PlaySound(PWEAPON(snum, p.curr_weapon, Sound2Sound),p.i);
 
-//            if (*kb == PWEAPON(snum, p->curr_weapon, SpawnTime))
+//            if (*kb == PWEAPON(snum, p.curr_weapon, SpawnTime))
 //                P_DoWeaponSpawn(p);
 
-//            if ((*kb) >= PWEAPON(snum, p->curr_weapon, TotalTime))
+//            if ((*kb) >= PWEAPON(snum, p.curr_weapon, TotalTime))
 //            {
-//                if (/*!(PWEAPON(snum, p->curr_weapon, Flags) & WEAPON_CHECKATRELOAD) && */ p->reloading == 1 ||
-//                        (PWEAPON(snum, p->curr_weapon, Reload) > PWEAPON(snum, p->curr_weapon, TotalTime) && p->ammo_amount[p->curr_weapon] > 0
-//                         && (PWEAPON(snum, p->curr_weapon, Clip)) && (((p->ammo_amount[p->curr_weapon]%(PWEAPON(snum, p->curr_weapon, Clip)))==0))))
+//                if (/*!(PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_CHECKATRELOAD) && */ p.reloading == 1 ||
+//                        (PWEAPON(snum, p.curr_weapon, Reload) > PWEAPON(snum, p.curr_weapon, TotalTime) && p.ammo_amount[p.curr_weapon] > 0
+//                         && (PWEAPON(snum, p.curr_weapon, Clip)) && (((p.ammo_amount[p.curr_weapon]%(PWEAPON(snum, p.curr_weapon, Clip)))==0))))
 //                {
-//                    int32_t i = PWEAPON(snum, p->curr_weapon, Reload) - PWEAPON(snum, p->curr_weapon, TotalTime);
+//                    int32_t i = PWEAPON(snum, p.curr_weapon, Reload) - PWEAPON(snum, p.curr_weapon, TotalTime);
 
-//                    p->reloading = 1;
+//                    p.reloading = 1;
 
-//                    if ((*kb) != (PWEAPON(snum, p->curr_weapon, TotalTime)))
+//                    if ((*kb) != (PWEAPON(snum, p.curr_weapon, TotalTime)))
 //                    {
-//                        if ((*kb) == (PWEAPON(snum, p->curr_weapon, TotalTime)+1))
+//                        if ((*kb) == (PWEAPON(snum, p.curr_weapon, TotalTime)+1))
 //                        {
-//                            if (PWEAPON(snum, p->curr_weapon, ReloadSound1) > 0)
-//                                A_PlaySound(PWEAPON(snum, p->curr_weapon, ReloadSound1),p->i);
+//                            if (PWEAPON(snum, p.curr_weapon, ReloadSound1) > 0)
+//                                A_PlaySound(PWEAPON(snum, p.curr_weapon, ReloadSound1),p.i);
 //                        }
-//                        else if (((*kb) == (PWEAPON(snum, p->curr_weapon, Reload) - (i/3)) &&
-//                                  !(PWEAPON(snum, p->curr_weapon, Flags) & WEAPON_RELOAD_TIMING)) ||
-//                                 ((*kb) == (PWEAPON(snum, p->curr_weapon, Reload) - i+4) &&
-//                                  (PWEAPON(snum, p->curr_weapon, Flags) & WEAPON_RELOAD_TIMING)))
+//                        else if (((*kb) == (PWEAPON(snum, p.curr_weapon, Reload) - (i/3)) &&
+//                                  !(PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_RELOAD_TIMING)) ||
+//                                 ((*kb) == (PWEAPON(snum, p.curr_weapon, Reload) - i+4) &&
+//                                  (PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_RELOAD_TIMING)))
 //                        {
-//                            if (PWEAPON(snum, p->curr_weapon, ReloadSound2) > 0)
-//                                A_PlaySound(PWEAPON(snum, p->curr_weapon, ReloadSound2),p->i);
+//                            if (PWEAPON(snum, p.curr_weapon, ReloadSound2) > 0)
+//                                A_PlaySound(PWEAPON(snum, p.curr_weapon, ReloadSound2),p.i);
 //                        }
-//                        else if ((*kb) >= (PWEAPON(snum, p->curr_weapon, Reload)))
+//                        else if ((*kb) >= (PWEAPON(snum, p.curr_weapon, Reload)))
 //                        {
 //                            *kb=0;
-//                            p->reloading = 0;
+//                            p.reloading = 0;
 //                        }
 //                    }
 //                }
 //                else
 //                {
-//                    if (PWEAPON(snum, p->curr_weapon, Flags) & WEAPON_AUTOMATIC &&
-//                            (PWEAPON(snum, p->curr_weapon, WorksLike)==KNEE_WEAPON?1:p->ammo_amount[p->curr_weapon] > 0))
+//                    if (PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_AUTOMATIC &&
+//                            (PWEAPON(snum, p.curr_weapon, WorksLike)==KNEE_WEAPON?1:p.ammo_amount[p.curr_weapon] > 0))
 //                    {
 //                        if (TEST_SYNC_KEY(sb_snum, SK_FIRE))
 //                        {
-//                            if (PWEAPON(snum, p->curr_weapon, Flags) & WEAPON_RANDOMRESTART)
+//                            if (PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_RANDOMRESTART)
 //                                *kb = 1+(krand()&3);
 //                            else *kb=1;
 //                        }
@@ -4062,24 +4062,24 @@ var WeaponPickupSprites = new Int16Array([ KNEE__STATIC, FIRSTGUNSPRITE__STATIC,
 //                    }
 //                    else *kb = 0;
 
-//                    if (PWEAPON(snum, p->curr_weapon, Flags) & WEAPON_RESET &&
-//                            ((PWEAPON(snum, p->curr_weapon, WorksLike) == KNEE_WEAPON)?1:p->ammo_amount[p->curr_weapon] > 0))
+//                    if (PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_RESET &&
+//                            ((PWEAPON(snum, p.curr_weapon, WorksLike) == KNEE_WEAPON)?1:p.ammo_amount[p.curr_weapon] > 0))
 //                    {
 //                        if (TEST_SYNC_KEY(sb_snum, SK_FIRE)) *kb = 1;
 //                        else *kb = 0;
 //                    }
 //                }
 //            }
-//            else if (*kb >= PWEAPON(snum, p->curr_weapon, FireDelay) && (*kb) < PWEAPON(snum, p->curr_weapon, TotalTime)
-//                     && ((PWEAPON(snum, p->curr_weapon, WorksLike) == KNEE_WEAPON)?1:p->ammo_amount[p->curr_weapon] > 0))
+//            else if (*kb >= PWEAPON(snum, p.curr_weapon, FireDelay) && (*kb) < PWEAPON(snum, p.curr_weapon, TotalTime)
+//                     && ((PWEAPON(snum, p.curr_weapon, WorksLike) == KNEE_WEAPON)?1:p.ammo_amount[p.curr_weapon] > 0))
 //            {
-//                if (PWEAPON(snum, p->curr_weapon, Flags) & WEAPON_AUTOMATIC)
+//                if (PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_AUTOMATIC)
 //                {
-//                    if (!(PWEAPON(snum, p->curr_weapon, Flags) & WEAPON_SEMIAUTO))
+//                    if (!(PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_SEMIAUTO))
 //                    {
-//                        if (TEST_SYNC_KEY(sb_snum, SK_FIRE) == 0 && PWEAPON(snum, p->curr_weapon, Flags) & WEAPON_RESET)
+//                        if (TEST_SYNC_KEY(sb_snum, SK_FIRE) == 0 && PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_RESET)
 //                            *kb = 0;
-//                        if (PWEAPON(snum, p->curr_weapon, Flags) & WEAPON_FIREEVERYTHIRD)
+//                        if (PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_FIREEVERYTHIRD)
 //                        {
 //                            if (((*(kb))%3) == 0)
 //                            {
@@ -4087,22 +4087,22 @@ var WeaponPickupSprites = new Int16Array([ KNEE__STATIC, FIRSTGUNSPRITE__STATIC,
 //                                P_DoWeaponSpawn(p);
 //                            }
 //                        }
-//                        else if (PWEAPON(snum, p->curr_weapon, Flags) & WEAPON_FIREEVERYOTHER)
+//                        else if (PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_FIREEVERYOTHER)
 //                        {
 //                            P_FireWeapon(p);
 //                            P_DoWeaponSpawn(p);
 //                        }
 //                        else
 //                        {
-//                            if (*kb == PWEAPON(snum, p->curr_weapon, FireDelay))
+//                            if (*kb == PWEAPON(snum, p.curr_weapon, FireDelay))
 //                            {
 //                                P_FireWeapon(p);
 //                                //                                P_DoWeaponSpawn(p);
 //                            }
 //                        }
-//                        if (PWEAPON(snum, p->curr_weapon, Flags) & WEAPON_RESET &&
-//                                (*kb) > PWEAPON(snum, p->curr_weapon, TotalTime)-PWEAPON(snum, p->curr_weapon, HoldDelay) &&
-//                                ((PWEAPON(snum, p->curr_weapon, WorksLike) == KNEE_WEAPON) || p->ammo_amount[p->curr_weapon] > 0))
+//                        if (PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_RESET &&
+//                                (*kb) > PWEAPON(snum, p.curr_weapon, TotalTime)-PWEAPON(snum, p.curr_weapon, HoldDelay) &&
+//                                ((PWEAPON(snum, p.curr_weapon, WorksLike) == KNEE_WEAPON) || p.ammo_amount[p.curr_weapon] > 0))
 //                        {
 //                            if (TEST_SYNC_KEY(sb_snum, SK_FIRE)) *kb = 1;
 //                            else *kb = 0;
@@ -4110,14 +4110,14 @@ var WeaponPickupSprites = new Int16Array([ KNEE__STATIC, FIRSTGUNSPRITE__STATIC,
 //                    }
 //                    else
 //                    {
-//                        if (PWEAPON(snum, p->curr_weapon, Flags) & WEAPON_FIREEVERYOTHER)
+//                        if (PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_FIREEVERYOTHER)
 //                        {
 //                            P_FireWeapon(p);
 //                            P_DoWeaponSpawn(p);
 //                        }
 //                        else
 //                        {
-//                            if (*kb == PWEAPON(snum, p->curr_weapon, FireDelay))
+//                            if (*kb == PWEAPON(snum, p.curr_weapon, FireDelay))
 //                            {
 //                                P_FireWeapon(p);
 //                                //                                P_DoWeaponSpawn(p);
@@ -4125,7 +4125,7 @@ var WeaponPickupSprites = new Int16Array([ KNEE__STATIC, FIRSTGUNSPRITE__STATIC,
 //                        }
 //                    }
 //                }
-//                else if (*kb == PWEAPON(snum, p->curr_weapon, FireDelay))
+//                else if (*kb == PWEAPON(snum, p.curr_weapon, FireDelay))
 //                    P_FireWeapon(p);
 //            }
 //        }
@@ -4136,7 +4136,7 @@ var WeaponPickupSprites = new Int16Array([ KNEE__STATIC, FIRSTGUNSPRITE__STATIC,
 //{
 //    // the fist punching NUKEBUTTON
 
-//    if (++p->fist_incs == 28)
+//    if (++p.fist_incs == 28)
 //    {
 //        if (ud.recstat == 1) G_CloseDemoWrite();
 //        S_PlaySound(PIPEBOMB_EXPLODE);
@@ -4144,14 +4144,14 @@ var WeaponPickupSprites = new Int16Array([ KNEE__STATIC, FIRSTGUNSPRITE__STATIC,
 //        P_PalFrom(p, 48, 64,64,64);
 //    }
 
-//    if (p->fist_incs > 42)
+//    if (p.fist_incs > 42)
 //    {
 //        int32_t i;
 
 //        for (TRAVERSE_CONNECT(i))
-//            g_player[i].ps->gm = MODE_EOL;
+//            g_player[i].ps.gm = MODE_EOL;
 
-//        if (p->buttonpalette && ud.from_bonus == 0)
+//        if (p.buttonpalette && ud.from_bonus == 0)
 //        {
 //            ud.from_bonus = ud.level_number+1;
 //            if (ud.secretlevel > 0 && ud.secretlevel <= MAXLEVELS)
@@ -4177,7 +4177,7 @@ var WeaponPickupSprites = new Int16Array([ KNEE__STATIC, FIRSTGUNSPRITE__STATIC,
 //            }
 //        }
 
-//        p->fist_incs = 0;
+//        p.fist_incs = 0;
 
 //        return 1;
 //    }
@@ -4225,91 +4225,91 @@ var WeaponPickupSprites = new Int16Array([ KNEE__STATIC, FIRSTGUNSPRITE__STATIC,
 
 //void P_UpdatePosWhenViewingCam(DukePlayer_t *p)
 //{
-//    int32_t i = p->newowner;
+//    int32_t i = p.newowner;
 
-//    p->pos.x = sprite[i].x;
-//    p->pos.y = sprite[i].y;
-//    p->pos.z = sprite[i].z;
-//    p->ang =  sprite[i].ang;
-//    p->vel.x = p->vel.y = sprite[p->i].xvel = 0;
-//    p->look_ang = 0;
-//    p->rotscrnang = 0;
+//    p.pos.x = sprite[i].x;
+//    p.pos.y = sprite[i].y;
+//    p.pos.z = sprite[i].z;
+//    p.ang =  sprite[i].ang;
+//    p.vel.x = p.vel.y = sprite[p.i].xvel = 0;
+//    p.look_ang = 0;
+//    p.rotscrnang = 0;
 //}
 
 //void P_ProcessInput(int32_t snum)
 //{
 //    DukePlayer_t *const p = g_player[snum].ps;
-//    spritetype *const s = &sprite[p->i];
+//    spritetype *const s = &sprite[p.i];
 
-//    uint32_t sb_snum = g_player[snum].sync->bits;
+//    uint32_t sb_snum = g_player[snum].sync.bits;
 
 //    int32_t j, i, k, doubvel = TICSPERFRAME, shrunk;
 //    int32_t fz, cz, hz, lz, truefdist, x, y, psectlotag;
-//    const uint8_t *const kb = &p->kickback_pic;
+//    const uint8_t *const kb = &p.kickback_pic;
 //    int16_t tempsect;
 
 //    if (g_player[snum].playerquitflag == 0)
 //        return;
 
-//    p->player_par++;
+//    p.player_par++;
 
-//    VM_OnEvent(EVENT_PROCESSINPUT, p->i, snum, -1, 0);
+//    VM_OnEvent(EVENT_PROCESSINPUT, p.i, snum, -1, 0);
 
-//    if (p->cheat_phase > 0) sb_snum = 0;
+//    if (p.cheat_phase > 0) sb_snum = 0;
 
-//    if (p->cursectnum == -1)
+//    if (p.cursectnum == -1)
 //    {
-//        if (s->extra > 0 && ud.noclip == 0)
+//        if (s.extra > 0 && ud.noclip == 0)
 //        {
 //            P_QuickKill(p);
-//            A_PlaySound(SQUISHED,p->i);
+//            A_PlaySound(SQUISHED,p.i);
 //        }
-//        p->cursectnum = 0;
+//        p.cursectnum = 0;
 //    }
 
-//    psectlotag = sector[p->cursectnum].lotag;
-//    p->spritebridge = p->sbs = 0;
+//    psectlotag = sector[p.cursectnum].lotag;
+//    p.spritebridge = p.sbs = 0;
 
-//    shrunk = (s->yrepeat < 32);
-//    getzrange((vec3_t *)p,p->cursectnum,&cz,&hz,&fz,&lz,163L,CLIPMASK0);
+//    shrunk = (s.yrepeat < 32);
+//    getzrange((vec3_t *)p,p.cursectnum,&cz,&hz,&fz,&lz,163L,CLIPMASK0);
 
 //#ifdef YAX_ENABLE
-//    getzsofslope_player(p->cursectnum,p->pos.x,p->pos.y,&p->truecz,&p->truefz);
+//    getzsofslope_player(p.cursectnum,p.pos.x,p.pos.y,&p.truecz,&p.truefz);
 //#else
-//    getzsofslope(p->cursectnum,p->pos.x,p->pos.y,&p->truecz,&p->truefz);
+//    getzsofslope(p.cursectnum,p.pos.x,p.pos.y,&p.truecz,&p.truefz);
 //#endif
-//    j = p->truefz;
+//    j = p.truefz;
 
-//    truefdist = klabs(p->pos.z-j);
+//    truefdist = klabs(p.pos.z-j);
 
 //    if ((lz&49152) == 16384 && psectlotag == 1 && truefdist > PHEIGHT+(16<<8))
 //        psectlotag = 0;
 
-//    actor[p->i].floorz = fz;
-//    actor[p->i].ceilingz = cz;
+//    actor[p.i].floorz = fz;
+//    actor[p.i].ceilingz = cz;
 
-//    p->ohoriz = p->horiz;
-//    p->ohorizoff = p->horizoff;
+//    p.ohoriz = p.horiz;
+//    p.ohorizoff = p.horizoff;
 
 //    // calculates automatic view angle for playing without a mouse
-//    if (p->aim_mode == 0 && p->on_ground && psectlotag != ST_2_UNDERWATER && (sector[p->cursectnum].floorstat&2))
+//    if (p.aim_mode == 0 && p.on_ground && psectlotag != ST_2_UNDERWATER && (sector[p.cursectnum].floorstat&2))
 //    {
-//        x = p->pos.x+(sintable[(p->ang+512)&2047]>>5);
-//        y = p->pos.y+(sintable[p->ang&2047]>>5);
-//        tempsect = p->cursectnum;
+//        x = p.pos.x+(sintable[(p.ang+512)&2047]>>5);
+//        y = p.pos.y+(sintable[p.ang&2047]>>5);
+//        tempsect = p.cursectnum;
 //        updatesector(x,y,&tempsect);
 //        if (tempsect >= 0)
 //        {
-//            k = getflorzofslope(p->cursectnum,x,y);
-//            if (p->cursectnum == tempsect)
-//                p->horizoff += mulscale16(j-k,160);
+//            k = getflorzofslope(p.cursectnum,x,y);
+//            if (p.cursectnum == tempsect)
+//                p.horizoff += mulscale16(j-k,160);
 //            else if (klabs(getflorzofslope(tempsect,x,y)-k) <= (4<<8))
-//                p->horizoff += mulscale16(j-k,160);
+//                p.horizoff += mulscale16(j-k,160);
 //        }
 //    }
 
-//    if (p->horizoff > 0) p->horizoff -= ((p->horizoff>>3)+1);
-//    else if (p->horizoff < 0) p->horizoff += (((-p->horizoff)>>3)+1);
+//    if (p.horizoff > 0) p.horizoff -= ((p.horizoff>>3)+1);
+//    else if (p.horizoff < 0) p.horizoff += (((-p.horizoff)>>3)+1);
 
 //    if (hz >= 0 && (hz&49152) == 49152)
 //    {
@@ -4318,7 +4318,7 @@ var WeaponPickupSprites = new Int16Array([ KNEE__STATIC, FIRSTGUNSPRITE__STATIC,
 //        if (sprite[hz].statnum == STAT_ACTOR && sprite[hz].extra >= 0)
 //        {
 //            hz = 0;
-//            cz = p->truecz;
+//            cz = p.truecz;
 //        }
 //    }
 
@@ -4329,51 +4329,51 @@ var WeaponPickupSprites = new Int16Array([ KNEE__STATIC, FIRSTGUNSPRITE__STATIC,
 //        if ((sprite[j].cstat&33) == 33 || (sprite[j].cstat&17) == 17)
 //        {
 //            psectlotag = 0;
-//            p->footprintcount = 0;
-//            p->spritebridge = 1;
-//            p->sbs = j;
+//            p.footprintcount = 0;
+//            p.spritebridge = 1;
+//            p.sbs = j;
 //        }
-//        else if (A_CheckEnemySprite(&sprite[j]) && sprite[j].xrepeat > 24 && klabs(s->z-sprite[j].z) < (84<<8))
+//        else if (A_CheckEnemySprite(&sprite[j]) && sprite[j].xrepeat > 24 && klabs(s.z-sprite[j].z) < (84<<8))
 //        {
 //            // I think this is what makes the player slide off enemies... might be a good sprite flag to add later
-//            j = getangle(sprite[j].x-p->pos.x,sprite[j].y-p->pos.y);
-//            p->vel.x -= sintable[(j+512)&2047]<<4;
-//            p->vel.y -= sintable[j&2047]<<4;
+//            j = getangle(sprite[j].x-p.pos.x,sprite[j].y-p.pos.y);
+//            p.vel.x -= sintable[(j+512)&2047]<<4;
+//            p.vel.y -= sintable[j&2047]<<4;
 //        }
 //    }
 
-//    if (s->extra > 0)
+//    if (s.extra > 0)
 //        P_IncurDamage(p);
 //    else
 //    {
-//        s->extra = 0;
-//        p->inv_amount[GET_SHIELD] = 0;
+//        s.extra = 0;
+//        p.inv_amount[GET_SHIELD] = 0;
 //    }
 
-//    p->last_extra = s->extra;
+//    p.last_extra = s.extra;
 
-//    if (p->loogcnt > 0) p->loogcnt--;
-//    else p->loogcnt = 0;
+//    if (p.loogcnt > 0) p.loogcnt--;
+//    else p.loogcnt = 0;
 
-//    if (p->fist_incs && P_DoFist(p)) return;
+//    if (p.fist_incs && P_DoFist(p)) return;
 
-//    if (p->timebeforeexit > 1 && p->last_extra > 0)
+//    if (p.timebeforeexit > 1 && p.last_extra > 0)
 //    {
-//        if (--p->timebeforeexit == GAMETICSPERSEC*5)
+//        if (--p.timebeforeexit == GAMETICSPERSEC*5)
 //        {
 //            FX_StopAllSounds();
 //            S_ClearSoundLocks();
 
-//            if (p->customexitsound >= 0)
+//            if (p.customexitsound >= 0)
 //            {
-//                S_PlaySound(p->customexitsound);
+//                S_PlaySound(p.customexitsound);
 //                P_DoQuote(QUOTE_WEREGONNAFRYYOURASS,p);
 //            }
 //        }
-//        else if (p->timebeforeexit == 1)
+//        else if (p.timebeforeexit == 1)
 //        {
 //            for (TRAVERSE_CONNECT(i))
-//                g_player[i].ps->gm = MODE_EOL;
+//                g_player[i].ps.gm = MODE_EOL;
 
 //            ud.m_level_number = ud.level_number++;
 
@@ -4386,182 +4386,182 @@ var WeaponPickupSprites = new Int16Array([ KNEE__STATIC, FIRSTGUNSPRITE__STATIC,
 //        }
 //    }
 
-//    if (p->pals.f > 0)
+//    if (p.pals.f > 0)
 //    {
 //#if !defined LUNATIC
-//        p->pals.f--;
+//        p.pals.f--;
 //#else
-//        if (p->palsfadespeed > 0)
+//        if (p.palsfadespeed > 0)
 //        {
 //            // <palsfadespeed> is the tint fade speed is in
 //            // decrements/P_ProcessInput() calls.
-//            p->pals.f = max(p->pals.f - p->palsfadespeed, 0);
+//            p.pals.f = max(p.pals.f - p.palsfadespeed, 0);
 //        }
 //        else
 //        {
 //            // <palsfadespeed> is a negated count of how many times we
 //            // (P_ProcessInput()) should be called before decrementing the tint
 //            // fading by one. <palsfadenext> is the live counter.
-//            if (p->palsfadenext < 0)
-//                p->palsfadenext++;
+//            if (p.palsfadenext < 0)
+//                p.palsfadenext++;
 
-//            if (p->palsfadenext == 0)
+//            if (p.palsfadenext == 0)
 //            {
-//                p->palsfadenext = p->palsfadespeed;
-//                p->pals.f--;
+//                p.palsfadenext = p.palsfadespeed;
+//                p.pals.f--;
 //            }
 //        }
 //#endif
 //    }
 
-//    if (p->fta > 0 && --p->fta == 0)
+//    if (p.fta > 0 && --p.fta == 0)
 //    {
 //        pub = pus = NUMPAGES;
-//        p->ftq = 0;
+//        p.ftq = 0;
 //    }
 
 //    if (g_levelTextTime > 0)
 //        g_levelTextTime--;
 
-//    if (s->extra <= 0)
+//    if (s.extra <= 0)
 //    {
 //        if (ud.recstat == 1 && (!g_netServer && ud.multimode < 2))
 //            G_CloseDemoWrite();
 
-//        if ((numplayers < 2 || g_netServer) && p->dead_flag == 0)
+//        if ((numplayers < 2 || g_netServer) && p.dead_flag == 0)
 //            P_FragPlayer(snum);
 
 //        if (psectlotag == ST_2_UNDERWATER)
 //        {
-//            if (p->on_warping_sector == 0)
+//            if (p.on_warping_sector == 0)
 //            {
-//                if (klabs(p->pos.z-fz) > (PHEIGHT>>1))
-//                    p->pos.z += 348;
+//                if (klabs(p.pos.z-fz) > (PHEIGHT>>1))
+//                    p.pos.z += 348;
 //            }
 //            else
 //            {
-//                s->z -= 512;
-//                s->zvel = -348;
+//                s.z -= 512;
+//                s.zvel = -348;
 //            }
 
-//            clipmove((vec3_t *)p,&p->cursectnum,
+//            clipmove((vec3_t *)p,&p.cursectnum,
 //                     0,0,164L,(4L<<8),(4L<<8),CLIPMASK0);
-//            //                        p->bobcounter += 32;
+//            //                        p.bobcounter += 32;
 //        }
 
-//        Bmemcpy(&p->opos.x, &p->pos.x, sizeof(vec3_t));
-//        p->oang = p->ang;
-//        p->opyoff = p->pyoff;
+//        Bmemcpy(&p.opos.x, &p.pos.x, sizeof(vec3_t));
+//        p.oang = p.ang;
+//        p.opyoff = p.pyoff;
 
-//        p->horiz = 100;
-//        p->horizoff = 0;
+//        p.horiz = 100;
+//        p.horizoff = 0;
 
-//        updatesector(p->pos.x,p->pos.y,&p->cursectnum);
+//        updatesector(p.pos.x,p.pos.y,&p.cursectnum);
 
-//        pushmove((vec3_t *)p,&p->cursectnum,128L,(4L<<8),(20L<<8),CLIPMASK0);
+//        pushmove((vec3_t *)p,&p.cursectnum,128L,(4L<<8),(20L<<8),CLIPMASK0);
 
-//        if (fz > cz+(16<<8) && s->pal != 1)
-//            p->rotscrnang = (p->dead_flag + ((fz+p->pos.z)>>7))&2047;
+//        if (fz > cz+(16<<8) && s.pal != 1)
+//            p.rotscrnang = (p.dead_flag + ((fz+p.pos.z)>>7))&2047;
 
-//        p->on_warping_sector = 0;
+//        p.on_warping_sector = 0;
 
 //        return;
 //    }
 
-//    if (p->transporter_hold > 0)
+//    if (p.transporter_hold > 0)
 //    {
-//        p->transporter_hold--;
-//        if (p->transporter_hold == 0 && p->on_warping_sector)
-//            p->transporter_hold = 2;
+//        p.transporter_hold--;
+//        if (p.transporter_hold == 0 && p.on_warping_sector)
+//            p.transporter_hold = 2;
 //    }
-//    else if (p->transporter_hold < 0)
-//        p->transporter_hold++;
+//    else if (p.transporter_hold < 0)
+//        p.transporter_hold++;
 
-//    if (p->newowner >= 0)
+//    if (p.newowner >= 0)
 //    {
 //        P_UpdatePosWhenViewingCam(p);
 //        P_DoCounters(p);
 
-//        if (PWEAPON(0, p->curr_weapon, WorksLike) == HANDREMOTE_WEAPON)
+//        if (PWEAPON(0, p.curr_weapon, WorksLike) == HANDREMOTE_WEAPON)
 //            P_ProcessWeapon(snum);
 
 //        return;
 //    }
 
-//    p->rotscrnang -= (p->rotscrnang>>1);
+//    p.rotscrnang -= (p.rotscrnang>>1);
 
-//    if (p->rotscrnang && !(p->rotscrnang>>1))
-//        p->rotscrnang -= ksgn(p->rotscrnang);
+//    if (p.rotscrnang && !(p.rotscrnang>>1))
+//        p.rotscrnang -= ksgn(p.rotscrnang);
 
-//    p->look_ang -= (p->look_ang>>2);
+//    p.look_ang -= (p.look_ang>>2);
 
-//    if (p->look_ang && !(p->look_ang>>2))
-//        p->look_ang -= ksgn(p->look_ang);
+//    if (p.look_ang && !(p.look_ang>>2))
+//        p.look_ang -= ksgn(p.look_ang);
 
 //    if (TEST_SYNC_KEY(sb_snum, SK_LOOK_LEFT))
 //    {
 //        // look_left
-//        if (VM_OnEvent(EVENT_LOOKLEFT,p->i,snum, -1, 0) == 0)
+//        if (VM_OnEvent(EVENT_LOOKLEFT,p.i,snum, -1, 0) == 0)
 //        {
-//            p->look_ang -= 152;
-//            p->rotscrnang += 24;
+//            p.look_ang -= 152;
+//            p.rotscrnang += 24;
 //        }
 //    }
 
 //    if (TEST_SYNC_KEY(sb_snum, SK_LOOK_RIGHT))
 //    {
 //        // look_right
-//        if (VM_OnEvent(EVENT_LOOKRIGHT,p->i,snum, -1, 0) == 0)
+//        if (VM_OnEvent(EVENT_LOOKRIGHT,p.i,snum, -1, 0) == 0)
 //        {
-//            p->look_ang += 152;
-//            p->rotscrnang -= 24;
+//            p.look_ang += 152;
+//            p.rotscrnang -= 24;
 //        }
 //    }
 
-//    if (p->on_crane >= 0)
+//    if (p.on_crane >= 0)
 //        goto HORIZONLY;
 
-//    j = ksgn(g_player[snum].sync->avel);
+//    j = ksgn(g_player[snum].sync.avel);
 
-//    if (s->xvel < 32 || p->on_ground == 0 || p->bobcounter == 1024)
+//    if (s.xvel < 32 || p.on_ground == 0 || p.bobcounter == 1024)
 //    {
-//        if ((p->weapon_sway&2047) > (1024+96))
-//            p->weapon_sway -= 96;
-//        else if ((p->weapon_sway&2047) < (1024-96))
-//            p->weapon_sway += 96;
-//        else p->weapon_sway = 1024;
+//        if ((p.weapon_sway&2047) > (1024+96))
+//            p.weapon_sway -= 96;
+//        else if ((p.weapon_sway&2047) < (1024-96))
+//            p.weapon_sway += 96;
+//        else p.weapon_sway = 1024;
 //    }
-//    else p->weapon_sway = p->bobcounter;
+//    else p.weapon_sway = p.bobcounter;
 
 //    // NOTE: This silently wraps if the difference is too great, e.g. used to do
 //    // that when teleported by silent SE7s.
-//    s->xvel = ksqrt(uhypsq(p->pos.x-p->bobposx, p->pos.y-p->bobposy));
+//    s.xvel = ksqrt(uhypsq(p.pos.x-p.bobposx, p.pos.y-p.bobposy));
 
-//    if (p->on_ground)
-//        p->bobcounter += sprite[p->i].xvel>>1;
+//    if (p.on_ground)
+//        p.bobcounter += sprite[p.i].xvel>>1;
 
-//    if (ud.noclip == 0 && ((uint16_t)p->cursectnum >= MAXSECTORS || sector[p->cursectnum].floorpicnum == MIRROR))
+//    if (ud.noclip == 0 && ((uint16_t)p.cursectnum >= MAXSECTORS || sector[p.cursectnum].floorpicnum == MIRROR))
 //    {
-//        p->pos.x = p->opos.x;
-//        p->pos.y = p->opos.y;
+//        p.pos.x = p.opos.x;
+//        p.pos.y = p.opos.y;
 //    }
 //    else
 //    {
-//        p->opos.x = p->pos.x;
-//        p->opos.y = p->pos.y;
+//        p.opos.x = p.pos.x;
+//        p.opos.y = p.pos.y;
 //    }
 
-//    p->bobposx = p->pos.x;
-//    p->bobposy = p->pos.y;
+//    p.bobposx = p.pos.x;
+//    p.bobposy = p.pos.y;
 
-//    p->opos.z = p->pos.z;
-//    p->opyoff = p->pyoff;
-//    p->oang = p->ang;
+//    p.opos.z = p.pos.z;
+//    p.opyoff = p.pyoff;
+//    p.oang = p.ang;
 
-//    if (p->one_eighty_count < 0)
+//    if (p.one_eighty_count < 0)
 //    {
-//        p->one_eighty_count += 128;
-//        p->ang += 128;
+//        p.one_eighty_count += 128;
+//        p.ang += 128;
 //    }
 
 //    // Shrinking code
@@ -4571,96 +4571,96 @@ var WeaponPickupSprites = new Int16Array([ KNEE__STATIC, FIRSTGUNSPRITE__STATIC,
 //    if (psectlotag == ST_2_UNDERWATER)
 //    {
 //        // under water
-//        p->jumping_counter = 0;
+//        p.jumping_counter = 0;
 
-//        p->pycount += 32;
-//        p->pycount &= 2047;
-//        p->pyoff = sintable[p->pycount]>>7;
+//        p.pycount += 32;
+//        p.pycount &= 2047;
+//        p.pyoff = sintable[p.pycount]>>7;
 
-//        if (!A_CheckSoundPlaying(p->i,DUKE_UNDERWATER))
-//            A_PlaySound(DUKE_UNDERWATER,p->i);
+//        if (!A_CheckSoundPlaying(p.i,DUKE_UNDERWATER))
+//            A_PlaySound(DUKE_UNDERWATER,p.i);
 
 //        if (TEST_SYNC_KEY(sb_snum, SK_JUMP))
 //        {
-//            if (VM_OnEvent(EVENT_SWIMUP,p->i,snum, -1, 0) == 0)
+//            if (VM_OnEvent(EVENT_SWIMUP,p.i,snum, -1, 0) == 0)
 //            {
 //                // jump
-//                if (p->vel.z > 0) p->vel.z = 0;
-//                p->vel.z -= 348;
-//                if (p->vel.z < -(256*6)) p->vel.z = -(256*6);
+//                if (p.vel.z > 0) p.vel.z = 0;
+//                p.vel.z -= 348;
+//                if (p.vel.z < -(256*6)) p.vel.z = -(256*6);
 //            }
 //        }
 //        else if (TEST_SYNC_KEY(sb_snum, SK_CROUCH))
 //        {
-//            if (VM_OnEvent(EVENT_SWIMDOWN,p->i,snum, -1, 0) == 0)
+//            if (VM_OnEvent(EVENT_SWIMDOWN,p.i,snum, -1, 0) == 0)
 //            {
 //                // crouch
-//                if (p->vel.z < 0) p->vel.z = 0;
-//                p->vel.z += 348;
-//                if (p->vel.z > (256*6)) p->vel.z = (256*6);
+//                if (p.vel.z < 0) p.vel.z = 0;
+//                p.vel.z += 348;
+//                if (p.vel.z > (256*6)) p.vel.z = (256*6);
 //            }
 //        }
 //        else
 //        {
 //            // normal view
-//            if (p->vel.z < 0)
+//            if (p.vel.z < 0)
 //            {
-//                p->vel.z += 256;
-//                if (p->vel.z > 0)
-//                    p->vel.z = 0;
+//                p.vel.z += 256;
+//                if (p.vel.z > 0)
+//                    p.vel.z = 0;
 //            }
-//            if (p->vel.z > 0)
+//            if (p.vel.z > 0)
 //            {
-//                p->vel.z -= 256;
-//                if (p->vel.z < 0)
-//                    p->vel.z = 0;
+//                p.vel.z -= 256;
+//                if (p.vel.z < 0)
+//                    p.vel.z = 0;
 //            }
 //        }
 
-//        if (p->vel.z > 2048)
-//            p->vel.z >>= 1;
+//        if (p.vel.z > 2048)
+//            p.vel.z >>= 1;
 
-//        p->pos.z += p->vel.z;
+//        p.pos.z += p.vel.z;
 
-//        if (p->pos.z > (fz-(15<<8)))
-//            p->pos.z += ((fz-(15<<8))-p->pos.z)>>1;
+//        if (p.pos.z > (fz-(15<<8)))
+//            p.pos.z += ((fz-(15<<8))-p.pos.z)>>1;
 
-//        if (p->pos.z < cz)
+//        if (p.pos.z < cz)
 //        {
-//            p->pos.z = cz;
-//            p->vel.z = 0;
+//            p.pos.z = cz;
+//            p.vel.z = 0;
 //        }
 
-//        if (p->scuba_on && (krand()&255) < 8)
+//        if (p.scuba_on && (krand()&255) < 8)
 //        {
-//            j = A_Spawn(p->i,WATERBUBBLE);
+//            j = A_Spawn(p.i,WATERBUBBLE);
 //            sprite[j].x +=
-//                sintable[(p->ang+512+64-(g_globalRandom&128))&2047]>>6;
+//                sintable[(p.ang+512+64-(g_globalRandom&128))&2047]>>6;
 //            sprite[j].y +=
-//                sintable[(p->ang+64-(g_globalRandom&128))&2047]>>6;
+//                sintable[(p.ang+64-(g_globalRandom&128))&2047]>>6;
 //            sprite[j].xrepeat = 3;
 //            sprite[j].yrepeat = 2;
-//            sprite[j].z = p->pos.z+(8<<8);
+//            sprite[j].z = p.pos.z+(8<<8);
 //        }
 //    }
-//    else if (p->jetpack_on)
+//    else if (p.jetpack_on)
 //    {
-//        p->on_ground = 0;
-//        p->jumping_counter = 0;
-//        p->hard_landing = 0;
-//        p->falling_counter = 0;
+//        p.on_ground = 0;
+//        p.jumping_counter = 0;
+//        p.hard_landing = 0;
+//        p.falling_counter = 0;
 
-//        p->pycount += 32;
-//        p->pycount &= 2047;
-//        p->pyoff = sintable[p->pycount]>>7;
+//        p.pycount += 32;
+//        p.pycount &= 2047;
+//        p.pyoff = sintable[p.pycount]>>7;
 
-//        if (p->jetpack_on < 11)
+//        if (p.jetpack_on < 11)
 //        {
-//            p->jetpack_on++;
-//            p->pos.z -= (p->jetpack_on<<7); //Goin up
+//            p.jetpack_on++;
+//            p.pos.z -= (p.jetpack_on<<7); //Goin up
 //        }
-//        else if (p->jetpack_on == 11 && !A_CheckSoundPlaying(p->i,DUKE_JETPACK_IDLE))
-//            A_PlaySound(DUKE_JETPACK_IDLE,p->i);
+//        else if (p.jetpack_on == 11 && !A_CheckSoundPlaying(p.i,DUKE_JETPACK_IDLE))
+//            A_PlaySound(DUKE_JETPACK_IDLE,p.i);
 
 //        if (shrunk) j = 512;
 //        else j = 2048;
@@ -4668,422 +4668,422 @@ var WeaponPickupSprites = new Int16Array([ KNEE__STATIC, FIRSTGUNSPRITE__STATIC,
 //        if (TEST_SYNC_KEY(sb_snum, SK_JUMP))         //A (soar high)
 //        {
 //            // jump
-//            if (VM_OnEvent(EVENT_SOARUP,p->i,snum, -1, 0) == 0)
+//            if (VM_OnEvent(EVENT_SOARUP,p.i,snum, -1, 0) == 0)
 //            {
-//                p->pos.z -= j;
-//                p->crack_time = 777;
+//                p.pos.z -= j;
+//                p.crack_time = 777;
 //            }
 //        }
 
 //        if (TEST_SYNC_KEY(sb_snum, SK_CROUCH))   //Z (soar low)
 //        {
 //            // crouch
-//            if (VM_OnEvent(EVENT_SOARDOWN,p->i,snum, -1, 0) == 0)
+//            if (VM_OnEvent(EVENT_SOARDOWN,p.i,snum, -1, 0) == 0)
 //            {
-//                p->pos.z += j;
-//                p->crack_time = 777;
+//                p.pos.z += j;
+//                p.crack_time = 777;
 //            }
 //        }
 
 //        if (shrunk == 0 && (psectlotag == 0 || psectlotag == ST_2_UNDERWATER)) k = 32;
 //        else k = 16;
 
-//        if (psectlotag != ST_2_UNDERWATER && p->scuba_on == 1)
-//            p->scuba_on = 0;
+//        if (psectlotag != ST_2_UNDERWATER && p.scuba_on == 1)
+//            p.scuba_on = 0;
 
-//        if (p->pos.z > (fz-(k<<8)))
-//            p->pos.z += ((fz-(k<<8))-p->pos.z)>>1;
-//        if (p->pos.z < (actor[p->i].ceilingz+(18<<8)))
-//            p->pos.z = actor[p->i].ceilingz+(18<<8);
+//        if (p.pos.z > (fz-(k<<8)))
+//            p.pos.z += ((fz-(k<<8))-p.pos.z)>>1;
+//        if (p.pos.z < (actor[p.i].ceilingz+(18<<8)))
+//            p.pos.z = actor[p.i].ceilingz+(18<<8);
 //    }
 //    else if (psectlotag != ST_2_UNDERWATER)
 //    {
-//        p->airleft = 15 * GAMETICSPERSEC; // 13 seconds
+//        p.airleft = 15 * GAMETICSPERSEC; // 13 seconds
 
-//        if (p->scuba_on == 1)
-//            p->scuba_on = 0;
+//        if (p.scuba_on == 1)
+//            p.scuba_on = 0;
 
-//        if (psectlotag == ST_1_ABOVE_WATER && p->spritebridge == 0)
+//        if (psectlotag == ST_1_ABOVE_WATER && p.spritebridge == 0)
 //        {
 //            if (shrunk == 0)
 //            {
 //                i = 34;
-//                p->pycount += 32;
-//                p->pycount &= 2047;
-//                p->pyoff = sintable[p->pycount]>>6;
+//                p.pycount += 32;
+//                p.pycount &= 2047;
+//                p.pyoff = sintable[p.pycount]>>6;
 //            }
 //            else i = 12;
 
 //            if (shrunk == 0 && truefdist <= PHEIGHT)
 //            {
-//                if (p->on_ground == 1)
+//                if (p.on_ground == 1)
 //                {
-//                    if (p->dummyplayersprite < 0)
-//                        p->dummyplayersprite = A_Spawn(p->i,PLAYERONWATER);
-//                    sprite[p->dummyplayersprite].pal = sprite[p->i].pal;
-//                    sprite[p->dummyplayersprite].cstat |= 32768;
+//                    if (p.dummyplayersprite < 0)
+//                        p.dummyplayersprite = A_Spawn(p.i,PLAYERONWATER);
+//                    sprite[p.dummyplayersprite].pal = sprite[p.i].pal;
+//                    sprite[p.dummyplayersprite].cstat |= 32768;
 
-//                    p->footprintcount = 6;
-//                    if (sector[p->cursectnum].floorpicnum == FLOORSLIME)
-//                        p->footprintpal = 8;
-//                    else p->footprintpal = 0;
-//                    p->footprintshade = 0;
+//                    p.footprintcount = 6;
+//                    if (sector[p.cursectnum].floorpicnum == FLOORSLIME)
+//                        p.footprintpal = 8;
+//                    else p.footprintpal = 0;
+//                    p.footprintshade = 0;
 //                }
 //            }
 //        }
 //        else
 //        {
-//            if (p->footprintcount > 0 && p->on_ground)
-//                if (p->cursectnum >= 0 && (sector[p->cursectnum].floorstat&2) != 2)
+//            if (p.footprintcount > 0 && p.on_ground)
+//                if (p.cursectnum >= 0 && (sector[p.cursectnum].floorstat&2) != 2)
 //                {
-//                    for (j=headspritesect[p->cursectnum]; j>=0; j=nextspritesect[j])
+//                    for (j=headspritesect[p.cursectnum]; j>=0; j=nextspritesect[j])
 //                        if (sprite[j].picnum == FOOTPRINTS || sprite[j].picnum == FOOTPRINTS2 ||
 //                                sprite[j].picnum == FOOTPRINTS3 || sprite[j].picnum == FOOTPRINTS4)
-//                            if (klabs(sprite[j].x-p->pos.x) < 384 && klabs(sprite[j].y-p->pos.y) < 384)
+//                            if (klabs(sprite[j].x-p.pos.x) < 384 && klabs(sprite[j].y-p.pos.y) < 384)
 //                                break;
 
 //                    if (j < 0)
 //                    {
-//                        if (p->cursectnum >= 0 && sector[p->cursectnum].lotag == 0 && sector[p->cursectnum].hitag == 0)
+//                        if (p.cursectnum >= 0 && sector[p.cursectnum].lotag == 0 && sector[p.cursectnum].hitag == 0)
 //#ifdef YAX_ENABLE
-//                            if (yax_getbunch(p->cursectnum, YAX_FLOOR) < 0 || (sector[p->cursectnum].floorstat&512))
+//                            if (yax_getbunch(p.cursectnum, YAX_FLOOR) < 0 || (sector[p.cursectnum].floorstat&512))
 //#endif
 //                        {
 //                            switch (krand()&3)
 //                            {
 //                            case 0:
-//                                j = A_Spawn(p->i,FOOTPRINTS);
+//                                j = A_Spawn(p.i,FOOTPRINTS);
 //                                break;
 //                            case 1:
-//                                j = A_Spawn(p->i,FOOTPRINTS2);
+//                                j = A_Spawn(p.i,FOOTPRINTS2);
 //                                break;
 //                            case 2:
-//                                j = A_Spawn(p->i,FOOTPRINTS3);
+//                                j = A_Spawn(p.i,FOOTPRINTS3);
 //                                break;
 //                            default:
-//                                j = A_Spawn(p->i,FOOTPRINTS4);
+//                                j = A_Spawn(p.i,FOOTPRINTS4);
 //                                break;
 //                            }
-//                            sprite[j].pal = p->footprintpal;
-//                            sprite[j].shade = p->footprintshade;
-//                            p->footprintcount--;
+//                            sprite[j].pal = p.footprintpal;
+//                            sprite[j].shade = p.footprintshade;
+//                            p.footprintcount--;
 //                        }
 //                    }
 //                }
 //        }
 
-//        if (p->pos.z < (fz-(i<<8)))  //falling
+//        if (p.pos.z < (fz-(i<<8)))  //falling
 //        {
 //            // not jumping or crouching
 
 //            if (!TEST_SYNC_KEY(sb_snum, SK_JUMP) && !TEST_SYNC_KEY(sb_snum, SK_CROUCH) &&
-//                    p->on_ground && (sector[p->cursectnum].floorstat&2) && p->pos.z >= (fz-(i<<8)-(16<<8)))
-//                p->pos.z = fz-(i<<8);
+//                    p.on_ground && (sector[p.cursectnum].floorstat&2) && p.pos.z >= (fz-(i<<8)-(16<<8)))
+//                p.pos.z = fz-(i<<8);
 //            else
 //            {
-//                p->on_ground = 0;
-//                p->vel.z += (g_spriteGravity+80); // (TICSPERFRAME<<6);
-//                if (p->vel.z >= (4096+2048)) p->vel.z = (4096+2048);
-//                if (p->vel.z > 2400 && p->falling_counter < 255)
+//                p.on_ground = 0;
+//                p.vel.z += (g_spriteGravity+80); // (TICSPERFRAME<<6);
+//                if (p.vel.z >= (4096+2048)) p.vel.z = (4096+2048);
+//                if (p.vel.z > 2400 && p.falling_counter < 255)
 //                {
-//                    p->falling_counter++;
-//                    if (p->falling_counter >= 38 && p->scream_voice <= FX_Ok)
-//                        p->scream_voice = A_PlaySound(DUKE_SCREAM,p->i);
+//                    p.falling_counter++;
+//                    if (p.falling_counter >= 38 && p.scream_voice <= FX_Ok)
+//                        p.scream_voice = A_PlaySound(DUKE_SCREAM,p.i);
 //                }
 
-//                if ((p->pos.z+p->vel.z) >= (fz-(i<<8)) && p->cursectnum >= 0)   // hit the ground
-//                    if (sector[p->cursectnum].lotag != ST_1_ABOVE_WATER)
+//                if ((p.pos.z+p.vel.z) >= (fz-(i<<8)) && p.cursectnum >= 0)   // hit the ground
+//                    if (sector[p.cursectnum].lotag != ST_1_ABOVE_WATER)
 //                    {
-//                        if (p->falling_counter > 62)
+//                        if (p.falling_counter > 62)
 //                            P_QuickKill(p);
-//                        else if (p->falling_counter > 9)
+//                        else if (p.falling_counter > 9)
 //                        {
 //                            // Falling damage.
-//                            s->extra -= p->falling_counter-(krand()&3);
+//                            s.extra -= p.falling_counter-(krand()&3);
 
-//                            if (s->extra <= 0)
+//                            if (s.extra <= 0)
 //                            {
-//                                A_PlaySound(SQUISHED,p->i);
+//                                A_PlaySound(SQUISHED,p.i);
 
 ////                                P_PalFrom(p, 63, 63,0,0);
 //                            }
 //                            else
 //                            {
-//                                A_PlaySound(DUKE_LAND,p->i);
-//                                A_PlaySound(DUKE_LAND_HURT,p->i);
+//                                A_PlaySound(DUKE_LAND,p.i);
+//                                A_PlaySound(DUKE_LAND_HURT,p.i);
 //                            }
 
 //                            P_PalFrom(p, 32, 16,0,0);
 //                        }
-//                        else if (p->vel.z > 2048)
-//                            A_PlaySound(DUKE_LAND,p->i);
+//                        else if (p.vel.z > 2048)
+//                            A_PlaySound(DUKE_LAND,p.i);
 //                    }
 //            }
 //        }
 //        else
 //        {
-//            p->falling_counter = 0;
+//            p.falling_counter = 0;
 
-//            if (p->scream_voice > FX_Ok)
+//            if (p.scream_voice > FX_Ok)
 //            {
-//                FX_StopSound(p->scream_voice);
+//                FX_StopSound(p.scream_voice);
 //                S_Cleanup();
-//                p->scream_voice = -1;
+//                p.scream_voice = -1;
 //            }
 
-//            if (psectlotag != ST_1_ABOVE_WATER && psectlotag != ST_2_UNDERWATER && p->on_ground == 0 && p->vel.z > (6144>>1))
-//                p->hard_landing = p->vel.z>>10;
+//            if (psectlotag != ST_1_ABOVE_WATER && psectlotag != ST_2_UNDERWATER && p.on_ground == 0 && p.vel.z > (6144>>1))
+//                p.hard_landing = p.vel.z>>10;
 
-//            p->on_ground = 1;
+//            p.on_ground = 1;
 
 //            if (i==40)
 //            {
 //                //Smooth on the ground
 
-//                k = ((fz-(i<<8))-p->pos.z)>>1;
+//                k = ((fz-(i<<8))-p.pos.z)>>1;
 //                if (klabs(k) < 256) k = 0;
-//                p->pos.z += k;
-//                p->vel.z -= 768;
-//                if (p->vel.z < 0) p->vel.z = 0;
+//                p.pos.z += k;
+//                p.vel.z -= 768;
+//                if (p.vel.z < 0) p.vel.z = 0;
 //            }
-//            else if (p->jumping_counter == 0)
+//            else if (p.jumping_counter == 0)
 //            {
-//                p->pos.z += ((fz-(i<<7))-p->pos.z)>>1; //Smooth on the water
-//                if (p->on_warping_sector == 0 && p->pos.z > fz-(16<<8))
+//                p.pos.z += ((fz-(i<<7))-p.pos.z)>>1; //Smooth on the water
+//                if (p.on_warping_sector == 0 && p.pos.z > fz-(16<<8))
 //                {
-//                    p->pos.z = fz-(16<<8);
-//                    p->vel.z >>= 1;
+//                    p.pos.z = fz-(16<<8);
+//                    p.vel.z >>= 1;
 //                }
 //            }
 
-//            p->on_warping_sector = 0;
+//            p.on_warping_sector = 0;
 
 //            if (TEST_SYNC_KEY(sb_snum, SK_CROUCH))
 //            {
 //                // crouching
-//                if (VM_OnEvent(EVENT_CROUCH,p->i,snum, -1, 0) == 0)
+//                if (VM_OnEvent(EVENT_CROUCH,p.i,snum, -1, 0) == 0)
 //                {
-//                    p->pos.z += (2048+768);
-//                    p->crack_time = 777;
+//                    p.pos.z += (2048+768);
+//                    p.crack_time = 777;
 //                }
 //            }
 
 //            // jumping
-//            if (!TEST_SYNC_KEY(sb_snum, SK_JUMP) && p->jumping_toggle == 1)
-//                p->jumping_toggle = 0;
-//            else if (TEST_SYNC_KEY(sb_snum, SK_JUMP) && p->jumping_toggle == 0)
+//            if (!TEST_SYNC_KEY(sb_snum, SK_JUMP) && p.jumping_toggle == 1)
+//                p.jumping_toggle = 0;
+//            else if (TEST_SYNC_KEY(sb_snum, SK_JUMP) && p.jumping_toggle == 0)
 //            {
-//                if (p->jumping_counter == 0)
+//                if (p.jumping_counter == 0)
 //                    if ((fz-cz) > (56<<8))
 //                    {
-//                        if (VM_OnEvent(EVENT_JUMP,p->i,snum, -1, 0) == 0)
+//                        if (VM_OnEvent(EVENT_JUMP,p.i,snum, -1, 0) == 0)
 //                        {
-//                            p->jumping_counter = 1;
-//                            p->jumping_toggle = 1;
+//                            p.jumping_counter = 1;
+//                            p.jumping_toggle = 1;
 //                        }
 //                    }
 //            }
 
-//            if (p->jumping_counter && !TEST_SYNC_KEY(sb_snum, SK_JUMP))
-//                p->jumping_toggle = 0;
+//            if (p.jumping_counter && !TEST_SYNC_KEY(sb_snum, SK_JUMP))
+//                p.jumping_toggle = 0;
 //        }
 
-//        if (p->jumping_counter)
+//        if (p.jumping_counter)
 //        {
-//            if (!TEST_SYNC_KEY(sb_snum, SK_JUMP) && p->jumping_toggle == 1)
-//                p->jumping_toggle = 0;
+//            if (!TEST_SYNC_KEY(sb_snum, SK_JUMP) && p.jumping_toggle == 1)
+//                p.jumping_toggle = 0;
 
-//            if (p->jumping_counter < (1024+256))
+//            if (p.jumping_counter < (1024+256))
 //            {
-//                if (psectlotag == ST_1_ABOVE_WATER && p->jumping_counter > 768)
+//                if (psectlotag == ST_1_ABOVE_WATER && p.jumping_counter > 768)
 //                {
-//                    p->jumping_counter = 0;
-//                    p->vel.z = -512;
+//                    p.jumping_counter = 0;
+//                    p.vel.z = -512;
 //                }
 //                else
 //                {
-//                    p->vel.z -= (sintable[(2048-128+p->jumping_counter)&2047])/12;
-//                    p->jumping_counter += 180;
-//                    p->on_ground = 0;
+//                    p.vel.z -= (sintable[(2048-128+p.jumping_counter)&2047])/12;
+//                    p.jumping_counter += 180;
+//                    p.on_ground = 0;
 //                }
 //            }
 //            else
 //            {
-//                p->jumping_counter = 0;
-//                p->vel.z = 0;
+//                p.jumping_counter = 0;
+//                p.vel.z = 0;
 //            }
 //        }
 
-//        p->pos.z += p->vel.z;
+//        p.pos.z += p.vel.z;
 
-//        if ((psectlotag != ST_2_UNDERWATER || cz != sector[p->cursectnum].ceilingz) && p->pos.z < (cz+(4<<8)))
+//        if ((psectlotag != ST_2_UNDERWATER || cz != sector[p.cursectnum].ceilingz) && p.pos.z < (cz+(4<<8)))
 //        {
-//            p->jumping_counter = 0;
-//            if (p->vel.z < 0)
-//                p->vel.x = p->vel.y = 0;
-//            p->vel.z = 128;
-//            p->pos.z = cz+(4<<8);
+//            p.jumping_counter = 0;
+//            if (p.vel.z < 0)
+//                p.vel.x = p.vel.y = 0;
+//            p.vel.z = 128;
+//            p.pos.z = cz+(4<<8);
 //        }
 //    }
 
-//    if (p->fist_incs || p->transporter_hold > 2 || p->hard_landing || p->access_incs > 0 || p->knee_incs > 0 ||
-//            (PWEAPON(0, p->curr_weapon, WorksLike) == TRIPBOMB_WEAPON &&
-//             *kb > 1 && *kb < PWEAPON(0, p->curr_weapon, FireDelay)))
+//    if (p.fist_incs || p.transporter_hold > 2 || p.hard_landing || p.access_incs > 0 || p.knee_incs > 0 ||
+//            (PWEAPON(0, p.curr_weapon, WorksLike) == TRIPBOMB_WEAPON &&
+//             *kb > 1 && *kb < PWEAPON(0, p.curr_weapon, FireDelay)))
 //    {
 //        doubvel = 0;
-//        p->vel.x = 0;
-//        p->vel.y = 0;
+//        p.vel.x = 0;
+//        p.vel.y = 0;
 //    }
-//    else if (g_player[snum].sync->avel)            //p->ang += syncangvel * constant
+//    else if (g_player[snum].sync.avel)            //p.ang += syncangvel * constant
 //    {
-//        int32_t tempang = g_player[snum].sync->avel<<1;
+//        int32_t tempang = g_player[snum].sync.avel<<1;
 
-//        if (psectlotag == ST_2_UNDERWATER) p->angvel =(tempang-(tempang>>3))*ksgn(doubvel);
-//        else p->angvel = tempang*ksgn(doubvel);
+//        if (psectlotag == ST_2_UNDERWATER) p.angvel =(tempang-(tempang>>3))*ksgn(doubvel);
+//        else p.angvel = tempang*ksgn(doubvel);
 
-//        p->ang += p->angvel;
-//        p->ang &= 2047;
-//        p->crack_time = 777;
+//        p.ang += p.angvel;
+//        p.ang &= 2047;
+//        p.crack_time = 777;
 //    }
 
-//    if (p->spritebridge == 0)
+//    if (p.spritebridge == 0)
 //    {
-//        j = sector[s->sectnum].floorpicnum;
+//        j = sector[s.sectnum].floorpicnum;
 
-//        if (j == PURPLELAVA || sector[s->sectnum].ceilingpicnum == PURPLELAVA)
+//        if (j == PURPLELAVA || sector[s.sectnum].ceilingpicnum == PURPLELAVA)
 //        {
-//            if (p->inv_amount[GET_BOOTS] > 0)
+//            if (p.inv_amount[GET_BOOTS] > 0)
 //            {
-//                p->inv_amount[GET_BOOTS]--;
-//                p->inven_icon = ICON_BOOTS;
-//                if (p->inv_amount[GET_BOOTS] <= 0)
+//                p.inv_amount[GET_BOOTS]--;
+//                p.inven_icon = ICON_BOOTS;
+//                if (p.inv_amount[GET_BOOTS] <= 0)
 //                    P_SelectNextInvItem(p);
 //            }
 //            else
 //            {
-//                if (!A_CheckSoundPlaying(p->i,DUKE_LONGTERM_PAIN))
-//                    A_PlaySound(DUKE_LONGTERM_PAIN,p->i);
+//                if (!A_CheckSoundPlaying(p.i,DUKE_LONGTERM_PAIN))
+//                    A_PlaySound(DUKE_LONGTERM_PAIN,p.i);
 
 //                P_PalFrom(p, 32, 0,8,0);
-//                s->extra--;
+//                s.extra--;
 //            }
 //        }
 
-//        if (p->on_ground && truefdist <= PHEIGHT+(16<<8) && P_CheckFloorDamage(p, j))
+//        if (p.on_ground && truefdist <= PHEIGHT+(16<<8) && P_CheckFloorDamage(p, j))
 //        {
 //            P_DoQuote(QUOTE_BOOTS_ON, p);
-//            p->inv_amount[GET_BOOTS] -= 2;
-//            if (p->inv_amount[GET_BOOTS] <= 0)
+//            p.inv_amount[GET_BOOTS] -= 2;
+//            if (p.inv_amount[GET_BOOTS] <= 0)
 //            {
-//                p->inv_amount[GET_BOOTS] = 0;
+//                p.inv_amount[GET_BOOTS] = 0;
 //                P_SelectNextInvItem(p);
 //            }
 //        }
 //    }
 
-//    if (g_player[snum].sync->extbits&(1))
-//        VM_OnEvent(EVENT_MOVEFORWARD,p->i,snum, -1, 0);
+//    if (g_player[snum].sync.extbits&(1))
+//        VM_OnEvent(EVENT_MOVEFORWARD,p.i,snum, -1, 0);
 
-//    if (g_player[snum].sync->extbits&(1<<1))
-//        VM_OnEvent(EVENT_MOVEBACKWARD,p->i,snum, -1, 0);
+//    if (g_player[snum].sync.extbits&(1<<1))
+//        VM_OnEvent(EVENT_MOVEBACKWARD,p.i,snum, -1, 0);
 
-//    if (g_player[snum].sync->extbits&(1<<2))
-//        VM_OnEvent(EVENT_STRAFELEFT,p->i,snum, -1, 0);
+//    if (g_player[snum].sync.extbits&(1<<2))
+//        VM_OnEvent(EVENT_STRAFELEFT,p.i,snum, -1, 0);
 
-//    if (g_player[snum].sync->extbits&(1<<3))
-//        VM_OnEvent(EVENT_STRAFERIGHT,p->i,snum, -1, 0);
+//    if (g_player[snum].sync.extbits&(1<<3))
+//        VM_OnEvent(EVENT_STRAFERIGHT,p.i,snum, -1, 0);
 
-//    if (g_player[snum].sync->extbits&(1<<4) || g_player[snum].sync->avel < 0)
-//        VM_OnEvent(EVENT_TURNLEFT,p->i,snum, -1, 0);
+//    if (g_player[snum].sync.extbits&(1<<4) || g_player[snum].sync.avel < 0)
+//        VM_OnEvent(EVENT_TURNLEFT,p.i,snum, -1, 0);
 
-//    if (g_player[snum].sync->extbits&(1<<5) || g_player[snum].sync->avel > 0)
-//        VM_OnEvent(EVENT_TURNRIGHT,p->i,snum, -1, 0);
+//    if (g_player[snum].sync.extbits&(1<<5) || g_player[snum].sync.avel > 0)
+//        VM_OnEvent(EVENT_TURNRIGHT,p.i,snum, -1, 0);
 
-//    if (p->vel.x || p->vel.y || g_player[snum].sync->fvel || g_player[snum].sync->svel)
+//    if (p.vel.x || p.vel.y || g_player[snum].sync.fvel || g_player[snum].sync.svel)
 //    {
-//        p->crack_time = 777;
+//        p.crack_time = 777;
 
-//        k = sintable[p->bobcounter&2047]>>12;
+//        k = sintable[p.bobcounter&2047]>>12;
 
 //        if ((truefdist < PHEIGHT+(8<<8)) && (k == 1 || k == 3))
 //        {
-//            if (p->walking_snd_toggle == 0 && p->on_ground)
+//            if (p.walking_snd_toggle == 0 && p.on_ground)
 //            {
 //                switch (psectlotag)
 //                {
 //                case 0:
 //                    if (lz >= 0 && (lz&49152) == 49152)
 //                        j = sprite[lz&(MAXSPRITES-1)].picnum;
-//                    else j = sector[p->cursectnum].floorpicnum;
+//                    else j = sector[p.cursectnum].floorpicnum;
 
 //                    switch (DYNAMICTILEMAP(j))
 //                    {
 //                    case PANNEL1__STATIC:
 //                    case PANNEL2__STATIC:
-//                        A_PlaySound(DUKE_WALKINDUCTS,p->i);
-//                        p->walking_snd_toggle = 1;
+//                        A_PlaySound(DUKE_WALKINDUCTS,p.i);
+//                        p.walking_snd_toggle = 1;
 //                        break;
 //                    }
 //                    break;
 
 //                case ST_1_ABOVE_WATER:
-//                    if (!p->spritebridge)
+//                    if (!p.spritebridge)
 //                    {
 //                        if ((krand()&1) == 0)
-//                            A_PlaySound(DUKE_ONWATER,p->i);
-//                        p->walking_snd_toggle = 1;
+//                            A_PlaySound(DUKE_ONWATER,p.i);
+//                        p.walking_snd_toggle = 1;
 //                    }
 //                    break;
 //                }
 //            }
 //        }
-//        else if (p->walking_snd_toggle > 0)
-//            p->walking_snd_toggle--;
+//        else if (p.walking_snd_toggle > 0)
+//            p.walking_snd_toggle--;
 
-//        if (p->jetpack_on == 0 && p->inv_amount[GET_STEROIDS] > 0 && p->inv_amount[GET_STEROIDS] < 400)
+//        if (p.jetpack_on == 0 && p.inv_amount[GET_STEROIDS] > 0 && p.inv_amount[GET_STEROIDS] < 400)
 //            doubvel <<= 1;
 
-//        p->vel.x += ((g_player[snum].sync->fvel*doubvel)<<6);
-//        p->vel.y += ((g_player[snum].sync->svel*doubvel)<<6);
+//        p.vel.x += ((g_player[snum].sync.fvel*doubvel)<<6);
+//        p.vel.y += ((g_player[snum].sync.svel*doubvel)<<6);
 
 //        j = 0;
 
 //        if (psectlotag == ST_2_UNDERWATER)
 //            j = 0x1400;
-//        else if (p->on_ground && (TEST_SYNC_KEY(sb_snum, SK_CROUCH) || (*kb > 10 && PWEAPON(snum, p->curr_weapon, WorksLike) == KNEE_WEAPON)))
+//        else if (p.on_ground && (TEST_SYNC_KEY(sb_snum, SK_CROUCH) || (*kb > 10 && PWEAPON(snum, p.curr_weapon, WorksLike) == KNEE_WEAPON)))
 //            j = 0x2000;
 
-//        p->vel.x = mulscale16(p->vel.x,p->runspeed-j);
-//        p->vel.y = mulscale16(p->vel.y,p->runspeed-j);
+//        p.vel.x = mulscale16(p.vel.x,p.runspeed-j);
+//        p.vel.y = mulscale16(p.vel.y,p.runspeed-j);
 
-//        if (klabs(p->vel.x) < 2048 && klabs(p->vel.y) < 2048)
-//            p->vel.x = p->vel.y = 0;
+//        if (klabs(p.vel.x) < 2048 && klabs(p.vel.y) < 2048)
+//            p.vel.x = p.vel.y = 0;
 
 //        if (shrunk)
 //        {
-//            p->vel.x = mulscale16(p->vel.x,p->runspeed-(p->runspeed>>1)+(p->runspeed>>2));
-//            p->vel.y = mulscale16(p->vel.y,p->runspeed-(p->runspeed>>1)+(p->runspeed>>2));
+//            p.vel.x = mulscale16(p.vel.x,p.runspeed-(p.runspeed>>1)+(p.runspeed>>2));
+//            p.vel.y = mulscale16(p.vel.y,p.runspeed-(p.runspeed>>1)+(p.runspeed>>2));
 //        }
 //    }
 
 //HORIZONLY:
-//    if (psectlotag == ST_1_ABOVE_WATER || p->spritebridge == 1) i = p->autostep_sbw;
-//    else i = p->autostep;
+//    if (psectlotag == ST_1_ABOVE_WATER || p.spritebridge == 1) i = p.autostep_sbw;
+//    else i = p.autostep;
 
-//    if (p->cursectnum >= 0 && sector[p->cursectnum].lotag == ST_2_UNDERWATER) k = 0;
+//    if (p.cursectnum >= 0 && sector[p.cursectnum].lotag == ST_2_UNDERWATER) k = 0;
 //    else k = 1;
 
 //    if (ud.noclip)
 //    {
-//        p->pos.x += p->vel.x>>14;
-//        p->pos.y += p->vel.y>>14;
-//        updatesector(p->pos.x,p->pos.y,&p->cursectnum);
-//        changespritesect(p->i,p->cursectnum);
+//        p.pos.x += p.vel.x>>14;
+//        p.pos.y += p.vel.y>>14;
+//        updatesector(p.pos.x,p.pos.y,&p.cursectnum);
+//        changespritesect(p.i,p.cursectnum);
 //    }
 //    else
 //    {
 //#ifdef YAX_ENABLE
-//        int32_t sect = p->cursectnum;
+//        int32_t sect = p.cursectnum;
 //        int16_t cb, fb;
 
 //        if (sect >= 0)
@@ -5092,55 +5092,55 @@ var WeaponPickupSprites = new Int16Array([ KNEE__STATIC, FIRSTGUNSPRITE__STATIC,
 //        // this updatesectorz conflicts with Duke3d's way of teleporting through water,
 //        // so make it a bit conditional... OTOH, this way we have an ugly z jump when
 //        // changing from above water to underwater
-//        if (sect >= 0 && !(sector[sect].lotag==ST_1_ABOVE_WATER && p->on_ground && fb>=0))
+//        if (sect >= 0 && !(sector[sect].lotag==ST_1_ABOVE_WATER && p.on_ground && fb>=0))
 //        {
 //            if ((fb>=0 && !(sector[sect].floorstat&512)) || (cb>=0 && !(sector[sect].ceilingstat&512)))
 //            {
-//                p->cursectnum += MAXSECTORS;  // skip initial z check, restored by updatesectorz
-//                updatesectorz(p->pos.x,p->pos.y,p->pos.z,&p->cursectnum);
+//                p.cursectnum += MAXSECTORS;  // skip initial z check, restored by updatesectorz
+//                updatesectorz(p.pos.x,p.pos.y,p.pos.z,&p.cursectnum);
 //            }
 //        }
 //#endif
-//        if ((j = clipmove((vec3_t *)p,&p->cursectnum, p->vel.x,p->vel.y,164L,(4L<<8),i,CLIPMASK0)))
+//        if ((j = clipmove((vec3_t *)p,&p.cursectnum, p.vel.x,p.vel.y,164L,(4L<<8),i,CLIPMASK0)))
 //            P_CheckTouchDamage(p, j);
 //    }
 
 //    // This makes the player view lower when shrunk.  NOTE that it can get the
 //    // view below the sector floor (and does, when on the ground).
-//    if (p->jetpack_on == 0 && psectlotag != ST_2_UNDERWATER && psectlotag != ST_1_ABOVE_WATER && shrunk)
-//        p->pos.z += 32<<8;
+//    if (p.jetpack_on == 0 && psectlotag != ST_2_UNDERWATER && psectlotag != ST_1_ABOVE_WATER && shrunk)
+//        p.pos.z += 32<<8;
 
-//    if (p->jetpack_on == 0)
+//    if (p.jetpack_on == 0)
 //    {
-//        if (s->xvel > 16)
+//        if (s.xvel > 16)
 //        {
-//            if (psectlotag != ST_1_ABOVE_WATER && psectlotag != ST_2_UNDERWATER && p->on_ground)
+//            if (psectlotag != ST_1_ABOVE_WATER && psectlotag != ST_2_UNDERWATER && p.on_ground)
 //            {
-//                p->pycount += 52;
-//                p->pycount &= 2047;
-//                p->pyoff =
-//                    klabs(s->xvel*sintable[p->pycount])/1596;
+//                p.pycount += 52;
+//                p.pycount &= 2047;
+//                p.pyoff =
+//                    klabs(s.xvel*sintable[p.pycount])/1596;
 //            }
 //        }
 //        else if (psectlotag != ST_2_UNDERWATER && psectlotag != ST_1_ABOVE_WATER)
-//            p->pyoff = 0;
+//            p.pyoff = 0;
 //    }
 
 //    // RBG***
 
-//    p->pos.z += PHEIGHT;
-//    setsprite(p->i,(vec3_t *)&p->pos.x);
-//    p->pos.z -= PHEIGHT;
+//    p.pos.z += PHEIGHT;
+//    setsprite(p.i,(vec3_t *)&p.pos.x);
+//    p.pos.z -= PHEIGHT;
 
 //    // ST_2_UNDERWATER
-//    if (p->cursectnum >= 0 && psectlotag < 3)
+//    if (p.cursectnum >= 0 && psectlotag < 3)
 //    {
-////        p->cursectnum = s->sectnum;
+////        p.cursectnum = s.sectnum;
 
-//        if (!ud.noclip && sector[p->cursectnum].lotag == ST_31_TWO_WAY_TRAIN)
+//        if (!ud.noclip && sector[p.cursectnum].lotag == ST_31_TWO_WAY_TRAIN)
 //        {
 //            // XXX: POTENTIAL_OOB
-//            if (sprite[sector[p->cursectnum].hitag].xvel && actor[sector[p->cursectnum].hitag].t_data[0] == 0)
+//            if (sprite[sector[p.cursectnum].hitag].xvel && actor[sector[p.cursectnum].hitag].t_data[0] == 0)
 //            {
 //                P_QuickKill(p);
 //                return;
@@ -5148,138 +5148,138 @@ var WeaponPickupSprites = new Int16Array([ KNEE__STATIC, FIRSTGUNSPRITE__STATIC,
 //        }
 //    }
 
-//    if (p->cursectnum >= 0 && truefdist < PHEIGHT && p->on_ground &&
-//            psectlotag != ST_1_ABOVE_WATER && shrunk == 0 && sector[p->cursectnum].lotag == ST_1_ABOVE_WATER)
-//        if (!A_CheckSoundPlaying(p->i,DUKE_ONWATER))
-//            A_PlaySound(DUKE_ONWATER,p->i);
+//    if (p.cursectnum >= 0 && truefdist < PHEIGHT && p.on_ground &&
+//            psectlotag != ST_1_ABOVE_WATER && shrunk == 0 && sector[p.cursectnum].lotag == ST_1_ABOVE_WATER)
+//        if (!A_CheckSoundPlaying(p.i,DUKE_ONWATER))
+//            A_PlaySound(DUKE_ONWATER,p.i);
 
-//    if (p->cursectnum >=0 && p->cursectnum != s->sectnum)
-//        changespritesect(p->i, p->cursectnum);
+//    if (p.cursectnum >=0 && p.cursectnum != s.sectnum)
+//        changespritesect(p.i, p.cursectnum);
 
-//    if (p->cursectnum >= 0 && ud.noclip == 0)
+//    if (p.cursectnum >= 0 && ud.noclip == 0)
 //    {
-//        j = (pushmove((vec3_t *)p,&p->cursectnum,164L,(4L<<8),(4L<<8),CLIPMASK0) < 0 && A_GetFurthestAngle(p->i,8) < 512);
+//        j = (pushmove((vec3_t *)p,&p.cursectnum,164L,(4L<<8),(4L<<8),CLIPMASK0) < 0 && A_GetFurthestAngle(p.i,8) < 512);
 
-//        if (klabs(actor[p->i].floorz-actor[p->i].ceilingz) < (48<<8) || j)
+//        if (klabs(actor[p.i].floorz-actor[p.i].ceilingz) < (48<<8) || j)
 //        {
-//            if (!(sector[s->sectnum].lotag&0x8000) && (isanunderoperator(sector[s->sectnum].lotag) ||
-//                    isanearoperator(sector[s->sectnum].lotag)))
-//                G_ActivateBySector(s->sectnum,p->i);
+//            if (!(sector[s.sectnum].lotag&0x8000) && (isanunderoperator(sector[s.sectnum].lotag) ||
+//                    isanearoperator(sector[s.sectnum].lotag)))
+//                G_ActivateBySector(s.sectnum,p.i);
 //            if (j)
 //            {
 //                P_QuickKill(p);
 //                return;
 //            }
 //        }
-//        else if (klabs(fz-cz) < (32<<8) && isanunderoperator(sector[p->cursectnum].lotag))
-//            G_ActivateBySector(p->cursectnum,p->i);
+//        else if (klabs(fz-cz) < (32<<8) && isanunderoperator(sector[p.cursectnum].lotag))
+//            G_ActivateBySector(p.cursectnum,p.i);
 //    }
 
 //    i = 0;
-//    if (TEST_SYNC_KEY(sb_snum, SK_CENTER_VIEW) || p->hard_landing)
-//        if (VM_OnEvent(EVENT_RETURNTOCENTER,p->i,snum, -1, 0) == 0)
-//            p->return_to_center = 9;
+//    if (TEST_SYNC_KEY(sb_snum, SK_CENTER_VIEW) || p.hard_landing)
+//        if (VM_OnEvent(EVENT_RETURNTOCENTER,p.i,snum, -1, 0) == 0)
+//            p.return_to_center = 9;
 
 //    if (TEST_SYNC_KEY(sb_snum, SK_LOOK_UP))
 //    {
-//        if (VM_OnEvent(EVENT_LOOKUP,p->i,snum, -1, 0) == 0)
+//        if (VM_OnEvent(EVENT_LOOKUP,p.i,snum, -1, 0) == 0)
 //        {
-//            p->return_to_center = 9;
-//            if (TEST_SYNC_KEY(sb_snum, SK_RUN)) p->horiz += 12;
-//            p->horiz += 12;
+//            p.return_to_center = 9;
+//            if (TEST_SYNC_KEY(sb_snum, SK_RUN)) p.horiz += 12;
+//            p.horiz += 12;
 //            i++;
 //        }
 //    }
 
 //    if (TEST_SYNC_KEY(sb_snum, SK_LOOK_DOWN))
 //    {
-//        if (VM_OnEvent(EVENT_LOOKDOWN,p->i,snum, -1, 0) == 0)
+//        if (VM_OnEvent(EVENT_LOOKDOWN,p.i,snum, -1, 0) == 0)
 //        {
-//            p->return_to_center = 9;
-//            if (TEST_SYNC_KEY(sb_snum, SK_RUN)) p->horiz -= 12;
-//            p->horiz -= 12;
+//            p.return_to_center = 9;
+//            if (TEST_SYNC_KEY(sb_snum, SK_RUN)) p.horiz -= 12;
+//            p.horiz -= 12;
 //            i++;
 //        }
 //    }
 
 //    if (TEST_SYNC_KEY(sb_snum, SK_AIM_UP))
 //    {
-//        if (VM_OnEvent(EVENT_AIMUP,p->i,snum, -1, 0) == 0)
+//        if (VM_OnEvent(EVENT_AIMUP,p.i,snum, -1, 0) == 0)
 //        {
-//            if (TEST_SYNC_KEY(sb_snum, SK_RUN)) p->horiz += 6;
-//            p->horiz += 6;
+//            if (TEST_SYNC_KEY(sb_snum, SK_RUN)) p.horiz += 6;
+//            p.horiz += 6;
 //            i++;
 //        }
 //    }
 
 //    if (TEST_SYNC_KEY(sb_snum, SK_AIM_DOWN))
 //    {
-//        if (VM_OnEvent(EVENT_AIMDOWN,p->i,snum, -1, 0) == 0)
+//        if (VM_OnEvent(EVENT_AIMDOWN,p.i,snum, -1, 0) == 0)
 //        {
-//            if (TEST_SYNC_KEY(sb_snum, SK_RUN)) p->horiz -= 6;
-//            p->horiz -= 6;
+//            if (TEST_SYNC_KEY(sb_snum, SK_RUN)) p.horiz -= 6;
+//            p.horiz -= 6;
 //            i++;
 //        }
 //    }
 
-//    if (p->return_to_center > 0 && !TEST_SYNC_KEY(sb_snum, SK_LOOK_UP) && !TEST_SYNC_KEY(sb_snum, SK_LOOK_DOWN))
+//    if (p.return_to_center > 0 && !TEST_SYNC_KEY(sb_snum, SK_LOOK_UP) && !TEST_SYNC_KEY(sb_snum, SK_LOOK_DOWN))
 //    {
-//        p->return_to_center--;
-//        p->horiz += 33-(p->horiz/3);
+//        p.return_to_center--;
+//        p.horiz += 33-(p.horiz/3);
 //        i++;
 //    }
 
-//    if (p->hard_landing > 0)
+//    if (p.hard_landing > 0)
 //    {
-//        p->hard_landing--;
-//        p->horiz -= (p->hard_landing<<4);
+//        p.hard_landing--;
+//        p.horiz -= (p.hard_landing<<4);
 //    }
 
 //    if (i)
 //    {
-//        if (p->horiz > 95 && p->horiz < 105) p->horiz = 100;
-//        if (p->horizoff > -5 && p->horizoff < 5) p->horizoff = 0;
+//        if (p.horiz > 95 && p.horiz < 105) p.horiz = 100;
+//        if (p.horizoff > -5 && p.horizoff < 5) p.horizoff = 0;
 //    }
 
-//    p->horiz += g_player[snum].sync->horz;
+//    p.horiz += g_player[snum].sync.horz;
 
-//    if (p->horiz > HORIZ_MAX) p->horiz = HORIZ_MAX;
-//    else if (p->horiz < HORIZ_MIN) p->horiz = HORIZ_MIN;
+//    if (p.horiz > HORIZ_MAX) p.horiz = HORIZ_MAX;
+//    else if (p.horiz < HORIZ_MIN) p.horiz = HORIZ_MIN;
 
 //    //Shooting code/changes
 
-//    if (p->show_empty_weapon > 0)
+//    if (p.show_empty_weapon > 0)
 //    {
-//        p->show_empty_weapon--;
-//        if (p->show_empty_weapon == 0 && (p->weaponswitch & 2) && p->ammo_amount[p->curr_weapon] <= 0)
+//        p.show_empty_weapon--;
+//        if (p.show_empty_weapon == 0 && (p.weaponswitch & 2) && p.ammo_amount[p.curr_weapon] <= 0)
 //        {
-//            if (p->last_full_weapon == GROW_WEAPON)
-//                p->subweapon |= (1<<GROW_WEAPON);
-//            else if (p->last_full_weapon == SHRINKER_WEAPON)
-//                p->subweapon &= ~(1<<GROW_WEAPON);
-//            P_AddWeapon(p, p->last_full_weapon);
+//            if (p.last_full_weapon == GROW_WEAPON)
+//                p.subweapon |= (1<<GROW_WEAPON);
+//            else if (p.last_full_weapon == SHRINKER_WEAPON)
+//                p.subweapon &= ~(1<<GROW_WEAPON);
+//            P_AddWeapon(p, p.last_full_weapon);
 //            return;
 //        }
 //    }
 
-//    if (p->knee_incs > 0)
+//    if (p.knee_incs > 0)
 //    {
-//        p->horiz -= 48;
-//        p->return_to_center = 9;
+//        p.horiz -= 48;
+//        p.return_to_center = 9;
 
-//        if (++p->knee_incs > 15)
+//        if (++p.knee_incs > 15)
 //        {
-//            p->knee_incs = 0;
-//            p->holster_weapon = 0;
-//            p->weapon_pos = klabs(p->weapon_pos);
+//            p.knee_incs = 0;
+//            p.holster_weapon = 0;
+//            p.weapon_pos = klabs(p.weapon_pos);
 
-//            if (p->actorsqu >= 0 && sprite[p->actorsqu].statnum != MAXSTATUS && dist(&sprite[p->i],&sprite[p->actorsqu]) < 1400)
+//            if (p.actorsqu >= 0 && sprite[p.actorsqu].statnum != MAXSTATUS && dist(&sprite[p.i],&sprite[p.actorsqu]) < 1400)
 //            {
-//                A_DoGuts(p->actorsqu,JIBS6,7);
-//                A_Spawn(p->actorsqu,BLOODPOOL);
-//                A_PlaySound(SQUISHED,p->actorsqu);
+//                A_DoGuts(p.actorsqu,JIBS6,7);
+//                A_Spawn(p.actorsqu,BLOODPOOL);
+//                A_PlaySound(SQUISHED,p.actorsqu);
 
-//                switch (DYNAMICTILEMAP(sprite[p->actorsqu].picnum))
+//                switch (DYNAMICTILEMAP(sprite[p.actorsqu].picnum))
 //                {
 //                case FEM1__STATIC:
 //                case FEM2__STATIC:
@@ -5294,25 +5294,25 @@ var WeaponPickupSprites = new Int16Array([ KNEE__STATIC, FIRSTGUNSPRITE__STATIC,
 //                case PODFEM1__STATIC:
 //                case NAKED1__STATIC:
 //                case STATUE__STATIC:
-//                    if (sprite[p->actorsqu].yvel)
-//                        G_OperateRespawns(sprite[p->actorsqu].yvel);
-//                    A_DeleteSprite(p->actorsqu);
+//                    if (sprite[p.actorsqu].yvel)
+//                        G_OperateRespawns(sprite[p.actorsqu].yvel);
+//                    A_DeleteSprite(p.actorsqu);
 //                    break;
 //                case APLAYER__STATIC:
-//                    P_QuickKill(g_player[sprite[p->actorsqu].yvel].ps);
-//                    g_player[sprite[p->actorsqu].yvel].ps->frag_ps = snum;
+//                    P_QuickKill(g_player[sprite[p.actorsqu].yvel].ps);
+//                    g_player[sprite[p.actorsqu].yvel].ps.frag_ps = snum;
 //                    break;
 //                default:
-//                    if (A_CheckEnemySprite(&sprite[p->actorsqu]))
-//                        p->actors_killed++;
-//                    A_DeleteSprite(p->actorsqu);
+//                    if (A_CheckEnemySprite(&sprite[p.actorsqu]))
+//                        p.actors_killed++;
+//                    A_DeleteSprite(p.actorsqu);
 //                    break;
 //                }
 //            }
-//            p->actorsqu = -1;
+//            p.actorsqu = -1;
 //        }
-//        else if (p->actorsqu >= 0)
-//            p->ang += G_GetAngleDelta(p->ang,getangle(sprite[p->actorsqu].x-p->pos.x,sprite[p->actorsqu].y-p->pos.y))>>2;
+//        else if (p.actorsqu >= 0)
+//            p.ang += G_GetAngleDelta(p.ang,getangle(sprite[p.actorsqu].x-p.pos.x,sprite[p.actorsqu].y-p.pos.y))>>2;
 //    }
 
 //    if (P_DoCounters(p)) return;
