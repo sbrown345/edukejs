@@ -4627,16 +4627,16 @@ void G_DrawRooms(int32_t snum, int32_t smoothratio)
 #ifdef DEBUG_MIRRORS_ONLY
             gotpic[MIRROR>>3] |= (1<<(MIRROR&7));
 #else
-            //yax_preparedrawrooms();
+            yax_preparedrawrooms();
             drawrooms(CAMERA(pos.x),CAMERA(pos.y),CAMERA(pos.z),CAMERA(ang),CAMERA(horiz),CAMERA(sect));
-            //yax_drawrooms(G_DoSpriteAnimations, CAMERA(sect), 0, smoothratio);
+            yax_drawrooms(G_DoSpriteAnimations, CAMERA(sect), 0, smoothratio);
 
-		/**S	G_OROR_Dupe/prites();
+            G_OROR_DupeSprites();
 
-					   G_DoSpriteAnimations(CAMERA(pos.x),CAMERA(pos.y),CAMERA(ang),smoothratio);
+            G_DoSpriteAnimations(CAMERA(pos.x),CAMERA(pos.y),CAMERA(ang),smoothratio);
 
-					   drawing_ror = 0;
-					   drawmasks()*/;
+            drawing_ror = 0;
+            drawmasks();
 #endif
         }
 

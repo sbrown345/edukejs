@@ -120,11 +120,11 @@ var usemodels=1, usehightile=1;//int32_t
 //
 //static double dxb1[MAXWALLSB], dxb2[MAXWALLSB];
 //
-//#define SCISDIST 1.0 //1.0: Close plane clipping distance
+var SCISDIST=1.0; //1.0: Close plane clipping distance
 //// the following three are for the obsolete rendmodes 1 and 2:
-//#define USEZBUFFER 1 //1:use zbuffer (slow, nice sprite rendering), 0:no zbuffer (fast, bad sprite rendering)
-//#define LINTERPSIZ 4 //log2 of interpolation size. 4:pretty fast&acceptable quality, 0:best quality/slow!
-//#define DEPTHDEBUG 0 //1:render distance instead of texture, for debugging only!, 0:default
+var USEZBUFFER=1; //1:use zbuffer (slow, nice sprite rendering), 0:no zbuffer (fast, bad sprite rendering)
+var LINTERPSIZ=4; //log2 of interpolation size. 4:pretty fast&acceptable quality, 0:best quality/slow!
+var DEPTHDEBUG=0; //1:render distance instead of texture, for debugging only!, 0:default
 //
 var shadescale = 1.0;//float 
 var shadescale_unbounded = 0;
@@ -3220,334 +3220,336 @@ function drawpoly(dpx: Float64Array, dpy: Float64Array, n:number, method: number
 //    while (sectorbordercnt > 0);
 //}
 //
-//void polymost_drawrooms()
-//{
-//    int32_t i, j, n, n2, closest;
-//    double ox, oy, oz, ox2, oy2, oz2, r, px[6], py[6], pz[6], px2[6], py2[6], pz2[6], sx[6], sy[6];
-//
-//    if (getrendermode() == REND_CLASSIC) return;
-//
-//    begindrawing();
-//    frameoffset = frameplace + windowy1*bytesperline + windowx1;
-//
+function polymost_drawrooms(): void 
+{
+    var /*int32_t */i: number, j: number, n: number, n2: number, closest: number;
+    var /*double */ox: number, oy: number, oz: number, ox2: number, oy2: number, oz2: number, r, px = new Float64Array(6), py = new Float64Array(6), pz = new Float64Array(6), px2 = new Float64Array(6), py2 = new Float64Array(6), pz2 = new Float64Array(6), sx = new Float64Array(6), sy = new Float64Array(6);
+
+    if (getrendermode() == REND_CLASSIC) return;
+
+    begindrawing();
+    frameoffset = frameplace + windowy1*bytesperline + windowx1;
+
 //#ifdef USE_OPENGL
-//    if (getrendermode() >= REND_POLYMOST)
-//    {
-//        resizeglcheck();
+    if (getrendermode() >= REND_POLYMOST)
+    {
+        resizeglcheck();
 //#ifdef YAX_ENABLE
-//        if (numyaxbunches==0)
+        if (numyaxbunches==0)
 //#endif
-//            if (editstatus)
-//                bglClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-//
-//        bglDisable(GL_BLEND);
-//        bglEnable(GL_TEXTURE_2D);
-//        //bglTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE); //default anyway
-//        bglEnable(GL_DEPTH_TEST);
-//        bglDepthFunc(GL_ALWAYS); //NEVER,LESS,(,L)EQUAL,GREATER,(NOT,G)EQUAL,ALWAYS
-//
-//        //bglPolygonOffset(1,1); //Supposed to make sprites pasted on walls or floors not disappear
-//        bglDepthRange(0.00001,1.0); //<- this is more widely supported than glPolygonOffset
-//
-//        //Enable this for OpenGL red-blue glasses mode :)
-//        if (glredbluemode)
-//        {
-//            static int32_t grbfcnt = 0; grbfcnt++;
-//            if (redblueclearcnt < numpages) { redblueclearcnt++; bglColorMask(1,1,1,1); bglClear(GL_COLOR_BUFFER_BIT); }
-//            if (grbfcnt&1)
-//            {
-//                bglViewport(windowx1-16,yres-(windowy2+1),windowx2-(windowx1-16)+1,windowy2-windowy1+1);
-//                bglColorMask(1,0,0,1);
-//                globalposx += singlobalang/1024;
-//                globalposy -= cosglobalang/1024;
-//            }
-//            else
-//            {
-//                bglViewport(windowx1,yres-(windowy2+1),windowx2+16-windowx1+1,windowy2-windowy1+1);
-//                bglColorMask(0,1,1,1);
-//                globalposx -= singlobalang/1024;
-//                globalposy += cosglobalang/1024;
-//            }
-//        }
-//    }
+            if (editstatus)
+                bglClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+
+        bglDisable(GL_BLEND);
+        bglEnable(GL_TEXTURE_2D);
+        //bglTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE); //default anyway
+        bglEnable(GL_DEPTH_TEST);
+        bglDepthFunc(GL_ALWAYS); //NEVER,LESS,(,L)EQUAL,GREATER,(NOT,G)EQUAL,ALWAYS
+
+        //bglPolygonOffset(1,1); //Supposed to make sprites pasted on walls or floors not disappear
+        bglDepthRange(0.00001,1.0); //<- this is more widely supported than glPolygonOffset
+
+        //Enable this for OpenGL red-blue glasses mode :)
+        if (glredbluemode)
+        {
+            static int32_t grbfcnt = 0; grbfcnt++;
+            if (redblueclearcnt < numpages) { redblueclearcnt++; bglColorMask(1,1,1,1); bglClear(GL_COLOR_BUFFER_BIT); }
+            if (grbfcnt&1)
+            {
+                bglViewport(windowx1-16,yres-(windowy2+1),windowx2-(windowx1-16)+1,windowy2-windowy1+1);
+                bglColorMask(1,0,0,1);
+                globalposx += singlobalang/1024;
+                globalposy -= cosglobalang/1024;
+            }
+            else
+            {
+                bglViewport(windowx1,yres-(windowy2+1),windowx2+16-windowx1+1,windowy2-windowy1+1);
+                bglColorMask(0,1,1,1);
+                globalposx -= singlobalang/1024;
+                globalposy += cosglobalang/1024;
+            }
+        }
+    }
 //#endif
-//
-//    //Polymost supports true look up/down :) Here, we convert horizon to angle.
-//    //gchang&gshang are cos&sin of this angle (respectively)
-//    gyxscale = ((double)xdimenscale)/131072.0;
-//    gxyaspect = ((double)xyaspect*(double)viewingrange)*(5.0/(65536.0*262144.0));
-//    gviewxrange = ((double)viewingrange)*((double)xdimen)/(32768.0*1024.0);
-//    gcosang = ((double)cosglobalang)/262144.0;
-//    gsinang = ((double)singlobalang)/262144.0;
-//    gcosang2 = gcosang*((double)viewingrange)/65536.0;
-//    gsinang2 = gsinang*((double)viewingrange)/65536.0;
-//    ghalfx = (double)halfxdimen; grhalfxdown10 = 1.0/(((double)ghalfx)*1024);
-//    ghoriz = (double)globalhoriz;
-//
-//    gvisibility = ((float)globalvisibility)*FOGSCALE;
-//
-//    //global cos/sin height angle
-//    r = (double)((ydimen>>1)-ghoriz);
-//    gshang = r/sqrt(r*r+ghalfx*ghalfx);
-//    gchang = sqrt(1.0-gshang*gshang);
-//    ghoriz = (double)(ydimen>>1);
-//
-//    //global cos/sin tilt angle
-//    gctang = cos(gtang);
-//    gstang = sin(gtang);
-//    if (fabs(gstang) < .001) //This hack avoids nasty precision bugs in domost()
-//        { gstang = 0; if (gctang > 0) gctang = 1.0; else gctang = -1.0; }
-//
-//    if (inpreparemirror)
-//        gstang = -gstang;
-//
-//    //Generate viewport trapezoid (for handling screen up/down)
-//    px[0] = px[3] = 0-1; px[1] = px[2] = windowx2+1-windowx1+2;
-//    py[0] = py[1] = 0-1; py[2] = py[3] = windowy2+1-windowy1+2; n = 4;
-//    for (i=0; i<n; i++)
-//    {
-//        ox = px[i]-ghalfx; oy = py[i]-ghoriz; oz = ghalfx;
-//
-//        //Tilt rotation (backwards)
-//        ox2 = ox*gctang + oy*gstang;
-//        oy2 = oy*gctang - ox*gstang;
-//        oz2 = oz;
-//
-//        //Up/down rotation (backwards)
-//        px[i] = ox2;
-//        py[i] = oy2*gchang + oz2*gshang;
-//        pz[i] = oz2*gchang - oy2*gshang;
-//    }
-//
-//    //Clip to SCISDIST plane
-//    n2 = 0;
-//    for (i=0; i<n; i++)
-//    {
-//        j = i+1; if (j >= n) j = 0;
-//        if (pz[i] >= SCISDIST) { px2[n2] = px[i]; py2[n2] = py[i]; pz2[n2] = pz[i]; n2++; }
-//        if ((pz[i] >= SCISDIST) != (pz[j] >= SCISDIST))
-//        {
-//            r = (SCISDIST-pz[i])/(pz[j]-pz[i]);
-//            px2[n2] = (px[j]-px[i])*r + px[i];
-//            py2[n2] = (py[j]-py[i])*r + py[i];
-//            pz2[n2] = SCISDIST; n2++;
-//        }
-//    }
-//    if (n2 < 3) { enddrawing(); return; }
-//    for (i=0; i<n2; i++)
-//    {
-//        r = ghalfx / pz2[i];
-//        sx[i] = px2[i]*r + ghalfx;
-//        sy[i] = py2[i]*r + ghoriz;
-//    }
-//    initmosts(sx,sy,n2);
-//
-//    if (searchit == 2)
-//    {
-//        int32_t vx, vy, vz;
-//        int32_t cz, fz;
-//        hitdata_t hit;
-//        vec3_t vect;
-//
-//        const float ratio = get_projhack_ratio();
-//
-//        ox2 = (searchx-ghalfx)/ratio;
-//        oy2 = (searchy-ghoriz)/ratio;  // ghoriz is (ydimen>>1) here
-//        oz2 = ghalfx;
-//
-//        //Tilt rotation
-//        ox = ox2*gctang + oy2*gstang;
-//        oy = oy2*gctang - ox2*gstang;
-//        oz = oz2;
-//
-//        //Up/down rotation
-//        ox2 = oz*gchang - oy*gshang;
-//        oy2 = ox;
-//        oz2 = oy*gchang + oz*gshang;
-//
-//        //Standard Left/right rotation
-//        vx = (int32_t)(ox2*((float)cosglobalang) - oy2*((float)singlobalang));
-//        vy = (int32_t)(ox2*((float)singlobalang) + oy2*((float)cosglobalang));
-//        vz = (int32_t)(oz2*16384.0);
-//
-//        vect.x = globalposx;
-//        vect.y = globalposy;
-//        vect.z = globalposz;
-//
-//        hitallsprites = 1;
-//        hitscan((const vec3_t *)&vect,globalcursectnum, //Start position
-//                vx>>10,vy>>10,vz>>6,&hit,0xffff0030);
-//
-//        if (hit.sect != -1) // if hitsect is -1, hitscan overflowed somewhere
-//        {
-//            getzsofslope(hit.sect,hit.pos.x,hit.pos.y,&cz,&fz);
-//            hitallsprites = 0;
-//
-//            searchsector = hit.sect;
-//            if (hit.pos.z<cz) searchstat = 1;
-//            else if (hit.pos.z>fz) searchstat = 2;
-//            else if (hit.wall >= 0)
-//            {
-//                searchbottomwall = searchwall = hit.wall; searchstat = 0;
-//                if (wall[hit.wall].nextwall >= 0)
-//                {
-//                    int32_t cz, fz;
-//                    getzsofslope(wall[hit.wall].nextsector,hit.pos.x,hit.pos.y,&cz,&fz);
-//                    if (hit.pos.z > fz)
-//                    {
-//                        searchisbottom = 1;
-//                        if (wall[hit.wall].cstat&2) //'2' bottoms of walls
-//                            searchbottomwall = wall[hit.wall].nextwall;
-//                    }
-//                    else
-//                    {
-//                        searchisbottom = 0;
-//                        if ((hit.pos.z > cz) && (wall[hit.wall].cstat&(16+32))) //masking or 1-way
-//                            searchstat = 4;
-//                    }
-//                }
-//            }
-//            else if (hit.sprite >= 0) { searchwall = hit.sprite; searchstat = 3; }
-//            else
-//            {
-//                int32_t cz, fz;
-//                getzsofslope(hit.sect,hit.pos.x,hit.pos.y,&cz,&fz);
-//                if ((hit.pos.z<<1) < cz+fz) searchstat = 1; else searchstat = 2;
-//                //if (vz < 0) searchstat = 1; else searchstat = 2; //Won't work for slopes :/
-//            }
-//
-//            if (preview_mouseaim && spritesortcnt < MAXSPRITESONSCREEN)
-//            {
-//                spritetype *tsp = &tsprite[spritesortcnt];
-//                double dadist, x,y,z;
-//                Bmemcpy(tsp, &hit.pos, sizeof(vec3_t));
-//                x = tsp.x-globalposx; y=tsp.y-globalposy; z=(tsp.z-globalposz)/16.0;
-//                dadist = sqrt(x*x + y*y + z*z);
-//                tsp.sectnum = hit.sect;
-//                tsp.picnum = 2523;  // CROSSHAIR
-//                tsp.cstat = 128;
-//                tsp.owner = MAXSPRITES-1;
-//                tsp.xrepeat = tsp.yrepeat = min(max(1, (int32_t)(dadist*48.0/3200.0)), 255);
-//                sprite[tsp.owner].xoffset = sprite[tsp.owner].yoffset = 0;
-//                tspriteptr[spritesortcnt++] = tsp;
-//            }
-//
-//            if ((searchstat==1 || searchstat==2) && searchsector>=0)
-//            {
-//                int32_t scrv[2] = {(vx>>12), (vy>>12)};
-//                int32_t scrv_r[2] = {scrv[1], -scrv[0]};
-//                walltype *wal = &wall[sector[searchsector].wallptr];
-//                uint64_t wdistsq, bestwdistsq=0x7fffffff;
-//                int32_t k, bestk=-1;
-//
-//                for (k=0; k<sector[searchsector].wallnum; k++)
-//                {
-//                    int32_t w1[2] = {wal[k].x, wal[k].y};
-//                    int32_t w2[2] = {wall[wal[k].point2].x, wall[wal[k].point2].y};
-//                    int32_t w21[2] = {w1[0]-w2[0], w1[1]-w2[1]};
-//                    int32_t pw1[2] = {w1[0]-hit.pos.x, w1[1]-hit.pos.y};
-//                    int32_t pw2[2] = {w2[0]-hit.pos.x, w2[1]-hit.pos.y};
-//                    float w1d = (float)(scrv_r[0]*pw1[0] + scrv_r[1]*pw1[1]);
-//                    float w2d = (float)(scrv_r[0]*pw2[0] + scrv_r[1]*pw2[1]);
-//                    int32_t ptonline[2], scrp[2];
-//                    int64_t t1, t2;
-//
-//                    w2d = -w2d;
-//                    if ((w1d==0 && w2d==0) || (w1d<0 || w2d<0))
-//                        continue;
-//                    ptonline[0] = (int32_t)(w2[0]+(w2d/(w1d+w2d))*w21[0]);
-//                    ptonline[1] = (int32_t)(w2[1]+(w2d/(w1d+w2d))*w21[1]);
-//                    scrp[0] = ptonline[0]-vect.x;
-//                    scrp[1] = ptonline[1]-vect.y;
-//                    if (scrv[0]*scrp[0] + scrv[1]*scrp[1] <= 0)
-//                        continue;
-//                    t1=scrp[0]; t2=scrp[1];
-//                    wdistsq = t1*t1 + t2*t2;
-//                    if (wdistsq < bestwdistsq)
-//                    {
-//                        bestk = k;
-//                        bestwdistsq = wdistsq;
-//                    }
-//                }
-//
-//                if (bestk >= 0)
-//                    searchwall = sector[searchsector].wallptr + bestk;
-//            }
-//        }
-//        searchit = 0;
-//    }
-//
-//    numscans = numbunches = 0;
-//
-//    // MASKWALL_BAD_ACCESS
-//    // Fixes access of stale maskwall[maskwallcnt] (a "scan" index, in BUILD lingo):
-//    maskwallcnt = 0;
-//
-//    if (globalcursectnum >= MAXSECTORS)
-//        globalcursectnum -= MAXSECTORS;
-//    else
-//    {
-//        i = globalcursectnum;
-//        updatesector(globalposx,globalposy,&globalcursectnum);
-//        if (globalcursectnum < 0) globalcursectnum = i;
-//    }
-//
-//    polymost_scansector(globalcursectnum);
-//
-//    if (inpreparemirror)
-//    {
-//        grhalfxdown10x = -grhalfxdown10;
-//        inpreparemirror = 0;
-//
-//        // see engine.c: INPREPAREMIRROR_NO_BUNCHES
-//        if (numbunches > 0)
-//        {
-//            polymost_drawalls(0);
-//            numbunches--;
-//            bunchfirst[0] = bunchfirst[numbunches];
-//            bunchlast[0] = bunchlast[numbunches];
-//        }
-//    }
-//    else
-//        grhalfxdown10x = grhalfxdown10;
-//
-//    while (numbunches > 0)
-//    {
-//        memset(ptempbuf,0,numbunches+3); ptempbuf[0] = 1;
-//
-//        closest = 0;              //Almost works, but not quite :(
-//        for (i=1; i<numbunches; i++)
-//        {
-//            j = polymost_bunchfront(i,closest); if (j < 0) continue;
-//            ptempbuf[i] = 1;
-//            if (!j) { ptempbuf[closest] = 1; closest = i; }
-//        }
-//        for (i=0; i<numbunches; i++) //Double-check
-//        {
-//            if (ptempbuf[i]) continue;
-//            j = polymost_bunchfront(i,closest); if (j < 0) continue;
-//            ptempbuf[i] = 1;
-//            if (!j) { ptempbuf[closest] = 1; closest = i; i = 0; }
-//        }
-//
-//        polymost_drawalls(closest);
-//
-//        numbunches--;
-//        bunchfirst[closest] = bunchfirst[numbunches];
-//        bunchlast[closest] = bunchlast[numbunches];
-//    }
+
+    //Polymost supports true look up/down :) Here, we convert horizon to angle.
+    //gchang&gshang are cos&sin of this angle (respectively)
+    gyxscale = ( /*(double)*/ xdimenscale)/131072.0;
+    gxyaspect = ( /*(double)*/ xyaspect* /*(double)*/ viewingrange)*(5.0/(65536.0*262144.0));
+    gviewxrange = ( /*(double)*/ viewingrange)*( /*(double)*/ xdimen)/(32768.0*1024.0);
+    gcosang = ( /*(double)*/ cosglobalang)/262144.0;
+    gsinang = ( /*(double)*/ singlobalang)/262144.0;
+    gcosang2 = gcosang*( /*(double)*/ viewingrange)/65536.0;
+    gsinang2 = gsinang*( /*(double)*/ viewingrange)/65536.0;
+    ghalfx =  /*(double)*/ halfxdimen; grhalfxdown10 = 1.0/(( /*(double)*/ ghalfx)*1024);
+    ghoriz =  /*(double)*/ globalhoriz;
+
+    gvisibility = (/*(float)*/ globalvisibility)*FOGSCALE;
+
+    //global cos/sin height angle
+    r =  /*(double)*/ ((ydimen>>1)-ghoriz);
+    gshang = r/sqrt(r*r+ghalfx*ghalfx);
+    gchang = sqrt(1.0-gshang*gshang);
+    ghoriz =  /*(double)*/ (ydimen>>1);
+
+    //global cos/sin tilt angle
+    gctang = cos(gtang);
+    gstang = sin(gtang);
+    if (fabs(gstang) < .001) //This hack avoids nasty precision bugs in domost()
+        { gstang = 0; if (gctang > 0) gctang = 1.0; else gctang = -1.0; }
+
+    if (inpreparemirror)
+        gstang = -gstang;
+
+    //Generate viewport trapezoid (for handling screen up/down)
+    px[0] = px[3] = 0-1; px[1] = px[2] = windowx2+1-windowx1+2;
+    py[0] = py[1] = 0-1; py[2] = py[3] = windowy2+1-windowy1+2; n = 4;
+    for (i=0; i<n; i++)
+    {
+        ox = px[i]-ghalfx; oy = py[i]-ghoriz; oz = ghalfx;
+
+        //Tilt rotation (backwards)
+        ox2 = ox*gctang + oy*gstang;
+        oy2 = oy*gctang - ox*gstang;
+        oz2 = oz;
+
+        //Up/down rotation (backwards)
+        px[i] = ox2;
+        py[i] = oy2*gchang + oz2*gshang;
+        pz[i] = oz2*gchang - oy2*gshang;
+    }
+
+    //Clip to SCISDIST plane
+    n2 = 0;
+    for (i=0; i<n; i++)
+    {
+        j = i+1; if (j >= n) j = 0;
+        if (pz[i] >= SCISDIST) { px2[n2] = px[i]; py2[n2] = py[i]; pz2[n2] = pz[i]; n2++; }
+        if ((pz[i] >= SCISDIST) != (pz[j] >= SCISDIST))
+        {
+            r = (SCISDIST-pz[i])/(pz[j]-pz[i]);
+            px2[n2] = (px[j]-px[i])*r + px[i];
+            py2[n2] = (py[j]-py[i])*r + py[i];
+            pz2[n2] = SCISDIST; n2++;
+        }
+    }
+    if (n2 < 3) { enddrawing(); return; }
+    for (i=0; i<n2; i++)
+    {
+        r = ghalfx / pz2[i];
+        sx[i] = px2[i]*r + ghalfx;
+        sy[i] = py2[i]*r + ghoriz;
+    }
+    initmosts(sx,sy,n2);
+
+    if (searchit == 2)
+    {
+        var /*int32_t */vx: number, vy: number, vz: number;
+        var /*int32_t */cz: number, fz: number;
+        var hit = new hitdata_t();
+        var vect = new vec3_t();;
+
+        var /*const float */ratio = get_projhack_ratio();
+
+        ox2 = (searchx-ghalfx)/ratio;
+        oy2 = (searchy-ghoriz)/ratio;  // ghoriz is (ydimen>>1) here
+        oz2 = ghalfx;
+
+        //Tilt rotation
+        ox = ox2*gctang + oy2*gstang;
+        oy = oy2*gctang - ox2*gstang;
+        oz = oz2;
+
+        //Up/down rotation
+        ox2 = oz*gchang - oy*gshang;
+        oy2 = ox;
+        oz2 = oy*gchang + oz*gshang;
+
+        //Standard Left/right rotation
+        vx = (int32_t)(ox2*((float)cosglobalang) - oy2*((float)singlobalang));
+        vy = (int32_t)(ox2*((float)singlobalang) + oy2*((float)cosglobalang));
+        vz = (int32_t)(oz2*16384.0);
+
+        vect.x = globalposx;
+        vect.y = globalposy;
+        vect.z = globalposz;
+
+        hitallsprites = 1;
+        hitscan((const vec3_t *)&vect,globalcursectnum, //Start position
+                vx>>10,vy>>10,vz>>6,&hit,0xffff0030);
+
+        if (hit.sect != -1) // if hitsect is -1, hitscan overflowed somewhere
+        {
+            getzsofslope(hit.sect,hit.pos.x,hit.pos.y,&cz,&fz);
+            hitallsprites = 0;
+
+            searchsector = hit.sect;
+            if (hit.pos.z<cz) searchstat = 1;
+            else if (hit.pos.z>fz) searchstat = 2;
+            else if (hit.wall >= 0)
+            {
+                searchbottomwall = searchwall = hit.wall; searchstat = 0;
+                if (wall[hit.wall].nextwall >= 0)
+                {
+                    int32_t cz, fz;
+                    getzsofslope(wall[hit.wall].nextsector,hit.pos.x,hit.pos.y,&cz,&fz);
+                    if (hit.pos.z > fz)
+                    {
+                        searchisbottom = 1;
+                        if (wall[hit.wall].cstat&2) //'2' bottoms of walls
+                            searchbottomwall = wall[hit.wall].nextwall;
+                    }
+                    else
+                    {
+                        searchisbottom = 0;
+                        if ((hit.pos.z > cz) && (wall[hit.wall].cstat&(16+32))) //masking or 1-way
+                            searchstat = 4;
+                    }
+                }
+            }
+            else if (hit.sprite >= 0) { searchwall = hit.sprite; searchstat = 3; }
+            else
+            {
+                var /*int32_t */cz: number, fz: number;
+                getzsofslope(hit.sect,hit.pos.x,hit.pos.y,&cz,&fz);
+                if ((hit.pos.z<<1) < cz+fz) searchstat = 1; else searchstat = 2;
+                //if (vz < 0) searchstat = 1; else searchstat = 2; //Won't work for slopes :/
+            }
+
+            if (preview_mouseaim && spritesortcnt < MAXSPRITESONSCREEN)
+            {
+                spritetype *tsp = &tsprite[spritesortcnt];
+                double dadist, x,y,z;
+                Bmemcpy(tsp, &hit.pos, sizeof(vec3_t));
+                x = tsp.x-globalposx; y=tsp.y-globalposy; z=(tsp.z-globalposz)/16.0;
+                dadist = sqrt(x*x + y*y + z*z);
+                tsp.sectnum = hit.sect;
+                tsp.picnum = 2523;  // CROSSHAIR
+                tsp.cstat = 128;
+                tsp.owner = MAXSPRITES-1;
+                tsp.xrepeat = tsp.yrepeat = min(max(1, (int32_t)(dadist*48.0/3200.0)), 255);
+                sprite[tsp.owner].xoffset = sprite[tsp.owner].yoffset = 0;
+                tspriteptr[spritesortcnt++] = tsp;
+            }
+
+            if ((searchstat==1 || searchstat==2) && searchsector>=0)
+            {
+                int32_t scrv[2] = {(vx>>12), (vy>>12)};
+                int32_t scrv_r[2] = {scrv[1], -scrv[0]};
+                walltype *wal = &wall[sector[searchsector].wallptr];
+                uint64_t wdistsq, bestwdistsq=0x7fffffff;
+                int32_t k, bestk=-1;
+
+                for (k=0; k<sector[searchsector].wallnum; k++)
+                {
+                    int32_t w1[2] = {wal[k].x, wal[k].y};
+                    int32_t w2[2] = {wall[wal[k].point2].x, wall[wal[k].point2].y};
+                    int32_t w21[2] = {w1[0]-w2[0], w1[1]-w2[1]};
+                    int32_t pw1[2] = {w1[0]-hit.pos.x, w1[1]-hit.pos.y};
+                    int32_t pw2[2] = {w2[0]-hit.pos.x, w2[1]-hit.pos.y};
+                    float w1d = (float)(scrv_r[0]*pw1[0] + scrv_r[1]*pw1[1]);
+                    float w2d = (float)(scrv_r[0]*pw2[0] + scrv_r[1]*pw2[1]);
+                    int32_t ptonline[2], scrp[2];
+                    int64_t t1, t2;
+
+                    w2d = -w2d;
+                    if ((w1d==0 && w2d==0) || (w1d<0 || w2d<0))
+                        continue;
+                    ptonline[0] = (int32_t)(w2[0]+(w2d/(w1d+w2d))*w21[0]);
+                    ptonline[1] = (int32_t)(w2[1]+(w2d/(w1d+w2d))*w21[1]);
+                    scrp[0] = ptonline[0]-vect.x;
+                    scrp[1] = ptonline[1]-vect.y;
+                    if (scrv[0]*scrp[0] + scrv[1]*scrp[1] <= 0)
+                        continue;
+                    t1=scrp[0]; t2=scrp[1];
+                    wdistsq = t1*t1 + t2*t2;
+                    if (wdistsq < bestwdistsq)
+                    {
+                        bestk = k;
+                        bestwdistsq = wdistsq;
+                    }
+                }
+
+                if (bestk >= 0)
+                    searchwall = sector[searchsector].wallptr + bestk;
+            }
+        }
+        searchit = 0;
+    }
+
+    numscans = numbunches = 0;
+
+    // MASKWALL_BAD_ACCESS
+    // Fixes access of stale maskwall[maskwallcnt] (a "scan" index, in BUILD lingo):
+    maskwallcnt = 0;
+
+    if (globalcursectnum >= MAXSECTORS)
+        globalcursectnum -= MAXSECTORS;
+    else
+    {
+        i = globalcursectnum;
+        var globalcursectnum = new R(globalcursectnum);
+        updatesector(globalposx,globalposy,$globalcursectnum);
+        globalcursectnum = $globalcursectnum.$;
+        if (globalcursectnum < 0) globalcursectnum = i;
+    }
+
+    polymost_scansector(globalcursectnum);
+
+    if (inpreparemirror)
+    {
+        grhalfxdown10x = -grhalfxdown10;
+        inpreparemirror = 0;
+
+        // see engine.c: INPREPAREMIRROR_NO_BUNCHES
+        if (numbunches > 0)
+        {
+            polymost_drawalls(0);
+            numbunches--;
+            bunchfirst[0] = bunchfirst[numbunches];
+            bunchlast[0] = bunchlast[numbunches];
+        }
+    }
+    else
+        grhalfxdown10x = grhalfxdown10;
+
+    while (numbunches > 0)
+    {
+        memset(ptempbuf,0,numbunches+3); ptempbuf[0] = 1;
+
+        closest = 0;              //Almost works, but not quite :(
+        for (i=1; i<numbunches; i++)
+        {
+            j = polymost_bunchfront(i,closest); if (j < 0) continue;
+            ptempbuf[i] = 1;
+            if (!j) { ptempbuf[closest] = 1; closest = i; }
+        }
+        for (i=0; i<numbunches; i++) //Double-check
+        {
+            if (ptempbuf[i]) continue;
+            j = polymost_bunchfront(i,closest); if (j < 0) continue;
+            ptempbuf[i] = 1;
+            if (!j) { ptempbuf[closest] = 1; closest = i; i = 0; }
+        }
+
+        polymost_drawalls(closest);
+
+        numbunches--;
+        bunchfirst[closest] = bunchfirst[numbunches];
+        bunchlast[closest] = bunchlast[numbunches];
+    }
 //#ifdef USE_OPENGL
-//    if (getrendermode() >= REND_POLYMOST)
-//    {
-//        bglDepthFunc(GL_LEQUAL); //NEVER,LESS,(,L)EQUAL,GREATER,(NOT,G)EQUAL,ALWAYS
-//
-//        //bglPolygonOffset(0,0);
-//        bglDepthRange(0.0,0.99999); //<- this is more widely supported than glPolygonOffset
-//    }
+    if (getrendermode() >= REND_POLYMOST)
+    {
+        bglDepthFunc(GL_LEQUAL); //NEVER,LESS,(,L)EQUAL,GREATER,(NOT,G)EQUAL,ALWAYS
+
+        //bglPolygonOffset(0,0);
+        bglDepthRange(0.0,0.99999); //<- this is more widely supported than glPolygonOffset
+    }
 //#endif
-//
-//    enddrawing();
-//}
+
+    enddrawing();
+}
 //
 //void polymost_drawmaskwall(int32_t damaskwallcnt)
 //{

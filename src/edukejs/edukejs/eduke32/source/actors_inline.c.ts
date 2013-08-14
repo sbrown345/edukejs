@@ -111,15 +111,15 @@ function A_SetSprite(/*int32_t*/ i: number,/*uint32_t*/ cliptype: number): numbe
 //}
 
 
-//EXTERN_INLINE void G_RestoreInterpolations(void)  //Stick at end of drawscreen
-//{
-//    int32_t i=g_numInterpolations-1;
+function G_RestoreInterpolations(): void//Stick at end of drawscreen
+{
+    var /*int32_t */i=g_numInterpolations-1;
 
-//    if (--g_interpolationLock)
-//        return;
+    if (--g_interpolationLock)
+        return;
 
-//    for (; i>=0; i--) *curipos[i] = bakipos[i];
-//}
+    for (; i>=0; i--) curipos[i] = bakipos[i];//*curipos[i] = bakipos[i];
+}
 
 function G_CheckForSpaceCeiling(/*int32_t*/ sectnum: number): number
 {

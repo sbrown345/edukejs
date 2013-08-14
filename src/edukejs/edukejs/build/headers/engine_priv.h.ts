@@ -57,14 +57,14 @@ var YAX_MAXDRAWS  = 8;
 //extern int16_t searchsector, searchwall, searchstat;
 //extern int16_t searchbottomwall, searchisbottom;
 
-//extern char inpreparemirror;
+var /*char */inpreparemirror: number = 0;
 
 //extern int32_t curbrightness, gammabrightness;
 //extern char britable[16][256];
 //extern char picsiz[MAXTILES];
 //extern int16_t sectorborder[256], sectorbordercnt;
 //extern int32_t qsetmode;
-//extern int32_t hitallsprites;
+var /*int32_t */hitallsprites;
 
 //extern int32_t xb1[MAXWALLSB];
 //extern int32_t rx1[MAXWALLSB], ry1[MAXWALLSB];
@@ -73,8 +73,8 @@ var YAX_MAXDRAWS  = 8;
 
 //#ifdef USE_OPENGL
 
-//// For GL_EXP2 fog:
-//#define FOGSCALE 0.0000768
+// For GL_EXP2 fog:
+var FOGSCALE=0.0000768;
 
 //extern palette_t palookupfog[MAXPALOOKUPS];
 //void calc_and_apply_fog(int32_t tile, int32_t shade, int32_t vis, int32_t pal);

@@ -4717,8 +4717,8 @@ function G_DrawRooms(/*int32_t*/ snum: number, /*int32_t */smoothratio: number):
 //#endif
         }
      debugger;todoThrow()
-//        if (g_screenCapture)
-//        {
+        if (g_screenCapture)
+        {todoThrow();
 //            g_screenCapture = 0;
 
 //            if (getrendermode() == REND_CLASSIC)
@@ -4730,9 +4730,9 @@ function G_DrawRooms(/*int32_t*/ snum: number, /*int32_t */smoothratio: number):
 //            else
 //                G_ReadGLFrame();
 //#endif
-//        }
-//        else if (software_screen_tilting)
-//        {
+        }
+        else if (software_screen_tilting)
+        {todoThrow();
 //            const int16_t tang = (ud.screen_tilting) ? p.rotscrnang : 0;
 
 //            setviewback();
@@ -4746,9 +4746,9 @@ function G_DrawRooms(/*int32_t*/ snum: number, /*int32_t */smoothratio: number):
 
 //            rotatesprite_win(160<<16,100<<16,i,tang+512,TILE_TILT,0,0,4+2+64+1024);
 //            walock[TILE_TILT] = 199;
-//        }
-//        else if (pixelDoubling)
-//        {
+        }
+        else if (pixelDoubling)
+        {todoThrow();
 //            Bassert(g_halfScreen.xdimen!=0);
 //            g_halveScreenArea = 0;
 //            G_UpdateScreenArea();
@@ -4779,7 +4779,7 @@ function G_DrawRooms(/*int32_t*/ snum: number, /*int32_t */smoothratio: number):
 //                    }
 //            }
 //            enddrawing();
-//        }
+        }
     }
 
     G_RestoreInterpolations();

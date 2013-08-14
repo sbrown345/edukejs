@@ -285,7 +285,7 @@ var whitecol: number;//int32
 //static void draw_rainbow_background(void);
 
 var editstatus = 0;//int16_t 
-//static int32_t global100horiz;  // (-100..300)-scale horiz (the one passed to drawrooms)
+var /*int32_t */global100horiz;  // (-100..300)-scale horiz (the one passed to drawrooms)
 
 
 //////////// YAX //////////
@@ -2358,10 +2358,10 @@ function msqrtasm(/*uint32_t */ c: number): number
 //static int32_t spritesy[MAXSPRITESONSCREEN+1];
 //static int32_t spritesz[MAXSPRITESONSCREEN];
 
-//static int16_t umost[MAXXDIM], dmost[MAXXDIM];
-//static int16_t bakumost[MAXXDIM], bakdmost[MAXXDIM];
-//static int16_t uplc[MAXXDIM], dplc[MAXXDIM];
-//static int16_t uwall[MAXXDIM], dwall[MAXXDIM];
+var umost = new Int16Array(MAXXDIM), dmost = new Int16Array(MAXXDIM);
+var bakumost = new Int16Array(MAXXDIM), bakdmost = new Int16Array(MAXXDIM);
+var uplc = new Int16Array(MAXXDIM), dplc = new Int16Array(MAXXDIM);
+var uwall = new Int16Array(MAXXDIM), dwall = new Int16Array(MAXXDIM);
 //static int32_t swplc[MAXXDIM], lplc[MAXXDIM];
 //static int32_t swall[MAXXDIM], lwall[MAXXDIM+4];
 //#ifdef HIGH_PRECISION_SPRITE
@@ -2382,9 +2382,9 @@ var horizlookupIdx = 0, horizlookup2Idx = 0;
 var globalposx: number, globalposy: number, globalposz: number, globalhoriz: number;    //int32_t 
 var globalang: number, globalcursectnum: number;                        //int16_t 
 var globalpal: number, cosglobalang: number, singlobalang: number; //int32_t 
-//int32_t cosviewingrangeglobalang, sinviewingrangeglobalang;
+var /*int32_t */cosviewingrangeglobalang:number, sinviewingrangeglobalang:number;
 var globalpalwritten: Uint8Array; //static char *
-//static int32_t globaluclip, globaldclip;
+var  /*int32_t */globaluclip: number, globaldclip: number;
 var globvis: number, globalvisibility: number;                               //int32_t 
 var globalhisibility: number, globalpisibility: number, globalcisibility: number;    //int32_t 
 ////char globparaceilclip, globparaflorclip;
@@ -8897,100 +8897,100 @@ function initspritelists(): void
 }
 
 
-//void set_globalang(int16_t ang)
-//{
-//    globalang = ang&2047;
-//    cosglobalang = sintable[(globalang+512)&2047];
-//    singlobalang = sintable[globalang&2047];
-//    cosviewingrangeglobalang = mulscale16(cosglobalang,viewingrange);
-//    sinviewingrangeglobalang = mulscale16(singlobalang,viewingrange);
-//}
+function set_globalang(/*int16_t */ang: number): void
+{
+    globalang = ang&2047;
+    cosglobalang = sintable[(globalang+512)&2047];
+    singlobalang = sintable[globalang&2047];
+    cosviewingrangeglobalang = mulscale16(cosglobalang,viewingrange);
+    sinviewingrangeglobalang = mulscale16(singlobalang,viewingrange);
+}
 
-////
-//// drawrooms
-////
-//int32_t drawrooms(int32_t daposx, int32_t daposy, int32_t daposz,
-//               int16_t daang, int32_t dahoriz, int16_t dacursectnum)
-//{
-//    int32_t i, j, /*cz, fz,*/ closest;
-//    int16_t *shortptr1, *shortptr2;
+//
+// drawrooms
+//
+function /*int32_t */drawrooms(/*int32_t*/ daposx: number, /*int32_t*/ daposy: number, /*int32_t */daposz: number,
+               /*int16_t */daang: number, /*int32_t */dahoriz: number, /*int16_t*/ dacursectnum: number): number
+{
+    var /*int32_t */i: number, j: number, /*cz, fz,*/ closest: number;
+    var /*int16_t */ *shortptr1, *shortptr2;
 
-//    int32_t didmirror = 0;
+    var /*int32_t */didmirror = 0;
 
-//    beforedrawrooms = 0;
-//    indrawroomsandmasks = 1;
+    beforedrawrooms = 0;
+    indrawroomsandmasks = 1;
 
-//    globalposx = daposx; globalposy = daposy; globalposz = daposz;
-//    set_globalang(daang);
+    globalposx = daposx; globalposy = daposy; globalposz = daposz;
+    set_globalang(daang);
 
-//    global100horiz = dahoriz;
+    global100horiz = dahoriz;
 
-//    // xdimenscale is scale(xdimen,yxaspect,320);
-//    // normalization by viewingrange so that center-of-aim doesn't depend on it
-//    globalhoriz = mulscale16(dahoriz-100,divscale16(xdimenscale,viewingrange))+(ydimen>>1);
+    // xdimenscale is scale(xdimen,yxaspect,320);
+    // normalization by viewingrange so that center-of-aim doesn't depend on it
+    globalhoriz = mulscale16(dahoriz-100,divscale16(xdimenscale,viewingrange))+(ydimen>>1);
 
-//    globaluclip = (0-globalhoriz)*xdimscale;
-//    globaldclip = (ydimen-globalhoriz)*xdimscale;
+    globaluclip = (0-globalhoriz)*xdimscale;
+    globaldclip = (ydimen-globalhoriz)*xdimscale;
 
-//    i = mulscale16(xdimenscale,viewingrangerecip);
-//    globalpisibility = mulscale16(parallaxvisibility,i);
-//    switch (getrendermode())
-//    {
-//        // switch on renderers to make fog look almost the same everywhere
+    i = mulscale16(xdimenscale,viewingrangerecip);
+    globalpisibility = mulscale16(parallaxvisibility,i);
+    switch (getrendermode())
+    {
+        // switch on renderers to make fog look almost the same everywhere
 
-//    case REND_CLASSIC:
-//        globalvisibility = mulscale16(g_visibility,i);
-//        break;
+    case REND_CLASSIC:
+        globalvisibility = mulscale16(g_visibility,i);
+        break;
 //#ifdef USE_OPENGL
-//    case REND_POLYMOST:
-//        // NOTE: In Polymost, the fragment depth depends on the x screen size!
-//        if (r_usenewshading==2)
-//            globalvisibility = scale(g_visibility<<2, xdimen, 1680);
-//        else
-//            globalvisibility = scale(g_visibility<<2, xdimen, 1100);
-//        break;
+    case REND_POLYMOST:
+        // NOTE: In Polymost, the fragment depth depends on the x screen size!
+        if (r_usenewshading==2)
+            globalvisibility = scale(g_visibility<<2, xdimen, 1680);
+        else
+            globalvisibility = scale(g_visibility<<2, xdimen, 1100);
+        break;
 //# ifdef POLYMER
-//    case REND_POLYMER:
-//        globalvisibility = g_visibility<<2;
-//        break;
+    case REND_POLYMER:
+        globalvisibility = g_visibility<<2;
+        break;
 //# endif
 //#endif
-//    }
+    }
 
-//    globalhisibility = mulscale16(globalvisibility,xyaspect);
-//    globalcisibility = mulscale8(globalhisibility,320);
+    globalhisibility = mulscale16(globalvisibility,xyaspect);
+    globalcisibility = mulscale8(globalhisibility,320);
 
-//    globalcursectnum = dacursectnum;
-//    totalclocklock = totalclock;
+    globalcursectnum = dacursectnum;
+    totalclocklock = totalclock;
 
-//    if ((xyaspect != oxyaspect) || (xdimen != oxdimen) || (viewingrange != oviewingrange))
-//        dosetaspect();
+    if ((xyaspect != oxyaspect) || (xdimen != oxdimen) || (viewingrange != oviewingrange))
+        todoThrow("dosetaspect();");
 
-//    Bmemset(gotsector, 0, ((numsectors+7)>>3));
+    Bmemset(new P(gotsector), 0, ((numsectors+7)>>3));
 
-//    if (getrendermode() != REND_CLASSIC
+    if (getrendermode() != REND_CLASSIC
 //#ifdef YAX_ENABLE
-//        || yax_globallev==YAX_MAXDRAWS
+        || yax_globallev==YAX_MAXDRAWS
 //#endif
-//        )
-//    {
-//        shortptr1 = (int16_t *)&startumost[windowx1];
-//        shortptr2 = (int16_t *)&startdmost[windowx1];
-//        i = xdimen-1;
-//        do
-//        {
-//            umost[i] = shortptr1[i]-windowy1;
-//            dmost[i] = shortptr2[i]-windowy1;
-//        }
-//        while (i--);  // xdimen == 1 is OK!
-//        umost[0] = shortptr1[0]-windowy1;
-//        dmost[0] = shortptr2[0]-windowy1;
-//    }
+        )
+    {
+        shortptr1 = /*(int16_t *)&*/startumost[windowx1];
+        shortptr2 = /*(int16_t *)&*/startdmost[windowx1];
+        i = xdimen-1;
+        do
+        {
+            umost[i] = shortptr1[i]-windowy1;
+            dmost[i] = shortptr2[i]-windowy1;
+        }
+        while (i--);  // xdimen == 1 is OK!
+        umost[0] = shortptr1[0]-windowy1;
+        dmost[0] = shortptr2[0]-windowy1;
+    }
 
 //#ifdef USE_OPENGL
 //# ifdef POLYMER
-//    if (getrendermode() == REND_POLYMER)
-//    {
+    if (getrendermode() == REND_POLYMER)
+    {todoThrow();
 //#  ifdef YAX_ENABLE
 //        // BEGIN_TWEAK ceiling/floor fake 'TROR' pics, see END_TWEAK in build.c
 //        if (editstatus && showinvisibility)
@@ -9007,14 +9007,14 @@ function initspritelists(): void
 //        bglDisable(GL_CULL_FACE);
 //        gloy1 = 0;
 //        return 0;
-//    }
+    }
 //# endif
 
 //    //============================================================================= //POLYMOST BEGINS
-//    polymost_drawrooms();
+    polymost_drawrooms();
 
-//    if (getrendermode() != REND_CLASSIC)
-//        return 0;
+    if (getrendermode() != REND_CLASSIC)
+        return 0;
 //    //============================================================================= //POLYMOST ENDS
 //#endif
 
@@ -9148,8 +9148,8 @@ function initspritelists(): void
 
 //    enddrawing();   //}}}
 
-//    return didmirror;
-//}
+    return didmirror;
+}
 
 //// UTILITY TYPES AND FUNCTIONS FOR DRAWMASKS OCCLUSION TREE
 //// typedef struct          s_maskleaf
@@ -13641,7 +13641,7 @@ function updatesectorz(/*int32_t*/ x: number, /*int32_t*/ y: number, /*int32_t*/
     if (uint32(sectnum.$) < 2*MAXSECTORS)
     {
         var wal: walltype ;
-        var /*int32_t  */j: number, cz: number, fz: number;
+        var /*int32_t  */j: number, cz: number = 0, fz: number = 0;
 
         var nofirstzcheck = 0;
 

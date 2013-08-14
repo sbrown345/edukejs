@@ -1000,7 +1000,7 @@ var waloff: ArrayBuffer[] = new Array(MAXTILES);  // stores pointers to cache  -
 //#endif
 
 var gotpic = new Uint8Array((MAXTILES+7)>>3);
-//EXTERN char gotsector[(MAXSECTORS+7)>>3];
+var gotsector = new Uint8Array((MAXSECTORS+7)>>3); ////EXTERN char 
 
 //EXTERN char editorcolors[256];
 

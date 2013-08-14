@@ -75,10 +75,13 @@ var min = Math.min;
 var max = Math.max;
 var pow = Math.pow;
 var sin = Math.sin;
+var cos = Math.cos;
 var atan = Math.atan;
 var floor = Math.floor;
 var abs = Math.abs;
 var labs = Math.abs;
+var fabs = Math.abs;
+var sqrt = Math.sqrt;
 
 function memcmp(buf1 : Uint8Array, buf2 : Uint8Array, count : number) : number {
     for (var i = 0; i < count; i++) {
