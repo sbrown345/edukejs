@@ -40,7 +40,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //    #define G_EXTERN extern
 //#endif
 
-//#define MAXINTERPOLATIONS MAXSPRITES
+var MAXINTERPOLATIONS = MAXSPRITES;
 //// KEEPINSYNC lunatic/con_lang.lua
 var MAXSKILLS=7;
 
@@ -51,9 +51,9 @@ var MAXSKILLS=7;
 
 var g_numInterpolations: number;   //G_EXTERN int32_t 
 var g_interpolationLock: number;   //G_EXTERN int32_t 
-//G_EXTERN int32_t oldipos[MAXINTERPOLATIONS];
-//G_EXTERN int32_t *curipos[MAXINTERPOLATIONS];
-//G_EXTERN int32_t bakipos[MAXINTERPOLATIONS];
+var oldipos = new Int32Array(MAXINTERPOLATIONS);
+var curipos = new Int32Array(MAXINTERPOLATIONS); //G_EXTERN int32_t *   ! pointers
+var bakipos = new Int32Array(MAXINTERPOLATIONS);
 var connectpoint2 = new Int32Array(MAXPLAYERS);
 
 //#include "duke3d.h"
@@ -71,10 +71,10 @@ var ScriptQuotes: Uint8Array[] = new Array<Uint8Array>(MAXQUOTES),ScriptQuoteRed
 var label : Uint8Array;//G_EXTERN char *label;
 var EnvMusicFilename: string[] = new Array<string>(MAXVOLUMES+1);//[MAXVOLUMES+1][BMAX_PATH];
 //G_EXTERN char g_RTSPlaying: number;
-//G_EXTERN int32_t g_musicIndex: number;
+var g_musicIndex: number; //G_EXTERN int32_t 
 var g_loadFromGroupOnly : number;//char
 var g_numSkills : number; // char
-//G_EXTERN char myjumpingtoggle,myonground,myhardlanding,myreturntocenter;
+var myjumpingtoggle: number,myonground: number,myhardlanding: number,myreturntocenter: number;//G_EXTERN char 
 var pus: number,pub: number;//G_EXTERN char 
 var ready2send: number;//G_EXTERN char 
 var szPlayerName: string; //G_EXTERN char [32]
@@ -137,7 +137,7 @@ var SpriteProjectile:projectile_t[] = new Array(MAXSPRITES);//= newStructArray(p
 //G_EXTERN sound_t g_sounds[MAXSOUNDS];
 var everyothertime: number;   ////G_EXTERN uint32_t
 var g_moveThingsCount: number;////G_EXTERN uint32_t
-//G_EXTERN vec3_t my,omy,myvel;
+var my=new vec3_t(),omy=new vec3_t(),myvel=new vec3_t();//G_EXTERN vec3_t 
 //G_EXTERN volatile char g_soundlocks[MAXSOUNDS];
 var  g_restorePalette=0;  //G_EXTERN int32_t
 var  g_screenCapture=0;   //G_EXTERN int32_t

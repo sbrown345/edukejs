@@ -58,7 +58,7 @@ Modifications for JonoF's port by Jonathon Fowler (jf@jonof.id.au)
 //*/
 
 ////extern byte  KB_KeyDown[ MAXKEYBOARDSCAN ];   // Keyboard state array
-//#define KB_KeyDown keystatus
+var KB_KeyDown = keystatus;
 //extern kb_scancode KB_LastScan;
 
 
@@ -76,9 +76,9 @@ Modifications for JonoF's port by Jonathon Fowler (jf@jonof.id.au)
 
 //#define KB_ClearLastScanCode() { KB_SetLastScanCode( sc_None ); }
 
-//#define KB_KeyPressed( scan )  ( keystatus[ ( scan ) ] != 0 )
+function KB_KeyPressed( scan: number ): number  { return keystatus[ ( scan ) ] != 0 ? 1:0; }
 
-//#define KB_ClearKeyDown( scan ) { keystatus[ ( scan ) ] = FALSE; }
+var KB_ClearKeyDown( scan: number ): number { return keystatus[ ( scan ) ] = FALSE ? 1:0; }
 
 //#define KB_UnBoundKeyPressed( scan )  ( keystatus[ ( scan ) ] != 0 && !CONTROL_KeyBinds[scan].cmdstr)
 

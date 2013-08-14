@@ -39,8 +39,8 @@ var g_numSelfObituaries = 0;
 
 function P_UpdateScreenPal(p: DukePlayer_t ): void
 {
-    int32_t intowater = 0;
-    const int32_t sect = p.cursectnum;
+    var /*int32_t */intowater = 0;
+    var /*const int32_t */sect = p.cursectnum;
 
     if (p.heat_on) p.palette = SLIMEPAL;
     else if (sect < 0) p.palette = BASEPAL;
@@ -2673,8 +2673,8 @@ function P_UpdateScreenPal(p: DukePlayer_t ): void
 //#define MAXHORIZ     127
 
 var g_myAimMode = 0, g_myAimStat = 0, g_oldAimStat = 0; //int32_t 
-//int32_t mouseyaxismode = -1;
-//int32_t g_emuJumpTics = 0;
+var /*int32_t */mouseyaxismode = -1;
+var /*int32_t */g_emuJumpTics = 0;
 
 //void P_GetInput(int32_t snum)
 //{

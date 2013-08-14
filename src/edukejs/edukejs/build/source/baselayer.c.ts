@@ -1,4 +1,5 @@
 /// <reference path="../../build/headers/build.h.ts" />
+/// <reference path="../../eduke32/headers/baselayer.h.ts" />
 
 //#include "compat.h"
 //#include "osd.h"
@@ -12,7 +13,7 @@
 
 //// input
 //char inputdevices=0;
-//char keystatus[256], keyfifo[KEYFIFOSIZ], keyfifoplc, keyfifoend;
+var keystatus = new Uint8Array(256), keyfifo = new Uint8Array(KEYFIFOSIZ), keyfifoplc = 0, keyfifoend = 0; //char
 //char keyasciififo[KEYFIFOSIZ], keyasciififoplc, keyasciififoend;
 //char remap[256];
 //int32_t remapinit=0;

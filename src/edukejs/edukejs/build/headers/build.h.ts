@@ -1180,6 +1180,10 @@ class vec3_t implements IVec3{
     x: number; y: number; z: number;//    int32_t
 
     constructor(x = 0, y = 0, z = 0) {
+        this.init(x, y, z);
+    }
+
+    init(x = 0, y = 0, z = 0) {
         this.x = x;
         this.y = y;
         this.z = z;
@@ -1189,6 +1193,12 @@ class vec3_t implements IVec3{
         v.x = this.x;
         v.y = this.y;
         v.z = this.z;
+    }
+
+    copyFrom(v: IVec3) {
+        this.x = v.x;
+        this.y = v.y;
+        this.z = v.z;
     }
 };
 

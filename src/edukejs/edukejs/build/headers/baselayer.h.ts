@@ -130,7 +130,7 @@ class glinfo_t {
 //extern char inputdevices;
 
 //// keys
-//#define KEYFIFOSIZ 64
+var KEYFIFOSIZ=64;
 //extern char keystatus[256], keyfifo[KEYFIFOSIZ], keyfifoplc, keyfifoend;
 //extern char keyasciififo[KEYFIFOSIZ], keyasciififoplc, keyasciififoend;
 //extern char scantoasc[128], remap[256], key_names[256][24];

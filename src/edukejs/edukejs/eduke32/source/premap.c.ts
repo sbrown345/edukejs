@@ -54,6 +54,7 @@
 /// <reference path="../../eduke32/source/global.c.ts" />
 /// <reference path="../../eduke32/source/grpscan.c.ts" />
 /// <reference path="../../eduke32/source/menus.c.ts" />
+/// <reference path="../../eduke32/source/music.c.ts" />
 /// <reference path="../../eduke32/source/namesdyn.c.ts" />
 /// <reference path="../../eduke32/source/net.c.ts" />
 /// <reference path="../../eduke32/source/osd.c.ts" />
@@ -146,209 +147,209 @@ function tloadtile(/*int32_t */tilenume: number, /*int32_t */type: number): void
         flag_precache(i, type);
 }
 
-//static void G_CacheSpriteNum(int32_t i)
-//{
-//    char maxc;
-//    int32_t j;
+function G_CacheSpriteNum(/*int32_t*/ i: number): void 
+{
+    var /*char */maxc: number;
+    var /*int32_t */j: number;
 
-//    if (ud.monsters_off && A_CheckEnemySprite(&sprite[i])) return;
+    if (ud.monsters_off && A_CheckEnemySprite(sprite[i])) return;
 
-//    maxc = 1;
+    maxc = 1;
 
-//    if (g_tile[sprite[i].picnum].cacherange >= sprite[i].picnum)
-//        for (j = sprite[i].picnum; j <= g_tile[sprite[i].picnum].cacherange; j++)
-//            tloadtile(j,1);
+    if (g_tile[sprite[i].picnum].cacherange >= sprite[i].picnum)
+        for (j = sprite[i].picnum; j <= g_tile[sprite[i].picnum].cacherange; j++)
+            tloadtile(j,1);
 
-//    switch (DYNAMICTILEMAP(sprite[i].picnum))
-//    {
-//    case HYDRENT__STATIC:
-//        tloadtile(BROKEFIREHYDRENT,1);
-//        for (j = TOILETWATER; j < (TOILETWATER+4); j++) tloadtile(j,1);
-//        break;
-//    case TOILET__STATIC:
-//        tloadtile(TOILETBROKE,1);
-//        for (j = TOILETWATER; j < (TOILETWATER+4); j++) tloadtile(j,1);
-//        break;
-//    case STALL__STATIC:
-//        tloadtile(STALLBROKE,1);
-//        for (j = TOILETWATER; j < (TOILETWATER+4); j++) tloadtile(j,1);
-//        break;
-//    case RUBBERCAN__STATIC:
-//        maxc = 2;
-//        break;
-//    case TOILETWATER__STATIC:
-//        maxc = 4;
-//        break;
-//    case FEMPIC1__STATIC:
-//        maxc = 44;
-//        break;
-//    case LIZTROOP__STATIC:
-//    case LIZTROOPRUNNING__STATIC:
-//    case LIZTROOPSHOOT__STATIC:
-//    case LIZTROOPJETPACK__STATIC:
-//    case LIZTROOPONTOILET__STATIC:
-//    case LIZTROOPDUCKING__STATIC:
-//        for (j = LIZTROOP; j < (LIZTROOP+72); j++) tloadtile(j,1);
-//        for (j=HEADJIB1; j<LEGJIB1+3; j++) tloadtile(j,1);
-//        maxc = 0;
-//        break;
-//    case WOODENHORSE__STATIC:
-//        maxc = 5;
-//        for (j = HORSEONSIDE; j < (HORSEONSIDE+4); j++) tloadtile(j,1);
-//        break;
-//    case NEWBEAST__STATIC:
-//    case NEWBEASTSTAYPUT__STATIC:
-//        maxc = 90;
-//        break;
-//    case BOSS1__STATIC:
-//    case BOSS2__STATIC:
-//    case BOSS3__STATIC:
-//        maxc = 30;
-//        break;
-//    case OCTABRAIN__STATIC:
-//    case OCTABRAINSTAYPUT__STATIC:
-//    case COMMANDER__STATIC:
-//    case COMMANDERSTAYPUT__STATIC:
-//        maxc = 38;
-//        break;
-//    case RECON__STATIC:
-//        maxc = 13;
-//        break;
-//    case PIGCOP__STATIC:
-//    case PIGCOPDIVE__STATIC:
-//        maxc = 61;
-//        break;
-//    case SHARK__STATIC:
-//        maxc = 30;
-//        break;
-//    case LIZMAN__STATIC:
-//    case LIZMANSPITTING__STATIC:
-//    case LIZMANFEEDING__STATIC:
-//    case LIZMANJUMP__STATIC:
-//        for (j=LIZMANHEAD1; j<LIZMANLEG1+3; j++) tloadtile(j,1);
-//        maxc = 80;
-//        break;
-//    case APLAYER__STATIC:
-//        maxc = 0;
-//        if ((g_netServer || ud.multimode > 1))
-//        {
-//            maxc = 5;
-//            for (j = 1420; j < 1420+106; j++) tloadtile(j,1);
-//        }
-//        break;
-//    case ATOMICHEALTH__STATIC:
-//        maxc = 14;
-//        break;
-//    case DRONE__STATIC:
-//        maxc = 10;
-//        break;
-//    case EXPLODINGBARREL__STATIC:
-//    case SEENINE__STATIC:
-//    case OOZFILTER__STATIC:
-//        maxc = 3;
-//        break;
-//    case NUKEBARREL__STATIC:
-//    case CAMERA1__STATIC:
-//        maxc = 5;
-//        break;
-//        // caching of HUD sprites for weapons that may be in the level
-//    case CHAINGUNSPRITE__STATIC:
-//        for (j=CHAINGUN; j<=CHAINGUN+7; j++) tloadtile(j,1);
-//        break;
-//    case RPGSPRITE__STATIC:
-//        for (j=RPGGUN; j<=RPGGUN+2; j++) tloadtile(j,1);
-//        break;
-//    case FREEZESPRITE__STATIC:
-//        for (j=FREEZE; j<=FREEZE+5; j++) tloadtile(j,1);
-//        break;
-//    case GROWSPRITEICON__STATIC:
-//    case SHRINKERSPRITE__STATIC:
-//        for (j=SHRINKER-2; j<=SHRINKER+5; j++) tloadtile(j,1);
-//        break;
-//    case HBOMBAMMO__STATIC:
-//    case HEAVYHBOMB__STATIC:
-//        for (j=HANDREMOTE; j<=HANDREMOTE+5; j++) tloadtile(j,1);
-//        break;
-//    case TRIPBOMBSPRITE__STATIC:
-//        for (j=HANDHOLDINGLASER; j<=HANDHOLDINGLASER+4; j++) tloadtile(j,1);
-//        break;
-//    case SHOTGUNSPRITE__STATIC:
-//        tloadtile(SHOTGUNSHELL,1);
-//        for (j=SHOTGUN; j<=SHOTGUN+6; j++) tloadtile(j,1);
-//        break;
-//    case DEVISTATORSPRITE__STATIC:
-//        for (j=DEVISTATOR; j<=DEVISTATOR+1; j++) tloadtile(j,1);
-//        break;
+    switch (DYNAMICTILEMAP(sprite[i].picnum))
+    {
+    case HYDRENT__STATIC:
+        tloadtile(BROKEFIREHYDRENT,1);
+        for (j = TOILETWATER; j < (TOILETWATER+4); j++) tloadtile(j,1);
+        break;
+    case TOILET__STATIC:
+        tloadtile(TOILETBROKE,1);
+        for (j = TOILETWATER; j < (TOILETWATER+4); j++) tloadtile(j,1);
+        break;
+    case STALL__STATIC:
+        tloadtile(STALLBROKE,1);
+        for (j = TOILETWATER; j < (TOILETWATER+4); j++) tloadtile(j,1);
+        break;
+    case RUBBERCAN__STATIC:
+        maxc = 2;
+        break;
+    case TOILETWATER__STATIC:
+        maxc = 4;
+        break;
+    case FEMPIC1__STATIC:
+        maxc = 44;
+        break;
+    case LIZTROOP__STATIC:
+    case LIZTROOPRUNNING__STATIC:
+    case LIZTROOPSHOOT__STATIC:
+    case LIZTROOPJETPACK__STATIC:
+    case LIZTROOPONTOILET__STATIC:
+    case LIZTROOPDUCKING__STATIC:
+        for (j = LIZTROOP; j < (LIZTROOP+72); j++) tloadtile(j,1);
+        for (j=HEADJIB1; j<LEGJIB1+3; j++) tloadtile(j,1);
+        maxc = 0;
+        break;
+    case WOODENHORSE__STATIC:
+        maxc = 5;
+        for (j = HORSEONSIDE; j < (HORSEONSIDE+4); j++) tloadtile(j,1);
+        break;
+    case NEWBEAST__STATIC:
+    case NEWBEASTSTAYPUT__STATIC:
+        maxc = 90;
+        break;
+    case BOSS1__STATIC:
+    case BOSS2__STATIC:
+    case BOSS3__STATIC:
+        maxc = 30;
+        break;
+    case OCTABRAIN__STATIC:
+    case OCTABRAINSTAYPUT__STATIC:
+    case COMMANDER__STATIC:
+    case COMMANDERSTAYPUT__STATIC:
+        maxc = 38;
+        break;
+    case RECON__STATIC:
+        maxc = 13;
+        break;
+    case PIGCOP__STATIC:
+    case PIGCOPDIVE__STATIC:
+        maxc = 61;
+        break;
+    case SHARK__STATIC:
+        maxc = 30;
+        break;
+    case LIZMAN__STATIC:
+    case LIZMANSPITTING__STATIC:
+    case LIZMANFEEDING__STATIC:
+    case LIZMANJUMP__STATIC:
+        for (j=LIZMANHEAD1; j<LIZMANLEG1+3; j++) tloadtile(j,1);
+        maxc = 80;
+        break;
+    case APLAYER__STATIC:
+        maxc = 0;
+        if ((g_netServer || ud.multimode > 1))
+        {
+            maxc = 5;
+            for (j = 1420; j < 1420+106; j++) tloadtile(j,1);
+        }
+        break;
+    case ATOMICHEALTH__STATIC:
+        maxc = 14;
+        break;
+    case DRONE__STATIC:
+        maxc = 10;
+        break;
+    case EXPLODINGBARREL__STATIC:
+    case SEENINE__STATIC:
+    case OOZFILTER__STATIC:
+        maxc = 3;
+        break;
+    case NUKEBARREL__STATIC:
+    case CAMERA1__STATIC:
+        maxc = 5;
+        break;
+        // caching of HUD sprites for weapons that may be in the level
+    case CHAINGUNSPRITE__STATIC:
+        for (j=CHAINGUN; j<=CHAINGUN+7; j++) tloadtile(j,1);
+        break;
+    case RPGSPRITE__STATIC:
+        for (j=RPGGUN; j<=RPGGUN+2; j++) tloadtile(j,1);
+        break;
+    case FREEZESPRITE__STATIC:
+        for (j=FREEZE; j<=FREEZE+5; j++) tloadtile(j,1);
+        break;
+    case GROWSPRITEICON__STATIC:
+    case SHRINKERSPRITE__STATIC:
+        for (j=SHRINKER-2; j<=SHRINKER+5; j++) tloadtile(j,1);
+        break;
+    case HBOMBAMMO__STATIC:
+    case HEAVYHBOMB__STATIC:
+        for (j=HANDREMOTE; j<=HANDREMOTE+5; j++) tloadtile(j,1);
+        break;
+    case TRIPBOMBSPRITE__STATIC:
+        for (j=HANDHOLDINGLASER; j<=HANDHOLDINGLASER+4; j++) tloadtile(j,1);
+        break;
+    case SHOTGUNSPRITE__STATIC:
+        tloadtile(SHOTGUNSHELL,1);
+        for (j=SHOTGUN; j<=SHOTGUN+6; j++) tloadtile(j,1);
+        break;
+    case DEVISTATORSPRITE__STATIC:
+        for (j=DEVISTATOR; j<=DEVISTATOR+1; j++) tloadtile(j,1);
+        break;
 
-//    }
+    }
 
-//    for (j = sprite[i].picnum; j < (sprite[i].picnum+maxc); j++) tloadtile(j,1);
-//}
+    for (j = sprite[i].picnum; j < (sprite[i].picnum+maxc); j++) tloadtile(j,1);
+}
 
-//static void G_PrecacheSprites(void)
-//{
-//    int32_t i,j;
+function G_PrecacheSprites(): void
+{
+    var /*int32_t */i: number,j: number;
 
-//    for (i=0; i<MAXTILES; i++)
-//    {
-//        if (g_tile[i].flags & SPRITE_PROJECTILE)
-//            tloadtile(i,1);
+    for (i=0; i<MAXTILES; i++)
+    {
+        if (g_tile[i].flags & SPRITE_PROJECTILE)
+            tloadtile(i,1);
 
-//        if (A_CheckSpriteTileFlags(i, SPRITE_CACHE))
-//            for (j = i; j <= g_tile[i].cacherange; j++)
-//                tloadtile(j,1);
-//    }
-//    tloadtile(BOTTOMSTATUSBAR,1);
-//    if ((g_netServer || ud.multimode > 1))
-//        tloadtile(FRAGBAR,1);
+        if (A_CheckSpriteTileFlags(i, SPRITE_CACHE))
+            for (j = i; j <= g_tile[i].cacherange; j++)
+                tloadtile(j,1);
+    }
+    tloadtile(BOTTOMSTATUSBAR,1);
+    if ((g_netServer || ud.multimode > 1))
+        tloadtile(FRAGBAR,1);
 
-//    tloadtile(VIEWSCREEN,1);
+    tloadtile(VIEWSCREEN,1);
 
-//    for (i=STARTALPHANUM; i<ENDALPHANUM+1; i++) tloadtile(i,1);
-//    for (i=BIGALPHANUM-11; i<BIGALPHANUM+82; i++) tloadtile(i,1);
-//    for (i=MINIFONT; i<MINIFONT+93; i++) tloadtile(i,1);
+    for (i=STARTALPHANUM; i<ENDALPHANUM+1; i++) tloadtile(i,1);
+    for (i=BIGALPHANUM-11; i<BIGALPHANUM+82; i++) tloadtile(i,1);
+    for (i=MINIFONT; i<MINIFONT+93; i++) tloadtile(i,1);
 
-//    for (i=FOOTPRINTS; i<FOOTPRINTS+3; i++) tloadtile(i,1);
+    for (i=FOOTPRINTS; i<FOOTPRINTS+3; i++) tloadtile(i,1);
 
-//    for (i = BURNING; i < BURNING+14; i++) tloadtile(i,1);
-//    for (i = BURNING2; i < BURNING2+14; i++) tloadtile(i,1);
+    for (i = BURNING; i < BURNING+14; i++) tloadtile(i,1);
+    for (i = BURNING2; i < BURNING2+14; i++) tloadtile(i,1);
 
-//    for (i = CRACKKNUCKLES; i < CRACKKNUCKLES+4; i++) tloadtile(i,1);
+    for (i = CRACKKNUCKLES; i < CRACKKNUCKLES+4; i++) tloadtile(i,1);
 
-//    for (i = FIRSTGUN; i < FIRSTGUN+3 ; i++) tloadtile(i,1);
-//    for (i = FIRSTGUNRELOAD; i < FIRSTGUNRELOAD+8 ; i++) tloadtile(i,1);
+    for (i = FIRSTGUN; i < FIRSTGUN+3 ; i++) tloadtile(i,1);
+    for (i = FIRSTGUNRELOAD; i < FIRSTGUNRELOAD+8 ; i++) tloadtile(i,1);
 
-//    for (i = EXPLOSION2; i < EXPLOSION2+21 ; i++) tloadtile(i,1);
+    for (i = EXPLOSION2; i < EXPLOSION2+21 ; i++) tloadtile(i,1);
 
-//    for (i = COOLEXPLOSION1; i < COOLEXPLOSION1+21 ; i++) tloadtile(i,1);
+    for (i = COOLEXPLOSION1; i < COOLEXPLOSION1+21 ; i++) tloadtile(i,1);
 
-//    tloadtile(BULLETHOLE,1);
-//    tloadtile(BLOODPOOL,1);
-//    for (i = TRANSPORTERBEAM; i < (TRANSPORTERBEAM+6); i++) tloadtile(i,1);
+    tloadtile(BULLETHOLE,1);
+    tloadtile(BLOODPOOL,1);
+    for (i = TRANSPORTERBEAM; i < (TRANSPORTERBEAM+6); i++) tloadtile(i,1);
 
-//    for (i = SMALLSMOKE; i < (SMALLSMOKE+4); i++) tloadtile(i,1);
-//    for (i = SHOTSPARK1; i < (SHOTSPARK1+4); i++) tloadtile(i,1);
+    for (i = SMALLSMOKE; i < (SMALLSMOKE+4); i++) tloadtile(i,1);
+    for (i = SHOTSPARK1; i < (SHOTSPARK1+4); i++) tloadtile(i,1);
 
-//    for (i = BLOOD; i < (BLOOD+4); i++) tloadtile(i,1);
-//    for (i = JIBS1; i < (JIBS5+5); i++) tloadtile(i,1);
-//    for (i = JIBS6; i < (JIBS6+8); i++) tloadtile(i,1);
+    for (i = BLOOD; i < (BLOOD+4); i++) tloadtile(i,1);
+    for (i = JIBS1; i < (JIBS5+5); i++) tloadtile(i,1);
+    for (i = JIBS6; i < (JIBS6+8); i++) tloadtile(i,1);
 
-//    for (i = SCRAP1; i < (SCRAP1+29); i++) tloadtile(i,1);
+    for (i = SCRAP1; i < (SCRAP1+29); i++) tloadtile(i,1);
 
-//    tloadtile(FIRELASER,1);
-//    for (i=TRANSPORTERSTAR; i<TRANSPORTERSTAR+6; i++) tloadtile(i,1);
-//    for (i=FORCERIPPLE; i<(FORCERIPPLE+9); i++) tloadtile(i,1);
+    tloadtile(FIRELASER,1);
+    for (i=TRANSPORTERSTAR; i<TRANSPORTERSTAR+6; i++) tloadtile(i,1);
+    for (i=FORCERIPPLE; i<(FORCERIPPLE+9); i++) tloadtile(i,1);
 
-//    for (i=MENUSCREEN; i<DUKECAR; i++) tloadtile(i,1);
+    for (i=MENUSCREEN; i<DUKECAR; i++) tloadtile(i,1);
 
-//    for (i=RPG; i<RPG+7; i++) tloadtile(i,1);
-//    for (i=FREEZEBLAST; i<FREEZEBLAST+3; i++) tloadtile(i,1);
-//    for (i=SHRINKSPARK; i<SHRINKSPARK+4; i++) tloadtile(i,1);
-//    for (i=GROWSPARK; i<GROWSPARK+4; i++) tloadtile(i,1);
-//    for (i=SHRINKEREXPLOSION; i<SHRINKEREXPLOSION+4; i++) tloadtile(i,1);
-//    for (i=MORTER; i<MORTER+4; i++) tloadtile(i,1);
-//    for (i=0; i<=60; i++) tloadtile(i,1);
-//}
+    for (i=RPG; i<RPG+7; i++) tloadtile(i,1);
+    for (i=FREEZEBLAST; i<FREEZEBLAST+3; i++) tloadtile(i,1);
+    for (i=SHRINKSPARK; i<SHRINKSPARK+4; i++) tloadtile(i,1);
+    for (i=GROWSPARK; i<GROWSPARK+4; i++) tloadtile(i,1);
+    for (i=SHRINKEREXPLOSION; i<SHRINKEREXPLOSION+4; i++) tloadtile(i,1);
+    for (i=MORTER; i<MORTER+4; i++) tloadtile(i,1);
+    for (i=0; i<=60; i++) tloadtile(i,1);
+}
 
 //// FIXME: this function is a piece of shit, needs specific sounds listed
 //static int32_t G_CacheSound(uint32_t num)
@@ -383,23 +384,24 @@ function tloadtile(/*int32_t */tilenume: number, /*int32_t */type: number): void
 //    return 1;
 //}
 
-//static void G_PrecacheSounds(void)
-//{
-//    int32_t i, j;
+function G_PrecacheSounds(): void
+{
+    todo("G_PrecacheSounds");
+    //int32_t i, j;
 
-//    if (ud.config.FXDevice < 0) return;
-//    j = 0;
+    //if (ud.config.FXDevice < 0) return;
+    //j = 0;
 
-//    for (i=MAXSOUNDS-1; i>=0; i--)
-//        if (g_sounds[i].ptr == 0)
-//        {
-//            j++;
-//            if ((j&7) == 0)
-//                G_HandleAsync();
+    //for (i=MAXSOUNDS-1; i>=0; i--)
+    //    if (g_sounds[i].ptr == 0)
+    //    {
+    //        j++;
+    //        if ((j&7) == 0)
+    //            G_HandleAsync();
 
-//            G_CacheSound(i);
-//        }
-//}
+    //        G_CacheSound(i);
+    //    }
+}
 
 function G_DoLoadScreen(statustext: string, percent: number): void
 {
@@ -501,133 +503,134 @@ function G_DoLoadScreen(statustext: string, percent: number): void
 //extern void G_SetCrosshairColor(int32_t r, int32_t g, int32_t b);
 //extern palette_t CrosshairColors;
 
-//void G_CacheMapData(void)
-//{
-//    int32_t i,j,pc=0;
-//    int32_t tc;
-//    uint32_t starttime, endtime;
+function G_CacheMapData(): void
+{
+    var i: number,j: number,pc=0;              //int32_t 
+    var tc: number;                    //int32_t 
+    var starttime: number, endtime: number;   //uint32_t
 
-//    if (ud.recstat == 2)
-//        return;
+    if (ud.recstat == 2)
+        return;
 
-//    S_PauseMusic(1);
-//    if (MapInfo[MAXVOLUMES*MAXLEVELS+2].alt_musicfn)
-//    {
-//        S_StopMusic();
-//        S_PlayMusic(&EnvMusicFilename[2][0],MAXVOLUMES*MAXLEVELS+2); // loadmus
-//    }
+    S_PauseMusic(1);
+    if (MapInfo[MAXVOLUMES*MAXLEVELS+2].alt_musicfn)
+    {
+        S_StopMusic();
+        S_PlayMusic(EnvMusicFilename[2][0],MAXVOLUMES*MAXLEVELS+2); // loadmus
+    }
 
-//    starttime = getticks();
+    starttime = getticks();
 
-//    G_PrecacheSounds();
-//    G_PrecacheSprites();
+    G_PrecacheSounds();
+    G_PrecacheSprites();
 
-//    for (i=0; i<numwalls; i++)
-//    {
-//        tloadtile(wall[i].picnum, 0);
+    for (i=0; i<numwalls; i++)
+    {
+        tloadtile(wall[i].picnum, 0);
 
-//        if (wall[i].overpicnum >= 0)
-//        {
-//            tloadtile(wall[i].overpicnum, 0);
-//        }
-//    }
+        if (wall[i].overpicnum >= 0)
+        {
+            tloadtile(wall[i].overpicnum, 0);
+        }
+    }
 
-//    for (i=0; i<numsectors; i++)
-//    {
-//        tloadtile(sector[i].floorpicnum, 0);
-//        tloadtile(sector[i].ceilingpicnum, 0);
-//        if (sector[i].ceilingpicnum == LA)  // JBF 20040509: if( waloff[sector[i].ceilingpicnum] == LA) WTF?!?!?!?
-//        {
-//            tloadtile(LA+1, 0);
-//            tloadtile(LA+2, 0);
-//        }
+    for (i=0; i<numsectors; i++)
+    {
+        tloadtile(sector[i].floorpicnum, 0);
+        tloadtile(sector[i].ceilingpicnum, 0);
+        if (sector[i].ceilingpicnum == LA)  // JBF 20040509: if( waloff[sector[i].ceilingpicnum] == LA) WTF?!?!?!?
+        {
+            tloadtile(LA+1, 0);
+            tloadtile(LA+2, 0);
+        }
 
-//        j = headspritesect[i];
-//        while (j >= 0)
-//        {
-//            if (sprite[j].xrepeat != 0 && sprite[j].yrepeat != 0 && (sprite[j].cstat&32768) == 0)
-//                G_CacheSpriteNum(j);
-//            j = nextspritesect[j];
-//        }
-//    }
+        j = headspritesect[i];
+        while (j >= 0)
+        {
+            if (sprite[j].xrepeat != 0 && sprite[j].yrepeat != 0 && (sprite[j].cstat&32768) == 0)
+                G_CacheSpriteNum(j);
+            j = nextspritesect[j];
+        }
+    }
 
-//    tc = totalclock;
-//    j = 0;
+    tc = totalclock;
+    j = 0;
 
-//    for (i=0; i<MAXTILES; i++)
-//    {
-//        if (!(i&7) && !gotpic[i>>3])
-//        {
-//            i+=7;
-//            continue;
-//        }
-//        if (gotpic[i>>3] & pow2char[i&7])
-//        {
-//            if (waloff[i] == 0)
-//                loadtile((int16_t)i);
+    for (i=0; i<MAXTILES; i++)
+    {
+        if (!(i&7) && !gotpic[i>>3])
+        {
+            i+=7;
+            continue;
+        }
+        if (gotpic[i>>3] & pow2char[i&7])
+        {
+            if (waloff[i] == null /*0*/)
+                loadtile(/*(int16_t)*/i);
 
 //#ifdef USE_OPENGL
-//// PRECACHE
-//            if (ud.config.useprecache && bpp > 8)
-//            {
-//                int32_t k,type;
+// PRECACHE
+            if (ud.config.useprecache && bpp > 8)
+            {
+                var /*int32_t */k: number,type: number;
 
-//                for (type=0; type<=1; type++)
-//                    if (precachehightile[type][i>>3] & pow2char[i&7])
-//                    {
-//                        k = 0;
-//                        for (k=0; k<MAXPALOOKUPS-RESERVEDPALS && !KB_KeyPressed(sc_Space); k++)
-//                        {
-//                            // this is the CROSSHAIR_COLOR, see comment in game.c
-//                            if (k == MAXPALOOKUPS-RESERVEDPALS-1)
-//                                break;
+                for (type=0; type<=1; type++)
+                    if (precachehightile[type][i>>3] & pow2char[i&7])
+                    {
+                        k = 0;
+                        for (k=0; k<MAXPALOOKUPS-RESERVEDPALS && !KB_KeyPressed(sc_Space); k++)
+                        {
+                            // this is the CROSSHAIR_COLOR, see comment in game.c
+                            if (k == MAXPALOOKUPS-RESERVEDPALS-1)
+                                break;
 //#ifdef POLYMER
-//                            if (getrendermode() != REND_POLYMER || !polymer_havehighpalookup(0, k))
+                            if (getrendermode() != REND_POLYMER || todoThrow("!polymer_havehighpalookup(0, k)"))
 //#endif
-//                                polymost_precache(i,k,type);
-//                        }
+                                polymost_precache(i,k,type);
+                        }
 
-//                        if (r_detailmapping && !KB_KeyPressed(sc_Space))
-//                            polymost_precache(i,DETAILPAL,type);
-//                        if (r_glowmapping && !KB_KeyPressed(sc_Space))
-//                            polymost_precache(i,GLOWPAL,type);
+                        if (r_detailmapping && !KB_KeyPressed(sc_Space))
+                            polymost_precache(i,DETAILPAL,type);
+                        if (r_glowmapping && !KB_KeyPressed(sc_Space))
+                            polymost_precache(i,GLOWPAL,type);
 //#ifdef POLYMER
-//                        if (getrendermode() == REND_POLYMER)
-//                        {
-//                            if (pr_specularmapping && !KB_KeyPressed(sc_Space))
-//                                polymost_precache(i,SPECULARPAL,type);
-//                            if (pr_normalmapping && !KB_KeyPressed(sc_Space))
-//                                polymost_precache(i,NORMALPAL,type);
-//                        }
+                        if (getrendermode() == REND_POLYMER)
+                        {
+                            todoThrow();
+                            //if (pr_specularmapping && !KB_KeyPressed(sc_Space))
+                            //    polymost_precache(i,SPECULARPAL,type);
+                            //if (pr_normalmapping && !KB_KeyPressed(sc_Space))
+                            //    polymost_precache(i,NORMALPAL,type);
+                        }
 //#endif
-//                    }
-//            }
+                    }
+            }
 //#endif
-//            j++;
-//            pc++;
-//        }
-//        else continue;
+            j++;
+            pc++;
+        }
+        else continue;
 
-//        MUSIC_Update();
+        MUSIC_Update();
 
-//        if ((j&7) == 0)
-//            G_HandleAsync();
+        if ((j&7) == 0)
+            G_HandleAsync();
 
-//        if (bpp > 8 && totalclock - tc > TICRATE/4)
-//        {
-//            /*Bsprintf(tempbuf,"%d resources remaining\n",g_precacheCount-pc+1);*/
-//            tc = min(100,100*pc/g_precacheCount);
-//            Bsprintf(tempbuf,"Loaded %d%% (%d/%d textures)\n",tc,pc,g_precacheCount);
-//            G_DoLoadScreen(tempbuf, tc);
-//            tc = totalclock;
-//        }
-//    }
+        if (bpp > 8 && totalclock - tc > TICRATE/4)
+        {
+            /*Bsprintf(tempbuf,"%d resources remaining\n",g_precacheCount-pc+1);*/
+            tc = min(100,100*pc/g_precacheCount);
+            Bsprintf(tempbuf,"Loaded %d%% (%d/%d textures)\n",tc,pc,g_precacheCount);
+            G_DoLoadScreen(tempbuf.toString(), tc);
+            tc = totalclock;
+        }
+    }
 
-//    clearbufbyte(gotpic,sizeof(gotpic),0);
+    clearbufbyte(gotpic,0,sizeof(gotpic),0);
 
-//    endtime = getticks();
-//    OSD_Printf("Cache time: %dms\n", endtime-starttime);
-//}
+    endtime = getticks();
+    OSD_Printf("Cache time: %dms\n", endtime-starttime);
+}
 
 //void G_SetupCamTile(int32_t i,int32_t wn)
 //{
@@ -820,115 +823,115 @@ function P_ResetTintFade(ps: DukePlayer_t): void
 //        VM_OnEvent(EVENT_RESETPLAYER, pl.i, snum, -1, 0);
 //}
 
-//void P_ResetStatus(int32_t snum)
-//{
-//    DukePlayer_t *p = g_player[snum].ps;
+function P_ResetStatus(/*int32_t*/ snum: number): void
+{
+    var p = g_player[snum].ps;
 
-//    ud.show_help        = 0;
-//    ud.showallmap       = 0;
-//    p.dead_flag        = 0;
-//    p.wackedbyactor    = -1;
-//    p.falling_counter  = 0;
-//    p.quick_kick       = 0;
-//    p.subweapon        = 0;
-//    p.last_full_weapon = 0;
-//    p.ftq              = 0;
-//    p.fta              = 0;
-//    p.tipincs          = 0;
-//    p.buttonpalette    = 0;
-//    p.actorsqu         =-1;
-//    p.invdisptime      = 0;
-//    p.refresh_inventory= 0;
-//    p.last_pissed_time = 0;
-//    p.holster_weapon   = 0;
-//    p.pycount          = 0;
-//    p.pyoff            = 0;
-//    p.opyoff           = 0;
-//    p.loogcnt          = 0;
-//    p.angvel           = 0;
-//    p.weapon_sway      = 0;
-//    //    p.select_dir       = 0;
-//    p.extra_extra8     = 0;
-//    p.show_empty_weapon= 0;
-//    p.dummyplayersprite=-1;
-//    p.crack_time       = 0;
-//    p.hbomb_hold_delay = 0;
-//    p.transporter_hold = 0;
-//    p.wantweaponfire  = -1;
-//    p.hurt_delay       = 0;
-//    p.footprintcount   = 0;
-//    p.footprintpal     = 0;
-//    p.footprintshade   = 0;
-//    p.jumping_toggle   = 0;
-//    p.ohoriz = p.horiz= 140;
-//    p.horizoff         = 0;
-//    p.bobcounter       = 0;
-//    p.on_ground        = 0;
-//    p.player_par       = 0;
-//    p.return_to_center = 9;
-//    p.airleft          = 15*GAMETICSPERSEC;
-//    p.rapid_fire_hold  = 0;
-//    p.toggle_key_flag  = 0;
-//    p.access_spritenum = -1;
-//    if ((g_netServer || ud.multimode > 1) && (GametypeFlags[ud.coop] & GAMETYPE_ACCESSATSTART))
-//        p.got_access = 7;
-//    else p.got_access      = 0;
-//    p.random_club_frame= 0;
-//    pus = 1;
-//    p.on_warping_sector = 0;
-//    p.spritebridge      = 0;
-//    p.sbs          = 0;
-//    p.palette = BASEPAL;
+    ud.show_help        = 0;
+    ud.showallmap       = 0;
+    p.dead_flag        = 0;
+    p.wackedbyactor    = -1;
+    p.falling_counter  = 0;
+    p.quick_kick       = 0;
+    p.subweapon        = 0;
+    p.last_full_weapon = 0;
+    p.ftq              = 0;
+    p.fta              = 0;
+    p.tipincs          = 0;
+    p.buttonpalette    = 0;
+    p.actorsqu         =-1;
+    p.invdisptime      = 0;
+    p.refresh_inventory= 0;
+    p.last_pissed_time = 0;
+    p.holster_weapon   = 0;
+    p.pycount          = 0;
+    p.pyoff            = 0;
+    p.opyoff           = 0;
+    p.loogcnt          = 0;
+    p.angvel           = 0;
+    p.weapon_sway      = 0;
+    //    p.select_dir       = 0;
+    p.extra_extra8     = 0;
+    p.show_empty_weapon= 0;
+    p.dummyplayersprite=-1;
+    p.crack_time       = 0;
+    p.hbomb_hold_delay = 0;
+    p.transporter_hold = 0;
+    p.wantweaponfire  = -1;
+    p.hurt_delay       = 0;
+    p.footprintcount   = 0;
+    p.footprintpal     = 0;
+    p.footprintshade   = 0;
+    p.jumping_toggle   = 0;
+    p.ohoriz = p.horiz= 140;
+    p.horizoff         = 0;
+    p.bobcounter       = 0;
+    p.on_ground        = 0;
+    p.player_par       = 0;
+    p.return_to_center = 9;
+    p.airleft          = 15*GAMETICSPERSEC;
+    p.rapid_fire_hold  = 0;
+    p.toggle_key_flag  = 0;
+    p.access_spritenum = -1;
+    if ((g_netServer || ud.multimode > 1) && (GametypeFlags[ud.coop] & GAMETYPE_ACCESSATSTART))
+        p.got_access = 7;
+    else p.got_access      = 0;
+    p.random_club_frame= 0;
+    pus = 1;
+    p.on_warping_sector = 0;
+    p.spritebridge      = 0;
+    p.sbs          = 0;
+    p.palette = BASEPAL;
 
-//    if (p.inv_amount[GET_STEROIDS] < 400)
-//    {
-//        p.inv_amount[GET_STEROIDS] = 0;
-//        p.inven_icon = ICON_NONE;
-//    }
-//    p.heat_on =            0;
-//    p.jetpack_on =         0;
-//    p.holoduke_on =       -1;
+    if (p.inv_amount[GET_STEROIDS] < 400)
+    {
+        p.inv_amount[GET_STEROIDS] = 0;
+        p.inven_icon = ICON_NONE;
+    }
+    p.heat_on =            0;
+    p.jetpack_on =         0;
+    p.holoduke_on =       -1;
 
-//    p.look_ang          = 512 - ((ud.level_number&1)<<10);
+    p.look_ang          = 512 - ((ud.level_number&1)<<10);
 
-//    p.rotscrnang        = 0;
-//    p.orotscrnang       = 1;   // JBF 20031220
-//    p.newowner          =-1;
-//    p.jumping_counter   = 0;
-//    p.hard_landing      = 0;
-//    p.vel.x             = 0;
-//    p.vel.y             = 0;
-//    p.vel.z             = 0;
-//    fricxv            = 0;
-//    fricyv            = 0;
-//    p.somethingonplayer =-1;
-//    p.one_eighty_count  = 0;
-//    p.cheat_phase       = 0;
+    p.rotscrnang        = 0;
+    p.orotscrnang       = 1;   // JBF 20031220
+    p.newowner          =-1;
+    p.jumping_counter   = 0;
+    p.hard_landing      = 0;
+    p.vel.x             = 0;
+    p.vel.y             = 0;
+    p.vel.z             = 0;
+    fricxv            = 0;
+    fricyv            = 0;
+    p.somethingonplayer =-1;
+    p.one_eighty_count  = 0;
+    p.cheat_phase       = 0;
 
-//    p.on_crane          = -1;
+    p.on_crane          = -1;
 
-//    if ((PWEAPON(snum, p.curr_weapon, WorksLike) == PISTOL_WEAPON) &&
-//            (PWEAPON(snum, p.curr_weapon, Reload) > PWEAPON(snum, p.curr_weapon, TotalTime)))
-//        p.kickback_pic  = PWEAPON(snum, p.curr_weapon, TotalTime);
-//    else p.kickback_pic = 0;
+    if ((PWEAPON(snum, p.curr_weapon, "WorksLike") == PISTOL_WEAPON) &&
+            (PWEAPON(snum, p.curr_weapon, "Reload") > PWEAPON(snum, p.curr_weapon, "TotalTime")))
+        p.kickback_pic  = PWEAPON(snum, p.curr_weapon, "TotalTime");
+    else p.kickback_pic = 0;
 
-//    p.weapon_pos        = WEAPON_POS_START;
-//    p.walking_snd_toggle= 0;
-//    p.weapon_ang        = 0;
+    p.weapon_pos        = WEAPON_POS_START;
+    p.walking_snd_toggle= 0;
+    p.weapon_ang        = 0;
 
-//    p.knuckle_incs      = 1;
-//    p.fist_incs = 0;
-//    p.knee_incs         = 0;
-//    p.jetpack_on        = 0;
-//    p.reloading        = 0;
+    p.knuckle_incs      = 1;
+    p.fist_incs = 0;
+    p.knee_incs         = 0;
+    p.jetpack_on        = 0;
+    p.reloading        = 0;
 
-//    p.movement_lock     = 0;
+    p.movement_lock     = 0;
 
-//    p.frag_ps          = snum;
+    p.frag_ps          = snum;
 
-//    P_UpdateScreenPal(p);
-//    VM_OnEvent(EVENT_RESETPLAYER, p.i, snum, -1, 0);
-//}
+    P_UpdateScreenPal(p);
+    VM_OnEvent(EVENT_RESETPLAYER, p.i, snum, -1, 0);
+}
 
 function P_ResetWeapons(/*int32_t*/ snum: number): void
 {
@@ -1591,7 +1594,7 @@ function resetpspritevars(/*char */g: number): void
     }
 
     if (ud.recstat != 2)
-        for (TRAVERSE_CONNECT(i))
+        for (i = 0; i != -1; i = connectpoint2[i])
         {
             aimmode[i] = g_player[i].ps.aim_mode;
             autoaim[i] = g_player[i].ps.auto_aim;
@@ -1602,7 +1605,7 @@ function resetpspritevars(/*char */g: number): void
                     tsbar[i].ammo_amount[j] = g_player[i].ps.ammo_amount[j];
 
                 tsbar[i].gotweapon = g_player[i].ps.gotweapon;
-                Bmemcpy(tsbar[i].inv_amount, g_player[i].ps.inv_amount, sizeof(tsbar[i].inv_amount));
+                Bmemcpy(new P(tsbar[i].inv_amount), new P(g_player[i].ps.inv_amount), sizeof(tsbar[i].inv_amount));
                 tsbar[i].curr_weapon = g_player[i].ps.curr_weapon;
                 tsbar[i].inven_icon = g_player[i].ps.inven_icon;
             }
@@ -1610,11 +1613,11 @@ function resetpspritevars(/*char */g: number): void
 
     P_ResetStatus(0);
 
-    for (TRAVERSE_CONNECT(i))
-        if (i) Bmemcpy(g_player[i].ps,g_player[0].ps,sizeof(DukePlayer_t));
+    for (i = 0; i != -1; i = connectpoint2[i])
+        if (i) todoThrow("Bmemcpy(g_player[i].ps,g_player[0].ps,sizeof(DukePlayer_t));");
 
     if (ud.recstat != 2)
-        for (TRAVERSE_CONNECT(i))
+        for (i = 0; i != -1; i = connectpoint2[i])
         {
             g_player[i].ps.aim_mode = aimmode[i];
             g_player[i].ps.auto_aim = autoaim[i];
@@ -1627,7 +1630,7 @@ function resetpspritevars(/*char */g: number): void
                 g_player[i].ps.gotweapon = tsbar[i].gotweapon;
                 g_player[i].ps.curr_weapon = tsbar[i].curr_weapon;
                 g_player[i].ps.inven_icon = tsbar[i].inven_icon;
-                Bmemcpy(g_player[i].ps.inv_amount, tsbar[i].inv_amount, sizeof(tsbar[i].inv_amount));
+                Bmemcpy(new P(g_player[i].ps.inv_amount), new P(tsbar[i].inv_amount), sizeof(tsbar[i].inv_amount));
             }
         }
 
@@ -1639,8 +1642,8 @@ function resetpspritevars(/*char */g: number): void
     i = headspritestat[STAT_PLAYER];
     while (i >= 0)
     {
-        const int32_t nexti = nextspritestat[i];
-        spritetype *const s = &sprite[i];
+        var /*const int32_t */nexti = nextspritestat[i];
+        var /*spritetype *const*/ s = sprite[i];
 
         if (g_numPlayerSprites == MAXPLAYERS)
             G_GameExit("\nToo many player sprites (max 16.)");
@@ -1682,7 +1685,7 @@ function resetpspritevars(/*char */g: number): void
                 {
                     if (s.pal == 0)
                     {
-                        int32_t k = 0;
+                        var /*int32_t */k = 0;
 
                         for (; k<ud.multimode; k++)
                         {
@@ -1702,7 +1705,7 @@ function resetpspritevars(/*char */g: number): void
                 }
                 else
                 {
-                    int32_t k = g_player[j].pcolor;
+                    var /*int32_t */k = g_player[j].pcolor;
 
                     if (GametypeFlags[ud.coop] & GAMETYPE_TDM)
                     {
@@ -1716,15 +1719,17 @@ function resetpspritevars(/*char */g: number): void
                 g_player[j].ps.frag_ps = j;
                 actor[i].owner = i;
 
-                g_player[j].ps.autostep = (20L<<8);
-                g_player[j].ps.autostep_sbw = (4L<<8);
+                g_player[j].ps.autostep = (20<<8);
+                g_player[j].ps.autostep_sbw = (4<<8);
 
                 actor[i].bpos.x = g_player[j].ps.bobposx = g_player[j].ps.opos.x = g_player[j].ps.pos.x =        s.x;
                 actor[i].bpos.y = g_player[j].ps.bobposy = g_player[j].ps.opos.y = g_player[j].ps.pos.y =        s.y;
                 actor[i].bpos.z = g_player[j].ps.opos.z = g_player[j].ps.pos.z =        s.z;
                 g_player[j].ps.oang  = g_player[j].ps.ang  =        s.ang;
 
-                updatesector(s.x,s.y,&g_player[j].ps.cursectnum);
+                var $cursectnum = new R(g_player[j].ps.cursectnum);
+                updatesector(s.x,s.y,$cursectnum);
+                g_player[j].ps.cursectnum = $cursectnum.$;
             }
 
             j++;
@@ -1762,24 +1767,30 @@ function resetpspritevars(/*char */g: number): void
 //        g_moveThingsCount = 0;
 //}
 
-//void G_ClearFIFO(void)
-//{
-//    int32_t i = MAXPLAYERS-1;
+function G_ClearFIFO(): void
+{
+    var /*int32_t */i = MAXPLAYERS-1;
     
-//    g_emuJumpTics = 0;
+    g_emuJumpTics = 0;
 
-//    Bmemset(&avg, 0, sizeof(input_t));
+    avg.init();//Bmemset(&avg, 0, sizeof(input_t));
 
-//    clearbufbyte(&loc,sizeof(input_t),0);
-//    clearbufbyte(&inputfifo,sizeof(input_t)*MOVEFIFOSIZ*MAXPLAYERS,0);
+    loc.init();//(&loc,sizeof(input_t),0);
 
-//    for (; i >= 0; i--)
-//    {
-//        if (g_player[i].sync != NULL)
-//            Bmemset(g_player[i].sync, 0, sizeof(input_t));
-//        g_player[i].vote = g_player[i].gotvote = 0;
-//    }
-//}
+
+    for (var k = 0; k < MOVEFIFOSIZ; k++) {
+        for (var j = 0; j < MAXPLAYERS; j++) {
+            inputfifo[k][j].init(); //clearbufbyte(inputfifo,sizeof(input_t)*MOVEFIFOSIZ*MAXPLAYERS,0);
+        }
+    }
+
+    for (; i >= 0; i--)
+    {
+        if (g_player[i].sync != NULL)
+            g_player[i].sync.init();//Bmemset(g_player[i].sync, 0, sizeof(input_t));
+        g_player[i].vote = g_player[i].gotvote = 0;
+    }
+}
 
 function G_FindLevelByFile(fn: string): number
 {
@@ -1797,29 +1808,29 @@ function G_FindLevelByFile(fn: string): number
     return MAXLEVELS*MAXVOLUMES;
 }
 
-//void G_FadeLoad(int32_t r, int32_t g, int32_t b, int32_t start, int32_t end, int32_t step, int32_t ticwait)
-//{
-//    int32_t m = (step < 0) ? -1 : 1;
+function G_FadeLoad(/*int32_t*/ r: number, /*int32_t */g: number, /*int32_t */b: number, /*int32_t */start: number, /*int32_t */end: number, /*int32_t */step: number, /*int32_t */ticwait: number): void
+{
+    var /*int32_t */m = (step < 0) ? -1 : 1;
 
-//    int32_t nexttic = totalclock;
+    var /*int32_t */nexttic = totalclock;
 
-//    for (; m*start <= m*end; start += step)
-//    {
-//        while (totalclock < nexttic)
-//            sampletimer();
-//        nexttic += ticwait;
+    for (; m*start <= m*end; start += step)
+    {
+        while (totalclock < nexttic)
+            todo("sampletimer();");
+        nexttic += ticwait;
 
-//        if (KB_KeyPressed(sc_Space))
-//        {
-//            KB_ClearKeyDown(sc_Space);
-//            return;
-//        }
+        if (KB_KeyPressed(sc_Space))
+        {
+            KB_ClearKeyDown(sc_Space);
+            return;
+        }
 
-//        G_FadePalette(r,g,b,start|128);
-//        flushperms();
-//        G_DoLoadScreen(" ", -1);
-//    }
-//}
+        G_FadePalette(r,g,b,start|128);
+        flushperms();
+        G_DoLoadScreen(" ", -1);
+    }
+}
 
 
 //static void G_LoadMapHack(char *outbuf, const char *filename)
@@ -2046,86 +2057,86 @@ function G_EnterLevel(g: number): number
    
     G_AlignWarpElevators();
     resetpspritevars(g);
-     debugger;
-//    G_FadeLoad(0,0,0, 63,0, -7, 4);
-//    G_CacheMapData();
-//    G_FadeLoad(0,0,0, 0,63, 7, 4);
+     
+    G_FadeLoad(0,0,0, 63,0, -7, 4);
+    G_CacheMapData();
+    G_FadeLoad(0,0,0, 0,63, 7, 4);
 
-//    if (ud.recstat != 2)
-//    {
-//        g_musicIndex = mii;
-//        if (MapInfo[g_musicIndex].musicfn != NULL)
-//            S_PlayMusic(MapInfo[g_musicIndex].musicfn, g_musicIndex);
-//    }
+    if (ud.recstat != 2)
+    {
+        g_musicIndex = mii;
+        if (MapInfo[g_musicIndex].musicfn != NULL)
+            S_PlayMusic(MapInfo[g_musicIndex].musicfn, g_musicIndex);
+    }
 
-//    if (g & (MODE_GAME|MODE_EOL))
-//    {
-//        for (TRAVERSE_CONNECT(i))
-//            g_player[i].ps.gm = MODE_GAME;
-//    }
-//    else if (g & MODE_RESTART)
-//    {
-//        if (ud.recstat == 2)
-//            g_player[myconnectindex].ps.gm = MODE_DEMO;
-//        else g_player[myconnectindex].ps.gm = MODE_GAME;
-//    }
+    if (g & (MODE_GAME|MODE_EOL))
+    {
+        for (i = 0; i != -1; i = connectpoint2[i])
+            g_player[i].ps.gm = MODE_GAME;
+    }
+    else if (g & MODE_RESTART)
+    {
+        if (ud.recstat == 2)
+            g_player[myconnectindex].ps.gm = MODE_DEMO;
+        else g_player[myconnectindex].ps.gm = MODE_GAME;
+    }
 
-//    if ((ud.recstat == 1) && (g&MODE_RESTART) != MODE_RESTART)
-//        G_OpenDemoWrite();
+    if ((ud.recstat == 1) && (g&MODE_RESTART) != MODE_RESTART)
+        todoThrow("G_OpenDemoWrite();");
 
-//    if (VOLUMEONE && ud.level_number == 0 && ud.recstat != 2)
-//        P_DoQuote(QUOTE_F1HELP,g_player[myconnectindex].ps);
+    if (window.VOLUMEONE && ud.level_number == 0 && ud.recstat != 2)
+        P_DoQuote(QUOTE_F1HELP,g_player[myconnectindex].ps);
 
-//    for (TRAVERSE_CONNECT(i))
-//        switch (DYNAMICTILEMAP(sector[sprite[g_player[i].ps.i].sectnum].floorpicnum))
-//        {
-//        case HURTRAIL__STATIC:
-//        case FLOORSLIME__STATIC:
-//        case FLOORPLASMA__STATIC:
-//            P_ResetWeapons(i);
-//            P_ResetInventory(i);
-//            g_player[i].ps.gotweapon &= ~(1<<PISTOL_WEAPON);
-//            g_player[i].ps.ammo_amount[PISTOL_WEAPON] = 0;
-//            g_player[i].ps.curr_weapon = KNEE_WEAPON;
-//            g_player[i].ps.kickback_pic = 0;
-//            break;
-//        }
+    for (i = 0; i != -1; i = connectpoint2[i])
+        switch (DYNAMICTILEMAP(sector[sprite[g_player[i].ps.i].sectnum].floorpicnum))
+        {
+        case HURTRAIL__STATIC:
+        case FLOORSLIME__STATIC:
+        case FLOORPLASMA__STATIC:
+            P_ResetWeapons(i);
+            P_ResetInventory(i);
+            g_player[i].ps.gotweapon &= ~(1<<PISTOL_WEAPON);
+            g_player[i].ps.ammo_amount[PISTOL_WEAPON] = 0;
+            g_player[i].ps.curr_weapon = KNEE_WEAPON;
+            g_player[i].ps.kickback_pic = 0;
+            break;
+        }
 
-//    //PREMAP.C - replace near the my's at the end of the file
+    //PREMAP.C - replace near the my's at the end of the file
+      
+    Net_NotifyNewGame();
+    Net_ResetPrediction();
 
-//    Net_NotifyNewGame();
-//    Net_ResetPrediction();
+    //g_player[myconnectindex].ps.palette = palette;
+    //G_FadePalette(0,0,0,0);
+    P_SetGamePalette(g_player[myconnectindex].ps, BASEPAL, 0);    // JBF 20040308
 
-//    //g_player[myconnectindex].ps.palette = palette;
-//    //G_FadePalette(0,0,0,0);
-//    P_SetGamePalette(g_player[myconnectindex].ps, BASEPAL, 0);    // JBF 20040308
+    P_UpdateScreenPal(g_player[myconnectindex].ps);
+    flushperms();
 
-//    P_UpdateScreenPal(g_player[myconnectindex].ps);
-//    flushperms();
+    everyothertime = 0;
+    g_globalRandom = 0;
 
-//    everyothertime = 0;
-//    g_globalRandom = 0;
+    ud.last_level = ud.level_number+1;
 
-//    ud.last_level = ud.level_number+1;
+    G_ClearFIFO();
 
-//    G_ClearFIFO();
+    for (i=g_numInterpolations-1; i>=0; i--) bakipos[i] = curipos[i];// *curipos[i];
 
-//    for (i=g_numInterpolations-1; i>=0; i--) bakipos[i] = *curipos[i];
+    g_restorePalette = -1;
 
-//    g_restorePalette = -1;
+//        mmulti_flushpackets();
 
-////        mmulti_flushpackets();
+    G_FadePalette(0,0,0,0);
+    G_UpdateScreenArea();
+    clearview(0);
+    G_DrawBackground();
+    G_DrawRooms(myconnectindex,65536);
 
-//    G_FadePalette(0,0,0,0);
-//    G_UpdateScreenArea();
-//    clearview(0);
-//    G_DrawBackground();
-//    G_DrawRooms(myconnectindex,65536);
+    g_player[myconnectindex].ps.over_shoulder_on = 0;
 
-//    g_player[myconnectindex].ps.over_shoulder_on = 0;
-
-//    clearfrags();
-
+    clearfrags();
+  debugger;
 //    G_ResetTimers(0);  // Here we go
 
 //    //Bsprintf(g_szBuf,"G_EnterLevel L=%d V=%d",ud.level_number, ud.volume_number);

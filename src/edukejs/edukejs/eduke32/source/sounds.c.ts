@@ -136,24 +136,25 @@ var g_numEnvSoundsPlaying: number,g_maxSoundPos = 0; //int32
 //        initprintf("%s\n", MUSIC_ErrorString(MUSIC_ErrorCode));
 //}
 
-//void S_PauseMusic(int32_t onf)
-//{
-//    if (MusicPaused == onf || (MusicIsWaveform && MusicVoice < 0))
-//        return;
+function S_PauseMusic(/*int32_t*/ onf: Number): void
+{
+    todo("S_PauseMusic");
+    //if (MusicPaused == onf || (MusicIsWaveform && MusicVoice < 0))
+    //    return;
 
-//    MusicPaused = onf;
+    //MusicPaused = onf;
 
-//    if (MusicIsWaveform)
-//    {
-//        FX_PauseVoice(MusicVoice, onf);
-//        return;
-//    }
+    //if (MusicIsWaveform)
+    //{
+    //    FX_PauseVoice(MusicVoice, onf);
+    //    return;
+    //}
 
-//    if (onf)
-//        MUSIC_Pause();
-//    else
-//        MUSIC_Continue();
-//}
+    //if (onf)
+    //    MUSIC_Pause();
+    //else
+    //    MUSIC_Continue();
+}
 
 //void S_MusicVolume(int32_t volume)
 //{
@@ -190,8 +191,9 @@ var g_numEnvSoundsPlaying: number,g_maxSoundPos = 0; //int32
 //    S_PlaySound(menusnds[SoundNum++ % (sizeof(menusnds)/sizeof(menusnds[0]))]);
 //}
 
-//int32_t S_PlayMusic(const char *fn, const int32_t sel)
-//{
+function /*int32_t */S_PlayMusic(/*const char **/fn: string, /*const int32_t */sel: number): number
+{
+    todo("S_PlayMusic");
 //    char *ofn = (char *)fn, *testfn, *extension;
 //    int32_t fp;
 //    const char *alt = 0;
@@ -275,11 +277,11 @@ var g_numEnvSoundsPlaying: number,g_maxSoundPos = 0; //int32
 //            MusicIsWaveform = 1;
 //    }
 //    return (alt != 0);
-//}
+}
 
-//void S_StopMusic(void)
-//{
-//    MusicPaused = 0;
+function S_StopMusic(): void
+{
+    //MusicPaused = 0;
 
 //    if (MusicIsWaveform && MusicVoice >= 0)
 //    {
@@ -296,7 +298,7 @@ var g_numEnvSoundsPlaying: number,g_maxSoundPos = 0; //int32
 //        MusicPtr = NULL;
 //        g_musicSize = MusicLen = 0;
 //    }
-//}
+}
 
 //void S_Cleanup(void)
 //{

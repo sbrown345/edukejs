@@ -5264,8 +5264,9 @@ function polymost_dorotatesprite(sx: number, sy: number, z: number, a: number, p
 //    }
 //}
 //
-//void polymost_precache(int32_t dapicnum, int32_t dapalnum, int32_t datype)
-//{
+function polymost_precache(/*int32_t*/ dapicnum: number, /*int32_t */dapalnum: number, /*int32_t */datype: number): void
+{
+    todo("polymost_precache");
 //#ifdef USE_OPENGL
 //    // dapicnum and dapalnum are like you'd expect
 //    // datype is 0 for a wall/floor/ceiling and 1 for a sprite
@@ -5299,7 +5300,7 @@ function polymost_dorotatesprite(sx: number, sy: number, z: number, a: number, p
 //            mdloadskin((md2model_t *)models[mid], 0, dapalnum, i);
 //    }
 //#endif
-//}
+}
 //
 //#else /* if !defined USE_OPENGL */
 //

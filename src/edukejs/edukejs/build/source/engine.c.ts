@@ -14645,95 +14645,96 @@ function getpal(col: number): palette_t
     }
 }
 
-//static void setpalettefade_calc(uint8_t offset)
-//{
-//    int32_t i;
-//    palette_t p;
+function setpalettefade_calc(/*uint8_t*/ offset: number):  void 
+{
+    var /*int32_t*/ i: number;
+    var /*palette_t*/ p: palette_t;
 
-//    for (i=0; i<256; i++)
-//    {
-//        p = getpal(i);
+    for (i=0; i<256; i++)
+    {
+        p = getpal(i);
 
-//        curpalettefaded[i].b =
-//            p.b + (((palfadergb.b - p.b) * offset) >> 6);
-//        curpalettefaded[i].g =
-//            p.g + (((palfadergb.g - p.g) * offset) >> 6);
-//        curpalettefaded[i].r =
-//            p.r + (((palfadergb.r - p.r) * offset) >> 6);
-//        curpalettefaded[i].f = 0;
-//    }
-//}
+        curpalettefaded[i].b =
+            p.b + (((palfadergb.b - p.b) * offset) >> 6);
+        curpalettefaded[i].g =
+            p.g + (((palfadergb.g - p.g) * offset) >> 6);
+        curpalettefaded[i].r =
+            p.r + (((palfadergb.r - p.r) * offset) >> 6);
+        curpalettefaded[i].f = 0;
+    }
+}
 
 ////#define DEBUG_PALETTEFADE
 
-////
-//// setpalettefade
-////
-//void setpalettefade(char r, char g, char b, char offset)
-//{
-//    palfadergb.r = min(63,r) << 2;
-//    palfadergb.g = min(63,g) << 2;
-//    palfadergb.b = min(63,b) << 2;
+//
+// setpalettefade
+//
+function setpalettefade(/*char*/ r: number, /*char */g: number, /*char */b: number, /*char*/ offset: number): void
+{
+    palfadergb.r = min(63,r) << 2;
+    palfadergb.g = min(63,g) << 2;
+    palfadergb.b = min(63,b) << 2;
 //#ifdef DEBUG_PALETTEFADE
-//    if (offset)
-//        offset = max(offset, 32);
+    //if (offset)
+    //    offset = max(offset, 32);
 //#endif
-//    palfadedelta = min(63,offset) << 2;
+    palfadedelta = min(63,offset) << 2;
 
-//    setpalettefade_calc(offset);
+    setpalettefade_calc(offset);
 
-//    {
-//        static uint32_t lastpalettesum=0;
-//        uint32_t newpalettesum = crc32once((uint8_t *)curpalettefaded, sizeof(curpalettefaded));
+    {
+        var /*static uint32_t */lastpalettesum=0;
+        var /*uint32_t*/ newpalettesum = -999999999999999999999999999999; todoThrow(" crc32once((uint8_t *)curpalettefaded, sizeof(curpalettefaded));");
 
-//        if (newpalettesum != lastpalettesum || newpalettesum != g_lastpalettesum)
-//        {
-//            setpalette(0,256);
-//        }
+        if (newpalettesum != lastpalettesum || newpalettesum != g_lastpalettesum)
+        {
+            setpalette(0,256);
+        }
 
-//        g_lastpalettesum = lastpalettesum = newpalettesum;
-//    }
-//}
+        g_lastpalettesum = lastpalettesum = newpalettesum;
+    }
+}
 
 
-////
-//// clearview
-////
-//void clearview(int32_t dacol)
-//{
-//    intptr_t p;
-//    int32_t  y, dx;
+//
+// clearview
+//
+function clearview(/*int32_t*/ dacol: number): void
+{
+    //var /*int32_t  */p: number; //intptr_t
+    var /*int32_t  */y: number, dx: number;
 
-//    if (!in3dmode()) return;
+    if (!in3dmode()) return;
 
 //#ifdef USE_OPENGL
-//    if (getrendermode() >= REND_POLYMOST)
-//    {
-//        palette_t p = getpal(dacol);
+    if (getrendermode() >= REND_POLYMOST)
+    {
+        var p = getpal(dacol);
 
-//        bglClearColor(((float)p.r)/255.0,
-//                      ((float)p.g)/255.0,
-//                      ((float)p.b)/255.0,
-//                      0);
-//        bglClear(GL_COLOR_BUFFER_BIT);
-//        return;
-//    }
+        bglClearColor((/*(float)*/p.r)/255.0,
+                      (/*(float)*/p.g)/255.0,
+                      (/*(float)*/p.b)/255.0,
+                      0);
+        bglClear(GL_COLOR_BUFFER_BIT);
+        return;
+    }
 //#endif
 
-//    begindrawing(); //{{{
-//    dx = windowx2-windowx1+1;
-//    //dacol += (dacol<<8); dacol += (dacol<<16);
-//    p = frameplace+ylookup[windowy1]+windowx1;
-//    for (y=windowy1; y<=windowy2; y++)
-//    {
-//        //clearbufbyte((void*)p,dx,dacol);
-//        Bmemset((void *)p,dacol,dx);
-//        p += ylookup[1];
-//    }
-//    enddrawing();   //}}}
+  todoThrow();
+    //begindrawing(); //{{{
+    //dx = windowx2-windowx1+1;
+    ////dacol += (dacol<<8); dacol += (dacol<<16);
+    //p = frameplace+ylookup[windowy1]+windowx1;
+    //for (y=windowy1; y<=windowy2; y++)
+    //{
+    //    //clearbufbyte((void*)p,dx,dacol);
+    //    Bmemset((void *)p,dacol,dx);
+    //    p += ylookup[1];
+    //}
+    //enddrawing();   //}}}
 
-//    faketimerhandler();
-//}
+    //faketimerhandler();
+}
 
 
 //

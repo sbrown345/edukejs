@@ -1991,6 +1991,20 @@ function swaplong(/*void **/a: string, /*void **/b: string, ctx: any)
 //	}
 //}
 
+function clearbufbyte(buffer: Uint8Array /*or other array with BYTES_PER_ELEMENT*/, offset: number, c: number, a: number): void {
+    if (arguments.length != 4) throw "arg error";
+
+    var p = new Uint8Array(buffer.buffer);
+    var pIdx = offset * buffer.BYTES_PER_ELEMENT;
+    var m = [0xff, 0xff00, 0xff0000, 0xff000000];
+    var n = [0, 8, 16, 24];
+    var z = 0;
+    while ((c--) > 0) {
+        p[pIdx++] = ((a & m[z]) >>> n[z]);
+        z = (z + 1) & 3;
+    }
+}
+
 //static __inline void copybuf(const void *s, void *d, int32_t c)
 //{
 //	_asm {

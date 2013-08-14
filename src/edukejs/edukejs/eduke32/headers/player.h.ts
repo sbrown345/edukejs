@@ -31,7 +31,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //#ifndef __player_h__
 //#define __player_h__
 
-//#define MOVEFIFOSIZ                 2
+var MOVEFIFOSIZ                 =2;
 
 var NAM_GRENADE_LIFETIME       = 120;
 var NAM_GRENADE_LIFETIME_VAR   = 30;
@@ -147,18 +147,31 @@ var pstanding                   = 0x00000001,
     pfacing                     = 0x00010000;
 //};
 
-//typedef struct {
-//    int32_t ox,oy,oz;
-//    int16_t oa,os;
-//} playerspawn_t;
+class playerspawn_t{
+    ox:number;oy:number;oz: number;          //int32_t 
+    oa:number;os: number;             //int16_t 
 
-//typedef struct {
-//    int16_t got_access, last_extra, inv_amount[GET_MAX], curr_weapon, holoduke_on;
-//    int16_t last_weapon, weapon_pos, kickback_pic;
-//    int16_t ammo_amount[MAX_WEAPONS], frag[MAXPLAYERS];
-//    uint16_t gotweapon;
-//    char inven_icon, jetpack_on, heat_on;
-//} DukeStatus_t;
+    constructor() {
+        this.ox = 0;this.oy = 0;this.oz = 0;         
+        this.oa = 0;this.os = 0;            
+    }
+}
+
+class DukeStatus_t {
+    got_access: number; last_extra: number; inv_amount:Int16Array/*[GET_MAX]*/; curr_weapon: number; holoduke_on: number;   //int16_t 
+    last_weapon: number; weapon_pos: number; kickback_pic: number;                                                          //int16_t 
+    ammo_amount: Int16Array; frag:Int16Array;                                                                                //int16_t 
+    gotweapon;                                                                                                                  //uint16_t
+    inven_icon: number; jetpack_on: number; heat_on: number;                                                                   //char
+
+    constructor() {
+        this.got_access = 0; this.last_extra = 0; this.inv_amount = new Int16Array(GET_MAX); this.curr_weapon = 0; this.holoduke_on = 0;   //int16_t 
+        this.last_weapon = 0; this.weapon_pos = 0; this.kickback_pic = 0;                                                                   //int16_t 
+        this.ammo_amount = new Int16Array(MAX_WEAPONS); this.frag = new Int16Array(MAXPLAYERS);                                             //int16_t 
+        this.gotweapon = 0;                                                                                                                  //uint16_t
+        this.inven_icon = 0; this.jetpack_on = 0; this.heat_on = 0;                                                                             //char
+    }
+}// DukeStatus_t;
 
 class input_t {
     bits: number; // 4b uint32_t
@@ -167,6 +180,10 @@ class input_t {
     extbits: number; filler: number; // 2b int8_t
 
     constructor() {
+        this.init();
+    }
+
+    init() {
         this.bits = 0; // 4b uint32_t
         this.fvel = 0, this.svel = 0; // 4b int16_t
         this.avel = 0, this.horz = 0; // 2b int8_t
@@ -432,9 +449,10 @@ var aplWeaponFlashColor: Int32Array[] = new Array(MAX_WEAPONS);      // Color fo
 //    int32_t shade;
 //} hudweapon_t;
 
-//extern input_t          inputfifo[MOVEFIFOSIZ][MAXPLAYERS];
-//extern playerspawn_t    g_playerSpawnPoints[MAXPLAYERS];
-var g_player: playerdata_t[] = newStructArray(playerdata_t, MAXPLAYERS);
+assert.areEqual(2, MOVEFIFOSIZ);
+var inputfifo: input_t[][] = [newStructArray(input_t, MAXPLAYERS), newStructArray(input_t, MAXPLAYERS)]; 
+var g_playerSpawnPoints: playerspawn_t[] = newStructArray<playerspawn_t>(playerspawn_t, MAXPLAYERS);
+var g_player: playerdata_t[] = newStructArray<playerdata_t>(playerdata_t, MAXPLAYERS);
 ////extern char             dashow2dsector[(MAXSECTORS+7)>>3];
 ////extern int16_t          searchsect[MAXSECTORS],searchparent[MAXSECTORS];
 //extern int16_t          WeaponPickupSprites[MAX_WEAPONS];

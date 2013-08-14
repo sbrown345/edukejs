@@ -1,3 +1,6 @@
+/// <reference path="../../eduke32/source/music.c.ts" />
+
+
 //-------------------------------------------------------------------------
 /*
 Copyright (C) 2010 EDuke32 developers and contributors
@@ -90,7 +93,7 @@ var g_netClient = NULL;    ////ENetHost *
 //    if (numplayers == 1)
 //        S_PlaySound(GENERIC_AMBIENCE17);
 
-//    if (g_player[myconnectindex].ps->gm & MODE_GAME)
+//    if (g_player[myconnectindex].ps.gm & MODE_GAME)
 //    {
 //        if (screenpeek == p)
 //            screenpeek = myconnectindex;
@@ -112,8 +115,8 @@ var g_netClient = NULL;    ////ENetHost *
 //        }
 
 //        Bstrcpy(ScriptQuotes[QUOTE_RESERVED2],buf);
-//        g_player[myconnectindex].ps->ftq = QUOTE_RESERVED2;
-//        g_player[myconnectindex].ps->fta = 180;
+//        g_player[myconnectindex].ps.ftq = QUOTE_RESERVED2;
+//        g_player[myconnectindex].ps.fta = 180;
 //    }
 //}
 
@@ -140,7 +143,7 @@ var g_netClient = NULL;    ////ENetHost *
 //        i = playerswhenstarted++;
 //    }
 
-//    event->peer->data = (void *)(intptr_t)i;
+//    event.peer.data = (void *)(intptr_t)i;
 
 //    g_player[i].netsynctime = totalclock;
 //    g_player[i].playerquitflag = 1;
@@ -158,10 +161,10 @@ var g_netClient = NULL;    ////ENetHost *
 //    ++numplayers;
 //    ++ud.multimode;
 //    Net_SendNewPlayer(i);
-//    Net_SendPlayerIndex(i, event->peer);
+//    Net_SendPlayerIndex(i, event.peer);
 //    Net_SendClientInfo();
 //    Net_SendUserMapName();
-//    Net_SendNewGame(0, event->peer);
+//    Net_SendNewGame(0, event.peer);
 //}
 
 //static void display_betascreen(void)
@@ -217,22 +220,22 @@ function faketimerhandler(): void
 //    while (1);
 //}
 
-//void Net_ResetPrediction(void)
-//{
-//    Bmemcpy(&my, &g_player[myconnectindex].ps, sizeof(vec3_t));
-//    Bmemcpy(&omy, &g_player[myconnectindex].ps, sizeof(vec3_t));
-//    Bmemset(&myvel, 0, sizeof(vec3_t));
+function Net_ResetPrediction(): void
+{
+    my.copyFrom(g_player[myconnectindex].ps.pos);
+    omy.copyFrom(g_player[myconnectindex].ps.pos);
+    myvel.init();
 
-//    myang = omyang = g_player[myconnectindex].ps->ang;
-//    myhoriz = omyhoriz = g_player[myconnectindex].ps->horiz;
-//    myhorizoff = omyhorizoff = g_player[myconnectindex].ps->horizoff;
-//    mycursectnum = g_player[myconnectindex].ps->cursectnum;
-//    myjumpingcounter = g_player[myconnectindex].ps->jumping_counter;
-//    myjumpingtoggle = g_player[myconnectindex].ps->jumping_toggle;
-//    myonground = g_player[myconnectindex].ps->on_ground;
-//    myhardlanding = g_player[myconnectindex].ps->hard_landing;
-//    myreturntocenter = g_player[myconnectindex].ps->return_to_center;
-//}
+    myang = omyang = g_player[myconnectindex].ps.ang;
+    myhoriz = omyhoriz = g_player[myconnectindex].ps.horiz;
+    myhorizoff = omyhorizoff = g_player[myconnectindex].ps.horizoff;
+    mycursectnum = g_player[myconnectindex].ps.cursectnum;
+    myjumpingcounter = g_player[myconnectindex].ps.jumping_counter;
+    myjumpingtoggle = g_player[myconnectindex].ps.jumping_toggle;
+    myonground = g_player[myconnectindex].ps.on_ground;
+    myhardlanding = g_player[myconnectindex].ps.hard_landing;
+    myreturntocenter = g_player[myconnectindex].ps.return_to_center;
+}
 
 //////////////////////////////////////////////////////////////////////////////////
 //// Connect/Disconnect
@@ -335,8 +338,8 @@ function faketimerhandler(): void
 //        int32_t i;
 //        ENetEvent event;
 
-//        for (i=0; i<(signed)g_netServer->peerCount; i++)
-//            enet_peer_disconnect_later(&g_netServer->peers[i], 0);
+//        for (i=0; i<(signed)g_netServer.peerCount; i++)
+//            enet_peer_disconnect_later(&g_netServer.peers[i], 0);
 
 //        while (enet_host_service(g_netServer, & event, 3000) > 0)
 //        {
@@ -363,7 +366,7 @@ function faketimerhandler(): void
 //    myconnectindex = screenpeek = 0;
 //    G_BackToMenu();
 
-//    switch (event->data)
+//    switch (event.data)
 //    {
 //    case DISC_BAD_PASSWORD:
 //        initprintf("Bad password.\n");
@@ -427,7 +430,7 @@ function Net_GetPackets() : void
 //    // dispatch any pending events from the local packet queue
 //    while (enet_host_check_events(g_netServer, &event) > 0)
 //    {
-//        const intptr_t playeridx = (intptr_t)event.peer->data;
+//        const intptr_t playeridx = (intptr_t)event.peer.data;
 
 //        switch (event.type)
 //        {
@@ -435,9 +438,9 @@ function Net_GetPackets() : void
 //        {
 //            char ipaddr[32];
 
-//            enet_address_get_host_ip(&event.peer->address, ipaddr, sizeof(ipaddr));
+//            enet_address_get_host_ip(&event.peer.address, ipaddr, sizeof(ipaddr));
 
-//            initprintf("A new client connected from %s:%u.\n", ipaddr, event.peer->address.port);
+//            initprintf("A new client connected from %s:%u.\n", ipaddr, event.peer.address.port);
 
 //            Net_SendVersion(event.peer);
 //            break;
@@ -446,28 +449,28 @@ function Net_GetPackets() : void
 //        case ENET_EVENT_TYPE_RECEIVE:
 //            /*
 //            initprintf ("A packet of length %u containing %s was received from player %d on channel %u.\n",
-//            event.packet -> dataLength,
-//            event.packet -> data,
-//            event.peer -> data,
+//            event.packet . dataLength,
+//            event.packet . data,
+//            event.peer . data,
 //            event.channelID);
 //            */
 //            Net_ParseClientPacket(&event);
 //            // broadcast takes care of enet_packet_destroy itself
 //            // we set the state to disconnected so enet_host_broadcast
 //            // doesn't send the player back his own packets
-//            if ((event.channelID == CHAN_GAMESTATE && event.packet->data[0] > PACKET_BROADCAST)
+//            if ((event.channelID == CHAN_GAMESTATE && event.packet.data[0] > PACKET_BROADCAST)
 //                    || event.channelID == CHAN_CHAT)
 //            {
 //                const ENetPacket *pak = event.packet;
 
-//                event.peer->state = ENET_PEER_STATE_DISCONNECTED;
+//                event.peer.state = ENET_PEER_STATE_DISCONNECTED;
 //                enet_host_broadcast(g_netServer, event.channelID,
-//                                    enet_packet_create(pak->data, pak->dataLength, pak->flags&ENET_PACKET_FLAG_RELIABLE));
-//                event.peer->state = ENET_PEER_STATE_CONNECTED;
+//                                    enet_packet_create(pak.data, pak.dataLength, pak.flags&ENET_PACKET_FLAG_RELIABLE));
+//                event.peer.state = ENET_PEER_STATE_CONNECTED;
 //            }
 
 //            enet_packet_destroy(event.packet);
-//            g_player[playeridx].ping = (event.peer->lastRoundTripTime + event.peer->roundTripTime)/2;
+//            g_player[playeridx].ping = (event.peer.lastRoundTripTime + event.peer.roundTripTime)/2;
 //            break;
 
 //        case ENET_EVENT_TYPE_DISCONNECT:
@@ -487,7 +490,7 @@ function Net_GetPackets() : void
 //                                enet_packet_create(packbuf, 6, ENET_PACKET_FLAG_RELIABLE));
 
 //            initprintf("%s disconnected.\n", g_player[playeridx].user_name);
-//            event.peer->data = NULL;
+//            event.peer.data = NULL;
 //            break;
 
 //        default:
@@ -519,8 +522,8 @@ function Net_GetPackets() : void
 
 //void Net_ParseClientPacket(ENetEvent *event)
 //{
-//    uint8_t *pbuf = event->packet->data;
-//    int32_t packbufleng = event->packet->dataLength;
+//    uint8_t *pbuf = event.packet.data;
+//    int32_t packbufleng = event.packet.dataLength;
 //    int16_t j;
 //    int32_t other = pbuf[--packbufleng];
 
@@ -540,15 +543,15 @@ function Net_GetPackets() : void
 //            break;
 //        }
 
-//        j = g_player[other].ps->i;
+//        j = g_player[other].ps.i;
 //        Bmemcpy(g_player[other].ps, g_player[0].ps, sizeof(DukePlayer_t));
 
-//        g_player[other].ps->i = j;
+//        g_player[other].ps.i = j;
 //        changespritestat(j, STAT_PLAYER);
 
-//        g_player[other].ps->last_extra = sprite[g_player[other].ps->i].extra = g_player[other].ps->max_player_health;
-//        sprite[g_player[other].ps->i].cstat = 1+256;
-//        actor[g_player[other].ps->i].t_data[2] = actor[g_player[other].ps->i].t_data[3] = actor[g_player[other].ps->i].t_data[4] = 0;
+//        g_player[other].ps.last_extra = sprite[g_player[other].ps.i].extra = g_player[other].ps.max_player_health;
+//        sprite[g_player[other].ps.i].cstat = 1+256;
+//        actor[g_player[other].ps.i].t_data[2] = actor[g_player[other].ps.i].t_data[3] = actor[g_player[other].ps.i].t_data[4] = 0;
 
 //        P_ResetPlayer(other);
 
@@ -556,7 +559,7 @@ function Net_GetPackets() : void
 //        packbuf[j++] = PACKET_PLAYER_SPAWN;
 //        packbuf[j++] = other;
 
-//        Bmemcpy(&packbuf[j], &g_player[other].ps->pos.x, sizeof(vec3_t) * 2);
+//        Bmemcpy(&packbuf[j], &g_player[other].ps.pos.x, sizeof(vec3_t) * 2);
 //        j += sizeof(vec3_t) * 2;
 
 //        packbuf[j++] = 0;
@@ -565,11 +568,11 @@ function Net_GetPackets() : void
 //        break;
 
 //    case PACKET_PLAYER_PING:
-//        if (g_player[myconnectindex].ps->gm & MODE_GAME)
+//        if (g_player[myconnectindex].ps.gm & MODE_GAME)
 //        {
 //            packbuf[0] = PACKET_PLAYER_PING;
 //            packbuf[1] = myconnectindex;
-//            enet_peer_send(event->peer, CHAN_GAMESTATE, enet_packet_create(packbuf, 2, ENET_PACKET_FLAG_RELIABLE));
+//            enet_peer_send(event.peer, CHAN_GAMESTATE, enet_packet_create(packbuf, 2, ENET_PACKET_FLAG_RELIABLE));
 //        }
 //        g_player[other].pingcnt++;
 //        break;
@@ -586,8 +589,8 @@ function Net_GetPackets() : void
 
 //void Net_ParseServerPacket(ENetEvent *event)
 //{
-//    uint8_t *pbuf = event->packet->data;
-//    int32_t packbufleng = event->packet->dataLength;
+//    uint8_t *pbuf = event.packet.data;
+//    int32_t packbufleng = event.packet.dataLength;
 //    int32_t i, j, l;
 //    input_t *nsyn;
 
@@ -600,7 +603,7 @@ function Net_GetPackets() : void
 //    {
 //    case PACKET_MASTER_TO_SLAVE:
 
-//        if (!(g_player[myconnectindex].ps->gm & MODE_GAME))
+//        if (!(g_player[myconnectindex].ps.gm & MODE_GAME))
 //        {
 //            return;
 //        }
@@ -610,7 +613,7 @@ function Net_GetPackets() : void
 
 //    case PACKET_MAP_STREAM:
 
-//        if (!(g_player[myconnectindex].ps->gm & MODE_GAME))
+//        if (!(g_player[myconnectindex].ps.gm & MODE_GAME))
 //            return;
 
 //        Net_ReceiveMapUpdate(event);
@@ -626,15 +629,15 @@ function Net_GetPackets() : void
 //        break;
 
 //    case PACKET_NUM_PLAYERS:
-//        Net_RecieveNewPlayer(event->packet->data, event->packet->dataLength);
+//        Net_RecieveNewPlayer(event.packet.data, event.packet.dataLength);
 //        break;
 
 //    case PACKET_PLAYER_INDEX:
-//        Net_RecievePlayerIndex(event->packet->data, event->packet->dataLength);
+//        Net_RecievePlayerIndex(event.packet.data, event.packet.dataLength);
 //        break;
 
 //    case PACKET_PLAYER_DISCONNECTED:
-//        if ((g_player[myconnectindex].ps->gm & MODE_GAME))
+//        if ((g_player[myconnectindex].ps.gm & MODE_GAME))
 //            P_RemovePlayer(pbuf[1]);
 //        numplayers = pbuf[2];
 //        ud.multimode = pbuf[3];
@@ -642,11 +645,11 @@ function Net_GetPackets() : void
 //        break;
 
 //    case PACKET_PLAYER_SPAWN:
-//        if (!(g_player[myconnectindex].ps->gm & MODE_GAME)) break;
+//        if (!(g_player[myconnectindex].ps.gm & MODE_GAME)) break;
 
 //        P_ResetPlayer(pbuf[1]);
-//        Bmemcpy(&g_player[pbuf[1]].ps->pos.x, &pbuf[2], sizeof(vec3_t) * 2);
-//        Bmemcpy(&sprite[g_player[pbuf[1]].ps->i], &pbuf[2], sizeof(vec3_t));
+//        Bmemcpy(&g_player[pbuf[1]].ps.pos.x, &pbuf[2], sizeof(vec3_t) * 2);
+//        Bmemcpy(&sprite[g_player[pbuf[1]].ps.i], &pbuf[2], sizeof(vec3_t));
 //        break;
 
 //    case PACKET_PLAYER_PING:
@@ -654,9 +657,9 @@ function Net_GetPackets() : void
 //        return;
 
 //    case PACKET_FRAG:
-//        if (!(g_player[myconnectindex].ps->gm & MODE_GAME)) break;
-//        g_player[pbuf[1]].ps->frag_ps = pbuf[2];
-//        actor[g_player[pbuf[1]].ps->i].picnum = pbuf[3];
+//        if (!(g_player[myconnectindex].ps.gm & MODE_GAME)) break;
+//        g_player[pbuf[1]].ps.frag_ps = pbuf[2];
+//        actor[g_player[pbuf[1]].ps.i].picnum = pbuf[3];
 //        ticrandomseed = *(int32_t *)&pbuf[4];
 //        P_FragPlayer(pbuf[1]);
 //        break;
@@ -774,7 +777,7 @@ function Net_GetPackets() : void
 //    }
 //    else
 //    {
-//        enet_peer_disconnect_later(event->peer, DISC_BAD_PASSWORD);
+//        enet_peer_disconnect_later(event.peer, DISC_BAD_PASSWORD);
 //        initprintf("Bad password from client.\n");
 //    }
 //}
@@ -876,10 +879,10 @@ function Net_GetPackets() : void
 //    }
 //    buf[l++] = 0;
 
-//    buf[l++] = g_player[myconnectindex].ps->aim_mode = ud.mouseaiming;
-//    buf[l++] = g_player[myconnectindex].ps->auto_aim = ud.config.AutoAim;
-//    buf[l++] = g_player[myconnectindex].ps->weaponswitch = ud.weaponswitch;
-//    buf[l++] = g_player[myconnectindex].ps->palookup = g_player[myconnectindex].pcolor = ud.color;
+//    buf[l++] = g_player[myconnectindex].ps.aim_mode = ud.mouseaiming;
+//    buf[l++] = g_player[myconnectindex].ps.auto_aim = ud.config.AutoAim;
+//    buf[l++] = g_player[myconnectindex].ps.weaponswitch = ud.weaponswitch;
+//    buf[l++] = g_player[myconnectindex].ps.palookup = g_player[myconnectindex].pcolor = ud.color;
 
 //    buf[l++] = g_player[myconnectindex].pteam = ud.team;
 
@@ -914,10 +917,10 @@ function Net_GetPackets() : void
 //    g_player[other].user_name[i-1] = 0;
 //    i++;
 
-//    g_player[other].ps->aim_mode = pbuf[i++];
-//    g_player[other].ps->auto_aim = pbuf[i++];
-//    g_player[other].ps->weaponswitch = pbuf[i++];
-//    g_player[other].ps->palookup = g_player[other].pcolor = pbuf[i++];
+//    g_player[other].ps.aim_mode = pbuf[i++];
+//    g_player[other].ps.auto_aim = pbuf[i++];
+//    g_player[other].ps.weaponswitch = pbuf[i++];
+//    g_player[other].ps.palookup = g_player[other].pcolor = pbuf[i++];
 //    g_player[other].pteam = pbuf[i++];
 
 //    for (j=i; i-j<10; i++)
@@ -1028,12 +1031,12 @@ function Net_GetPackets() : void
 //    // I use this to test server diffs without requiring a client.
 //    //Net_FillMapDiff(prevMapDiff, g_netMapRevision);
 
-//    for (pi = 0; pi < (signed) g_netServer->peerCount; pi++)
+//    for (pi = 0; pi < (signed) g_netServer.peerCount; pi++)
 //    {
-//        ENetPeer *const currentPeer = &g_netServer->peers[pi];
-//        const intptr_t playeridx = (intptr_t) currentPeer->data;
+//        ENetPeer *const currentPeer = &g_netServer.peers[pi];
+//        const intptr_t playeridx = (intptr_t) currentPeer.data;
 
-//        if (currentPeer->state != ENET_PEER_STATE_CONNECTED || !g_player[playeridx].playerquitflag)
+//        if (currentPeer.state != ENET_PEER_STATE_CONNECTED || !g_player[playeridx].playerquitflag)
 //        {
 //            continue;
 //        }
@@ -1055,7 +1058,7 @@ function Net_GetPackets() : void
 //        tempnetbuf[0] = PACKET_MAP_STREAM;
 //        packetsize++;
 
-//        //initprintf("update packet size: %d - revision (%d->%d) - num actors: %d\n", packetsize, g_player[playeridx].revision, g_netMapRevision, tempMapDiff.numActors);
+//        //initprintf("update packet size: %d - revision (%d.%d) - num actors: %d\n", packetsize, g_player[playeridx].revision, g_netMapRevision, tempMapDiff.numActors);
 
 //        enet_peer_send(currentPeer, CHAN_GAMESTATE, enet_packet_create(tempnetbuf, packetsize, ENET_PACKET_FLAG_RELIABLE));
 //    }
@@ -1063,11 +1066,11 @@ function Net_GetPackets() : void
 
 //void Net_ReceiveMapUpdate(ENetEvent *event)
 //{
-//    char *pktBuf = (char *) event->packet->data;
+//    char *pktBuf = (char *) event.packet.data;
 //    qlz_decompress(&pktBuf[1], &tempMapDiff, state_decompress);
 
 //    Net_RestoreMapState();
-//    //initprintf("Update packet size: %d - num actors: %d\n", event->packet->dataLength, tempMapDiff.numActors);
+//    //initprintf("Update packet size: %d - num actors: %d\n", event.packet.dataLength, tempMapDiff.numActors);
 //}
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -1075,7 +1078,7 @@ function Net_GetPackets() : void
 
 //static int Net_CompareActors(const netactor_t *actor1, const netactor_t *actor2)
 //{
-//    return actor1->netIndex - actor2->netIndex;
+//    return actor1.netIndex - actor2.netIndex;
 //}
 
 //void Net_SaveMapState(netmapstate_t *save)
@@ -1088,7 +1091,7 @@ function Net_GetPackets() : void
 //        return;
 //    }
 
-//    save->numActors = 0;
+//    save.numActors = 0;
 
 //    for (statIndex = 0; g_netStatnums[statIndex] != MAXSTATUS; ++statIndex)
 //    {
@@ -1097,19 +1100,19 @@ function Net_GetPackets() : void
 //        {
 //            if (Net_IsRelevantSprite(i) && sprite[i].statnum != STAT_NETALLOC)
 //            {
-//                netactor_t *tempActor = &save->actor[save->numActors];
+//                netactor_t *tempActor = &save.actor[save.numActors];
 //                Net_CopyToNet(i, tempActor);
-//                save->numActors++;
+//                save.numActors++;
 //            }
 
-//            if (save->numActors >= NETMAXACTORS)
+//            if (save.numActors >= NETMAXACTORS)
 //            {
 //                break;
 //            }
 //        }
 //    }
 
-//    qsort(save->actor, save->numActors, sizeof(netactor_t), (int( *)(const void *, const void *)) &Net_CompareActors);
+//    qsort(save.actor, save.numActors, sizeof(netactor_t), (int( *)(const void *, const void *)) &Net_CompareActors);
 //}
 
 //void Net_FillMapDiff(uint32_t fromRevision, uint32_t toRevision)
@@ -1141,27 +1144,27 @@ function Net_GetPackets() : void
 //    assert(fromState != NULL);
 //    assert(toState != NULL);
 
-//    while (fromIndex < fromState->numActors || toIndex < toState->numActors)
+//    while (fromIndex < fromState.numActors || toIndex < toState.numActors)
 //    {
-//        const int32_t fromNet = fromState->actor[fromIndex].netIndex;
-//        const int32_t toNet = toState->actor[toIndex].netIndex;
-//        const int32_t fromValid = fromIndex < fromState->numActors;
-//        const int32_t toValid = toIndex < toState->numActors;
+//        const int32_t fromNet = fromState.actor[fromIndex].netIndex;
+//        const int32_t toNet = toState.actor[toIndex].netIndex;
+//        const int32_t fromValid = fromIndex < fromState.numActors;
+//        const int32_t toValid = toIndex < toState.numActors;
 //        if (toValid && (!fromValid || fromNet > toNet))
 //        {
-//            //initprintf("This actor is new: %d - %d\n", toState->actor[toIndex].netIndex, toState->actor[toIndex].sprite.picnum);
+//            //initprintf("This actor is new: %d - %d\n", toState.actor[toIndex].netIndex, toState.actor[toIndex].sprite.picnum);
 
 //            // Add the "to" data. It's a new actor.
-//            memcpy(&actorBuf[tempMapDiff.numActors], &toState->actor[toIndex], sizeof(netactor_t));
+//            memcpy(&actorBuf[tempMapDiff.numActors], &toState.actor[toIndex], sizeof(netactor_t));
 //            tempMapDiff.numActors++;
 //            toIndex++;
 //        }
 //        else if (fromValid && (!toValid || toNet > fromNet))
 //        {
-//            //initprintf("This actor is deleted: %d - %d\n", fromState->actor[fromIndex].netIndex, fromState->actor[fromIndex].sprite.picnum);
+//            //initprintf("This actor is deleted: %d - %d\n", fromState.actor[fromIndex].netIndex, fromState.actor[fromIndex].sprite.picnum);
 
 //            // Add the "fromNet" to the list of deleted actors
-//            deleteBuf[tempMapDiff.numToDelete] = fromState->actor[fromIndex].netIndex;
+//            deleteBuf[tempMapDiff.numToDelete] = fromState.actor[fromIndex].netIndex;
 //            tempMapDiff.numToDelete++;
 //            fromIndex++;
 //        }
@@ -1169,12 +1172,12 @@ function Net_GetPackets() : void
 //        {
 //            assert(fromNet == toNet);
 
-//            if (Net_ActorsAreDifferent(&fromState->actor[fromIndex], &toState->actor[toIndex]))
+//            if (Net_ActorsAreDifferent(&fromState.actor[fromIndex], &toState.actor[toIndex]))
 //            {
-//                //initprintf("This actor is different: %d - %d\n", toState->actor[toIndex].netIndex, toState->actor[toIndex].sprite.picnum);
+//                //initprintf("This actor is different: %d - %d\n", toState.actor[toIndex].netIndex, toState.actor[toIndex].sprite.picnum);
 
 //                // Add the "to" data. It's changed.
-//                memcpy(&actorBuf[tempMapDiff.numActors], &toState->actor[toIndex], sizeof(netactor_t));
+//                memcpy(&actorBuf[tempMapDiff.numActors], &toState.actor[toIndex], sizeof(netactor_t));
 //                tempMapDiff.numActors++;
 //            }
 
@@ -1231,68 +1234,68 @@ function Net_GetPackets() : void
 
 //void Net_CopyToNet(int32_t i, netactor_t *netactor)
 //{
-//    netactor->netIndex = i;
-//    netactor->picnum = actor[i].picnum;
-//    netactor->ang = actor[i].ang;
-//    netactor->extra = actor[i].extra;
-//    netactor->owner = actor[i].owner;
-//    netactor->movflag = actor[i].movflag;
-//    netactor->tempang = actor[i].tempang;
-//    netactor->timetosleep = actor[i].timetosleep;
-//    netactor->flags = actor[i].flags;
-//    netactor->floorz = actor[i].floorz;
-//    netactor->lastvx = actor[i].lastvx;
-//    netactor->lastvy = actor[i].lastvy;
-//    netactor->lasttransport = actor[i].lasttransport;
-//    netactor->actorstayput = actor[i].actorstayput;
-//    //netactor->dispicnum = actor[i].dispicnum;
-//    netactor->cgg = actor[i].cgg;
-//    netactor->owner = actor[i].owner;
+//    netactor.netIndex = i;
+//    netactor.picnum = actor[i].picnum;
+//    netactor.ang = actor[i].ang;
+//    netactor.extra = actor[i].extra;
+//    netactor.owner = actor[i].owner;
+//    netactor.movflag = actor[i].movflag;
+//    netactor.tempang = actor[i].tempang;
+//    netactor.timetosleep = actor[i].timetosleep;
+//    netactor.flags = actor[i].flags;
+//    netactor.floorz = actor[i].floorz;
+//    netactor.lastvx = actor[i].lastvx;
+//    netactor.lastvy = actor[i].lastvy;
+//    netactor.lasttransport = actor[i].lasttransport;
+//    netactor.actorstayput = actor[i].actorstayput;
+//    //netactor.dispicnum = actor[i].dispicnum;
+//    netactor.cgg = actor[i].cgg;
+//    netactor.owner = actor[i].owner;
 
-//    Bmemcpy(netactor->t_data, actor[i].t_data, 10 * sizeof(int32_t));
+//    Bmemcpy(netactor.t_data, actor[i].t_data, 10 * sizeof(int32_t));
 
-//    Bmemcpy(&netactor->sprite, &sprite[i], sizeof(spritetype));
+//    Bmemcpy(&netactor.sprite, &sprite[i], sizeof(spritetype));
 //}
 
 //void Net_CopyFromNet(int32_t i, netactor_t *netactor)
 //{
-//    if (netactor->sprite.statnum == STAT_NETALLOC)
+//    if (netactor.sprite.statnum == STAT_NETALLOC)
 //    {
 //        // Do nothing if it's going to be deleted
 //        return;
 //    }
 //    else if (sprite[i].statnum == STAT_NETALLOC)
 //    {
-//        changespritestat(i, netactor->sprite.statnum);
-//        do_insertsprite_at_headofsect(i, netactor->sprite.sectnum);
+//        changespritestat(i, netactor.sprite.statnum);
+//        do_insertsprite_at_headofsect(i, netactor.sprite.sectnum);
 //    }
 //    else
 //    {
 //        // These functions already check to see if the sprite already has the stat/sect value. No need to do it twice.
-//        changespritestat(i, netactor->sprite.statnum);
-//        changespritesect(i, netactor->sprite.sectnum);
+//        changespritestat(i, netactor.sprite.statnum);
+//        changespritesect(i, netactor.sprite.sectnum);
 //    }
 
-//    actor[i].picnum = netactor->picnum;
-//    actor[i].ang = netactor->ang;
-//    actor[i].extra = netactor->extra;
-//    actor[i].owner = netactor->owner;
-//    actor[i].movflag = netactor->movflag;
-//    actor[i].tempang = netactor->tempang;
-//    actor[i].timetosleep = netactor->timetosleep;
-//    actor[i].flags = netactor->flags;
-//    actor[i].floorz = netactor->floorz;
-//    actor[i].lastvx = netactor->lastvx;
-//    actor[i].lastvy = netactor->lastvy;
-//    actor[i].lasttransport = netactor->lasttransport;
-//    actor[i].actorstayput = netactor->actorstayput;
-//    actor[i].dispicnum = netactor->dispicnum;
-//    actor[i].cgg = netactor->cgg;
-//    actor[i].owner = netactor->owner;
+//    actor[i].picnum = netactor.picnum;
+//    actor[i].ang = netactor.ang;
+//    actor[i].extra = netactor.extra;
+//    actor[i].owner = netactor.owner;
+//    actor[i].movflag = netactor.movflag;
+//    actor[i].tempang = netactor.tempang;
+//    actor[i].timetosleep = netactor.timetosleep;
+//    actor[i].flags = netactor.flags;
+//    actor[i].floorz = netactor.floorz;
+//    actor[i].lastvx = netactor.lastvx;
+//    actor[i].lastvy = netactor.lastvy;
+//    actor[i].lasttransport = netactor.lasttransport;
+//    actor[i].actorstayput = netactor.actorstayput;
+//    actor[i].dispicnum = netactor.dispicnum;
+//    actor[i].cgg = netactor.cgg;
+//    actor[i].owner = netactor.owner;
 
-//    Bmemcpy(actor[i].t_data, netactor->t_data, 10 * sizeof(int32_t));
+//    Bmemcpy(actor[i].t_data, netactor.t_data, 10 * sizeof(int32_t));
 
-//    Bmemcpy(&sprite[i], &netactor->sprite, sizeof(spritetype));
+//    Bmemcpy(&sprite[i], &netactor.sprite, sizeof(spritetype));
 //}
 
 //int32_t Net_ActorsAreDifferent(netactor_t *actor1, netactor_t *actor2)
@@ -1302,40 +1305,40 @@ function Net_GetPackets() : void
 //    int32_t nonStandableDiff;
 
 //    allDiff =
-//        actor1->picnum			!= actor2->picnum ||
-//        actor1->ang				!= actor2->ang ||
-//        actor1->extra			!= actor2->extra ||
-//        actor1->owner			!= actor2->owner ||
-//        actor1->movflag			!= actor2->movflag ||
-//        actor1->tempang			!= actor2->tempang ||
-//        //actor1->timetosleep	!= actor2->timetosleep ||
-//        actor1->flags			!= actor2->flags ||
-//        actor1->floorz			!= actor2->floorz ||
-//        actor1->lastvx			!= actor2->lastvx ||
-//        actor1->lastvy			!= actor2->lastvy ||
-//        actor1->lasttransport	!= actor2->lasttransport ||
-//        actor1->actorstayput	!= actor2->actorstayput ||
-//        //actor1->dispicnum		!= actor2->dispicnum ||
-//        //actor1->cgg			!= actor2->cgg ||
+//        actor1.picnum			!= actor2.picnum ||
+//        actor1.ang				!= actor2.ang ||
+//        actor1.extra			!= actor2.extra ||
+//        actor1.owner			!= actor2.owner ||
+//        actor1.movflag			!= actor2.movflag ||
+//        actor1.tempang			!= actor2.tempang ||
+//        //actor1.timetosleep	!= actor2.timetosleep ||
+//        actor1.flags			!= actor2.flags ||
+//        actor1.floorz			!= actor2.floorz ||
+//        actor1.lastvx			!= actor2.lastvx ||
+//        actor1.lastvy			!= actor2.lastvy ||
+//        actor1.lasttransport	!= actor2.lasttransport ||
+//        actor1.actorstayput	!= actor2.actorstayput ||
+//        //actor1.dispicnum		!= actor2.dispicnum ||
+//        //actor1.cgg			!= actor2.cgg ||
 
-//        actor1->sprite.owner	!= actor2->sprite.owner ||
-//        actor1->sprite.statnum	!= actor2->sprite.statnum ||
-//        actor1->sprite.sectnum	!= actor2->sprite.sectnum ||
-//        actor1->sprite.picnum	!= actor2->sprite.picnum ||
-//        //actor1->sprite.shade	!= actor2->sprite.shade ||
-//        actor1->sprite.xrepeat	!= actor2->sprite.xrepeat ||
-//        actor1->sprite.yrepeat	!= actor2->sprite.yrepeat;// ||
-//        //actor1->sprite.ang	!= actor2->sprite.ang ||
+//        actor1.sprite.owner	!= actor2.sprite.owner ||
+//        actor1.sprite.statnum	!= actor2.sprite.statnum ||
+//        actor1.sprite.sectnum	!= actor2.sprite.sectnum ||
+//        actor1.sprite.picnum	!= actor2.sprite.picnum ||
+//        //actor1.sprite.shade	!= actor2.sprite.shade ||
+//        actor1.sprite.xrepeat	!= actor2.sprite.xrepeat ||
+//        actor1.sprite.yrepeat	!= actor2.sprite.yrepeat;// ||
+//        //actor1.sprite.ang	!= actor2.sprite.ang ||
 
 //    nonStandableDiff =
-//        actor1->sprite.x		!= actor2->sprite.x ||
-//        actor1->sprite.y		!= actor2->sprite.y ||
-//        actor1->sprite.z		!= actor2->sprite.z ||
-//        actor1->sprite.xvel		!= actor2->sprite.xvel ||
-//        actor1->sprite.yvel		!= actor2->sprite.yvel ||
-//        actor1->sprite.zvel		!= actor2->sprite.zvel;
+//        actor1.sprite.x		!= actor2.sprite.x ||
+//        actor1.sprite.y		!= actor2.sprite.y ||
+//        actor1.sprite.z		!= actor2.sprite.z ||
+//        actor1.sprite.xvel		!= actor2.sprite.xvel ||
+//        actor1.sprite.yvel		!= actor2.sprite.yvel ||
+//        actor1.sprite.zvel		!= actor2.sprite.zvel;
 
-//    finalDiff = allDiff || (actor1->sprite.statnum != STAT_STANDABLE && nonStandableDiff);
+//    finalDiff = allDiff || (actor1.sprite.statnum != STAT_STANDABLE && nonStandableDiff);
 
 //    return finalDiff;
 //}
@@ -1411,39 +1414,39 @@ function Net_IsRelevantStat(/*int32_t */stat: number): number
 
 //void Net_FillPlayerUpdate(playerupdate_t *update, int32_t player)
 //{
-//    update->playerindex = player;
+//    update.playerindex = player;
 
-//    update->pos = g_player[player].ps->pos;
-//    update->opos = g_player[player].ps->opos;
-//    update->vel = g_player[player].ps->vel;
-//    update->ang = g_player[player].ps->ang;
-//    update->horiz = g_player[player].ps->horiz;
-//    update->horizoff = g_player[player].ps->horizoff;
-//    update->ping = g_player[player].ping;
-//    update->deadflag = g_player[player].ps->dead_flag;
-//    update->playerquitflag = g_player[player].playerquitflag;
+//    update.pos = g_player[player].ps.pos;
+//    update.opos = g_player[player].ps.opos;
+//    update.vel = g_player[player].ps.vel;
+//    update.ang = g_player[player].ps.ang;
+//    update.horiz = g_player[player].ps.horiz;
+//    update.horizoff = g_player[player].ps.horizoff;
+//    update.ping = g_player[player].ping;
+//    update.deadflag = g_player[player].ps.dead_flag;
+//    update.playerquitflag = g_player[player].playerquitflag;
 //}
 
 //void Net_ExtractPlayerUpdate(playerupdate_t *update)
 //{
-//    const int32_t playerindex = update->playerindex;
+//    const int32_t playerindex = update.playerindex;
 
 //    if (playerindex != myconnectindex)
 //    {
-//        g_player[playerindex].ps->pos = update->pos;
-//        g_player[playerindex].ps->opos = update->opos;
-//        g_player[playerindex].ps->vel = update->vel;
-//        g_player[playerindex].ps->ang = update->ang;
-//        g_player[playerindex].ps->horiz = update->horiz;
-//        g_player[playerindex].ps->horizoff = update->horizoff;
+//        g_player[playerindex].ps.pos = update.pos;
+//        g_player[playerindex].ps.opos = update.opos;
+//        g_player[playerindex].ps.vel = update.vel;
+//        g_player[playerindex].ps.ang = update.ang;
+//        g_player[playerindex].ps.horiz = update.horiz;
+//        g_player[playerindex].ps.horizoff = update.horizoff;
 //    }
 
-//    g_player[playerindex].ping = update->ping;
-//    g_player[playerindex].ps->dead_flag = update->deadflag;
-//    g_player[playerindex].playerquitflag = update->playerquitflag;
+//    g_player[playerindex].ping = update.ping;
+//    g_player[playerindex].ps.dead_flag = update.deadflag;
+//    g_player[playerindex].playerquitflag = update.playerquitflag;
 
-//    //updatesectorz(g_player[other].ps->pos.x, g_player[other].ps->pos.y, g_player[other].ps->pos.z, &g_player[other].ps->cursectnum);
-//    //changespritesect(g_player[other].ps->i, g_player[other].ps->cursectnum);
+//    //updatesectorz(g_player[other].ps.pos.x, g_player[other].ps.pos.y, g_player[other].ps.pos.z, &g_player[other].ps.cursectnum);
+//    //changespritesect(g_player[other].ps.i, g_player[other].ps.cursectnum);
 //}
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -1527,27 +1530,27 @@ function Net_IsRelevantStat(/*int32_t */stat: number): number
 
 //        Net_FillPlayerUpdate(&playerupdate.player, i);
 
-//        playerupdate.gotweapon = g_player[i].ps->gotweapon;
-//        playerupdate.extra = sprite[g_player[i].ps->i].extra;
-//        playerupdate.cstat = sprite[g_player[i].ps->i].cstat;
-//        playerupdate.owner = actor[g_player[i].ps->i].owner;
-//        playerupdate.picnum = actor[g_player[i].ps->i].picnum;
-//        playerupdate.kickback_pic = g_player[i].ps->kickback_pic;
+//        playerupdate.gotweapon = g_player[i].ps.gotweapon;
+//        playerupdate.extra = sprite[g_player[i].ps.i].extra;
+//        playerupdate.cstat = sprite[g_player[i].ps.i].cstat;
+//        playerupdate.owner = actor[g_player[i].ps.i].owner;
+//        playerupdate.picnum = actor[g_player[i].ps.i].picnum;
+//        playerupdate.kickback_pic = g_player[i].ps.kickback_pic;
 //        Bmemcpy(playerupdate.frags, g_player[i].frags, sizeof(playerupdate.frags));
-//        Bmemcpy(playerupdate.inv_amount, g_player[i].ps->inv_amount, sizeof(playerupdate.inv_amount));
-//        Bmemcpy(playerupdate.ammo_amount, g_player[i].ps->ammo_amount, sizeof(playerupdate.ammo_amount));
+//        Bmemcpy(playerupdate.inv_amount, g_player[i].ps.inv_amount, sizeof(playerupdate.inv_amount));
+//        Bmemcpy(playerupdate.ammo_amount, g_player[i].ps.ammo_amount, sizeof(playerupdate.ammo_amount));
 
-//        playerupdate.curr_weapon = g_player[i].ps->curr_weapon;
-//        playerupdate.last_weapon = g_player[i].ps->last_weapon;
-//        playerupdate.wantweaponfire = g_player[i].ps->wantweaponfire;
-//        playerupdate.weapon_pos = g_player[i].ps->weapon_pos;
-//        playerupdate.frag_ps = g_player[i].ps->frag_ps;
-//        playerupdate.frag = g_player[i].ps->frag;
-//        playerupdate.fraggedself = g_player[i].ps->fraggedself;
-//        playerupdate.last_extra = g_player[i].ps->last_extra;
+//        playerupdate.curr_weapon = g_player[i].ps.curr_weapon;
+//        playerupdate.last_weapon = g_player[i].ps.last_weapon;
+//        playerupdate.wantweaponfire = g_player[i].ps.wantweaponfire;
+//        playerupdate.weapon_pos = g_player[i].ps.weapon_pos;
+//        playerupdate.frag_ps = g_player[i].ps.frag_ps;
+//        playerupdate.frag = g_player[i].ps.frag;
+//        playerupdate.fraggedself = g_player[i].ps.fraggedself;
+//        playerupdate.last_extra = g_player[i].ps.last_extra;
 //        playerupdate.ping = g_player[i].ping;
-//        playerupdate.newowner = g_player[i].ps->newowner;
-//        playerupdate.pal = sprite[g_player[i].ps->i].pal;
+//        playerupdate.newowner = g_player[i].ps.newowner;
+//        playerupdate.pal = sprite[g_player[i].ps.i].pal;
 
 //        Bmemcpy(updatebuf, &playerupdate, sizeof(serverplayerupdate_t));
 //        updatebuf += sizeof(serverplayerupdate_t);
@@ -1572,12 +1575,12 @@ function Net_IsRelevantStat(/*int32_t */stat: number): number
 //    serverupdate_t serverupdate;
 //    serverplayerupdate_t playerupdate;
 
-//    if (((event->packet->dataLength - sizeof(serverupdate_t)) % sizeof(serverplayerupdate_t)) != 0)
+//    if (((event.packet.dataLength - sizeof(serverupdate_t)) % sizeof(serverplayerupdate_t)) != 0)
 //    {
 //        return;
 //    }
 
-//    updatebuf = (char *) event->packet->data;
+//    updatebuf = (char *) event.packet.data;
 //    Bmemcpy(&serverupdate, updatebuf, sizeof(serverupdate_t));
 //    updatebuf += sizeof(serverupdate_t);
 //    inputfifo[0][0] = serverupdate.nsyn;
@@ -1592,27 +1595,27 @@ function Net_IsRelevantStat(/*int32_t */stat: number): number
 
 //        Net_ExtractPlayerUpdate(&playerupdate.player);
 
-//        g_player[i].ps->gotweapon = playerupdate.gotweapon;
-//        sprite[g_player[i].ps->i].extra = playerupdate.extra;
-//        sprite[g_player[i].ps->i].cstat = playerupdate.cstat;
-//        //actor[g_player[i].ps->i].owner = playerupdate.owner; // This makes baby jesus cry
-//        actor[g_player[i].ps->i].picnum = playerupdate.picnum;
-//        g_player[i].ps->kickback_pic = playerupdate.kickback_pic;
+//        g_player[i].ps.gotweapon = playerupdate.gotweapon;
+//        sprite[g_player[i].ps.i].extra = playerupdate.extra;
+//        sprite[g_player[i].ps.i].cstat = playerupdate.cstat;
+//        //actor[g_player[i].ps.i].owner = playerupdate.owner; // This makes baby jesus cry
+//        actor[g_player[i].ps.i].picnum = playerupdate.picnum;
+//        g_player[i].ps.kickback_pic = playerupdate.kickback_pic;
 //        Bmemcpy(g_player[i].frags, playerupdate.frags, sizeof(playerupdate.frags));
-//        Bmemcpy(g_player[i].ps->inv_amount, playerupdate.inv_amount, sizeof(playerupdate.inv_amount));
-//        Bmemcpy(g_player[i].ps->ammo_amount, playerupdate.ammo_amount, sizeof(playerupdate.ammo_amount));
+//        Bmemcpy(g_player[i].ps.inv_amount, playerupdate.inv_amount, sizeof(playerupdate.inv_amount));
+//        Bmemcpy(g_player[i].ps.ammo_amount, playerupdate.ammo_amount, sizeof(playerupdate.ammo_amount));
 
-//        g_player[i].ps->curr_weapon = playerupdate.curr_weapon;
-//        g_player[i].ps->last_weapon = playerupdate.last_weapon;
-//        g_player[i].ps->wantweaponfire = playerupdate.wantweaponfire;
-//        g_player[i].ps->weapon_pos = playerupdate.weapon_pos;
-//        g_player[i].ps->frag_ps = playerupdate.frag_ps;
-//        g_player[i].ps->frag = playerupdate.frag;
-//        g_player[i].ps->fraggedself = playerupdate.fraggedself;
-//        g_player[i].ps->last_extra = playerupdate.last_extra;
+//        g_player[i].ps.curr_weapon = playerupdate.curr_weapon;
+//        g_player[i].ps.last_weapon = playerupdate.last_weapon;
+//        g_player[i].ps.wantweaponfire = playerupdate.wantweaponfire;
+//        g_player[i].ps.weapon_pos = playerupdate.weapon_pos;
+//        g_player[i].ps.frag_ps = playerupdate.frag_ps;
+//        g_player[i].ps.frag = playerupdate.frag;
+//        g_player[i].ps.fraggedself = playerupdate.fraggedself;
+//        g_player[i].ps.last_extra = playerupdate.last_extra;
 //        g_player[i].ping = playerupdate.ping;
-//        sprite[g_player[i].ps->i].pal = playerupdate.pal;
-//        g_player[i].ps->newowner = playerupdate.newowner;
+//        sprite[g_player[i].ps.i].pal = playerupdate.pal;
+//        g_player[i].ps.newowner = playerupdate.newowner;
 //    }
 //}
 
@@ -1646,14 +1649,14 @@ function Net_IsRelevantStat(/*int32_t */stat: number): number
 //    int32_t playeridx;
 //    clientupdate_t update;
 
-//    if (event->packet->dataLength != sizeof(clientupdate_t))
+//    if (event.packet.dataLength != sizeof(clientupdate_t))
 //    {
 //        return;
 //    }
 
-//    Bmemcpy(&update, (char *) event->packet->data, sizeof(clientupdate_t));
+//    Bmemcpy(&update, (char *) event.packet.data, sizeof(clientupdate_t));
 
-//    playeridx = (int32_t)(intptr_t) event->peer->data;
+//    playeridx = (int32_t)(intptr_t) event.peer.data;
 
 //    g_player[playeridx].revision = update.revision;
 //    inputfifo[0][playeridx] = update.nsyn;
@@ -1668,7 +1671,7 @@ function Net_IsRelevantStat(/*int32_t */stat: number): number
 //{
 //    int16_t hitstate, i, j, l;
 
-//    if (g_player[myconnectindex].ps->gm&MODE_SENDTOWHOM)
+//    if (g_player[myconnectindex].ps.gm&MODE_SENDTOWHOM)
 //    {
 //        if (g_chatPlayer != -1 || ud.multimode < 3)
 //        {
@@ -1722,7 +1725,7 @@ function Net_IsRelevantStat(/*int32_t */stat: number): number
 //                quotebotgoal = quotebot;
 //            }
 //            g_chatPlayer = -1;
-//            g_player[myconnectindex].ps->gm &= ~(MODE_TYPE|MODE_SENDTOWHOM);
+//            g_player[myconnectindex].ps.gm &= ~(MODE_TYPE|MODE_SENDTOWHOM);
 //        }
 //        else if (g_chatPlayer == -1)
 //        {
@@ -1766,7 +1769,7 @@ function Net_IsRelevantStat(/*int32_t */stat: number): number
 //                    g_chatPlayer = ud.multimode;
 //                    if (i == 27)
 //                    {
-//                        g_player[myconnectindex].ps->gm &= ~(MODE_TYPE|MODE_SENDTOWHOM);
+//                        g_player[myconnectindex].ps.gm &= ~(MODE_TYPE|MODE_SENDTOWHOM);
 //                        g_chatPlayer = -1;
 //                    }
 //                    else
@@ -1800,7 +1803,7 @@ function Net_IsRelevantStat(/*int32_t */stat: number): number
 //            KB_ClearKeyDown(sc_Enter);
 //            if (Bstrlen(typebuf) == 0)
 //            {
-//                g_player[myconnectindex].ps->gm &= ~(MODE_TYPE|MODE_SENDTOWHOM);
+//                g_player[myconnectindex].ps.gm &= ~(MODE_TYPE|MODE_SENDTOWHOM);
 //                return;
 //            }
 //            if (ud.automsg)
@@ -1808,10 +1811,10 @@ function Net_IsRelevantStat(/*int32_t */stat: number): number
 //                if (SHIFTS_IS_PRESSED) g_chatPlayer = -1;
 //                else g_chatPlayer = ud.multimode;
 //            }
-//            g_player[myconnectindex].ps->gm |= MODE_SENDTOWHOM;
+//            g_player[myconnectindex].ps.gm |= MODE_SENDTOWHOM;
 //        }
 //        else if (hitstate == -1)
-//            g_player[myconnectindex].ps->gm &= ~(MODE_TYPE|MODE_SENDTOWHOM);
+//            g_player[myconnectindex].ps.gm &= ~(MODE_TYPE|MODE_SENDTOWHOM);
 //        else pub = NUMPAGES;
 //    }
 //}
@@ -1853,39 +1856,39 @@ function Net_IsRelevantStat(/*int32_t */stat: number): number
 //    }
 //}
 
-//void Net_NotifyNewGame()
-//{
-//    int32_t i;
-//    int32_t statIndex;
-//    int32_t numSprites = 0;
-//    int32_t numSpritesToNetAlloc = 0;
+function Net_NotifyNewGame(): void
+{
+    var /*int32_t*/ i: number;
+    var /*int32_t*/ statIndex;
+    var /*int32_t*/ numSprites = 0;
+    var /*int32_t*/ numSpritesToNetAlloc = 0;
 
-//    if (!g_netServer && !g_netClient)
-//    {
-//        return;
-//    }
+    if (!g_netServer && !g_netClient)
+    {
+        return;
+    }
 
-//    // Grab the total number of sprites at level load
-//    for (statIndex = 0; statIndex < MAXSTATUS; ++statIndex)
-//    {
-//        i = headspritestat[statIndex];
-//        for (; i >= 0; i = nextspritestat[i])
-//        {
-//            numSprites++;
-//        }
-//    }
+    // Grab the total number of sprites at level load
+    for (statIndex = 0; statIndex < MAXSTATUS; ++statIndex)
+    {
+        i = headspritestat[statIndex];
+        for (; i >= 0; i = nextspritestat[i])
+        {
+            numSprites++;
+        }
+    }
 
-//    // Take half of the leftover sprites and allocate them for the network's nefarious purposes.
-//    numSpritesToNetAlloc = (MAXSPRITES - numSprites) / 2;
-//    for (i = 0; i < numSpritesToNetAlloc; ++i)
-//    {
-//        int32_t newSprite = insertspritestat(STAT_NETALLOC);
-//        sprite[newSprite].sectnum = MAXSECTORS;
-//        Numsprites++;
-//    }
+    // Take half of the leftover sprites and allocate them for the network's nefarious purposes.
+    numSpritesToNetAlloc = (MAXSPRITES - numSprites) / 2 | 0;
+    for (i = 0; i < numSpritesToNetAlloc; ++i)
+    {
+        var /*int32_t */newSprite = insertspritestat(STAT_NETALLOC);
+        sprite[newSprite].sectnum = MAXSECTORS;
+        Numsprites++;
+    }
 
-//    Net_SaveMapState(&g_mapStartState);
-//}
+    todo("Net_SaveMapState(&g_mapStartState);");
+}
 
 //void Net_SendNewGame(int32_t frommenu, ENetPeer *peer)
 //{
@@ -1911,7 +1914,7 @@ function Net_IsRelevantStat(/*int32_t */stat: number): number
 //    if ((vote_map + vote_episode + voting) != -3)
 //        G_AddUserQuote("Vote Succeeded");
 
-//    Bmemcpy(&pendingnewgame, event->packet->data, sizeof(newgame_t));
+//    Bmemcpy(&pendingnewgame, event.packet.data, sizeof(newgame_t));
 //    Net_StartNewGame();
 
 //    packbuf[0] = PACKET_PLAYER_READY;
@@ -1922,7 +1925,7 @@ function Net_IsRelevantStat(/*int32_t */stat: number): number
 //        enet_peer_send(g_netClientPeer, CHAN_GAMESTATE, enet_packet_create(packbuf, 2, ENET_PACKET_FLAG_RELIABLE));
 //    }
 
-//    g_player[myconnectindex].ps->gm = MODE_GAME;
+//    g_player[myconnectindex].ps.gm = MODE_GAME;
 //    ready2send = 1;
 //}
 
@@ -1930,57 +1933,57 @@ function Net_IsRelevantStat(/*int32_t */stat: number): number
 //{
 //    if (frommenu)
 //    {
-//        newgame->level_number = ud.m_level_number;
-//        newgame->volume_number = ud.m_volume_number;
-//        newgame->player_skill = ud.m_player_skill;
-//        newgame->monsters_off = ud.m_monsters_off;
-//        newgame->respawn_monsters = ud.m_respawn_monsters;
-//        newgame->respawn_items = ud.m_respawn_items;
-//        newgame->respawn_inventory = ud.m_respawn_inventory;
-//        newgame->ffire = ud.m_ffire;
-//        newgame->noexits = ud.m_noexits;
-//        newgame->coop = ud.m_coop;
+//        newgame.level_number = ud.m_level_number;
+//        newgame.volume_number = ud.m_volume_number;
+//        newgame.player_skill = ud.m_player_skill;
+//        newgame.monsters_off = ud.m_monsters_off;
+//        newgame.respawn_monsters = ud.m_respawn_monsters;
+//        newgame.respawn_items = ud.m_respawn_items;
+//        newgame.respawn_inventory = ud.m_respawn_inventory;
+//        newgame.ffire = ud.m_ffire;
+//        newgame.noexits = ud.m_noexits;
+//        newgame.coop = ud.m_coop;
 //    }
 //    else
 //    {
-//        newgame->level_number = ud.level_number;
-//        newgame->volume_number = ud.volume_number;
-//        newgame->player_skill = ud.player_skill;
-//        newgame->monsters_off = ud.monsters_off;
-//        newgame->respawn_monsters = ud.respawn_monsters;
-//        newgame->respawn_items = ud.respawn_items;
-//        newgame->respawn_inventory = ud.respawn_inventory;
-//        newgame->ffire = ud.ffire;
-//        newgame->noexits = ud.noexits;
-//        newgame->coop = ud.coop;
+//        newgame.level_number = ud.level_number;
+//        newgame.volume_number = ud.volume_number;
+//        newgame.player_skill = ud.player_skill;
+//        newgame.monsters_off = ud.monsters_off;
+//        newgame.respawn_monsters = ud.respawn_monsters;
+//        newgame.respawn_items = ud.respawn_items;
+//        newgame.respawn_inventory = ud.respawn_inventory;
+//        newgame.ffire = ud.ffire;
+//        newgame.noexits = ud.noexits;
+//        newgame.coop = ud.coop;
 //    }
 //}
 
 //void Net_ExtractNewGame(newgame_t *newgame, int32_t menuonly)
 //{
-//    ud.m_level_number = newgame->level_number;
-//    ud.m_volume_number = newgame->volume_number;
-//    ud.m_player_skill = newgame->player_skill;
-//    ud.m_monsters_off = newgame->monsters_off;
-//    ud.m_respawn_monsters = newgame->respawn_monsters;
-//    ud.m_respawn_items = newgame->respawn_items;
-//    ud.m_respawn_inventory = newgame->respawn_inventory;
-//    ud.m_ffire = newgame->ffire;
-//    ud.m_noexits = newgame->noexits;
-//    ud.m_coop = newgame->coop;
+//    ud.m_level_number = newgame.level_number;
+//    ud.m_volume_number = newgame.volume_number;
+//    ud.m_player_skill = newgame.player_skill;
+//    ud.m_monsters_off = newgame.monsters_off;
+//    ud.m_respawn_monsters = newgame.respawn_monsters;
+//    ud.m_respawn_items = newgame.respawn_items;
+//    ud.m_respawn_inventory = newgame.respawn_inventory;
+//    ud.m_ffire = newgame.ffire;
+//    ud.m_noexits = newgame.noexits;
+//    ud.m_coop = newgame.coop;
 
 //    if (!menuonly)
 //    {
-//        ud.level_number = newgame->level_number;
-//        ud.volume_number = newgame->volume_number;
-//        ud.player_skill = newgame->player_skill;
-//        ud.monsters_off = newgame->monsters_off;
-//        ud.respawn_monsters = newgame->respawn_monsters;
-//        ud.respawn_monsters = newgame->respawn_items;
-//        ud.respawn_inventory = newgame->respawn_inventory;
-//        ud.ffire = newgame->ffire;
-//        ud.noexits = newgame->noexits;
-//        ud.coop = newgame->coop;
+//        ud.level_number = newgame.level_number;
+//        ud.volume_number = newgame.volume_number;
+//        ud.player_skill = newgame.player_skill;
+//        ud.monsters_off = newgame.monsters_off;
+//        ud.respawn_monsters = newgame.respawn_monsters;
+//        ud.respawn_monsters = newgame.respawn_items;
+//        ud.respawn_inventory = newgame.respawn_inventory;
+//        ud.ffire = newgame.ffire;
+//        ud.noexits = newgame.noexits;
+//        ud.coop = newgame.coop;
 //    }
 //}
 

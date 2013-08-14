@@ -48,6 +48,7 @@
 /// <reference path="../../eduke32/source/global.c.ts" />
 /// <reference path="../../eduke32/source/grpscan.c.ts" />
 /// <reference path="../../eduke32/source/menus.c.ts" />
+/// <reference path="../../eduke32/source/music.c.ts" />
 /// <reference path="../../eduke32/source/namesdyn.c.ts" />
 /// <reference path="../../eduke32/source/net.c.ts" />
 /// <reference path="../../eduke32/source/osd.c.ts" />
@@ -2743,8 +2744,8 @@ var g_spriteStat =  {
 //    }
 //}
 
-//void P_DoQuote(int32_t q, DukePlayer_t *p)
-//{
+function P_DoQuote(/*int32_t*/ q: number, /*DukePlayer_t **/p: DukePlayer_t): void
+{todoThrow("P_DoQuote");
 //    int32_t cq = 0;
 
 //    if (ud.fta_on == 0 || q < 0)
@@ -2780,7 +2781,7 @@ var g_spriteStat =  {
 //    }
 //    pub = NUMPAGES;
 //    pus = NUMPAGES;
-//}
+}
 
 
 //////////// OFTEN-USED FEW-LINERS //////////
@@ -2812,22 +2813,22 @@ var g_spriteStat =  {
 //}
 ////////////
 
-//void G_FadePalette(int32_t r,int32_t g,int32_t b,int32_t e)
-//{
-//    setpalettefade(r,g,b,e&63);
+function G_FadePalette(/*int32_t*/ r: number,/*int32_t */g: number,/*int32_t */b: number,/*int32_t */e: number): void
+{
+    setpalettefade(r,g,b,e&63);
+    todo("G_FadePalette");
+    if ((e&128) == 0)
+    {
+        var /*int32_t */tc: number;
 
-//    if ((e&128) == 0)
-//    {
-//        int32_t tc;
+        nextpage();
+        tc = totalclock;
+        while (totalclock < tc + 4)
+            G_HandleAsync();
+    }
+}
 
-//        nextpage();
-//        tc = totalclock;
-//        while (totalclock < tc + 4)
-//            G_HandleAsync();
-//    }
-//}
-
-//// START and END limits are always inclusive!
+// START and END limits are always inclusive!
 //// STEP must evenly divide END-START, i.e. abs(end-start)%step == 0
 //void fadepal(int32_t r, int32_t g, int32_t b, int32_t start, int32_t end, int32_t step)
 //{

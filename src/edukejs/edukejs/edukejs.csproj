@@ -111,6 +111,7 @@
     <Content Include="eduke32\source\global.c.ts" />
     <Content Include="eduke32\source\grpscan.c.ts" />
     <Content Include="eduke32\source\menus.c.ts" />
+    <Content Include="eduke32\source\music.c.ts" />
     <Content Include="eduke32\source\namesdyn.c.ts" />
     <Content Include="eduke32\source\net.c.ts" />
     <Content Include="eduke32\source\player.c.ts" />

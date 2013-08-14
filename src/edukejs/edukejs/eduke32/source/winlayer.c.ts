@@ -1564,26 +1564,27 @@ function AcquireInputDevices(/*char */acquire: number): void
 //    msperhitick = 0;
 //}
 
-////
-//// sampletimer() -- update totalclock
-////
-//void sampletimer(void)
-//{
-//    int64_t i;
-//    int32_t n;
+//
+// sampletimer() -- update totalclock
+//
+function sampletimer(): void
+{
+    todoThrow();
+    //int64_t i;
+    //int32_t n;
 
-//    if (!win_timerfreq) return;
+    //if (!win_timerfreq) return;
 
-//    QueryPerformanceCounter((LARGE_INTEGER *)&i);
-//    n = (int32_t)((i*timerticspersec / win_timerfreq) - timerlastsample);
+    //QueryPerformanceCounter((LARGE_INTEGER *)&i);
+    //n = (int32_t)((i*timerticspersec / win_timerfreq) - timerlastsample);
 
-//    if (n <= 0) return;
+    //if (n <= 0) return;
 
-//    totalclock += n;
-//    timerlastsample += n;
+    //totalclock += n;
+    //timerlastsample += n;
 
-//    if (usertimercallback) for (; n>0; n--) usertimercallback();
-//}
+    //if (usertimercallback) for (; n>0; n--) usertimercallback();
+}
 
 
 //

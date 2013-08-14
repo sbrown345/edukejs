@@ -438,15 +438,15 @@ var g_Shareware: number = 0; //int32_t
 ////void fadepaltile(int32_t r,int32_t g,int32_t b,int32_t start,int32_t end,int32_t step,int32_t tile);
 //void G_InitTimer(int32_t ticpersec);
 
-//static inline int32_t G_GetTeamPalette(int32_t team)
-//{
-//    int8_t pal[] = { 3, 10, 11, 12 };
+function/* int32_t */G_GetTeamPalette(/*int32_t*/ team: number): number
+{
+    var pal = new Uint8Array([3, 10, 11, 12]);
 
-//    if ((unsigned)team >= (sizeof(pal)/sizeof(pal[0])))
-//        return 0;
+    if (team >= (sizeof(pal)/sizeof(pal[0])))
+        return 0;
 
-//    return pal[team];
-//}
+    return pal[team];
+}
 
 //#if defined(_WIN32)
 //int32_t G_GetVersionFromWebsite(char *buffer);
