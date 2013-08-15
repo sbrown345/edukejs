@@ -24,7 +24,7 @@
 
 //int32_t backgroundidle = 1;
 
-//int64_t win_timerfreq = 0;
+var /*int64_t */win_timerfreq = 0;
 
 var silentvideomodeswitch = 0; //char 
 

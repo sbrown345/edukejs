@@ -81,8 +81,8 @@ var szPlayerName: string; //G_EXTERN char [32]
 //// XXX: menutextbuf overflow possible?
 var tempbuf = new Uint8Array(MAXSECTORS<<1),packbuf = new Uint8Array(PACKBUF_SIZE),menutextbuf = new Uint8Array(128),buf = new Uint8Array(1024);
 //G_EXTERN char typebuflen,typebuf[141];
-var avg: input_t;
-var loc: input_t;
+var avg = new input_t();
+var loc = new input_t();
 //G_EXTERN input_t recsync[RECSYNCBUFSIZ];
 var SpriteDeletionQueue = new Int16Array(1024),g_spriteDeleteQueuePos: number; //G_EXTERN int16_t 
 //G_EXTERN int16_t animatesect[MAXANIMATES];

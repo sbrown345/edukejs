@@ -14538,12 +14538,12 @@ void setpalettefade(char r, char g, char b, char offset)
 
     {
         static uint32_t lastpalettesum=0;
-        uint32_t newpalettesum = crc32once((uint8_t *)curpalettefaded, sizeof(curpalettefaded));
+		uint32_t newpalettesum = crc32once((uint8_t *)curpalettefaded, sizeof(curpalettefaded));
 
-        if (newpalettesum != lastpalettesum || newpalettesum != g_lastpalettesum)
-        {
-            setpalette(0,256);
-        }
+		if (newpalettesum != lastpalettesum || newpalettesum != g_lastpalettesum)
+		{
+			setpalette(0,256);
+		}
 
         g_lastpalettesum = lastpalettesum = newpalettesum;
     }

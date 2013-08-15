@@ -189,6 +189,13 @@ class input_t {
         this.avel = 0, this.horz = 0; // 2b int8_t
         this.extbits = 0, this.filler = 0; // 2b int8_t
     }
+
+    copyFrom(v: input_t) {
+        this.bits = v.bits; // 4b uint32_t
+        this.fvel = v.fvel, this.svel = v.svel; // 4b int16_t
+        this.avel = v.avel, this.horz = v.horz; // 2b int8_t
+        this.extbits = v.extbits, this.filler = v.filler; // 2b int8_t
+    }
 } //input_t;
 
 //#pragma pack(push,1)

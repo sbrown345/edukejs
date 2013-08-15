@@ -886,7 +886,7 @@ var headsectbunch: Int16Array[] = multiDimArray<Int16Array>(Int16Array, 2, YAX_M
 var Numsprites: number; //EXTERN int32_t
 var numsectors: number, numwalls: number; //EXTERN int16_t 
 var display_mirror: number;//EXTERN char 
-/*@type {number}*/ var totalclock: number;
+/*@type {number}*/ var totalclock: number=0;
 var numframes = 0, randomseed = 0; //EXTERN int32_t 
 var sintable = new Int16Array(2048);
 var palette = new Uint8Array(768);

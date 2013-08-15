@@ -95,7 +95,7 @@ var REALGAMETICSPERSEC = 30;
 //// NOTE: calling a game state update a 'frame' is really weird.
 //// (This used to be TICRATE/GAMETICSPERSEC, which was 120/26 = 4.615~ truncated
 //// to 4 by integer division.)
-var TICSPERFRAME =(TICRATE/REALGAMETICSPERSEC)/0;
+var TICSPERFRAME =(TICRATE/REALGAMETICSPERSEC)|0;
 //// Used as a constant to satisfy all of the calculations written with ticrate =
 //// 26 in mind:
 var GAMETICSPERSEC     =26;

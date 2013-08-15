@@ -119,7 +119,7 @@ var g_whichPalForPlayer = 9;//static int32_t
 var precachehightile: Uint8Array[] = multiDimArray<Uint8Array>(Uint8Array, 2, MAXTILES>>3); //static uint8_t 
 var g_precacheCount = 0; //static int32_t  
 
-var g_levelTextTime = 0; //extern int32_t 
+//var g_levelTextTime = 0; //extern int32_t 
  
 function flag_precache(/*int32_t*/ tile: number, /*int32_t*/ type: number): void
 {
@@ -505,7 +505,7 @@ function G_DoLoadScreen(statustext: string, percent: number): void
 //extern palette_t CrosshairColors;
 
 function G_CacheMapData(): void
-{
+{todo("G_CacheMapData");return;
     var i: number,j: number,pc=0;              //int32_t 
     var tc: number;                    //int32_t 
     var starttime: number, endtime: number;   //uint32_t
@@ -1754,19 +1754,19 @@ function clearfrags(): void
     }
 }
 
-//void G_ResetTimers(uint8_t keepgtics)
-//{
-//    vel = svel = angvel = horiz = 0;
+function G_ResetTimers(/*uint8_t */keepgtics: number): void 
+{
+    vel = svel = angvel = horiz = 0;
 
-//    totalclock = 0;
-//    cloudtotalclock = 0;
-//    ototalclock = 0;
-//    lockclock = 0;
-//    ready2send = 1;
-//    g_levelTextTime = 85;
-//    if (!keepgtics)
-//        g_moveThingsCount = 0;
-//}
+    totalclock = 0;
+    cloudtotalclock = 0;
+    ototalclock = 0;
+    lockclock = 0;
+    ready2send = 1;
+    g_levelTextTime = 85;
+    if (!keepgtics)
+        g_moveThingsCount = 0;
+}
 
 function G_ClearFIFO(): void
 {
@@ -1810,27 +1810,27 @@ function G_FindLevelByFile(fn: string): number
 }
 
 function G_FadeLoad(/*int32_t*/ r: number, /*int32_t */g: number, /*int32_t */b: number, /*int32_t */start: number, /*int32_t */end: number, /*int32_t */step: number, /*int32_t */ticwait: number): void
-{
-    var /*int32_t */m = (step < 0) ? -1 : 1;
+{todoUnimportant("G_FadeLoad");
+    //var /*int32_t */m = (step < 0) ? -1 : 1;
 
-    var /*int32_t */nexttic = totalclock;
+    //var /*int32_t */nexttic = totalclock;
 
-    for (; m*start <= m*end; start += step)
-    {
-        while (totalclock < nexttic)
-            todo("sampletimer();");
-        nexttic += ticwait;
+    //for (; m*start <= m*end; start += step)
+    //{
+    //    while (totalclock < nexttic)
+    //        sampletimer();
+    //    nexttic += ticwait;
 
-        if (KB_KeyPressed(sc_Space))
-        {
-            KB_ClearKeyDown(sc_Space);
-            return;
-        }
+    //    if (KB_KeyPressed(sc_Space))
+    //    {
+    //        KB_ClearKeyDown(sc_Space);
+    //        return;
+    //    }
 
-        G_FadePalette(r,g,b,start|128);
-        flushperms();
-        G_DoLoadScreen(" ", -1);
-    }
+    //    G_FadePalette(r,g,b,start|128);
+    //    flushperms();
+    //    G_DoLoadScreen(" ", -1);
+    //}
 }
 
 
@@ -2137,19 +2137,19 @@ function G_EnterLevel(g: number): number
     g_player[myconnectindex].ps.over_shoulder_on = 0;
 
     clearfrags();
-  debugger;
-//    G_ResetTimers(0);  // Here we go
+ 
+    G_ResetTimers(0);  // Here we go
 
 //    //Bsprintf(g_szBuf,"G_EnterLevel L=%d V=%d",ud.level_number, ud.volume_number);
 //    //AddLog(g_szBuf);
 //    // variables are set by pointer...
 
-//    Bmemcpy(currentboardfilename, boardfilename, BMAX_PATH);
-//    VM_OnEvent(EVENT_ENTERLEVEL, -1, -1, -1, 0);
-//    OSD_Printf(OSDTEXT_YELLOW "E%dL%d: %s\n", ud.volume_number+1, ud.level_number+1,
-//               MapInfo[mii].name);
+    Bmemcpy(new P(currentboardfilename), new P(boardfilename), BMAX_PATH);
+    VM_OnEvent(EVENT_ENTERLEVEL, -1, -1, -1, 0);
+    OSD_Printf(OSDTEXT_YELLOW + "E%dL%d: %s\n", ud.volume_number+1, ud.level_number+1,
+               MapInfo[mii].name);
 
-//    Net_WaitForServer();
+    Net_WaitForServer();
     return 0;
 }
 

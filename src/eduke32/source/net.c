@@ -187,7 +187,7 @@ void Net_WaitForServer(void)
     int32_t server_ready = g_player[0].pingcnt;
 
     if (numplayers < 2 || g_netServer) return;
-
+		
     P_SetGamePalette(g_player[myconnectindex].ps, TITLEPAL, 8+2+1);
 
     do

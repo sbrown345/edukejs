@@ -2676,8 +2676,8 @@ var g_myAimMode = 0, g_myAimStat = 0, g_oldAimStat = 0; //int32_t
 var /*int32_t */mouseyaxismode = -1;
 var /*int32_t */g_emuJumpTics = 0;
 
-//void P_GetInput(int32_t snum)
-//{
+function P_GetInput(/*int32_t */snum: number): void
+{todo("P_GetInput");
 //    int32_t j, daang;
 //    static ControlInfo info[2];
 //    static int32_t turnheldtime; //MED
@@ -2966,7 +2966,7 @@ var /*int32_t */g_emuJumpTics = 0;
 
 //    loc.avel = angvel;
 //    loc.horz = horiz;
-//}
+}
 
 //static int32_t P_DoCounters(DukePlayer_t *p)
 //{

@@ -1777,21 +1777,21 @@ function OSD_Printf(fmt: string, ...args: any[]): void
 }
 
 
-////
-//// OSD_DispatchQueued() -- Executes any commands queued in the buffer
-////
-//void OSD_DispatchQueued(void)
-//{
-//    int32_t cmd;
+//
+// OSD_DispatchQueued() -- Executes any commands queued in the buffer
+//
+function OSD_DispatchQueued(): void
+{todo("OSD_DispatchQueued");
+    //int32_t cmd;
 
-//    if (!osdexeccount) return;
+    //if (!osdexeccount) return;
 
-//    cmd=osdexeccount-1;
-//    osdexeccount=0;
+    //cmd=osdexeccount-1;
+    //osdexeccount=0;
 
-//    for (; cmd>=0; cmd--)
-//        OSD_Dispatch((const char *)osdhistorybuf[cmd]);
-//}
+    //for (; cmd>=0; cmd--)
+    //    OSD_Dispatch((const char *)osdhistorybuf[cmd]);
+}
 
 
 ////

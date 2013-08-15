@@ -186,39 +186,39 @@ function faketimerhandler(): void
 //    enet_host_service(g_netServer ? g_netServer : g_netClient, NULL, 0);
 }
 
-//void Net_WaitForServer(void)
-//{
-//    int32_t server_ready = g_player[0].pingcnt;
+function Net_WaitForServer(): void
+{todoUnimportant("Net_WaitForServer");
+    //int32_t server_ready = g_player[0].pingcnt;
 
-//    if (numplayers < 2 || g_netServer) return;
+    //if (numplayers < 2 || g_netServer) return;
 
-//    P_SetGamePalette(g_player[myconnectindex].ps, TITLEPAL, 8+2+1);
+    //P_SetGamePalette(g_player[myconnectindex].ps, TITLEPAL, 8+2+1);
 
-//    do
-//    {
-//        if (quitevent || keystatus[1]) G_GameExit("");
+    //do
+    //{
+    //    if (quitevent || keystatus[1]) G_GameExit("");
 
-//        display_betascreen();
+    //    display_betascreen();
 
-//        gametext(160,170,"Waiting for server",14,2);
-//        nextpage();
+    //    gametext(160,170,"Waiting for server",14,2);
+    //    nextpage();
 
-//        packbuf[0] = PACKET_PLAYER_PING;
-//        packbuf[1] = myconnectindex;
+    //    packbuf[0] = PACKET_PLAYER_PING;
+    //    packbuf[1] = myconnectindex;
 
-//        if (g_netClientPeer)
-//            enet_peer_send(g_netClientPeer, CHAN_GAMESTATE, enet_packet_create(packbuf, 2, ENET_PACKET_FLAG_RELIABLE));
+    //    if (g_netClientPeer)
+    //        enet_peer_send(g_netClientPeer, CHAN_GAMESTATE, enet_packet_create(packbuf, 2, ENET_PACKET_FLAG_RELIABLE));
 
-//        G_HandleAsync();
+    //    G_HandleAsync();
 
-//        if (g_player[0].pingcnt > server_ready)
-//        {
-//            P_SetGamePalette(g_player[myconnectindex].ps, BASEPAL, 8+2+1);
-//            return;
-//        }
-//    }
-//    while (1);
-//}
+    //    if (g_player[0].pingcnt > server_ready)
+    //    {
+    //        P_SetGamePalette(g_player[myconnectindex].ps, BASEPAL, 8+2+1);
+    //        return;
+    //    }
+    //}
+    //while (1);
+}
 
 function Net_ResetPrediction(): void
 {

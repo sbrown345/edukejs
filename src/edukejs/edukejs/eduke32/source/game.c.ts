@@ -3,6 +3,7 @@
 /// <reference path="../../utils/todo.ts" />
 /// <reference path="../../utils/types.ts" />
 
+/// <reference path="../../jmact/source/control.ts" />
 /// <reference path="../../jmact/source/mathutil.c.ts" />
 
 /// <reference path="../../build/headers/baselayer.h.ts" />
@@ -246,17 +247,17 @@ var ticrandomseed: number;//int32_t
 
 //#define quotepulseshade (sintable[((uint32_t)totalclock<<5)&2047]>>11)
 
-//int32_t althud_numbertile = 2930;
-//int32_t althud_numberpal = 0;
-//int32_t althud_shadows = 1;
-//int32_t althud_flashing = 1;
-//int32_t hud_glowingquotes = 1;
-//int32_t hud_showmapname = 1;
+var /*int32_t*/ althud_numbertile = 2930;
+var /*int32_t*/ althud_numberpal = 0;
+var /*int32_t*/ althud_shadows = 1;
+var /*int32_t*/ althud_flashing = 1;
+var /*int32_t*/ hud_glowingquotes = 1;
+var /*int32_t*/ hud_showmapname = 1;
 
-//int32_t g_levelTextTime = 0;
+var /*int32_t*/ g_levelTextTime = 0;
 
-//int32_t r_maxfps = 0;
-//uint32_t g_frameDelay = 0;
+var /*int32_t*/ r_maxfps = 0;
+var /*uint32_t */g_frameDelay = 0;
 
 //#if defined(RENDERTYPEWIN) && defined(USE_OPENGL)
 //extern char forcegl;
@@ -2818,15 +2819,15 @@ function G_FadePalette(/*int32_t*/ r: number,/*int32_t */g: number,/*int32_t */b
 {
     setpalettefade(r,g,b,e&63);
     todo("G_FadePalette");
-    if ((e&128) == 0)
-    {
-        var /*int32_t */tc: number;
+    //if ((e&128) == 0)
+    //{
+    //    var /*int32_t */tc: number;
 
-        nextpage();
-        tc = totalclock;
-        while (totalclock < tc + 4)
-            G_HandleAsync();
-    }
+    //    nextpage();
+    //    tc = totalclock;
+    //    while (totalclock < tc + 4)
+    //        G_HandleAsync();
+    //}
 }
 
 // START and END limits are always inclusive!
@@ -3487,10 +3488,10 @@ function G_SetCrosshairColor(r: number, g: number, b: number): void
 //}
 
 
-//////////// DISPLAYREST //////////
+////////// DISPLAYREST //////////
 
-//void G_DisplayRest(int32_t smoothratio)
-//{
+function G_DisplayRest(/*int32_t */smoothratio: number): void
+{todo("G_DisplayRest");
 //    int32_t i, j;
 //    palaccum_t tint = PALACCUM_INITIALIZER;
 
@@ -8044,8 +8045,8 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 
 //static int8_t cheatbuf[MAXCHEATLEN], cheatbuflen;
 
-//GAME_STATIC void G_DoCheats(void)
-//{
+function G_DoCheats(): void
+{
 //    int32_t ch, i, j, k=0, weapon;
 //    static int32_t vol1inited=0;
 //    char consolecheat = 0;  // JBF 20030914
@@ -8463,7 +8464,7 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //            }
 //        }
 //    }
-//}
+}
 
 //void G_SetViewportShrink(int32_t dir)
 //{
@@ -8484,8 +8485,8 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //    }
 //}
 
-//void G_HandleLocalKeys(void)
-//{
+function G_HandleLocalKeys(): void
+{todo("G_HandleLocalKeys");
 //    int32_t i,ch;
 //    int32_t j;
 
@@ -9064,7 +9065,7 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //            totalclock = ototalclock;
 //        }
 //    }
-//}
+}
 
 //static void G_ShowParameterHelp(void)
 //{
@@ -11805,7 +11806,7 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
     if (g_networkMode != NET_DEDICATED_SERVER)
     {
         G_GetCrosshairColor();
-        G_SetCrosshairColor(CrosshairColors.r, CrosshairColors.g, CrosshairColors.b)
+        G_SetCrosshairColor(CrosshairColors.r, CrosshairColors.g, CrosshairColors.b);
     }
     
     if (ud.warp_on == 0)
@@ -11854,43 +11855,43 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
     }
     else todoThrow("G_UpdateScreenArea();");
 
-////    G_GameExit(" "); ///
+//    G_GameExit(" "); ///
 
-////    ud.auto_run = ud.config.RunMode;
-//    ud.showweapons = ud.config.ShowOpponentWeapons;
-//    // CODEDUP_UD_TO_GPLAYER
-//    g_player[myconnectindex].ps.aim_mode = ud.mouseaiming;
-//    g_player[myconnectindex].ps.auto_aim = ud.config.AutoAim;
-//    g_player[myconnectindex].ps.weaponswitch = ud.weaponswitch;
-//    g_player[myconnectindex].pteam = ud.team;
+//    ud.auto_run = ud.config.RunMode;
+    ud.showweapons = ud.config.ShowOpponentWeapons;
+    // CODEDUP_UD_TO_GPLAYER
+    g_player[myconnectindex].ps.aim_mode = ud.mouseaiming;
+    g_player[myconnectindex].ps.auto_aim = ud.config.AutoAim;
+    g_player[myconnectindex].ps.weaponswitch = ud.weaponswitch;
+    g_player[myconnectindex].pteam = ud.team;
 
-//    if (GametypeFlags[ud.coop] & GAMETYPE_TDM)
-//        g_player[myconnectindex].ps.palookup = g_player[myconnectindex].pcolor = G_GetTeamPalette(g_player[myconnectindex].pteam);
-//    else
-//    {
-//        if (ud.color) g_player[myconnectindex].ps.palookup = g_player[myconnectindex].pcolor = ud.color;
-//        else g_player[myconnectindex].ps.palookup = g_player[myconnectindex].pcolor;
-//    }
+    if (GametypeFlags[ud.coop] & GAMETYPE_TDM)
+        g_player[myconnectindex].ps.palookup = g_player[myconnectindex].pcolor = G_GetTeamPalette(g_player[myconnectindex].pteam);
+    else
+    {
+        if (ud.color) g_player[myconnectindex].ps.palookup = g_player[myconnectindex].pcolor = ud.color;
+        else g_player[myconnectindex].ps.palookup = g_player[myconnectindex].pcolor;
+    }
+    debugger
+    ud.warp_on = 0;
+    KB_KeyDown[sc_Pause] = 0;   // JBF: I hate the pause key
 
-//    ud.warp_on = 0;
-//    KB_KeyDown[sc_Pause] = 0;   // JBF: I hate the pause key
+    do //main loop
+    {
+        var /*static uint32_t */nextrender = 0, framewaiting = 0;
+        var /*uint32_t */j: number;
 
-//    do //main loop
-//    {
-//        static uint32_t nextrender = 0, framewaiting = 0;
-//        uint32_t j;
+        if (handleevents() && quitevent)
+        {
+            KB_KeyDown[sc_Escape] = 1;
+            quitevent = 0;
+        }
 
-//        if (handleevents() && quitevent)
-//        {
-//            KB_KeyDown[sc_Escape] = 1;
-//            quitevent = 0;
-//        }
+        sampletimer();
+        Net_GetPackets();
 
-//        sampletimer();
-//        Net_GetPackets();
-
-//        // only allow binds to function if the player is actually in a game (not in a menu, typing, et cetera) or demo
-//        CONTROL_BindsEnabled = g_player[myconnectindex].ps.gm & (MODE_GAME|MODE_DEMO);
+        // only allow binds to function if the player is actually in a game (not in a menu, typing, et cetera) or demo
+        CONTROL_BindsEnabled = g_player[myconnectindex].ps.gm & (MODE_GAME|MODE_DEMO);
 
 //#ifndef _WIN32
 //        // stdin . OSD input for dedicated server
@@ -11919,114 +11920,114 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
 //        }
 //        else
 //#endif
-//        {
-//            MUSIC_Update();
-//            G_HandleLocalKeys();
-//        }
+        {
+            MUSIC_Update();
+            G_HandleLocalKeys();
+        }
 
-//        OSD_DispatchQueued();
+        OSD_DispatchQueued();
 
-//        if (((g_netClient || g_netServer) || !(g_player[myconnectindex].ps.gm & (MODE_MENU|MODE_DEMO))) && totalclock >= ototalclock+TICSPERFRAME)
-//        {
-//            if (g_networkMode != NET_DEDICATED_SERVER)
-//            {
-//                CONTROL_ProcessBinds();
-//                P_GetInput(myconnectindex);
-//            }
+        if (((g_netClient || g_netServer) || !(g_player[myconnectindex].ps.gm & (MODE_MENU|MODE_DEMO))) && totalclock >= ototalclock+TICSPERFRAME)
+        {
+            if (g_networkMode != NET_DEDICATED_SERVER)
+            {
+                CONTROL_ProcessBinds();
+                P_GetInput(myconnectindex);
+            }
 
-//            avg.fvel += loc.fvel;
-//            avg.svel += loc.svel;
-//            avg.avel += loc.avel;
-//            avg.horz += loc.horz;
-//            avg.bits |= loc.bits;
-//            avg.extbits |= loc.extbits;
+            avg.fvel += loc.fvel;
+            avg.svel += loc.svel;
+            avg.avel += loc.avel;
+            avg.horz += loc.horz;
+            avg.bits |= loc.bits;
+            avg.extbits |= loc.extbits;
 
-//            Bmemcpy(&inputfifo[0][myconnectindex], &avg, sizeof(input_t));
-//            Bmemset(&avg, 0, sizeof(input_t));
+            inputfifo[0][myconnectindex].copyFrom(avg);// Bmemcpy(&inputfifo[0][myconnectindex], &avg, sizeof(input_t));
+            avg.init();
 
-//            do
-//            {
-//                int32_t clockbeforetic;
+            do
+            {
+                var /*int32_t */clockbeforetic;
 
-//                sampletimer();
+                sampletimer();
 
-//                if (ready2send == 0) break;
+                if (ready2send == 0) break;
 
-//                ototalclock += TICSPERFRAME;
+                ototalclock += TICSPERFRAME;
 
-//                clockbeforetic = totalclock;
+                clockbeforetic = totalclock;
 
-//                if (((ud.show_help == 0 && (g_player[myconnectindex].ps.gm&MODE_MENU) != MODE_MENU) || ud.recstat == 2 || (g_netServer || ud.multimode > 1)) &&
-//                        (g_player[myconnectindex].ps.gm&MODE_GAME))
-//                    G_MoveLoop();
+                if (((ud.show_help == 0 && (g_player[myconnectindex].ps.gm&MODE_MENU) != MODE_MENU) || ud.recstat == 2 || (g_netServer || ud.multimode > 1)) &&
+                        (g_player[myconnectindex].ps.gm&MODE_GAME))
+                    todoThrow("G_MoveLoop();");
 
-//                sampletimer();
+                sampletimer();
 
-//                if (totalclock - clockbeforetic >= TICSPERFRAME)
-//                {
-//                    // computing a tic takes longer than a tic, so we're slowing
-//                    // the game down. rather than tightly spinning here, go draw
-//                    // a frame since we're fucked anyway
-//                    break;
-//                }
-//            }
-//            while (((g_netClient || g_netServer) || !(g_player[myconnectindex].ps.gm & (MODE_MENU|MODE_DEMO))) && totalclock >= ototalclock+TICSPERFRAME);
+                if (totalclock - clockbeforetic >= TICSPERFRAME)
+                {
+                    // computing a tic takes longer than a tic, so we're slowing
+                    // the game down. rather than tightly spinning here, go draw
+                    // a frame since we're fucked anyway
+                    break;
+                }
+            }
+            while (((g_netClient || g_netServer) || !(g_player[myconnectindex].ps.gm & (MODE_MENU|MODE_DEMO))) && totalclock >= ototalclock+TICSPERFRAME);
 
-//        }
+        }
 
-//        G_DoCheats();
+        G_DoCheats();
 
-//        if (g_player[myconnectindex].ps.gm & (MODE_EOL|MODE_RESTART))
-//        {
-//            switch (G_EndOfLevel())
-//            {
-//            case 1: continue;
-//            case 2: goto MAIN_LOOP_RESTART;
-//            }
-//        }
+        if (g_player[myconnectindex].ps.gm & (MODE_EOL|MODE_RESTART))
+        {todoThrow();
+            //switch (G_EndOfLevel())
+            //{
+            //case 1: continue;
+            //case 2: goto MAIN_LOOP_RESTART;
+            //}
+        }
 
-//        if (g_networkMode == NET_DEDICATED_SERVER)
-//        {
-//            idle();
-//            goto skipframe;
-//        }
+        if (g_networkMode == NET_DEDICATED_SERVER)
+        {todoThrow();
+            //idle();
+            //goto skipframe;
+        }
 
-//        if (framewaiting)
-//        {
-//            framewaiting--;
-//            nextpage();
-//        }
+        if (framewaiting)
+        {
+            framewaiting--;
+            nextpage();
+        }
 
-//        j = getticks();
+        j = getticks();
 
-//        if (r_maxfps == 0 || j >= nextrender)
-//        {
-//            if (j > nextrender+g_frameDelay)
-//                nextrender = j;
+        if (r_maxfps == 0 || j >= nextrender)
+        {
+            if (j > nextrender+g_frameDelay)
+                nextrender = j;
 
-//            nextrender += g_frameDelay;
+            nextrender += g_frameDelay;
 
-//            if ((ud.show_help == 0 && (!g_netServer && ud.multimode < 2) && !(g_player[myconnectindex].ps.gm&MODE_MENU)) ||
-//                    (g_netServer || ud.multimode > 1) || ud.recstat == 2)
-//                i = calc_smoothratio(totalclock, ototalclock);
-//            else
-//                i = 65536;
+            if ((ud.show_help == 0 && (!g_netServer && ud.multimode < 2) && !(g_player[myconnectindex].ps.gm&MODE_MENU)) ||
+                    (g_netServer || ud.multimode > 1) || ud.recstat == 2)
+                i = calc_smoothratio(totalclock, ototalclock);
+            else
+                i = 65536;
 
-//            G_DrawRooms(screenpeek,i);
-//            if (getrendermode() >= REND_POLYMOST)
-//                G_DrawBackground();
-//            G_DisplayRest(i);
+            G_DrawRooms(screenpeek,i);
+            if (getrendermode() >= REND_POLYMOST)
+                G_DrawBackground();
+            G_DisplayRest(i);
 
-//            framewaiting++;
-//        }
-
+            framewaiting++;
+        }
+        
 //skipframe:
-//        if (g_player[myconnectindex].ps.gm&MODE_DEMO)
-//            goto MAIN_LOOP_RESTART;
-//    }
-//    while (1);
+        if (g_player[myconnectindex].ps.gm&MODE_DEMO)
+            todoThrow("goto MAIN_LOOP_RESTART;");
+    }
+    while (1);
 
-//    G_GameExit(" ");
+    G_GameExit(" ");
     return 0;  // not reached (duh)
 }
 

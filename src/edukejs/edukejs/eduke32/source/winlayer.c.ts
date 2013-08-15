@@ -753,14 +753,15 @@ var initprintf = function(f: string, ...args: any[])  {
 //    return 0;
 //}
 
-////
-//// handleevents() -- process the Windows message queue
-////   returns !0 if there was an important event worth checking (like quitting)
-////
-//int32_t handleevents(void)
-//{
-//    int32_t rv=0;
-//    MSG msg;
+//
+// handleevents() -- process the Windows message queue
+//   returns !0 if there was an important event worth checking (like quitting)
+//
+function /*int32_t */handleevents(): number
+{
+    var /*int32_t */rv=0;
+    todo("handleevents");
+    //var MSG msg;
 
 //    //if (frameplace && fullscreen) printf("Offscreen buffer is locked!\n");
 
@@ -794,8 +795,8 @@ var initprintf = function(f: string, ...args: any[])  {
 
 //    sampletimer();
 
-//    return rv;
-//}
+    return rv;
+}
 
 
 ////
@@ -1505,10 +1506,10 @@ function AcquireInputDevices(/*char */acquire: number): void
 ////  TIMER
 ////=================================================================================================
 
-//static int32_t timerlastsample=0;
-//int32_t timerticspersec=0;
+var /*static int32_t */timerlastsample=0;
+var /*int32_t */timerticspersec=0;
 //static double msperhitick = 0;
-//static void (*usertimercallback)(void) = NULL;
+var usertimercallback: ()=>void;//static void (*usertimercallback)(void) = NULL;
 
 ////  This timer stuff is all Ken's idea.
 
@@ -1570,21 +1571,20 @@ function AcquireInputDevices(/*char */acquire: number): void
 //
 function sampletimer(): void
 {
-    todoThrow();
-    //int64_t i;
-    //int32_t n;
+    var /*int64_t */i: number;
+    var /*int32_t */n: number;
 
-    //if (!win_timerfreq) return;
+    if (!win_timerfreq) return;
 
-    //QueryPerformanceCounter((LARGE_INTEGER *)&i);
-    //n = (int32_t)((i*timerticspersec / win_timerfreq) - timerlastsample);
+    i = Date.now();//QueryPerformanceCounter((LARGE_INTEGER *)&i);
+    n = int32((i*timerticspersec / win_timerfreq) - timerlastsample);
 
     //if (n <= 0) return;
 
-    //totalclock += n;
-    //timerlastsample += n;
+    totalclock += n;
+    timerlastsample += n;
 
-    //if (usertimercallback) for (; n>0; n--) usertimercallback();
+    if (usertimercallback) for (; n>0; n--) usertimercallback();
 }
 
 

@@ -14683,15 +14683,15 @@ function setpalettefade(/*char*/ r: number, /*char */g: number, /*char */b: numb
     setpalettefade_calc(offset);
 
     {
-        var /*static uint32_t */lastpalettesum=0;
-        var /*uint32_t*/ newpalettesum = -999999999999999999999999999999; todoThrow(" crc32once((uint8_t *)curpalettefaded, sizeof(curpalettefaded));");
+        //var /*static uint32_t */lastpalettesum=0;
+        //var /*uint32_t*/ newpalettesum = crc32once((uint8_t *)curpalettefaded, sizeof(curpalettefaded));
 
-        if (newpalettesum != lastpalettesum || newpalettesum != g_lastpalettesum)
-        {
-            setpalette(0,256);
-        }
+        //if (newpalettesum != lastpalettesum || newpalettesum != g_lastpalettesum)
+        //{
+            setpalette(0,256); todo("calc newpalettesum etc.. ");
+        //}
 
-        g_lastpalettesum = lastpalettesum = newpalettesum;
+        //g_lastpalettesum = lastpalettesum = newpalettesum;
     }
 }
 
