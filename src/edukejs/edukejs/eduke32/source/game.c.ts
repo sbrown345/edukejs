@@ -3918,7 +3918,7 @@ function G_DisplayRest(/*int32_t */smoothratio: number): void
 //            applied = 0;
 //        }
 //    }
-//}
+}
 
 //static void G_DoThirdPerson(const DukePlayer_t *pp, vec3_t *vect, int16_t *vsectnum, int32_t ang, int32_t horiz)
 //{
@@ -11947,7 +11947,7 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
 
             do
             {
-                var /*int32_t */clockbeforetic;
+                var /*int32_t */clockbeforetic: number;
 
                 sampletimer();
 
