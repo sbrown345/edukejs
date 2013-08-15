@@ -14,6 +14,8 @@
 /// <reference path="../../build/headers/pragmas.h.ts" />
 /// <reference path="../../build/headers/scancodes.h.ts" />
 
+/// <reference path="../../build/source/engine.c.ts" />
+
 /// <reference path="../../build/source/crc32.c.ts" />
 /// <reference path="../../build/source/texcache.c.ts" />
 
@@ -113,13 +115,33 @@ var rendmode=0; //int32_t
 var usemodels=1, usehightile=1;//int32_t 
 //
 //#include <math.h> //<-important!
-//typedef struct { float x, cy[2], fy[2]; int32_t tag; int16_t n, p, ctag, ftag; } vsptyp;
-//#define VSPMAX 4096 //<- careful!
-//static vsptyp vsp[VSPMAX];
-//static int32_t gtag;
-//
-//static double dxb1[MAXWALLSB], dxb2[MAXWALLSB];
-//
+class vsptyp{ 
+    /*float */x: number; 
+    cy: Float32Array; 
+    fy: Float32Array; 
+    /*int32_t */tag: number; 
+    /*int16_t */n: number; 
+    p: number;
+    ctag: number;
+    ftag: number; 
+
+    constructor() {
+        this.x = 0;
+        this.cy = new Float32Array(2);
+        this.fy = new Float32Array(2);
+        this.tag = 0;
+        this.n = 0;
+        this.p = 0;
+        this.ctag = 0;
+        this.ftag = 0;
+    }
+} 
+var VSPMAX=4096; //<- careful!
+var vsp = newStructArray<vsptyp>(vsptyp, VSPMAX);
+var /*static int32_t */gtag: number;
+
+var dxb1 = new Float64Array(MAXWALLSB), dxb2 = new Float64Array(MAXWALLSB);
+
 var SCISDIST=1.0; //1.0: Close plane clipping distance
 //// the following three are for the obsolete rendmodes 1 and 2:
 var USEZBUFFER=1; //1:use zbuffer (slow, nice sprite rendering), 0:no zbuffer (fast, bad sprite rendering)
@@ -166,10 +188,10 @@ var glusetexcache = 2, glusememcache = 1; //int32_t
 //int32_t glmultisample = 0, glnvmultisamplehint = 0;
 var gltexmaxsize = 0;      // 0 means autodetection on first run
 var gltexmiplevel = 0;		// discards this many mipmap levels
-//static int32_t lastglpolygonmode = 0; //FUK
-//int32_t glpolygonmode = 0;     // 0:GL_FILL,1:GL_LINE,2:GL_POINT //FUK
-//int32_t glwidescreen = 0;
-//int32_t glprojectionhacks = 1;
+var /*static int32_t*/ lastglpolygonmode = 0; //FUK
+var /*int32_t*/ glpolygonmode = 0;     // 0:GL_FILL,1:GL_LINE,2:GL_POINT //FUK
+var /*int32_t*/ glwidescreen = 0;
+var /*int32_t*/ glprojectionhacks = 1;
 var polymosttext = 0; //static GLuint 
 var glrendmode = REND_POLYMOST;
 
@@ -206,7 +228,7 @@ var r_downsizevar = -1;      //int32_t
 var fogresult = 0.0, fogresult2 = 0.0, fogcol = new Float32Array(4), fogtable = new Float32Array(4*MAXPALOOKUPS); //float 
 //#endif
 //
-//char ptempbuf[MAXWALLSB<<1];
+var ptempbuf = new Int8Array(MAXWALLSB<<1);
 //
 //// polymost ART sky control
 //int32_t r_parallaxskyclamping = 1;
@@ -612,100 +634,103 @@ function polymost_glreset(): void
 //    bglFogf(GL_FOG_START, FULLVIS_BEGIN);
 //    bglFogf(GL_FOG_END, FULLVIS_END);
 //}
-//////////////////////
-//
-//
-//static float get_projhack_ratio(void)
-//{
-//    // Legacy widescreen
-//    if (glwidescreen && !r_usenewaspect)
-//        return 1.2f;
-//
-//    if (glprojectionhacks == 1)
-//    {
-//        double mul = (gshang*gshang);
-//        return 1.05f + mul*mul*mul*mul;
-//    }
-//
-//    if (glprojectionhacks == 2)
-//    {
-//        float abs_shang = fabs(gshang);
-//        if (abs_shang > 0.7f)
-//            return 1.05f + 4.f*(abs_shang-0.7f);
-//    }
-//
-//    // No projection hacks (legacy or new-aspect)
-//    return 1.0f;
-//}
-//
-//static void resizeglcheck(void)
-//{
-//    float m[4][4];
-//
-//    if (glredbluemode < lastglredbluemode)
-//    {
-//        glox1 = -1;
-//        bglColorMask(1,1,1,1);
-//    }
-//    else if (glredbluemode != lastglredbluemode)
-//    {
-//        redblueclearcnt = 0;
-//    }
-//    lastglredbluemode = glredbluemode;
-//
-//    //FUK
-//    if (lastglpolygonmode != glpolygonmode)
-//    {
-//        lastglpolygonmode = glpolygonmode;
-//        switch (glpolygonmode)
-//        {
-//        default:
-//        case 0:
-//            bglPolygonMode(GL_FRONT_AND_BACK,GL_FILL); break;
-//        case 1:
-//            bglPolygonMode(GL_FRONT_AND_BACK,GL_LINE); break;
-//        case 2:
-//            bglPolygonMode(GL_FRONT_AND_BACK,GL_POINT); break;
-//        }
-//    }
-//    if (glpolygonmode) //FUK
-//    {
-//        bglClearColor(1.0,1.0,1.0,0.0);
-//        bglClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-//        bglDisable(GL_TEXTURE_2D);
-//    }
-//
-//    if ((glox1 != windowx1) || (gloy1 != windowy1) || (glox2 != windowx2) || (gloy2 != windowy2))
-//    {
-//        const int32_t ourxdimen = (windowx2-windowx1+1);
-//        const float ratio = get_projhack_ratio();
-//        const int32_t fovcorrect = (ratio==0) ? 0 : (int32_t)(ourxdimen*ratio - ourxdimen);
-//
-//        glox1 = (float)windowx1; gloy1 = (float)windowy1;
-//        glox2 = (float)windowx2; gloy2 = (float)windowy2;
-//
-//        bglViewport(windowx1-(fovcorrect/2), yres-(windowy2+1),
-//                    ourxdimen+fovcorrect, windowy2-windowy1+1);
-//
-//        bglMatrixMode(GL_PROJECTION);
-//        memset(m,0,sizeof(m));
-//        m[0][0] = (float)ydimen / ratio; m[0][2] = 1.0;
-//        m[1][1] = (float)xdimen; m[1][2] = 1.0;
-//        m[2][2] = 1.0; m[2][3] = (float)ydimen / ratio;
-//        m[3][2] =-1.0;
-//        bglLoadMatrixf(&m[0][0]);
-//
-//        bglMatrixMode(GL_MODELVIEW);
-//        bglLoadIdentity();
-//
+////////////////////
+
+
+function /*static float */get_projhack_ratio(): number
+{
+    // Legacy widescreen
+    if (glwidescreen && !r_usenewaspect)
+        return 1.2;
+
+    if (glprojectionhacks == 1)
+    {
+        var /*double */mul = (gshang*gshang);
+        return 1.05 + mul*mul*mul*mul;
+    }
+
+    if (glprojectionhacks == 2)
+    {
+        var /*float */abs_shang = fabs(gshang);
+        if (abs_shang > 0.7)
+            return 1.05 + 4.0*(abs_shang-0.7);
+    }
+
+    // No projection hacks (legacy or new-aspect)
+    return 1.0;
+}
+
+function resizeglcheck(): void
+{
+    var m = multiDimArray<Float32Array>(Float32Array, 4, 4);
+
+    if (glredbluemode < lastglredbluemode)
+    {
+        glox1 = -1;
+        bglColorMask(1,1,1,1);
+    }
+    else if (glredbluemode != lastglredbluemode)
+    {
+        redblueclearcnt = 0;
+    }
+    lastglredbluemode = glredbluemode;
+
+    //FUK
+    if (lastglpolygonmode != glpolygonmode)
+    {
+        todoThrow();
+        //lastglpolygonmode = glpolygonmode;
+        //switch (glpolygonmode)
+        //{
+        //default:
+        //case 0:
+        //    bglPolygonMode(GL_FRONT_AND_BACK,GL_FILL); break;
+        //case 1:
+        //    bglPolygonMode(GL_FRONT_AND_BACK,GL_LINE); break;
+        //case 2:
+        //    bglPolygonMode(GL_FRONT_AND_BACK,GL_POINT); break;
+        //}
+    }
+    if (glpolygonmode) //FUK
+    {
+        bglClearColor(1.0,1.0,1.0,0.0);
+        bglClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+        bglDisable(GL_TEXTURE_2D);
+    }
+
+    if ((glox1 != windowx1) || (gloy1 != windowy1) || (glox2 != windowx2) || (gloy2 != windowy2))
+    {
+        var /*const int32_t */ourxdimen = (windowx2-windowx1+1);
+        var /*const float */ratio = get_projhack_ratio();
+        var /*const int32_t */fovcorrect = (ratio==0) ? 0 : int32(ourxdimen*ratio - ourxdimen);
+
+        glox1 =  /*(float)*/windowx1; gloy1 =  /*(float)*/windowy1;
+        glox2 =  /*(float)*/windowx2; gloy2 =  /*(float)*/windowy2;
+
+        bglViewport(windowx1-(fovcorrect/2), yres-(windowy2+1),
+                    ourxdimen+fovcorrect, windowy2-windowy1+1);
+
+        bglMatrixMode(GL_PROJECTION);
+        for (var i = 0; i < m.length; i++) {
+            memset(new P(m[i]),0,sizeof(m[i]));
+        }
+        m[0][0] =  /*(float)*/ydimen / ratio; m[0][2] = 1.0;
+        m[1][1] =  /*(float)*/xdimen; m[1][2] = 1.0;
+        m[2][2] = 1.0; m[2][3] =  /*(float)*/ydimen / ratio;
+        m[3][2] =-1.0;
+        bglLoadMatrixf(m /*&m[0][0]*/);
+
+        bglMatrixMode(GL_MODELVIEW);
+        bglLoadIdentity();
+
 //#ifdef USE_OPENGL
-//        if (!nofog) bglEnable(GL_FOG);
+        if (!nofog) bglEnable(GL_FOG);
 //#endif
-//
-//        //bglEnable(GL_TEXTURE_2D);
-//    }
-//}
-//
+
+        //bglEnable(GL_TEXTURE_2D);
+    }
+}
+
 // NOTE: must not use DAPICNUM for indexing into tile arrays.
 function fixtransparency(dapicnum: number, dapic: coltype[], daxsiz: number, daysiz: number,
                             daxsiz2: number, daysiz2: number, dameth: number): void
@@ -1799,97 +1824,97 @@ function drawpoly(dpx: Float64Array, dpy: Float64Array, n:number, method: number
 }
 
 
-//static void vsp_finalize_init(vsptyp *vsp, int32_t vcnt)
-//{
-//    int32_t i;
-//
-//    for (i=0; i<vcnt; i++)
-//    {
-//        vsp[i].cy[1] = vsp[i+1].cy[0]; vsp[i].ctag = i;
-//        vsp[i].fy[1] = vsp[i+1].fy[0]; vsp[i].ftag = i;
-//        vsp[i].n = i+1; vsp[i].p = i-1;
-////        vsp[i].tag = -1;
-//    }
-//    vsp[vcnt-1].n = 0; vsp[0].p = vcnt-1;
-//
-//    //VSPMAX-1 is dummy empty node
-//    for (i=vcnt; i<VSPMAX; i++) { vsp[i].n = i+1; vsp[i].p = i-1; }
-//    vsp[VSPMAX-1].n = vcnt; vsp[vcnt].p = VSPMAX-1;
-//}
-//
-///*Init viewport boundary (must be 4 point convex loop):
-////      (px[0],py[0]).----.(px[1],py[1])
-////                  /      \
-////                /          \
-//// (px[3],py[3]).--------------.(px[2],py[2])
-//*/
-//
-//void initmosts(double *px, double *py, int32_t n)
-//{
-//    int32_t i, j, k, imin, vcnt;
-//
-//    vcnt = 1; //0 is dummy solid node
-//
-//    if (n < 3) return;
-//    imin = (px[1] < px[0]);
-//    for (i=n-1; i>=2; i--) if (px[i] < px[imin]) imin = i;
-//
-//
-//    vsp[vcnt].x = px[imin];
-//    vsp[vcnt].cy[0] = vsp[vcnt].fy[0] = py[imin];
-//    vcnt++;
-//    i = imin+1; if (i >= n) i = 0;
-//    j = imin-1; if (j < 0) j = n-1;
-//    do
-//    {
-//        if (px[i] < px[j])
-//        {
-//            if ((vcnt > 1) && (px[i] <= vsp[vcnt-1].x)) vcnt--;
-//            vsp[vcnt].x = px[i];
-//            vsp[vcnt].cy[0] = py[i];
-//            k = j+1; if (k >= n) k = 0;
-//            //(px[k],py[k])
-//            //(px[i],?)
-//            //(px[j],py[j])
-//            vsp[vcnt].fy[0] = (px[i]-px[k])*(py[j]-py[k])/(px[j]-px[k]) + py[k];
-//            vcnt++;
-//            i++; if (i >= n) i = 0;
-//        }
-//        else if (px[j] < px[i])
-//        {
-//            if ((vcnt > 1) && (px[j] <= vsp[vcnt-1].x)) vcnt--;
-//            vsp[vcnt].x = px[j];
-//            vsp[vcnt].fy[0] = py[j];
-//            k = i-1; if (k < 0) k = n-1;
-//            //(px[k],py[k])
-//            //(px[j],?)
-//            //(px[i],py[i])
-//            vsp[vcnt].cy[0] = (px[j]-px[k])*(py[i]-py[k])/(px[i]-px[k]) + py[k];
-//            vcnt++;
-//            j--; if (j < 0) j = n-1;
-//        }
-//        else
-//        {
-//            if ((vcnt > 1) && (px[i] <= vsp[vcnt-1].x)) vcnt--;
-//            vsp[vcnt].x = px[i];
-//            vsp[vcnt].cy[0] = py[i];
-//            vsp[vcnt].fy[0] = py[j];
-//            vcnt++;
-//            i++; if (i >= n) i = 0; if (i == j) break;
-//            j--; if (j < 0) j = n-1;
-//        }
-//    }
-//    while (i != j);
-//    if (px[i] > vsp[vcnt-1].x)
-//    {
-//        vsp[vcnt].x = px[i];
-//        vsp[vcnt].cy[0] = vsp[vcnt].fy[0] = py[i];
-//        vcnt++;
-//    }
-//
-//    vsp_finalize_init(vsp, vcnt);
-//    gtag = vcnt;
-//}
+function vsp_finalize_init(/*vsptyp */vsp: vsptyp, /*int32_t */vcnt: number): void 
+{
+    var /*int32_t */i: number;
+
+    for (i=0; i<vcnt; i++)
+    {
+        vsp[i].cy[1] = vsp[i+1].cy[0]; vsp[i].ctag = i;
+        vsp[i].fy[1] = vsp[i+1].fy[0]; vsp[i].ftag = i;
+        vsp[i].n = i+1; vsp[i].p = i-1;
+//        vsp[i].tag = -1;
+    }
+    vsp[vcnt-1].n = 0; vsp[0].p = vcnt-1;
+
+    //VSPMAX-1 is dummy empty node
+    for (i=vcnt; i<VSPMAX; i++) { vsp[i].n = i+1; vsp[i].p = i-1; }
+    vsp[VSPMAX-1].n = vcnt; vsp[vcnt].p = VSPMAX-1;
+}
+
+/*Init viewport boundary (must be 4 point convex loop):
+//      (px[0],py[0]).----.(px[1],py[1])
+//                  /      \
+//                /          \
+// (px[3],py[3]).--------------.(px[2],py[2])
+*/
+
+function initmosts(/*double **/ px: number, /*double **/ py: number, /*int32_t */n: number): void
+{
+    var /*int32_t */i: number, j: number, k: number, imin: number, vcnt: number;
+
+    vcnt = 1; //0 is dummy solid node
+
+    if (n < 3) return;
+    imin = (px[1] < px[0])?1:0;
+    for (i=n-1; i>=2; i--) if (px[i] < px[imin]) imin = i;
+
+
+    vsp[vcnt].x = px[imin];
+    vsp[vcnt].cy[0] = vsp[vcnt].fy[0] = py[imin];
+    vcnt++;
+    i = imin+1; if (i >= n) i = 0;
+    j = imin-1; if (j < 0) j = n-1;
+    do
+    {
+        if (px[i] < px[j])
+        {
+            if ((vcnt > 1) && (px[i] <= vsp[vcnt-1].x)) vcnt--;
+            vsp[vcnt].x = px[i];
+            vsp[vcnt].cy[0] = py[i];
+            k = j+1; if (k >= n) k = 0;
+            //(px[k],py[k])
+            //(px[i],?)
+            //(px[j],py[j])
+            vsp[vcnt].fy[0] = (px[i]-px[k])*(py[j]-py[k])/(px[j]-px[k]) + py[k];
+            vcnt++;
+            i++; if (i >= n) i = 0;
+        }
+        else if (px[j] < px[i])
+        {
+            if ((vcnt > 1) && (px[j] <= vsp[vcnt-1].x)) vcnt--;
+            vsp[vcnt].x = px[j];
+            vsp[vcnt].fy[0] = py[j];
+            k = i-1; if (k < 0) k = n-1;
+            //(px[k],py[k])
+            //(px[j],?)
+            //(px[i],py[i])
+            vsp[vcnt].cy[0] = (px[j]-px[k])*(py[i]-py[k])/(px[i]-px[k]) + py[k];
+            vcnt++;
+            j--; if (j < 0) j = n-1;
+        }
+        else
+        {
+            if ((vcnt > 1) && (px[i] <= vsp[vcnt-1].x)) vcnt--;
+            vsp[vcnt].x = px[i];
+            vsp[vcnt].cy[0] = py[i];
+            vsp[vcnt].fy[0] = py[j];
+            vcnt++;
+            i++; if (i >= n) i = 0; if (i == j) break;
+            j--; if (j < 0) j = n-1;
+        }
+    }
+    while (i != j);
+    if (px[i] > vsp[vcnt-1].x)
+    {
+        vsp[vcnt].x = px[i];
+        vsp[vcnt].cy[0] = vsp[vcnt].fy[0] = py[i];
+        vcnt++;
+    }
+
+    vsp_finalize_init(vsp[0], vcnt);
+    gtag = vcnt;
+}
 //
 //static inline void vsdel(vsptyp *vsp, int32_t i)
 //{
@@ -2316,8 +2341,8 @@ function drawpoly(dpx: Float64Array, dpy: Float64Array, n:number, method: number
 //}
 //
 //
-//static void polymost_drawalls(int32_t bunch)
-//{
+function polymost_drawalls(/*int32_t */bunch: number): void
+{todoThrow()
 //    sectortype *sec, *nextsec;
 //    walltype *wal, *wal2, *nwal;
 //    double ox, oy, oz, dd[3], vv[3];
@@ -3099,25 +3124,25 @@ function drawpoly(dpx: Float64Array, dpy: Float64Array, n:number, method: number
 //            if ((!(gotsector[nextsectnum>>3]&pow2char[nextsectnum&7])) && (testvisiblemost(x0,x1)))
 //                polymost_scansector(nextsectnum);
 //    }
-//}
-//
-//static int32_t polymost_bunchfront(int32_t b1, int32_t b2)
-//{
-//    double x1b1, x1b2, x2b1, x2b2;
-//    int32_t b1f, b2f, i;
-//
-//    b1f = bunchfirst[b1]; x1b1 = dxb1[b1f]; x2b2 = dxb2[bunchlast[b2]]; if (x1b1 >= x2b2) return(-1);
-//    b2f = bunchfirst[b2]; x1b2 = dxb1[b2f]; x2b1 = dxb2[bunchlast[b1]]; if (x1b2 >= x2b1) return(-1);
-//
-//    if (x1b1 >= x1b2)
-//    {
-//        for (i=b2f; dxb2[i]<=x1b1; i=p2[i]);
-//        return(wallfront(b1f,i));
-//    }
-//    for (i=b1f; dxb2[i]<=x1b2; i=p2[i]);
-//    return(wallfront(i,b2f));
-//}
-//
+}
+
+function /*static int32_t */polymost_bunchfront(/*int32_t */b1: number, /*int32_t */b2: number)
+{
+    var /*double */x1b1: number, x1b2: number, x2b1: number, x2b2: number;
+    var /*int32_t */b1f: number, b2f: number, i: number;
+
+    b1f = bunchfirst[b1]; x1b1 = dxb1[b1f]; x2b2 = dxb2[bunchlast[b2]]; if (x1b1 >= x2b2) return(-1);
+    b2f = bunchfirst[b2]; x1b2 = dxb1[b2f]; x2b1 = dxb2[bunchlast[b1]]; if (x1b2 >= x2b1) return(-1);
+
+    if (x1b1 >= x1b2)
+    {
+        for (i=b2f; dxb2[i]<=x1b1; i=p2[i]);
+        return(wallfront(b1f,i));
+    }
+    for (i=b1f; dxb2[i]<=x1b2; i=p2[i]);
+    return(wallfront(i,b2f));
+}
+
 //void polymost_scansector(int32_t sectnum)
 //{
 //    double d, xp1, yp1, xp2, yp2;
@@ -3223,7 +3248,7 @@ function drawpoly(dpx: Float64Array, dpy: Float64Array, n:number, method: number
 function polymost_drawrooms(): void 
 {
     var /*int32_t */i: number, j: number, n: number, n2: number, closest: number;
-    var /*double */ox: number, oy: number, oz: number, ox2: number, oy2: number, oz2: number, r, px = new Float64Array(6), py = new Float64Array(6), pz = new Float64Array(6), px2 = new Float64Array(6), py2 = new Float64Array(6), pz2 = new Float64Array(6), sx = new Float64Array(6), sy = new Float64Array(6);
+    var /*double */ox: number, oy: number, oz: number, ox2: number, oy2: number, oz2: number, r: number, px = new Float64Array(6), py = new Float64Array(6), pz = new Float64Array(6), px2 = new Float64Array(6), py2 = new Float64Array(6), pz2 = new Float64Array(6), sx = new Float64Array(6), sy = new Float64Array(6);
 
     if (getrendermode() == REND_CLASSIC) return;
 
@@ -3252,7 +3277,7 @@ function polymost_drawrooms(): void
         //Enable this for OpenGL red-blue glasses mode :)
         if (glredbluemode)
         {
-            static int32_t grbfcnt = 0; grbfcnt++;
+            var /*static int32_t */grbfcnt = 0; grbfcnt++;
             if (redblueclearcnt < numpages) { redblueclearcnt++; bglColorMask(1,1,1,1); bglClear(GL_COLOR_BUFFER_BIT); }
             if (grbfcnt&1)
             {
@@ -3340,141 +3365,145 @@ function polymost_drawrooms(): void
         sx[i] = px2[i]*r + ghalfx;
         sy[i] = py2[i]*r + ghoriz;
     }
-    initmosts(sx,sy,n2);
+    initmosts(sx[0],sy[0],n2);
 
     if (searchit == 2)
-    {
-        var /*int32_t */vx: number, vy: number, vz: number;
-        var /*int32_t */cz: number, fz: number;
-        var hit = new hitdata_t();
-        var vect = new vec3_t();;
+    {todoThrow();
+        //var /*int32_t */vx: number, vy: number, vz: number;
+        //var /*int32_t */cz: number, fz: number;
+        //var hit = new hitdata_t();
+        //var vect = new vec3_t();;
 
-        var /*const float */ratio = get_projhack_ratio();
+        //var /*const float */ratio = get_projhack_ratio();
 
-        ox2 = (searchx-ghalfx)/ratio;
-        oy2 = (searchy-ghoriz)/ratio;  // ghoriz is (ydimen>>1) here
-        oz2 = ghalfx;
+        //ox2 = (searchx-ghalfx)/ratio;
+        //oy2 = (searchy-ghoriz)/ratio;  // ghoriz is (ydimen>>1) here
+        //oz2 = ghalfx;
 
-        //Tilt rotation
-        ox = ox2*gctang + oy2*gstang;
-        oy = oy2*gctang - ox2*gstang;
-        oz = oz2;
+        ////Tilt rotation
+        //ox = ox2*gctang + oy2*gstang;
+        //oy = oy2*gctang - ox2*gstang;
+        //oz = oz2;
 
-        //Up/down rotation
-        ox2 = oz*gchang - oy*gshang;
-        oy2 = ox;
-        oz2 = oy*gchang + oz*gshang;
+        ////Up/down rotation
+        //ox2 = oz*gchang - oy*gshang;
+        //oy2 = ox;
+        //oz2 = oy*gchang + oz*gshang;
 
-        //Standard Left/right rotation
-        vx = (int32_t)(ox2*((float)cosglobalang) - oy2*((float)singlobalang));
-        vy = (int32_t)(ox2*((float)singlobalang) + oy2*((float)cosglobalang));
-        vz = (int32_t)(oz2*16384.0);
+        ////Standard Left/right rotation
+        //vx = int32(ox2*( /*(float)*/cosglobalang) - oy2*( /*(float)*/singlobalang));
+        //vy = int32(ox2*( /*(float)*/singlobalang) + oy2*( /*(float)*/cosglobalang));
+        //vz = int32(oz2*16384.0);
 
-        vect.x = globalposx;
-        vect.y = globalposy;
-        vect.z = globalposz;
+        //vect.x = globalposx;
+        //vect.y = globalposy;
+        //vect.z = globalposz;
 
-        hitallsprites = 1;
-        hitscan((const vec3_t *)&vect,globalcursectnum, //Start position
-                vx>>10,vy>>10,vz>>6,&hit,0xffff0030);
+        //hitallsprites = 1;
+        //hitscan((const vec3_t *)&vect,globalcursectnum, //Start position
+        //        vx>>10,vy>>10,vz>>6,&hit,0xffff0030);
 
-        if (hit.sect != -1) // if hitsect is -1, hitscan overflowed somewhere
-        {
-            getzsofslope(hit.sect,hit.pos.x,hit.pos.y,&cz,&fz);
-            hitallsprites = 0;
+        //if (hit.sect != -1) // if hitsect is -1, hitscan overflowed somewhere
+        //{
+        //    var $cz = new R(cz);
+        //    var $fz = new R(fz);
+        //    getzsofslope(hit.sect,hit.pos.x,hit.pos.y,$cz,$fz);
+        //    cz = $cz.$;
+        //    fz = $fz.$;
+        //    hitallsprites = 0;
 
-            searchsector = hit.sect;
-            if (hit.pos.z<cz) searchstat = 1;
-            else if (hit.pos.z>fz) searchstat = 2;
-            else if (hit.wall >= 0)
-            {
-                searchbottomwall = searchwall = hit.wall; searchstat = 0;
-                if (wall[hit.wall].nextwall >= 0)
-                {
-                    int32_t cz, fz;
-                    getzsofslope(wall[hit.wall].nextsector,hit.pos.x,hit.pos.y,&cz,&fz);
-                    if (hit.pos.z > fz)
-                    {
-                        searchisbottom = 1;
-                        if (wall[hit.wall].cstat&2) //'2' bottoms of walls
-                            searchbottomwall = wall[hit.wall].nextwall;
-                    }
-                    else
-                    {
-                        searchisbottom = 0;
-                        if ((hit.pos.z > cz) && (wall[hit.wall].cstat&(16+32))) //masking or 1-way
-                            searchstat = 4;
-                    }
-                }
-            }
-            else if (hit.sprite >= 0) { searchwall = hit.sprite; searchstat = 3; }
-            else
-            {
-                var /*int32_t */cz: number, fz: number;
-                getzsofslope(hit.sect,hit.pos.x,hit.pos.y,&cz,&fz);
-                if ((hit.pos.z<<1) < cz+fz) searchstat = 1; else searchstat = 2;
-                //if (vz < 0) searchstat = 1; else searchstat = 2; //Won't work for slopes :/
-            }
+        //    searchsector = hit.sect;
+        //    if (hit.pos.z<cz) searchstat = 1;
+        //    else if (hit.pos.z>fz) searchstat = 2;
+        //    else if (hit.wall >= 0)
+        //    {
+        //        searchbottomwall = searchwall = hit.wall; searchstat = 0;
+        //        if (wall[hit.wall].nextwall >= 0)
+        //        {
+        //            var /*int32_t */cz: number, fz: number;
+        //            getzsofslope(wall[hit.wall].nextsector,hit.pos.x,hit.pos.y,&cz,&fz);
+        //            if (hit.pos.z > fz)
+        //            {
+        //                searchisbottom = 1;
+        //                if (wall[hit.wall].cstat&2) //'2' bottoms of walls
+        //                    searchbottomwall = wall[hit.wall].nextwall;
+        //            }
+        //            else
+        //            {
+        //                searchisbottom = 0;
+        //                if ((hit.pos.z > cz) && (wall[hit.wall].cstat&(16+32))) //masking or 1-way
+        //                    searchstat = 4;
+        //            }
+        //        }
+        //    }
+        //    else if (hit.sprite >= 0) { searchwall = hit.sprite; searchstat = 3; }
+        //    else
+        //    {
+        //        var /*int32_t */cz: number, fz: number;
+        //        getzsofslope(hit.sect,hit.pos.x,hit.pos.y,&cz,&fz);
+        //        if ((hit.pos.z<<1) < cz+fz) searchstat = 1; else searchstat = 2;
+        //        //if (vz < 0) searchstat = 1; else searchstat = 2; //Won't work for slopes :/
+        //    }
 
-            if (preview_mouseaim && spritesortcnt < MAXSPRITESONSCREEN)
-            {
-                spritetype *tsp = &tsprite[spritesortcnt];
-                double dadist, x,y,z;
-                Bmemcpy(tsp, &hit.pos, sizeof(vec3_t));
-                x = tsp.x-globalposx; y=tsp.y-globalposy; z=(tsp.z-globalposz)/16.0;
-                dadist = sqrt(x*x + y*y + z*z);
-                tsp.sectnum = hit.sect;
-                tsp.picnum = 2523;  // CROSSHAIR
-                tsp.cstat = 128;
-                tsp.owner = MAXSPRITES-1;
-                tsp.xrepeat = tsp.yrepeat = min(max(1, (int32_t)(dadist*48.0/3200.0)), 255);
-                sprite[tsp.owner].xoffset = sprite[tsp.owner].yoffset = 0;
-                tspriteptr[spritesortcnt++] = tsp;
-            }
+        //    if (preview_mouseaim && spritesortcnt < MAXSPRITESONSCREEN)
+        //    {
+        //        spritetype *tsp = &tsprite[spritesortcnt];
+        //        double dadist, x,y,z;
+        //        Bmemcpy(tsp, &hit.pos, sizeof(vec3_t));
+        //        x = tsp.x-globalposx; y=tsp.y-globalposy; z=(tsp.z-globalposz)/16.0;
+        //        dadist = sqrt(x*x + y*y + z*z);
+        //        tsp.sectnum = hit.sect;
+        //        tsp.picnum = 2523;  // CROSSHAIR
+        //        tsp.cstat = 128;
+        //        tsp.owner = MAXSPRITES-1;
+        //        tsp.xrepeat = tsp.yrepeat = min(max(1, (int32_t)(dadist*48.0/3200.0)), 255);
+        //        sprite[tsp.owner].xoffset = sprite[tsp.owner].yoffset = 0;
+        //        tspriteptr[spritesortcnt++] = tsp;
+        //    }
 
-            if ((searchstat==1 || searchstat==2) && searchsector>=0)
-            {
-                int32_t scrv[2] = {(vx>>12), (vy>>12)};
-                int32_t scrv_r[2] = {scrv[1], -scrv[0]};
-                walltype *wal = &wall[sector[searchsector].wallptr];
-                uint64_t wdistsq, bestwdistsq=0x7fffffff;
-                int32_t k, bestk=-1;
+        //    if ((searchstat==1 || searchstat==2) && searchsector>=0)
+        //    {
+        //        int32_t scrv[2] = {(vx>>12), (vy>>12)};
+        //        int32_t scrv_r[2] = {scrv[1], -scrv[0]};
+        //        walltype *wal = &wall[sector[searchsector].wallptr];
+        //        uint64_t wdistsq, bestwdistsq=0x7fffffff;
+        //        int32_t k, bestk=-1;
 
-                for (k=0; k<sector[searchsector].wallnum; k++)
-                {
-                    int32_t w1[2] = {wal[k].x, wal[k].y};
-                    int32_t w2[2] = {wall[wal[k].point2].x, wall[wal[k].point2].y};
-                    int32_t w21[2] = {w1[0]-w2[0], w1[1]-w2[1]};
-                    int32_t pw1[2] = {w1[0]-hit.pos.x, w1[1]-hit.pos.y};
-                    int32_t pw2[2] = {w2[0]-hit.pos.x, w2[1]-hit.pos.y};
-                    float w1d = (float)(scrv_r[0]*pw1[0] + scrv_r[1]*pw1[1]);
-                    float w2d = (float)(scrv_r[0]*pw2[0] + scrv_r[1]*pw2[1]);
-                    int32_t ptonline[2], scrp[2];
-                    int64_t t1, t2;
+        //        for (k=0; k<sector[searchsector].wallnum; k++)
+        //        {
+        //            int32_t w1[2] = {wal[k].x, wal[k].y};
+        //            int32_t w2[2] = {wall[wal[k].point2].x, wall[wal[k].point2].y};
+        //            int32_t w21[2] = {w1[0]-w2[0], w1[1]-w2[1]};
+        //            int32_t pw1[2] = {w1[0]-hit.pos.x, w1[1]-hit.pos.y};
+        //            int32_t pw2[2] = {w2[0]-hit.pos.x, w2[1]-hit.pos.y};
+        //            float w1d = (float)(scrv_r[0]*pw1[0] + scrv_r[1]*pw1[1]);
+        //            float w2d = (float)(scrv_r[0]*pw2[0] + scrv_r[1]*pw2[1]);
+        //            int32_t ptonline[2], scrp[2];
+        //            int64_t t1, t2;
 
-                    w2d = -w2d;
-                    if ((w1d==0 && w2d==0) || (w1d<0 || w2d<0))
-                        continue;
-                    ptonline[0] = (int32_t)(w2[0]+(w2d/(w1d+w2d))*w21[0]);
-                    ptonline[1] = (int32_t)(w2[1]+(w2d/(w1d+w2d))*w21[1]);
-                    scrp[0] = ptonline[0]-vect.x;
-                    scrp[1] = ptonline[1]-vect.y;
-                    if (scrv[0]*scrp[0] + scrv[1]*scrp[1] <= 0)
-                        continue;
-                    t1=scrp[0]; t2=scrp[1];
-                    wdistsq = t1*t1 + t2*t2;
-                    if (wdistsq < bestwdistsq)
-                    {
-                        bestk = k;
-                        bestwdistsq = wdistsq;
-                    }
-                }
+        //            w2d = -w2d;
+        //            if ((w1d==0 && w2d==0) || (w1d<0 || w2d<0))
+        //                continue;
+        //            ptonline[0] = (int32_t)(w2[0]+(w2d/(w1d+w2d))*w21[0]);
+        //            ptonline[1] = (int32_t)(w2[1]+(w2d/(w1d+w2d))*w21[1]);
+        //            scrp[0] = ptonline[0]-vect.x;
+        //            scrp[1] = ptonline[1]-vect.y;
+        //            if (scrv[0]*scrp[0] + scrv[1]*scrp[1] <= 0)
+        //                continue;
+        //            t1=scrp[0]; t2=scrp[1];
+        //            wdistsq = t1*t1 + t2*t2;
+        //            if (wdistsq < bestwdistsq)
+        //            {
+        //                bestk = k;
+        //                bestwdistsq = wdistsq;
+        //            }
+        //        }
 
-                if (bestk >= 0)
-                    searchwall = sector[searchsector].wallptr + bestk;
-            }
-        }
-        searchit = 0;
+        //        if (bestk >= 0)
+        //            searchwall = sector[searchsector].wallptr + bestk;
+        //    }
+        //}
+        //searchit = 0;
     }
 
     numscans = numbunches = 0;
@@ -3488,13 +3517,13 @@ function polymost_drawrooms(): void
     else
     {
         i = globalcursectnum;
-        var globalcursectnum = new R(globalcursectnum);
+        var $globalcursectnum = new R(globalcursectnum);
         updatesector(globalposx,globalposy,$globalcursectnum);
         globalcursectnum = $globalcursectnum.$;
         if (globalcursectnum < 0) globalcursectnum = i;
     }
 
-    polymost_scansector(globalcursectnum);
+    todoThrow("polymost_scansector(globalcursectnum);");
 
     if (inpreparemirror)
     {
@@ -3503,11 +3532,11 @@ function polymost_drawrooms(): void
 
         // see engine.c: INPREPAREMIRROR_NO_BUNCHES
         if (numbunches > 0)
-        {
-            polymost_drawalls(0);
-            numbunches--;
-            bunchfirst[0] = bunchfirst[numbunches];
-            bunchlast[0] = bunchlast[numbunches];
+        {todoThrow();
+            //polymost_drawalls(0);
+            //numbunches--;
+            //bunchfirst[0] = bunchfirst[numbunches];
+            //bunchlast[0] = bunchlast[numbunches];
         }
     }
     else
@@ -3515,7 +3544,7 @@ function polymost_drawrooms(): void
 
     while (numbunches > 0)
     {
-        memset(ptempbuf,0,numbunches+3); ptempbuf[0] = 1;
+        memset(new P(ptempbuf),0,numbunches+3); ptempbuf[0] = 1;
 
         closest = 0;              //Almost works, but not quite :(
         for (i=1; i<numbunches; i++)

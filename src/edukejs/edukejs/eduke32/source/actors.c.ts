@@ -138,7 +138,7 @@ function G_SetInterpolation(/*int32_t * */posptr: R<number>): number
 
 function G_DoInterpolations(/*int32_t*/ smoothratio: number): void       //Stick at beginning of drawscreen
 {
-    var /*int32_t */i=g_numInterpolations-1, j = 0, odelta, ndelta = 0;
+    var /*int32_t */i=g_numInterpolations-1, j = 0, odelta: number, ndelta = 0;
 
     if (g_interpolationLock++)
     {

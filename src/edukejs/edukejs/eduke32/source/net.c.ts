@@ -1859,7 +1859,7 @@ function Net_IsRelevantStat(/*int32_t */stat: number): number
 function Net_NotifyNewGame(): void
 {
     var /*int32_t*/ i: number;
-    var /*int32_t*/ statIndex;
+    var /*int32_t*/ statIndex: number;
     var /*int32_t*/ numSprites = 0;
     var /*int32_t*/ numSpritesToNetAlloc = 0;
 

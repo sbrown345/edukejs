@@ -173,7 +173,7 @@ var indrawroomsandmasks = 0;//int32_t
 
 var oxdimen = -1, oviewingrange = -1, oxyaspect = -1;
 
-//// r_usenewaspect is the cvar, newaspect_enable to trigger the new behaviour in the code
+// r_usenewaspect is the cvar, newaspect_enable to trigger the new behaviour in the code
 var r_usenewaspect = 1, newaspect_enable=0;    //int32_t 
 var  r_screenxy = 0;                           //uint32_t
 
@@ -285,7 +285,7 @@ var whitecol: number;//int32
 //static void draw_rainbow_background(void);
 
 var editstatus = 0;//int16_t 
-var /*int32_t */global100horiz;  // (-100..300)-scale horiz (the one passed to drawrooms)
+var /*int32_t */global100horiz: number;  // (-100..300)-scale horiz (the one passed to drawrooms)
 
 
 //////////// YAX //////////
@@ -2346,7 +2346,7 @@ function msqrtasm(/*uint32_t */ c: number): number
 //static int32_t rx2[MAXWALLSB], ry2[MAXWALLSB];
 //int16_t p2[MAXWALLSB], thesector[MAXWALLSB];
 
-//int16_t bunchfirst[MAXWALLSB], bunchlast[MAXWALLSB];
+var bunchfirst = new Int16Array(MAXWALLSB), bunchlast = new Int16Array(MAXWALLSB);
 
 //static int32_t smostcnt;
 //static int16_t smost[MAXYSAVES];
@@ -2465,9 +2465,9 @@ class permfifotype
 var permfifo: permfifotype[] = newStructArray(permfifotype, MAXPERMS); 
 var permhead = 0, permtail = 0; //static int32_t 
 
-//int16_t numscans, numbunches;
-//static int16_t numhits;
-//int16_t capturecount = 0;
+var /*int16_t */numscans = 0, numbunches = 0;
+var /*int16_t */numhits = 0;
+var /*int16_t */capturecount = 0;
 
 //char vgapal16[4*256] =
 //{
@@ -2477,7 +2477,7 @@ var permhead = 0, permtail = 0; //static int32_t
 //    63,63,63,00
 //};
 
-var searchit: number; //int16_t
+var searchit: number = 0; //int16_t
 var searchx = -1, searchy: number;                          //search input //int32_t 
 var searchsector: number, searchwall: number, searchstat: number;     //search output //int16_t
 
@@ -8913,7 +8913,7 @@ function /*int32_t */drawrooms(/*int32_t*/ daposx: number, /*int32_t*/ daposy: n
                /*int16_t */daang: number, /*int32_t */dahoriz: number, /*int16_t*/ dacursectnum: number): number
 {
     var /*int32_t */i: number, j: number, /*cz, fz,*/ closest: number;
-    var /*int16_t */ *shortptr1, *shortptr2;
+    var /*int16_t */ /***/ shortptr1: Int16Array, /***/shortptr2: Int16Array;
 
     var /*int32_t */didmirror = 0;
 
@@ -8974,8 +8974,8 @@ function /*int32_t */drawrooms(/*int32_t*/ daposx: number, /*int32_t*/ daposy: n
 //#endif
         )
     {
-        shortptr1 = /*(int16_t *)&*/startumost[windowx1];
-        shortptr2 = /*(int16_t *)&*/startdmost[windowx1];
+        shortptr1 = /*(int16_t *)&*/startumost.subarray(windowx1);
+        shortptr2 = /*(int16_t *)&*/startdmost.subarray(windowx1);
         i = xdimen-1;
         do
         {

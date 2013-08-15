@@ -69,7 +69,7 @@ var M32_FIXME_SECTORS = 2;
 //# define M32_FIXME_SECTORS 0
 //#endif
 
-//#define MAXWALLSB ((MAXWALLS>>2)+(MAXWALLS>>3))
+var MAXWALLSB = ((MAXWALLS>>2)+(MAXWALLS>>3));
 
 var MAXTILES = 30720;
 var MAXVOXELS = 4096;

@@ -34,7 +34,7 @@ var YAX_MAXDRAWS  = 8;
 
 //extern int16_t thesector[MAXWALLSB], thewall[MAXWALLSB];
 //extern int16_t bunchfirst[MAXWALLSB], bunchlast[MAXWALLSB];
-//extern int16_t maskwall[MAXWALLSB], maskwallcnt;
+var /*int16_t */maskwall = new Int16Array(MAXWALLSB), maskwallcnt: number;
 //extern spritetype *tspriteptr[MAXSPRITESONSCREEN + 1];
 //extern int32_t xdimen, xdimenrecip, halfxdimen, xdimenscale, xdimscale, ydimen;
 //extern intptr_t frameoffset;
@@ -64,7 +64,7 @@ var /*char */inpreparemirror: number = 0;
 //extern char picsiz[MAXTILES];
 //extern int16_t sectorborder[256], sectorbordercnt;
 //extern int32_t qsetmode;
-var /*int32_t */hitallsprites;
+var /*int32_t */hitallsprites: number;
 
 //extern int32_t xb1[MAXWALLSB];
 //extern int32_t rx1[MAXWALLSB], ry1[MAXWALLSB];
@@ -87,7 +87,7 @@ var FOGSCALE=0.0000768;
 
 //void set_globalang(int16_t ang);
 
-function DO_TILE_ANIM(Picnum: number, Fakevar):void {// do { 
+function DO_TILE_ANIM(Picnum: number, Fakevar: any):void {// do { 
     todoThrow("Picnum - inline this!!!!! Picnum is a value");
     // maybe try http://www.codeproject.com/Articles/3853/Wave-a-Standard-conformant-C-preprocessor-library
         if (picanm[Picnum].sf&PICANM_ANIMTYPE_MASK) Picnum += animateoffs(Picnum, Fakevar); 

@@ -40,6 +40,7 @@ gl.canvas.height = 768;
 
 var GL_TEXTURE0_ARB = gl.TEXTURE0;
 var GL_COLOR_BUFFER_BIT = gl.COLOR_BUFFER_BIT;
+var GL_DEPTH_BUFFER_BIT = gl.DEPTH_BUFFER_BIT;
 var GL_TRIANGLE_FAN = gl.TRIANGLE_FAN;
 var GL_TEXTURE_2D = gl.TEXTURE_2D;
 var GL_TEXTURE = gl.TEXTURE;
@@ -57,6 +58,12 @@ var GL_CLAMP: number = null; //off
 var GL_FOG = -99999; //todo!?
 var GL_UNSIGNED_BYTE = gl.UNSIGNED_BYTE;
 var GL_MAX_TEXTURE_SIZE = gl.MAX_TEXTURE_SIZE;
+var GL_ALWAYS = gl.ALWAYS;
+var GL_FRONT_AND_BACK = gl.FRONT_AND_BACK;
+var GL_LEQUAL = gl.LEQUAL;
+//var GL_FILL = gl.FILL;
+//var GL_LINE = gl.LINE;
+//var GL_POINT = gl.POINT;
 //#include "compat.h"
 //#include "glbuild.h"
 //#include "baselayer.h"
@@ -72,7 +79,7 @@ var GL_MAX_TEXTURE_SIZE = gl.MAX_TEXTURE_SIZE;
 
 var bglClearColor = gl.clearColor.bind(gl);//bglClearColorProcPtr;
 var bglClear = gl.clear.bind(gl);//bglClearProcPtr;
-//bglColorMaskProcPtr bglColorMask;
+var bglColorMask = gl.colorMask.bind(gl); //bglColorMaskProcPtr 
 //bglAlphaFuncProcPtr bglAlphaFunc;
 //bglBlendFuncProcPtr bglBlendFunc;
 //bglBlendEquationProcPtr bglBlendEquation;
@@ -95,10 +102,10 @@ var bglGetIntegerv = gl.getParameter.bind(gl); //bglGetIntegervProcPtr
 //bglScissorProcPtr bglScissor;
 //bglClipPlaneProcPtr bglClipPlane;
 
-//// Depth
-//bglDepthFuncProcPtr bglDepthFunc;
+// Depth
+var bglDepthFunc = gl.depthFunc.bind(gl); //bglDepthFuncProcPtr 
 //bglDepthMaskProcPtr bglDepthMask;
-//bglDepthRangeProcPtr bglDepthRange;
+var bglDepthRange = gl.depthRange.bind(gl); //bglDepthRangeProcPtr 
 
 // Matrix
 var bglMatrixMode = gl.matrixMode.bind(gl);//bglMatrixModeProcPtr ;
@@ -173,7 +180,7 @@ var bglTexCoord2d = gl.texCoord.bind(gl); //bglTexCoord2dProcPtr
 // Texture mapping
 //texture wrap stuff https://code.google.com/p/webglsamples/source/browse/color-adjust/color-adjust.html (linked from http://stackoverflow.com/questions/14150941/webgl-glsl-emulate-texture3d )
 //bglTexEnvfProcPtr bglTexEnvf;
-var bglGenTextures = function(/*GLsizei (int)*/ n: number, /*GLuint **/textures) {
+var bglGenTextures = function(/*GLsizei (int)*/ n: number, /*GLuint **/textures: number): void {
     todo("use params??");
     gl.createTexture.call(gl);
 };//gl.createTexture;//bglGenTexturesProcPtr// http://www.khronos.org/files/webgl/webgl-reference-card-1_0.pdf Note: Corresponding OpenGL ES function is GenTextures

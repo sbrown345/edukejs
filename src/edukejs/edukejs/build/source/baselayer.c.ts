@@ -1,5 +1,5 @@
+/// <reference path="../../build/headers/baselayer.h.ts" />
 /// <reference path="../../build/headers/build.h.ts" />
-/// <reference path="../../eduke32/headers/baselayer.h.ts" />
 
 //#include "compat.h"
 //#include "osd.h"

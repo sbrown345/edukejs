@@ -193,7 +193,7 @@ function S_PauseMusic(/*int32_t*/ onf: Number): void
 
 function /*int32_t */S_PlayMusic(/*const char **/fn: string, /*const int32_t */sel: number): number
 {
-    todo("S_PlayMusic");
+    todo("S_PlayMusic");return -9999999999999999999999;
 //    char *ofn = (char *)fn, *testfn, *extension;
 //    int32_t fp;
 //    const char *alt = 0;

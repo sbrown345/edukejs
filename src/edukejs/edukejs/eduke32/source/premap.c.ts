@@ -1741,18 +1741,18 @@ function resetpspritevars(/*char */g: number): void
     }
 }
 
-//static inline void clearfrags(void)
-//{
-//    int32_t i;
+function clearfrags(): void
+{
+    var /*int32_t */i: number;
 
-//    for (i=0; i<ud.multimode; i++)
-//    {
-//        playerdata_t *p = &g_player[i];
+    for (i=0; i<ud.multimode; i++)
+    {
+        var p: playerdata_t = g_player[i];
 
-//        p.ps.frag = p.ps.fraggedself = 0;
-//        Bmemset(p.frags, 0, sizeof(p.frags));
-//    }
-//}
+        p.ps.frag = p.ps.fraggedself = 0;
+        Bmemset(new P(p.frags), 0, sizeof(p.frags));
+    }
+}
 
 //void G_ResetTimers(uint8_t keepgtics)
 //{

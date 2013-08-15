@@ -78,7 +78,7 @@ var KB_KeyDown = keystatus;
 
 function KB_KeyPressed( scan: number ): number  { return keystatus[ ( scan ) ] != 0 ? 1:0; }
 
-var KB_ClearKeyDown( scan: number ): number { return keystatus[ ( scan ) ] = FALSE ? 1:0; }
+function KB_ClearKeyDown( scan: number ): number { return keystatus[ ( scan ) ] = FALSE ? 1:0; }
 
 //#define KB_UnBoundKeyPressed( scan )  ( keystatus[ ( scan ) ] != 0 && !CONTROL_KeyBinds[scan].cmdstr)
 
