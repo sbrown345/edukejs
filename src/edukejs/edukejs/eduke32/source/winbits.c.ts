@@ -131,27 +131,27 @@ var silentvideomodeswitch = 0; //char
 //    return (WaitForSingleObject(instanceflag,0) == WAIT_TIMEOUT);
 //}
 
-////
-//// high-resolution timers for profiling
-////
-//int32_t win_inittimer(void)
-//{
-//    int64_t t;
+//
+// high-resolution timers for profiling
+//
+function /*int32_t */win_inittimer(): number
+{
+    //int64_t t;
 
-//    if (win_timerfreq) return 0;	// already installed
+    //if (win_timerfreq) return 0;	// already installed
 
-//    // OpenWatcom seems to want us to query the value into a local variable
-//    // instead of the global 'win_timerfreq' or else it gets pissed with an
-//    // access violation
-//    if (!QueryPerformanceFrequency((LARGE_INTEGER *)&t))
-//    {
-//        ShowErrorBox("Failed fetching timer frequency");
-//        return -1;
-//    }
-//    win_timerfreq = t;
+    //// OpenWatcom seems to want us to query the value into a local variable
+    //// instead of the global 'win_timerfreq' or else it gets pissed with an
+    //// access violation
+    //if (!QueryPerformanceFrequency((LARGE_INTEGER *)&t))
+    //{
+    //    ShowErrorBox("Failed fetching timer frequency");
+    //    return -1;
+    //}
+    //win_timerfreq = t;
 
-//    return 0;
-//}
+    return 0;
+}
 
 //uint64_t win_gethiticks(void)
 //{

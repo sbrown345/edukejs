@@ -10765,7 +10765,7 @@ function G_Startup() : void
     path("G_Startup");
     var i : number;
 
-    todo("inittimer(TICRATE);")
+    inittimer(TICRATE);
 
     initcrc32table();
 
@@ -12025,11 +12025,14 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
         if (g_player[myconnectindex].ps.gm&MODE_DEMO)
             todoThrow("goto MAIN_LOOP_RESTART;");
     }
-    while (1);
-
+    while (tempWhile++ < 3);
+    //while (1);
+    throw "todo";
     G_GameExit(" ");
     return 0;  // not reached (duh)
 }
+
+var tempWhile = 0;
 
 //GAME_STATIC GAME_INLINE int32_t G_MoveLoop()
 //{

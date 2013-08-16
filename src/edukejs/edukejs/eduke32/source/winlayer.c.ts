@@ -1508,7 +1508,7 @@ function AcquireInputDevices(/*char */acquire: number): void
 
 var /*static int32_t */timerlastsample=0;
 var /*int32_t */timerticspersec=0;
-//static double msperhitick = 0;
+var  /*static double */msperhitick = 0;
 var usertimercallback: ()=>void;//static void (*usertimercallback)(void) = NULL;
 
 ////  This timer stuff is all Ken's idea.
@@ -1527,31 +1527,31 @@ var usertimercallback: ()=>void;//static void (*usertimercallback)(void) = NULL;
 //}
 
 
-////
-//// inittimer() -- initialize timer
-////
-//int32_t inittimer(int32_t tickspersecond)
-//{
-//    int64_t t;
+//
+// inittimer() -- initialize timer
+//
+function /*int32_t */inittimer(/*int32_t */tickspersecond: number): number
+{
+    var /*int64_t */t: number;
 
-//    if (win_timerfreq) return 0;	// already installed
+    if (win_timerfreq) return 0;	// already installed
 
-//    //    initprintf("Initializing timer\n");
+    //    initprintf("Initializing timer\n");
 
-//    t = win_inittimer();
-//    if (t < 0)
-//        return t;
+    t = win_inittimer();
+    if (t < 0)
+        return t;
 
-//    timerticspersec = tickspersecond;
-//    QueryPerformanceCounter((LARGE_INTEGER *)&t);
-//    timerlastsample = (int32_t)(t*timerticspersec / win_timerfreq);
+    timerticspersec = tickspersecond;
+    //QueryPerformanceCounter((LARGE_INTEGER *)&t);
+    timerlastsample = int32(t*timerticspersec / win_timerfreq);
 
-//    usertimercallback = NULL;
+    usertimercallback = NULL;
 
-//    msperhitick = 1000.0 / (double)gethitickspersec();
+    msperhitick = 1000;//1000.0 / (double)gethitickspersec();
 
-//    return 0;
-//}
+    return 0;
+}
 
 ////
 //// uninittimer() -- shut down timer
@@ -1576,10 +1576,12 @@ function sampletimer(): void
 
     if (!win_timerfreq) return;
 
-    i = Date.now();//QueryPerformanceCounter((LARGE_INTEGER *)&i);
-    n = int32((i*timerticspersec / win_timerfreq) - timerlastsample);
+    //i = Date.now();//QueryPerformanceCounter((LARGE_INTEGER *)&i);
+    //n = int32((i*timerticspersec / win_timerfreq) - timerlastsample);
 
-    //if (n <= 0) return;
+    tempHC(() => {n = 1;/*todo: modified original source too*/});
+
+    if (n <= 0) return;
 
     totalclock += n;
     timerlastsample += n;
@@ -1591,15 +1593,30 @@ function sampletimer(): void
 //
 // getticks() -- returns the windows ticks count
 //
+var /*static uint32_t */tempTotalTicks = 0;
 function getticks() : number //uint32_t
 {
-    todo("getticks, test number");
-    return +new Date;
+    //todo("getticks, test number");
+    //var i = Timer.getPlatformTicks();
+    //return (i * (1000) / win_timerfreq) | 0;
+
     //var i;
     //if (win_timerfreq == 0) return 0;
     //QueryPerformanceCounter((LARGE_INTEGER *)&i);
     //return (uint32_t)(i*longlong(1000)/win_timerfreq);
+    
+	tempTotalTicks+=1000;
+	return tempTotalTicks;
 }
+
+var Timer = { 
+    initTime: Date.now(), 
+    ticksInOneSecond: 1000 ,
+    getPlatformTicks : function() {
+        return Date.now() - Timer.initTime;
+    }
+};
+
 
 //// high-resolution timers for profiling
 //uint64_t gethiticks(void)
