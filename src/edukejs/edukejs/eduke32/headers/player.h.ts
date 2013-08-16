@@ -426,6 +426,26 @@ class weapondata_t
 //# define PWEAPON(Player, Weapon, Wmember) (g_playerWeapon[Player][Weapon].Wmember)
 //extern weapondata_t g_playerWeapon[MAXPLAYERS][MAX_WEAPONS];
 //#else
+var Clip              = "Clip";
+var Reload            = "Reload";
+var FireDelay         = "FireDelay";
+var HoldDelay         = "HoldDelay";
+var TotalTime         = "TotalTime";
+var Flags             = "Flags";
+var Shoots            = "Shoots";
+var SpawnTime         = "SpawnTime";
+var Spawn             = "Spawn";
+var ShotsPerBurst     = "ShotsPerBurst";
+var WorksLike         = "WorksLike";
+var InitialSound      = "InitialSound";
+var FireSound         = "FireSound";
+var Sound2Time        = "Sound2Time";
+var Sound2Sound       = "Sound2Sound";
+var ReloadSound1      = "ReloadSound1";
+var ReloadSound2      = "ReloadSound2";
+var SelectSound       = "SelectSound";
+var FlashColor        = "FlashColor";
+
 function PWEAPON(Player: number, Weapon: number, Wmember: string): number {return window["aplWeapon" + Wmember][Weapon][Player];}
 var aplWeaponClip: Int32Array[] = new Array(MAX_WEAPONS);            // number of items in clip                                      extern intptr_t         
 var aplWeaponReload: Int32Array[] = new Array(MAX_WEAPONS);          // delay to reload (include fire)                               extern intptr_t         

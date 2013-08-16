@@ -4484,7 +4484,7 @@ function G_DrawRooms(/*int32_t*/ snum: number, /*int32_t */smoothratio: number):
         else
         {
             tmpvr = vr;
-            tmpyx = (65536*ydim*8)/(xdim*5);
+            tmpyx = ((65536*ydim*8)/(xdim*5))|0;
 
             setaspect(mulscale16(tmpvr,viewingrange), yxaspect);
         }
@@ -4557,7 +4557,7 @@ function G_DrawRooms(/*int32_t*/ snum: number, /*int32_t */smoothratio: number):
             setaspect(mulscale16(oviewingrange,i>>1), yxaspect);
 
             tmpvr = i>>1;
-            tmpyx = (65536*ydim*8)/(xdim*5)|0;
+            tmpyx = ((65536*ydim*8)/(xdim*5))|0;
         }
         else if (getrendermode() >= REND_POLYMOST && (ud.screen_tilting && !g_fakeMultiMode))
         {
@@ -11872,7 +11872,7 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
         if (ud.color) g_player[myconnectindex].ps.palookup = g_player[myconnectindex].pcolor = ud.color;
         else g_player[myconnectindex].ps.palookup = g_player[myconnectindex].pcolor;
     }
-    debugger
+  
     ud.warp_on = 0;
     KB_KeyDown[sc_Pause] = 0;   // JBF: I hate the pause key
 

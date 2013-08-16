@@ -587,7 +587,7 @@ function yax_update(/*int32_t*/ resetstat: number): void
     editstatus = (resetstat==0)?1:0;
     // NOTE: Use oeditstatus to check for in-gamedness from here on!
 //#endif
-    debugger;
+   
     if (resetstat==0)
     {
         // make bunchnums consecutive
@@ -9841,7 +9841,7 @@ function prepare_loadboard(fil: number, dapos: vec3_t , daang: R<number>, dacurs
 function finish_loadboard(/*const vec3_t **/dapos: vec3_t, /*int16_t **/dacursectnum: R<number>, /*int16_t*/ numsprites: number, /*char*/ myflags: number): number
 {
     var i: number, realnumsprites=numsprites, numremoved: number;
-    debugger; 
+   
 //#if !defined USE_OPENGL || !defined POLYMER
 //    UNREFERENCED_PARAMETER(myflags);
 //#endif
@@ -9891,25 +9891,31 @@ function finish_loadboard(/*const vec3_t **/dapos: vec3_t, /*int16_t **/dacursec
     updatesector(dapos.x, dapos.y, dacursectnum);
 
 //#ifdef HAVE_CLIPSHAPE_FEATURE
-//    if (!quickloadboard)
+    if (!quickloadboard)
 //#endif
-//    {
-//        Bmemset(spriteext, 0, sizeof(spriteext_t)*MAXSPRITES);
+    {
+        //Bmemset(spriteext, 0, sizeof(spriteext_t)*MAXSPRITES);
+        for (var j = 0; j < spriteext.length; j++) {
+            spriteext[j].init();
+        }
 
 //#ifdef USE_OPENGL
-//        Bmemset(spritesmooth, 0, sizeof(spritesmooth_t)*(MAXSPRITES+MAXUNIQHUDID));
+        //Bmemset(spritesmooth, 0, sizeof(spritesmooth_t)*(MAXSPRITES+MAXUNIQHUDID));
+        for (var k = 0; k < spritesmooth.length; k++) {
+            spritesmooth[k].init();
+        }
 
 //# ifdef POLYMER
-//        if (getrendermode() == REND_POLYMER)
-//        {
-//            if ((myflags&4)==0)
-//                polymer_loadboard();
-//        }
+        if (getrendermode() == REND_POLYMER)
+        {
+            if ((myflags&4)==0)
+                todoThrow("polymer_loadboard();");
+        }
 //# endif
 //#endif
-//    }
+    }
 
-//    guniqhudid = 0;
+    guniqhudid = 0;
 
     return numremoved;
 }
@@ -14239,7 +14245,7 @@ function setaspect_new(): void
     {
         // The correction factor 100/107 has been found
         // out experimentally. Squares FTW!
-        var vr: number, yx=(65536*4*100)/(3*107);
+        var vr: number, yx=((65536*4*100)/(3*107))|0;
         var y: number, x: number;
 
         var xd = setaspect_new_use_dimen ? xdimen : xdim;
@@ -14309,7 +14315,7 @@ function setview(x1: number, y1: number, x2: number, y2: number): void
 //
 // setaspect
 //
-function setaspect(daxrange: number, daaspect: number): void
+function setaspect(/*int32_t*/ daxrange: number, /*int32_t */daaspect: number): void
 {
     viewingrange = daxrange;
     viewingrangerecip = divscale32(1,daxrange);

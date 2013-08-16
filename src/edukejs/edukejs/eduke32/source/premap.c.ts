@@ -911,9 +911,9 @@ function P_ResetStatus(/*int32_t*/ snum: number): void
 
     p.on_crane          = -1;
 
-    if ((PWEAPON(snum, p.curr_weapon, "WorksLike") == PISTOL_WEAPON) &&
-            (PWEAPON(snum, p.curr_weapon, "Reload") > PWEAPON(snum, p.curr_weapon, "TotalTime")))
-        p.kickback_pic  = PWEAPON(snum, p.curr_weapon, "TotalTime");
+    if ((PWEAPON(snum, p.curr_weapon, WorksLike) == PISTOL_WEAPON) &&
+            (PWEAPON(snum, p.curr_weapon, Reload) > PWEAPON(snum, p.curr_weapon, TotalTime)))
+        p.kickback_pic  = PWEAPON(snum, p.curr_weapon, TotalTime);
     else p.kickback_pic = 0;
 
     p.weapon_pos        = WEAPON_POS_START;
@@ -944,7 +944,7 @@ function P_ResetWeapons(/*int32_t*/ snum: number): void
 
     p.weapon_pos = WEAPON_POS_START;
     p.curr_weapon = PISTOL_WEAPON;
-    p.kickback_pic = PWEAPON(snum, p.curr_weapon, "TotalTime");
+    p.kickback_pic = PWEAPON(snum, p.curr_weapon, TotalTime);
     p.gotweapon = ((1<<PISTOL_WEAPON) | (1<<KNEE_WEAPON) | (1<<HANDREMOTE_WEAPON));
     p.ammo_amount[PISTOL_WEAPON] = min(p.max_ammo_amount[PISTOL_WEAPON], 48);
     p.last_weapon = -1;
@@ -990,9 +990,9 @@ function resetprestat(/*int32_t*/ snum: number,/*int32_t */g: number): void
 
     P_ResetTintFade(p);
 
-    if ((PWEAPON(snum, p.curr_weapon, "WorksLike") == PISTOL_WEAPON) &&
-            (PWEAPON(snum, p.curr_weapon, "Reload") > PWEAPON(snum, p.curr_weapon, "TotalTime")))
-        p.kickback_pic  = PWEAPON(snum, p.curr_weapon, "TotalTime");
+    if ((PWEAPON(snum, p.curr_weapon, WorksLike) == PISTOL_WEAPON) &&
+            (PWEAPON(snum, p.curr_weapon, Reload) > PWEAPON(snum, p.curr_weapon, TotalTime)))
+        p.kickback_pic  = PWEAPON(snum, p.curr_weapon, TotalTime);
     else p.kickback_pic = 0;
 
     p.last_weapon = -1;
@@ -1143,9 +1143,9 @@ function prelevel(/*char*/ g: number): void
 {
     path("prelevel");
     debugger;
-   var i: number, nexti: number, j: number, startwall: number, endwall: number;                 // int32_t 
-   var switchpicnum: number;                                    // int32_t 
-   var tagbitmap = new Uint8Array(65536>>3);// /(uint8_t *)Bcalloc(65536>>3, 1);    // uint8_t 
+    var i: number, nexti: number, j: number, startwall: number, endwall: number;                 // int32_t 
+    var switchpicnum: number;                                    // int32_t 
+    var tagbitmap = new Uint8Array(65536>>3);// /(uint8_t *)Bcalloc(65536>>3, 1);    // uint8_t 
 
     if (tagbitmap==NULL)
         G_GameExit("OUT OF MEMORY in prelevel()");
@@ -1205,7 +1205,7 @@ function prelevel(/*char*/ g: number): void
 //    El_CreateGameState();
 //    G_PostCreateGameState();
 //#endif
-
+    debugger;
     i = headspritestat[STAT_DEFAULT];
     while (i >= 0)
     {
@@ -1559,20 +1559,19 @@ function G_NewGame(vn: number,ln: number,sk: number): void
 
     if (ud.m_coop != 1)
     {
-        todo("some  non coop init stuff");
-        //for (i=0; i<MAX_WEAPONS; i++)
-        //{
-        //    if (PWEAPON(0, i, WorksLike)==PISTOL_WEAPON)
-        //    {
-        //        p.curr_weapon = i;
-        //        p.gotweapon |= (1<<i);
-        //        p.ammo_amount[i] = min(p.max_ammo_amount[i], 48);
-        //    }
-        //    else if (PWEAPON(0, i, WorksLike)==KNEE_WEAPON)
-        //        p.gotweapon |= (1<<i);
-        //    else if (PWEAPON(0, i, WorksLike)==HANDREMOTE_WEAPON)
-        //        p.gotweapon |= (1<<i);
-        //}
+        for (i=0; i<MAX_WEAPONS; i++)
+        {
+            if (PWEAPON(0, i, WorksLike)==PISTOL_WEAPON)
+            {
+                p.curr_weapon = i;
+                p.gotweapon |= (1<<i);
+                p.ammo_amount[i] = min(p.max_ammo_amount[i], 48);
+            }
+            else if (PWEAPON(0, i, WorksLike)==KNEE_WEAPON)
+                p.gotweapon |= (1<<i);
+            else if (PWEAPON(0, i, WorksLike)==HANDREMOTE_WEAPON)
+                p.gotweapon |= (1<<i);
+        }
         p.last_weapon = -1;
     }
 
