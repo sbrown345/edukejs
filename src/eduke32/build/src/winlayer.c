@@ -1503,7 +1503,7 @@ void sampletimer(void)
 
     QueryPerformanceCounter((LARGE_INTEGER *)&i);
     n = (int32_t)((i*timerticspersec / win_timerfreq) - timerlastsample);
-
+	n=1; // temp code to match JS
     if (n <= 0) return;
 
     totalclock += n;
@@ -1516,12 +1516,15 @@ void sampletimer(void)
 //
 // getticks() -- returns the windows ticks count
 //
+static uint32_t tempTotalTicks = 0;
 uint32_t getticks(void)
 {
-    int64_t i;
-    if (win_timerfreq == 0) return 0;
-    QueryPerformanceCounter((LARGE_INTEGER *)&i);
-    return (uint32_t)(i*longlong(1000)/win_timerfreq);
+    //int64_t i;
+    //if (win_timerfreq == 0) return 0;
+    //QueryPerformanceCounter((LARGE_INTEGER *)&i);
+    //return (uint32_t)(i*longlong(1000)/win_timerfreq);
+	tempTotalTicks+=1000;
+	return tempTotalTicks;
 }
 
 // high-resolution timers for profiling
