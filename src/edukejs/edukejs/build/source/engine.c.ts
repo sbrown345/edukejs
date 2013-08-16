@@ -11555,7 +11555,7 @@ function inside(/*int32_t*/ x: number, /*int32_t*/ y: number, /*int16_t*/ sectnu
         }
         while (i);
 
-        return (cnt1|cnt2)>>31;
+        return (cnt1|cnt2)>>>31;
     }
 
     return -1;
