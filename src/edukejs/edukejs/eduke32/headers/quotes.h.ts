@@ -27,8 +27,8 @@ var MAXQUOTES                  =16384;
 var MAXQUOTELEN                =128;
 var OBITQUOTEINDEX             =(MAXQUOTES-128);
 var SUICIDEQUOTEINDEX          =(MAXQUOTES-32);
-assert.areEqual(true, window.DUKEBETA !== undefined);
-function NOBETAQUOTE(x: number): number {return window.DUKEBETA ? -1 : x;}
+
+function NOBETAQUOTE(x: number): number {return /*window.DUKEBETA todo!*/ false ? -1 : x;}
 
 var  QUOTE_SHOW_MAP_OFF          =NOBETAQUOTE(1)
 var  QUOTE_ACTIVATED             =2
