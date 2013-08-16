@@ -2022,6 +2022,7 @@ function G_EnterLevel(g: number): number
             g_player[0].ps.cursectnum = $cursectnum.$;
             todoUnimportant("G_LoadMapHack(levname, MapInfo[mii].filename);");
         }
+
     }
     else
     {

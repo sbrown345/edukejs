@@ -433,6 +433,7 @@ extern palette_t CrosshairColors;
 
 void G_CacheMapData(void)
 {
+#ifdef DEBUG_TODO
     int32_t i,j,pc=0;
     int32_t tc;
     uint32_t starttime, endtime;
@@ -557,6 +558,8 @@ void G_CacheMapData(void)
 
     endtime = getticks();
     OSD_Printf("Cache time: %dms\n", endtime-starttime);
+
+#endif
 }
 
 void G_SetupCamTile(int32_t i,int32_t wn)
