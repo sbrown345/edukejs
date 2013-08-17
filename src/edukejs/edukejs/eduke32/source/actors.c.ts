@@ -648,41 +648,40 @@ var block_deletesprite = 0;//int32_t
 // deletesprite() game wrapper
 function A_DeleteSprite(s: number): void
 {
-    todoThrow();
-//    if (block_deletesprite)
-//    {
-//        OSD_Printf(OSD_ERROR + "A_DeleteSprite(): tried to remove sprite %d in EVENT_EGS\n",s);
-//        return;
-//    }
+    if (block_deletesprite)
+    {
+        OSD_Printf(OSD_ERROR + "A_DeleteSprite(): tried to remove sprite %d in EVENT_EGS\n",s);
+        return;
+    }
+    todo("G_HaveEvent(EVENT_KILLIT)) is different?! should be 0 first time");
+    if (G_HaveEvent(EVENT_KILLIT))
+    {
+        var p = new R<number>(0), pl=A_FindPlayer(sprite[s],p);
 
-//    if (G_HaveEvent(EVENT_KILLIT))
-//    {
-//        var p: number, pl=A_FindPlayer(&sprite[s],&p);
+        if (VM_OnEvent(EVENT_KILLIT, s, pl, p.$, 0))
+            return;
+    }
 
-//        if (VM_OnEvent(EVENT_KILLIT, s, pl, p, 0))
-//            return;
-//    }
+//#ifdef POLYMER
+    if (getrendermode() == REND_POLYMER && actor[s].lightptr != NULL)
+        todoThrow("A_DeleteLight(s);");
+//#endif
 
-////#ifdef POLYMER
-//    if (getrendermode() == REND_POLYMER && actor[s].lightptr != NULL)
-//        A_DeleteLight(s);
-////#endif
+    if (sprite[s].picnum == MUSICANDSFX && actor[s].t_data[8]==1)
+    {
+        // AMBIENT_SFX_PLAYING
+        S_StopEnvSound(sprite[s].lotag, s);
+    }
 
-//    if (sprite[s].picnum == MUSICANDSFX && actor[s].t_data[8]==1)
-//    {
-//        // AMBIENT_SFX_PLAYING
-//        S_StopEnvSound(sprite[s].lotag, s);
-//    }
-
-//    // NetAlloc
-//    if (Net_IsRelevantSprite(s))
-//    {
-//        Net_DeleteSprite(s);
-//    }
-//    else
-//    {
-//        deletesprite(s);
-//    }
+    // NetAlloc
+    if (Net_IsRelevantSprite(s))
+    {
+        Net_DeleteSprite(s);
+    }
+    else
+    {
+        deletesprite(s);
+    }
 }
 
 function A_AddToDeleteQueue(/*int32_t */i: number): void

@@ -1343,21 +1343,21 @@ function Net_GetPackets() : void
 //    return finalDiff;
 //}
 
-//int32_t Net_IsRelevantSprite(int32_t i)
-//{
-//    if (g_netServer == NULL && g_netClient == NULL)
-//    {
-//        return 0;
-//    }
-//    else if (i < 0 || i >= MAXSPRITES)
-//    {
-//        return 0;
-//    }
-//    else
-//    {
-//        return Net_IsRelevantStat(sprite[i].statnum);
-//    }
-//}
+function /*int32_t */Net_IsRelevantSprite(/*int32_t */i: number): number
+{
+    if (g_netServer == NULL && g_netClient == NULL)
+    {
+        return 0;
+    }
+    else if (i < 0 || i >= MAXSPRITES)
+    {
+        return 0;
+    }
+    else
+    {
+        return Net_IsRelevantStat(sprite[i].statnum);
+    }
+}
 
 function Net_IsRelevantStat(/*int32_t */stat: number): number
 {
@@ -1395,17 +1395,17 @@ function Net_IsRelevantStat(/*int32_t */stat: number): number
 //    return i;
 //}
 
-//void Net_DeleteSprite(int32_t spritenum)
-//{
-//    if (sprite[spritenum].statnum == STAT_NETALLOC)
-//    {
-//        return;
-//    }
+function Net_DeleteSprite(/*int32_t */spritenum:  number): void
+{
+    if (sprite[spritenum].statnum == STAT_NETALLOC)
+    {
+        return;
+    }
 
-//    changespritestat(spritenum, STAT_NETALLOC);
-//    do_deletespritesect(spritenum);
-//    sprite[spritenum].sectnum = MAXSECTORS;
-//}
+    changespritestat(spritenum, STAT_NETALLOC);
+    do_deletespritesect(spritenum);
+    sprite[spritenum].sectnum = MAXSECTORS;
+}
 
 //extern void Gv_RefreshPointers(void);
 

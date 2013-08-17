@@ -6,6 +6,7 @@
 /// <reference path="../../eduke32/headers/function.h.ts" />
 /// <reference path="../../eduke32/headers/global.h.ts" />
 /// <reference path="../../eduke32/headers/player.h.ts" />
+/// <reference path="../../eduke32/headers/premap.h.ts" />
 
 //-------------------------------------------------------------------------
 /*
@@ -212,7 +213,7 @@ class actor_t {
 
     lightId:number; lightcount:number; lightmaxrange: number; //6b//    int16_t 
 //#ifdef POLYMER
-   //todo: lightptr: _prlight; //4b/8b
+    lightptr: _prlight; //4b/8b
 //#else
 //    void *lightptr;
 //#endif
@@ -257,6 +258,8 @@ class actor_t {
         this.shootzvel_ = 0;
 
         this.cgg = 0;
+
+        this.lightptr = null;
 
         this.lightId=0; this.lightcount=0; this.lightmaxrange=0;
 
