@@ -153,7 +153,7 @@ function G_HaveEvent(/*int32_t*/ iEventID: number): number
 //#ifdef LUNATIC
 //    return El_HaveEvent(iEventID);
 //#else
-    return apScriptGameEvent[iEventID]!=NULL?1:0;
+    return apScriptGameEvent[iEventID]!=0 /*NULL*/ ?1:0;
 //#endif
 }
 
