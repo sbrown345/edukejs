@@ -207,9 +207,9 @@ function mulscale31(input1: number, input2: number): number {return mulscale(inp
 function mulscale32(input1: number, input2: number): number {return mulscale(input1, input2, 32);}
 
 function mulscale(input1: number, input2: number, input3: number) {
-    if ((input1 | 0) != input1) throw "input1 " + input1 + " not an integer";
-    if ((input2 | 0) != input2) throw "input2 " + input2 + " not an integer";
-    if ((input3 | 0) != input3) throw "input3 " + input3 + " not an integer";
+    if ((input1 | 0) != input1) {debugger;throw "input1 " + input1 + " not an integer"; }
+    if ((input2 | 0) != input2) {debugger;throw "input2 " + input2 + " not an integer"; }
+    if ((input3 | 0) != input3) {debugger;throw "input3 " + input3 + " not an integer"; }
 
     var output = Math.floor(input1 * input2 / Math.pow(2, input3)) | 0;
     return output;
