@@ -1348,12 +1348,12 @@ function /*int32_t */getceilzofslope(/*int16_t */sectnum: number, /*int32_t */da
 
 function /*int32_t*/ getflorzofslope(/*int16_t*/ sectnum: number, /*int32_t*/ dax: number, /*int32_t */day: number): number
 {
-    return getflorzofslopeptr(sector[sectnum], dax, day);
+    return window["getflorzofslopeptr"](sector[sectnum], dax, day);
 }
 
 function getzsofslope(/*int16_t */sectnum: number, /*int32_t */dax: number, /*int32_t */day: number, /*int32_t **/ceilz: R<number>, /*int32_t **/florz: R<number>): void
 {
-    getzsofslopeptr(sector[sectnum], dax, day, ceilz, florz);
+    window["getzsofslopeptr"](sector[sectnum], dax, day, ceilz, florz);
 }
 
 //// Is <wal> a red wall in a safe fashion, i.e. only if consistency invariant
@@ -1389,11 +1389,11 @@ function getzsofslope(/*int16_t */sectnum: number, /*int32_t */dax: number, /*in
 //int32_t   setsprite(int16_t spritenum, const vec3_t *) ATTRIBUTE((nonnull(2)));
 //int32_t   setspritez(int16_t spritenum, const vec3_t *) ATTRIBUTE((nonnull(2)));
 
-//int32_t spriteheightofsptr(const spritetype *spr, int32_t *height, int32_t alsotileyofs);
-//static inline int32_t spriteheightofs(int16_t i, int32_t *height, int32_t alsotileyofs)
-//{
-//    return spriteheightofsptr(&sprite[i], height, alsotileyofs);
-//}
+var  spriteheightofsptr/*todo: type*/ = window["spriteheightofsptr"];//(const spritetype *spr, int32_t *height, int32_t alsotileyofs);
+function /*int32_t */spriteheightofs(/*int16_t */i: number, /*int32_t **/height: R<number>, /*int32_t */alsotileyofs: number)
+{
+    return spriteheightofsptr(sprite[i], height, alsotileyofs);
+}
 
 //int32_t   screencapture(const char *filename, char inverseit, const char *versionstr) ATTRIBUTE((nonnull(1)));
 

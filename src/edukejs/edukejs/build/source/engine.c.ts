@@ -11608,26 +11608,26 @@ function inside(/*int32_t*/ x: number, /*int32_t*/ y: number, /*int16_t*/ sectnu
 //}
 //#endif
 
-//// Gets the BUILD unit height and z offset of a sprite.
-//// Returns the z offset, 'height' may be NULL.
-//int32_t spriteheightofsptr(const spritetype *spr, int32_t *height, int32_t alsotileyofs)
-//{
-//    int32_t hei, zofs=0;
-//    const int32_t picnum=spr.picnum, yrepeat=spr.yrepeat;
+// Gets the BUILD unit height and z offset of a sprite.
+// Returns the z offset, 'height' may be NULL.
+function /*int32_t */spriteheightofsptr(/*const spritetype **/spr: spritetype, /*int32_t **/height: R<number>, /*int32_t */alsotileyofs: number)
+{
+    var /*int32_t */hei: number, zofs=0;
+    var /*const int32_t */picnum=spr.picnum, yrepeat=spr.yrepeat;
 
-//    hei = (tilesizy[picnum]*yrepeat)<<2;
-//    *height = hei;
+    hei = (tilesizy[picnum]*yrepeat)<<2;
+    height.$ = hei;
 
-//    if (spr.cstat&128)
-//        zofs = hei>>1;
+    if (spr.cstat&128)
+        zofs = hei>>1;
 
-//    // NOTE: a positive per-tile yoffset translates the sprite into the
-//    // negative world z direction (i.e. upward).
-//    if (alsotileyofs)
-//        zofs -= picanm[picnum].yofs*yrepeat<<2;
+    // NOTE: a positive per-tile yoffset translates the sprite into the
+    // negative world z direction (i.e. upward).
+    if (alsotileyofs)
+        zofs -= picanm[picnum].yofs*yrepeat<<2;
 
-//    return zofs;
-//}
+    return zofs;
+}
 
 //
 // setsprite
@@ -13876,13 +13876,14 @@ function mul32(n: number, m: number): number {
     clipspritecnt = clipspritenum = 0;
 
 //#ifdef HAVE_CLIPSHAPE_FEATURE
-    if (0)
-    {
-beginagain:
+    //if (0)
+    //{
+function beginagain() {
         // replace sector and wall with clip map
         mapinfo_set(origmapinfo, clipmapinfo);
         clipsectcnt = clipsectnum;  // should be a nop, "safety"...
-    }
+}
+    //}
 //#endif
 
 //#ifdef YAX_ENABLE
@@ -13890,7 +13891,7 @@ restart_grand:
 //#endif
     do  //Collect sectors inside your square first
     {
-        var wal: walltype;//const walltype *wal;
+        var wal: walltype, walIdx = 0;//const walltype *wal;
         var sec: sectortype;//const sectortype *sec;
         var /*int32_t */startwall=0, endwall=0;
 
@@ -13953,7 +13954,7 @@ restart_grand:
 
         sec = sector[clipsectorlist[clipsectcnt]];
         startwall = sec.wallptr; endwall = startwall + sec.wallnum;
-        for (j=startwall,wal=&wall[startwall]; j<endwall; j++,wal++)
+        for (j = startwall, wal = wall[walIdx = startwall]; j < endwall; j++, wal = wall[++walIdx])
         {
             k = wal.nextsector;
             if (k >= 0)
@@ -14018,7 +14019,11 @@ restart_grand:
                 if (curspr)
                 {
                     var /*int32_t */fz: number,cz: number, hitwhat=(curspr-sprite)+49152;
-                    getzsofslope(sectq[clipinfo[curidx].qend],pos.x,pos.y,&cz,&fz);
+                    var $cz = new R(cz);
+                    var $fz = new R(fz);
+                    getzsofslope(sectq[clipinfo[curidx].qend],pos.x,pos.y,$cz,$fz);
+                    cz = $cz.$;
+                    fz = $fz.$;
 
                     if ((sec.ceilingstat&1)==0)
                     {
@@ -14096,7 +14101,9 @@ restart_grand:
                     k = walldist+(spr.clipdist<<2)+1;
                     if ((klabs(x1-pos.x) <= k) && (klabs(y1-pos.y) <= k))
                     {
-                        daz = spr.z + spriteheightofs(j, &k, 1);
+                        var $k = new R(k);
+                        daz = spr.z + spriteheightofs(j, $k, 1);
+                        k = $k.$;
                         daz2 = daz - k;
                         clipyou = 1;
                     }
@@ -14104,11 +14111,13 @@ restart_grand:
 
                 case 16:
                 {
-                    get_wallspr_points(spr, &x1, &x2, &y1, &y2);
+                    todoThrow("get_wallspr_points(spr, &x1, &x2, &y1, &y2);");
 
                     if (clipinsideboxline(pos.x,pos.y,x1,y1,x2,y2,walldist+1) != 0)
                     {
-                        daz = spr.z + spriteheightofs(j, &k, 1);
+                        var $k = new R(k);
+                        daz = spr.z + spriteheightofs(j, $k, 1);
+                        k = $k.$;
                         daz2 = daz-k;
                         clipyou = 1;
                     }
@@ -14117,15 +14126,15 @@ restart_grand:
 
                 case 32:
                 {
-                    int32_t x3, y3, x4, y4;
+                    var /*int32_t */x3: number, y3: number, x4: number, y4: number;
 
                     daz = spr.z; daz2 = daz;
 
                     if ((cstat&64) != 0)
                         if ((pos.z > daz) == ((cstat&8)==0)) continue;
 
-                    get_floorspr_points(spr, pos.x, pos.y, &x1, &x2, &x3, &x4,
-                                       &y1, &y2, &y3, &y4);
+                    todoThrow("get_floorspr_points(spr, pos.x, pos.y, &x1, &x2, &x3, &x4,\
+                                       &y1, &y2, &y3, &y4);");
 
                     dax = mulscale14(sintable[(spr.ang-256+512)&2047],walldist+4);
                     day = mulscale14(sintable[(spr.ang-256)&2047],walldist+4);
@@ -14166,7 +14175,7 @@ restart_grand:
 
 //#ifdef HAVE_CLIPSHAPE_FEATURE
     if (clipspritenum>0)
-        cointinue /*goto */beginagain;
+        {beginagain(); continue restart_grand;} //goto beginagain;
 //#endif
 
 //#ifdef YAX_ENABLE
@@ -14202,7 +14211,7 @@ restart_grand:
                     if (cb < 0)
                         continue;
 
-                    for (SECTORS_OF_BUNCH(cb,YAX_FLOOR, j))
+                    for (j = headsectbunch[YAX_FLOOR][cb]; j != -1; j = nextsectbunch[YAX_FLOOR][j] /*SECTORS_OF_BUNCH(cb,YAX_FLOOR, j)*/)
                         if (inside(pos.x,pos.y, j)==1)
                         {
                             clipsectorlist[clipsectnum++] = j;
@@ -14237,7 +14246,7 @@ restart_grand:
                     if (fb < 0)
                         continue;
 
-                    for (SECTORS_OF_BUNCH(fb, YAX_CEILING, j))
+                    for (j = headsectbunch[YAX_FLOOR][cb]; j != -1; j = nextsectbunch[YAX_FLOOR][j] /*SECTORS_OF_BUNCH(cb,YAX_FLOOR, j)*/)
                         if (inside(pos.x,pos.y, j)==1)
                         {
                             clipsectorlist[clipsectnum++] = j;
@@ -14255,7 +14264,7 @@ restart_grand:
             curspr = NULL;
             clipspritecnt = 0; clipspritenum = 0;
 
-            goto restart_grand;
+            continue /*goto */restart_grand;
         }
     }
 //#endif
@@ -14277,7 +14286,7 @@ function setaspect_new(): void
         
         if (fullscreen && !setaspect_new_use_dimen)
         {
-            var screenw = r_screenxy/100|0;
+            var screenw = (r_screenxy/100)|0;
             var screenh = r_screenxy%100;
 
             if (screenw==0 || screenh==0)
