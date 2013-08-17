@@ -64,6 +64,7 @@
     <Content Include="build\headers\crc32.h.ts" />
     <Content Include="build\headers\glbuild.h.ts" />
     <Content Include="build\headers\polymost.h.ts" />
+    <Content Include="build\headers\prlights.h.ts" />
     <Content Include="build\headers\texcache.h.ts" />
     <Content Include="build\source\texcache.c.ts" />
     <Content Include="eduke32\headers\duke3d.h.ts" />

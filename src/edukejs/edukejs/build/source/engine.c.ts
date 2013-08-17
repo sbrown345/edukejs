@@ -1320,40 +1320,46 @@ class mapinfo_t
     }
 } //mapinfo_t;
 
-//static void mapinfo_set(mapinfo_t *bak, mapinfo_t *newmap)
-//{
-//    if (bak)
-//    {
-//        bak.numsectors = numsectors;
-//        bak.numwalls = numwalls;
-//        bak.sector = sector;
-//        bak.wall = wall;
-//    }
+function mapinfo_set(bak: mapinfo_t, newmap: mapinfo_t): void
+{
+    if (bak)
+    {
+        bak.numsectors = numsectors;
+        bak.numwalls = numwalls;
+        bak.sector = sector;
+        bak.wall = wall;
+    }
 
-//    if (newmap)
-//    {
-//        numsectors = newmap.numsectors;
-//        numwalls = newmap.numwalls;
-//        sector = newmap.sector;
-//        wall = newmap.wall;
-//    }
-//}
+    if (newmap)
+    {
+        numsectors = newmap.numsectors;
+        numwalls = newmap.numwalls;
+        sector = newmap.sector;
+        wall = newmap.wall;
+    }
+}
 
 var origmapinfo = new mapinfo_t(), clipmapinfo = new mapinfo_t();//static mapinfo_t 
 var quickloadboard=0;
 
 
-//#define CM_MAX 256  // must be a power of 2
+var CM_MAX=256;  // must be a power of 2
 
-//typedef struct
-//{
-//    int16_t qbeg, qend;  // indices into sectq
-//    int16_t picnum, next;
-//    int32_t maxdist;
-//} clipinfo_t;
+class clipinfo_t
+{
+    qbeg: number; qend: number;  // indices into sectq     //int16_t 
+    picnum: number; next: number;                          //int16_t 
+    maxdist: number;                               //int32_t 
+
+    constructor() {
+        this.qbeg = 0; this.qend = 0;
+        this.picnum = 0; this.next = 0;
+        this.maxdist = 0;
+    }
+}
 
 var numclipmaps: number; //static int32_t 
-//static clipinfo_t clipinfo[CM_MAX];
+var /*static clipinfo_t */clipinfo = newStructArray<clipinfo_t>(clipinfo_t, CM_MAX);
 
 var numclipsects: number;  // number in sectq[] ////static int32_t
 var sectoidx: Int16Array, sectq: Int16Array;  // [numsectors] ////static int16_t *
@@ -2435,10 +2441,10 @@ var colscan = new Int32Array(27);
 
 //typedef struct { int32_t x1, y1, x2, y2; } linetype;
 //static linetype clipit[MAXCLIPNUM];
-//static int32_t clipsectnum, origclipsectnum, clipspritenum;
-//static int16_t clipsectorlist[MAXCLIPNUM], origclipsectorlist[MAXCLIPNUM];
-//static int16_t clipspritelist[MAXCLIPNUM];  // sector-like sprite clipping
-//static int16_t clipobjectval[MAXCLIPNUM];
+var /*static int32_t */clipsectnum: number, origclipsectnum: number, clipspritenum: number;
+var /*static int16_t */ clipsectorlist = new Int16Array(MAXCLIPNUM), origclipsectorlist = new Int16Array(MAXCLIPNUM);
+var /*static int16_t */clipspritelist = new Int16Array(MAXCLIPNUM);  // sector-like sprite clipping
+var /*static int16_t */clipobjectval = new Int16Array(MAXCLIPNUM);
 
 class permfifotype
 {
@@ -12137,9 +12143,9 @@ function /*int32_t */ setspritez(/*int16_t */spritenum: number, /*const vec3_t *
 ////
 //static int32_t clipsprite_initindex(int32_t curidx, spritetype *curspr, int32_t *clipsectcnt, const vec3_t *vect);
 
-//int32_t hitscan(const vec3_t *sv, int16_t sectnum, int32_t vx, int32_t vy, int32_t vz,
-//                hitdata_t *hit, uint32_t cliptype)
-//{
+function/*int32_t */hitscan(/*const vec3_t **/sv: vec3_t, /*int16_t */sectnum: number, /*int32_t */vx: number, /*int32_t */vy: number, /*int32_t */vz: number,
+                hit: hitdata_t , /*uint32_t */cliptype: number): number
+{todoThrow("hitscan");
 //    int32_t x1, y1=0, z1=0, x2, y2, intx, inty, intz;
 //    int32_t i, k, daz;
 //    int16_t tempshortcnt, tempshortnum;
@@ -12460,8 +12466,8 @@ function /*int32_t */ setspritez(/*int16_t */spritenum: number, /*const vec3_t *
 //    }
 //#endif
 
-//    return(0);
-//}
+    return(0);
+}
 
 
 ////
@@ -13829,411 +13835,429 @@ function mul32(n: number, m: number): number {
  function getzrange(pos:IVec3, /*int16_t */sectnum: number,
                /*int32_t **/ceilz: R<number>, /*int32_t **/ceilhit: R<number>, /*int32_t **/florz: R<number>, /*int32_t **/florhit: R<number>,
                /*int32_t */walldist: number, /*uint32_t */cliptype: number): void
-{todoThrow();
-//    int32_t clipsectcnt;
-//    int32_t dax, day, daz, daz2;
-//    int32_t i, j, k, dx, dy;
-//    int32_t x1, y1, x2, y2;
+{debugger;
+    var/*int32_t */clipsectcnt=0;
+    var /*int32_t*/ dax=0, day=0, daz=0, daz2=0;
+    var /*int32_t*/ i=0, j=0, k=0, dx=0, dy=0;
+    var /*int32_t*/ x1=0, y1=0, x2=0, y2=0;
 
 //#ifdef YAX_ENABLE
-//    // YAX round, -1:center, 0:ceiling, 1:floor
-//    int32_t mcf=-1;
+    // YAX round, -1:center, 0:ceiling, 1:floor
+    var /*int32_t */mcf=-1;
 //#endif
 
-//    spritetype *curspr=NULL;  // non-NULL when handling sprite with sector-like clipping
-//    int32_t curidx=-1, clipspritecnt;
+    var curspr: spritetype =NULL;  // non-NULL when handling sprite with sector-like clipping
+    var /*int32_t */curidx=-1, clipspritecnt: number;
 
-//    //Extra walldist for sprites on sector lines
-//    const int32_t extradist = walldist+MAXCLIPDIST+1;
-//    const int32_t xmin = pos.x-extradist, ymin = pos.y-extradist;
-//    const int32_t xmax = pos.x+extradist, ymax = pos.y+extradist;
+    //Extra walldist for sprites on sector lines
+    var /*const int32_t */extradist = walldist+MAXCLIPDIST+1;
+    var /*const int32_t */xmin = pos.x-extradist, ymin = pos.y-extradist;
+    var /*const int32_t */xmax = pos.x+extradist, ymax = pos.y+extradist;
 
-//    const int32_t dawalclipmask = (cliptype&65535);
-//    const int32_t dasprclipmask = (cliptype>>16);
+    var /*const int32_t */ dawalclipmask = (cliptype&65535);
+    var /*const int32_t */ dasprclipmask = (cliptype>>16);
 
-//    if (sectnum < 0)
-//    {
-//        *ceilz = INT32_MIN; *ceilhit = -1;
-//        *florz = INT32_MAX; *florhit = -1;
-//        return;
-//    }
+    if (sectnum < 0)
+    {
+        ceilz.$ = INT32_MIN; ceilhit.$ = -1;
+        florz.$ = INT32_MAX; florhit.$ = -1;
+        return;
+    }
 
-//    getzsofslope(sectnum,pos.x,pos.y,ceilz,florz);
-//    *ceilhit = sectnum+16384; *florhit = sectnum+16384;
+    getzsofslope(sectnum,pos.x,pos.y,ceilz,florz);
+    ceilhit.$ = sectnum+16384; florhit.$ = sectnum+16384;
 
 //#ifdef YAX_ENABLE
-//    origclipsectorlist[0] = sectnum;
-//    origclipsectnum = 1;
+    origclipsectorlist[0] = sectnum;
+    origclipsectnum = 1;
 //#endif
-//    clipsectorlist[0] = sectnum;
-//    clipsectcnt = 0; clipsectnum = 1;
-//    clipspritecnt = clipspritenum = 0;
+    clipsectorlist[0] = sectnum;
+    clipsectcnt = 0; clipsectnum = 1;
+    clipspritecnt = clipspritenum = 0;
 
 //#ifdef HAVE_CLIPSHAPE_FEATURE
-//    if (0)
-//    {
-//beginagain:
-//        // replace sector and wall with clip map
-//        mapinfo_set(&origmapinfo, &clipmapinfo);
-//        clipsectcnt = clipsectnum;  // should be a nop, "safety"...
-//    }
+    if (0)
+    {
+beginagain:
+        // replace sector and wall with clip map
+        mapinfo_set(origmapinfo, clipmapinfo);
+        clipsectcnt = clipsectnum;  // should be a nop, "safety"...
+    }
 //#endif
 
 //#ifdef YAX_ENABLE
-//restart_grand:
+restart_grand:
 //#endif
-//    do  //Collect sectors inside your square first
-//    {
-//        const walltype *wal;
-//        const sectortype *sec;
-//        int32_t startwall, endwall;
+    do  //Collect sectors inside your square first
+    {
+        var wal: walltype;//const walltype *wal;
+        var sec: sectortype;//const sectortype *sec;
+        var /*int32_t */startwall=0, endwall=0;
 
 //#ifdef HAVE_CLIPSHAPE_FEATURE
-//        if (clipsectcnt>=clipsectnum)
-//        {
-//            // one set of clip-sprite sectors completed, prepare the next
+        if (clipsectcnt>=clipsectnum)
+        {
+            // one set of clip-sprite sectors completed, prepare the next
 
-//            curspr = &sprite[clipspritelist[clipspritecnt]];
+            curspr = sprite[clipspritelist[clipspritecnt]];
 
-//            if (curidx < 0)  // per-sprite init
-//                curidx = pictoidx[curspr.picnum];
-//            else
-//                curidx = clipinfo[curidx].next;
+            if (curidx < 0)  // per-sprite init
+                curidx = pictoidx[curspr.picnum];
+            else
+                curidx = clipinfo[curidx].next;
 
-//            while (curidx>=0 && (curspr.cstat&32) != (sector[sectq[clipinfo[curidx].qbeg]].CM_CSTAT&32))
-//                curidx = clipinfo[curidx].next;
+            while (curidx>=0 && (curspr.cstat&32) != (sector[sectq[clipinfo[curidx].qbeg]].CM_CSTAT&32))
+                curidx = clipinfo[curidx].next;
 
-//            if (curidx < 0)
-//            {
-//                // didn't find matching clipping sectors for sprite
-//                clipspritecnt++;
-//                continue;
-//            }
+            if (curidx < 0)
+            {
+                // didn't find matching clipping sectors for sprite
+                clipspritecnt++;
+                continue;
+            }
 
-//            clipsprite_initindex(curidx, curspr, &clipsectcnt, pos);
+            var $clipsectcnt = new R(clipsectcnt);
+            clipsprite_initindex(curidx, curspr, $clipsectcnt, pos);
+            clipsectcnt = $clipsectcnt.$;
 
-//            for (i=0; i<clipsectnum; i++)
-//            {
-//                int32_t fz,cz, hitwhat;
-//                k = clipsectorlist[i];
+            for (i=0; i<clipsectnum; i++)
+            {
+                var /*int32_t */fz: number,cz: number, hitwhat: number;
+                k = clipsectorlist[i];
 
-//                if (k==sectq[clipinfo[curidx].qend])
-//                    continue;
+                if (k==sectq[clipinfo[curidx].qend])
+                    continue;
+                
+                var $daz = new R(daz);
+                var $daz2 = new R(daz2);
+                getzsofslope(/*(int16_t)*/k,pos.x,pos.y,$daz,$daz2);
+                daz = $daz.$;
+                daz2 = $daz2.$;
+                getzsofslope(sectq[clipinfo[curidx].qend],pos.x,pos.y,cz,fz);
+                hitwhat = (curspr-sprite)+49152;
 
-//                getzsofslope((int16_t)k,pos.x,pos.y,&daz,&daz2);
-//                getzsofslope(sectq[clipinfo[curidx].qend],pos.x,pos.y,&cz,&fz);
-//                hitwhat = (curspr-sprite)+49152;
-
-//                if ((sector[k].ceilingstat&1)==0)
-//                {
-//                    if (pos.z < cz && cz < *florz) { *florz = cz; *florhit = hitwhat; }
-//                    if (pos.z > daz && daz > *ceilz) { *ceilz = daz; *ceilhit = hitwhat; }
-//                }
-//                if ((sector[k].floorstat&1)==0)
-//                {
-//                    if (pos.z < daz2 && daz2 < *florz) { *florz = daz2; *florhit = hitwhat; }
-//                    if (pos.z > fz && fz > *ceilz) { *ceilz = fz; *ceilhit = hitwhat; }
-//                }
-//            }
-//        }
+                if ((sector[k].ceilingstat&1)==0)
+                {
+                    if (pos.z < cz && cz < florz.$) { florz.$ = cz; florhit.$ = hitwhat; }
+                    if (pos.z > daz && daz > ceilz.$) { ceilz.$ = daz; ceilhit.$ = hitwhat; }
+                }
+                if ((sector[k].floorstat&1)==0)
+                {
+                    if (pos.z < daz2 && daz2 < florz.$) { florz.$ = daz2; florhit.$ = hitwhat; }
+                    if (pos.z > fz && fz > ceilz.$) { ceilz.$ = fz; ceilhit.$ = hitwhat; }
+                }
+            }
+        }
 //#endif
-//        ////////// Walls //////////
+        ////////// Walls //////////
 
-//        sec = &sector[clipsectorlist[clipsectcnt]];
-//        startwall = sec.wallptr; endwall = startwall + sec.wallnum;
-//        for (j=startwall,wal=&wall[startwall]; j<endwall; j++,wal++)
-//        {
-//            k = wal.nextsector;
-//            if (k >= 0)
-//            {
-//                const walltype *const wal2 = &wall[wal.point2];
+        sec = sector[clipsectorlist[clipsectcnt]];
+        startwall = sec.wallptr; endwall = startwall + sec.wallnum;
+        for (j=startwall,wal=&wall[startwall]; j<endwall; j++,wal++)
+        {
+            k = wal.nextsector;
+            if (k >= 0)
+            {
+                var /*const walltype *const*/ wal2 = wall[wal.point2];
 
-//                x1 = wal.x; x2 = wal2.x;
-//                if ((x1 < xmin) && (x2 < xmin)) continue;
-//                if ((x1 > xmax) && (x2 > xmax)) continue;
-//                y1 = wal.y; y2 = wal2.y;
-//                if ((y1 < ymin) && (y2 < ymin)) continue;
-//                if ((y1 > ymax) && (y2 > ymax)) continue;
+                x1 = wal.x; x2 = wal2.x;
+                if ((x1 < xmin) && (x2 < xmin)) continue;
+                if ((x1 > xmax) && (x2 > xmax)) continue;
+                y1 = wal.y; y2 = wal2.y;
+                if ((y1 < ymin) && (y2 < ymin)) continue;
+                if ((y1 > ymax) && (y2 > ymax)) continue;
 
-//                dx = x2-x1; dy = y2-y1;
-//                if (dx*(pos.y-y1) < (pos.x-x1)*dy) continue; //back
-//                if (dx > 0) dax = dx*(ymin-y1); else dax = dx*(ymax-y1);
-//                if (dy > 0) day = dy*(xmax-x1); else day = dy*(xmin-x1);
-//                if (dax >= day) continue;
+                dx = x2-x1; dy = y2-y1;
+                if (dx*(pos.y-y1) < (pos.x-x1)*dy) continue; //back
+                if (dx > 0) dax = dx*(ymin-y1); else dax = dx*(ymax-y1);
+                if (dy > 0) day = dy*(xmax-x1); else day = dy*(xmin-x1);
+                if (dax >= day) continue;
 
-//                if (wal.cstat&dawalclipmask) continue;  // XXX?
-//                sec = &sector[k];
+                if (wal.cstat&dawalclipmask) continue;  // XXX?
+                sec = sector[k];
 
 //#ifdef HAVE_CLIPSHAPE_FEATURE
-//                if (curspr)
-//                {
-//                    if (k==sectq[clipinfo[curidx].qend])
-//                        continue;
-//                    if ((sec.ceilingstat&1) && (sec.floorstat&1))
-//                        continue;
-//                }
-//                else
+                if (curspr)
+                {
+                    if (k==sectq[clipinfo[curidx].qend])
+                        continue;
+                    if ((sec.ceilingstat&1) && (sec.floorstat&1))
+                        continue;
+                }
+                else
 //#endif
-//                if (editstatus == 0)
-//                {
-//                    if (((sec.ceilingstat&1) == 0) && (pos.z <= sec.ceilingz+(3<<8))) continue;
-//                    if (((sec.floorstat&1) == 0) && (pos.z >= sec.floorz-(3<<8))) continue;
-//                }
+                if (editstatus == 0)
+                {
+                    if (((sec.ceilingstat&1) == 0) && (pos.z <= sec.ceilingz+(3<<8))) continue;
+                    if (((sec.floorstat&1) == 0) && (pos.z >= sec.floorz-(3<<8))) continue;
+                }
 
-//                for (i=clipsectnum-1; i>=0; i--)
-//                    if (clipsectorlist[i] == k) break;
-//                if (i < 0) clipsectorlist[clipsectnum++] = k;
+                for (i=clipsectnum-1; i>=0; i--)
+                    if (clipsectorlist[i] == k) break;
+                if (i < 0) clipsectorlist[clipsectnum++] = k;
 
-//                if ((x1 < xmin+MAXCLIPDIST) && (x2 < xmin+MAXCLIPDIST)) continue;
-//                if ((x1 > xmax-MAXCLIPDIST) && (x2 > xmax-MAXCLIPDIST)) continue;
-//                if ((y1 < ymin+MAXCLIPDIST) && (y2 < ymin+MAXCLIPDIST)) continue;
-//                if ((y1 > ymax-MAXCLIPDIST) && (y2 > ymax-MAXCLIPDIST)) continue;
-//                if (dx > 0) dax += dx*MAXCLIPDIST; else dax -= dx*MAXCLIPDIST;
-//                if (dy > 0) day -= dy*MAXCLIPDIST; else day += dy*MAXCLIPDIST;
-//                if (dax >= day) continue;
+                if ((x1 < xmin+MAXCLIPDIST) && (x2 < xmin+MAXCLIPDIST)) continue;
+                if ((x1 > xmax-MAXCLIPDIST) && (x2 > xmax-MAXCLIPDIST)) continue;
+                if ((y1 < ymin+MAXCLIPDIST) && (y2 < ymin+MAXCLIPDIST)) continue;
+                if ((y1 > ymax-MAXCLIPDIST) && (y2 > ymax-MAXCLIPDIST)) continue;
+                if (dx > 0) dax += dx*MAXCLIPDIST; else dax -= dx*MAXCLIPDIST;
+                if (dy > 0) day -= dy*MAXCLIPDIST; else day += dy*MAXCLIPDIST;
+                if (dax >= day) continue;
 //#ifdef YAX_ENABLE
-//                if (mcf==-1 && curspr==NULL)
-//                    origclipsectorlist[origclipsectnum++] = k;
+                if (mcf==-1 && curspr==NULL)
+                    origclipsectorlist[origclipsectnum++] = k;
 //#endif
-//                //It actually got here, through all the continue's!!!
-//                getzsofslope(k, pos.x,pos.y, &daz,&daz2);
+                //It actually got here, through all the continue's!!!
+                var $daz = new R(daz);
+                var $daz2 = new R(daz2);
+                getzsofslope(k, pos.x,pos.y, $daz,$daz2);
+                daz = $daz.$;
+                daz2 = $daz2.$;
 
 //#ifdef HAVE_CLIPSHAPE_FEATURE
-//                if (curspr)
-//                {
-//                    int32_t fz,cz, hitwhat=(curspr-sprite)+49152;
-//                    getzsofslope(sectq[clipinfo[curidx].qend],pos.x,pos.y,&cz,&fz);
+                if (curspr)
+                {
+                    var /*int32_t */fz: number,cz: number, hitwhat=(curspr-sprite)+49152;
+                    getzsofslope(sectq[clipinfo[curidx].qend],pos.x,pos.y,&cz,&fz);
 
-//                    if ((sec.ceilingstat&1)==0)
-//                    {
-//                        if (pos.z < cz && cz < *florz) { *florz = cz; *florhit = hitwhat; }
-//                        if (pos.z > daz && daz > *ceilz) { *ceilz = daz; *ceilhit = hitwhat; }
-//                    }
-//                    if ((sec.floorstat&1)==0)
-//                    {
-//                        if (pos.z < daz2 && daz2 < *florz) { *florz = daz2; *florhit = hitwhat; }
-//                        if (pos.z > fz && fz > *ceilz) { *ceilz = fz; *ceilhit = hitwhat; }
-//                    }
-//                }
-//                else
+                    if ((sec.ceilingstat&1)==0)
+                    {
+                        if (pos.z < cz && cz < florz.$) { florz.$ = cz; florhit.$ = hitwhat; }
+                        if (pos.z > daz && daz > ceilz.$) { ceilz.$ = daz; ceilhit.$ = hitwhat; }
+                    }
+                    if ((sec.floorstat&1)==0)
+                    {
+                        if (pos.z < daz2 && daz2 < florz.$) { florz.$ = daz2; florhit.$ = hitwhat; }
+                        if (pos.z > fz && fz > ceilz.$) { ceilz.$ = fz; ceilhit.$ = hitwhat; }
+                    }
+                }
+                else
 //#endif
-//                {
+                {
 //#ifdef YAX_ENABLE
-//                    int16_t cb, fb;
-//                    yax_getbunches(k, &cb, &fb);
+                    var /*int16_t */cb: number, fb: number;
+                    var $cb = new R(cb);
+                    var $fb = new R(fb);
+                    yax_getbunches(k, $cb, $fb);
+                    cb = $cb.$;
+                    fb = $fb.$;
 //#endif
-//                    if (daz > *ceilz)
+                    if (daz > ceilz.$)
 //#ifdef YAX_ENABLE
-//                        if (mcf!=YAX_FLOOR && cb < 0)
+                        if (mcf!=YAX_FLOOR && cb < 0)
 //#endif
-//                        *ceilz = daz, *ceilhit = k+16384; 
+                        ceilz.$ = daz, ceilhit.$ = k+16384; 
 
-//                    if (daz2 < *florz)
+                    if (daz2 < florz.$)
 //#ifdef YAX_ENABLE
-//                        if (mcf!=YAX_CEILING && fb < 0)
+                        if (mcf!=YAX_CEILING && fb < 0)
 //#endif
-//                        *florz = daz2, *florhit = k+16384; 
-//                }
-//            }
-//        }
-//        clipsectcnt++;
-//    }
-//    while (clipsectcnt < clipsectnum || clipspritecnt < clipspritenum);
+                        florz.$ = daz2, florhit.$ = k+16384; 
+                }
+            }
+        }
+        clipsectcnt++;
+    }
+    while (clipsectcnt < clipsectnum || clipspritecnt < clipspritenum);
 
 //#ifdef HAVE_CLIPSHAPE_FEATURE
-//    if (curspr)
-//    {
-//        mapinfo_set(NULL, &origmapinfo);  // restore original map
-//        clipsectnum = clipspritenum = 0;  // skip the next for loop and check afterwards
-//    }
+    if (curspr)
+    {
+        mapinfo_set(NULL, origmapinfo);  // restore original map
+        clipsectnum = clipspritenum = 0;  // skip the next for loop and check afterwards
+    }
 //#endif
 
-//    ////////// Sprites //////////
+    ////////// Sprites //////////
 
-//    for (i=0; i<clipsectnum; i++)
-//    {
-//        if (dasprclipmask==0)
-//            break;
+    for (i=0; i<clipsectnum; i++)
+    {
+        if (dasprclipmask==0)
+            break;
 
-//        for (j=headspritesect[clipsectorlist[i]]; j>=0; j=nextspritesect[j])
-//        {
-//            const spritetype *const spr = &sprite[j];
-//            const int32_t cstat = spr.cstat;
+        for (j=headspritesect[clipsectorlist[i]]; j>=0; j=nextspritesect[j])
+        {
+            var /*const spritetype *const */spr = sprite[j];
+            var /*const int32_t */cstat = spr.cstat;
 
-//            if (cstat&dasprclipmask)
-//            {
-//                int32_t clipyou = 0;
+            if (cstat&dasprclipmask)
+            {
+                var /*int32_t */clipyou = 0;
 
 //#ifdef HAVE_CLIPSHAPE_FEATURE
-//                if (clipsprite_try(spr, xmin,ymin, xmax,ymax))
-//                    continue;
+                if (clipsprite_try(spr, xmin,ymin, xmax,ymax))
+                    continue;
 //#endif
-//                x1 = spr.x; y1 = spr.y;
+                x1 = spr.x; y1 = spr.y;
 
-//                switch (cstat&48)
-//                {
-//                case 0:
-//                    k = walldist+(spr.clipdist<<2)+1;
-//                    if ((klabs(x1-pos.x) <= k) && (klabs(y1-pos.y) <= k))
-//                    {
-//                        daz = spr.z + spriteheightofs(j, &k, 1);
-//                        daz2 = daz - k;
-//                        clipyou = 1;
-//                    }
-//                    break;
+                switch (cstat&48)
+                {
+                case 0:
+                    k = walldist+(spr.clipdist<<2)+1;
+                    if ((klabs(x1-pos.x) <= k) && (klabs(y1-pos.y) <= k))
+                    {
+                        daz = spr.z + spriteheightofs(j, &k, 1);
+                        daz2 = daz - k;
+                        clipyou = 1;
+                    }
+                    break;
 
-//                case 16:
-//                {
-//                    get_wallspr_points(spr, &x1, &x2, &y1, &y2);
+                case 16:
+                {
+                    get_wallspr_points(spr, &x1, &x2, &y1, &y2);
 
-//                    if (clipinsideboxline(pos.x,pos.y,x1,y1,x2,y2,walldist+1) != 0)
-//                    {
-//                        daz = spr.z + spriteheightofs(j, &k, 1);
-//                        daz2 = daz-k;
-//                        clipyou = 1;
-//                    }
-//                    break;
-//                }
+                    if (clipinsideboxline(pos.x,pos.y,x1,y1,x2,y2,walldist+1) != 0)
+                    {
+                        daz = spr.z + spriteheightofs(j, &k, 1);
+                        daz2 = daz-k;
+                        clipyou = 1;
+                    }
+                    break;
+                }
 
-//                case 32:
-//                {
-//                    int32_t x3, y3, x4, y4;
+                case 32:
+                {
+                    int32_t x3, y3, x4, y4;
 
-//                    daz = spr.z; daz2 = daz;
+                    daz = spr.z; daz2 = daz;
 
-//                    if ((cstat&64) != 0)
-//                        if ((pos.z > daz) == ((cstat&8)==0)) continue;
+                    if ((cstat&64) != 0)
+                        if ((pos.z > daz) == ((cstat&8)==0)) continue;
 
-//                    get_floorspr_points(spr, pos.x, pos.y, &x1, &x2, &x3, &x4,
-//                                       &y1, &y2, &y3, &y4);
+                    get_floorspr_points(spr, pos.x, pos.y, &x1, &x2, &x3, &x4,
+                                       &y1, &y2, &y3, &y4);
 
-//                    dax = mulscale14(sintable[(spr.ang-256+512)&2047],walldist+4);
-//                    day = mulscale14(sintable[(spr.ang-256)&2047],walldist+4);
-//                    x1 += dax; x2 -= day; x3 -= dax; x4 += day;
-//                    y1 += day; y2 += dax; y3 -= day; y4 -= dax;
+                    dax = mulscale14(sintable[(spr.ang-256+512)&2047],walldist+4);
+                    day = mulscale14(sintable[(spr.ang-256)&2047],walldist+4);
+                    x1 += dax; x2 -= day; x3 -= dax; x4 += day;
+                    y1 += day; y2 += dax; y3 -= day; y4 -= dax;
 
-//                    clipyou = get_floorspr_clipyou(x1, x2, x3, x4, y1, y2, y3, y4);
-//                    break;
-//                }
-//                }
+                    clipyou = get_floorspr_clipyou(x1, x2, x3, x4, y1, y2, y3, y4);
+                    break;
+                }
+                }
 
-//                if (clipyou != 0)
-//                {
-//                    if ((pos.z > daz) && (daz > *ceilz
+                if (clipyou != 0)
+                {
+                    if ((pos.z > daz) && (daz > ceilz.$
 //#ifdef YAX_ENABLE
-//                                           || (daz == *ceilz && yax_getbunch(clipsectorlist[i], YAX_CEILING)>=0)
+                                           || (daz == ceilz.$ && yax_getbunch(clipsectorlist[i], YAX_CEILING)>=0)
 //#endif
-//                            ))
-//                    {
-//                        *ceilz = daz;
-//                        *ceilhit = j+49152;
-//                    }
+                            ))
+                    {
+                        ceilz.$ = daz;
+                        ceilhit.$ = j+49152;
+                    }
 
-//                    if ((pos.z < daz2) && (daz2 < *florz
+                    if ((pos.z < daz2) && (daz2 < florz.$
 //#ifdef YAX_ENABLE
-//                                            // can have a floor-sprite lying directly on the floor!
-//                                            || (daz2 == *florz && yax_getbunch(clipsectorlist[i], YAX_FLOOR)>=0)
+                                            // can have a floor-sprite lying directly on the floor!
+                                            || (daz2 == florz.$ && yax_getbunch(clipsectorlist[i], YAX_FLOOR)>=0)
 //#endif
-//                            ))
-//                    {
-//                        *florz = daz2;
-//                        *florhit = j+49152;
-//                    }
-//                }
-//            }
-//        }
-//    }
+                            ))
+                    {
+                        florz.$ = daz2;
+                        florhit.$ = j+49152;
+                    }
+                }
+            }
+        }
+    }
 
 //#ifdef HAVE_CLIPSHAPE_FEATURE
-//    if (clipspritenum>0)
-//        goto beginagain;
+    if (clipspritenum>0)
+        cointinue /*goto */beginagain;
 //#endif
 
 //#ifdef YAX_ENABLE
-//    if (numyaxbunches > 0)
-//    {
-//        const int32_t dasecclipmask = yax_waltosecmask(dawalclipmask);
-//        int16_t cb, fb, didchange;
+    if (numyaxbunches > 0)
+    {
+        var /*const int32_t */dasecclipmask = yax_waltosecmask(dawalclipmask);
+        var /*int16_t */cb: number, fb: number, didchange: number;
+        
+        var $cb = new R(cb);
+        var $fb = new R(fb);
+        yax_getbunches(sectnum, $cb, $fb);
+        cb = $cb.$;
+        fb = $fb.$;
 
-//        yax_getbunches(sectnum, &cb, &fb);
+        mcf++;
+        clipsectcnt = 0; clipsectnum = 0;
 
-//        mcf++;
-//        clipsectcnt = 0; clipsectnum = 0;
+        didchange = 0;
+        if (cb>=0 && mcf==0 && ceilhit.$==sectnum+16384)
+        {
+            for (i=0; i<origclipsectnum; i++)
+            {
+                j = origclipsectorlist[i];
+                if (yax_getbunch(j, YAX_CEILING) >= 0)
+                    if (sector[j].ceilingstat&dasecclipmask)
+                        break;
+            }
 
-//        didchange = 0;
-//        if (cb>=0 && mcf==0 && *ceilhit==sectnum+16384)
-//        {
-//            for (i=0; i<origclipsectnum; i++)
-//            {
-//                j = origclipsectorlist[i];
-//                if (yax_getbunch(j, YAX_CEILING) >= 0)
-//                    if (sector[j].ceilingstat&dasecclipmask)
-//                        break;
-//            }
+            if (i==origclipsectnum)
+                for (i=0; i<origclipsectnum; i++)
+                {
+                    cb = yax_getbunch(origclipsectorlist[i], YAX_CEILING);
+                    if (cb < 0)
+                        continue;
 
-//            if (i==origclipsectnum)
-//                for (i=0; i<origclipsectnum; i++)
-//                {
-//                    cb = yax_getbunch(origclipsectorlist[i], YAX_CEILING);
-//                    if (cb < 0)
-//                        continue;
+                    for (SECTORS_OF_BUNCH(cb,YAX_FLOOR, j))
+                        if (inside(pos.x,pos.y, j)==1)
+                        {
+                            clipsectorlist[clipsectnum++] = j;
+                            daz = getceilzofslope(j, pos.x,pos.y);
+                            if (!didchange || daz > ceilz.$)
+                                didchange=1, ceilhit.$ = j+16384, ceilz.$ = daz;
+                        }
+                }
 
-//                    for (SECTORS_OF_BUNCH(cb,YAX_FLOOR, j))
-//                        if (inside(pos.x,pos.y, j)==1)
-//                        {
-//                            clipsectorlist[clipsectnum++] = j;
-//                            daz = getceilzofslope(j, pos.x,pos.y);
-//                            if (!didchange || daz > *ceilz)
-//                                didchange=1, *ceilhit = j+16384, *ceilz = daz;
-//                        }
-//                }
+            if (clipsectnum==0)
+                mcf++;
+        }
+        else if (mcf==0)
+            mcf++;
 
-//            if (clipsectnum==0)
-//                mcf++;
-//        }
-//        else if (mcf==0)
-//            mcf++;
+        didchange = 0;
+        if (fb>=0 && mcf==1 && florhit.$==sectnum+16384)
+        {
+            for (i=0; i<origclipsectnum; i++)
+            {
+                j = origclipsectorlist[i];
+                if (yax_getbunch(j, YAX_FLOOR) >= 0)
+                    if (sector[j].floorstat&dasecclipmask)
+                        break;
+            }
 
-//        didchange = 0;
-//        if (fb>=0 && mcf==1 && *florhit==sectnum+16384)
-//        {
-//            for (i=0; i<origclipsectnum; i++)
-//            {
-//                j = origclipsectorlist[i];
-//                if (yax_getbunch(j, YAX_FLOOR) >= 0)
-//                    if (sector[j].floorstat&dasecclipmask)
-//                        break;
-//            }
+            // (almost) same as above, but with floors...
+            if (i==origclipsectnum)
+                for (i=0; i<origclipsectnum; i++)
+                {
+                    fb = yax_getbunch(origclipsectorlist[i], YAX_FLOOR);
+                    if (fb < 0)
+                        continue;
 
-//            // (almost) same as above, but with floors...
-//            if (i==origclipsectnum)
-//                for (i=0; i<origclipsectnum; i++)
-//                {
-//                    fb = yax_getbunch(origclipsectorlist[i], YAX_FLOOR);
-//                    if (fb < 0)
-//                        continue;
+                    for (SECTORS_OF_BUNCH(fb, YAX_CEILING, j))
+                        if (inside(pos.x,pos.y, j)==1)
+                        {
+                            clipsectorlist[clipsectnum++] = j;
+                            daz = getflorzofslope(j, pos.x,pos.y);
+                            if (!didchange || daz < florz.$)
+                                didchange=1, florhit.$ = j+16384, florz.$ = daz;
+                        }
+                }
+        }
 
-//                    for (SECTORS_OF_BUNCH(fb, YAX_CEILING, j))
-//                        if (inside(pos.x,pos.y, j)==1)
-//                        {
-//                            clipsectorlist[clipsectnum++] = j;
-//                            daz = getflorzofslope(j, pos.x,pos.y);
-//                            if (!didchange || daz < *florz)
-//                                didchange=1, *florhit = j+16384, *florz = daz;
-//                        }
-//                }
-//        }
+        if (clipsectnum > 0)
+        {
+            // sector-like sprite re-init:
+            curidx = -1;
+            curspr = NULL;
+            clipspritecnt = 0; clipspritenum = 0;
 
-//        if (clipsectnum > 0)
-//        {
-//            // sector-like sprite re-init:
-//            curidx = -1;
-//            curspr = NULL;
-//            clipspritecnt = 0; clipspritenum = 0;
-
-//            goto restart_grand;
-//        }
-//    }
+            goto restart_grand;
+        }
+    }
 //#endif
 }
 

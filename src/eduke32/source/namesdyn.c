@@ -1572,8 +1572,8 @@ void G_InitDynamicTiles(void)
     Bmemset(DynamicTileMap, 0, sizeof(DynamicTileMap));
 
     for (i=0; g_dynTileList[i].staticval >= 0; i++)
-#ifdef DYNTILEREMAP_ENABLE
-        DynamicTileMap[*(g_dynTileList[i].dynvalptr)] = g_dynTileList[i].staticval;
+#ifdef DYNTILEREMAP_ENABLEg_dynTileList[i].dynvalptr
+        DynamicTileMap[*()] = g_dynTileList[i].staticval;
 #else
         DynamicTileMap[g_dynTileList[i].staticval] = g_dynTileList[i].staticval;
 #endif

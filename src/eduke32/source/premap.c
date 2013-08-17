@@ -1755,6 +1755,7 @@ void G_FadeLoad(int32_t r, int32_t g, int32_t b, int32_t start, int32_t end, int
 
 static void G_LoadMapHack(char *outbuf, const char *filename)
 {
+#ifdef DEBUG_TODO
     if (filename != NULL)
         Bstrcpy(outbuf, filename);
 
@@ -1762,6 +1763,7 @@ static void G_LoadMapHack(char *outbuf, const char *filename)
 
     if (!loadmaphack(outbuf))
         initprintf("Loaded map hack file \"%s\"\n",outbuf);
+#endif
 }
 
 static void realloc_and_copy_musicfn(int32_t level_number, const char *levnamebuf, int32_t altp)
