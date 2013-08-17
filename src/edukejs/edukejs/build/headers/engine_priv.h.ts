@@ -1,6 +1,3 @@
-/// <reference path="../../build/source/engine.c.ts" />
-
-
 //#ifndef ENGINE_PRIV_H
 //#define ENGINE_PRIV_H
 

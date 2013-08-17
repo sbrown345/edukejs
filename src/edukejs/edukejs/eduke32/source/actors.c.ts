@@ -653,7 +653,7 @@ function A_DeleteSprite(s: number): void
         OSD_Printf(OSD_ERROR + "A_DeleteSprite(): tried to remove sprite %d in EVENT_EGS\n",s);
         return;
     }
-    todo("G_HaveEvent(EVENT_KILLIT)) is different?! should be 0 first time");
+    
     if (G_HaveEvent(EVENT_KILLIT))
     {
         var p = new R<number>(0), pl=A_FindPlayer(sprite[s],p);

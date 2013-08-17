@@ -1,3 +1,5 @@
+/// <reference path="../../build/headers/engine_priv.h.ts" />
+
 /// <reference path="../../utils/logging.ts" />
 /// <reference path="../../utils/assert.ts" />
 /// <reference path="../../utils/c.ts" />
@@ -7,7 +9,6 @@
 /// <reference path="../../build/headers/baselayer.h.ts" />
 /// <reference path="../../build/headers/build.h.ts" />
 /// <reference path="../../build/headers/compat.h.ts" />
-/// <reference path="../../build/headers/engine_priv.h.ts" />
 /// <reference path="../../build/headers/hightile.h.ts" />
 /// <reference path="../../build/headers/mdsprite.h.ts" />
 /// <reference path="../../build/headers/osd.h.ts" />
@@ -13895,68 +13896,69 @@ restart_grand:
         var wal: walltype, walIdx = 0;//const walltype *wal;
         var sec: sectortype;//const sectortype *sec;
         var /*int32_t */startwall=0, endwall=0;
-
+        debugger;
 //#ifdef HAVE_CLIPSHAPE_FEATURE
         if (clipsectcnt>=clipsectnum)
         {
+            debugger; todoThrow("not needed for first roof bit");
             // one set of clip-sprite sectors completed, prepare the next
 
-            curspr = sprite[clipspritelist[clipspritecnt]];
+            //curspr = sprite[clipspritelist[clipspritecnt]];
+            
+            //if (curidx < 0)  // per-sprite init
+            //    curidx = pictoidx[curspr.picnum];
+            //else
+            //    curidx = clipinfo[curidx].next;
 
-            if (curidx < 0)  // per-sprite init
-                curidx = pictoidx[curspr.picnum];
-            else
-                curidx = clipinfo[curidx].next;
+            //while (curidx>=0 && (curspr.cstat&32) != (sector[sectq[clipinfo[curidx].qbeg]].hitag&32))
+            //    curidx = clipinfo[curidx].next;
 
-            while (curidx>=0 && (curspr.cstat&32) != (sector[sectq[clipinfo[curidx].qbeg]].hitag&32))
-                curidx = clipinfo[curidx].next;
+            //if (curidx < 0)
+            //{
+            //    // didn't find matching clipping sectors for sprite
+            //    clipspritecnt++;
+            //    continue;
+            //}
 
-            if (curidx < 0)
-            {
-                // didn't find matching clipping sectors for sprite
-                clipspritecnt++;
-                continue;
-            }
+            //var $clipsectcnt = new R(clipsectcnt);
+            //clipsprite_initindex(curidx, curspr, $clipsectcnt, pos);
+            //clipsectcnt = $clipsectcnt.$;
 
-            var $clipsectcnt = new R(clipsectcnt);
-            clipsprite_initindex(curidx, curspr, $clipsectcnt, pos);
-            clipsectcnt = $clipsectcnt.$;
+            //for (i=0; i<clipsectnum; i++)
+            //{
+            //    var /*int32_t */fz: number,cz: number, hitwhat: number;
+            //    k = clipsectorlist[i];
 
-            for (i=0; i<clipsectnum; i++)
-            {
-                var /*int32_t */fz: number,cz: number, hitwhat: number;
-                k = clipsectorlist[i];
-
-                if (k==sectq[clipinfo[curidx].qend])
-                    continue;
+            //    if (k==sectq[clipinfo[curidx].qend])
+            //        continue;
                 
-                var $daz = new R(daz);
-                var $daz2 = new R(daz2);
-                getzsofslope(/*(int16_t)*/k,pos.x,pos.y,$daz,$daz2);
-                daz = $daz.$;
-                daz2 = $daz2.$;
-                var $cz = new R(cz);
-                var $fz = new R(fz);
-                getzsofslope(sectq[clipinfo[curidx].qend],pos.x,pos.y,$cz,$fz);
-                cz = $cz.$;
-                fz = $fz.$;
-                todoThrow("hitwhat = (curspr-sprite)+49152");
+            //    var $daz = new R(daz);
+            //    var $daz2 = new R(daz2);
+            //    getzsofslope(/*(int16_t)*/k,pos.x,pos.y,$daz,$daz2);
+            //    daz = $daz.$;
+            //    daz2 = $daz2.$;
+            //    var $cz = new R(cz);
+            //    var $fz = new R(fz);
+            //    getzsofslope(sectq[clipinfo[curidx].qend],pos.x,pos.y,$cz,$fz);
+            //    cz = $cz.$;
+            //    fz = $fz.$;
+            //    todoThrow("hitwhat = (curspr-sprite)+49152");
 
-                if ((sector[k].ceilingstat&1)==0)
-                {
-                    if (pos.z < cz && cz < florz.$) { florz.$ = cz; florhit.$ = hitwhat; }
-                    if (pos.z > daz && daz > ceilz.$) { ceilz.$ = daz; ceilhit.$ = hitwhat; }
-                }
-                if ((sector[k].floorstat&1)==0)
-                {
-                    if (pos.z < daz2 && daz2 < florz.$) { florz.$ = daz2; florhit.$ = hitwhat; }
-                    if (pos.z > fz && fz > ceilz.$) { ceilz.$ = fz; ceilhit.$ = hitwhat; }
-                }
-            }
+            //    if ((sector[k].ceilingstat&1)==0)
+            //    {
+            //        if (pos.z < cz && cz < florz.$) { florz.$ = cz; florhit.$ = hitwhat; }
+            //        if (pos.z > daz && daz > ceilz.$) { ceilz.$ = daz; ceilhit.$ = hitwhat; }
+            //    }
+            //    if ((sector[k].floorstat&1)==0)
+            //    {
+            //        if (pos.z < daz2 && daz2 < florz.$) { florz.$ = daz2; florhit.$ = hitwhat; }
+            //        if (pos.z > fz && fz > ceilz.$) { ceilz.$ = fz; ceilhit.$ = hitwhat; }
+            //    }
+            //}
         }
 //#endif
         ////////// Walls //////////
-
+        
         sec = sector[clipsectorlist[clipsectcnt]];
         startwall = sec.wallptr; endwall = startwall + sec.wallnum;
         for (j = startwall, wal = wall[walIdx = startwall]; j < endwall; j++, wal = wall[++walIdx])
@@ -14023,23 +14025,23 @@ restart_grand:
 //#ifdef HAVE_CLIPSHAPE_FEATURE
                 if (curspr)
                 {
-                    var /*int32_t */fz: number,cz: number, hitwhat=(curspr-sprite)+49152;
-                    var $cz = new R(cz);
-                    var $fz = new R(fz);
-                    getzsofslope(sectq[clipinfo[curidx].qend],pos.x,pos.y,$cz,$fz);
-                    cz = $cz.$;
-                    fz = $fz.$;
+                    todoThrow("var /*int32_t */fz: number,cz: number, hitwhat=(curspr-sprite)+49152");
+                    //var $cz = new R(cz);
+                    //var $fz = new R(fz);
+                    //getzsofslope(sectq[clipinfo[curidx].qend],pos.x,pos.y,$cz,$fz);
+                    //cz = $cz.$;
+                    //fz = $fz.$;
 
-                    if ((sec.ceilingstat&1)==0)
-                    {
-                        if (pos.z < cz && cz < florz.$) { florz.$ = cz; florhit.$ = hitwhat; }
-                        if (pos.z > daz && daz > ceilz.$) { ceilz.$ = daz; ceilhit.$ = hitwhat; }
-                    }
-                    if ((sec.floorstat&1)==0)
-                    {
-                        if (pos.z < daz2 && daz2 < florz.$) { florz.$ = daz2; florhit.$ = hitwhat; }
-                        if (pos.z > fz && fz > ceilz.$) { ceilz.$ = fz; ceilhit.$ = hitwhat; }
-                    }
+                    //if ((sec.ceilingstat&1)==0)
+                    //{
+                    //    if (pos.z < cz && cz < florz.$) { florz.$ = cz; florhit.$ = hitwhat; }
+                    //    if (pos.z > daz && daz > ceilz.$) { ceilz.$ = daz; ceilhit.$ = hitwhat; }
+                    //}
+                    //if ((sec.floorstat&1)==0)
+                    //{
+                    //    if (pos.z < daz2 && daz2 < florz.$) { florz.$ = daz2; florhit.$ = hitwhat; }
+                    //    if (pos.z > fz && fz > ceilz.$) { ceilz.$ = fz; ceilhit.$ = hitwhat; }
+                    //}
                 }
                 else
 //#endif
@@ -14069,7 +14071,6 @@ restart_grand:
         clipsectcnt++;
     }
     while (clipsectcnt < clipsectnum || clipspritecnt < clipspritenum);
-    }// for label restart_grand
 
 //#ifdef HAVE_CLIPSHAPE_FEATURE
     if (curspr)
@@ -14273,6 +14274,8 @@ restart_grand:
             continue /*goto */restart_grand;
         }
     }
+
+    }// for label restart_grand
 //#endif
 }
 
