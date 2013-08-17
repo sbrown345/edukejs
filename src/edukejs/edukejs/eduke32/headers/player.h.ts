@@ -161,7 +161,7 @@ class DukeStatus_t {
     got_access: number; last_extra: number; inv_amount:Int16Array/*[GET_MAX]*/; curr_weapon: number; holoduke_on: number;   //int16_t 
     last_weapon: number; weapon_pos: number; kickback_pic: number;                                                          //int16_t 
     ammo_amount: Int16Array; frag:Int16Array;                                                                                //int16_t 
-    gotweapon;                                                                                                                  //uint16_t
+    gotweapon: number;                                                                                                                  //uint16_t
     inven_icon: number; jetpack_on: number; heat_on: number;                                                                   //char
 
     constructor() {

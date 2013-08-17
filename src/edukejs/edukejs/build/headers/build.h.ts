@@ -182,12 +182,12 @@ function YAX_NEXTWALL(Wall: number, Cf: number): number{return YAX_PTRNEXTWALL(w
 //void yax_update(int32_t resetstat);
 //int32_t yax_getneighborsect(int32_t x, int32_t y, int32_t sectnum, int32_t cf);
 
-//static inline int32_t yax_waltosecmask(int32_t walclipmask)
-//{
-//    // blocking: walstat&1 --> secstat&512
-//    // hitscan: walstat&64 --> secstat&2048
-//    return ((walclipmask&1)<<9) | ((walclipmask&64)<<5);
-//}
+function/*static inline int32_t */yax_waltosecmask(/*int32_t */walclipmask: number): number
+{
+    // blocking: walstat&1 --> secstat&512
+    // hitscan: walstat&64 --> secstat&2048
+    return ((walclipmask&1)<<9) | ((walclipmask&64)<<5);
+}
 //void yax_preparedrawrooms(void);
 //void yax_drawrooms(void (*SpriteAnimFunc)(int32_t,int32_t,int32_t,int32_t),
 //                   int16_t sectnum, int32_t didmirror, int32_t smoothr);
@@ -838,7 +838,7 @@ var spritesmooth: spritesmooth_t[];//EXTERN spritesmooth_t spritesmooth[MAXSPRIT
 //}
 
 //EXTERN int16_t maskwall[MAXWALLSB], maskwallcnt;
-//EXTERN int16_t thewall[MAXWALLSB];
+var thewall = new Int16Array(MAXWALLSB);
 //EXTERN spritetype *tspriteptr[MAXSPRITESONSCREEN + 1];
 
 var xdim = 0, ydim = 0, numpages = 0;       //EXTERN int32_t 
@@ -1202,10 +1202,15 @@ class vec3_t implements IVec3{
     }
 };
 
-//typedef struct {
-//    vec3_t pos;
-//    int16_t sprite, wall, sect;
-//} hitdata_t;
+class hitdata_t {
+    pos: vec3_t ;
+    sprite: number; wall: number; sect: number;//    int16_t 
+
+    constructor() {
+        this.pos = new vec3_t();
+        this.sprite = 0; this.wall = 0; this.sect = 0;
+    }
+}
 
 
 //int32_t    preinitengine(void);	// a partial setup of the engine used for launch windows
@@ -1389,10 +1394,10 @@ function getzsofslope(/*int16_t */sectnum: number, /*int32_t */dax: number, /*in
 //int32_t   setsprite(int16_t spritenum, const vec3_t *) ATTRIBUTE((nonnull(2)));
 //int32_t   setspritez(int16_t spritenum, const vec3_t *) ATTRIBUTE((nonnull(2)));
 
-var  spriteheightofsptr/*todo: type*/ = window["spriteheightofsptr"];//(const spritetype *spr, int32_t *height, int32_t alsotileyofs);
+//int32_t spriteheightofsptr(const spritetype *spr, int32_t *height, int32_t alsotileyofs);
 function /*int32_t */spriteheightofs(/*int16_t */i: number, /*int32_t **/height: R<number>, /*int32_t */alsotileyofs: number)
 {
-    return spriteheightofsptr(sprite[i], height, alsotileyofs);
+    return window["spriteheightofsptr"](sprite[i], height, alsotileyofs);
 }
 
 //int32_t   screencapture(const char *filename, char inverseit, const char *versionstr) ATTRIBUTE((nonnull(1)));

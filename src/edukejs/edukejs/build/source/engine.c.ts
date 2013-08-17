@@ -1326,16 +1326,16 @@ function mapinfo_set(bak: mapinfo_t, newmap: mapinfo_t): void
     {
         bak.numsectors = numsectors;
         bak.numwalls = numwalls;
-        bak.sector = sector;
-        bak.wall = wall;
+        bak.sector[0] = sector;
+        bak.wall[0] = wall;
     }
 
     if (newmap)
     {
         numsectors = newmap.numsectors;
         numwalls = newmap.numwalls;
-        sector = newmap.sector;
-        wall = newmap.wall;
+        sector[0] = newmap.sector;
+        wall[0] = newmap.wall;
     }
 }
 
@@ -1392,7 +1392,7 @@ var loadsprite: spritetype;//static spritetype *
 
 //// don't rotate when applying clipping, for models with rotational symmetry
 //#define CM_NOROT(Spri) (sprite[Spri].cstat&2)
-//#define CM_NOROTS(Sect) (sector[Sect].CM_CSTAT&2)
+//#define CM_NOROTS(Sect) (sector[Sect].hitag&2)
 
 
 function clipmapinfo_init() : void
@@ -1738,7 +1738,7 @@ function clipmapinfo_init() : void
 //                    sector[k].CM_YREPEAT = sprite[i].yrepeat;
 //                    sector[k].CM_XOFFSET = sprite[i].xoffset;
 //                    sector[k].CM_YOFFSET = sprite[i].yoffset;
-//                    sector[k].CM_CSTAT = sprite[i].cstat;
+//                    sector[k].hitag = sprite[i].cstat;
 //                    sector[k].CM_ANG = sprite[i].ang;
 //                }
 
@@ -2349,8 +2349,8 @@ function msqrtasm(/*uint32_t */ c: number): number
 //int32_t xb1[MAXWALLSB];  // Polymost uses this as a temp array
 //static int32_t yb1[MAXWALLSB], xb2[MAXWALLSB], yb2[MAXWALLSB];
 //int32_t rx1[MAXWALLSB], ry1[MAXWALLSB];
-//static int32_t rx2[MAXWALLSB], ry2[MAXWALLSB];
-//int16_t p2[MAXWALLSB], thesector[MAXWALLSB];
+var rx2 = new Int16Array(MAXWALLSB), ry2 = new Int16Array(MAXWALLSB);
+var p2 = new Int16Array(MAXWALLSB), thesector = new Int16Array(MAXWALLSB);//int16_t 
 
 var bunchfirst = new Int16Array(MAXWALLSB), bunchlast = new Int16Array(MAXWALLSB);
 
@@ -3008,42 +3008,42 @@ var palfadedelta = 0; //char
 //}
 
 
-////
-//// wallfront (internal)
-////
-//int32_t wallfront(int32_t l1, int32_t l2)
-//{
-//    walltype *wal;
-//    int32_t x11, y11, x21, y21, x12, y12, x22, y22, dx, dy, t1, t2;
+//
+// wallfront (internal)
+//
+function /*int32_t */wallfront(/*int32_t */l1: number, /*int32_t */l2: number): number
+{
+    var wal: walltype;
+    var /*int32_t */x11=0, y11=0, x21=0, y21=0, x12=0, y12=0, x22=0, y22=0, dx=0, dy=0, t1=0, t2=0;
 
-//    wal = &wall[thewall[l1]]; x11 = wal.x; y11 = wal.y;
-//    wal = &wall[wal.point2]; x21 = wal.x; y21 = wal.y;
-//    wal = &wall[thewall[l2]]; x12 = wal.x; y12 = wal.y;
-//    wal = &wall[wal.point2]; x22 = wal.x; y22 = wal.y;
+    wal = wall[thewall[l1]]; x11 = wal.x; y11 = wal.y;
+    wal = wall[wal.point2]; x21 = wal.x; y21 = wal.y;
+    wal = wall[thewall[l2]]; x12 = wal.x; y12 = wal.y;
+    wal = wall[wal.point2]; x22 = wal.x; y22 = wal.y;
 
-//    dx = x21-x11; dy = y21-y11;
-//    t1 = dmulscale2(x12-x11,dy,-dx,y12-y11); //p1(l2) vs. l1
-//    t2 = dmulscale2(x22-x11,dy,-dx,y22-y11); //p2(l2) vs. l1
-//    if (t1 == 0) { t1 = t2; if (t1 == 0) return(-1); }
-//    if (t2 == 0) t2 = t1;
-//    if ((t1^t2) >= 0)
-//    {
-//        t2 = dmulscale2(globalposx-x11,dy,-dx,globalposy-y11); //pos vs. l1
-//        return((t2^t1) >= 0);
-//    }
+    dx = x21-x11; dy = y21-y11;
+    t1 = dmulscale2(x12-x11,dy,-dx,y12-y11); //p1(l2) vs. l1
+    t2 = dmulscale2(x22-x11,dy,-dx,y22-y11); //p2(l2) vs. l1
+    if (t1 == 0) { t1 = t2; if (t1 == 0) return(-1); }
+    if (t2 == 0) t2 = t1;
+    if ((t1^t2) >= 0)
+    {
+        t2 = dmulscale2(globalposx-x11,dy,-dx,globalposy-y11); //pos vs. l1
+        return((t2^t1) >= 0)?1:0;
+    }
 
-//    dx = x22-x12; dy = y22-y12;
-//    t1 = dmulscale2(x11-x12,dy,-dx,y11-y12); //p1(l1) vs. l2
-//    t2 = dmulscale2(x21-x12,dy,-dx,y21-y12); //p2(l1) vs. l2
-//    if (t1 == 0) { t1 = t2; if (t1 == 0) return(-1); }
-//    if (t2 == 0) t2 = t1;
-//    if ((t1^t2) >= 0)
-//    {
-//        t2 = dmulscale2(globalposx-x12,dy,-dx,globalposy-y12); //pos vs. l2
-//        return((t2^t1) < 0);
-//    }
-//    return(-2);
-//}
+    dx = x22-x12; dy = y22-y12;
+    t1 = dmulscale2(x11-x12,dy,-dx,y11-y12); //p1(l1) vs. l2
+    t2 = dmulscale2(x21-x12,dy,-dx,y21-y12); //p2(l1) vs. l2
+    if (t1 == 0) { t1 = t2; if (t1 == 0) return(-1); }
+    if (t2 == 0) t2 = t1;
+    if ((t1^t2) >= 0)
+    {
+        t2 = dmulscale2(globalposx-x12,dy,-dx,globalposy-y12); //pos vs. l2
+        return((t2^t1) < 0)?1:0;
+    }
+    return(-2);
+}
 
 
 ////
@@ -11475,32 +11475,32 @@ function loadtile(tilenume: number): void
 //}
 
 
-////
-//// clipinsideboxline
-////
-//int32_t clipinsideboxline(int32_t x, int32_t y, int32_t x1, int32_t y1, int32_t x2, int32_t y2, int32_t walldist)
-//{
-//    const int32_t r = walldist<<1;
+//
+// clipinsideboxline
+//
+function /*int32_t */clipinsideboxline(/*int32_t */x: number, /*int32_t */y: number, /*int32_t */x1: number, /*int32_t */y1: number, /*int32_t */x2: number, /*int32_t */y2: number, /*int32_t */walldist: number)
+{
+    var /*const int32_t */r = walldist<<1;
 
-//    x1 += walldist-x; x2 += walldist-x;
-//    if ((x1 < 0) && (x2 < 0)) return(0);
-//    if ((x1 >= r) && (x2 >= r)) return(0);
+    x1 += walldist-x; x2 += walldist-x;
+    if ((x1 < 0) && (x2 < 0)) return(0);
+    if ((x1 >= r) && (x2 >= r)) return(0);
 
-//    y1 += walldist-y; y2 += walldist-y;
-//    if ((y1 < 0) && (y2 < 0)) return(0);
-//    if ((y1 >= r) && (y2 >= r)) return(0);
+    y1 += walldist-y; y2 += walldist-y;
+    if ((y1 < 0) && (y2 < 0)) return(0);
+    if ((y1 >= r) && (y2 >= r)) return(0);
 
-//    x2 -= x1; y2 -= y1;
-//    if (x2*(walldist-y1) >= y2*(walldist-x1))  //Front
-//    {
-//        if (x2 > 0) x2 *= (0-y1); else x2 *= (r-y1);
-//        if (y2 > 0) y2 *= (r-x1); else y2 *= (0-x1);
-//        return(x2 < y2);
-//    }
-//    if (x2 > 0) x2 *= (r-y1); else x2 *= (0-y1);
-//    if (y2 > 0) y2 *= (0-x1); else y2 *= (r-x1);
-//    return((x2 >= y2)<<1);
-//}
+    x2 -= x1; y2 -= y1;
+    if (x2*(walldist-y1) >= y2*(walldist-x1))  //Front
+    {
+        if (x2 > 0) x2 *= (0-y1); else x2 *= (r-y1);
+        if (y2 > 0) y2 *= (r-x1); else y2 *= (0-x1);
+        return(x2 < y2);
+    }
+    if (x2 > 0) x2 *= (r-y1); else x2 *= (0-y1);
+    if (y2 > 0) y2 *= (0-x1); else y2 *= (r-x1);
+    return((x2 >= y2)<<1);
+}
 
 
 //
@@ -12062,34 +12062,34 @@ function /*int32_t */ setspritez(/*int16_t */spritenum: number, /*const vec3_t *
 //    k = -mulscale16(sinang,l); *y3 = *y2+k; *y4 = *y1+k;
 //}
 
-//static int32_t get_floorspr_clipyou(int32_t x1, int32_t x2, int32_t x3, int32_t x4,
-//                                   int32_t y1, int32_t y2, int32_t y3, int32_t y4)
-//{
-//    int32_t clipyou = 0;
+function /*static int32_t */get_floorspr_clipyou(/*int32_t */x1: number, /*int32_t */x2: number, /*int32_t */x3: number, /*int32_t */x4: number,
+                                   /*int32_t */y1: number, /*int32_t */y2: number, /*int32_t */y3: number, /*int32_t */y4: number)
+{
+    var /*int32_t */clipyou = 0;
 
-//    if ((y1^y2) < 0)
-//    {
-//        if ((x1^x2) < 0) clipyou ^= (x1*y2 < x2*y1)^(y1<y2);
-//        else if (x1 >= 0) clipyou ^= 1;
-//    }
-//    if ((y2^y3) < 0)
-//    {
-//        if ((x2^x3) < 0) clipyou ^= (x2*y3 < x3*y2)^(y2<y3);
-//        else if (x2 >= 0) clipyou ^= 1;
-//    }
-//    if ((y3^y4) < 0)
-//    {
-//        if ((x3^x4) < 0) clipyou ^= (x3*y4 < x4*y3)^(y3<y4);
-//        else if (x3 >= 0) clipyou ^= 1;
-//    }
-//    if ((y4^y1) < 0)
-//    {
-//        if ((x4^x1) < 0) clipyou ^= (x4*y1 < x1*y4)^(y4<y1);
-//        else if (x4 >= 0) clipyou ^= 1;
-//    }
+    if ((y1^y2) < 0)
+    {
+        if ((x1^x2) < 0) clipyou ^= (x1*y2 < x2*y1)^(y1<y2);
+        else if (x1 >= 0) clipyou ^= 1;
+    }
+    if ((y2^y3) < 0)
+    {
+        if ((x2^x3) < 0) clipyou ^= (x2*y3 < x3*y2)^(y2<y3);
+        else if (x2 >= 0) clipyou ^= 1;
+    }
+    if ((y3^y4) < 0)
+    {
+        if ((x3^x4) < 0) clipyou ^= (x3*y4 < x4*y3)^(y3<y4);
+        else if (x3 >= 0) clipyou ^= 1;
+    }
+    if ((y4^y1) < 0)
+    {
+        if ((x4^x1) < 0) clipyou ^= (x4*y1 < x1*y4)^(y4<y1);
+        else if (x4 >= 0) clipyou ^= 1;
+    }
 
-//    return clipyou;
-//}
+    return clipyou;
+}
 
 //// intp: point of currently best (closest) intersection
 //static int32_t try_facespr_intersect(const spritetype *spr, const vec3_t *refpos,
@@ -12192,7 +12192,7 @@ function/*int32_t */hitscan(/*const vec3_t **/sv: vec3_t, /*int16_t */sectnum: n
 //            else
 //                curidx = clipinfo[curidx].next;
 
-//            while (curidx>=0 && (curspr.cstat&32) != (sector[sectq[clipinfo[curidx].qbeg]].CM_CSTAT&32))
+//            while (curidx>=0 && (curspr.cstat&32) != (sector[sectq[clipinfo[curidx].qbeg]].hitag&32))
 //                curidx = clipinfo[curidx].next;
 
 //            if (curidx < 0)
@@ -12312,7 +12312,7 @@ function/*int32_t */hitscan(/*const vec3_t **/sv: vec3_t, /*int16_t */sectnum: n
 //            // try and see whether this sprite's picnum has sector-like clipping data
 //            i = pictoidx[spr.picnum];
 //            // handle sector-like floor sprites separately
-//            while (i>=0 && (spr.cstat&32) != (clipmapinfo.sector[sectq[clipinfo[i].qbeg]].CM_CSTAT&32))
+//            while (i>=0 && (spr.cstat&32) != (clipmapinfo.sector[sectq[clipinfo[i].qbeg]].hitag&32))
 //                i = clipinfo[i].next;
 //            if (i>=0 && clipspritenum<MAXCLIPNUM)
 //            {
@@ -12751,55 +12751,55 @@ function/*int32_t */hitscan(/*const vec3_t **/sv: vec3_t, /*int16_t */sectnum: n
 
 //////////// CLIPMOVE //////////
 
-//static int32_t clipmoveboxtracenum = 3;
+var /*static int32_t */clipmoveboxtracenum = 3;
 
 //#ifdef HAVE_CLIPSHAPE_FEATURE
-//static int32_t clipsprite_try(const spritetype *spr, int32_t xmin, int32_t ymin, int32_t xmax, int32_t ymax)
-//{
-//    // try and see whether this sprite's picnum has sector-like clipping data
-//    int32_t i = pictoidx[spr.picnum];
-//    // handle sector-like floor sprites separately
-//    while (i>=0 && (spr.cstat&32) != (clipmapinfo.sector[sectq[clipinfo[i].qbeg]].CM_CSTAT&32))
-//        i = clipinfo[i].next;
+function /*static int32_t */clipsprite_try(/*const spritetype **/spr: spritetype, /*int32_t */xmin: number, /*int32_t */ymin: number, /*int32_t */xmax: number, /*int32_t */ymax: number)
+{
+    // try and see whether this sprite's picnum has sector-like clipping data
+    var /*int32_t */i = pictoidx[spr.picnum];
+    // handle sector-like floor sprites separately
+    while (i>=0 && (spr.cstat&32) != (clipmapinfo.sector[sectq[clipinfo[i].qbeg]].hitag&32))
+        i = clipinfo[i].next;
 
-//    if (i>=0)
-//    {
-//        int32_t maxcorrection = clipinfo[i].maxdist;
-//        const int32_t k = sectq[clipinfo[i].qbeg];
+    if (i>=0)
+    {
+        var /*int32_t */maxcorrection = clipinfo[i].maxdist;
+        var /*const int32_t */k = sectq[clipinfo[i].qbeg];
 
-//        if ((spr.cstat&48)!=32)  // face/wall sprite
-//        {
-//            int32_t tempint1 = clipmapinfo.sector[k].CM_XREPEAT;
-//            maxcorrection = (maxcorrection * (int32_t)spr.xrepeat)/tempint1;
-//        }
-//        else  // floor sprite
-//        {
-//            int32_t tempint1 = clipmapinfo.sector[k].CM_XREPEAT;
-//            int32_t tempint2 = clipmapinfo.sector[k].CM_YREPEAT;
-//            maxcorrection = max((maxcorrection * (int32_t)spr.xrepeat)/tempint1,
-//                                (maxcorrection * (int32_t)spr.yrepeat)/tempint2);
-//        }
+        if ((spr.cstat&48)!=32)  // face/wall sprite
+        {
+            var /*int32_t */tempint1 = clipmapinfo.sector[k].CM_XREPEAT;
+            maxcorrection = ((maxcorrection * /*(int32_t)*/spr.xrepeat)/tempint1)|0;
+        }
+        else  // floor sprite
+        {
+            var /*int32_t */tempint1 = clipmapinfo.sector[k].CM_XREPEAT;
+            var /*int32_t */tempint2 = clipmapinfo.sector[k].CM_YREPEAT;
+            maxcorrection = max(((maxcorrection * /*(int32_t)*/spr.xrepeat)/tempint1)|0,
+                                ((maxcorrection * /*(int32_t)*/spr.yrepeat)/tempint2)|0);
+        }
 
-//        maxcorrection -= MAXCLIPDIST;
+        maxcorrection -= MAXCLIPDIST;
 
-//        if (spr.x < xmin - maxcorrection) return 1;
-//        if (spr.y < ymin - maxcorrection) return 1;
-//        if (spr.x > xmax + maxcorrection) return 1;
-//        if (spr.y > ymax + maxcorrection) return 1;
+        if (spr.x < xmin - maxcorrection) return 1;
+        if (spr.y < ymin - maxcorrection) return 1;
+        if (spr.x > xmax + maxcorrection) return 1;
+        if (spr.y > ymax + maxcorrection) return 1;
 
-//        if (clipspritenum < MAXCLIPNUM)
-//            clipspritelist[clipspritenum++] = spr-sprite;
-////initprintf("%d: clip sprite[%d]\n",clipspritenum,j);
-//        return 1;
-//    }
+        if (clipspritenum < MAXCLIPNUM)
+            todoThrow("clipspritelist[clipspritenum++] = spr-sprite;");
+//initprintf("%d: clip sprite[%d]\n",clipspritenum,j);
+        return 1;
+    }
 
-//    return 0;
-//}
+    return 0;
+}
 
-//// return: -1 if curspr has x-flip xor y-flip (in the horizontal map plane!), 1 else
-//static int32_t clipsprite_initindex(int32_t curidx, spritetype *curspr, int32_t *clipsectcnt, const vec3_t *vect)
-//{
-//    int32_t k, daz = curspr.z;
+// return: -1 if curspr has x-flip xor y-flip (in the horizontal map plane!), 1 else
+function/*int32_t */clipsprite_initindex(/*int32_t*/ curidx: number, curspr: spritetype , /*int32_t */clipsectcnt: R<number>, /*const vec3_t **/vect: IVec3): number
+{todoThrow(); return -99999999999999999;
+//    var int32_t k, daz = curspr.z;
 //    int32_t scalex, scaley, scalez, flipx, flipy;
 //    int32_t flipmul=1;
 
@@ -12835,7 +12835,7 @@ function/*int32_t */hitscan(/*const vec3_t **/sv: vec3_t, /*int16_t */sectnum: n
 //            wall = loadwallinv;
 //    }
 
-//    if ((curspr.cstat&128) != (sector[j].CM_CSTAT&128))
+//    if ((curspr.cstat&128) != (sector[j].hitag&128))
 //        daz += (((curspr.cstat&128)>>6)-1)*((tilesizy[curspr.picnum]*curspr.yrepeat)<<1);
 
 //    *clipsectcnt = clipsectnum = 0;
@@ -12878,7 +12878,7 @@ function/*int32_t */hitscan(/*const vec3_t **/sv: vec3_t, /*int16_t */sectnum: n
 //        clipsectorlist[clipsectnum++] = sectq[k-1];
 
 //    return flipmul;
-//}
+}
 //#endif
 
 //static int32_t clipmove_warned=0;
@@ -12987,7 +12987,7 @@ function /*int32_t */clipmove(pos: IVec3, /*int16_t **/sectnum: R<number>,
 //            else
 //                curidx = clipinfo[curidx].next;
 
-//            while (curidx>=0 && (curspr.cstat&32) != (sector[sectq[clipinfo[curidx].qbeg]].CM_CSTAT&32))
+//            while (curidx>=0 && (curspr.cstat&32) != (sector[sectq[clipinfo[curidx].qbeg]].hitag&32))
 //                curidx = clipinfo[curidx].next;
 
 //            if (curidx < 0)
@@ -13888,6 +13888,7 @@ function beginagain() {
 
 //#ifdef YAX_ENABLE
 restart_grand:
+    for (;;) {
 //#endif
     do  //Collect sectors inside your square first
     {
@@ -13907,7 +13908,7 @@ restart_grand:
             else
                 curidx = clipinfo[curidx].next;
 
-            while (curidx>=0 && (curspr.cstat&32) != (sector[sectq[clipinfo[curidx].qbeg]].CM_CSTAT&32))
+            while (curidx>=0 && (curspr.cstat&32) != (sector[sectq[clipinfo[curidx].qbeg]].hitag&32))
                 curidx = clipinfo[curidx].next;
 
             if (curidx < 0)
@@ -13934,8 +13935,12 @@ restart_grand:
                 getzsofslope(/*(int16_t)*/k,pos.x,pos.y,$daz,$daz2);
                 daz = $daz.$;
                 daz2 = $daz2.$;
-                getzsofslope(sectq[clipinfo[curidx].qend],pos.x,pos.y,cz,fz);
-                hitwhat = (curspr-sprite)+49152;
+                var $cz = new R(cz);
+                var $fz = new R(fz);
+                getzsofslope(sectq[clipinfo[curidx].qend],pos.x,pos.y,$cz,$fz);
+                cz = $cz.$;
+                fz = $fz.$;
+                todoThrow("hitwhat = (curspr-sprite)+49152");
 
                 if ((sector[k].ceilingstat&1)==0)
                 {
@@ -14064,6 +14069,7 @@ restart_grand:
         clipsectcnt++;
     }
     while (clipsectcnt < clipsectnum || clipspritecnt < clipspritenum);
+    }// for label restart_grand
 
 //#ifdef HAVE_CLIPSHAPE_FEATURE
     if (curspr)
