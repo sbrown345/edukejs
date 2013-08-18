@@ -2379,9 +2379,9 @@ var ydimen: number;                                                            /
 var wx1: number, wy1: number, wx2: number, wy2: number;//static int32_t 
 var frameoffset: number; //intptr_t
 
-//static int32_t nrx1[8], nry1[8], nrx2[8], nry2[8]; // JBF 20031206: Thanks Ken
+//static int32_t nrx1 = new Int32Array(8), nry1 = new Int32Array(8), nrx2 = new Int32Array(8), nry2 = new Int32Array(8); // JBF 20031206: Thanks Ken
 
-//static int32_t rxi[8], ryi[8], rzi[8], rxi2[8], ryi2[8], rzi2[8];
+var rxi = new Int32Array(8), ryi = new Int32Array(8), rzi = new Int32Array(8), rxi2 = new Int32Array(8), ryi2 = new Int32Array(8), rzi2 = new Int32Array(8);
 var xsi = new Int32Array(8), ysi = new Int32Array(8), horizycent: number; //static int32_t 
 var horizlookup: Int32Array, horizlookup2: Int32Array;
 var horizlookupIdx = 0, horizlookup2Idx = 0;
@@ -2434,14 +2434,23 @@ var colnext = new Int32Array(256);
 var coldist = new Uint8Array([0,1,2,3,4,3,2,1]);
 var colscan = new Int32Array(27);
 
-//static int16_t clipnum, hitwalls[4];
+var /*int16_t */clipnum: number, hitwalls = new Int16Array(4);
 //const int32_t hitscangoalx = (1<<29)-1, hitscangoaly = (1<<29)-1;
 //#ifdef USE_OPENGL
 //int32_t hitallsprites = 0;
 //#endif
 
-//typedef struct { int32_t x1, y1, x2, y2; } linetype;
-//static linetype clipit[MAXCLIPNUM];
+class linetype{
+  x1: number; y1: number; x2: number; y2: number;  //int32_t 
+
+    constructor() {
+        this.x1=0;
+        this.y1=0;
+        this.x2=0;
+        this.y2=0;
+    }
+} 
+var clipit: linetype[] = newStructArray<linetype>(linetype, MAXCLIPNUM);
 var /*static int32_t */clipsectnum: number, origclipsectnum: number, clipspritenum: number;
 var /*static int16_t */ clipsectorlist = new Int16Array(MAXCLIPNUM), origclipsectorlist = new Int16Array(MAXCLIPNUM);
 var /*static int16_t */clipspritelist = new Int16Array(MAXCLIPNUM);  // sector-like sprite clipping
@@ -8458,48 +8467,48 @@ function changespritestat(/*int16_t*/ spritenum: number, /*int16_t*/ newstatnum:
 //    return lintersect(x1, y1, z1, x2, y2, z2, x3, y3, x4, y4, intx, inty, intz);
 //}
 
-////
-//// rintersect (internal)
-////
-//// returns: -1 if didn't intersect, coefficient (x3--x4 fraction)<<16 else
-//static int32_t rintersect(int32_t x1, int32_t y1, int32_t z1,
-//                          int32_t vx_, int32_t vy_, int32_t vz,
-//                          int32_t x3, int32_t y3, int32_t x4, int32_t y4,
-//                          int32_t *intx, int32_t *inty, int32_t *intz)
-//{
-//    //p1 towards p2 is a ray
-//    int64_t topt, topu, t;
+//
+// rintersect (internal)
+//
+// returns: -1 if didn't intersect, coefficient (x3--x4 fraction)<<16 else
+function /*int32_t */rintersect(/*int32_t*/ x1:number, /*int32_t*/ y1:number, /*int32_t*/ z1:number,
+                          /*int32_t*/ vx_:number, /*int32_t*/ vy_:number, /*int32_t*/ vz:number,
+                          /*int32_t*/ x3:number, /*int32_t*/ y3:number, /*int32_t*/ x4:number, /*int32_t*/ y4:number,
+                          /*int32_t*/ intx: R<number>, /*int32_t*/ inty: R<number>, /*int32_t*/ intz: R<number>): number
+{
+    //p1 towards p2 is a ray
+    var /*int64_t */topt=0, topu=0, t=0;
 
-//    const int64_t vx=vx_, vy=vy_;
-//    const int64_t x34=x3-x4, y34=y3-y4;
-//    const int64_t bot = vx*y34 - vy*x34;
+    var /*const int64_t*/ vx=vx_, vy=vy_;
+    var /*const int64_t*/ x34=x3-x4, y34=y3-y4;
+    var /*const int64_t*/ bot = vx*y34 - vy*x34;
 
-//    if (bot == 0)
-//        return -1;
+    if (bot == 0)
+        return -1;
 
-//    if (bot >= 0)
-//    {
-//        int64_t x31=x3-x1, y31 = y3-y1;
-//        topt = x31*y34 - y31*x34; if (topt < 0) return -1;
-//        topu = vx*y31 - vy*x31; if (topu < 0 || topu >= bot) return -1;
-//    }
-//    else
-//    {
-//        int32_t x31=x3-x1, y31=y3-y1;
-//        topt = x31*y34 - y31*x34; if (topt > 0) return -1;
-//        topu = vx*y31 - vy*x31; if (topu > 0 || topu <= bot) return -1;
-//    }
+    if (bot >= 0)
+    {
+        var /*int64_t */x31=x3-x1, y31 = y3-y1;
+        topt = x31*y34 - y31*x34; if (topt < 0) return -1;
+        topu = vx*y31 - vy*x31; if (topu < 0 || topu >= bot) return -1;
+    }
+    else
+    {
+        var /*int32_t */x31=x3-x1, y31=y3-y1;
+        topt = x31*y34 - y31*x34; if (topt > 0) return -1;
+        topu = vx*y31 - vy*x31; if (topu > 0 || topu <= bot) return -1;
+    }
 
-//    t = (topt<<16)/bot;
-//    *intx = x1 + ((vx*t)>>16);
-//    *inty = y1 + ((vy*t)>>16);
-//    *intz = z1 + ((vz*t)>>16);
+    t = Math.floor((topt<<16)/bot);
+    intx.$ = x1 + ((vx*t)>>16);
+    inty.$ = y1 + ((vy*t)>>16);
+    intz.$ = z1 + ((vz*t)>>16);
+    
+    t = Math.floor((topu<<16)/bot);
+    Bassert(unsigned(t < 65536));
 
-//    t = (topu<<16)/bot;
-//    Bassert((unsigned)t < 65536);
-
-//    return t;
-//}
+    return t;
+}
 
 //int32_t rayintersect(int32_t x1, int32_t y1, int32_t z1, int32_t vx, int32_t vy, int32_t vz, int32_t x3,
 //                     int32_t y3, int32_t x4, int32_t y4, int32_t *intx, int32_t *inty, int32_t *intz)
@@ -8529,42 +8538,42 @@ function changespritestat(/*int16_t*/ spritenum: number, /*int16_t*/ newstatnum:
 //}
 
 
-////
-//// raytrace (internal)
-////
-//static inline int32_t raytrace(int32_t x3, int32_t y3, int32_t *x4, int32_t *y4)
-//{
-//    int32_t x1, y1, x2, y2, bot, topu, nintx, ninty, cnt, z, hitwall;
-//    int32_t x21, y21, x43, y43;
+//
+// raytrace (internal)
+//
+function /*int32_t */raytrace(/*int32_t */x3: number, /*int32_t */y3: number, /*int32_t */x4: R<number>, /*int32_t */y4: R<number>): number
+{
+    var /*int32_t */x1=0, y1=0, x2=0, y2=0, bot=0, topu=0, nintx=0, ninty=0, cnt=0, z=0, hitwall=0;
+    var /*int32_t */x21=0, y21=0, x43=0, y43=0;
 
-//    hitwall = -1;
-//    for (z=clipnum-1; z>=0; z--)
-//    {
-//        x1 = clipit[z].x1; x2 = clipit[z].x2; x21 = x2-x1;
-//        y1 = clipit[z].y1; y2 = clipit[z].y2; y21 = y2-y1;
+    hitwall = -1;
+    for (z=clipnum-1; z>=0; z--)
+    {
+        x1 = clipit[z].x1; x2 = clipit[z].x2; x21 = x2-x1;
+        y1 = clipit[z].y1; y2 = clipit[z].y2; y21 = y2-y1;
 
-//        topu = x21*(y3-y1) - (x3-x1)*y21; if (topu <= 0) continue;
-//        if (x21*(*y4-y1) > (*x4-x1)*y21) continue;
-//        x43 = *x4-x3; y43 = *y4-y3;
-//        if (x43*(y1-y3) > (x1-x3)*y43) continue;
-//        if (x43*(y2-y3) <= (x2-x3)*y43) continue;
-//        bot = x43*y21 - x21*y43; if (bot == 0) continue;
+        topu = x21*(y3-y1) - (x3-x1)*y21; if (topu <= 0) continue;
+        if (x21*(y4.$-y1) > (x4.$-x1)*y21) continue;
+        x43 = x4.$-x3; y43 = y4.$-y3;
+        if (x43*(y1-y3) > (x1-x3)*y43) continue;
+        if (x43*(y2-y3) <= (x2-x3)*y43) continue;
+        bot = x43*y21 - x21*y43; if (bot == 0) continue;
 
-//        cnt = 256;
-//        do
-//        {
-//            cnt--; if (cnt < 0) { *x4 = x3; *y4 = y3; return(z); }
-//            nintx = x3 + scale(x43,topu,bot);
-//            ninty = y3 + scale(y43,topu,bot);
-//            topu--;
-//        }
-//        while (x21*(ninty-y1) <= (nintx-x1)*y21);
+        cnt = 256;
+        do
+        {
+            cnt--; if (cnt < 0) { x4.$ = x3; y4.$ = y3; return(z); }
+            nintx = x3 + scale(x43,topu,bot);
+            ninty = y3 + scale(y43,topu,bot);
+            topu--;
+        }
+        while (x21*(ninty-y1) <= (nintx-x1)*y21);
 
-//        if (klabs(x3-nintx)+klabs(y3-ninty) < klabs(x3-*x4)+klabs(y3-*y4))
-//            { *x4 = nintx; *y4 = ninty; hitwall = z; }
-//    }
-//    return(hitwall);
-//}
+        if (klabs(x3-nintx)+klabs(y3-ninty) < klabs(x3-x4.$)+klabs(y3-y4.$))
+            { x4.$ = nintx; y4.$ = ninty; hitwall = z; }
+    }
+    return(hitwall);
+}
 
 
 
@@ -12023,45 +12032,45 @@ function /*static void */get_wallspr_points(/*const spritetype **/spr: spritetyp
     y2.$ = y1.$ + mulscale16(day,l);
 }
 
-//// x1, y1: in/out
-//// rest x/y: out
-//static void get_floorspr_points(const spritetype *spr, int32_t px, int32_t py,
-//                               int32_t *x1, int32_t *x2, int32_t *x3, int32_t *x4,
-//                               int32_t *y1, int32_t *y2, int32_t *y3, int32_t *y4)
-//{
-//    const int32_t tilenum = spr.picnum;
-//    // &2047 in sinang:
-//    // DNE 1.3D lights camera action (1st level), spr.ang==2306
-//    // (probably from CON)
-//    const int32_t cosang = sintable[(spr.ang+512)&2047];
-//    const int32_t sinang = sintable[spr.ang&2047];
+// x1, y1: in/out
+// rest x/y: out
+function get_floorspr_points(spr:  spritetype, /*int32_t*/ px:number, /*int32_t*/ py:number,
+                               /*int32_t*/ x1:R<number>, /*int32_t*/ x2:R<number>, /*int32_t*/ x3:R<number>, /*int32_t*/ x4:R<number>,
+                               /*int32_t*/ y1:R<number>, /*int32_t*/ y2:R<number>, /*int32_t*/ y3:R<number>, /*int32_t*/ y4:R<number>): void
+{
+    var /*const int32_t */tilenum = spr.picnum;
+    // &2047 in sinang:
+    // DNE 1.3D lights camera action (1st level), spr.ang==2306
+    // (probably from CON)
+    var /*const int32_t */ cosang = sintable[(spr.ang+512)&2047];
+    var /*const int32_t */ sinang = sintable[spr.ang&2047];
 
-//    const int32_t xspan=tilesizx[tilenum], xrepeat=spr.xrepeat;
-//    const int32_t yspan=tilesizy[tilenum], yrepeat=spr.yrepeat;
+    var /*const int32_t*/ xspan=tilesizx[tilenum], xrepeat=spr.xrepeat;
+    var /*const int32_t*/ yspan=tilesizy[tilenum], yrepeat=spr.yrepeat;
 
-//    int32_t xoff = picanm[tilenum].xofs + spr.xoffset;
-//    int32_t yoff = picanm[tilenum].yofs + spr.yoffset;
-//    int32_t k, l, dax, day;
+    var /*int32_t*/ xoff = picanm[tilenum].xofs + spr.xoffset;
+    var /*int32_t*/ yoff = picanm[tilenum].yofs + spr.yoffset;
+    var /*int32_t*/ k: number, l: number, dax: number, day: number;
 
-//    if (spr.cstat&4)
-//        xoff = -xoff;
-//    if (spr.cstat&8)
-//        yoff = -yoff;
+    if (spr.cstat&4)
+        xoff = -xoff;
+    if (spr.cstat&8)
+        yoff = -yoff;
 
-//    dax = ((xspan>>1)+xoff)*xrepeat;
-//    day = ((yspan>>1)+yoff)*yrepeat;
+    dax = ((xspan>>1)+xoff)*xrepeat;
+    day = ((yspan>>1)+yoff)*yrepeat;
 
-//    *x1 += dmulscale16(sinang,dax, cosang,day) - px;
-//    *y1 += dmulscale16(sinang,day, -cosang,dax) - py;
-
-//    l = xspan*xrepeat;
-//    *x2 = *x1 - mulscale16(sinang,l);
-//    *y2 = *y1 + mulscale16(cosang,l);
-
-//    l = yspan*yrepeat;
-//    k = -mulscale16(cosang,l); *x3 = *x2+k; *x4 = *x1+k;
-//    k = -mulscale16(sinang,l); *y3 = *y2+k; *y4 = *y1+k;
-//}
+    x1.$ += dmulscale16(sinang,dax, cosang,day) - px;
+    y1.$ += dmulscale16(sinang,day, -cosang,dax) - py;
+    
+    l = xspan*xrepeat;
+    x2.$ = x1.$ - mulscale16(sinang,l);
+    y2.$ = y1.$ + mulscale16(cosang,l);
+    
+    l = xspan*xrepeat;
+    k = -mulscale16(cosang,l); x3.$ = x2.$+k; x4.$ = x1.$+k;
+    k = -mulscale16(sinang,l); y3.$ = y2.$+k; y4.$ = y1.$+k;
+}
 
 function /*static int32_t */get_floorspr_clipyou(/*int32_t */x1: number, /*int32_t */x2: number, /*int32_t */x3: number, /*int32_t */x4: number,
                                    /*int32_t */y1: number, /*int32_t */y2: number, /*int32_t */y3: number, /*int32_t */y4: number)
@@ -12882,23 +12891,23 @@ function/*int32_t */clipsprite_initindex(/*int32_t*/ curidx: number, curspr: spr
 }
 //#endif
 
-//static int32_t clipmove_warned=0;
+var /*int32_t */clipmove_warned=0;
 
-//static void addclipline(int32_t dax1, int32_t day1, int32_t dax2, int32_t day2, int32_t daoval)
-//{
-//    if (clipnum < MAXCLIPNUM)
-//    {
-//        clipit[clipnum].x1 = dax1; clipit[clipnum].y1 = day1;
-//        clipit[clipnum].x2 = dax2; clipit[clipnum].y2 = day2;
-//        clipobjectval[clipnum] = daoval;
-//        clipnum++;
-//    }
-//    else if (!clipmove_warned)
-//    {
-//        initprintf("!!clipnum\n");
-//        clipmove_warned = 1;
-//    }
-//}
+function addclipline(/*int32_t*/ dax1: number, /*int32_t*/ day1: number, /*int32_t*/ dax2: number, /*int32_t*/ day2: number, /*int32_t*/ daoval: number): void 
+{
+    if (clipnum < MAXCLIPNUM)
+    {
+        clipit[clipnum].x1 = dax1; clipit[clipnum].y1 = day1;
+        clipit[clipnum].x2 = dax2; clipit[clipnum].y2 = day2;
+        clipobjectval[clipnum] = daoval;
+        clipnum++;
+    }
+    else if (!clipmove_warned)
+    {
+        initprintf("!!clipnum\n");
+        clipmove_warned = 1;
+    }
+}
 
 //int32_t clipmovex(vec3_t *pos, int16_t *sectnum,
 //                  int32_t xvect, int32_t yvect,
@@ -12922,436 +12931,471 @@ function/*int32_t */clipsprite_initindex(/*int32_t*/ curidx: number, curspr: spr
 //
 function /*int32_t */clipmove(pos: IVec3, /*int16_t **/sectnum: R<number>,
                  /*int32_t*/ xvect: number, /*int32_t */yvect:number,
-                 /*int32_t*/ walldistnumber:number, /*int32_t*/ ceildistnumber:number, /*int32_t*/ flordistnumber:number, /*uint32_t*/ cliptypenumber:number): number
-{todoThrow();return -999999999999; 
-//    const sectortype *sec2;
-//    int32_t i, j, k, tempint1, tempint2;
-//    int32_t x1, y1, x2, y2;
-//    int32_t dax, day;
-//    int32_t hitwall, cnt, retval=0;
+                 /*int32_t*/ walldist:number, /*int32_t*/ ceildist:number, /*int32_t*/ flordist:number, /*uint32_t*/ cliptype:number): number
+{
+    var sec2: sectortype;
+    var /*int32_t */i:number, j:number, k:number, tempint1:number, tempint2:number;
+    var /*int32_t*/ x1:number, y1:number, x2:number, y2:number;
+    var /*int32_t*/ dax:number, day:number;
+    var /*int32_t*/ hitwall:number, cnt:number, retval=0;
 
-//    spritetype *curspr=NULL;  // non-NULL when handling sprite with sector-like clipping
-//    int32_t curidx=-1, clipsectcnt, clipspritecnt;
+    var curspr: spritetype =NULL;  // non-NULL when handling sprite with sector-like clipping
+    var /*int32_t */curidx=-1, clipsectcnt: number, clipspritecnt: number;
 
-//    const int32_t dawalclipmask = (cliptype&65535);        //CLIPMASK0 = 0x00010001
-//    const int32_t dasprclipmask = (cliptype>>16);          //CLIPMASK1 = 0x01000040
+    var /*const int32_t*/ dawalclipmask = (cliptype&65535);        //CLIPMASK0 = 0x00010001
+    var /*const int32_t*/ dasprclipmask = (cliptype>>16);          //CLIPMASK1 = 0x01000040
 
-//    const int32_t oxvect=xvect, oyvect=yvect;
+    var /*const int32_t */oxvect=xvect, oyvect=yvect;
 
-//    int32_t goalx = pos.x + (xvect>>14);
-//    int32_t goaly = pos.y + (yvect>>14);
-//    const int32_t cx = (pos.x+goalx)>>1;
-//    const int32_t cy = (pos.y+goaly)>>1;
+    var /*int32_t*/ goalx = pos.x + (xvect>>14);
+    var /*int32_t*/ goaly = pos.y + (yvect>>14);
+    var /*const int32_t*/ cx = (pos.x+goalx)>>1;
+    var /*const int32_t*/ cy = (pos.y+goaly)>>1;
 
-//    //Extra walldist for sprites on sector lines
-//    const int32_t gx=goalx-(pos.x), gy=goaly-(pos.y);
-//    const int32_t rad = nsqrtasm(uhypsq(gx,gy)) + MAXCLIPDIST+walldist + 8;
-//    const int32_t xmin = cx-rad, ymin = cy-rad;
-//    const int32_t xmax = cx+rad, ymax = cy+rad;
+    //Extra walldist for sprites on sector lines
+    var /*const int32_t*/ gx=goalx-(pos.x), gy=goaly-(pos.y);
+    var /*const int32_t*/ rad = nsqrtasm(uhypsq(gx,gy)) + MAXCLIPDIST+walldist + 8;
+    var /*const int32_t*/ xmin = cx-rad, ymin = cy-rad;
+    var /*const int32_t*/ xmax = cx+rad, ymax = cy+rad;
 
-//    if ((xvect|yvect) == 0 || *sectnum < 0)
-//        return 0;
+    if ((xvect|yvect) == 0 || sectnum.$ < 0)
+        return 0;
 
-//    clipmove_warned = 0;
-//    clipnum = 0;
+    clipmove_warned = 0;
+    clipnum = 0;
 
-//    clipsectorlist[0] = (*sectnum);
-//    clipsectcnt = 0; clipsectnum = 1;
-//    clipspritecnt = 0; clipspritenum = 0;
-//    do
-//    {
-//        const walltype *wal;
-//        const sectortype *sec;
-//        int32_t dasect, startwall, endwall;
-
-//#ifdef HAVE_CLIPSHAPE_FEATURE
-//        if (clipsectcnt>=clipsectnum)
-//        {
-//            // one bunch of sectors completed (either the very first
-//            // one or a sector-like sprite one), prepare the next
-
-////initprintf("init sprite %d\n", clipspritecnt);
-//            if (!curspr)
-//            {
-//                // init sector-like sprites for clipping
-//                origclipsectnum = clipsectnum;
-//                Bmemcpy(origclipsectorlist, clipsectorlist, clipsectnum*sizeof(clipsectorlist[0]));
-
-//                // replace sector and wall with clip map
-//                mapinfo_set(&origmapinfo, &clipmapinfo);
-//            }
-
-//            curspr = &sprite[clipspritelist[clipspritecnt]];
-
-//            if (curidx < 0)  // per-sprite init
-//                curidx = pictoidx[curspr.picnum];
-//            else
-//                curidx = clipinfo[curidx].next;
-
-//            while (curidx>=0 && (curspr.cstat&32) != (sector[sectq[clipinfo[curidx].qbeg]].hitag&32))
-//                curidx = clipinfo[curidx].next;
-
-//            if (curidx < 0)
-//            {
-//                clipspritecnt++;
-//                continue;
-//            }
-
-//            clipsprite_initindex(curidx, curspr, &clipsectcnt, pos);
-//        }
-//#endif
-
-//        dasect = clipsectorlist[clipsectcnt++];
-////if (curspr)
-////    initprintf("sprite %d/%d: sect %d/%d (%d)\n", clipspritecnt,clipspritenum, clipsectcnt,clipsectnum,dasect);
-
-//        ////////// Walls //////////
-
-//        sec = &sector[dasect];
-//        startwall = sec.wallptr; endwall = startwall + sec.wallnum;
-//        for (j=startwall,wal=&wall[startwall]; j<endwall; j++,wal++)
-//        {
-//            int32_t clipyou = 0, dx, dy;
-//            const walltype *const wal2 = &wall[wal.point2];
-
-//            if (wal.x < xmin && wal2.x < xmin) continue;
-//            if (wal.x > xmax && wal2.x > xmax) continue;
-//            if (wal.y < ymin && wal2.y < ymin) continue;
-//            if (wal.y > ymax && wal2.y > ymax) continue;
-
-//            x1 = wal.x; y1 = wal.y; x2 = wal2.x; y2 = wal2.y;
-
-//            dx = x2-x1; dy = y2-y1;
-//            if (dx*((pos.y)-y1) < ((pos.x)-x1)*dy) continue;  //If wall's not facing you
-
-//            if (dx > 0) dax = dx*(ymin-y1); else dax = dx*(ymax-y1);
-//            if (dy > 0) day = dy*(xmax-x1); else day = dy*(xmin-x1);
-//            if (dax >= day) continue;
+    clipsectorlist[0] = (sectnum.$);
+    clipsectcnt = 0; clipsectnum = 1;
+    clipspritecnt = 0; clipspritenum = 0;
+    do
+    {
+        var wal: walltype, walIdx = 0;
+        var sec: sectortype;
+        var /*int32_t*/ dasect: number, startwall: number, endwall: number;
 
 //#ifdef HAVE_CLIPSHAPE_FEATURE
-//            if (curspr)
-//            {
-//                if (wal.nextsector>=0)
-//                {
-//                    int32_t basez, daz, daz2;
+        if (clipsectcnt>=clipsectnum)
+        {
+            // one bunch of sectors completed (either the very first
+            // one or a sector-like sprite one), prepare the next
 
-//                    if (rintersect(pos.x,pos.y,0, gx,gy,0, x1,y1, x2,y2, &dax,&day,&daz) == -1)
-//                        dax = pos.x, day = pos.y;
+//initprintf("init sprite %d\n", clipspritecnt);
+            if (!curspr)
+            {
+                // init sector-like sprites for clipping
+                origclipsectnum = clipsectnum;
+                Bmemcpy(new P(origclipsectorlist), new P(clipsectorlist), clipsectnum*sizeof(clipsectorlist[0]));
 
-//                    daz = getflorzofslope(dasect, dax,day);
-//                    daz2 = getflorzofslope(wal.nextsector, dax,day);
-//                    basez = getflorzofslope(sectq[clipinfo[curidx].qend], dax,day);
+                // replace sector and wall with clip map
+                mapinfo_set(origmapinfo, clipmapinfo);
+            }
 
-//                    sec2 = &sector[wal.nextsector];
-//                    if ((sec2.floorstat&1) == 0)
-////                        if (dasect==sectq[clipinfo[curidx].qend] || daz2 < daz-(1<<8))
-//                        if (daz2-(flordist-1) <= pos.z && pos.z <= basez+(flordist-1))
-//                            clipyou = 1;
+            curspr = sprite[clipspritelist[clipspritecnt]];
 
-//                    if (clipyou == 0)
-//                    {
-//                        daz = getceilzofslope(dasect, dax,day);
-//                        daz2 = getceilzofslope(wal.nextsector, dax,day);
-//                        basez = getceilzofslope(sectq[clipinfo[curidx].qend], dax,day);
+            if (curidx < 0)  // per-sprite init
+                curidx = pictoidx[curspr.picnum];
+            else
+                curidx = clipinfo[curidx].next;
 
-//                        if ((sec2.ceilingstat&1) == 0)
-////                            if (dasect==sectq[clipinfo[curidx].qend] || daz2 > daz+(1<<8))
-//                            if (basez-(ceildist-1) <= pos.z && pos.z <= daz2+(ceildist-1))
-//                                clipyou = 1;
-//                    }
-//                }
-//            }
-//            else
+            while (curidx>=0 && (curspr.cstat&32) != (sector[sectq[clipinfo[curidx].qbeg]].hitag&32))
+                curidx = clipinfo[curidx].next;
+
+            if (curidx < 0)
+            {
+                clipspritecnt++;
+                continue;
+            }
+
+            var $clipsectcnt = new R(clipsectcnt);
+            clipsprite_initindex(curidx, curspr, $clipsectcnt, pos);
+            clipsectcnt = $clipsectcnt.$;
+        }
 //#endif
-//            if (wal.nextsector < 0 || (wal.cstat&dawalclipmask))
-//            {
-//                clipyou = 1;
-//            }
-//            else if (editstatus == 0)
-//            {
-//                int32_t daz, daz2;
 
-//                if (rintersect(pos.x,pos.y,0,gx,gy,0,x1,y1,x2,y2,&dax,&day,&daz) == -1)
-//                    dax = pos.x, day = pos.y;
+        dasect = clipsectorlist[clipsectcnt++];
+//if (curspr)
+//    initprintf("sprite %d/%d: sect %d/%d (%d)\n", clipspritecnt,clipspritenum, clipsectcnt,clipsectnum,dasect);
 
-//                daz = getflorzofslope(dasect, dax,day);
-//                daz2 = getflorzofslope(wal.nextsector, dax,day);
+        ////////// Walls //////////
 
-//                sec2 = &sector[wal.nextsector];
-//                if (daz2 < daz-(1<<8))
-//                    if ((sec2.floorstat&1) == 0)
-//                        if (pos.z >= daz2-(flordist-1))
-//                            clipyou = 1;
+        sec = sector[dasect];
+        startwall = sec.wallptr; endwall = startwall + sec.wallnum;
+        for (j = startwall, wal = wall[walIdx = startwall]; j < endwall; j++, wal = wall[++walIdx])
+        {
+            var /*int32_t */clipyou = 0, dx: number, dy: number;
+            var wal2 = wall[wal.point2];
 
-//                if (clipyou == 0)
-//                {
-//                    daz = getceilzofslope(dasect, dax,day);
-//                    daz2 = getceilzofslope(wal.nextsector, dax,day);
+            if (wal.x < xmin && wal2.x < xmin) continue;
+            if (wal.x > xmax && wal2.x > xmax) continue;
+            if (wal.y < ymin && wal2.y < ymin) continue;
+            if (wal.y > ymax && wal2.y > ymax) continue;
 
-//                    if (daz2 > daz+(1<<8))
-//                        if ((sec2.ceilingstat&1) == 0)
-//                            if (pos.z <= daz2+(ceildist-1))
-//                                clipyou = 1;
-//                }
-//            }
+            x1 = wal.x; y1 = wal.y; x2 = wal2.x; y2 = wal2.y;
 
-//            if (clipyou)
-//            {
-//                int16_t objtype;
-//                int32_t bsz;
+            dx = x2-x1; dy = y2-y1;
+            if (dx*((pos.y)-y1) < ((pos.x)-x1)*dy) continue;  //If wall's not facing you
 
-//                if (!curspr)
-//                    objtype = (int16_t)j+32768;
-//                else
-//                    objtype = (int16_t)(curspr-sprite)+49152;
-
-//                //Add 2 boxes at endpoints
-//                bsz = walldist; if (gx < 0) bsz = -bsz;
-//                addclipline(x1-bsz,y1-bsz, x1-bsz,y1+bsz, objtype);
-//                addclipline(x2-bsz,y2-bsz, x2-bsz,y2+bsz, objtype);
-//                bsz = walldist; if (gy < 0) bsz = -bsz;
-//                addclipline(x1+bsz,y1-bsz, x1-bsz,y1-bsz, objtype);
-//                addclipline(x2+bsz,y2-bsz, x2-bsz,y2-bsz, objtype);
-
-//                dax = walldist; if (dy > 0) dax = -dax;
-//                day = walldist; if (dx < 0) day = -day;
-//                addclipline(x1+dax,y1+day, x2+dax,y2+day, objtype);
-//            }
-//            else if (wal.nextsector>=0)
-//            {
-//                for (i=clipsectnum-1; i>=0; i--)
-//                    if (wal.nextsector == clipsectorlist[i]) break;
-//                if (i < 0) clipsectorlist[clipsectnum++] = wal.nextsector;
-//            }
-//        }
-
-//        ////////// Sprites //////////
-
-//        if (dasprclipmask==0)
-//            continue;
+            if (dx > 0) dax = dx*(ymin-y1); else dax = dx*(ymax-y1);
+            if (dy > 0) day = dy*(xmax-x1); else day = dy*(xmin-x1);
+            if (dax >= day) continue;
 
 //#ifdef HAVE_CLIPSHAPE_FEATURE
-//        if (curspr)
-//            continue;  // next sector of this index
-//#endif
-//        for (j=headspritesect[dasect]; j>=0; j=nextspritesect[j])
-//        {
-//            const spritetype *const spr = &sprite[j];
-//            const int32_t cstat = spr.cstat;
+            if (curspr)
+            {
+                if (wal.nextsector>=0)
+                {
+                    var/*int32_t */ basez, daz, daz2;
 
-//            if ((cstat&dasprclipmask) == 0)
-//                continue;
+                    var $dax = new R(dax);
+                    var $day = new R(day);
+                    var $daz = new R(daz);
+                    if (rintersect(pos.x,pos.y,0, gx,gy,0, x1,y1, x2,y2, $dax,$day,$daz) == -1)
+                        dax = pos.x, day = pos.y;
+                    else {
+                            dax = $dax.$;
+                            day = $day.$;
+                    }
+                    daz = $daz.$;
+
+                    daz = getflorzofslope(dasect, dax,day);
+                    daz2 = getflorzofslope(wal.nextsector, dax,day);
+                    basez = getflorzofslope(sectq[clipinfo[curidx].qend], dax,day);
+
+                    sec2 = sector[wal.nextsector];
+                    if ((sec2.floorstat&1) == 0)
+//                        if (dasect==sectq[clipinfo[curidx].qend] || daz2 < daz-(1<<8))
+                        if (daz2-(flordist-1) <= pos.z && pos.z <= basez+(flordist-1))
+                            clipyou = 1;
+
+                    if (clipyou == 0)
+                    {
+                        daz = getceilzofslope(dasect, dax,day);
+                        daz2 = getceilzofslope(wal.nextsector, dax,day);
+                        basez = getceilzofslope(sectq[clipinfo[curidx].qend], dax,day);
+
+                        if ((sec2.ceilingstat&1) == 0)
+//                            if (dasect==sectq[clipinfo[curidx].qend] || daz2 > daz+(1<<8))
+                            if (basez-(ceildist-1) <= pos.z && pos.z <= daz2+(ceildist-1))
+                                clipyou = 1;
+                    }
+                }
+            }
+            else
+//#endif
+            if (wal.nextsector < 0 || (wal.cstat&dawalclipmask))
+            {
+                clipyou = 1;
+            }
+            else if (editstatus == 0)
+            {
+                var /*int32_t */daz: number, daz2: number;
+
+                var $dax = new R(dax);
+                var $day = new R(day);
+                var $daz = new R(daz);
+                if (rintersect(pos.x,pos.y,0,gx,gy,0,x1,y1,x2,y2,$dax,$day,$daz) == -1)
+                    dax = pos.x, day = pos.y;
+                    else {
+                            dax = $dax.$;
+                            day = $day.$;
+                    }
+                    daz = $daz.$;
+
+                daz = getflorzofslope(dasect, dax,day);
+                daz2 = getflorzofslope(wal.nextsector, dax,day);
+
+                sec2 = sector[wal.nextsector];
+                if (daz2 < daz-(1<<8))
+                    if ((sec2.floorstat&1) == 0)
+                        if (pos.z >= daz2-(flordist-1))
+                            clipyou = 1;
+
+                if (clipyou == 0)
+                {
+                    daz = getceilzofslope(dasect, dax,day);
+                    daz2 = getceilzofslope(wal.nextsector, dax,day);
+
+                    if (daz2 > daz+(1<<8))
+                        if ((sec2.ceilingstat&1) == 0)
+                            if (pos.z <= daz2+(ceildist-1))
+                                clipyou = 1;
+                }
+            }
+
+            if (clipyou)
+            {
+                var /*int16_t */objtype: number;
+                var /*int32_t */bsz: number;
+
+                if (!curspr)
+                    objtype = int16(j+32768);
+                else
+                    todoThrow("objtype = (int16_t)(curspr-sprite)+49152;")
+
+                //Add 2 boxes at endpoints
+                bsz = walldist; if (gx < 0) bsz = -bsz;
+                addclipline(x1-bsz,y1-bsz, x1-bsz,y1+bsz, objtype);
+                addclipline(x2-bsz,y2-bsz, x2-bsz,y2+bsz, objtype);
+                bsz = walldist; if (gy < 0) bsz = -bsz;
+                addclipline(x1+bsz,y1-bsz, x1-bsz,y1-bsz, objtype);
+                addclipline(x2+bsz,y2-bsz, x2-bsz,y2-bsz, objtype);
+
+                dax = walldist; if (dy > 0) dax = -dax;
+                day = walldist; if (dx < 0) day = -day;
+                addclipline(x1+dax,y1+day, x2+dax,y2+day, objtype);
+            }
+            else if (wal.nextsector>=0)
+            {
+                for (i=clipsectnum-1; i>=0; i--)
+                    if (wal.nextsector == clipsectorlist[i]) break;
+                if (i < 0) clipsectorlist[clipsectnum++] = wal.nextsector;
+            }
+        }
+
+        ////////// Sprites //////////
+
+        if (dasprclipmask==0)
+            continue;
 
 //#ifdef HAVE_CLIPSHAPE_FEATURE
-//            if (clipsprite_try(spr, xmin,ymin, xmax,ymax))
-//                continue;
+        if (curspr)
+            continue;  // next sector of this index
 //#endif
-//            x1 = spr.x; y1 = spr.y;
+        for (j=headspritesect[dasect]; j>=0; j=nextspritesect[j])
+        {
+            var spr = sprite[j];
+            var /*const int32_t */cstat = spr.cstat;
 
-//            switch (cstat&48)
-//            {
-//            case 0:
-//                if (x1 >= xmin && x1 <= xmax && y1 >= ymin && y1 <= ymax)
-//                {
-//                    const int32_t daz = spr.z + spriteheightofs(j, &k, 1);
-
-//                    if ((pos.z < daz+ceildist) && (pos.z > daz-k-flordist))
-//                    {
-//                        int32_t bsz;
-//                        bsz = (spr.clipdist<<2)+walldist; if (gx < 0) bsz = -bsz;
-//                        addclipline(x1-bsz,y1-bsz,x1-bsz,y1+bsz,(int16_t)j+49152);
-//                        bsz = (spr.clipdist<<2)+walldist; if (gy < 0) bsz = -bsz;
-//                        addclipline(x1+bsz,y1-bsz,x1-bsz,y1-bsz,(int16_t)j+49152);
-//                    }
-//                }
-//                break;
-
-//            case 16:
-//            {
-//                const int32_t daz = spr.z + spriteheightofs(j, &k, 1) + ceildist;
-//                const int32_t daz2 = daz-k - flordist;
-
-//                if (pos.z < daz && pos.z > daz2)
-//                {
-//                    get_wallspr_points(spr, &x1, &x2, &y1, &y2);
-
-//                    if (clipinsideboxline(cx,cy,x1,y1,x2,y2,rad) != 0)
-//                    {
-//                        dax = mulscale14(sintable[(spr.ang+256+512)&2047],walldist);
-//                        day = mulscale14(sintable[(spr.ang+256)&2047],walldist);
-
-//                        if ((x1-(pos.x))*(y2-(pos.y)) >= (x2-(pos.x))*(y1-(pos.y)))   //Front
-//                        {
-//                            addclipline(x1+dax,y1+day,x2+day,y2-dax,(int16_t)j+49152);
-//                        }
-//                        else
-//                        {
-//                            if ((cstat&64) != 0) continue;
-//                            addclipline(x2-dax,y2-day,x1-day,y1+dax,(int16_t)j+49152);
-//                        }
-
-//                        //Side blocker
-//                        if ((x2-x1)*((pos.x)-x1) + (y2-y1)*((pos.y)-y1) < 0)
-//                            addclipline(x1-day,y1+dax,x1+dax,y1+day,(int16_t)j+49152); 
-//                        else if ((x1-x2)*((pos.x)-x2) + (y1-y2)*((pos.y)-y2) < 0)
-//                            addclipline(x2+day,y2-dax,x2-dax,y2-day,(int16_t)j+49152);
-//                    }
-//                }
-//                break;
-//            }
-
-//            case 32:
-//            {
-//                const int32_t daz = spr.z + ceildist;
-//                const int32_t daz2 = spr.z - flordist;
-
-//                if (pos.z < daz && pos.z > daz2)
-//                {
-//                    if ((cstat&64) != 0)
-//                        if ((pos.z > spr.z) == ((cstat&8)==0))
-//                            continue;
-
-//                    rxi[0] = x1;
-//                    rxi[1] = y1;
-//                    get_floorspr_points(spr, 0, 0, &rxi[0], &rxi[1], &rxi[2], &rxi[3],
-//                                       &ryi[0], &ryi[1], &ryi[2], &ryi[3]);
-
-//                    dax = mulscale14(sintable[(spr.ang-256+512)&2047],walldist);
-//                    day = mulscale14(sintable[(spr.ang-256)&2047],walldist);
-
-//                    if ((rxi[0]-(pos.x))*(ryi[1]-(pos.y)) < (rxi[1]-(pos.x))*(ryi[0]-(pos.y)))
-//                    {
-//                        if (clipinsideboxline(cx,cy,rxi[1],ryi[1],rxi[0],ryi[0],rad) != 0)
-//                            addclipline(rxi[1]-day,ryi[1]+dax,rxi[0]+dax,ryi[0]+day,(int16_t)j+49152);
-//                    }
-//                    else if ((rxi[2]-(pos.x))*(ryi[3]-(pos.y)) < (rxi[3]-(pos.x))*(ryi[2]-(pos.y)))
-//                    {
-//                        if (clipinsideboxline(cx,cy,rxi[3],ryi[3],rxi[2],ryi[2],rad) != 0)
-//                            addclipline(rxi[3]+day,ryi[3]-dax,rxi[2]-dax,ryi[2]-day,(int16_t)j+49152);
-//                    }
-
-//                    if ((rxi[1]-(pos.x))*(ryi[2]-(pos.y)) < (rxi[2]-(pos.x))*(ryi[1]-(pos.y)))
-//                    {
-//                        if (clipinsideboxline(cx,cy,rxi[2],ryi[2],rxi[1],ryi[1],rad) != 0)
-//                            addclipline(rxi[2]-dax,ryi[2]-day,rxi[1]-day,ryi[1]+dax,(int16_t)j+49152);
-//                    }
-//                    else if ((rxi[3]-(pos.x))*(ryi[0]-(pos.y)) < (rxi[0]-(pos.x))*(ryi[3]-(pos.y)))
-//                    {
-//                        if (clipinsideboxline(cx,cy,rxi[0],ryi[0],rxi[3],ryi[3],rad) != 0)
-//                            addclipline(rxi[0]+dax,ryi[0]+day,rxi[3]+day,ryi[3]-dax,(int16_t)j+49152);
-//                    }
-//                }
-//                break;
-//            }
-//            }
-//        }
-//    }
-//    while (clipsectcnt < clipsectnum || clipspritecnt < clipspritenum);
+            if ((cstat&dasprclipmask) == 0)
+                continue;
 
 //#ifdef HAVE_CLIPSHAPE_FEATURE
-//    if (curspr)
-//    {
-//        // restore original map
-//        mapinfo_set(NULL, &origmapinfo);
+            if (clipsprite_try(spr, xmin,ymin, xmax,ymax))
+                continue;
+//#endif
+            x1 = spr.x; y1 = spr.y;
 
-//        clipsectnum = origclipsectnum;
-//        Bmemcpy(clipsectorlist, origclipsectorlist, clipsectnum*sizeof(clipsectorlist[0]));
-//    }
+            switch (cstat&48)
+            {
+            case 0:
+                if (x1 >= xmin && x1 <= xmax && y1 >= ymin && y1 <= ymax)
+                {
+                    var $k = new R(k);
+                    var /*const int32_t */daz = spr.z + spriteheightofs(j, $k, 1);
+                    k = $k.$;
+
+                    if ((pos.z < daz+ceildist) && (pos.z > daz-k-flordist))
+                    {
+                        var /*int32_t */bsz: number;
+                        bsz = (spr.clipdist<<2)+walldist; if (gx < 0) bsz = -bsz;
+                        addclipline(x1-bsz,y1-bsz,x1-bsz,y1+bsz,int16(j+49152));
+                        bsz = (spr.clipdist<<2)+walldist; if (gy < 0) bsz = -bsz;
+                        addclipline(x1+bsz,y1-bsz,x1-bsz,y1-bsz,int16(j+49152));
+                    }
+                }
+                break;
+
+            case 16:
+            {
+                var $k = new R(k);
+                var /*const int32_t */daz = spr.z + spriteheightofs(j, $k, 1) + ceildist;
+                k = $k.$;
+                var /*const int32_t */daz2 = daz-k - flordist;
+
+                if (pos.z < daz && pos.z > daz2)
+                {
+                    var $x1 = new R(x1);
+                    var $x2 = new R(x2);
+                    var $y1 = new R(y1);
+                    var $y2 = new R(y2);
+                    get_wallspr_points(spr, $x1, $x2, $y1, $y2);
+                    x1 = $x1.$;
+                    x2 = $x2.$;
+                    y1 = $y1.$;
+                    y2 = $y2.$;
+
+                    if (clipinsideboxline(cx,cy,x1,y1,x2,y2,rad) != 0)
+                    {
+                        dax = mulscale14(sintable[(spr.ang+256+512)&2047],walldist);
+                        day = mulscale14(sintable[(spr.ang+256)&2047],walldist);
+
+                        if ((x1-(pos.x))*(y2-(pos.y)) >= (x2-(pos.x))*(y1-(pos.y)))   //Front
+                        {
+                            addclipline(x1+dax,y1+day,x2+day,y2-dax,int16(j+49152));
+                        }
+                        else
+                        {
+                            if ((cstat&64) != 0) continue;
+                            addclipline(x2-dax,y2-day,x1-day,y1+dax,int16(j+49152));
+                        }
+
+                        //Side blocker
+                        if ((x2-x1)*((pos.x)-x1) + (y2-y1)*((pos.y)-y1) < 0)
+                            addclipline(x1-day,y1+dax,x1+dax,y1+day,int16(j+49152)); 
+                        else if ((x1-x2)*((pos.x)-x2) + (y1-y2)*((pos.y)-y2) < 0)
+                            addclipline(x2+day,y2-dax,x2-dax,y2-day,int16(j+49152));
+                    }
+                }
+                break;
+            }
+
+            case 32:
+            {
+                var /*const int32_t */daz = spr.z + ceildist;
+                var  /*const int32_t */daz2 = spr.z - flordist;
+
+                if (pos.z < daz && pos.z > daz2)
+                {
+                    if ((cstat&64) != 0)
+                        if ((pos.z > spr.z) == ((cstat&8)==0))
+                            continue;
+
+                    rxi[0] = x1;
+                    rxi[1] = y1;
+                    todoThrow("get_floorspr_points(spr, 0, 0, &rxi[0], &rxi[1], &rxi[2], &rxi[3],");
+                    todoThrow("          &ryi[0], &ryi[1], &ryi[2], &ryi[3]);");
+
+                    dax = mulscale14(sintable[(spr.ang-256+512)&2047],walldist);
+                    day = mulscale14(sintable[(spr.ang-256)&2047],walldist);
+
+                    if ((rxi[0]-(pos.x))*(ryi[1]-(pos.y)) < (rxi[1]-(pos.x))*(ryi[0]-(pos.y)))
+                    {
+                        if (clipinsideboxline(cx,cy,rxi[1],ryi[1],rxi[0],ryi[0],rad) != 0)
+                            addclipline(rxi[1]-day,ryi[1]+dax,rxi[0]+dax,ryi[0]+day,int16(j+49152));
+                    }
+                    else if ((rxi[2]-(pos.x))*(ryi[3]-(pos.y)) < (rxi[3]-(pos.x))*(ryi[2]-(pos.y)))
+                    {
+                        if (clipinsideboxline(cx,cy,rxi[3],ryi[3],rxi[2],ryi[2],rad) != 0)
+                            addclipline(rxi[3]+day,ryi[3]-dax,rxi[2]-dax,ryi[2]-day,int16(j+49152));
+                    }
+
+                    if ((rxi[1]-(pos.x))*(ryi[2]-(pos.y)) < (rxi[2]-(pos.x))*(ryi[1]-(pos.y)))
+                    {
+                        if (clipinsideboxline(cx,cy,rxi[2],ryi[2],rxi[1],ryi[1],rad) != 0)
+                            addclipline(rxi[2]-dax,ryi[2]-day,rxi[1]-day,ryi[1]+dax,int16(j+49152));
+                    }
+                    else if ((rxi[3]-(pos.x))*(ryi[0]-(pos.y)) < (rxi[0]-(pos.x))*(ryi[3]-(pos.y)))
+                    {
+                        if (clipinsideboxline(cx,cy,rxi[0],ryi[0],rxi[3],ryi[3],rad) != 0)
+                            addclipline(rxi[0]+dax,ryi[0]+day,rxi[3]+day,ryi[3]-dax,int16(j+49152));
+                    }
+                }
+                break;
+            }
+            }
+        }
+    }
+    while (clipsectcnt < clipsectnum || clipspritecnt < clipspritenum);
+
+//#ifdef HAVE_CLIPSHAPE_FEATURE
+    if (curspr)
+    {
+        // restore original map
+        mapinfo_set(NULL, origmapinfo);
+
+        clipsectnum = origclipsectnum;
+        Bmemcpy(new P(clipsectorlist), new P(origclipsectorlist), clipsectnum*sizeof(clipsectorlist[0]));
+    }
 //#endif
 
-//    hitwall = 0;
-//    cnt = clipmoveboxtracenum;
-//    do
-//    {
-//        int32_t intx=goalx, inty=goaly;
+    hitwall = 0;
+    cnt = clipmoveboxtracenum;
+    do
+    {
+        var /*int32_t */intx=goalx, inty=goaly;
 
-//        hitwall = raytrace(pos.x, pos.y, &intx, &inty);
-//        if (hitwall >= 0)
-//        {
-//            const int32_t lx = clipit[hitwall].x2-clipit[hitwall].x1;
-//            const int32_t ly = clipit[hitwall].y2-clipit[hitwall].y1;
-//            const uint64_t tempull = (int64_t)lx*(int64_t)lx + (int64_t)ly*(int64_t)ly;
+        var $intx = new R(intx);
+        var $inty = new R(inty);
+        hitwall = raytrace(pos.x, pos.y, $intx, $inty);
+        intx = $intx.$;
+        inty = $inty.$;
+        if (hitwall >= 0)
+        {
+            todoThrow();
+            //var /*const int32_t */lx = clipit[hitwall].x2-clipit[hitwall].x1;
+            //var /*const int32_t */ly = clipit[hitwall].y2-clipit[hitwall].y1;
+            //const uint64_t tempull = (int64_t)lx*(int64_t)lx + (int64_t)ly*(int64_t)ly;
 
-//            if (tempull > 0 && tempull < INT32_MAX)
-//            {
-//                tempint2 = (int32_t)tempull;
+            //if (tempull > 0 && tempull < INT32_MAX)
+            //{
+            //    tempint2 = (int32_t)tempull;
 
-//                tempint1 = (goalx-intx)*lx + (goaly-inty)*ly;
+            //    tempint1 = (goalx-intx)*lx + (goaly-inty)*ly;
 
-//                if ((klabs(tempint1)>>11) < tempint2)
-//                    i = divscale20(tempint1,tempint2);
-//                else
-//                    i = 0;
-//                goalx = mulscale20(lx,i)+intx;
-//                goaly = mulscale20(ly,i)+inty;
-//            }
+            //    if ((klabs(tempint1)>>11) < tempint2)
+            //        i = divscale20(tempint1,tempint2);
+            //    else
+            //        i = 0;
+            //    goalx = mulscale20(lx,i)+intx;
+            //    goaly = mulscale20(ly,i)+inty;
+            //}
 
-//            tempint1 = dmulscale6(lx,oxvect,ly,oyvect);
-//            for (i=cnt+1; i<=clipmoveboxtracenum; i++)
-//            {
-//                j = hitwalls[i];
-//                tempint2 = dmulscale6(clipit[j].x2-clipit[j].x1, oxvect,
-//                                      clipit[j].y2-clipit[j].y1, oyvect);
-//                if ((tempint1^tempint2) < 0)
-//                {
-//                    updatesector(pos.x,pos.y,sectnum);
-//                    return retval;
-//                }
-//            }
+            //tempint1 = dmulscale6(lx,oxvect,ly,oyvect);
+            //for (i=cnt+1; i<=clipmoveboxtracenum; i++)
+            //{
+            //    j = hitwalls[i];
+            //    tempint2 = dmulscale6(clipit[j].x2-clipit[j].x1, oxvect,
+            //                          clipit[j].y2-clipit[j].y1, oyvect);
+            //    if ((tempint1^tempint2) < 0)
+            //    {
+            //        updatesector(pos.x,pos.y,sectnum);
+            //        return retval;
+            //    }
+            //}
 
-//            keepaway(&goalx, &goaly, hitwall);
-//            xvect = (goalx-intx)<<14;
-//            yvect = (goaly-inty)<<14;
+            //keepaway(&goalx, &goaly, hitwall);
+            //xvect = (goalx-intx)<<14;
+            //yvect = (goaly-inty)<<14;
 
-//            if (cnt == clipmoveboxtracenum) retval = clipobjectval[hitwall];
-//            hitwalls[cnt] = hitwall;
-//        }
-//        cnt--;
+            //if (cnt == clipmoveboxtracenum) retval = clipobjectval[hitwall];
+            //hitwalls[cnt] = hitwall;
+        }
+        cnt--;
 
-//        pos.x = intx;
-//        pos.y = inty;
-//    }
-//    while ((xvect|yvect) != 0 && hitwall >= 0 && cnt > 0);
+        pos.x = intx;
+        pos.y = inty;
+    }
+    while ((xvect|yvect) != 0 && hitwall >= 0 && cnt > 0);
 
-//    for (j=0; j<clipsectnum; j++)
-//        if (inside(pos.x,pos.y,clipsectorlist[j]) == 1)
-//        {
-//            *sectnum = clipsectorlist[j];
-//            return retval;
-//        }
+    for (j=0; j<clipsectnum; j++)
+        if (inside(pos.x,pos.y,clipsectorlist[j]) == 1)
+        {
+            sectnum.$ = clipsectorlist[j];
+            return retval;
+        }
 
-//    *sectnum = -1; tempint1 = INT32_MAX;
-//    for (j=numsectors-1; j>=0; j--)
-//        if (inside(pos.x,pos.y,j) == 1)
-//        {
-//            if (sector[j].ceilingstat&2)
-//                tempint2 = getceilzofslope(j, pos.x, pos.y) - pos.z;
-//            else
-//                tempint2 = sector[j].ceilingz - pos.z;
+    sectnum.$ = -1; tempint1 = INT32_MAX;
+    for (j=numsectors-1; j>=0; j--)
+        if (inside(pos.x,pos.y,j) == 1)
+        {
+            if (sector[j].ceilingstat&2)
+                tempint2 = getceilzofslope(j, pos.x, pos.y) - pos.z;
+            else
+                tempint2 = sector[j].ceilingz - pos.z;
 
-//            if (tempint2 > 0)
-//            {
-//                if (tempint2 < tempint1)
-//                    { *sectnum = j; tempint1 = tempint2; }
-//            }
-//            else
-//            {
-//                if (sector[j].floorstat&2)
-//                    tempint2 = pos.z - getflorzofslope(j, pos.x, pos.y);
-//                else
-//                    tempint2 = pos.z - sector[j].floorz;
+            if (tempint2 > 0)
+            {
+                if (tempint2 < tempint1)
+                    { sectnum.$ = j; tempint1 = tempint2; }
+            }
+            else
+            {
+                if (sector[j].floorstat&2)
+                    tempint2 = pos.z - getflorzofslope(j, pos.x, pos.y);
+                else
+                    tempint2 = pos.z - sector[j].floorz;
 
-//                if (tempint2 <= 0)
-//                {
-//                    *sectnum = j;
-//                    return retval;
-//                }
-//                if (tempint2 < tempint1)
-//                    { *sectnum = j; tempint1 = tempint2; }
-//            }
-//        }
+                if (tempint2 <= 0)
+                {
+                    sectnum.$ = j;
+                    return retval;
+                }
+                if (tempint2 < tempint1)
+                    { sectnum.$ = j; tempint1 = tempint2; }
+            }
+        }
 
-//    return retval;
+    return retval;
 }
 
 
@@ -13525,9 +13569,9 @@ function /*int32_t */clipmove(pos: IVec3, /*int16_t **/sectnum: R<number>,
 /* Different "is inside" predicates.
  * NOTE: The redundant bound checks are expected to be optimized away in the
  * inlined code. */
-function /*int32_t */inside_p(/*int32_t */x: number, /*int32_t */y: number, /*int16_t */sectnum: number)
+function /*int32_t */inside_p(/*int32_t */x: number, /*int32_t */y: number, /*int16_t */sectnum: number): number
 {
-    return (sectnum>=0 && inside(x, y, sectnum) == 1);
+    return (sectnum>=0 && inside(x, y, sectnum) == 1) ? 1 : 0;
 }
 
 //static inline int32_t inside_exclude_p(int32_t x, int32_t y, int16_t i, const uint8_t *excludesectbitmap)
@@ -13653,7 +13697,7 @@ function updatesectorz(/*int32_t*/ x: number, /*int32_t*/ y: number, /*int32_t*/
 
     if (uint32(sectnum.$) < 2*MAXSECTORS)
     {
-        var wal: walltype ;
+        var wal: walltype, walIdx: number;
         var /*int32_t  */j: number, cz: number = 0, fz: number = 0;
 
         var nofirstzcheck = 0;
@@ -14148,8 +14192,24 @@ restart_grand:
                     if ((cstat&64) != 0)
                         if ((pos.z > daz) == ((cstat&8)==0)) continue;
 
-                    todoThrow("get_floorspr_points(spr, pos.x, pos.y, &x1, &x2, &x3, &x4,\
-                                       &y1, &y2, &y3, &y4);");
+                    var $x1 = new R(x1);
+                    var $x2 = new R(x2);
+                    var $x3 = new R(x3);
+                    var $x4 = new R(x4);
+                    var $y1 = new R(y1);
+                    var $y2 = new R(y2);
+                    var $y3 = new R(y3);
+                    var $y4 = new R(y4);
+                    get_floorspr_points(spr, pos.x, pos.y, $x1, $x2, $x3, $x4,
+                                       $y1, $y2, $y3, $y4);
+                    x1 = $x1.$;
+                    x2 = $x2.$;
+                    x3 = $x3.$;
+                    x4 = $x4.$;
+                    y1 = $y1.$;
+                    y2 = $y2.$;
+                    y3 = $y3.$;
+                    y4 = $y4.$;
 
                     dax = mulscale14(sintable[(spr.ang-256+512)&2047],walldist+4);
                     day = mulscale14(sintable[(spr.ang-256)&2047],walldist+4);

@@ -30,6 +30,12 @@ var uint8 = function (v: number): number {
     return uint8ConvertArray[0];
 };
 
+var int16ConvertArray = new Int16Array(1);
+var int16 = function (v: number): number {
+   int16ConvertArray[0] = v;
+    return int16ConvertArray[0];
+};
+
 var int32 = function (v: number): number {
     return v | 0;   
 };

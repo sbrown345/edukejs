@@ -701,6 +701,7 @@ void A_DoGutsDir(int32_t sp, int32_t gtype, int32_t n)
 
 LUNATIC_EXTERN int32_t G_ToggleWallInterpolation(int32_t w, int32_t doset)
 {
+	return 0;
     if (doset)
     {
         return G_SetInterpolation(&wall[w].x)

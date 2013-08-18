@@ -321,6 +321,7 @@ class sectortypev7 implements ITypeInfo
     floorpicnum : number; floorheinum: number;                                       //Tracker(Sector, int16_t) 
     floorshade: number;                                                            //Tracker(Sector, int8_t)  
     floorpal : number; floorxpanning : number; floorypanning: number;                         //Tracker(Sector, uint8_t) 
+    visibility: number; filler: number;
     private _lotag:Uint16Array;private _hitag:Uint16Array;                      //Tracker(Sector, uint16_t) 
     private _extra:Int16Array;                                                  //Tracker(Sector, int16_t)  
     
