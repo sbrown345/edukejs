@@ -27,10 +27,12 @@ function tempHC(fn: () => void): void {
 // the first version will take the most direct route, add these markers in to track
 function path(location: string) : void {
     var stack = (new Error()).stack;
-    var depth = stack.split("\n").length - 4; // skip first line, this function, load gamme, xhr load
-    depth = Math.max(0, depth);
-    var spacing = Array(depth+1).join(" ");
-    console.info("%cpath: %s%s", "color: green", spacing, location);
+    if(stack) {
+        var depth = stack.split("\n").length - 4; // skip first line, this function, load gamme, xhr load
+        depth = Math.max(0, depth);
+        var spacing = Array(depth+1).join(" ");
+        console.info("%cpath: %s%s", "color: green", spacing, location);
+    }
 }
 
 interface Error {
