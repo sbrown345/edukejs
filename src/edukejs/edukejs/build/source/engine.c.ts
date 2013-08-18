@@ -11994,34 +11994,34 @@ function /*int32_t */ setspritez(/*int16_t */spritenum: number, /*const vec3_t *
 //    return 0;
 //}
 
-//// x1, y1: in/out
-//// rest x/y: out
-//static void get_wallspr_points(const spritetype *spr, int32_t *x1, int32_t *x2,
-//                              int32_t *y1, int32_t *y2)
-//{
-//    //These lines get the 2 points of the rotated sprite
-//    //Given: (x1, y1) starts out as the center point
+// x1, y1: in/out
+// rest x/y: out
+function /*static void */get_wallspr_points(/*const spritetype **/spr: spritetype, /*int32_t */ x1: R<number>, /*int32_t */x2: R<number>,
+                              /*int32_t */ y1: R<number>, /*int32_t **/y2: R<number>): void
+{
+    //These lines get the 2 points of the rotated sprite
+    //Given: (x1, y1) starts out as the center point
 
-//    const int32_t tilenum=spr.picnum, ang=spr.ang;
-//    const int32_t xrepeat = spr.xrepeat;
-//    int32_t xoff = picanm[tilenum].xofs + spr.xoffset;
-//    int32_t k, l, dax, day;
+    var /*const int32_t */tilenum=spr.picnum, ang=spr.ang;
+    var /*const int32_t */xrepeat = spr.xrepeat;
+    var /*int32_t */xoff = picanm[tilenum].xofs + spr.xoffset;
+    var /*int32_t */k: number, l: number, dax: number, day: number;
 
-//    if (spr.cstat&4)
-//        xoff = -xoff;
+    if (spr.cstat&4)
+        xoff = -xoff;
 
-//    dax = sintable[ang&2047]*xrepeat;
-//    day = sintable[(ang+1536)&2047]*xrepeat;
+    dax = sintable[ang&2047]*xrepeat;
+    day = sintable[(ang+1536)&2047]*xrepeat;
 
-//    l = tilesizx[tilenum];
-//    k = (l>>1)+xoff;
+    l = tilesizx[tilenum];
+    k = (l>>1)+xoff;
 
-//    *x1 -= mulscale16(dax,k);
-//    *x2 = *x1 + mulscale16(dax,l);
+    x1.$ -= mulscale16(dax,k);
+    x2.$ = x1.$ + mulscale16(dax,l);
 
-//    *y1 -= mulscale16(day,k);
-//    *y2 = *y1 + mulscale16(day,l);
-//}
+    y1.$ -= mulscale16(day,k);
+    y2.$ = y1.$ + mulscale16(day,l);
+}
 
 //// x1, y1: in/out
 //// rest x/y: out
@@ -14118,7 +14118,15 @@ restart_grand:
 
                 case 16:
                 {
-                    todoThrow("get_wallspr_points(spr, &x1, &x2, &y1, &y2);");
+                    var $x1 = new R(x1);
+                    var $x2 = new R(x2);
+                    var $y1 = new R(y1);
+                    var $y2 = new R(y2);
+                    get_wallspr_points(spr, $x1, $x2, $y1, $y2);
+                    x1 = $x1.$;
+                    x2 = $x2.$;
+                    y1 = $y1.$;
+                    y2 = $y2.$;
 
                     if (clipinsideboxline(pos.x,pos.y,x1,y1,x2,y2,walldist+1) != 0)
                     {
