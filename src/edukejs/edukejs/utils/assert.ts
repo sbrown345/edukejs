@@ -191,7 +191,7 @@
         trackAssert(testFn(type, value), "value is not of type " + type);
     }
 
-    function trackAssert(result, message: string) {
+    function trackAssert(result, message: any) {
         console.assert(result, message);
         if (!result) {
             assert.failedCount++;
