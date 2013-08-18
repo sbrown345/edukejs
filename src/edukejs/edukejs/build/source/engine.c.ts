@@ -13836,7 +13836,7 @@ function mul32(n: number, m: number): number {
  function getzrange(pos:IVec3, /*int16_t */sectnum: number,
                /*int32_t **/ceilz: R<number>, /*int32_t **/ceilhit: R<number>, /*int32_t **/florz: R<number>, /*int32_t **/florhit: R<number>,
                /*int32_t */walldist: number, /*uint32_t */cliptype: number): void
-{debugger;
+{
     var/*int32_t */clipsectcnt=0;
     var /*int32_t*/ dax=0, day=0, daz=0, daz2=0;
     var /*int32_t*/ i=0, j=0, k=0, dx=0, dy=0;
@@ -13896,7 +13896,7 @@ restart_grand:
         var wal: walltype, walIdx = 0;//const walltype *wal;
         var sec: sectortype;//const sectortype *sec;
         var /*int32_t */startwall=0, endwall=0;
-        debugger;
+
 //#ifdef HAVE_CLIPSHAPE_FEATURE
         if (clipsectcnt>=clipsectnum)
         {
@@ -14274,7 +14274,7 @@ restart_grand:
             continue /*goto */restart_grand;
         }
     }
-
+        break;
     }// for label restart_grand
 //#endif
 }
