@@ -772,7 +772,7 @@ function A_AddToDeleteQueue(/*int32_t */i: number): void
 
 function/* int32_t */G_ToggleWallInterpolation(/*int32_t */w: number, /*int32_t */doset: number)
 {
-    todoThrow();return -9999999999999999999999999;
+    todo("G_ToggleWallInterpolation");return -0;
     //if (doset)
     //{
     //    return G_SetInterpolation(&wall[w].x)

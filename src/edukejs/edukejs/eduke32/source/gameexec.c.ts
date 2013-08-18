@@ -378,7 +378,6 @@ function A_GetZLimits(/*int32_t */iActor:  number): number
 
 function A_Fall(/*int32_t*/ iActor: number): void
 {
-    debugger;
     var s = sprite[iActor];
     var hz: number,lz: number,c = g_spriteGravity;
 //#ifdef YAX_ENABLE

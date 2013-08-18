@@ -122,7 +122,25 @@ var NORMALPAL  =(MAXPALOOKUPS - 4);
 //#endif
 
 //////////// yax defs //////////
-function SECTORFLD(Sect: number,Fld: string, Cf: boolean) {return ((Cf) ? (sector[Sect]["floor" + Fld]) : (sector[Sect]["ceiling" + Fld]));}
+function SECTORFLD(Sect: number,Fld: string, Cf: number): number;
+function SECTORFLD(Sect: number,Fld: string, Cf: number, setFn: (v)=>{}): number;
+function SECTORFLD(Sect: number,Fld: string, Cf: number, value: number): number;
+function SECTORFLD(Sect: number,Fld: string, Cf: number, setFnOrValue: any = null): number {
+    function getPropertyName() {
+        return ((Cf) ? ("floor" + Fld) : ("ceiling" + Fld));
+    }
+    
+    var s = sector[Sect];
+    var propName = getPropertyName();
+    if(typeof setFnOrValue === "function") {
+        s[propName] = setFnOrValue(s[propName]);
+    }
+    else if(typeof setFnOrValue === "number") {
+        s[propName] = setFnOrValue;
+    }
+
+    return s[propName];
+}
 
 var YAX_CEILING = 0;  // don't change!
 var YAX_FLOOR = 1;  // don't change!
@@ -303,9 +321,15 @@ class sectortypev7 implements ITypeInfo
     floorpicnum : number; floorheinum: number;                                       //Tracker(Sector, int16_t) 
     floorshade: number;                                                            //Tracker(Sector, int8_t)  
     floorpal : number; floorxpanning : number; floorypanning: number;                         //Tracker(Sector, uint8_t) 
-    /*CM_CEILINGZ:*/ visibility : number; filler: number;                           //Tracker(Sector, uint8_t) 
-    lotag : number; hitag: number;                                                  //Tracker(Sector, uint16_t)
-    extra: number;                                                                 //Tracker(Sector, int16_t) 
+    private _lotag:Uint16Array;private _hitag:Uint16Array;                      //Tracker(Sector, uint16_t) 
+    private _extra:Int16Array;                                                  //Tracker(Sector, int16_t)  
+    
+    get lotag(): number  {return this._lotag[0];}
+    set lotag(val: number) {this._lotag[0] = val; }
+    get hitag(): number  {return this._hitag[0];}
+    set hitag(val: number) {this._hitag[0] = val; }
+    get extra(): number  {return this._extra[0];}
+    set extra(val: number) {this._extra[0] = val; }                                                            //Tracker(Sector, int16_t) 
 
     public static size = 40;
     public static typeInfo = [
@@ -338,8 +362,8 @@ class sectortypev7 implements ITypeInfo
         this.floorshade = 0;                                                            //Tracker(Sector, int8_t)  
         this.floorpal = 0, this.floorxpanning = 0, this.floorypanning = 0;                         //Tracker(Sector, uint8_t) 
         /*CM_CEILINGZ:*/ this.visibility = 0, this.filler = 0;                           //Tracker(Sector, uint8_t) 
-        this.lotag = 0, this.hitag = 0;                                                  //Tracker(Sector, uint16_t)
-        this.extra = 0; 
+        this._lotag = new Uint16Array(1), this._hitag = new Uint16Array(1);                                                  //Tracker(Sector, uint16_t)
+        this._extra = new Int16Array(1); 
     }
 }// sectortypev7;
 
@@ -702,7 +726,7 @@ class spriteext_t {
     flags: number;                             //    uint8_t 
     xpanning: number; ypanning: number;                //    uint8_t 
     filler: number;                            //    uint8_t 
-    alpha = 0.0;//    float 
+    alpha:number; //    float 
 
     constructor() {
         this.init();

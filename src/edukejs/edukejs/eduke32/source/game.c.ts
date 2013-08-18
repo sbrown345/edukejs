@@ -6498,23 +6498,22 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 //#ifdef YAX_ENABLE
                     {
                         var cf=!sp.owner?1:0, bn=yax_getbunch(sect, cf);//int16_t
-                        todoThrow();
-                        //var jj: number, daz=SECTORFLD(sect,z, cf);          //int32_t
-                        //if (bn >= 0)
-                        //{
-                        //    for (SECTORS_OF_BUNCH(bn, cf, jj))
-                        //    {
-                        //        SECTORFLD(jj,z, cf) = daz;
-                        //        SECTORFLD(jj,stat, cf) &= ~256;
-                        //        SECTORFLD(jj,stat, cf) |= 128 + 512+2048;
-                        //    }
-                        //    for (SECTORS_OF_BUNCH(bn, !cf, jj))
-                        //    {
-                        //        SECTORFLD(jj,z, !cf) = daz;
-                        //        SECTORFLD(jj,stat, !cf) &= ~256;
-                        //        SECTORFLD(jj,stat, !cf) |= 128 + 512+2048;
-                        //    }
-                        //}
+                        var jj: number, daz=SECTORFLD(sect,"z", cf);          //int32_t
+                        if (bn >= 0)
+                        {
+                            for (jj = headsectbunch[cf][bn]; jj != -1; jj = nextsectbunch[cf][jj]   /*SECTORS_OF_BUNCH(bn, cf, jj)*/)
+                            {debugger;
+                                SECTORFLD(jj,"z", cf, daz);// = daz;
+                                SECTORFLD(jj,"stat", cf, (v) => {return v &= ~256;});// &= ~256;
+                                SECTORFLD(jj,"stat", cf, (v) => {return v |= 128 + 512+2048;});// |= 128 + 512+2048;
+                            }
+                            for (jj = headsectbunch[!cf?1:0][bn]; jj != -1; jj = nextsectbunch[!cf?1:0][jj] /*SECTORS_OF_BUNCH(bn, !cf, jj)*/)
+                            {
+                                SECTORFLD(jj,"z", !cf?1:0, daz);// = daz;
+                                SECTORFLD(jj,"stat", !cf?1:0, (v) => {return v &= ~256;});// &= ~256;
+                                SECTORFLD(jj,"stat", !cf?1:0, (v) => {return v |= 128 + 512+2048;});// |= 128 + 512+2048;
+                            }
+                        }
                     }
 //#endif
                 }
