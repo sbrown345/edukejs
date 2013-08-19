@@ -2576,31 +2576,31 @@ var palfadedelta = 0; //char
 
 // returns: 0=continue sprite collecting;
 //          1=break out of sprite collecting;
-function /*int32_t */engine_addtsprite(/*int16_t */z: number, /*int16_t */sectnum: number)
-{todoThrow();
-//    spritetype *spr = &sprite[z];
-//#ifdef YAX_ENABLE
-//    int16_t cb, fb, *sortcnt;
-//    int32_t spheight, spzofs;
+function /*int32_t */engine_addtsprite(/*int16_t */z: number, /*int16_t */sectnum: number): number
+{todo("engine_addtsprite");
+//    var spr = sprite[z];
+////#ifdef YAX_ENABLE
+//    var /*int16_t */cb: number, fb: number, sortcnt = ??;
+//    var /*int32_t */spheight, spzofs;
 
 //    if (g_nodraw==0)
 //    {
 //        if (numyaxbunches==0)
 //        {
-//#endif
+////#endif
 //            if (spritesortcnt >= MAXSPRITESONSCREEN)
 //                return 1;
 
 //            Bmemcpy(&tsprite[spritesortcnt], spr, sizeof(spritetype));
 //            tsprite[spritesortcnt++].owner = z;
 
-//#ifdef YAX_ENABLE
+////#ifdef YAX_ENABLE
 //        }
 //    }
 //    else
-//#ifdef YAX_ENABLE
+////#ifdef YAX_ENABLE
 //        if (yax_nomaskpass==0)
-//#endif
+////#endif
 //    {
 //        sortcnt = &yax_spritesortcnt[yax_globallev];
 //        if (*sortcnt >= MAXSPRITESONSCREEN)
@@ -2644,7 +2644,7 @@ function /*int32_t */engine_addtsprite(/*int16_t */z: number, /*int16_t */sectnu
 //            }
 //        }
 //    }
-//#endif
+////#endif
 
     return 0;
 }

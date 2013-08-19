@@ -2486,7 +2486,8 @@ void fade_screen_black(int32_t moreopaquep)
 // returns: 0=continue sprite collecting;
 //          1=break out of sprite collecting;
 int32_t engine_addtsprite(int16_t z, int16_t sectnum)
-{
+{return 0;
+#ifdef DEBUG_TODO
     spritetype *spr = &sprite[z];
 #ifdef YAX_ENABLE
     int16_t cb, fb, *sortcnt;
@@ -2556,6 +2557,7 @@ int32_t engine_addtsprite(int16_t z, int16_t sectnum)
 #endif
 
     return 0;
+#endif
 }
 
 //
