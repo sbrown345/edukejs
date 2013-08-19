@@ -984,6 +984,7 @@ int32_t gloadtile_art(int32_t dapic, int32_t dapal, int32_t dashade, int32_t dam
 	#endif
 
 	#ifdef DEBUG_GL_SIMPLE_OFF
+	#else
 	hasalpha = 1; // so intformat and format is the same
 	#endif
 

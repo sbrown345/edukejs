@@ -20,7 +20,13 @@ function logGLCall(functionName: string, args: any[]): void {
 function validateNoneOfTheArgsAreUndefined(functionName: string, args: any[]): void {
   for (var ii = 0; ii < args.length; ++ii) {
     if (args[ii] === undefined) {
+      debugger;
       console.error("undefined passed to gl." + functionName + "(" +
+                     WebGLDebugUtils.glFunctionArgsToString(functionName, args) + ")");
+    }
+    if (typeof args[ii] === "number" && isNaN(args[ii])) {
+      debugger;
+      console.error("NaN passed to gl." + functionName + "(" +
                      WebGLDebugUtils.glFunctionArgsToString(functionName, args) + ")");
     }
   }

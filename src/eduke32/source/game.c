@@ -3422,6 +3422,7 @@ static void G_FadePalaccum(const palaccum_t *pa)
 
 void G_DisplayRest(int32_t smoothratio)
 {
+#ifdef DEBUG_TODO
     int32_t i, j;
     palaccum_t tint = PALACCUM_INITIALIZER;
 
@@ -3848,6 +3849,7 @@ void G_DisplayRest(int32_t smoothratio)
             applied = 0;
         }
     }
+#endif
 }
 
 static void G_DoThirdPerson(const DukePlayer_t *pp, vec3_t *vect, int16_t *vsectnum, int32_t ang, int32_t horiz)

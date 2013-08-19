@@ -116,7 +116,9 @@ var usemodels=1, usehightile=1;//int32_t
 //
 //#include <math.h> //<-important!
 class vsptyp{ 
-    /*float */x: number; 
+    /*float */private _x: number; 
+    get x(): number  {return this._x;}
+    set x(val: number) {if(val === undefined || (typeof val === "number" && isNaN(val))){debugger;} this._x = val; }
     cy: Float32Array; 
     fy: Float32Array; 
     /*int32_t */tag: number; 
@@ -1848,7 +1850,7 @@ function vsp_finalize_init(/*vsptyp */vsp: vsptyp[], /*int32_t */vcnt: number): 
 // (px[3],py[3]).--------------.(px[2],py[2])
 */
 
-function initmosts(/*double **/ px: number, /*double **/ py: number, /*int32_t */n: number): void
+function initmosts(/*double **/ px: Float64Array, /*double **/ py: Float64Array, /*int32_t */n: number): void
 {
     var /*int32_t */i: number, j: number, k: number, imin: number, vcnt: number;
 
@@ -1970,7 +1972,7 @@ function domost(/*float*/ x0: number, /*float */y0: number, /*float */x1: number
     var /*int32_t*/ i=0, j=0, k=0, z=0, ni=0, vcnt=0, scnt=0, newi=0, dir=0, spt=new Int32Array(4);
 
     alpha = 0.0;
-
+    debugger
     if (x0 < x1)
     {
         dir = 1; //clip dmost (floor)
@@ -1984,7 +1986,7 @@ function domost(/*float*/ x0: number, /*float */y0: number, /*float */x1: number
         dir = 0; //clip umost (ceiling)
         //y0 += .01; y1 += .01; //necessary?
     }
-
+    
     slop = (y1-y0)/(x1-x0);
     for (i=vsp[0].n; i; i=newi)
     {
@@ -3384,7 +3386,7 @@ function polymost_drawrooms(): void
         sx[i] = px2[i]*r + ghalfx;
         sy[i] = py2[i]*r + ghoriz;
     }
-    initmosts(sx[0],sy[0],n2);
+    initmosts(sx,sy,n2);
 
     if (searchit == 2)
     {todoThrow();
