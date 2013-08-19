@@ -2181,9 +2181,7 @@ function domost(/*float*/ x0: number, /*float */y0: number, /*float */x1: number
     //Combine neighboring vertical strips with matching collinear top&bottom edges
     //This prevents x-splits from propagating through the entire scan
     i = vsp[0].n;
-    dlogFlush();
-    debugger;
-    throw "todo";
+
     while (i)
     {
         ni = vsp[i].n;
