@@ -357,10 +357,11 @@
 //}
 
 //#else
-//static inline void ftol(float f, int32_t *a)
-//{
-//    *a = (int32_t)f;
-//}
+function /*int32_t*/ ftol(/*float*/ f/*, int32_t *a*/): number
+{
+    //*a = (int32_t)f;
+    return f|0;
+}
 
 //static inline void dtol(double d, int32_t *a)
 //{
