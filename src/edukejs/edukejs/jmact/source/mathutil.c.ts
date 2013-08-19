@@ -42,8 +42,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 function /*int32_t*/ FindDistance2D(/*int32_t */x: number, /*int32_t */y: number): number
 {
-    debugger;//check swap long
-    if ((x=klabs(x)) < (y=klabs(y))) swaplong("x","y", this);
+    if ((x=klabs(x)) < (y=klabs(y))) {
+        var t = y;
+        y = x;
+        x = t;
+    }
 
     {
         var /*int32_t */t = y + (y>>1);

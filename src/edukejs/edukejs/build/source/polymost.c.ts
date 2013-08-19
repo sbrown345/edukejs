@@ -1824,7 +1824,7 @@ function drawpoly(dpx: Float64Array, dpy: Float64Array, n:number, method: number
 }
 
 
-function vsp_finalize_init(/*vsptyp */vsp: vsptyp, /*int32_t */vcnt: number): void 
+function vsp_finalize_init(/*vsptyp */vsp: vsptyp[], /*int32_t */vcnt: number): void 
 {
     var /*int32_t */i: number;
 
@@ -1912,7 +1912,7 @@ function initmosts(/*double **/ px: number, /*double **/ py: number, /*int32_t *
         vcnt++;
     }
 
-    vsp_finalize_init(vsp[0], vcnt);
+    vsp_finalize_init(vsp, vcnt);
     gtag = vcnt;
 }
 //

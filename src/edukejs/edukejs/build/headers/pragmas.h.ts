@@ -535,19 +535,11 @@ function clearbuf(d: P, c: number, a: number): void {
 //	*(int16_t*)b = t;
 //}
 
-function swaplong(/*void **/a: string, /*void **/b: string, ctx: any)
+function swaplong(/*void **/a: any, /*void **/b: any)
 {
     // execute script in private context
     debugger;
-    (new Function( "with(this) { var t = " + a + ";a = b;b = t; }")).call(ctx);
-
-    //with(ctx) {
-    //    eval("var t = " + a + ";a = b;b = t;");
-
-    //}
-	//int32_t t = *(int32_t*)a;
-	//*(int32_t*)a = *(int32_t*)b;
-	//*(int32_t*)b = t;
+    throw "todo - write manually";
 }
 
 

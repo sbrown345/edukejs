@@ -119,7 +119,7 @@ var neartaghitdist:number,lockclock:number,g_startArmorAmount:number;//G_EXTERN 
 var playerswhenstarted : number; ////G_EXTERN int32_t
 var screenpeek: number;
 var startofdynamicinterpolations: number;         //G_EXTERN int32_t 
-var vel: number,svel: number,angvel: number,horiz: number,ototalclock: number;    //G_EXTERN int32_t 
+var vel: number=0,svel: number=0,angvel: number=0,horiz: number=0,ototalclock: number=0;    //G_EXTERN int32_t 
 //G_EXTERN intptr_t *g_parsingActorPtr;
 var g_scriptPtr = 0, insptr = 0;// - pointers to script G_EXTERN intptr_t 
 var labelcode: Int32Array, labeltype: Int32Array;//G_EXTERN int32_t *labelcode,*labeltype;

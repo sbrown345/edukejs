@@ -165,7 +165,7 @@ var voxscale = new Int32Array(MAXVOXELS);
 
 //static int32_t ggxinc[MAXXSIZ+1], ggyinc[MAXXSIZ+1];
 var lowrecip = new Int32Array(1024), nytooclose: number, nytoofar: number; //static int32_t 
-//static uint32_t distrecip[65536+256];
+var /*uint32_t */distrecip = new Uint32Array(65536+256);
 
 var lookups:Int32Array = NULL; //int32_t *
 var lookupsIdx: number;
@@ -222,7 +222,7 @@ var artsize = 0, cachesize = 0; //cachesize - looks like this is in cache1d.c to
 //// Whole ART file contents loaded from ZIPs in memory.
 //static char *artptrs[MAXTILEFILES];
 
-//static int32_t no_radarang2 = 0;
+var /*int32_t */no_radarang2 = 0;
 var radarang = new Int16Array(1280), radarang2 = new Int16Array(MAXXDIM);
 
 var sqrtable = new Uint16Array(4096), shlookup = new Uint16Array(4096+256);
@@ -7868,63 +7868,63 @@ function initksqrt() : void
 }
 
 
-////
-//// dosetaspect
-////
-//static void dosetaspect(void)
-//{
-//    int32_t i, j;
+//
+// dosetaspect
+//
+function dosetaspect(): void
+{
+    var /*int32_t */i: number, j: number;
 
-//    if (xyaspect != oxyaspect)
-//    {
-//        oxyaspect = xyaspect;
-//        j = xyaspect*320;
-//        horizlookup2[horizycent-1] = divscale26(131072,j);
-//        for (i=ydim*4-1; i>=0; i--)
-//            if (i != (horizycent-1))
-//            {
-//                horizlookup[i] = divscale28(1,i-(horizycent-1));
-//                horizlookup2[i] = divscale14(klabs(horizlookup[i]),j);
-//            }
-//    }
+    if (xyaspect != oxyaspect)
+    {
+        oxyaspect = xyaspect;
+        j = xyaspect*320;
+        horizlookup2[horizycent-1] = divscale26(131072,j);
+        for (i=ydim*4-1; i>=0; i--)
+            if (i != (horizycent-1))
+            {
+                horizlookup[i] = divscale28(1,i-(horizycent-1));
+                horizlookup2[i] = divscale14(klabs(horizlookup[i]),j);
+            }
+    }
 
-//    if (xdimen != oxdimen || viewingrange != oviewingrange)
-//    {
-//        int32_t k, x, xinc;
+    if (xdimen != oxdimen || viewingrange != oviewingrange)
+    {
+        var /*int32_t */k: number, x: number, xinc: number;
 
-//        no_radarang2 = 0;
-//        oxdimen = xdimen;
-//        oviewingrange = viewingrange;
+        no_radarang2 = 0;
+        oxdimen = xdimen;
+        oviewingrange = viewingrange;
 
-//        xinc = mulscale32(viewingrange*320,xdimenrecip);
-//        x = (640<<16)-mulscale1(xinc,xdimen);
+        xinc = mulscale32(viewingrange*320,xdimenrecip);
+        x = (640<<16)-mulscale1(xinc,xdimen);
 
-//        for (i=0; i<xdimen; i++)
-//        {
-//            j = (x&65535); k = (x>>16); x += xinc;
+        for (i=0; i<xdimen; i++)
+        {
+            j = (x&65535); k = (x>>16); x += xinc;
 
-//            if (k < 0 || k >= (int32_t)(sizeof(radarang)/sizeof(radarang[0]))-1)
-//            {
-//                no_radarang2 = 1;
+            if (k < 0 || k >= int32(sizeof(radarang)/sizeof(radarang[0]))-1)
+            {
+                no_radarang2 = 1;
 //#ifdef DEBUGGINGAIDS
 //                if (editstatus)
 //                    initprintf("no rad2\n");
 //#endif
-//                break;
-//            }
+                break;
+            }
 
-//            if (j != 0)
-//                j = mulscale16(radarang[k+1]-radarang[k], j);
-//            radarang2[i] = (int16_t)((radarang[k]+j)>>6);
-//        }
+            if (j != 0)
+                j = mulscale16(radarang[k+1]-radarang[k], j);
+            radarang2[i] = ((radarang[k]+j)>>6);
+        }
 
-//        for (i=1; i<(int32_t)(sizeof(distrecip)/sizeof(distrecip[0])); i++)
-//            distrecip[i] = divscale20(xdimen,i);
+        for (i=1; i< int32(sizeof(distrecip)/sizeof(distrecip[0])); i++)
+            distrecip[i] = divscale20(xdimen,i);
 
-//        nytooclose = xdimen*2100;
-//        nytoofar = 65536*16384-1048576;
-//    }
-//}
+        nytooclose = xdimen*2100;
+        nytoofar = 65536*16384-1048576;
+    }
+}
 
 
 //
@@ -8505,7 +8505,7 @@ function /*int32_t */rintersect(/*int32_t*/ x1:number, /*int32_t*/ y1:number, /*
     intz.$ = z1 + ((vz*t)>>16);
     
     t = Math.floor((topu<<16)/bot);
-    Bassert(unsigned(t < 65536));
+    Bassert(unsigned(t < 65536 ? 1:0));
 
     return t;
 }
@@ -8980,7 +8980,7 @@ function /*int32_t */drawrooms(/*int32_t*/ daposx: number, /*int32_t*/ daposy: n
     totalclocklock = totalclock;
 
     if ((xyaspect != oxyaspect) || (xdimen != oxdimen) || (viewingrange != oviewingrange))
-        todoThrow("dosetaspect();");
+        dosetaspect();
 
     Bmemset(new P(gotsector), 0, ((numsectors+7)>>3));
 

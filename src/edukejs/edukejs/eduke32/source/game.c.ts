@@ -5011,31 +5011,31 @@ if(DEBUGGINGAIDS) {
 }
 
 //#ifdef YAX_ENABLE
-//void Yax_SetBunchZs(int32_t sectnum, int32_t cf, int32_t daz)
-//{
-//    int32_t i, bunchnum = yax_getbunch(sectnum, cf);
+function Yax_SetBunchZs(/*int32_t*/ sectnum: number, /*int32_t */cf: number, /*int32_t */daz: number): void
+{
+    var /*int32_t*/ i: number, bunchnum = yax_getbunch(sectnum, cf);
 
-//    if (bunchnum < 0 || bunchnum >= numyaxbunches)
-//        return;
+    if (bunchnum < 0 || bunchnum >= numyaxbunches)
+        return;
 
-//    for (SECTORS_OF_BUNCH(bunchnum, YAX_CEILING, i))
-//        SECTORFLD(i,z, YAX_CEILING) = daz;
-//    for (SECTORS_OF_BUNCH(bunchnum, YAX_FLOOR, i))
-//        SECTORFLD(i,z, YAX_FLOOR) = daz;
-//}
+    for (i = headsectbunch[YAX_CEILING][bunchnum]; i != -1; i = nextsectbunch[YAX_CEILING][i] /*SECTORS_OF_BUNCH(bunchnum, YAX_CEILING, i)*/)
+        SECTORFLD(i,"z", YAX_CEILING, (v) => {return daz;});
+    for (i = headsectbunch[YAX_FLOOR][bunchnum]; i != -1; i = nextsectbunch[YAX_FLOOR][i]    /*SECTORS_OF_BUNCH(bunchnum, YAX_FLOOR, i)*/)
+        SECTORFLD(i,"z", YAX_FLOOR, (v) => {return daz;});
+}
 
-//static void Yax_SetBunchInterpolation(int32_t sectnum, int32_t cf)
-//{
-//    int32_t i, bunchnum = yax_getbunch(sectnum, cf);
+function Yax_SetBunchInterpolation(/*int32_t*/ sectnum: number, /*int32_t*/ cf: number): void
+{
+    var /*int32_t */ i: number, bunchnum = yax_getbunch(sectnum, cf);
 
-//    if (bunchnum < 0 || bunchnum >= numyaxbunches)
-//        return;
+    if (bunchnum < 0 || bunchnum >= numyaxbunches)
+        return;
     
-//    for (SECTORS_OF_BUNCH(bunchnum, YAX_CEILING, i))
-//        G_SetInterpolation(&sector[i].ceilingz);
-//    for (SECTORS_OF_BUNCH(bunchnum, YAX_FLOOR, i))
-//        G_SetInterpolation(&sector[i].floorz);
-//}
+    for (i = headsectbunch[YAX_CEILING][bunchnum]; i != -1; i = nextsectbunch[YAX_CEILING][i] /*SECTORS_OF_BUNCH(bunchnum, YAX_CEILING, i)*/)
+        G_SetInterpolation(new R(sector[i].ceilingz));
+    for (i = headsectbunch[YAX_FLOOR][bunchnum]; i != -1; i = nextsectbunch[YAX_FLOOR][i] /*SECTORS_OF_BUNCH(bunchnum, YAX_FLOOR, i)*/)
+        G_SetInterpolation(new R(sector[i].floorz));
+}
 //#else
 //# define Yax_SetBunchInterpolation(sectnum, cf)
 //#endif
@@ -6667,44 +6667,44 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
                 break;
 
             case SE_31_FLOOR_RISE_FALL:
-            {todoThrow();
-                //actor[i].t_data[1] = sector[sect].floorz;
-                ////    actor[i].t_data[2] = sp.hitag;
-                //if (sp.ang != 1536)
-                //{
-                //    sector[sect].floorz = sp.z;
-                //    Yax_SetBunchZs(sect, YAX_FLOOR, sp.z);
-                //}
+            {
+                actor[i].t_data[1] = sector[sect].floorz;
+                //    actor[i].t_data[2] = sp.hitag;
+                if (sp.ang != 1536)
+                {
+                    sector[sect].floorz = sp.z;
+                    Yax_SetBunchZs(sect, YAX_FLOOR, sp.z);
+                }
 
-                //startwall = sector[sect].wallptr;
-                //endwall = startwall+sector[sect].wallnum;
+                startwall = sector[sect].wallptr;
+                endwall = startwall+sector[sect].wallnum;
 
-                //for (s=startwall; s<endwall; s++)
-                //    if (wall[s].hitag == 0) wall[s].hitag = 9999;
+                for (s=startwall; s<endwall; s++)
+                    if (wall[s].hitag == 0) wall[s].hitag = 9999;
 
-                //G_SetInterpolation(&sector[sect].floorz);
-                //Yax_SetBunchInterpolation(sect, YAX_FLOOR);
+                G_SetInterpolation(new R(sector[sect].floorz));
+                Yax_SetBunchInterpolation(sect, YAX_FLOOR);
             }
             break;
 
             case SE_32_CEILING_RISE_FALL:
-            {todoThrow();
-                //actor[i].t_data[1] = sector[sect].ceilingz;
-                //actor[i].t_data[2] = sp.hitag;
-                //if (sp.ang != 1536)
-                //{
-                //    sector[sect].ceilingz = sp.z;
-                //    Yax_SetBunchZs(sect, YAX_CEILING, sp.z);
-                //}
+            {
+                actor[i].t_data[1] = sector[sect].ceilingz;
+                actor[i].t_data[2] = sp.hitag;
+                if (sp.ang != 1536)
+                {
+                    sector[sect].ceilingz = sp.z;
+                    Yax_SetBunchZs(sect, YAX_CEILING, sp.z);
+                }
 
-                //startwall = sector[sect].wallptr;
-                //endwall = startwall+sector[sect].wallnum;
+                startwall = sector[sect].wallptr;
+                endwall = startwall+sector[sect].wallnum;
 
-                //for (s=startwall; s<endwall; s++)
-                //    if (wall[s].hitag == 0) wall[s].hitag = 9999;
+                for (s=startwall; s<endwall; s++)
+                    if (wall[s].hitag == 0) wall[s].hitag = 9999;
 
-                //G_SetInterpolation(&sector[sect].ceilingz);
-                //Yax_SetBunchInterpolation(sect, YAX_CEILING);
+                G_SetInterpolation(new R(sector[sect].ceilingz));
+                Yax_SetBunchInterpolation(sect, YAX_CEILING);
             }
             break;
 
