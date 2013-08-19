@@ -1972,7 +1972,7 @@ function domost(/*float*/ x0: number, /*float */y0: number, /*float */x1: number
     var /*int32_t*/ i=0, j=0, k=0, z=0, ni=0, vcnt=0, scnt=0, newi=0, dir=0, spt=new Int32Array(4);
 
     alpha = 0.0;
-    debugger
+    
     if (x0 < x1)
     {
         dir = 1; //clip dmost (floor)
@@ -2177,7 +2177,7 @@ var global_getzofslope_func: (a1: number, a2: number, a3: number) => number;//st
 //
 function polymost_internal_nonparallaxed(/*double*/ nx0:number, /*double*/ ny0:number, /*double*/ nx1:number, /*double*/ ny1:number, /*double*/ ryp0:number, /*double*/ ryp1:number,
                                             /*double*/ x0:number, /*double*/ x1:number, /*double*/ cf_y0:number, /*double*/ cf_y1:number, /*int32_t*/ have_floor:number,
-                                            /*int32_t*/ sectnum):void 
+                                            /*int32_t*/ sectnum:number):void 
 {
     var /*double */ft = new Float64Array(4), fx=0.0, fy=0.0, ox=0.0, oy=0.0, oz=0.0, ox2=0.0, oy2=0.0;
     var /*double */px = new Float64Array(3), py = new Float64Array(3), dd = new Float64Array(3), uu = new Float64Array(3), vv = new Float64Array(3), r=0.0;
@@ -3164,7 +3164,7 @@ function /*static int32_t */polymost_bunchfront(/*int32_t */b1: number, /*int32_
     return(wallfront(i,b2f));
 }
 
-function polymost_scansector(/*int32_t*/ sectnum): void 
+function polymost_scansector(/*int32_t*/ sectnum:number): void 
 {
     var /*double*/ d = 0.0, xp1 = 0.0, yp1 = 0.0, xp2 = 0.0, yp2 = 0.0;
     var wal: walltype, walIdx: number, wal2: walltype;

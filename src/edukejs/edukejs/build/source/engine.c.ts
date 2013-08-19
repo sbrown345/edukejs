@@ -13,12 +13,14 @@
 /// <reference path="../../build/headers/mdsprite.h.ts" />
 /// <reference path="../../build/headers/osd.h.ts" />
 /// <reference path="../../build/headers/pragmas.h.ts" />
+/// <reference path="../../build/headers/polymost.h.ts" />
 /// <reference path="../../build/headers/scancodes.h.ts" />
 /// <reference path="../../build/headers/texcache.h.ts" />
 
 /// <reference path="../../build/source/cache1d.c.ts" />
 /// <reference path="../../build/source/crc32.c.ts" />
 /// <reference path="../../build/source/mdsprite.c.ts" />
+/// <reference path="../../build/source/polymost.c.ts" />
 
 /// <reference path="../../eduke32/source/net.c.ts" />
 
@@ -11488,7 +11490,7 @@ function loadtile(tilenume: number): void
 //
 // clipinsideboxline
 //
-function /*int32_t */clipinsideboxline(/*int32_t */x: number, /*int32_t */y: number, /*int32_t */x1: number, /*int32_t */y1: number, /*int32_t */x2: number, /*int32_t */y2: number, /*int32_t */walldist: number)
+function /*int32_t */clipinsideboxline(/*int32_t */x: number, /*int32_t */y: number, /*int32_t */x1: number, /*int32_t */y1: number, /*int32_t */x2: number, /*int32_t */y2: number, /*int32_t */walldist: number): number
 {
     var /*const int32_t */r = walldist<<1;
 
@@ -11505,11 +11507,11 @@ function /*int32_t */clipinsideboxline(/*int32_t */x: number, /*int32_t */y: num
     {
         if (x2 > 0) x2 *= (0-y1); else x2 *= (r-y1);
         if (y2 > 0) y2 *= (r-x1); else y2 *= (0-x1);
-        return(x2 < y2);
+        return(x2 < y2)?1:0;
     }
     if (x2 > 0) x2 *= (r-y1); else x2 *= (0-y1);
     if (y2 > 0) y2 *= (0-x1); else y2 *= (r-x1);
-    return((x2 >= y2)<<1);
+    return((x2 >= y2)<<1)?1:0;
 }
 
 
@@ -12073,7 +12075,7 @@ function get_floorspr_points(spr:  spritetype, /*int32_t*/ px:number, /*int32_t*
 }
 
 function /*static int32_t */get_floorspr_clipyou(/*int32_t */x1: number, /*int32_t */x2: number, /*int32_t */x3: number, /*int32_t */x4: number,
-                                   /*int32_t */y1: number, /*int32_t */y2: number, /*int32_t */y3: number, /*int32_t */y4: number)
+                                   /*int32_t */y1: number, /*int32_t */y2: number, /*int32_t */y3: number, /*int32_t */y4: number): number
 {
     var /*int32_t */clipyou = 0;
 
@@ -13044,7 +13046,7 @@ function /*int32_t */clipmove(pos: IVec3, /*int16_t **/sectnum: R<number>,
             {
                 if (wal.nextsector>=0)
                 {
-                    var/*int32_t */ basez, daz, daz2;
+                    var/*int32_t */ basez: number, daz: number, daz2: number;
 
                     var $dax = new R(dax);
                     var $day = new R(day);
@@ -13181,7 +13183,7 @@ function /*int32_t */clipmove(pos: IVec3, /*int16_t **/sectnum: R<number>,
                 if (x1 >= xmin && x1 <= xmax && y1 >= ymin && y1 <= ymax)
                 {
                     var $k = new R(k);
-                    var /*const int32_t */daz = spr.z + spriteheightofs(j, $k, 1);
+                    var /*const int32_t */daz:number = spr.z + spriteheightofs(j, $k, 1);
                     k = $k.$;
 
                     if ((pos.z < daz+ceildist) && (pos.z > daz-k-flordist))
@@ -13198,9 +13200,9 @@ function /*int32_t */clipmove(pos: IVec3, /*int16_t **/sectnum: R<number>,
             case 16:
             {
                 var $k = new R(k);
-                var /*const int32_t */daz = spr.z + spriteheightofs(j, $k, 1) + ceildist;
+                var /*const int32_t */daz: number = spr.z + spriteheightofs(j, $k, 1) + ceildist;
                 k = $k.$;
-                var /*const int32_t */daz2 = daz-k - flordist;
+                var /*const int32_t */daz2: number = daz-k - flordist;
 
                 if (pos.z < daz && pos.z > daz2)
                 {
@@ -13241,8 +13243,8 @@ function /*int32_t */clipmove(pos: IVec3, /*int16_t **/sectnum: R<number>,
 
             case 32:
             {
-                var /*const int32_t */daz = spr.z + ceildist;
-                var  /*const int32_t */daz2 = spr.z - flordist;
+                var /*const int32_t */daz: number = spr.z + ceildist;
+                var  /*const int32_t */daz2: number = spr.z - flordist;
 
                 if (pos.z < daz && pos.z > daz2)
                 {

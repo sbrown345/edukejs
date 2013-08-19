@@ -123,7 +123,7 @@ var NORMALPAL  =(MAXPALOOKUPS - 4);
 
 //////////// yax defs //////////
 function SECTORFLD(Sect: number,Fld: string, Cf: number): number;
-function SECTORFLD(Sect: number,Fld: string, Cf: number, setFn: (v)=>{}): number;
+function SECTORFLD(Sect: number,Fld: string, Cf: number, setFn: (v:number)=>{}): number;
 function SECTORFLD(Sect: number,Fld: string, Cf: number, value: number): number;
 function SECTORFLD(Sect: number,Fld: string, Cf: number, setFnOrValue: any = null): number {
     function getPropertyName() {
@@ -915,7 +915,7 @@ var display_mirror: number;//EXTERN char
 var numframes = 0, randomseed = 0; //EXTERN int32_t 
 var sintable = new Int16Array(2048);
 var palette = new Uint8Array(768);
-var numshades;//EXTERN int16_t 
+var numshades:number;//EXTERN int16_t 
 var palookup: Uint8Array[] = new Array(MAXPALOOKUPS); //EXTERN char *
 var basepaltableptr: Uint8Array[]; //EXTERN uint8_t **
 var parallaxtype: number, showinvisibility: number; //EXTERN char
@@ -1420,7 +1420,7 @@ function getzsofslope(/*int16_t */sectnum: number, /*int32_t */dax: number, /*in
 //int32_t   setspritez(int16_t spritenum, const vec3_t *) ATTRIBUTE((nonnull(2)));
 
 //int32_t spriteheightofsptr(const spritetype *spr, int32_t *height, int32_t alsotileyofs);
-function /*int32_t */spriteheightofs(/*int16_t */i: number, /*int32_t **/height: R<number>, /*int32_t */alsotileyofs: number)
+function /*int32_t */spriteheightofs(/*int16_t */i: number, /*int32_t **/height: R<number>, /*int32_t */alsotileyofs: number):number
 {
     return window["spriteheightofsptr"](sprite[i], height, alsotileyofs);
 }

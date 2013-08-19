@@ -357,7 +357,7 @@
 //}
 
 //#else
-function /*int32_t*/ ftol(/*float*/ f/*, int32_t *a*/): number
+function /*int32_t*/ ftol(/*float*/ f:number/*, int32_t *a*/): number
 {
     //*a = (int32_t)f;
     return f|0;

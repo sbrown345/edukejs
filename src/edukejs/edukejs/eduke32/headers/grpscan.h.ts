@@ -62,6 +62,7 @@ class grpfile {
     next: grpfile;
 
     constructor(name: string = null, crcval: number = 0, size: number = 0, game: number = 0, dependency: number = 0, scriptname: string = null, defname: string = null, next: grpfile = null /*grpfile*/) {
+        this.name = name;
         this.crcval = crcval;
         this.size = size;
         this.game = game;
