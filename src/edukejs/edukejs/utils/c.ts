@@ -160,6 +160,11 @@ function read(fileHandle: number, dstBuf: Ptr, maxCharCount: number) : number {
 //}
 
 function sizeof(obj: any) : number {
+    if(typeof obj === "number") {
+        debugger;
+        throw "cannot get size of number type";
+    }
+
     if (obj.size !== undefined) {
         return obj.size;
     }

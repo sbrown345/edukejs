@@ -72,7 +72,7 @@ var label : Uint8Array;//G_EXTERN char *label;
 var EnvMusicFilename: string[] = new Array<string>(MAXVOLUMES+1);//[MAXVOLUMES+1][BMAX_PATH];
 //G_EXTERN char g_RTSPlaying: number;
 var g_musicIndex: number; //G_EXTERN int32_t 
-var g_loadFromGroupOnly : number;//char
+var g_loadFromGroupOnly = 0;//char
 var g_numSkills : number; // char
 var myjumpingtoggle: number,myonground: number,myhardlanding: number,myreturntocenter: number;//G_EXTERN char 
 var pus: number,pub: number;//G_EXTERN char 

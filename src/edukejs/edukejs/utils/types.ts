@@ -203,7 +203,7 @@ class Ref {
 class R<T> {
     $: T;
 
-    constructor(val: T) {
+    constructor(val?: T) {
         this.$ = val;
     }
 }

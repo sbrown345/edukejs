@@ -7905,7 +7905,7 @@ function dosetaspect(): void
         {
             j = (x&65535); k = (x>>16); x += xinc;
 
-            if (k < 0 || k >= int32(sizeof(radarang)/sizeof(radarang[0]))-1)
+            if (k < 0 || k >= int32(sizeof(radarang)/radarang.BYTES_PER_ELEMENT)-1)
             {
                 no_radarang2 = 1;
 //#ifdef DEBUGGINGAIDS
@@ -7920,7 +7920,7 @@ function dosetaspect(): void
             radarang2[i] = ((radarang[k]+j)>>6);
         }
 
-        for (i=1; i< int32(sizeof(distrecip)/sizeof(distrecip[0])); i++)
+        for (i=1; i< int32(sizeof(distrecip)/distrecip.BYTES_PER_ELEMENT); i++)
             distrecip[i] = divscale20(xdimen,i);
 
         nytooclose = xdimen*2100;

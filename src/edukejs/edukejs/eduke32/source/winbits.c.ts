@@ -149,6 +149,8 @@ function /*int32_t */win_inittimer(): number
     //    return -1;
     //}
     //win_timerfreq = t;
+    
+    tempHC(() => win_timerfreq = 10000);
 
     return 0;
 }
