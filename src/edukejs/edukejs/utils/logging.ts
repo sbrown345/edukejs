@@ -2,6 +2,7 @@
 var SKIP_ALL_LOGGING = false;
 
 var DEBUG_COMPILE = false;
+var DEBUG_MOSTS = false;
 var DEBUG_PALETTE = false;
 var DEBUG_SCRIPT_CHANGE = false;
 var DEBUG_LOAD_TILE_ART = false;
@@ -54,7 +55,7 @@ function sendTextNew(text: string, append: boolean) {
     xhr.send(body);
 }
 
-var tokenize = function (/*String*/ str, /*RegExp*/ re, /*Function?*/ parseDelim, /*Object?*/ instance) {
+var tokenize = function (/*String*/ str, /*RegExp*/ re?, /*Function?*/ parseDelim?, /*Object?*/ instance?) {
     // summary:
     //    Split a string by a regular expression with the ability to capture the delimeters
     // parseDelim:
@@ -88,7 +89,7 @@ var tokenize = function (/*String*/ str, /*RegExp*/ re, /*Function?*/ parseDelim
     return tokens;
 }
 
-var Formatter = function (/*String*/ format) {
+var Formatter = function (/*String*/ format?) {
     var tokens = [];
     this._mapped = false;
     this._format = format;
@@ -96,7 +97,7 @@ var Formatter = function (/*String*/ format) {
 }
 
 Formatter.prototype._re = /\%(?:\(([\w_]+)\)|([1-9]\d*)\$)?([0 +\-\#]*)(\*|\d+)?(\.)?(\*|\d+)?[hlL]?([\%AbscdeEfFgGioOuxX])/g;
-Formatter.prototype._parseDelim = function (mapping, intmapping, flags, minWidth, period, precision, specifier) {
+Formatter.prototype._parseDelim = function (mapping?, intmapping?, flags?, minWidth?, period?, precision?, specifier?) {
     if (mapping) {
         this._mapped = true;
     }
@@ -139,7 +140,7 @@ Formatter.prototype._specifiers = {
         isUnsigned: true
     },
     c: {
-        setArg: function (token) {
+        setArg: function (token?) {
             if (!isNaN(token.arg)) {
                 var num = parseInt(token.arg);
                 if (num < 0 || num > 127) {
@@ -150,7 +151,7 @@ Formatter.prototype._specifiers = {
         }
     },
     s: {
-        setMaxWidth: function (token) {
+        setMaxWidth: function (token?) {
             token.maxWidth = (token.period == '.') ? token.precision : -1;
         }
     },
@@ -186,7 +187,7 @@ Formatter.prototype._specifiers = {
         showNonEnumerable: false
     },
 };
-Formatter.prototype.format = function (/*mixed...*/ filler) {
+Formatter.prototype.format = function (/*mixed...*/ filler?) {
     if (this._mapped && typeof filler != 'object') {
         throw new Error('format requires a mapping');
     }
@@ -340,7 +341,7 @@ Formatter.prototype.format = function (/*mixed...*/ filler) {
 };
 Formatter.prototype._zeros10 = '0000000000';
 Formatter.prototype._spaces10 = '          ';
-Formatter.prototype.formatInt = function (token) {
+Formatter.prototype.formatInt = function (token?) {
     var i = parseInt(token.arg);
     //if (!isFinite(i)) { // isNaN(f) || f == Number.POSITIVE_INFINITY || f == Number.NEGATIVE_INFINITY)
     //    // allow this only if arg is number
@@ -385,7 +386,7 @@ Formatter.prototype.formatInt = function (token) {
         }
     }
 };
-Formatter.prototype.formatDouble = function (token) {
+Formatter.prototype.formatDouble = function (token?) {
     var f = parseFloat(token.arg);
     if (!isFinite(f)) { // isNaN(f) || f == Number.POSITIVE_INFINITY || f == Number.NEGATIVE_INFINITY)
         // allow this only if arg is number
@@ -451,12 +452,12 @@ Formatter.prototype.formatDouble = function (token) {
 
     token.arg = token.toUpper ? token.arg.toUpperCase() : token.arg.toLowerCase();
 };
-Formatter.prototype.formatObject = function (token) {
+Formatter.prototype.formatObject = function (token?) {
     // If no precision is specified, then reset it to null (infinite depth).
     var precision = (token.period === '.') ? token.precision : null;
     throw "todo token.arg = util.inspect(token.arg, token.showNonEnumerable, precision);";
 };
-Formatter.prototype.zeroPad = function (token, /*Int*/ length) {
+Formatter.prototype.zeroPad = function (token?, /*Int*/ length?) {
     length = (arguments.length == 2) ? length : token.precision;
     var negative = false;
     if (typeof token.arg != "string") {
@@ -475,7 +476,7 @@ Formatter.prototype.zeroPad = function (token, /*Int*/ length) {
     token.arg = (token.rightJustify) ? token.arg + this._zeros10.substring(0, pad) : this._zeros10.substring(0, pad) + token.arg;
     if (negative) token.arg = '-' + token.arg;
 };
-Formatter.prototype.fitField = function (token) {
+Formatter.prototype.fitField = function (token?) {
     if (token.maxWidth >= 0 && token.arg.length > token.maxWidth) {
         return token.arg.substring(0, token.maxWidth);
     }
@@ -485,7 +486,7 @@ Formatter.prototype.fitField = function (token) {
     }
     this.spacePad(token);
 };
-Formatter.prototype.spacePad = function (token, /*Int*/ length) {
+Formatter.prototype.spacePad = function (token?, /*Int*/ length?) {
     length = (arguments.length == 2) ? length : token.minWidth;
     if (typeof token.arg != 'string') {
         token.arg = '' + token.arg;

@@ -122,7 +122,9 @@ class vsptyp{
     cy: Float32Array; 
     fy: Float32Array; 
     /*int32_t */tag: number; 
-    /*int16_t */n: number; 
+    /*int16_t */_n: number;     
+    get n(): number  {return this._n;}
+    set n(val: number) {if(val === 6){debugger;} this._n = val; }
     p: number;
     ctag: number;
     ftag: number; 
@@ -136,6 +138,19 @@ class vsptyp{
         this.p = 0;
         this.ctag = 0;
         this.ftag = 0;
+    }
+
+    public copyFrom(v: vsptyp): void {
+        this.x = v.x;
+        this.cy[0] = v.cy[0];
+        this.cy[1] = v.cy[1];
+        this.fy[0] = v.fy[0];
+        this.fy[1] = v.fy[1];
+        this.tag = v.tag;
+        this.n = v.n;
+        this.p = v.p;
+        this.ctag = v.ctag;
+        this.ftag = v.ftag;
     }
 } 
 var VSPMAX=4096; //<- careful!
@@ -1913,6 +1928,10 @@ function initmosts(/*double **/ px: Float64Array, /*double **/ py: Float64Array,
         vcnt++;
     }
 
+    for (var l = 0; l < VSPMAX; l++) {
+        dlog(DEBUG_MOSTS, "initmosts vsp[%i].n == %i\n", l, vsp[l].n);
+    }
+
     vsp_finalize_init(vsp, vcnt);
     gtag = vcnt;
 }
@@ -1932,21 +1951,25 @@ function vsdel(vsp: vsptyp[], /*int32_t */i: number):void
     vsp[vsp[VSPMAX-1].n].p = i;
     vsp[VSPMAX-1].n = i;
 }
-
+var vsinsaftCount = 0;
 function /*int32_t */vsinsaft(/*vsptyp **/vsp: vsptyp[], /*int32_t */i: number)
 {
     var /*int32_t */r: number;
+    vsinsaftCount++;
+    dlog(DEBUG_MOSTS, "vsinsaftCount %i, i: %i\n", vsinsaftCount, i);
+    dlog(DEBUG_MOSTS, "vsinsaft vsp[6].n: %i\n", vsinsaftCount,vsp[6].n);
     //i = next element from empty list
     r = vsp[VSPMAX-1].n;
     vsp[vsp[r].n].p = VSPMAX-1;
     vsp[VSPMAX-1].n = vsp[r].n;
 
-    vsp[r] = vsp[i]; //copy i to r
+    vsp[r].copyFrom(vsp[i]); //copy i to r
 
     //insert r after i
     vsp[r].p = i; vsp[r].n = vsp[i].n;
     vsp[vsp[i].n].p = r; vsp[i].n = r;
 
+    dlog(DEBUG_MOSTS, "vsinsaft vsp[6].n: %i\n", vsinsaftCount,vsp[6].n);
     return(r);
 }
 
@@ -1972,7 +1995,12 @@ function domost(/*float*/ x0: number, /*float */y0: number, /*float */x1: number
     var /*int32_t*/ i=0, j=0, k=0, z=0, ni=0, vcnt=0, scnt=0, newi=0, dir=0, spt=new Int32Array(4);
 
     alpha = 0.0;
-    
+
+    dlog(DEBUG_MOSTS, "x0 %f, y0 %f, x1 %f, y1 %f\n", x0, y0, x1, y1);
+    for (var l = 0; l < VSPMAX; l++) {
+        dlog(DEBUG_MOSTS, "domost vsp[%i].n == %i\n", l, vsp[l].n);
+    }
+
     if (x0 < x1)
     {
         dir = 1; //clip dmost (floor)
@@ -2146,9 +2174,16 @@ function domost(/*float*/ x0: number, /*float */y0: number, /*float */x1: number
 
     gtag++;
 
+    for (var l = 0; l < VSPMAX; l++) {
+        dlog(DEBUG_MOSTS, "domost part2 vsp[%i].n == %i\n", l, vsp[l].n);
+    }
+
     //Combine neighboring vertical strips with matching collinear top&bottom edges
     //This prevents x-splits from propagating through the entire scan
     i = vsp[0].n;
+    dlogFlush();
+    debugger;
+    throw "todo";
     while (i)
     {
         ni = vsp[i].n;

@@ -207,9 +207,6 @@
     </PreBuildEvent>
   </PropertyGroup>
   <ItemGroup>
-    <AvailableItemName Include="TypeScriptCompile" />
-  </ItemGroup>
-  <ItemGroup>
     <TypeScriptCompile Include="$(ProjectDir)\**\*.ts" />
   </ItemGroup>
   <Target Name="BeforeBuild">

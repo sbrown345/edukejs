@@ -1874,6 +1874,10 @@ void initmosts(double *px, double *py, int32_t n)
         vcnt++;
     }
 
+    for (int l = 0; l < VSPMAX; l++) {
+		dlog(DEBUG_MOSTS, "initmosts vsp[%i].n == %i\n", l, vsp[l].n);
+    }
+
     vsp_finalize_init(vsp, vcnt);
     gtag = vcnt;
 }
@@ -1894,9 +1898,13 @@ static inline void vsdel(vsptyp *vsp, int32_t i)
     vsp[VSPMAX-1].n = i;
 }
 
+static int vsinsaftCount = 0;
 static inline int32_t vsinsaft(vsptyp *vsp, int32_t i)
 {
     int32_t r;
+    vsinsaftCount++;
+    dlog(DEBUG_MOSTS, "vsinsaftCount %i, i: %i\n", vsinsaftCount, i);
+    dlog(DEBUG_MOSTS, "vsinsaft vsp[6].n: %i\n", vsinsaftCount,vsp[6].n);
     //i = next element from empty list
     r = vsp[VSPMAX-1].n;
     vsp[vsp[r].n].p = VSPMAX-1;
@@ -1908,6 +1916,7 @@ static inline int32_t vsinsaft(vsptyp *vsp, int32_t i)
     vsp[r].p = i; vsp[r].n = vsp[i].n;
     vsp[vsp[i].n].p = r; vsp[i].n = r;
 
+    dlog(DEBUG_MOSTS, "vsinsaft vsp[6].n: %i\n", vsinsaftCount,vsp[6].n);
     return(r);
 }
 
@@ -1933,6 +1942,11 @@ void domost(float x0, float y0, float x1, float y1)
     int32_t i, j, k, z, ni, vcnt = 0, scnt, newi, dir, spt[4];
 
     alpha = 0.f;
+		
+    dlog(DEBUG_MOSTS, "x0 %f, y0 %f, x1 %f, y1 %f\n", x0, y0, x1, y1);
+    for (int l = 0; l < VSPMAX; l++) {
+        dlog(DEBUG_MOSTS, "domost vsp[%i].n == %i\n", l, vsp[l].n);
+    }
 
     if (x0 < x1)
     {
@@ -2107,6 +2121,10 @@ void domost(float x0, float y0, float x1, float y1)
 
     gtag++;
 
+	for (int l = 0; l < VSPMAX; l++) {
+        dlog(DEBUG_MOSTS, "domost part2 vsp[%i].n == %i\n", l, vsp[l].n);
+    }
+	exit(0);
     //Combine neighboring vertical strips with matching collinear top&bottom edges
     //This prevents x-splits from propagating through the entire scan
     i = vsp[0].n;
