@@ -3143,108 +3143,108 @@ function /*static int32_t */polymost_bunchfront(/*int32_t */b1: number, /*int32_
     return(wallfront(i,b2f));
 }
 
-//void polymost_scansector(int32_t sectnum)
-//{
-//    double d, xp1, yp1, xp2, yp2;
-//    walltype *wal, *wal2;
-//    spritetype *spr;
-//    int32_t z, zz, startwall, endwall, numscansbefore, scanfirst, bunchfrst, nextsectnum;
-//    int32_t xs, ys, x1, y1, x2, y2;
-//
-//    if (sectnum < 0) return;
-//
-//    sectorborder[0] = sectnum, sectorbordercnt = 1;
-//    do
-//    {
-//        sectnum = sectorborder[--sectorbordercnt];
-//
-//        for (z=headspritesect[sectnum]; z>=0; z=nextspritesect[z])
-//        {
-//            spr = &sprite[z];
-//            if ((((spr.cstat&0x8000) == 0) || (showinvisibility)) &&
-//                    (spr.xrepeat > 0) && (spr.yrepeat > 0))
-//            {
-//                xs = spr.x-globalposx; ys = spr.y-globalposy;
-//                if ((spr.cstat&48) || (xs*gcosang+ys*gsinang > 0) || (usemodels && tile2model[spr.picnum].modelid>=0))
-//                {
-//                    if ((spr.cstat&(64+48))!=(64+16) || dmulscale6(sintable[(spr.ang+512)&2047],-xs, sintable[spr.ang&2047],-ys) > 0)
-//                        if (engine_addtsprite(z, sectnum))
-//                            break;
-//                }
-//            }
-//        }
-//
-//        gotsector[sectnum>>3] |= pow2char[sectnum&7];
-//
-//        bunchfrst = numbunches;
-//        numscansbefore = numscans;
-//
-//        startwall = sector[sectnum].wallptr; endwall = sector[sectnum].wallnum+startwall;
-//        scanfirst = numscans;
-//        xp2 = 0; yp2 = 0;
-//        for (z=startwall,wal=&wall[z]; z<endwall; z++,wal++)
-//        {
-//            wal2 = &wall[wal.point2];
-//            x1 = wal.x-globalposx; y1 = wal.y-globalposy;
-//            x2 = wal2.x-globalposx; y2 = wal2.y-globalposy;
-//
-//            nextsectnum = wal.nextsector; //Scan close sectors
+function polymost_scansector(/*int32_t*/ sectnum): void 
+{
+    var /*double*/ d = 0.0, xp1 = 0.0, yp1 = 0.0, xp2 = 0.0, yp2 = 0.0;
+    var wal: walltype, walIdx: number, wal2: walltype;
+    var spr: spritetype;
+    var /*int32_t*/ z=0, zz=0, startwall=0, endwall=0, numscansbefore=0, scanfirst=0, bunchfrst=0, nextsectnum=0;
+    var /*int32_t*/ xs=0, ys=0, x1=0, y1=0, x2=0, y2=0;
+
+    if (sectnum < 0) return;
+
+    sectorborder[0] = sectnum, sectorbordercnt = 1;
+    do
+    {
+        sectnum = sectorborder[--sectorbordercnt];
+
+        for (z=headspritesect[sectnum]; z>=0; z=nextspritesect[z])
+        {
+            spr = sprite[z];
+            if ((((spr.cstat&0x8000) == 0) || (showinvisibility)) &&
+                    (spr.xrepeat > 0) && (spr.yrepeat > 0))
+            {
+                xs = spr.x-globalposx; ys = spr.y-globalposy;
+                if ((spr.cstat&48) || (xs*gcosang+ys*gsinang > 0) || (usemodels && tile2model[spr.picnum].modelid>=0))
+                {
+                    if ((spr.cstat&(64+48))!=(64+16) || dmulscale6(sintable[(spr.ang+512)&2047],-xs, sintable[spr.ang&2047],-ys) > 0)
+                        if (engine_addtsprite(z, sectnum))
+                            break;
+                }
+            }
+        }
+
+        gotsector[sectnum>>3] |= pow2char[sectnum&7];
+
+        bunchfrst = numbunches;
+        numscansbefore = numscans;
+
+        startwall = sector[sectnum].wallptr; endwall = sector[sectnum].wallnum+startwall;
+        scanfirst = numscans;
+        xp2 = 0; yp2 = 0;
+        for (z=startwall,wal=wall[walIdx = z];z<endwall;z++,wal=wall[++walIdx])
+        {
+            wal2 = wall[wal.point2];
+            x1 = wal.x-globalposx; y1 = wal.y-globalposy;
+            x2 = wal2.x-globalposx; y2 = wal2.y-globalposy;
+
+            nextsectnum = wal.nextsector; //Scan close sectors
 //#ifdef YAX_ENABLE
-//            if (yax_nomaskpass==0 || !yax_isislandwall(z, !yax_globalcf) || (yax_nomaskdidit=1, 0))
+            if (yax_nomaskpass==0 || !yax_isislandwall(z, (!yax_globalcf)?1:0) || (yax_nomaskdidit=1, 0))
 //#endif
-//            if ((nextsectnum >= 0) && (!(wal.cstat&32)) && (!(gotsector[nextsectnum>>3]&pow2char[nextsectnum&7])))
-//            {
-//                d = (double)x1*(double)y2 - (double)x2*(double)y1; xp1 = (double)(x2-x1); yp1 = (double)(y2-y1);
-//                if (d*d <= (xp1*xp1 + yp1*yp1)*(SCISDIST*SCISDIST*260.0))
-//                    sectorborder[sectorbordercnt++] = nextsectnum;
-//            }
-//
-//            if ((z == startwall) || (wall[z-1].point2 != z))
-//            {
-//                xp1 = ((double)y1*(double)cosglobalang             - (double)x1*(double)singlobalang)/64.0;
-//                yp1 = ((double)x1*(double)cosviewingrangeglobalang + (double)y1*(double)sinviewingrangeglobalang)/64.0;
-//            }
-//            else { xp1 = xp2; yp1 = yp2; }
-//            xp2 = ((double)y2*(double)cosglobalang             - (double)x2*(double)singlobalang)/64.0;
-//            yp2 = ((double)x2*(double)cosviewingrangeglobalang + (double)y2*(double)sinviewingrangeglobalang)/64.0;
-//            if ((yp1 >= SCISDIST) || (yp2 >= SCISDIST))
-//                if ((double)xp1*(double)yp2 < (double)xp2*(double)yp1) //if wall is facing you...
-//                {
-//                    if (yp1 >= SCISDIST)
-//                        dxb1[numscans] = (double)xp1*ghalfx/(double)yp1 + ghalfx;
-//                    else dxb1[numscans] = -1e32;
-//
-//                    if (yp2 >= SCISDIST)
-//                        dxb2[numscans] = (double)xp2*ghalfx/(double)yp2 + ghalfx;
-//                    else dxb2[numscans] = 1e32;
-//
-//                    if (dxb1[numscans] < dxb2[numscans])
-//                        { thesector[numscans] = sectnum; thewall[numscans] = z; p2[numscans] = numscans+1; numscans++; }
-//                }
-//
-//            if ((wall[z].point2 < z) && (scanfirst < numscans))
-//                { p2[numscans-1] = scanfirst; scanfirst = numscans; }
-//        }
-//
-//        for (z=numscansbefore; z<numscans; z++)
-//            if ((wall[thewall[z]].point2 != thewall[p2[z]]) || (dxb2[z] > dxb1[p2[z]]))
-//            {
-//                bunchfirst[numbunches++] = p2[z]; p2[z] = -1;
+            if ((nextsectnum >= 0) && (!(wal.cstat&32)) && (!(gotsector[nextsectnum>>3]&pow2char[nextsectnum&7])))
+            {
+                d =  /*(double)*/ x1* /*(double)*/ y2 -  /*(double)*/ x2* /*(double)*/ y1; xp1 =  /*(double)*/ (x2-x1); yp1 =  /*(double)*/ (y2-y1);
+                if (d*d <= (xp1*xp1 + yp1*yp1)*(SCISDIST*SCISDIST*260.0))
+                    sectorborder[sectorbordercnt++] = nextsectnum;
+            }
+
+            if ((z == startwall) || (wall[z-1].point2 != z))
+            {
+                xp1 = ( /*(double)*/ y1* /*(double)*/ cosglobalang             -  /*(double)*/ x1* /*(double)*/ singlobalang)/64.0;
+                yp1 = ( /*(double)*/ x1* /*(double)*/ cosviewingrangeglobalang +  /*(double)*/ y1* /*(double)*/ sinviewingrangeglobalang)/64.0;
+            }
+            else { xp1 = xp2; yp1 = yp2; }
+            xp2 = ( /*(double)*/ y2* /*(double)*/ cosglobalang             -  /*(double)*/ x2* /*(double)*/ singlobalang)/64.0;
+            yp2 = ( /*(double)*/ x2* /*(double)*/ cosviewingrangeglobalang +  /*(double)*/ y2* /*(double)*/ sinviewingrangeglobalang)/64.0;
+            if ((yp1 >= SCISDIST) || (yp2 >= SCISDIST))
+                if ( /*(double)*/ xp1* /*(double)*/ yp2 <  /*(double)*/ xp2* /*(double)*/ yp1) //if wall is facing you...
+                {
+                    if (yp1 >= SCISDIST)
+                        dxb1[numscans] =  /*(double)*/ xp1*ghalfx/ /*(double)*/ yp1 + ghalfx;
+                    else dxb1[numscans] = -1e32;
+
+                    if (yp2 >= SCISDIST)
+                        dxb2[numscans] =  /*(double)*/ xp2*ghalfx/ /*(double)*/ yp2 + ghalfx;
+                    else dxb2[numscans] = 1e32;
+
+                    if (dxb1[numscans] < dxb2[numscans])
+                        { thesector[numscans] = sectnum; thewall[numscans] = z; p2[numscans] = numscans+1; numscans++; }
+                }
+
+            if ((wall[z].point2 < z) && (scanfirst < numscans))
+                { p2[numscans-1] = scanfirst; scanfirst = numscans; }
+        }
+
+        for (z=numscansbefore; z<numscans; z++)
+            if ((wall[thewall[z]].point2 != thewall[p2[z]]) || (dxb2[z] > dxb1[p2[z]]))
+            {
+                bunchfirst[numbunches++] = p2[z]; p2[z] = -1;
 //#ifdef YAX_ENABLE
-//                if (scansector_retfast)
-//                    return;
+                if (scansector_retfast)
+                    return;
 //#endif
-//            }
-//
-//        for (z=bunchfrst; z<numbunches; z++)
-//        {
-//            for (zz=bunchfirst[z]; p2[zz]>=0; zz=p2[zz]);
-//            bunchlast[z] = zz;
-//        }
-//    }
-//    while (sectorbordercnt > 0);
-//}
-//
+            }
+
+        for (z=bunchfrst; z<numbunches; z++)
+        {
+            for (zz=bunchfirst[z]; p2[zz]>=0; zz=p2[zz]);
+            bunchlast[z] = zz;
+        }
+    }
+    while (sectorbordercnt > 0);
+}
+
 function polymost_drawrooms(): void 
 {
     var /*int32_t */i: number, j: number, n: number, n2: number, closest: number;
@@ -3523,7 +3523,7 @@ function polymost_drawrooms(): void
         if (globalcursectnum < 0) globalcursectnum = i;
     }
 
-    todoThrow("polymost_scansector(globalcursectnum);");
+    polymost_scansector(globalcursectnum);
 
     if (inpreparemirror)
     {

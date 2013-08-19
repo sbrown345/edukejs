@@ -127,10 +127,10 @@ function getpalookup(davis: number, dashade: number)
 //extern uint8_t haveymost[YAX_MAXBUNCHES>>3];
 //extern uint8_t yax_gotsector[MAXSECTORS>>3];
 
-//static inline int32_t yax_isislandwall(int32_t line, int32_t cf)
-//{
-//    return (yax_vnextsec(line, cf)>=0);
-//}
+function /*static inline int32_t */yax_isislandwall(/*int32_t */line: number, /*int32_t */cf: number): number
+{
+    return (yax_vnextsec(line, cf)>=0)?1:0;
+}
 //#endif
 
 //#ifdef YAX_DEBUG

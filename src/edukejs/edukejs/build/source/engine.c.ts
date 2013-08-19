@@ -2416,7 +2416,7 @@ var globalpicnum: number; //int16_t
 //static int32_t globaly1, globalx2, globalzx;
 //static int32_t globalx, globaly, globalz;
 
-//int16_t sectorborder[256], sectorbordercnt;
+var /*int16_t  */ sectorborder = new Int16Array(256), sectorbordercnt=0;
 //int32_t ydim16, qsetmode = 0;
 //int16_t pointhighlight=-1, linehighlight=-1, highlightcnt=0;
 //static int32_t lastx[MAXYDIM];
@@ -2574,10 +2574,10 @@ var palfadedelta = 0; //char
 //}
 
 
-//// returns: 0=continue sprite collecting;
-////          1=break out of sprite collecting;
-//int32_t engine_addtsprite(int16_t z, int16_t sectnum)
-//{
+// returns: 0=continue sprite collecting;
+//          1=break out of sprite collecting;
+function /*int32_t */engine_addtsprite(/*int16_t */z: number, /*int16_t */sectnum: number)
+{todoThrow();
 //    spritetype *spr = &sprite[z];
 //#ifdef YAX_ENABLE
 //    int16_t cb, fb, *sortcnt;
@@ -2646,8 +2646,8 @@ var palfadedelta = 0; //char
 //    }
 //#endif
 
-//    return 0;
-//}
+    return 0;
+}
 
 ////
 //// scansector (internal)
