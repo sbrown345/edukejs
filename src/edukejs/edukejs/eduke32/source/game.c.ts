@@ -4717,7 +4717,7 @@ function G_DrawRooms(/*int32_t*/ snum: number, /*int32_t */smoothratio: number):
             todo("drawmasks();");
 //#endif
         }
-     debugger;todoThrow()
+   
         if (g_screenCapture)
         {todoThrow();
 //            g_screenCapture = 0;
