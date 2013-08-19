@@ -10849,6 +10849,10 @@ function G_Startup() : void
             }
         }
     }
+
+    var boardfilenameTempQuickHack = new Uint8Array(BMAX_PATH);
+    boardfilenameTempQuickHack.set(boardfilename);
+    boardfilename = boardfilenameTempQuickHack; // keep it correct length
     
     if (window.VOLUMEONE)
     {

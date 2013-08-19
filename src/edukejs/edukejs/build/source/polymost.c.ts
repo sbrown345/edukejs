@@ -122,9 +122,7 @@ class vsptyp{
     cy: Float32Array; 
     fy: Float32Array; 
     /*int32_t */tag: number; 
-    /*int16_t */_n: number;     
-    get n(): number  {return this._n;}
-    set n(val: number) {if(val === 6){debugger;} this._n = val; }
+    /*int16_t */n: number;     
     p: number;
     ctag: number;
     ftag: number; 
