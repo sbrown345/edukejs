@@ -2124,7 +2124,7 @@ void domost(float x0, float y0, float x1, float y1)
 	for (int l = 0; l < VSPMAX; l++) {
         dlog(DEBUG_MOSTS, "domost part2 vsp[%i].n == %i\n", l, vsp[l].n);
     }
-	exit(0);
+	
     //Combine neighboring vertical strips with matching collinear top&bottom edges
     //This prevents x-splits from propagating through the entire scan
     i = vsp[0].n;
