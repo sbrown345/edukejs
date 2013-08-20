@@ -8405,6 +8405,7 @@ void G_InitTimer(int32_t ticspersec)
 
 void G_HandleLocalKeys(void)
 {
+#ifdef DEBUG_TODO
     int32_t i,ch;
     int32_t j;
 
@@ -8983,6 +8984,7 @@ FAKE_F3:
             totalclock = ototalclock;
         }
     }
+#endif
 }
 
 static void G_ShowParameterHelp(void)

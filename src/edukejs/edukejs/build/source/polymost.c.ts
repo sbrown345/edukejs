@@ -1353,7 +1353,7 @@ function gloadtile_art(dapic: number, dapal: number, dashade: number, dameth: nu
 var pow2xsplit = 0, skyclamphack = 0; //static int32_t 
 var alpha = 0.0;
 
-function drawpoly(dpx: Float64Array, dpy: Float64Array, n:number, method: number): void
+function drawpoly(dpx: Float64Array, dpy: Float64Array, /*int32_t*/ n:number, /*int32_t*/ method: number): void
 {
     var ngdx = 0.0, ngdy = 0.0, ngdo = 0.0, ngux = 0.0, nguy = 0.0, nguo = 0.0;             //double 
     var ngvx = 0.0, ngvy = 0.0, ngvo = 0.0, dp= 0.0, up= 0.0, vp= 0.0, du0 = 0.0, du1 = 0.0, dui = 0.0, duj = 0.0;     //double 
@@ -1371,7 +1371,7 @@ function drawpoly(dpx: Float64Array, dpy: Float64Array, n:number, method: number
 //#ifdef YAX_ENABLE
     if (g_nodraw) return;
 //#endif
-
+    dlog(DEBUG_POLYMOST_DRAWALLS, "drawpoly dpx[0]: %f, dpx[1]: %f, dpy[0]: %f, dpy[1]: %f, n: %i, method: %i\n",dpx[0], dpx[1], dpy[0], dpy[1], n, method);
     if (n == 3)
     {
         if ((dpx[0]-dpx[1])*(dpy[2]-dpy[1]) >= (dpx[2]-dpx[1])*(dpy[0]-dpy[1])) return; //for triangle
@@ -2388,7 +2388,7 @@ function polymost_drawalls(/*int32_t */bunch: number): void
     var /*const int16_t */dapskyoff: Int16Array;
 
     alpha = 0.0;
-
+    dlog(DEBUG_POLYMOST_DRAWALLS, "polymost_drawalls %i\n", bunch);
     sectnum = thesector[bunchfirst[bunch]]; sec = sector[sectnum];
 
     //DRAW WALLS SECTION!
@@ -3202,7 +3202,7 @@ function polymost_scansector(/*int32_t*/ sectnum:number): void
     var spr: spritetype;
     var /*int32_t*/ z=0, zz=0, startwall=0, endwall=0, numscansbefore=0, scanfirst=0, bunchfrst=0, nextsectnum=0;
     var /*int32_t*/ xs=0, ys=0, x1=0, y1=0, x2=0, y2=0;
-
+    dlog(DEBUG_POLYMOST_DRAWALLS, "polymost_scansector sectnum: %i\n", sectnum);
     if (sectnum < 0) return;
 
     sectorborder[0] = sectnum, sectorbordercnt = 1;

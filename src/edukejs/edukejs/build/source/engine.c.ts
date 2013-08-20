@@ -13846,7 +13846,7 @@ function updatesectorz(/*int32_t*/ x: number, /*int32_t*/ y: number, /*int32_t*/
     // todo: search for all methods that have multiple krand() or krand etc - reverse argument order
     // and swap values around so they eval in the same order as the C version (regex: krand.+krand      and krand().+krand())
     randomseed = (mul32(randomseed, 27584621) + 1) | 0;
-	dlog(DEBUG_KRAND, "krand %u\n", randomseed)>>>16);
+	dlog(DEBUG_KRAND, "krand %u\n", randomseed>>>16);
     return randomseed >>> 16;
 
 

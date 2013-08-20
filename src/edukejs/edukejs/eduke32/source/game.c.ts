@@ -12028,7 +12028,8 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
         if (g_player[myconnectindex].ps.gm&MODE_DEMO)
             todoThrow("goto MAIN_LOOP_RESTART;");
     }
-    while (tempWhile++ < 30);
+    while (tempWhile++ < 3);
+    dlogFlush();
     //while (1);
     throw "todo";
     G_GameExit(" ");

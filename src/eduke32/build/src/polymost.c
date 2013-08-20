@@ -1319,7 +1319,7 @@ void drawpoly(double *dpx, double *dpy, int32_t n, int32_t method)
 #ifdef YAX_ENABLE
     if (g_nodraw) return;
 #endif
-
+    dlog(DEBUG_POLYMOST_DRAWALLS, "drawpoly dpx[0]: %f, dpx[1]: %f, dpy[0]: %f, dpy[1]: %f, n: %i, method: %i\n",dpx[0], dpx[1], dpy[0], dpy[1], n, method);
     if (n == 3)
     {
         if ((dpx[0]-dpx[1])*(dpy[2]-dpy[1]) >= (dpx[2]-dpx[1])*(dpy[0]-dpy[1])) return; //for triangle
@@ -2336,7 +2336,7 @@ static void polymost_drawalls(int32_t bunch)
     const int16_t *dapskyoff;
 
     alpha = 0.f;
-
+    dlog(DEBUG_POLYMOST_DRAWALLS, "polymost_drawalls %i\n", bunch);
     sectnum = thesector[bunchfirst[bunch]]; sec = &sector[sectnum];
 
     //DRAW WALLS SECTION!
@@ -3130,7 +3130,7 @@ void polymost_scansector(int32_t sectnum)
     spritetype *spr;
     int32_t z, zz, startwall, endwall, numscansbefore, scanfirst, bunchfrst, nextsectnum;
     int32_t xs, ys, x1, y1, x2, y2;
-
+    dlog(DEBUG_POLYMOST_DRAWALLS, "polymost_scansector sectnum: %i\n", sectnum);
     if (sectnum < 0) return;
 
     sectorborder[0] = sectnum, sectorbordercnt = 1;

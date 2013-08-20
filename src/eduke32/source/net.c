@@ -387,6 +387,7 @@ void Net_ReceiveDisconnect(ENetEvent *event)
 void Net_GetPackets(void)
 {
     sampletimer();
+#ifdef DEBUG_TODO
     MUSIC_Update();
     S_Update();
 
@@ -411,6 +412,7 @@ void Net_GetPackets(void)
     {
         Net_HandleServerPackets();
     }
+#endif
 }
 
 #ifndef NETCODE_DISABLE

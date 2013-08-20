@@ -592,6 +592,8 @@ void MUSIC_RegisterTimbreBank
 
 void MUSIC_Update(void)
 {
+#ifdef DEBUG_TODO
     MIDI_UpdateMusic();
+#endif
 }
 
