@@ -4443,7 +4443,7 @@ function G_DrawRooms(/*int32_t*/ snum: number, /*int32_t */smoothratio: number):
 
     G_DoInterpolations(smoothratio);
     G_AnimateCamSprite();
-       debugger;
+       
     if (ud.camerasprite >= 0)
     {todoThrow();
 //        spritetype *const s = &sprite[ud.camerasprite];
@@ -11959,13 +11959,13 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
                 ototalclock += TICSPERFRAME;
 
                 clockbeforetic = totalclock;
-
+                debugger
                 if (((ud.show_help == 0 && (g_player[myconnectindex].ps.gm&MODE_MENU) != MODE_MENU) || ud.recstat == 2 || (g_netServer || ud.multimode > 1)) &&
                         (g_player[myconnectindex].ps.gm&MODE_GAME))
                     todoThrow("G_MoveLoop();");
 
                 sampletimer();
-
+                debugger
                 if (totalclock - clockbeforetic >= TICSPERFRAME)
                 {
                     // computing a tic takes longer than a tic, so we're slowing
@@ -12028,7 +12028,7 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
         if (g_player[myconnectindex].ps.gm&MODE_DEMO)
             todoThrow("goto MAIN_LOOP_RESTART;");
     }
-    while (tempWhile++ < 3);
+    while (tempWhile++ < 30);
     //while (1);
     throw "todo";
     G_GameExit(" ");

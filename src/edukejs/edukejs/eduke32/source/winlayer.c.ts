@@ -692,6 +692,7 @@ function WinMain(hInst: any, hPrevInst: any, lpCmdLine: number, nCmdShow: number
 // initprintf() -- prints a string to the intitialization window
 //
 var initprintf = function(f: string, ...args: any[])  {
+    sampletimer();
     args.unshift(f.trim());
     console.log.apply(console, args);
 };
@@ -793,7 +794,7 @@ function /*int32_t */handleevents(): number
 
 //    if (!appactive || quitevent) rv = -1;
 
-//    sampletimer();
+    sampletimer();
 
     return rv;
 }

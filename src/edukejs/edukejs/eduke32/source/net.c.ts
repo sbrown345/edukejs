@@ -390,8 +390,8 @@ function Net_ResetPrediction(): void
 
 function Net_GetPackets() : void
 {
-    todo("Net_GetPackets      todo - sampletimer!");
-//    sampletimer();
+    todo("Net_GetPackets");
+    sampletimer();
 //    MUSIC_Update();
 //    S_Update();
 
