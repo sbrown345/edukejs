@@ -7962,6 +7962,7 @@ static int8_t cheatbuf[MAXCHEATLEN], cheatbuflen;
 
 GAME_STATIC void G_DoCheats(void)
 {
+#ifdef DEBUG_TODO
     int32_t ch, i, j, k=0, weapon;
     static int32_t vol1inited=0;
     char consolecheat = 0;  // JBF 20030914
@@ -8379,6 +8380,7 @@ FOUNDCHEAT:
             }
         }
     }
+#endif
 }
 
 void G_SetViewportShrink(int32_t dir)
@@ -11933,7 +11935,8 @@ GAME_STATIC GAME_INLINE int32_t G_MoveLoop()
 
 int32_t G_DoMoveThings(void)
 {
-    int32_t i;
+#ifdef DEBUG_TODO
+	int32_t i;
 
     ud.camerasprite = -1;
     lockclock += TICSPERFRAME;
@@ -12085,7 +12088,7 @@ int32_t G_DoMoveThings(void)
 
     if (g_netClient)   //Slave
         Net_SendClientUpdate();
-
+#endif
     return 0;
 }
 

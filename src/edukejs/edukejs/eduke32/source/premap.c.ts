@@ -1204,7 +1204,7 @@ function prelevel(/*char*/ g: number): void
 //    El_CreateGameState();
 //    G_PostCreateGameState();
 //#endif
-    debugger;
+    
     i = headspritestat[STAT_DEFAULT];
     while (i >= 0)
     {

@@ -11962,7 +11962,7 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
                 debugger
                 if (((ud.show_help == 0 && (g_player[myconnectindex].ps.gm&MODE_MENU) != MODE_MENU) || ud.recstat == 2 || (g_netServer || ud.multimode > 1)) &&
                         (g_player[myconnectindex].ps.gm&MODE_GAME))
-                    todoThrow("G_MoveLoop();");
+                    G_MoveLoop();
 
                 sampletimer();
                 debugger
@@ -12037,15 +12037,16 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
 
 var tempWhile = 0;
 
-//GAME_STATIC GAME_INLINE int32_t G_MoveLoop()
-//{
-//    Net_GetPackets();
+function /*int32_t*/ G_MoveLoop():number
+{
+    todo("G_MoveLoop");
+    Net_GetPackets();
 
-//    return G_DoMoveThings();
-//}
+    return G_DoMoveThings();
+}
 
-//int32_t G_DoMoveThings(void)
-//{
+function /*int32_t */G_DoMoveThings(): number
+{todo("G_DoMoveThings");
 //    int32_t i;
 
 //    ud.camerasprite = -1;
@@ -12199,8 +12200,8 @@ var tempWhile = 0;
 //    if (g_netClient)   //Slave
 //        Net_SendClientUpdate();
 
-//    return 0;
-//}
+    return 0;
+}
 
 //static void G_DoOrderScreen(void)
 //{

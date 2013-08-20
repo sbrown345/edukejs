@@ -387,12 +387,15 @@ class walltypev7 implements ITypeInfo
 {
     x : number; y : number;                                        //Tracker(Wall, int32_t)  
     point2 : number; nextwall : number; nextsector : number;                //Tracker(Wall, int16_t)  
-    cstat : number;                                       //Tracker(Wall, uint16_t) 
+    _cstat : Uint16Array;                                       //Tracker(Wall, uint16_t) 
     picnum : number; overpicnum : number;                          //Tracker(Wall, int16_t)  
     shade : number;                                       //Tracker(Wall, int8_t)   
     pal : number; xrepeat : number; yrepeat : number; xpanning : number; ypanning : number;   //Tracker(Wall, uint8_t)  
     lotag : number; hitag : number;                                //Tracker(Wall, uint16_t) 
     extra : number;                                       //Tracker(Wall, int16_t)  
+
+    get cstat(): number  {return this._cstat[0];}
+    set cstat(val: number) {this._cstat[0] = val;} //Tracker(Sprite, uint16_t)
 
     public static size = 32;
     public static typeInfo = [
@@ -411,9 +414,9 @@ class walltypev7 implements ITypeInfo
     }
 
     public init() {
-         this.x = 0, this.y = 0;                                        //Tracker(Wall, int32_t)  
+        this.x = 0, this.y = 0;                                        //Tracker(Wall, int32_t)  
         this.point2 = 0, this.nextwall = 0, this.nextsector = 0;                //Tracker(Wall, int16_t)  
-        this.cstat = 0;                                       //Tracker(Wall, uint16_t) 
+        this._cstat = new Uint16Array(1);                                       //Tracker(Wall, uint16_t) 
         this.picnum = 0, this.overpicnum = 0;                          //Tracker(Wall, int16_t)  
         this.shade = 0;                                       //Tracker(Wall, int8_t)   
         this.pal = 0, this.xrepeat = 0, this.yrepeat = 0, this.xpanning = 0, this.ypanning = 0;   //Tracker(Wall, uint8_t)  
