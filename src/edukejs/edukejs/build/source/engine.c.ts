@@ -13838,7 +13838,7 @@ function updatesectorz(/*int32_t*/ x: number, /*int32_t*/ y: number, /*int32_t*/
 //
 // krand
 //
-/*int32_t*/function krand(): number
+function/*int32_t*/ krand(): number
 {
     //return 10; //- breaks animation
     // c method arguments eval in the opposite direction to js

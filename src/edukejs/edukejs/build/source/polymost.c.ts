@@ -116,9 +116,9 @@ var usemodels=1, usehightile=1;//int32_t
 //
 //#include <math.h> //<-important!
 class vsptyp{ 
-    /*float */private _x: number; 
-    get x(): number  {return this._x;}
-    set x(val: number) {if(val === undefined || (typeof val === "number" && isNaN(val))){debugger;} this._x = val; }
+    private _x: Float32Array; 
+    get x(): number  {return this._x[0];}
+    set x(val: number) {if(val === undefined || (typeof val === "number" && isNaN(val))){debugger;} this._x[0] = val; }
     cy: Float32Array; 
     fy: Float32Array; 
     /*int32_t */tag: number; 
@@ -128,7 +128,7 @@ class vsptyp{
     ftag: number; 
 
     constructor() {
-        this.x = 0;
+        this._x = new Float32Array(1);
         this.cy = new Float32Array(2);
         this.fy = new Float32Array(2);
         this.tag = 0;
@@ -2082,7 +2082,7 @@ function domost(/*float*/ x0: number, /*float */y0: number, /*float */x1: number
 
             ni = vsp[i].n; if (!ni) {dlog(DEBUG_POLYMOST_DRAWALLS, "!ni\n");continue;} //this 'if' fixes many bugs!
             dlog(DEBUG_POLYMOST_DRAWALLS, "ni: %i x0: %f  dx0: %f \n",ni, x0, dx0);
-            dlog(DEBUG_POLYMOST_DRAWALLS, "new dx0: %f \n",vsp[i].x);
+            dlog(DEBUG_POLYMOST_DRAWALLS, "new dx0: %f \n",vsp[i].x);debugger
             dx0 = vsp[i].x; if (x0 > dx0) {dlog(DEBUG_POLYMOST_DRAWALLS, "x0 > dx0\n");continue;}
             dx1 = vsp[ni].x; if (x1 < dx1) {dlog(DEBUG_POLYMOST_DRAWALLS, "x1 < dx1\n");continue;}
             dlog(DEBUG_POLYMOST_DRAWALLS, "ni: %i dx0: %f dx1: %f\n",ni, dx0, dx1);
