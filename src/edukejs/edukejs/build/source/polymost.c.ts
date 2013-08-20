@@ -1807,7 +1807,7 @@ function drawpoly(dpx: Float64Array, dpy: Float64Array, /*int32_t*/ n:number, /*
         }
 
         if (fullbrightdrawingpass == 1) // tile has fullbright colors ?
-        {
+        {todoThrow();
             var shadeforfullbrightpass = globalshade; // save the current shade     int32_t
             fullbrightdrawingpass = 2;
             globalshade = -128; // fullbright
@@ -2016,6 +2016,7 @@ function domost(/*float*/ x0: number, /*float */y0: number, /*float */x1: number
     slop = (y1-y0)/(x1-x0);
     for (i=vsp[0].n; i; i=newi)
     {
+        dlog(DEBUG_POLYMOST_DRAWALLS, "for vsp n stuff i: %i\n", i);
         newi = vsp[i].n; nx0 = vsp[i].x; nx1 = vsp[newi].x;
         if ((x0 >= nx1) || (nx0 >= x1) || (vsp[i].ctag <= 0)) continue;
         dx = nx1-nx0;
@@ -2079,9 +2080,12 @@ function domost(/*float*/ x0: number, /*float */y0: number, /*float */x1: number
                 vsp[vcnt].tag = spt[z];
             }
 
-            ni = vsp[i].n; if (!ni) continue; //this 'if' fixes many bugs!
-            dx0 = vsp[i].x; if (x0 > dx0) continue;
-            dx1 = vsp[ni].x; if (x1 < dx1) continue;
+            ni = vsp[i].n; if (!ni) {dlog(DEBUG_POLYMOST_DRAWALLS, "!ni\n");continue;} //this 'if' fixes many bugs!
+            dlog(DEBUG_POLYMOST_DRAWALLS, "ni: %i x0: %f  dx0: %f \n",ni, x0, dx0);
+            dlog(DEBUG_POLYMOST_DRAWALLS, "new dx0: %f \n",vsp[i].x);
+            dx0 = vsp[i].x; if (x0 > dx0) {dlog(DEBUG_POLYMOST_DRAWALLS, "x0 > dx0\n");continue;}
+            dx1 = vsp[ni].x; if (x1 < dx1) {dlog(DEBUG_POLYMOST_DRAWALLS, "x1 < dx1\n");continue;}
+            dlog(DEBUG_POLYMOST_DRAWALLS, "ni: %i dx0: %f dx1: %f\n",ni, dx0, dx1);
             ny0 = (dx0-x0)*slop + y0;
             ny1 = (dx1-x0)*slop + y0;
 
@@ -2103,6 +2107,8 @@ function domost(/*float*/ x0: number, /*float */y0: number, /*float */x1: number
             if ((vsp[i].tag == 1) || (ny0 >= vsp[i].fy[0]-.01)) k++;
             if ((vsp[ni].tag == 0) || (ny1 <= vsp[i].cy[1]+.01)) k -= 3;
             if ((vsp[ni].tag == 1) || (ny1 >= vsp[i].fy[1]-.01)) k += 3;
+
+            dlog(DEBUG_POLYMOST_DRAWALLS, "polymost dir/k dir: %i, k: %i\n", dir, k);
 
             if (!dir)
             {
@@ -4642,7 +4648,7 @@ function polymost_dorotatesprite(sx: number, sy: number, z: number, a: number, p
             z = zz;
         }
         while (z);
-
+        dlog(DEBUG_POLYMOST_DRAWALLS, "polymost dorotatesprite drawpoly, nn: %i\n", nn);
 //#ifdef USE_OPENGL
         if (!nofog) bglDisable(GL_FOG);
         pow2xsplit = 0; drawpoly(px,py,n,method);
