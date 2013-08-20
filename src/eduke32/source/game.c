@@ -4615,11 +4615,11 @@ void G_DrawRooms(int32_t snum, int32_t smoothratio)
             if (dont_draw != 0)
                 OSD_Printf(OSD_ERROR "ERROR: EVENT_DISPLAYROOMS return value must be 0 or 1, "
                            "other values are reserved.\n");
-
+			#if DEBUG_TODO
             G_HandleMirror(CAMERA(pos.x), CAMERA(pos.y), CAMERA(pos.z), CAMERA(ang), CAMERA(horiz), smoothratio);
 
             G_SE40(smoothratio);
-
+			#endif
 #ifdef POLYMER
             if (getrendermode() == REND_POLYMER)
                 polymer_setanimatesprites(G_DoSpriteAnimations, CAMERA(pos.x),CAMERA(pos.y),CAMERA(ang),smoothratio);
