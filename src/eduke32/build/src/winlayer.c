@@ -646,7 +646,9 @@ void initprintf(const char *f, ...)
     if (flushlogwindow || Bstrlen(dabuf) > 768)
     {
         startwin_puts(dabuf);
+#ifdef DEBUG_TODO
         handleevents();
+#endif
         Bmemset(dabuf, 0, sizeof(dabuf));
     }
     mutex_unlock(&m_initprintf);
@@ -1502,6 +1504,7 @@ void uninittimer(void)
 //
 // sampletimer() -- update totalclock
 //
+static int sampletimerDebug = 0;
 void sampletimer(void)
 {
     int64_t i;
@@ -1512,7 +1515,7 @@ void sampletimer(void)
     QueryPerformanceCounter((LARGE_INTEGER *)&i);
 #ifdef DEBUG_TODO
 #else
-	i = 10000;
+	i = sampletimerDebug += 10000;
 #endif
     n = (int32_t)((i*timerticspersec / win_timerfreq) - timerlastsample);
     if (n <= 0) return;

@@ -10924,8 +10924,9 @@ void nextpage(void)
                                per->cx1,per->cy1,per->cx2,per->cy2,per->uniqid);
         }
         enddrawing();   //}}}
-
+#ifdef DEBUG_TODO
         OSD_Draw();
+#endif
         showframe(0);
 
         begindrawing(); //{{{

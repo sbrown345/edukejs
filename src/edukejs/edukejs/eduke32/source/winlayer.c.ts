@@ -692,7 +692,7 @@ function WinMain(hInst: any, hPrevInst: any, lpCmdLine: number, nCmdShow: number
 // initprintf() -- prints a string to the intitialization window
 //
 var initprintf = function(f: string, ...args: any[])  {
-    sampletimer();
+    //sampletimer();
     args.unshift(f.trim());
     console.log.apply(console, args);
 };
@@ -1572,6 +1572,7 @@ function /*int32_t */inittimer(/*int32_t */tickspersecond: number): number
 //
 // sampletimer() -- update totalclock
 //
+var sampletimerDebug = 0;
 function sampletimer(): void
 {
     var /*int64_t */i: number=0;
@@ -1580,7 +1581,7 @@ function sampletimer(): void
     if (!win_timerfreq) return;
     
     //i = Date.now();//QueryPerformanceCounter((LARGE_INTEGER *)&i);
-    tempHC(()=> { i = 10000; });
+    tempHC(()=> { i = sampletimerDebug += 10000; });
     n = int32(int32(i*timerticspersec / win_timerfreq) - timerlastsample);
 
     if (n <= 0) return;

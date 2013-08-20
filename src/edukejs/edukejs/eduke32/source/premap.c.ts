@@ -1142,7 +1142,6 @@ function G_SetupRotfixedSprites(): void
 function prelevel(/*char*/ g: number): void
 {
     path("prelevel");
-    debugger;
     var i: number, nexti: number, j: number, startwall: number, endwall: number;                 // int32_t 
     var switchpicnum: number;                                    // int32_t 
     var tagbitmap = new Uint8Array(65536>>3);// /(uint8_t *)Bcalloc(65536>>3, 1);    // uint8_t 

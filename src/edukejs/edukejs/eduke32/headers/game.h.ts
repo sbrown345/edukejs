@@ -474,9 +474,8 @@ function A_CheckSpriteTileFlags(iPicnum: number, iType: number): number {return 
 
 function G_HandleAsync()
 {
-    todo("G_HandleAsync !!!");
-    //handleevents();
-    //Net_GetPackets();
+    handleevents();
+    Net_GetPackets();
 }
 
 function /* int32_t */calc_smoothratio(/*int32_t */totalclk: number, /*int32_t */ototalclk: number): number
