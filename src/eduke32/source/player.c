@@ -2678,6 +2678,7 @@ int32_t g_emuJumpTics = 0;
 
 void P_GetInput(int32_t snum)
 {
+#ifdef DEBUG_TODO
     int32_t j, daang;
     static ControlInfo info[2];
     static int32_t turnheldtime; //MED
@@ -2966,6 +2967,7 @@ void P_GetInput(int32_t snum)
 
     loc.avel = angvel;
     loc.horz = horiz;
+#endif
 }
 
 static int32_t P_DoCounters(DukePlayer_t *p)

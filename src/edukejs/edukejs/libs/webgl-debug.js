@@ -228,7 +228,7 @@ function glFunctionArgToString(functionName, numArgs, argumentIndex, value) {
   } else if (value === undefined) {
     return "undefined";
   } else {
-    return value.toString();
+    return value.toString().substr(0, 50);
   }
 }
 

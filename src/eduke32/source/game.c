@@ -2750,7 +2750,7 @@ static int32_t G_PlaySoundWhileNoInput(int32_t soundnum)
 void G_FadePalette(int32_t r,int32_t g,int32_t b,int32_t e)
 {
     setpalettefade(r,g,b,e&63);
-
+#ifdef DEBUG_TODO
     if ((e&128) == 0)
     {
         int32_t tc;
@@ -2760,6 +2760,7 @@ void G_FadePalette(int32_t r,int32_t g,int32_t b,int32_t e)
         while (totalclock < tc + 4)
             G_HandleAsync();
     }
+#endif
 }
 
 // START and END limits are always inclusive!

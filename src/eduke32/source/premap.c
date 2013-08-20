@@ -1730,6 +1730,7 @@ int32_t G_FindLevelByFile(const char *fn)
 
 void G_FadeLoad(int32_t r, int32_t g, int32_t b, int32_t start, int32_t end, int32_t step, int32_t ticwait)
 {
+#ifdef DEBUG_TODO
     int32_t m = (step < 0) ? -1 : 1;
 
     int32_t nexttic = totalclock;
@@ -1750,6 +1751,7 @@ void G_FadeLoad(int32_t r, int32_t g, int32_t b, int32_t start, int32_t end, int
         flushperms();
         G_DoLoadScreen(" ", -1);
     }
+#endif
 }
 
 

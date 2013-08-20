@@ -11959,13 +11959,13 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
                 ototalclock += TICSPERFRAME;
 
                 clockbeforetic = totalclock;
-                debugger
+                
                 if (((ud.show_help == 0 && (g_player[myconnectindex].ps.gm&MODE_MENU) != MODE_MENU) || ud.recstat == 2 || (g_netServer || ud.multimode > 1)) &&
                         (g_player[myconnectindex].ps.gm&MODE_GAME))
                     G_MoveLoop();
 
                 sampletimer();
-                debugger
+               
                 if (totalclock - clockbeforetic >= TICSPERFRAME)
                 {
                     // computing a tic takes longer than a tic, so we're slowing
