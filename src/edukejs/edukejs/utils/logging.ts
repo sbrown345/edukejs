@@ -3,7 +3,7 @@ var SKIP_ALL_LOGGING = false;
 
 var DEBUG_COMPILE = false;
 var DEBUG_KRAND = false;
-var DEBUG_MOSTS = false;
+var DEBUG_MOSTS = true;
 var DEBUG_POLYMOST_DRAWALLS = true;
 var DEBUG_PALETTE = false;
 var DEBUG_SCRIPT_CHANGE = false;

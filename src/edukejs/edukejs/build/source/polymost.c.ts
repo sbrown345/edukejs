@@ -1925,11 +1925,7 @@ function initmosts(/*double **/ px: Float64Array, /*double **/ py: Float64Array,
         vsp[vcnt].cy[0] = vsp[vcnt].fy[0] = py[i];
         vcnt++;
     }
-
-    for (var l = 0; l < VSPMAX; l++) {
-        dlog(DEBUG_MOSTS, "initmosts vsp[%i].n == %i\n", l, vsp[l].n);
-    }
-
+    
     vsp_finalize_init(vsp, vcnt);
     gtag = vcnt;
 }
@@ -1948,14 +1944,21 @@ function vsdel(vsp: vsptyp[], /*int32_t */i: number):void
     vsp[i].p = VSPMAX-1;
     vsp[vsp[VSPMAX-1].n].p = i;
     vsp[VSPMAX-1].n = i;
+
+    dlog(DEBUG_MOSTS, "vsdel: i: %i\n", i);
 }
 var vsinsaftCount = 0;
 function /*int32_t */vsinsaft(/*vsptyp **/vsp: vsptyp[], /*int32_t */i: number)
 {
     var /*int32_t */r: number;
     vsinsaftCount++;
-    dlog(DEBUG_MOSTS, "vsinsaftCount %i, i: %i\n", vsinsaftCount, i);
-    dlog(DEBUG_MOSTS, "vsinsaft vsp[6].n: %i\n", vsinsaftCount,vsp[6].n);
+    dlog(DEBUG_MOSTS, "vsinsaft: Count %i, i: %i\n", vsinsaftCount, i);
+    dlog(DEBUG_MOSTS, "start vsinsaft vsp:\n");
+    for (var l = 0; l < VSPMAX; l++) {
+        dlog(DEBUG_MOSTS, "[%i].n:%i ", l, vsp[l].n);
+    }
+    dlog(DEBUG_MOSTS, "\n");
+
     //i = next element from empty list
     r = vsp[VSPMAX-1].n;
     vsp[vsp[r].n].p = VSPMAX-1;
@@ -1967,7 +1970,11 @@ function /*int32_t */vsinsaft(/*vsptyp **/vsp: vsptyp[], /*int32_t */i: number)
     vsp[r].p = i; vsp[r].n = vsp[i].n;
     vsp[vsp[i].n].p = r; vsp[i].n = r;
 
-    dlog(DEBUG_MOSTS, "vsinsaft vsp[6].n: %i\n", vsinsaftCount,vsp[6].n);
+    dlog(DEBUG_MOSTS, "after vsinsaft vsp:\n");
+    for (var l = 0; l < VSPMAX; l++) {
+        dlog(DEBUG_MOSTS, "[%i].n:%i ", l, vsp[l].n);
+    }
+    dlog(DEBUG_MOSTS, "\n");
     return(r);
 }
 
@@ -2020,7 +2027,7 @@ function domost(/*float*/ x0: number, /*float */y0: number, /*float */x1: number
     slop = (y1-y0)/(x1-x0);
     for (i=vsp[0].n; i; i=newi)
     {
-        dlog(DEBUG_POLYMOST_DRAWALLS, "for vsp n stuff i: %i\n", i);
+        dlog(DEBUG_POLYMOST_DRAWALLS, "for vsp n stuff i: %i, dir: %i\n", i, dir);
         newi = vsp[i].n; nx0 = vsp[i].x; nx1 = vsp[newi].x;
         if ((x0 >= nx1) || (nx0 >= x1) || (vsp[i].ctag <= 0)) continue;
         dx = nx1-nx0;
@@ -2034,7 +2041,7 @@ function domost(/*float*/ x0: number, /*float */y0: number, /*float */x1: number
         {
             t = (x0-nx0)*cv[dir] - (y0-cy[dir])*dx;
             if (((!dir) && (t < 0)) || ((dir) && (t > 0)))
-                { spx[scnt] = x0; /*spy[scnt] = y0;*/ spt[scnt] = -1; scnt++; }
+                { spx[scnt] = x0; /*spy[scnt] = y0;*/ spt[scnt] = -1; scnt++;dlog(DEBUG_POLYMOST_DRAWALLS, "1) scnt++: %i\n", scnt); }
         }
 
         //Test for intersection on umost (j == 0) and dmost (j == 1)
@@ -2044,11 +2051,12 @@ function domost(/*float*/ x0: number, /*float */y0: number, /*float */x1: number
             n = (y0-cy[j])*dx - (x0-nx0)*cv[j];
             if ((fabs(n) <= fabs(d)) && (d *n >= 0) && (d != 0))
             {
-                t = n/d; nx = (x1-x0)*t + x0;
+                t = n/d; nx = float32((x1-x0)*t + x0);throw "todo: floats always get turned into 64bit float  http://stackoverflow.com/questions/588004/is-javascripts-floating-point-math-broken  new Float32Array([0.1])[0] == 0.10000000149011612 == (double)(float)0.1";
+                dlog(DEBUG_POLYMOST_DRAWALLS, "t: %f, nx: %f, nx0: %f, nx1: %f\n", t, nx, nx0, nx1);
                 if ((nx > nx0) && (nx < nx1))
                 {
                     spx[scnt] = nx; /* spy[scnt] = (y1-y0)*t + y0; */
-                    spt[scnt] = j; scnt++;
+                    spt[scnt] = j; scnt++;dlog(DEBUG_POLYMOST_DRAWALLS, "2) scnt++: %i\n", scnt); 
                 }
             }
         }
@@ -2066,10 +2074,10 @@ function domost(/*float*/ x0: number, /*float */y0: number, /*float */x1: number
         {
             t = (x1-nx0)*cv[dir] - (y1-cy[dir])*dx;
             if (((!dir) && (t < 0)) || ((dir) && (t > 0)))
-                { spx[scnt] = x1; /* spy[scnt] = y1; */ spt[scnt] = -1; scnt++; }
+                { spx[scnt] = x1; /* spy[scnt] = y1; */ spt[scnt] = -1; scnt++;dlog(DEBUG_POLYMOST_DRAWALLS, "3) scnt++: %i\n", scnt);  }
         }
 
-        dlog(DEBUG_POLYMOST_DRAWALLS, "domost vsp:\n");
+        dlog(DEBUG_POLYMOST_DRAWALLS, "domost vsp: i: %i, scnt: %i\n", i, scnt);
         for (var l = 0; l < VSPMAX; l++) {
             dlog(DEBUG_POLYMOST_DRAWALLS, "[%i].n:%i ", l, vsp[l].n);
         }
@@ -2090,7 +2098,7 @@ function domost(/*float*/ x0: number, /*float */y0: number, /*float */x1: number
                 vsp[vcnt].tag = spt[z];
             }
 
-            dlog(DEBUG_POLYMOST_DRAWALLS, "domost vsp:\n");
+            dlog(DEBUG_POLYMOST_DRAWALLS, "domost vsp z: %i:\n", z);
             for (var l = 0; l < VSPMAX; l++) {
                 dlog(DEBUG_POLYMOST_DRAWALLS, "[%i].n:%i ", l, vsp[l].n);
             }

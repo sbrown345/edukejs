@@ -1874,10 +1874,6 @@ void initmosts(double *px, double *py, int32_t n)
         vcnt++;
     }
 
-    for (int l = 0; l < VSPMAX; l++) {
-		dlog(DEBUG_MOSTS, "initmosts vsp[%i].n == %i\n", l, vsp[l].n);
-    }
-
     vsp_finalize_init(vsp, vcnt);
     gtag = vcnt;
 }
@@ -1896,6 +1892,8 @@ static inline void vsdel(vsptyp *vsp, int32_t i)
     vsp[i].p = VSPMAX-1;
     vsp[vsp[VSPMAX-1].n].p = i;
     vsp[VSPMAX-1].n = i;
+
+    dlog(DEBUG_MOSTS, "vsdel: i: %i\n", i);
 }
 
 static int vsinsaftCount = 0;
@@ -1903,8 +1901,12 @@ static inline int32_t vsinsaft(vsptyp *vsp, int32_t i)
 {
     int32_t r;
     vsinsaftCount++;
-    dlog(DEBUG_MOSTS, "vsinsaftCount %i, i: %i\n", vsinsaftCount, i);
-    dlog(DEBUG_MOSTS, "vsinsaft vsp[6].n: %i\n", vsinsaftCount,vsp[6].n);
+    dlog(DEBUG_MOSTS, "vsinsaft: Count %i, i: %i\n", vsinsaftCount, i);
+    dlog(DEBUG_MOSTS, "start vsinsaft vsp:\n");
+    for (int l = 0; l < VSPMAX; l++) {
+        dlog(DEBUG_MOSTS, "[%i].n:%i ", l, vsp[l].n);
+    }
+    dlog(DEBUG_MOSTS, "\n");
     //i = next element from empty list
     r = vsp[VSPMAX-1].n;
     vsp[vsp[r].n].p = VSPMAX-1;
@@ -1916,7 +1918,11 @@ static inline int32_t vsinsaft(vsptyp *vsp, int32_t i)
     vsp[r].p = i; vsp[r].n = vsp[i].n;
     vsp[vsp[i].n].p = r; vsp[i].n = r;
 
-    dlog(DEBUG_MOSTS, "vsinsaft vsp[6].n: %i\n", vsinsaftCount,vsp[6].n);
+    dlog(DEBUG_MOSTS, "after vsinsaft vsp:\n");
+    for (int l = 0; l < VSPMAX; l++) {
+        dlog(DEBUG_MOSTS, "[%i].n:%i ", l, vsp[l].n);
+    }
+    dlog(DEBUG_MOSTS, "\n");
     return(r);
 }
 
@@ -1965,7 +1971,7 @@ void domost(float x0, float y0, float x1, float y1)
     slop = (y1-y0)/(x1-x0);
     for (i=vsp[0].n; i; i=newi)
     {
-        dlog(DEBUG_POLYMOST_DRAWALLS, "for vsp n stuff i: %i\n", i);
+        dlog(DEBUG_POLYMOST_DRAWALLS, "for vsp n stuff i: %i, dir: %i\n", i, dir);
         newi = vsp[i].n; nx0 = vsp[i].x; nx1 = vsp[newi].x;
         if ((x0 >= nx1) || (nx0 >= x1) || (vsp[i].ctag <= 0)) continue;
         dx = nx1-nx0;
@@ -1979,7 +1985,7 @@ void domost(float x0, float y0, float x1, float y1)
         {
             t = (x0-nx0)*cv[dir] - (y0-cy[dir])*dx;
             if (((!dir) && (t < 0)) || ((dir) && (t > 0)))
-                { spx[scnt] = x0; /*spy[scnt] = y0;*/ spt[scnt] = -1; scnt++; }
+                { spx[scnt] = x0; /*spy[scnt] = y0;*/ spt[scnt] = -1; scnt++;dlog(DEBUG_POLYMOST_DRAWALLS, "1) scnt++: %i\n", scnt);  }
         }
 
         //Test for intersection on umost (j == 0) and dmost (j == 1)
@@ -1990,10 +1996,11 @@ void domost(float x0, float y0, float x1, float y1)
             if ((fabs(n) <= fabs(d)) && (d *n >= 0) && (d != 0))
             {
                 t = n/d; nx = (x1-x0)*t + x0;
+                dlog(DEBUG_POLYMOST_DRAWALLS, "t: %f, nx: %f, nx0: %f, nx1: %f\n", t, nx, nx0, nx1);
                 if ((nx > nx0) && (nx < nx1))
                 {
                     spx[scnt] = nx; /* spy[scnt] = (y1-y0)*t + y0; */
-                    spt[scnt] = j; scnt++;
+                    spt[scnt] = j; scnt++;dlog(DEBUG_POLYMOST_DRAWALLS, "2) scnt++: %i\n", scnt); 
                 }
             }
         }
@@ -2011,10 +2018,10 @@ void domost(float x0, float y0, float x1, float y1)
         {
             t = (x1-nx0)*cv[dir] - (y1-cy[dir])*dx;
             if (((!dir) && (t < 0)) || ((dir) && (t > 0)))
-                { spx[scnt] = x1; /* spy[scnt] = y1; */ spt[scnt] = -1; scnt++; }
+                { spx[scnt] = x1; /* spy[scnt] = y1; */ spt[scnt] = -1; scnt++;dlog(DEBUG_POLYMOST_DRAWALLS, "3) scnt++: %i\n", scnt);  }
         }
 
-		dlog(DEBUG_POLYMOST_DRAWALLS, "domost vsp:\n");
+		dlog(DEBUG_POLYMOST_DRAWALLS, "domost vsp: i: %i, scnt: %i\n", i, scnt);
         for (int l = 0; l < VSPMAX; l++) {
             dlog(DEBUG_POLYMOST_DRAWALLS, "[%i].n:%i ", l, vsp[l].n);
         }
@@ -2035,7 +2042,7 @@ void domost(float x0, float y0, float x1, float y1)
                 vsp[vcnt].tag = spt[z];
             }
 
-			dlog(DEBUG_POLYMOST_DRAWALLS, "domost vsp:\n");
+			dlog(DEBUG_POLYMOST_DRAWALLS, "domost vsp z: %i:\n", z);
 			for (int l = 0; l < VSPMAX; l++) {
 				dlog(DEBUG_POLYMOST_DRAWALLS, "[%i].n:%i ", l, vsp[l].n);
 			}
