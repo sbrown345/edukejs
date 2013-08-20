@@ -1319,7 +1319,7 @@ void drawpoly(double *dpx, double *dpy, int32_t n, int32_t method)
 #ifdef YAX_ENABLE
     if (g_nodraw) return;
 #endif
-    dlog(DEBUG_POLYMOST_DRAWALLS, "drawpoly dpx[0]: %f, dpx[1]: %f, dpy[0]: %f, dpy[1]: %f, n: %i, method: %i\n",dpx[0], dpx[1], dpy[0], dpy[1], n, method);
+    dlog(DEBUG_POLYMOST_DRAWALLS, "drawpoly dpx: [%f, %f, %f, %f] dpy: [%f, %f, %f, %f], n: %i, method: %i\n",dpx[0], dpx[1], dpx[2], dpx[3], dpy[0], dpy[1], dpy[2], dpy[3], n, method);
     if (n == 3)
     {
         if ((dpx[0]-dpx[1])*(dpy[2]-dpy[1]) >= (dpx[2]-dpx[1])*(dpy[0]-dpy[1])) return; //for triangle
@@ -2030,8 +2030,7 @@ void domost(float x0, float y0, float x1, float y1)
             }
 
             ni = vsp[i].n; if (!ni) {dlog(DEBUG_POLYMOST_DRAWALLS, "!ni\n");continue;} //this 'if' fixes many bugs!
-            dlog(DEBUG_POLYMOST_DRAWALLS, "ni: %i x0: %f  dx0: %f \n",ni, x0, dx0);
-            dlog(DEBUG_POLYMOST_DRAWALLS, "new dx0: %f \n",vsp[i].x);
+            dlog(DEBUG_POLYMOST_DRAWALLS, "ni: %i x0: %f  dx0: %f \n",ni, x0, vsp[i].x);
             dx0 = vsp[i].x; if (x0 > dx0) {dlog(DEBUG_POLYMOST_DRAWALLS, "x0 > dx0\n");continue;}
             dx1 = vsp[ni].x; if (x1 < dx1) {dlog(DEBUG_POLYMOST_DRAWALLS, "x1 < dx1\n");continue;}
             dlog(DEBUG_POLYMOST_DRAWALLS, "ni: %i dx0: %f dx1: %f\n",ni, dx0, dx1);
