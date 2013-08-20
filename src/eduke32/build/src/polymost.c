@@ -2014,6 +2014,12 @@ void domost(float x0, float y0, float x1, float y1)
                 { spx[scnt] = x1; /* spy[scnt] = y1; */ spt[scnt] = -1; scnt++; }
         }
 
+		dlog(DEBUG_POLYMOST_DRAWALLS, "domost vsp:\n");
+        for (int l = 0; l < VSPMAX; l++) {
+            dlog(DEBUG_POLYMOST_DRAWALLS, "[%i].n:%i ", l, vsp[l].n);
+        }
+        dlog(DEBUG_POLYMOST_DRAWALLS, "\n");
+
         vsp[i].tag = vsp[newi].tag = -1;
         for (z=0; z<=scnt; z++,i=vcnt)
         {
