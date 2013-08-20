@@ -1943,10 +1943,10 @@ void domost(float x0, float y0, float x1, float y1)
 
     alpha = 0.f;
 		
-    dlog(DEBUG_MOSTS, "x0 %f, y0 %f, x1 %f, y1 %f\n", x0, y0, x1, y1);
-    for (int l = 0; l < VSPMAX; l++) {
-        dlog(DEBUG_MOSTS, "domost vsp[%i].n == %i\n", l, vsp[l].n);
-    }
+    //dlog(DEBUG_MOSTS, "x0 %f, y0 %f, x1 %f, y1 %f\n", x0, y0, x1, y1);
+    //for (int l = 0; l < VSPMAX; l++) {
+    //    dlog(DEBUG_MOSTS, "domost vsp[%i].n == %i\n", l, vsp[l].n);
+    //}
 
     if (x0 < x1)
     {
@@ -2034,6 +2034,12 @@ void domost(float x0, float y0, float x1, float y1)
                 vsp[vcnt].fy[0] = vsp[i].fy[1];
                 vsp[vcnt].tag = spt[z];
             }
+
+			dlog(DEBUG_POLYMOST_DRAWALLS, "domost vsp:\n");
+			for (int l = 0; l < VSPMAX; l++) {
+				dlog(DEBUG_POLYMOST_DRAWALLS, "[%i].n:%i ", l, vsp[l].n);
+			}
+			dlog(DEBUG_POLYMOST_DRAWALLS, "\n");
 
             ni = vsp[i].n; if (!ni) {dlog(DEBUG_POLYMOST_DRAWALLS, "!ni\n");continue;} //this 'if' fixes many bugs!
             dlog(DEBUG_POLYMOST_DRAWALLS, "ni: %i x0: %f  dx0: %f \n",ni, x0, vsp[i].x);
@@ -2132,9 +2138,9 @@ void domost(float x0, float y0, float x1, float y1)
 
     gtag++;
 
-	for (int l = 0; l < VSPMAX; l++) {
-        dlog(DEBUG_MOSTS, "domost part2 vsp[%i].n == %i\n", l, vsp[l].n);
-    }
+	//for (int l = 0; l < VSPMAX; l++) {
+ //       dlog(DEBUG_MOSTS, "domost part2 vsp[%i].n == %i\n", l, vsp[l].n);
+ //   }
 	
     //Combine neighboring vertical strips with matching collinear top&bottom edges
     //This prevents x-splits from propagating through the entire scan

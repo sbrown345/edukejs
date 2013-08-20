@@ -11033,6 +11033,10 @@ static void G_LoadAddon(void)
 EDUKE32_STATIC_ASSERT(sizeof(actor_t)==128);
 EDUKE32_STATIC_ASSERT(sizeof(DukePlayer_t)%4 == 0);
 
+#ifdef DEBUG_TODO
+#else
+static int tempWhile = 0;
+#endif
 int32_t app_main(int32_t argc, const char **argv)
 {
     int32_t i = 0, j;
@@ -11923,7 +11927,12 @@ skipframe:
         if (g_player[myconnectindex].ps->gm&MODE_DEMO)
             goto MAIN_LOOP_RESTART;
     }
-    while (1);
+#ifdef DEBUG_TODO
+	while (1);
+#else
+    while (tempWhile++ < 3);
+	exit(0);//temp
+#endif
 
     G_GameExit(" ");
     return 0;  // not reached (duh)

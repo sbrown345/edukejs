@@ -11127,6 +11127,7 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
 //EDUKE32_STATIC_ASSERT(sizeof(actor_t)==128);
 //EDUKE32_STATIC_ASSERT(sizeof(DukePlayer_t)%4 == 0);
 
+var tempWhile = 0;
 /*int32_t*/ function app_main(/*int32_t*/ argc: number, /*const char ***/argv: string[])
 {
     path("app_main");
@@ -12036,7 +12037,6 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
     return 0;  // not reached (duh)
 }
 
-var tempWhile = 0;
 
 function /*int32_t*/ G_MoveLoop():number
 {
