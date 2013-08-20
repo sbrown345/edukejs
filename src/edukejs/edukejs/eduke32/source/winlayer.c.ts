@@ -1546,10 +1546,12 @@ function /*int32_t */inittimer(/*int32_t */tickspersecond: number): number
     timerticspersec = tickspersecond;
     //QueryPerformanceCounter((LARGE_INTEGER *)&t);
     timerlastsample = int32(t*timerticspersec / win_timerfreq);
+    tempHC(()=> { timerlastsample = 0; });
 
     usertimercallback = NULL;
 
-    msperhitick = 1000;//1000.0 / (double)gethitickspersec();
+    //msperhitick = 1000.0 / (double)gethitickspersec();
+    tempHC(()=> { msperhitick = 1000; });    
 
     return 0;
 }
@@ -1572,15 +1574,14 @@ function /*int32_t */inittimer(/*int32_t */tickspersecond: number): number
 //
 function sampletimer(): void
 {
-    var /*int64_t */i: number;
+    var /*int64_t */i: number=0;
     var /*int32_t */n: number;
 
     if (!win_timerfreq) return;
-
+    
     //i = Date.now();//QueryPerformanceCounter((LARGE_INTEGER *)&i);
-    //n = int32((i*timerticspersec / win_timerfreq) - timerlastsample);
-
-    tempHC(() => {n = 1;/*todo: modified original source too*/});
+    tempHC(()=> { i = 10000; });
+    n = int32(int32(i*timerticspersec / win_timerfreq) - timerlastsample);
 
     if (n <= 0) return;
 
@@ -1606,7 +1607,7 @@ function getticks() : number //uint32_t
     //QueryPerformanceCounter((LARGE_INTEGER *)&i);
     //return (uint32_t)(i*longlong(1000)/win_timerfreq);
     
-	tempTotalTicks+=1000;
+	tempTotalTicks+=10;
 	return tempTotalTicks;
 }
 

@@ -1470,10 +1470,18 @@ int32_t inittimer(int32_t tickspersecond)
     timerticspersec = tickspersecond;
     QueryPerformanceCounter((LARGE_INTEGER *)&t);
     timerlastsample = (int32_t)(t*timerticspersec / win_timerfreq);
+#ifdef DEBUG_TODO
+#else
+	timerlastsample = 0;
+#endif
 
     usertimercallback = NULL;
 
     msperhitick = 1000.0 / (double)gethitickspersec();
+#ifdef DEBUG_TODO
+#else
+	msperhitick = 1000;
+#endif
 
     return 0;
 }
@@ -1502,8 +1510,11 @@ void sampletimer(void)
     if (!win_timerfreq) return;
 
     QueryPerformanceCounter((LARGE_INTEGER *)&i);
+#ifdef DEBUG_TODO
+#else
+	i = 10000;
+#endif
     n = (int32_t)((i*timerticspersec / win_timerfreq) - timerlastsample);
-	n=1; // temp code to match JS
     if (n <= 0) return;
 
     totalclock += n;
@@ -1523,7 +1534,7 @@ uint32_t getticks(void)
     //if (win_timerfreq == 0) return 0;
     //QueryPerformanceCounter((LARGE_INTEGER *)&i);
     //return (uint32_t)(i*longlong(1000)/win_timerfreq);
-	tempTotalTicks+=1000;
+	tempTotalTicks+=10;
 	return tempTotalTicks;
 }
 

@@ -152,7 +152,7 @@ int32_t win_inittimer(void)
 
 #ifdef DEBUG_TEMP
 #else
-	win_timerfreq = 10000;
+	win_timerfreq = 1000;
 #endif
 
     return 0;
