@@ -1987,6 +1987,10 @@ var /*int32_t */domostpolymethod = 0;
 
 function domost(/*float*/ x0: number, /*float */y0: number, /*float */x1: number, /*float */y1: number): void
 {
+    x0 = float32(x0);
+    y0 = float32(y0);
+    x1 = float32(x1);
+    y1 = float32(y1);
     var dpx = new Float64Array(4), dpy = new Float64Array(4);
     var /*float*/ d=0.0, f=0.0, n=0.0, t=0.0, slop=0.0, dx=0.0, dx0=0.0, dx1=0.0, nx=0.0, nx0=0.0, ny0=0.0, nx1=0.0, ny1=0.0;
     var /*float*/ spx = new Float32Array(4), /*spy[4],*/ cy = new Float32Array(2), cv = new Float32Array(4);
