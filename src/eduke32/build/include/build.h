@@ -1396,6 +1396,7 @@ static inline void pop_nofog(void)
 
 // DEBUGGING STUFF TO HELP COMPARE WITH JS PORT
 #define DEBUG_COMPILE 0
+#define DEBUG_KRAND 0
 #define DEBUG_MOSTS 0
 #define DEBUG_PALETTE 0
 #define DEBUG_LOAD_TILE_ART 0

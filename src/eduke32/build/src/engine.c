@@ -13680,7 +13680,7 @@ int32_t krand(void)
             krd_numcalls++;
         }
 #endif
-
+	dlog(DEBUG_KRAND, "krand %u\n", ((uint32_t)randomseed)>>16);
     return ((uint32_t)randomseed)>>16;
 }
 

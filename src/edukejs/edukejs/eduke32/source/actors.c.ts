@@ -787,20 +787,20 @@ function/* int32_t */G_ToggleWallInterpolation(/*int32_t */w: number, /*int32_t 
 }
 
 function Sect_ToggleInterpolation(/*int32_t*/ sectnum: number, /*int32_t */doset: number): void
-{
-    var /*int32_t */k: number, j = sector[sectnum].wallptr, endwall = j+sector[sectnum].wallnum;
+{todo("Sect_ToggleInterpolation");
+    //var /*int32_t */k: number, j = sector[sectnum].wallptr, endwall = j+sector[sectnum].wallnum;
 
-    for (; j<endwall; j++)
-    {
-        G_ToggleWallInterpolation(j, doset);
+    //for (; j<endwall; j++)
+    //{
+    //    G_ToggleWallInterpolation(j, doset);
 
-        k = wall[j].nextwall;
-        if (k >= 0)
-        {
-            G_ToggleWallInterpolation(k, doset);
-            G_ToggleWallInterpolation(wall[k].point2, doset);
-        }
-    }
+    //    k = wall[j].nextwall;
+    //    if (k >= 0)
+    //    {
+    //        G_ToggleWallInterpolation(k, doset);
+    //        G_ToggleWallInterpolation(wall[k].point2, doset);
+    //    }
+    //}
 }
 
 function Sect_SetInterpolation(/*int32_t*/ sectnum: number): void

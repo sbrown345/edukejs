@@ -701,7 +701,7 @@ void A_DoGutsDir(int32_t sp, int32_t gtype, int32_t n)
 
 LUNATIC_EXTERN int32_t G_ToggleWallInterpolation(int32_t w, int32_t doset)
 {
-	return 0;
+#ifdef DEBUG_TODO
     if (doset)
     {
         return G_SetInterpolation(&wall[w].x)
@@ -713,10 +713,14 @@ LUNATIC_EXTERN int32_t G_ToggleWallInterpolation(int32_t w, int32_t doset)
         G_StopInterpolation(&wall[w].y);
         return 0;
     }
+#else
+	return 0;
+#endif
 }
 
 static void Sect_ToggleInterpolation(int32_t sectnum, int32_t doset)
 {
+#ifdef DEBUG_TODO
     int32_t k, j = sector[sectnum].wallptr, endwall = j+sector[sectnum].wallnum;
 
     for (; j<endwall; j++)
@@ -730,6 +734,7 @@ static void Sect_ToggleInterpolation(int32_t sectnum, int32_t doset)
             G_ToggleWallInterpolation(wall[k].point2, doset);
         }
     }
+#endif
 }
 
 void Sect_SetInterpolation(int32_t sectnum)
