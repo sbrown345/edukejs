@@ -147,6 +147,7 @@ int32_t RTS_AddFile(const char *filename)
 
 void RTS_Init(const char *filename)
 {
+#ifdef DEBUG_TODO
     int32_t length;
     //
     // open all the files, load headers, and count lumps
@@ -166,6 +167,7 @@ void RTS_Init(const char *filename)
     rts_lumpcache = (void **)Bmalloc(length);
     memset(rts_lumpcache,0,length);
     RTS_Started = TRUE;
+#endif
 }
 
 
