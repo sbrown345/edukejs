@@ -57,19 +57,106 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="build\headers\baselayer.h.ts" />
+    <Content Include="build\headers\build.h.ts" />
+    <Content Include="build\headers\cache1d.h.ts" />
+    <Content Include="build\headers\compat.h.ts" />
+    <Content Include="build\headers\crc32.h.ts" />
+    <Content Include="build\headers\glbuild.h.ts" />
+    <Content Include="build\headers\polymost.h.ts" />
+    <Content Include="build\headers\prlights.h.ts" />
+    <Content Include="build\headers\texcache.h.ts" />
+    <Content Include="build\source\texcache.c.ts" />
+    <Content Include="eduke32\headers\duke3d.h.ts" />
+    <Content Include="build\headers\engine_priv.h.ts" />
+    <Content Include="build\headers\mdsprite.h.ts" />
+    <Content Include="build\headers\osd.h.ts" />
+    <Content Include="build\headers\pragmas.h.ts" />
+    <Content Include="build\headers\scancodes.h.ts" />
+    <Content Include="build\source\baselayer.c.ts" />
+    <Content Include="build\source\build.c.ts" />
+    <Content Include="build\source\compat.c.ts" />
+    <Content Include="build\source\crc32.c.ts" />
+    <Content Include="build\source\engine.c.ts" />
+    <Content Include="build\source\hightile.c.ts" />
+    <Content Include="build\source\mdsprite.c.ts" />
+    <Content Include="build\source\polymost.c.ts" />
+    <Content Include="eduke32\headers\actors.h.ts" />
+    <Content Include="eduke32\headers\common_game.h.ts" />
+    <Content Include="eduke32\headers\function.h.ts" />
+    <Content Include="eduke32\headers\game.h.ts" />
+    <Content Include="eduke32\headers\gamedef.h.ts" />
+    <Content Include="eduke32\headers\gamevars.h.ts" />
+    <Content Include="eduke32\headers\global.h.ts" />
+    <Content Include="eduke32\headers\grpscan.h.ts" />
+    <Content Include="eduke32\headers\macros.h.ts" />
+    <Content Include="eduke32\headers\namesdyn.h.ts" />
+    <Content Include="eduke32\headers\net.h.ts" />
+    <Content Include="eduke32\headers\player.h.ts" />
+    <Content Include="eduke32\headers\quotes.h.ts" />
+    <Content Include="eduke32\headers\sector.h.ts" />
+    <Content Include="eduke32\headers\sounds.h.ts" />
+    <Content Include="eduke32\headers\soundsdyn.h.ts" />
+    <Content Include="eduke32\headers\_functio.h.ts" />
+    <Content Include="eduke32\headers\_rts.h.ts" />
+    <Content Include="eduke32\source\actors.c.ts" />
+    <Content Include="eduke32\source\actors_inline.c.ts" />
+    <Content Include="eduke32\source\astub.c.ts" />
+    <Content Include="build\source\cache1d.c.ts" />
+    <Content Include="eduke32\source\config.c.ts" />
+    <Content Include="eduke32\source\gamedef.c.ts" />
+    <Content Include="eduke32\headers\gameexec.h.ts" />
+    <Content Include="eduke32\source\gameexec.c.ts" />
+    <Content Include="eduke32\source\gamevars.c.ts" />
+    <Content Include="eduke32\source\glbuild.c.ts" />
+    <Content Include="eduke32\source\global.c.ts" />
+    <Content Include="eduke32\source\grpscan.c.ts" />
+    <Content Include="eduke32\source\menus.c.ts" />
+    <Content Include="eduke32\source\music.c.ts" />
+    <Content Include="eduke32\source\namesdyn.c.ts" />
+    <Content Include="eduke32\source\net.c.ts" />
+    <Content Include="eduke32\source\osdcmds.c.ts" />
+    <Content Include="eduke32\source\player.c.ts" />
+    <Content Include="eduke32\source\premap.c.ts" />
+    <Content Include="eduke32\headers\premap.h.ts" />
+    <Content Include="eduke32\source\rts.c.ts" />
+    <Content Include="eduke32\source\sector.c.ts" />
+    <Content Include="eduke32\source\sounds.c.ts" />
+    <Content Include="eduke32\source\soundsdyn.c.ts" />
+    <Content Include="eduke32\source\winbits.c.ts" />
+    <Content Include="eduke32\source\winlayer.c.ts" />
+    <Content Include="build\headers\hightile.h.ts" />
     <Content Include="index.htm" />
+    <Content Include="eduke32\source\common.c.ts" />
+    <Content Include="eduke32\source\game.c.ts" />
+    <Content Include="eduke32\source\osd.c.ts" />
+    <Content Include="eduke32\source\osdfuncs.c.ts" />
+    <Content Include="jaudiolib\headers\fx_man.h.ts" />
+    <Content Include="jaudiolib\source\fx_man.c.ts" />
+    <Content Include="jmact\headers\keyboard.h.ts" />
+    <Content Include="jmact\source\control.ts" />
+    <Content Include="jmact\source\mathutil.c.ts" />
     <Content Include="libs\lightgl.js" />
     <Content Include="libs\lightgl\convert-to-js.html" />
     <Content Include="libs\lightgl\Copy of test-from-trace.html" />
     <Content Include="libs\lightgl\test-from-trace.html" />
     <Content Include="libs\lightgl\test.html" />
     <Content Include="libs\lightgl\immediatemode.html" />
+    <Content Include="libs\sprintf.ts" />
+    <Content Include="libs\sprintf.d.ts" />
     <Content Include="libs\webgl-debug.js" />
+    <Content Include="libs\WebGL.d.ts" />
     <Content Include="log.aspx" />
+    <Content Include="test.ts" />
     <Content Include="tests\assert.tests.js" />
     <Content Include="tests\index.htm" />
     <Content Include="tests\libs\qunit.js" />
     <Content Include="tests\style\qunit.css" />
+    <Content Include="utils\assert.ts" />
+    <Content Include="utils\c.ts" />
+    <Content Include="utils\logging.ts" />
+    <Content Include="utils\types.ts" />
+    <Content Include="utils\todo.ts" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -123,7 +210,7 @@
     <TypeScriptCompile Include="$(ProjectDir)\**\*.ts" />
   </ItemGroup>
   <Target Name="BeforeBuild">
-    <Exec Command="&quot;C:\dev\typescript\built\local\tsc2.exe&quot; -target ES5 --sourcemap --out eduke.js  @(TypeScriptCompile ->'&quot;%(fullpath)&quot;', ' ')" IgnoreExitCode="true" />
+    <Exec Command="&quot;tsc&quot; -target ES5 --sourcemap --out eduke.js  @(TypeScriptCompile ->'&quot;%(fullpath)&quot;', ' ')" IgnoreExitCode="true" />
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
