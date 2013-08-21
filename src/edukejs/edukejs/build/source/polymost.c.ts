@@ -1990,6 +1990,23 @@ function /*static inline int32_t */testvisiblemost(/*float */x0:number, /*float 
     return(0);
 }
 
+//function fpFix(n: number): number {
+//    return +n.toFixed(5);
+//}
+
+interface Number { fpFix: () => number; }
+Number.prototype.fpFix = function() {
+    return +this.toFixed(5); // or http://www.cygnus-software.com/papers/comparingfloats/comparingfloats.htm
+};
+
+//function fpFix(n: number): number {
+//    return +n.toFixed(5);
+//}
+
+function fpEq(x: number, y: number) :boolean {
+    return abs(x - y) < 0.000001; // http://stackoverflow.com/questions/588004/is-javascripts-floating-point-math-broken
+}
+
 var /*int32_t */domostpolymethod = 0;
 
 function domost(/*float*/ x0: number, /*float */y0: number, /*float */x1: number, /*float */y1: number): void
@@ -1998,6 +2015,7 @@ function domost(/*float*/ x0: number, /*float */y0: number, /*float */x1: number
     y0 = float32(y0);
     x1 = float32(x1);
     y1 = float32(y1);
+
     var dpx = new Float64Array(4), dpy = new Float64Array(4);
     var /*float*/ d=0.0, f=0.0, n=0.0, t=0.0, slop=0.0, dx=0.0, dx0=0.0, dx1=0.0, nx=0.0, nx0=0.0, ny0=0.0, nx1=0.0, ny1=0.0;
     var /*float*/ spx = new Float32Array(4), /*spy[4],*/ cy = new Float32Array(2), cv = new Float32Array(4);
@@ -2021,7 +2039,7 @@ function domost(/*float*/ x0: number, /*float */y0: number, /*float */x1: number
         f = x0; x0 = x1; x1 = f;
         f = y0; y0 = y1; y1 = f;
         dir = 0; //clip umost (ceiling)
-        //y0 += .01; y1 += .01; //necessary?
+        y0 += .01; y1 += .01; //necessary?
     }
     
     slop = (y1-y0)/(x1-x0);
@@ -2037,9 +2055,11 @@ function domost(/*float*/ x0: number, /*float */y0: number, /*float */x1: number
         scnt = 0;
 
         //Test if left edge requires split (x0,y0) (nx0,cy(0)),<dx,cv(0)>
+        dlog(DEBUG_POLYMOST_DRAWALLS, "(x0 %f > nx0 %f) && (x0 %f < nx1%f )\n", x0 , nx0,x0, nx1);
         if ((x0 > nx0) && (x0 < nx1))
         {
             t = (x0-nx0)*cv[dir] - (y0-cy[dir])*dx;
+            dlog(DEBUG_POLYMOST_DRAWALLS, "t: %f\n", t);
             if (((!dir) && (t < 0)) || ((dir) && (t > 0)))
                 { spx[scnt] = x0; /*spy[scnt] = y0;*/ spt[scnt] = -1; scnt++;dlog(DEBUG_POLYMOST_DRAWALLS, "1) scnt++: %i\n", scnt); }
         }
@@ -2051,7 +2071,7 @@ function domost(/*float*/ x0: number, /*float */y0: number, /*float */x1: number
             n = (y0-cy[j])*dx - (x0-nx0)*cv[j];
             if ((fabs(n) <= fabs(d)) && (d *n >= 0) && (d != 0))
             {
-                t = n/d; nx = float32((x1-x0)*t + x0);throw "todo: floats always get turned into 64bit float  http://stackoverflow.com/questions/588004/is-javascripts-floating-point-math-broken  new Float32Array([0.1])[0] == 0.10000000149011612 == (double)(float)0.1";
+                t = n/d; nx = float32((x1-x0)*t + x0);//throw "todo: floats always get turned into 64bit float    new Float32Array([0.1])[0] == 0.10000000149011612 == (double)(float)0.1";
                 dlog(DEBUG_POLYMOST_DRAWALLS, "t: %f, nx: %f, nx0: %f, nx1: %f\n", t, nx, nx0, nx1);
                 if ((nx > nx0) && (nx < nx1))
                 {

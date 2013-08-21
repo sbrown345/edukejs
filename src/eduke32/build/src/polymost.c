@@ -1981,8 +1981,10 @@ void domost(float x0, float y0, float x1, float y1)
         scnt = 0;
 
         //Test if left edge requires split (x0,y0) (nx0,cy(0)),<dx,cv(0)>
+        dlog(DEBUG_POLYMOST_DRAWALLS, "(x0 %f > nx0 %f) && (x0 %f < nx1%f )\n", x0 , nx0,x0, nx1);
         if ((x0 > nx0) && (x0 < nx1))
         {
+            dlog(DEBUG_POLYMOST_DRAWALLS, "t: %f\n", t);
             t = (x0-nx0)*cv[dir] - (y0-cy[dir])*dx;
             if (((!dir) && (t < 0)) || ((dir) && (t > 0)))
                 { spx[scnt] = x0; /*spy[scnt] = y0;*/ spt[scnt] = -1; scnt++;dlog(DEBUG_POLYMOST_DRAWALLS, "1) scnt++: %i\n", scnt);  }
