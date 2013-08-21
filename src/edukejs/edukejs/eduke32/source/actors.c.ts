@@ -866,67 +866,67 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //#define LIGHTRAD (s.yrepeat * tilesizy[s.picnum + LIGHTRAD_PICOFS])
 //#define LIGHTRAD2 (((s.yrepeat) + (rand()%(s.yrepeat>>2))) * tilesizy[s.picnum + LIGHTRAD_PICOFS])
 
-//void G_AddGameLight(int32_t radius, int32_t srcsprite, int32_t zoffset, int32_t range, int32_t color, int32_t priority)
-//{
+function G_AddGameLight(/*int32_t*/ radius:number, /*int32_t */srcsprite:number, /*int32_t */zoffset:number, /*int32_t */range:number, /*int32_t */color:number, /*int32_t */priority:number):void
+{todoThrow();
 //#ifdef POLYMER
-//    spritetype *s = &sprite[srcsprite];
+    var s = sprite[srcsprite];
 
-//    if (getrendermode() != REND_POLYMER)
-//        return;
+    if (getrendermode() != REND_POLYMER)
+        return;
 
-//    if (actor[srcsprite].lightptr == NULL)
-//    {
+    if (actor[srcsprite].lightptr == NULL)
+    {
 //#pragma pack(push,1)
-//        _prlight mylight;
+        var mylight:_prlight ;
 //#pragma pack(pop)
-//        Bmemset(&mylight, 0, sizeof(mylight));
+        mylight = new _prlight();//Bmemset(&mylight, 0, sizeof(mylight));
+          todoThrow();
+        //mylight.sector = s.sectnum;
+        //mylight.x = s.x;
+        //mylight.y = s.y;
+        //mylight.z = s.z-zoffset;
+        //mylight.color[0] = color&255;
+        //mylight.color[1] = (color>>8)&255;
+        //mylight.color[2] = (color>>16)&255;
+        //mylight.radius = radius;
+        //actor[srcsprite].lightmaxrange = mylight.range = range;
 
-//        mylight.sector = s.sectnum;
-//        mylight.x = s.x;
-//        mylight.y = s.y;
-//        mylight.z = s.z-zoffset;
-//        mylight.color[0] = color&255;
-//        mylight.color[1] = (color>>8)&255;
-//        mylight.color[2] = (color>>16)&255;
-//        mylight.radius = radius;
-//        actor[srcsprite].lightmaxrange = mylight.range = range;
+        //mylight.priority = priority;
+        //mylight.tilenum = 0;
 
-//        mylight.priority = priority;
-//        mylight.tilenum = 0;
+        //mylight.publicflags.emitshadow = 1;
+        //mylight.publicflags.negative = 0;
+  
+        //actor[srcsprite].lightId = polymer_addlight(&mylight);
+        //if (actor[srcsprite].lightId >= 0)
+        //    actor[srcsprite].lightptr = &prlights[actor[srcsprite].lightId];
+        return;
+    }
 
-//        mylight.publicflags.emitshadow = 1;
-//        mylight.publicflags.negative = 0;
+    //s.z -= zoffset;
 
-//        actor[srcsprite].lightId = polymer_addlight(&mylight);
-//        if (actor[srcsprite].lightId >= 0)
-//            actor[srcsprite].lightptr = &prlights[actor[srcsprite].lightId];
-//        return;
-//    }
+    //if (range < actor[srcsprite].lightmaxrange>>1)
+    //    actor[srcsprite].lightmaxrange = 0;
 
-//    s.z -= zoffset;
+    //if (range > actor[srcsprite].lightmaxrange ||
+    //        priority != actor[srcsprite].lightptr.priority ||
+    //        Bmemcmp(&sprite[srcsprite], actor[srcsprite].lightptr, sizeof(int32_t) * 3))
+    //{
+    //    if (range > actor[srcsprite].lightmaxrange)
+    //        actor[srcsprite].lightmaxrange = range;
 
-//    if (range < actor[srcsprite].lightmaxrange>>1)
-//        actor[srcsprite].lightmaxrange = 0;
+    //    Bmemcpy(actor[srcsprite].lightptr, &sprite[srcsprite], sizeof(int32_t) * 3);
+    //    actor[srcsprite].lightptr.sector = s.sectnum;
+    //    actor[srcsprite].lightptr.flags.invalidate = 1;
+    //}
 
-//    if (range > actor[srcsprite].lightmaxrange ||
-//            priority != actor[srcsprite].lightptr.priority ||
-//            Bmemcmp(&sprite[srcsprite], actor[srcsprite].lightptr, sizeof(int32_t) * 3))
-//    {
-//        if (range > actor[srcsprite].lightmaxrange)
-//            actor[srcsprite].lightmaxrange = range;
+    //actor[srcsprite].lightptr.priority = priority;
+    //actor[srcsprite].lightptr.range = range;
+    //actor[srcsprite].lightptr.color[0] = color&255;
+    //actor[srcsprite].lightptr.color[1] = (color>>8)&255;
+    //actor[srcsprite].lightptr.color[2] = (color>>16)&255;
 
-//        Bmemcpy(actor[srcsprite].lightptr, &sprite[srcsprite], sizeof(int32_t) * 3);
-//        actor[srcsprite].lightptr.sector = s.sectnum;
-//        actor[srcsprite].lightptr.flags.invalidate = 1;
-//    }
-
-//    actor[srcsprite].lightptr.priority = priority;
-//    actor[srcsprite].lightptr.range = range;
-//    actor[srcsprite].lightptr.color[0] = color&255;
-//    actor[srcsprite].lightptr.color[1] = (color>>8)&255;
-//    actor[srcsprite].lightptr.color[2] = (color>>16)&255;
-
-//    s.z += zoffset;
+    //s.z += zoffset;
 
 //#else
 //    UNREFERENCED_PARAMETER(radius);
@@ -936,7 +936,7 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //    UNREFERENCED_PARAMETER(color);
 //    UNREFERENCED_PARAMETER(priority);
 //#endif
-//}
+}
 
 //// sleeping monsters, etc
 //ACTOR_STATIC void G_MoveZombieActors(void)

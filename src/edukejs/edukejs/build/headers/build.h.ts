@@ -88,15 +88,15 @@ var GLOWPAL    =(MAXPALOOKUPS - 2);
 var SPECULARPAL=(MAXPALOOKUPS - 3);
 var NORMALPAL  =(MAXPALOOKUPS - 4);
 
-//#define TSPR_TEMP 99
-//#define TSPR_MIRROR 100
+var TSPR_TEMP=99;
+var TSPR_MIRROR=100;
 
-//#define PR_LIGHT_PRIO_MAX       0
-//#define PR_LIGHT_PRIO_MAX_GAME  1
-//#define PR_LIGHT_PRIO_HIGH      2
-//#define PR_LIGHT_PRIO_HIGH_GAME 3
-//#define PR_LIGHT_PRIO_LOW       4
-//#define PR_LIGHT_PRIO_LOW_GAME  5
+var PR_LIGHT_PRIO_MAX       =0;
+var PR_LIGHT_PRIO_MAX_GAME  =1;
+var PR_LIGHT_PRIO_HIGH      =2;
+var PR_LIGHT_PRIO_HIGH_GAME =3;
+var PR_LIGHT_PRIO_LOW       =4;
+var PR_LIGHT_PRIO_LOW_GAME  =5;
 
 //// Convenient sprite iterators, must not be used if any sprites inside the loop
 //// are potentially deleted or their sector changed...

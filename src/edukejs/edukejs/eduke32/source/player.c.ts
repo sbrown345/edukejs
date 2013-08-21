@@ -240,20 +240,20 @@ function P_QuickKill(p: DukePlayer_t): void
 //    }
 //}
 
-//int32_t A_GetHitscanRange(int32_t i)
-//{
-//    int32_t zoff = (sprite[i].picnum == APLAYER) ? PHEIGHT : 0;
-//    hitdata_t hit;
+function /*int32_t */A_GetHitscanRange(/*int32_t */i:number):number
+{
+    var /*int32_t */zoff = (sprite[i].picnum == APLAYER) ? PHEIGHT : 0;
+    var hit:hitdata_t;
 
-//    sprite[i].z -= zoff;
-//    hitscan((const vec3_t *)&sprite[i],sprite[i].sectnum,
-//            sintable[(sprite[i].ang+512)&2047],
-//            sintable[sprite[i].ang&2047],
-//            0,&hit,CLIPMASK1);
-//    sprite[i].z += zoff;
+    sprite[i].z -= zoff;
+    hitscan(new vec3_t(sprite[i].x, sprite[i].y, sprite[i].z) ,sprite[i].sectnum,
+            sintable[(sprite[i].ang+512)&2047],
+            sintable[sprite[i].ang&2047],
+            0,hit,CLIPMASK1);
+    sprite[i].z += zoff;
 
-//    return (FindDistance2D(hit.pos.x-sprite[i].x,hit.pos.y-sprite[i].y));
-//}
+    return (FindDistance2D(hit.pos.x-sprite[i].x,hit.pos.y-sprite[i].y));
+}
 
 //static int32_t A_FindTargetSprite(spritetype *s,int32_t aang,int32_t atwith)
 //{
@@ -1986,84 +1986,84 @@ function P_SetWeaponGamevars(/*int32_t */snum:number, p:DukePlayer_t ):void
 }
 
 
-//static void P_FireWeapon(DukePlayer_t *p)
-//{
-//    int32_t i, snum = sprite[p.i].yvel;
+function P_FireWeapon(p:DukePlayer_t):void
+{
+    var /*int32_t */i:number, snum = sprite[p.i].yvel;
 
-//    if (VM_OnEvent(EVENT_DOFIRE, p.i, snum, -1, 0) == 0)
-//    {
-//        if (p.weapon_pos != 0) return;
+    if (VM_OnEvent(EVENT_DOFIRE, p.i, snum, -1, 0) == 0)
+    {
+        if (p.weapon_pos != 0) return;
 
-//        if (PWEAPON(snum, p.curr_weapon, WorksLike) != KNEE_WEAPON)
-//            p.ammo_amount[p.curr_weapon]--;
+        if (PWEAPON(snum, p.curr_weapon, WorksLike) != KNEE_WEAPON)
+            p.ammo_amount[p.curr_weapon]--;
 
-//        if (PWEAPON(snum, p.curr_weapon, FireSound) > 0)
-//            A_PlaySound(PWEAPON(snum, p.curr_weapon, FireSound),p.i);
+        if (PWEAPON(snum, p.curr_weapon, FireSound) > 0)
+            A_PlaySound(PWEAPON(snum, p.curr_weapon, FireSound),p.i);
 
-//        P_SetWeaponGamevars(snum, p);
-////        OSD_Printf("doing %d %d %d\n",PWEAPON(snum, p.curr_weapon, Shoots),p.curr_weapon,snum);
-//        A_Shoot(p.i,PWEAPON(snum, p.curr_weapon, Shoots));
+        P_SetWeaponGamevars(snum, p);
+//        OSD_Printf("doing %d %d %d\n",PWEAPON(snum, p.curr_weapon, Shoots),p.curr_weapon,snum);
+        A_Shoot(p.i,PWEAPON(snum, p.curr_weapon, Shoots));
 
-//        for (i=PWEAPON(snum, p.curr_weapon, ShotsPerBurst)-1; i > 0; i--)
-//        {
-//            if (PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_FIREEVERYOTHER)
-//            {
-//                // this makes the projectiles fire on a delay from player code
-//                actor[p.i].t_data[7] = (PWEAPON(snum, p.curr_weapon, ShotsPerBurst))<<1;
-//            }
-//            else
-//            {
-//                if (PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_AMMOPERSHOT &&
-//                        PWEAPON(snum, p.curr_weapon, WorksLike) != KNEE_WEAPON)
-//                {
-//                    if (p.ammo_amount[p.curr_weapon] > 0)
-//                        p.ammo_amount[p.curr_weapon]--;
-//                    else break;
-//                }
-//                A_Shoot(p.i,PWEAPON(snum, p.curr_weapon, Shoots));
-//            }
-//        }
+        for (i=PWEAPON(snum, p.curr_weapon, ShotsPerBurst)-1; i > 0; i--)
+        {
+            if (PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_FIREEVERYOTHER)
+            {
+                // this makes the projectiles fire on a delay from player code
+                actor[p.i].t_data[7] = (PWEAPON(snum, p.curr_weapon, ShotsPerBurst))<<1;
+            }
+            else
+            {
+                if (PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_AMMOPERSHOT &&
+                        PWEAPON(snum, p.curr_weapon, WorksLike) != KNEE_WEAPON)
+                {
+                    if (p.ammo_amount[p.curr_weapon] > 0)
+                        p.ammo_amount[p.curr_weapon]--;
+                    else break;
+                }
+                A_Shoot(p.i,PWEAPON(snum, p.curr_weapon, Shoots));
+            }
+        }
 
-//        if (!(PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_NOVISIBLE))
-//        {
+        if (!(PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_NOVISIBLE))
+        {
 //#ifdef POLYMER
-//            spritetype *s = &sprite[p.i];
-//            int32_t x = ((sintable[(s.ang+512)&2047])>>7), y = ((sintable[(s.ang)&2047])>>7);
+            var s = sprite[p.i];
+            var /*int32_t */x = ((sintable[(s.ang+512)&2047])>>7), y = ((sintable[(s.ang)&2047])>>7);
 
-//            s.x += x;
-//            s.y += y;
-//            G_AddGameLight(0, p.i, PHEIGHT, 8192, PWEAPON(snum, p.curr_weapon, FlashColor),PR_LIGHT_PRIO_MAX_GAME);
-//            actor[p.i].lightcount = 2;
-//            s.x -= x;
-//            s.y -= y;
+            s.x += x;
+            s.y += y;
+            G_AddGameLight(0, p.i, PHEIGHT, 8192, PWEAPON(snum, p.curr_weapon, FlashColor),PR_LIGHT_PRIO_MAX_GAME);
+            actor[p.i].lightcount = 2;
+            s.x -= x;
+            s.y -= y;
 //#endif // POLYMER
-//            lastvisinc = totalclock+32;
-//            p.visibility = 0;
-//        }
-//    }
-//}
+            lastvisinc = totalclock+32;
+            p.visibility = 0;
+        }
+    }
+}
 
-//static void P_DoWeaponSpawn(const DukePlayer_t *p)
-//{
-//    int32_t j, snum = sprite[p.i].yvel;
+function P_DoWeaponSpawn(p: DukePlayer_t):void
+{
+    var /*int32_t */j:number, snum = sprite[p.i].yvel;
 
-//    if (PWEAPON(snum, p.curr_weapon, Spawn) <= 0)  // <=0 : AMC TC beta/RC2 has WEAPONx_SPAWN -1
-//        return;
+    if (PWEAPON(snum, p.curr_weapon, Spawn) <= 0)  // <=0 : AMC TC beta/RC2 has WEAPONx_SPAWN -1
+        return;
 
-//    j = A_Spawn(p.i, PWEAPON(snum, p.curr_weapon, Spawn));
+    j = A_Spawn(p.i, PWEAPON(snum, p.curr_weapon, Spawn));
 
-//    if ((PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_SPAWNTYPE3))
-//    {
-//        // like chaingun shells
-//        sprite[j].ang += 1024;
-//        sprite[j].ang &= 2047;
-//        sprite[j].xvel += 32;
-//        sprite[j].z += (3<<8);
-//    }
+    if ((PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_SPAWNTYPE3))
+    {
+        // like chaingun shells
+        sprite[j].ang += 1024;
+        sprite[j].ang &= 2047;
+        sprite[j].xvel += 32;
+        sprite[j].z += (3<<8);
+    }
 
-//    A_SetSprite(j,CLIPMASK0);
+    A_SetSprite(j,CLIPMASK0);
 
-//}
+}
 
 //void P_DisplayScuba(int32_t snum)
 //{
@@ -3346,50 +3346,50 @@ function P_SelectNextInvItem(p:DukePlayer_t):void
     else p.inven_icon = ICON_NONE;
 }
 
-//void P_CheckWeapon(DukePlayer_t *p)
-//{
-//    int32_t i, snum, weapon;
+function P_CheckWeapon(p:DukePlayer_t ):void
+{
+    var /*int32_t */i:number, snum:number, weapon:number;
 
-//    if (p.reloading) return;
+    if (p.reloading) return;
 
-//    if (p.wantweaponfire >= 0)
-//    {
-//        weapon = p.wantweaponfire;
-//        p.wantweaponfire = -1;
+    if (p.wantweaponfire >= 0)
+    {
+        weapon = p.wantweaponfire;
+        p.wantweaponfire = -1;
 
-//        if (weapon == p.curr_weapon) return;
-//        if ((p.gotweapon & (1<<weapon)) && p.ammo_amount[weapon] > 0)
-//        {
-//            P_AddWeapon(p,weapon);
-//            return;
-//        }
-//    }
+        if (weapon == p.curr_weapon) return;
+        if ((p.gotweapon & (1<<weapon)) && p.ammo_amount[weapon] > 0)
+        {
+            P_AddWeapon(p,weapon);
+            return;
+        }
+    }
 
-//    weapon = p.curr_weapon;
+    weapon = p.curr_weapon;
 
-//    if ((p.gotweapon & (1<<weapon)) && (p.ammo_amount[weapon] > 0 || !(p.weaponswitch & 2)))
-//        return;
+    if ((p.gotweapon & (1<<weapon)) && (p.ammo_amount[weapon] > 0 || !(p.weaponswitch & 2)))
+        return;
 
-//    snum = sprite[p.i].yvel;
+    snum = sprite[p.i].yvel;
 
-//    for (i=0; i<10; i++)
-//    {
-//        weapon = g_player[snum].wchoice[i];
-//        if (VOLUMEONE && weapon > 6) continue;
+    for (i=0; i<10; i++)
+    {
+        weapon = g_player[snum].wchoice[i];
+        if (window.VOLUMEONE && weapon > 6) continue;
 
-//        if (weapon == 0) weapon = 9;
-//        else weapon--;
+        if (weapon == 0) weapon = 9;
+        else weapon--;
 
-//        if (weapon == 0 || ((p.gotweapon & (1<<weapon)) && p.ammo_amount[weapon] > 0))
-//            break;
-//    }
+        if (weapon == 0 || ((p.gotweapon & (1<<weapon)) && p.ammo_amount[weapon] > 0))
+            break;
+    }
 
-//    if (i == 10) weapon = 0;
+    if (i == 10) weapon = 0;
 
-//    // Found the weapon
+    // Found the weapon
 
-//    P_ChangeWeapon(p, weapon);
-//}
+    P_ChangeWeapon(p, weapon);
+}
 
 //#ifdef LUNATIC
 //void P_CheckWeaponI(int32_t snum)
@@ -3672,530 +3672,530 @@ function P_FragPlayer(/*int32_t */snum:number):void
 //#ifdef LUNATIC
 //# define PIPEBOMB_CONTROL(snum) (g_player[snum].ps.pipebombControl)
 //#else
-//# define PIPEBOMB_CONTROL(snum) (Gv_GetVarByLabel("PIPEBOMB_CONTROL", PIPEBOMB_REMOTE, -1, snum))
+function PIPEBOMB_CONTROL(snum:number):number {return Gv_GetVarByLabel("PIPEBOMB_CONTROL", PIPEBOMB_REMOTE, -1, snum);}
 //#endif
 
 function P_ProcessWeapon(/*int32_t */snum:number):void 
-{todoThrow();
-//    DukePlayer_t *const p = g_player[snum].ps;
-//    uint8_t *const kb = &p.kickback_pic;
-//    const int32_t shrunk = (sprite[p.i].yrepeat < 32);
-//    uint32_t sb_snum = g_player[snum].sync.bits;
-//    int32_t i, j, k;
+{
+    var p = g_player[snum].ps;
+    var kb = new R(p.kickback_pic);
+    var /*const int32_t */shrunk = (sprite[p.i].yrepeat < 32)?1:0;
+    var /*uint32_t */sb_snum = g_player[snum].sync.bits;
+    var /*int32_t */i:number, j:number, k:number;
 
-//    switch (p.weapon_pos)
-//    {
-//    case -9:
-//        if (p.last_weapon >= 0)
-//        {
-//            p.weapon_pos = WEAPON_POS_RAISE;
-//            p.last_weapon = -1;
-//        }
-//        else if (p.holster_weapon == 0)
-//            p.weapon_pos = WEAPON_POS_RAISE;
-//        break;
-//    case 0:
-//        break;
-//    default:
-//        p.weapon_pos--;
-//        break;
-//    }
+    switch (p.weapon_pos)
+    {
+    case -9:
+        if (p.last_weapon >= 0)
+        {
+            p.weapon_pos = WEAPON_POS_RAISE;
+            p.last_weapon = -1;
+        }
+        else if (p.holster_weapon == 0)
+            p.weapon_pos = WEAPON_POS_RAISE;
+        break;
+    case 0:
+        break;
+    default:
+        p.weapon_pos--;
+        break;
+    }
 
-//    if (TEST_SYNC_KEY(sb_snum, SK_FIRE))
-//    {
-//        P_SetWeaponGamevars(snum, p);
+    if (TEST_SYNC_KEY(sb_snum, SK_FIRE))
+    {
+        P_SetWeaponGamevars(snum, p);
         
-//        if (VM_OnEvent(EVENT_PRESSEDFIRE, p.i, snum, -1, 0) != 0)
-//            sb_snum &= ~BIT(SK_FIRE);
-//    }
+        if (VM_OnEvent(EVENT_PRESSEDFIRE, p.i, snum, -1, 0) != 0)
+            sb_snum &= ~BIT(SK_FIRE);
+    }
 
-//    if (TEST_SYNC_KEY(sb_snum, SK_HOLSTER))   // 'Holster Weapon
-//    {
-//        P_SetWeaponGamevars(snum, p);
+    if (TEST_SYNC_KEY(sb_snum, SK_HOLSTER))   // 'Holster Weapon
+    {
+        P_SetWeaponGamevars(snum, p);
         
-//        if (VM_OnEvent(EVENT_HOLSTER, p.i, snum, -1, 0) == 0)
-//        {
-//            if (PWEAPON(0, p.curr_weapon, WorksLike) != KNEE_WEAPON)
-//            {
-//                if (p.holster_weapon == 0 && p.weapon_pos == 0)
-//                {
-//                    p.holster_weapon = 1;
-//                    p.weapon_pos = -1;
-//                    P_DoQuote(QUOTE_WEAPON_LOWERED,p);
-//                }
-//                else if (p.holster_weapon == 1 && p.weapon_pos == WEAPON_POS_LOWER)
-//                {
-//                    p.holster_weapon = 0;
-//                    p.weapon_pos = WEAPON_POS_RAISE;
-//                    P_DoQuote(QUOTE_WEAPON_RAISED,p);
-//                }
-//            }
+        if (VM_OnEvent(EVENT_HOLSTER, p.i, snum, -1, 0) == 0)
+        {
+            if (PWEAPON(0, p.curr_weapon, WorksLike) != KNEE_WEAPON)
+            {
+                if (p.holster_weapon == 0 && p.weapon_pos == 0)
+                {
+                    p.holster_weapon = 1;
+                    p.weapon_pos = -1;
+                    P_DoQuote(QUOTE_WEAPON_LOWERED,p);
+                }
+                else if (p.holster_weapon == 1 && p.weapon_pos == WEAPON_POS_LOWER)
+                {
+                    p.holster_weapon = 0;
+                    p.weapon_pos = WEAPON_POS_RAISE;
+                    P_DoQuote(QUOTE_WEAPON_RAISED,p);
+                }
+            }
 
-//            if (PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_HOLSTER_CLEARS_CLIP)
-//            {
-//                if (p.ammo_amount[p.curr_weapon] > PWEAPON(snum, p.curr_weapon, Clip)
-//                        && (p.ammo_amount[p.curr_weapon] % PWEAPON(snum, p.curr_weapon, Clip)) != 0)
-//                {
-//                    p.ammo_amount[p.curr_weapon]-=
-//                        p.ammo_amount[p.curr_weapon] % PWEAPON(snum, p.curr_weapon, Clip) ;
-//                    (*kb) = PWEAPON(snum, p.curr_weapon, TotalTime);
-//                    sb_snum &= ~BIT(SK_FIRE); // not firing...
-//                }
-//                return;
-//            }
-//        }
-//    }
+            if (PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_HOLSTER_CLEARS_CLIP)
+            {
+                if (p.ammo_amount[p.curr_weapon] > PWEAPON(snum, p.curr_weapon, Clip)
+                        && (p.ammo_amount[p.curr_weapon] % PWEAPON(snum, p.curr_weapon, Clip)) != 0)
+                {
+                    p.ammo_amount[p.curr_weapon]-=
+                        p.ammo_amount[p.curr_weapon] % PWEAPON(snum, p.curr_weapon, Clip) ;
+                    (kb.$) = PWEAPON(snum, p.curr_weapon, TotalTime);
+                    sb_snum &= ~BIT(SK_FIRE); // not firing...
+                }
+                return;
+            }
+        }
+    }
 
-//    if (PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_GLOWS)
-//    {
-//        p.random_club_frame += 64; // Glowing
+    if (PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_GLOWS)
+    {
+        p.random_club_frame += 64; // Glowing
 
-//        if (p.kickback_pic == 0)
-//        {
-//            spritetype *s = &sprite[p.i];
-//            int32_t x = ((sintable[(s.ang+512)&2047])>>7), y = ((sintable[(s.ang)&2047])>>7);
-//            int32_t r = 1024+(sintable[p.random_club_frame&2047]>>3);
+        if (p.kickback_pic == 0)
+        {
+            var s = sprite[p.i];
+            var /*int32_t*/ x = ((sintable[(s.ang+512)&2047])>>7), y = ((sintable[(s.ang)&2047])>>7);
+            var /*int32_t*/ r = 1024+(sintable[p.random_club_frame&2047]>>3);
 
-//            s.x += x;
-//            s.y += y;
-//            G_AddGameLight(0, p.i, PHEIGHT, max(r, 0), PWEAPON(snum, p.curr_weapon, FlashColor),PR_LIGHT_PRIO_HIGH_GAME);
-//            actor[p.i].lightcount = 2;
-//            s.x -= x;
-//            s.y -= y;
-//        }
+            s.x += x;
+            s.y += y;
+            G_AddGameLight(0, p.i, PHEIGHT, max(r, 0), PWEAPON(snum, p.curr_weapon, FlashColor),PR_LIGHT_PRIO_HIGH_GAME);
+            actor[p.i].lightcount = 2;
+            s.x -= x;
+            s.y -= y;
+        }
 
-//    }
+    }
 
-//    // this is a hack for WEAPON_FIREEVERYOTHER
-//    if (actor[p.i].t_data[7])
-//    {
-//        actor[p.i].t_data[7]--;
-//        if (p.last_weapon == -1 && actor[p.i].t_data[7] != 0 && ((actor[p.i].t_data[7] & 1) == 0))
-//        {
-//            if (PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_AMMOPERSHOT)
-//            {
-//                if (p.ammo_amount[p.curr_weapon] > 0)
-//                    p.ammo_amount[p.curr_weapon]--;
-//                else
-//                {
-//                    actor[p.i].t_data[7] = 0;
-//                    P_CheckWeapon(p);
-//                }
-//            }
+    // this is a hack for WEAPON_FIREEVERYOTHER
+    if (actor[p.i].t_data[7])
+    {
+        actor[p.i].t_data[7]--;
+        if (p.last_weapon == -1 && actor[p.i].t_data[7] != 0 && ((actor[p.i].t_data[7] & 1) == 0))
+        {
+            if (PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_AMMOPERSHOT)
+            {
+                if (p.ammo_amount[p.curr_weapon] > 0)
+                    p.ammo_amount[p.curr_weapon]--;
+                else
+                {
+                    actor[p.i].t_data[7] = 0;
+                    P_CheckWeapon(p);
+                }
+            }
 
-//            if (actor[p.i].t_data[7] != 0)
-//                A_Shoot(p.i,PWEAPON(snum, p.curr_weapon, Shoots));
-//        }
-//    }
+            if (actor[p.i].t_data[7] != 0)
+                A_Shoot(p.i,PWEAPON(snum, p.curr_weapon, Shoots));
+        }
+    }
 
-//    if (p.rapid_fire_hold == 1)
-//    {
-//        if (TEST_SYNC_KEY(sb_snum, SK_FIRE)) return;
-//        p.rapid_fire_hold = 0;
-//    }
+    if (p.rapid_fire_hold == 1)
+    {
+        if (TEST_SYNC_KEY(sb_snum, SK_FIRE)) return;
+        p.rapid_fire_hold = 0;
+    }
 
-//    if (shrunk || p.tipincs || p.access_incs)
-//        sb_snum &= ~BIT(SK_FIRE);
-//    else if (shrunk == 0 && (sb_snum&(1<<2)) && (*kb) == 0 && p.fist_incs == 0 &&
-//             p.last_weapon == -1 && (p.weapon_pos == 0 || p.holster_weapon == 1))
-//    {
-//        p.crack_time = 777;
+    if (shrunk || p.tipincs || p.access_incs)
+        sb_snum &= ~BIT(SK_FIRE);
+    else if (shrunk == 0 && (sb_snum&(1<<2)) && (kb.$) == 0 && p.fist_incs == 0 &&
+             p.last_weapon == -1 && (p.weapon_pos == 0 || p.holster_weapon == 1))
+    {
+        p.crack_time = 777;
 
-//        if (p.holster_weapon == 1)
-//        {
-//            if (p.last_pissed_time <= (GAMETICSPERSEC*218) && p.weapon_pos == WEAPON_POS_LOWER)
-//            {
-//                p.holster_weapon = 0;
-//                p.weapon_pos = WEAPON_POS_RAISE;
-//                P_DoQuote(QUOTE_WEAPON_RAISED,p);
-//            }
-//        }
-//        else
-//        {
-//            P_SetWeaponGamevars(snum, p);
+        if (p.holster_weapon == 1)
+        {
+            if (p.last_pissed_time <= (GAMETICSPERSEC*218) && p.weapon_pos == WEAPON_POS_LOWER)
+            {
+                p.holster_weapon = 0;
+                p.weapon_pos = WEAPON_POS_RAISE;
+                P_DoQuote(QUOTE_WEAPON_RAISED,p);
+            }
+        }
+        else
+        {
+            P_SetWeaponGamevars(snum, p);
 
-//            if (VM_OnEvent(EVENT_FIRE, p.i, snum, -1, 0) == 0)
-//            {
-//                if (G_HaveEvent(EVENT_FIREWEAPON)) // this event is deprecated
-//                    VM_OnEvent(EVENT_FIREWEAPON, p.i, snum, -1, 0);
+            if (VM_OnEvent(EVENT_FIRE, p.i, snum, -1, 0) == 0)
+            {
+                if (G_HaveEvent(EVENT_FIREWEAPON)) // this event is deprecated
+                    VM_OnEvent(EVENT_FIREWEAPON, p.i, snum, -1, 0);
 
-//                switch (PWEAPON(snum, p.curr_weapon, WorksLike))
-//                {
-//                case HANDBOMB_WEAPON:
-//                    p.hbomb_hold_delay = 0;
-//                    if (p.ammo_amount[p.curr_weapon] > 0)
-//                    {
-//                        (*kb)=1;
-//                        if (PWEAPON(snum, p.curr_weapon, InitialSound) > 0)
-//                            A_PlaySound(PWEAPON(snum, p.curr_weapon, InitialSound), p.i);
-//                    }
-//                    break;
+                switch (PWEAPON(snum, p.curr_weapon, WorksLike))
+                {
+                case HANDBOMB_WEAPON:
+                    p.hbomb_hold_delay = 0;
+                    if (p.ammo_amount[p.curr_weapon] > 0)
+                    {
+                        (kb.$)=1;
+                        if (PWEAPON(snum, p.curr_weapon, InitialSound) > 0)
+                            A_PlaySound(PWEAPON(snum, p.curr_weapon, InitialSound), p.i);
+                    }
+                    break;
 
-//                case HANDREMOTE_WEAPON:
-//                    p.hbomb_hold_delay = 0;
-//                    (*kb) = 1;
-//                    if (PWEAPON(snum, p.curr_weapon, InitialSound) > 0)
-//                        A_PlaySound(PWEAPON(snum, p.curr_weapon, InitialSound), p.i);
-//                    break;
+                case HANDREMOTE_WEAPON:
+                    p.hbomb_hold_delay = 0;
+                    (kb.$) = 1;
+                    if (PWEAPON(snum, p.curr_weapon, InitialSound) > 0)
+                        A_PlaySound(PWEAPON(snum, p.curr_weapon, InitialSound), p.i);
+                    break;
 
-//                case SHOTGUN_WEAPON:
-//                    if (p.ammo_amount[p.curr_weapon] > 0 && p.random_club_frame == 0)
-//                    {
-//                        (*kb)=1;
-//                        if (PWEAPON(snum, p.curr_weapon, InitialSound) > 0)
-//                            A_PlaySound(PWEAPON(snum, p.curr_weapon, InitialSound), p.i);
-//                    }
-//                    break;
+                case SHOTGUN_WEAPON:
+                    if (p.ammo_amount[p.curr_weapon] > 0 && p.random_club_frame == 0)
+                    {
+                        (kb.$)=1;
+                        if (PWEAPON(snum, p.curr_weapon, InitialSound) > 0)
+                            A_PlaySound(PWEAPON(snum, p.curr_weapon, InitialSound), p.i);
+                    }
+                    break;
 
-//                case TRIPBOMB_WEAPON:
-//                    if (p.ammo_amount[p.curr_weapon] > 0)
-//                    {
-//                        hitdata_t hit;
-//                        hitscan((const vec3_t *)p,
-//                                p.cursectnum, sintable[(p.ang+512)&2047],
-//                                sintable[p.ang&2047], (100-p.horiz-p.horizoff)*32,
-//                                &hit,CLIPMASK1);
+                case TRIPBOMB_WEAPON:
+                    if (p.ammo_amount[p.curr_weapon] > 0)
+                    {
+                        var hit:hitdata_t ;
+                        hitscan(/*(const vec3_t *)*/p.pos,
+                                p.cursectnum, sintable[(p.ang+512)&2047],
+                                sintable[p.ang&2047], (100-p.horiz-p.horizoff)*32,
+                                hit,CLIPMASK1);
 
-//                        if (hit.sect < 0 || hit.sprite >= 0)
-//                            break;
+                        if (hit.sect < 0 || hit.sprite >= 0)
+                            break;
 
-//                        // ST_2_UNDERWATER
-//                        if (hit.wall >= 0 && sector[hit.sect].lotag > 2)
-//                            break;
+                        // ST_2_UNDERWATER
+                        if (hit.wall >= 0 && sector[hit.sect].lotag > 2)
+                            break;
 
-//                        if (hit.wall >= 0 && wall[hit.wall].overpicnum >= 0)
-//                            if (wall[hit.wall].overpicnum == BIGFORCE)
-//                                break;
+                        if (hit.wall >= 0 && wall[hit.wall].overpicnum >= 0)
+                            if (wall[hit.wall].overpicnum == BIGFORCE)
+                                break;
 
-//                        j = headspritesect[hit.sect];
-//                        while (j >= 0)
-//                        {
-//                            if (sprite[j].picnum == TRIPBOMB &&
-//                                    klabs(sprite[j].z-hit.pos.z) < (12<<8) &&
-//                                    ((sprite[j].x-hit.pos.x)*(sprite[j].x-hit.pos.x)+
-//                                     (sprite[j].y-hit.pos.y)*(sprite[j].y-hit.pos.y)) < (290*290))
-//                                break;
-//                            j = nextspritesect[j];
-//                        }
+                        j = headspritesect[hit.sect];
+                        while (j >= 0)
+                        {
+                            if (sprite[j].picnum == TRIPBOMB &&
+                                    klabs(sprite[j].z-hit.pos.z) < (12<<8) &&
+                                    ((sprite[j].x-hit.pos.x)*(sprite[j].x-hit.pos.x)+
+                                     (sprite[j].y-hit.pos.y)*(sprite[j].y-hit.pos.y)) < (290*290))
+                                break;
+                            j = nextspritesect[j];
+                        }
 
-//                        // ST_2_UNDERWATER
-//                        if (j == -1 && hit.wall >= 0 && (wall[hit.wall].cstat&16) == 0)
-//                            if ((wall[hit.wall].nextsector >= 0 &&
-//                                    sector[wall[hit.wall].nextsector].lotag <= 2) ||
-//                                    (wall[hit.wall].nextsector == -1 && sector[hit.sect].lotag <= 2))
-//                                if (((hit.pos.x-p.pos.x)*(hit.pos.x-p.pos.x) +
-//                                        (hit.pos.y-p.pos.y)*(hit.pos.y-p.pos.y)) < (290*290))
-//                                {
-//                                    p.pos.z = p.opos.z;
-//                                    p.vel.z = 0;
-//                                    (*kb) = 1;
-//                                    if (PWEAPON(snum, p.curr_weapon, InitialSound) > 0)
-//                                    {
-//                                        A_PlaySound(PWEAPON(snum, p.curr_weapon, InitialSound), p.i);
-//                                    }
-//                                }
-//                    }
-//                    break;
+                        // ST_2_UNDERWATER
+                        if (j == -1 && hit.wall >= 0 && (wall[hit.wall].cstat&16) == 0)
+                            if ((wall[hit.wall].nextsector >= 0 &&
+                                    sector[wall[hit.wall].nextsector].lotag <= 2) ||
+                                    (wall[hit.wall].nextsector == -1 && sector[hit.sect].lotag <= 2))
+                                if (((hit.pos.x-p.pos.x)*(hit.pos.x-p.pos.x) +
+                                        (hit.pos.y-p.pos.y)*(hit.pos.y-p.pos.y)) < (290*290))
+                                {
+                                    p.pos.z = p.opos.z;
+                                    p.vel.z = 0;
+                                    (kb.$) = 1;
+                                    if (PWEAPON(snum, p.curr_weapon, InitialSound) > 0)
+                                    {
+                                        A_PlaySound(PWEAPON(snum, p.curr_weapon, InitialSound), p.i);
+                                    }
+                                }
+                    }
+                    break;
 
-//                case PISTOL_WEAPON:
-//                case CHAINGUN_WEAPON:
-//                case SHRINKER_WEAPON:
-//                case GROW_WEAPON:
-//                case FREEZE_WEAPON:
-//                case RPG_WEAPON:
-//                    if (p.ammo_amount[p.curr_weapon] > 0)
-//                    {
-//                        (*kb) = 1;
-//                        if (PWEAPON(snum, p.curr_weapon, InitialSound) > 0)
-//                            A_PlaySound(PWEAPON(snum, p.curr_weapon, InitialSound), p.i);
-//                    }
-//                    break;
+                case PISTOL_WEAPON:
+                case CHAINGUN_WEAPON:
+                case SHRINKER_WEAPON:
+                case GROW_WEAPON:
+                case FREEZE_WEAPON:
+                case RPG_WEAPON:
+                    if (p.ammo_amount[p.curr_weapon] > 0)
+                    {
+                        (kb.$) = 1;
+                        if (PWEAPON(snum, p.curr_weapon, InitialSound) > 0)
+                            A_PlaySound(PWEAPON(snum, p.curr_weapon, InitialSound), p.i);
+                    }
+                    break;
 
-//                case DEVISTATOR_WEAPON:
-//                    if (p.ammo_amount[p.curr_weapon] > 0)
-//                    {
-//                        (*kb) = 1;
-//                        p.hbomb_hold_delay = !p.hbomb_hold_delay;
-//                        if (PWEAPON(snum, p.curr_weapon, InitialSound) > 0)
-//                            A_PlaySound(PWEAPON(snum, p.curr_weapon, InitialSound), p.i);
-//                    }
-//                    break;
+                case DEVISTATOR_WEAPON:
+                    if (p.ammo_amount[p.curr_weapon] > 0)
+                    {
+                        (kb.$) = 1;
+                        p.hbomb_hold_delay = !p.hbomb_hold_delay;
+                        if (PWEAPON(snum, p.curr_weapon, InitialSound) > 0)
+                            A_PlaySound(PWEAPON(snum, p.curr_weapon, InitialSound), p.i);
+                    }
+                    break;
 
-//                case KNEE_WEAPON:
-//                    if (p.quick_kick == 0)
-//                    {
-//                        (*kb) = 1;
-//                        if (PWEAPON(snum, p.curr_weapon, InitialSound) > 0)
-//                            A_PlaySound(PWEAPON(snum, p.curr_weapon, InitialSound), p.i);
-//                    }
-//                    break;
-//                }
-//            }
-//        }
-//    }
-//    else if (*kb)
-//    {
-//        if (PWEAPON(snum, p.curr_weapon, WorksLike) == HANDBOMB_WEAPON)
-//        {
-//            if (PWEAPON(snum, p.curr_weapon, HoldDelay) && ((*kb) == PWEAPON(snum, p.curr_weapon, FireDelay)) && TEST_SYNC_KEY(sb_snum, SK_FIRE))
-//            {
-//                p.rapid_fire_hold = 1;
-//                return;
-//            }
+                case KNEE_WEAPON:
+                    if (p.quick_kick == 0)
+                    {
+                        (kb.$) = 1;
+                        if (PWEAPON(snum, p.curr_weapon, InitialSound) > 0)
+                            A_PlaySound(PWEAPON(snum, p.curr_weapon, InitialSound), p.i);
+                    }
+                    break;
+                }
+            }
+        }
+    }
+    else if (kb.$)
+    {
+        if (PWEAPON(snum, p.curr_weapon, WorksLike) == HANDBOMB_WEAPON)
+        {
+            if (PWEAPON(snum, p.curr_weapon, HoldDelay) && ((kb.$) == PWEAPON(snum, p.curr_weapon, FireDelay)) && TEST_SYNC_KEY(sb_snum, SK_FIRE))
+            {
+                p.rapid_fire_hold = 1;
+                return;
+            }
 
-//            if (++(*kb) == PWEAPON(snum, p.curr_weapon, HoldDelay))
-//            {
-//                p.ammo_amount[p.curr_weapon]--;
+            if (++(kb.$) == PWEAPON(snum, p.curr_weapon, HoldDelay))
+            {
+                p.ammo_amount[p.curr_weapon]--;
 
-//                if (numplayers < 2 || g_netServer)
-//                {
-//                    int32_t lPipeBombControl;
+                if (numplayers < 2 || g_netServer)
+                {
+                    var /*int32_t */lPipeBombControl:number;
 
-//                    if (p.on_ground && TEST_SYNC_KEY(sb_snum, SK_CROUCH))
-//                    {
-//                        k = 15;
-//                        i = ((p.horiz+p.horizoff-100)*20);
-//                    }
-//                    else
-//                    {
-//                        k = 140;
-//                        i = -512-((p.horiz+p.horizoff-100)*20);
-//                    }
+                    if (p.on_ground && TEST_SYNC_KEY(sb_snum, SK_CROUCH))
+                    {
+                        k = 15;
+                        i = ((p.horiz+p.horizoff-100)*20);
+                    }
+                    else
+                    {
+                        k = 140;
+                        i = -512-((p.horiz+p.horizoff-100)*20);
+                    }
 
-//                    j = A_InsertSprite(p.cursectnum,
-//                                       p.pos.x+(sintable[(p.ang+512)&2047]>>6),
-//                                       p.pos.y+(sintable[p.ang&2047]>>6),
-//                                       p.pos.z,PWEAPON(snum, p.curr_weapon, Shoots),-16,9,9,
-//                                       p.ang,(k+(p.hbomb_hold_delay<<5)),i,p.i,1);
+                    j = A_InsertSprite(p.cursectnum,
+                                       p.pos.x+(sintable[(p.ang+512)&2047]>>6),
+                                       p.pos.y+(sintable[p.ang&2047]>>6),
+                                       p.pos.z,PWEAPON(snum, p.curr_weapon, Shoots),-16,9,9,
+                                       p.ang,(k+(p.hbomb_hold_delay<<5)),i,p.i,1);
 
-//                    lPipeBombControl = PIPEBOMB_CONTROL(snum);
+                    lPipeBombControl = PIPEBOMB_CONTROL(snum);
 
-//                    if (lPipeBombControl & PIPEBOMB_TIMER)
-//                    {
+                    if (lPipeBombControl & PIPEBOMB_TIMER)
+                    {
 //#ifdef LUNATIC
 //                        int32_t ltime = g_player[snum].ps.pipebombLifetime;
 //                        int32_t lv = g_player[snum].ps.pipebombLifetimeVar;
 //#else
-//                        int32_t ltime = Gv_GetVarByLabel("GRENADE_LIFETIME", NAM_GRENADE_LIFETIME, -1, snum);
-//                        int32_t lv=Gv_GetVarByLabel("GRENADE_LIFETIME_VAR", NAM_GRENADE_LIFETIME_VAR, -1, snum);
+                        var /*int32_t */ltime = Gv_GetVarByLabel("GRENADE_LIFETIME", NAM_GRENADE_LIFETIME, -1, snum);
+                        var /*int32_t */lv=Gv_GetVarByLabel("GRENADE_LIFETIME_VAR", NAM_GRENADE_LIFETIME_VAR, -1, snum);
 //#endif
-//                        actor[j].t_data[7]= ltime
-//                                            + mulscale(krand(),lv, 14)
-//                                            - lv;
-//                        actor[j].t_data[6]=1;
-//                    }
-//                    else actor[j].t_data[6]=2;
+                        actor[j].t_data[7]= ltime
+                                            + mulscale(krand(),lv, 14)
+                                            - lv;
+                        actor[j].t_data[6]=1;
+                    }
+                    else actor[j].t_data[6]=2;
 
-//                    if (k == 15)
-//                    {
-//                        sprite[j].yvel = 3;
-//                        sprite[j].z += (8<<8);
-//                    }
+                    if (k == 15)
+                    {
+                        sprite[j].yvel = 3;
+                        sprite[j].z += (8<<8);
+                    }
 
-//                    if (A_GetHitscanRange(p.i) < 512)
-//                    {
-//                        sprite[j].ang += 1024;
-//                        sprite[j].zvel /= 3;
-//                        sprite[j].xvel /= 3;
-//                    }
-//                }
+                    if (A_GetHitscanRange(p.i) < 512)
+                    {
+                        sprite[j].ang += 1024;
+                        sprite[j].zvel /= 3;
+                        sprite[j].xvel /= 3;
+                    }
+                }
 
-//                p.hbomb_on = 1;
-//            }
-//            else if ((*kb) < PWEAPON(snum, p.curr_weapon, HoldDelay) && TEST_SYNC_KEY(sb_snum, SK_FIRE))
-//                p.hbomb_hold_delay++;
-//            else if ((*kb) > PWEAPON(snum, p.curr_weapon, TotalTime))
-//            {
-//                (*kb) = 0;
-//                p.weapon_pos = WEAPON_POS_RAISE;
-//                if (PIPEBOMB_CONTROL(snum) == PIPEBOMB_REMOTE)
-//                {
-//                    p.curr_weapon = HANDREMOTE_WEAPON;
-//                    p.last_weapon = -1;
-//                }
-//                else P_CheckWeapon(p);
-//            }
-//        }
-//        else if (PWEAPON(snum, p.curr_weapon, WorksLike) == HANDREMOTE_WEAPON)
-//        {
-//            if (++(*kb) == PWEAPON(snum, p.curr_weapon, FireDelay))
-//            {
-//                if (PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_BOMB_TRIGGER)
-//                    p.hbomb_on = 0;
+                p.hbomb_on = 1;
+            }
+            else if ((kb.$) < PWEAPON(snum, p.curr_weapon, HoldDelay) && TEST_SYNC_KEY(sb_snum, SK_FIRE))
+                p.hbomb_hold_delay++;
+            else if ((kb.$) > PWEAPON(snum, p.curr_weapon, TotalTime))
+            {
+                (kb.$) = 0;
+                p.weapon_pos = WEAPON_POS_RAISE;
+                if (PIPEBOMB_CONTROL(snum) == PIPEBOMB_REMOTE)
+                {
+                    p.curr_weapon = HANDREMOTE_WEAPON;
+                    p.last_weapon = -1;
+                }
+                else P_CheckWeapon(p);
+            }
+        }
+        else if (PWEAPON(snum, p.curr_weapon, WorksLike) == HANDREMOTE_WEAPON)
+        {
+            if (++(kb.$) == PWEAPON(snum, p.curr_weapon, FireDelay))
+            {
+                if (PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_BOMB_TRIGGER)
+                    p.hbomb_on = 0;
 
-//                if (PWEAPON(snum, p.curr_weapon, Shoots) != 0)
-//                {
-//                    if (!(PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_NOVISIBLE))
-//                    {
-//                        lastvisinc = totalclock+32;
-//                        p.visibility = 0;
-//                    }
+                if (PWEAPON(snum, p.curr_weapon, Shoots) != 0)
+                {
+                    if (!(PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_NOVISIBLE))
+                    {
+                        lastvisinc = totalclock+32;
+                        p.visibility = 0;
+                    }
 
-//                    P_SetWeaponGamevars(snum, p);
-//                    A_Shoot(p.i, PWEAPON(snum, p.curr_weapon, Shoots));
-//                }
-//            }
+                    P_SetWeaponGamevars(snum, p);
+                    A_Shoot(p.i, PWEAPON(snum, p.curr_weapon, Shoots));
+                }
+            }
 
-//            if ((*kb) >= PWEAPON(snum, p.curr_weapon, TotalTime))
-//            {
-//                (*kb) = 0;
-//                if ((p.ammo_amount[HANDBOMB_WEAPON] > 0) &&
-//                        PIPEBOMB_CONTROL(snum) == PIPEBOMB_REMOTE)
-//                    P_AddWeapon(p,HANDBOMB_WEAPON);
-//                else P_CheckWeapon(p);
-//            }
-//        }
-//        else
-//        {
-//            // the basic weapon...
-//            (*kb)++;
+            if ((kb.$) >= PWEAPON(snum, p.curr_weapon, TotalTime))
+            {
+                (kb.$) = 0;
+                if ((p.ammo_amount[HANDBOMB_WEAPON] > 0) &&
+                        PIPEBOMB_CONTROL(snum) == PIPEBOMB_REMOTE)
+                    P_AddWeapon(p,HANDBOMB_WEAPON);
+                else P_CheckWeapon(p);
+            }
+        }
+        else
+        {
+            // the basic weapon...
+            (kb.$)++;
 
-//            if (PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_CHECKATRELOAD)
-//            {
-//                if (PWEAPON(snum, p.curr_weapon, WorksLike) == TRIPBOMB_WEAPON)
-//                {
-//                    if ((*kb) >= PWEAPON(snum, p.curr_weapon, TotalTime))
-//                    {
-//                        (*kb) = 0;
-//                        P_CheckWeapon(p);
-//                        p.weapon_pos = WEAPON_POS_LOWER;
-//                    }
-//                }
-//                else if (*kb >= PWEAPON(snum, p.curr_weapon, Reload))
-//                    P_CheckWeapon(p);
-//            }
-//            else if (PWEAPON(snum, p.curr_weapon, WorksLike)!=KNEE_WEAPON && *kb >= PWEAPON(snum, p.curr_weapon, FireDelay))
-//                P_CheckWeapon(p);
+            if (PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_CHECKATRELOAD)
+            {
+                if (PWEAPON(snum, p.curr_weapon, WorksLike) == TRIPBOMB_WEAPON)
+                {
+                    if ((kb.$) >= PWEAPON(snum, p.curr_weapon, TotalTime))
+                    {
+                        (kb.$) = 0;
+                        P_CheckWeapon(p);
+                        p.weapon_pos = WEAPON_POS_LOWER;
+                    }
+                }
+                else if (kb.$ >= PWEAPON(snum, p.curr_weapon, Reload))
+                    P_CheckWeapon(p);
+            }
+            else if (PWEAPON(snum, p.curr_weapon, WorksLike)!=KNEE_WEAPON && kb.$ >= PWEAPON(snum, p.curr_weapon, FireDelay))
+                P_CheckWeapon(p);
 
-//            if (PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_STANDSTILL
-//                    && *kb < (PWEAPON(snum, p.curr_weapon, FireDelay)+1))
-//            {
-//                p.pos.z = p.opos.z;
-//                p.vel.z = 0;
-//            }
+            if (PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_STANDSTILL
+                    && kb.$ < (PWEAPON(snum, p.curr_weapon, FireDelay)+1))
+            {
+                p.pos.z = p.opos.z;
+                p.vel.z = 0;
+            }
 
-//            if (*kb == PWEAPON(snum, p.curr_weapon, Sound2Time))
-//                if (PWEAPON(snum, p.curr_weapon, Sound2Sound) > 0)
-//                    A_PlaySound(PWEAPON(snum, p.curr_weapon, Sound2Sound),p.i);
+            if (kb.$ == PWEAPON(snum, p.curr_weapon, Sound2Time))
+                if (PWEAPON(snum, p.curr_weapon, Sound2Sound) > 0)
+                    A_PlaySound(PWEAPON(snum, p.curr_weapon, Sound2Sound),p.i);
 
-//            if (*kb == PWEAPON(snum, p.curr_weapon, SpawnTime))
-//                P_DoWeaponSpawn(p);
+            if (kb.$ == PWEAPON(snum, p.curr_weapon, SpawnTime))
+                P_DoWeaponSpawn(p);
 
-//            if ((*kb) >= PWEAPON(snum, p.curr_weapon, TotalTime))
-//            {
-//                if (/*!(PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_CHECKATRELOAD) && */ p.reloading == 1 ||
-//                        (PWEAPON(snum, p.curr_weapon, Reload) > PWEAPON(snum, p.curr_weapon, TotalTime) && p.ammo_amount[p.curr_weapon] > 0
-//                         && (PWEAPON(snum, p.curr_weapon, Clip)) && (((p.ammo_amount[p.curr_weapon]%(PWEAPON(snum, p.curr_weapon, Clip)))==0))))
-//                {
-//                    int32_t i = PWEAPON(snum, p.curr_weapon, Reload) - PWEAPON(snum, p.curr_weapon, TotalTime);
+            if ((kb.$) >= PWEAPON(snum, p.curr_weapon, TotalTime))
+            {
+                if (/*!(PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_CHECKATRELOAD) && */ p.reloading == 1 ||
+                        (PWEAPON(snum, p.curr_weapon, Reload) > PWEAPON(snum, p.curr_weapon, TotalTime) && p.ammo_amount[p.curr_weapon] > 0
+                         && (PWEAPON(snum, p.curr_weapon, Clip)) && (((p.ammo_amount[p.curr_weapon]%(PWEAPON(snum, p.curr_weapon, Clip)))==0))))
+                {
+                    var/*int32_t */i = PWEAPON(snum, p.curr_weapon, Reload) - PWEAPON(snum, p.curr_weapon, TotalTime);
 
-//                    p.reloading = 1;
+                    p.reloading = 1;
 
-//                    if ((*kb) != (PWEAPON(snum, p.curr_weapon, TotalTime)))
-//                    {
-//                        if ((*kb) == (PWEAPON(snum, p.curr_weapon, TotalTime)+1))
-//                        {
-//                            if (PWEAPON(snum, p.curr_weapon, ReloadSound1) > 0)
-//                                A_PlaySound(PWEAPON(snum, p.curr_weapon, ReloadSound1),p.i);
-//                        }
-//                        else if (((*kb) == (PWEAPON(snum, p.curr_weapon, Reload) - (i/3)) &&
-//                                  !(PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_RELOAD_TIMING)) ||
-//                                 ((*kb) == (PWEAPON(snum, p.curr_weapon, Reload) - i+4) &&
-//                                  (PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_RELOAD_TIMING)))
-//                        {
-//                            if (PWEAPON(snum, p.curr_weapon, ReloadSound2) > 0)
-//                                A_PlaySound(PWEAPON(snum, p.curr_weapon, ReloadSound2),p.i);
-//                        }
-//                        else if ((*kb) >= (PWEAPON(snum, p.curr_weapon, Reload)))
-//                        {
-//                            *kb=0;
-//                            p.reloading = 0;
-//                        }
-//                    }
-//                }
-//                else
-//                {
-//                    if (PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_AUTOMATIC &&
-//                            (PWEAPON(snum, p.curr_weapon, WorksLike)==KNEE_WEAPON?1:p.ammo_amount[p.curr_weapon] > 0))
-//                    {
-//                        if (TEST_SYNC_KEY(sb_snum, SK_FIRE))
-//                        {
-//                            if (PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_RANDOMRESTART)
-//                                *kb = 1+(krand()&3);
-//                            else *kb=1;
-//                        }
-//                        else *kb = 0;
-//                    }
-//                    else *kb = 0;
+                    if ((kb.$) != (PWEAPON(snum, p.curr_weapon, TotalTime)))
+                    {
+                        if ((kb.$) == (PWEAPON(snum, p.curr_weapon, TotalTime)+1))
+                        {
+                            if (PWEAPON(snum, p.curr_weapon, ReloadSound1) > 0)
+                                A_PlaySound(PWEAPON(snum, p.curr_weapon, ReloadSound1),p.i);
+                        }
+                        else if (((kb.$) == (PWEAPON(snum, p.curr_weapon, Reload) - (i/3)) &&
+                                  !(PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_RELOAD_TIMING)) ||
+                                 ((kb.$) == (PWEAPON(snum, p.curr_weapon, Reload) - i+4) &&
+                                  (PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_RELOAD_TIMING)))
+                        {
+                            if (PWEAPON(snum, p.curr_weapon, ReloadSound2) > 0)
+                                A_PlaySound(PWEAPON(snum, p.curr_weapon, ReloadSound2),p.i);
+                        }
+                        else if ((kb.$) >= (PWEAPON(snum, p.curr_weapon, Reload)))
+                        {
+                            kb.$=0;
+                            p.reloading = 0;
+                        }
+                    }
+                }
+                else
+                {
+                    if (PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_AUTOMATIC &&
+                            (PWEAPON(snum, p.curr_weapon, WorksLike)==KNEE_WEAPON?1:p.ammo_amount[p.curr_weapon] > 0))
+                    {
+                        if (TEST_SYNC_KEY(sb_snum, SK_FIRE))
+                        {
+                            if (PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_RANDOMRESTART)
+                                kb.$ = 1+(krand()&3);
+                            else kb.$=1;
+                        }
+                        else kb.$ = 0;
+                    }
+                    else kb.$ = 0;
 
-//                    if (PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_RESET &&
-//                            ((PWEAPON(snum, p.curr_weapon, WorksLike) == KNEE_WEAPON)?1:p.ammo_amount[p.curr_weapon] > 0))
-//                    {
-//                        if (TEST_SYNC_KEY(sb_snum, SK_FIRE)) *kb = 1;
-//                        else *kb = 0;
-//                    }
-//                }
-//            }
-//            else if (*kb >= PWEAPON(snum, p.curr_weapon, FireDelay) && (*kb) < PWEAPON(snum, p.curr_weapon, TotalTime)
-//                     && ((PWEAPON(snum, p.curr_weapon, WorksLike) == KNEE_WEAPON)?1:p.ammo_amount[p.curr_weapon] > 0))
-//            {
-//                if (PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_AUTOMATIC)
-//                {
-//                    if (!(PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_SEMIAUTO))
-//                    {
-//                        if (TEST_SYNC_KEY(sb_snum, SK_FIRE) == 0 && PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_RESET)
-//                            *kb = 0;
-//                        if (PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_FIREEVERYTHIRD)
-//                        {
-//                            if (((*(kb))%3) == 0)
-//                            {
-//                                P_FireWeapon(p);
-//                                P_DoWeaponSpawn(p);
-//                            }
-//                        }
-//                        else if (PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_FIREEVERYOTHER)
-//                        {
-//                            P_FireWeapon(p);
-//                            P_DoWeaponSpawn(p);
-//                        }
-//                        else
-//                        {
-//                            if (*kb == PWEAPON(snum, p.curr_weapon, FireDelay))
-//                            {
-//                                P_FireWeapon(p);
-//                                //                                P_DoWeaponSpawn(p);
-//                            }
-//                        }
-//                        if (PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_RESET &&
-//                                (*kb) > PWEAPON(snum, p.curr_weapon, TotalTime)-PWEAPON(snum, p.curr_weapon, HoldDelay) &&
-//                                ((PWEAPON(snum, p.curr_weapon, WorksLike) == KNEE_WEAPON) || p.ammo_amount[p.curr_weapon] > 0))
-//                        {
-//                            if (TEST_SYNC_KEY(sb_snum, SK_FIRE)) *kb = 1;
-//                            else *kb = 0;
-//                        }
-//                    }
-//                    else
-//                    {
-//                        if (PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_FIREEVERYOTHER)
-//                        {
-//                            P_FireWeapon(p);
-//                            P_DoWeaponSpawn(p);
-//                        }
-//                        else
-//                        {
-//                            if (*kb == PWEAPON(snum, p.curr_weapon, FireDelay))
-//                            {
-//                                P_FireWeapon(p);
-//                                //                                P_DoWeaponSpawn(p);
-//                            }
-//                        }
-//                    }
-//                }
-//                else if (*kb == PWEAPON(snum, p.curr_weapon, FireDelay))
-//                    P_FireWeapon(p);
-//            }
-//        }
-//    }
+                    if (PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_RESET &&
+                            ((PWEAPON(snum, p.curr_weapon, WorksLike) == KNEE_WEAPON)?1:p.ammo_amount[p.curr_weapon] > 0))
+                    {
+                        if (TEST_SYNC_KEY(sb_snum, SK_FIRE)) kb.$ = 1;
+                        else kb.$ = 0;
+                    }
+                }
+            }
+            else if (kb.$ >= PWEAPON(snum, p.curr_weapon, FireDelay) && (kb.$) < PWEAPON(snum, p.curr_weapon, TotalTime)
+                     && ((PWEAPON(snum, p.curr_weapon, WorksLike) == KNEE_WEAPON)?1:p.ammo_amount[p.curr_weapon] > 0))
+            {
+                if (PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_AUTOMATIC)
+                {
+                    if (!(PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_SEMIAUTO))
+                    {
+                        if (TEST_SYNC_KEY(sb_snum, SK_FIRE) == 0 && PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_RESET)
+                            kb.$ = 0;
+                        if (PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_FIREEVERYTHIRD)
+                        {
+                            if (((kb.$)%3) == 0)
+                            {
+                                P_FireWeapon(p);
+                                P_DoWeaponSpawn(p);
+                            }
+                        }
+                        else if (PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_FIREEVERYOTHER)
+                        {
+                            P_FireWeapon(p);
+                            P_DoWeaponSpawn(p);
+                        }
+                        else
+                        {
+                            if (kb.$ == PWEAPON(snum, p.curr_weapon, FireDelay))
+                            {
+                                P_FireWeapon(p);
+                                //                                P_DoWeaponSpawn(p);
+                            }
+                        }
+                        if (PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_RESET &&
+                                (kb.$) > PWEAPON(snum, p.curr_weapon, TotalTime)-PWEAPON(snum, p.curr_weapon, HoldDelay) &&
+                                ((PWEAPON(snum, p.curr_weapon, WorksLike) == KNEE_WEAPON) || p.ammo_amount[p.curr_weapon] > 0))
+                        {
+                            if (TEST_SYNC_KEY(sb_snum, SK_FIRE)) kb.$ = 1;
+                            else kb.$ = 0;
+                        }
+                    }
+                    else
+                    {
+                        if (PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_FIREEVERYOTHER)
+                        {
+                            P_FireWeapon(p);
+                            P_DoWeaponSpawn(p);
+                        }
+                        else
+                        {
+                            if (kb.$ == PWEAPON(snum, p.curr_weapon, FireDelay))
+                            {
+                                P_FireWeapon(p);
+                                //                                P_DoWeaponSpawn(p);
+                            }
+                        }
+                    }
+                }
+                else if (kb.$ == PWEAPON(snum, p.curr_weapon, FireDelay))
+                    P_FireWeapon(p);
+            }
+        }
+    }
 }
 
 function/*int32_t */P_DoFist(p: DukePlayer_t):number
