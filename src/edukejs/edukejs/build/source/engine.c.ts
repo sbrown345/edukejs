@@ -11456,35 +11456,35 @@ function loadtile(tilenume: number): void
 //}
 
 
-////
-//// clipinsidebox
-////
-//int32_t clipinsidebox(int32_t x, int32_t y, int16_t wallnum, int32_t walldist)
-//{
-//    walltype *wal;
-//    int32_t x1, y1, x2, y2;
+//
+// clipinsidebox
+//
+function /*int32_t */clipinsidebox(/*int32_t */x:number, /*int32_t */y:number, /*int16_t */wallnum:number, /*int32_t */walldist:number):number
+{
+    var wal:walltype;
+    var /*int32_t */x1:number, y1:number, x2:number, y2:number;
 
-//    const int32_t r = walldist<<1;
+    var r = walldist<<1;
 
-//    wal = &wall[wallnum];     x1 = wal.x+walldist-x; y1 = wal.y+walldist-y;
-//    wal = &wall[wal.point2]; x2 = wal.x+walldist-x; y2 = wal.y+walldist-y;
+    wal = wall[wallnum];     x1 = wal.x+walldist-x; y1 = wal.y+walldist-y;
+    wal = wall[wal.point2];  x2 = wal.x+walldist-x; y2 = wal.y+walldist-y;
 
-//    if ((x1 < 0) && (x2 < 0)) return(0);
-//    if ((y1 < 0) && (y2 < 0)) return(0);
-//    if ((x1 >= r) && (x2 >= r)) return(0);
-//    if ((y1 >= r) && (y2 >= r)) return(0);
+    if ((x1 < 0) && (x2 < 0)) return(0);
+    if ((y1 < 0) && (y2 < 0)) return(0);
+    if ((x1 >= r) && (x2 >= r)) return(0);
+    if ((y1 >= r) && (y2 >= r)) return(0);
 
-//    x2 -= x1; y2 -= y1;
-//    if (x2*(walldist-y1) >= y2*(walldist-x1))  //Front
-//    {
-//        if (x2 > 0) x2 *= (0-y1); else x2 *= (r-y1);
-//        if (y2 > 0) y2 *= (r-x1); else y2 *= (0-x1);
-//        return(x2 < y2);
-//    }
-//    if (x2 > 0) x2 *= (r-y1); else x2 *= (0-y1);
-//    if (y2 > 0) y2 *= (0-x1); else y2 *= (r-x1);
-//    return((x2 >= y2)<<1);
-//}
+    x2 -= x1; y2 -= y1;
+    if (x2*(walldist-y1) >= y2*(walldist-x1))  //Front
+    {
+        if (x2 > 0) x2 *= (0-y1); else x2 *= (r-y1);
+        if (y2 > 0) y2 *= (r-x1); else y2 *= (0-x1);
+        return(x2 < y2)?1:0;
+    }
+    if (x2 > 0) x2 *= (r-y1); else x2 *= (0-y1);
+    if (y2 > 0) y2 *= (0-x1); else y2 *= (r-x1);
+    return(((x2 >= y2)?1:0)<<1);
+}
 
 
 //
@@ -11585,33 +11585,33 @@ function inside(/*int32_t*/ x: number, /*int32_t*/ y: number, /*int16_t*/ sectnu
     return -1;
 }
 
-//int32_t __fastcall getangle(int32_t xvect, int32_t yvect)
-//{
-//    if ((xvect|yvect) == 0) return(0);
-//    if (xvect == 0) return 512+((yvect<0)<<10);
-//    if (yvect == 0) return ((xvect<0)<<10);
-//    if (xvect == yvect) return 256+((xvect<0)<<10);
-//    if (xvect == -yvect) return 768+((xvect>0)<<10);
-//    if (klabs(xvect) > klabs(yvect))
-//        return ((radarang[640+scale(160,yvect,xvect)]>>6)+((xvect<0)<<10))&2047;
-//    return ((radarang[640-scale(160,xvect,yvect)]>>6)+512+((yvect<0)<<10))&2047;
-//}
+function /*int32_t */getangle(/*int32_t */xvect:number, /*int32_t */yvect:number)
+{
+    if ((xvect|yvect) == 0) return(0);
+    if (xvect == 0) return 512+((yvect<0)<<10);
+    if (yvect == 0) return ((xvect<0)<<10);
+    if (xvect == yvect) return 256+((xvect<0)<<10);
+    if (xvect == -yvect) return 768+((xvect>0)<<10);
+    if (klabs(xvect) > klabs(yvect))
+        return ((radarang[640+scale(160,yvect,xvect)]>>6)+((xvect<0)<<10))&2047;
+    return ((radarang[640-scale(160,xvect,yvect)]>>6)+512+((yvect<0)<<10))&2047;
+}
 
-////
-//// ksqrt
-////
-//int32_t ksqrt(uint32_t num)
-//{
-//    return nsqrtasm(num);
-//}
+//
+// ksqrt
+//
+function /*int32_t */ ksqrt(/*uint32_t*/ num:number):number
+{
+    return nsqrtasm(num);
+}
 
-////
-//// krecip
-////
-//int32_t krecip(int32_t num)
-//{
-//    return krecipasm(num);
-//}
+//
+// krecip
+//
+function/*int32_t */krecip(/*int32_t*/ num:number):number
+{todoThrow();return -99999999999999;
+    //return krecipasm(num);
+}
 
 //#ifdef LUNATIC
 //int32_t Mulscale(int32_t a, int32_t b, int32_t sh)
@@ -12157,7 +12157,7 @@ function /*static int32_t */get_floorspr_clipyou(/*int32_t */x1: number, /*int32
 
 function/*int32_t */hitscan(/*const vec3_t **/sv: vec3_t, /*int16_t */sectnum: number, /*int32_t */vx: number, /*int32_t */vy: number, /*int32_t */vz: number,
                 hit: hitdata_t , /*uint32_t */cliptype: number): number
-{todoThrow("hitscan");
+{
 //    int32_t x1, y1=0, z1=0, x2, y2, intx, inty, intz;
 //    int32_t i, k, daz;
 //    int16_t tempshortcnt, tempshortnum;
@@ -13401,36 +13401,36 @@ function /*int32_t */clipmove(pos: IVec3, /*int16_t **/sectnum: R<number>,
 }
 
 
-////
-//// pushmove
-////
-//int32_t pushmove(vec3_t *vect, int16_t *sectnum,
-//                 int32_t walldist, int32_t ceildist, int32_t flordist, uint32_t cliptype)
-//{
-//    int32_t i, j, k, t, dx, dy, dax, day, daz;
-//    int32_t dir, bad, bad2;
+//
+// pushmove
+//
+function /*int32_t */pushmove(/*vec3_t **/vect:IVec3, /*int16_t **/sectnum: R<number>,
+                 /*int32_t */walldist:number, /*int32_t */ceildist:number, /*int32_t */flordist:number, /*uint32_t */cliptype:number):number
+{
+    var/*int32_t */i=0, j=0, k=0, t=0, dx=0, dy=0, dax=0, day=0, daz=0;
+    var /*int32_t */dir=0, bad=0, bad2=0;
 
-//    const int32_t dawalclipmask = (cliptype&65535);
-////    const int32_t dasprclipmask = (cliptype>>16);
+    var/*const int32_t */dawalclipmask = (cliptype&65535);
+//    const int32_t dasprclipmask = (cliptype>>16);
 
-//    if (*sectnum < 0)
-//        return -1;
+    if (sectnum.$ < 0)
+        return -1;
 
-//    k = 32;
-//    dir = 1;
-//    do
-//    {
-//        int32_t clipsectcnt;
+    k = 32;
+    dir = 1;
+    do
+    {
+        var /*int32_t */clipsectcnt:number;
 
-//        bad = 0;
+        bad = 0;
 
-//        clipsectorlist[0] = *sectnum;
-//        clipsectcnt = 0; clipsectnum = 1;
-//        do
-//        {
-//            const walltype *wal;
-//            const sectortype *sec;
-//            int32_t startwall, endwall;
+        clipsectorlist[0] = sectnum.$;
+        clipsectcnt = 0; clipsectnum = 1;
+        do
+        {
+            var wal:walltype, walIdx:number ;
+            var /*const */sec:sectortype ;
+            var/*int32_t */startwall:number, endwall:number;
 //#if 0
 //            // Push FACE sprites
 //            for(i=headspritesect[clipsectorlist[clipsectcnt]];i>=0;i=nextspritesect[i])
@@ -13464,83 +13464,84 @@ function /*int32_t */clipmove(pos: IVec3, /*int16_t **/sectnum: R<number>,
 //                }
 //            }
 //#endif
-//            sec = &sector[clipsectorlist[clipsectcnt]];
-//            if (dir > 0)
-//                startwall = sec.wallptr, endwall = startwall + sec.wallnum;
-//            else
-//                endwall = sec.wallptr, startwall = endwall + sec.wallnum;
+            sec = sector[clipsectorlist[clipsectcnt]];
+            if (dir > 0)
+                startwall = sec.wallptr, endwall = startwall + sec.wallnum;
+            else
+                endwall = sec.wallptr, startwall = endwall + sec.wallnum;
 
-//            for (i=startwall,wal=&wall[startwall]; i!=endwall; i+=dir,wal+=dir)
-//                if (clipinsidebox(vect.x,vect.y,i,walldist-4) == 1)
-//                {
-//                    j = 0;
-//                    if (wal.nextsector < 0) j = 1;
-//                    if (wal.cstat&dawalclipmask) j = 1;
-//                    if (j == 0)
-//                    {
-//                        const sectortype *const sec2 = &sector[wal.nextsector];
-//                        int32_t daz2;
+         //for (i=startwall,wal=&wall[startwall];      i!=endwall; i+=dir,wal+=dir)
+            for(i=startwall,wal=wall[walIdx=startwall];i!=endwall; i+=dir,walIdx+=dir,wal=wall[walIdx])
+                if (clipinsidebox(vect.x,vect.y,i,walldist-4) == 1)
+                {
+                    j = 0;
+                    if (wal.nextsector < 0) j = 1;
+                    if (wal.cstat&dawalclipmask) j = 1;
+                    if (j == 0)
+                    {
+                        var sec2 = sector[wal.nextsector];
+                        var /*int32_t */daz2:number;
 
-//                        //Find closest point on wall (dax, day) to (vect.x, vect.y)
-//                        dax = wall[wal.point2].x-wal.x;
-//                        day = wall[wal.point2].y-wal.y;
-//                        daz = dax*((vect.x)-wal.x) + day*((vect.y)-wal.y);
-//                        if (daz <= 0)
-//                            t = 0;
-//                        else
-//                        {
-//                            daz2 = dax*dax+day*day;
-//                            if (daz >= daz2) t = (1<<30); else t = divscale30(daz,daz2);
-//                        }
-//                        dax = wal.x + mulscale30(dax,t);
-//                        day = wal.y + mulscale30(day,t);
+                        //Find closest point on wall (dax, day) to (vect.x, vect.y)
+                        dax = wall[wal.point2].x-wal.x;
+                        day = wall[wal.point2].y-wal.y;
+                        daz = dax*((vect.x)-wal.x) + day*((vect.y)-wal.y);
+                        if (daz <= 0)
+                            t = 0;
+                        else
+                        {
+                            daz2 = dax*dax+day*day;
+                            if (daz >= daz2) t = (1<<30); else t = divscale30(daz,daz2);
+                        }
+                        dax = wal.x + mulscale30(dax,t);
+                        day = wal.y + mulscale30(day,t);
 
 
-//                        daz = getflorzofslope(clipsectorlist[clipsectcnt],dax,day);
-//                        daz2 = getflorzofslope(wal.nextsector,dax,day);
-//                        if ((daz2 < daz-(1<<8)) && ((sec2.floorstat&1) == 0))
-//                            if (vect.z >= daz2-(flordist-1)) j = 1;
+                        daz = getflorzofslope(clipsectorlist[clipsectcnt],dax,day);
+                        daz2 = getflorzofslope(wal.nextsector,dax,day);
+                        if ((daz2 < daz-(1<<8)) && ((sec2.floorstat&1) == 0))
+                            if (vect.z >= daz2-(flordist-1)) j = 1;
 
-//                        daz = getceilzofslope(clipsectorlist[clipsectcnt],dax,day);
-//                        daz2 = getceilzofslope(wal.nextsector,dax,day);
-//                        if ((daz2 > daz+(1<<8)) && ((sec2.ceilingstat&1) == 0))
-//                            if (vect.z <= daz2+(ceildist-1)) j = 1;
-//                    }
+                        daz = getceilzofslope(clipsectorlist[clipsectcnt],dax,day);
+                        daz2 = getceilzofslope(wal.nextsector,dax,day);
+                        if ((daz2 > daz+(1<<8)) && ((sec2.ceilingstat&1) == 0))
+                            if (vect.z <= daz2+(ceildist-1)) j = 1;
+                    }
 
-//                    if (j != 0)
-//                    {
-//                        j = getangle(wall[wal.point2].x-wal.x,wall[wal.point2].y-wal.y);
-//                        dx = (sintable[(j+1024)&2047]>>11);
-//                        dy = (sintable[(j+512)&2047]>>11);
-//                        bad2 = 16;
-//                        do
-//                        {
-//                            vect.x = (vect.x) + dx; vect.y = (vect.y) + dy;
-//                            bad2--; if (bad2 == 0) break;
-//                        }
-//                        while (clipinsidebox(vect.x,vect.y,i,walldist-4) != 0);
-//                        bad = -1;
-//                        k--; if (k <= 0) return(bad);
-//                        updatesector(vect.x,vect.y,sectnum);
-//                        if (*sectnum < 0) return -1;
-//                    }
-//                    else
-//                    {
-//                        for (j=clipsectnum-1; j>=0; j--)
-//                            if (wal.nextsector == clipsectorlist[j]) break;
-//                        if (j < 0) clipsectorlist[clipsectnum++] = wal.nextsector;
-//                    }
-//                }
+                    if (j != 0)
+                    {
+                        j = getangle(wall[wal.point2].x-wal.x,wall[wal.point2].y-wal.y);
+                        dx = (sintable[(j+1024)&2047]>>11);
+                        dy = (sintable[(j+512)&2047]>>11);
+                        bad2 = 16;
+                        do
+                        {
+                            vect.x = (vect.x) + dx; vect.y = (vect.y) + dy;
+                            bad2--; if (bad2 == 0) break;
+                        }
+                        while (clipinsidebox(vect.x,vect.y,i,walldist-4) != 0);
+                        bad = -1;
+                        k--; if (k <= 0) return(bad);
+                        updatesector(vect.x,vect.y,sectnum);
+                        if (sectnum.$ < 0) return -1;
+                    }
+                    else
+                    {
+                        for (j=clipsectnum-1; j>=0; j--)
+                            if (wal.nextsector == clipsectorlist[j]) break;
+                        if (j < 0) clipsectorlist[clipsectnum++] = wal.nextsector;
+                    }
+                }
 
-//            clipsectcnt++;
-//        }
-//        while (clipsectcnt < clipsectnum);
-//        dir = -dir;
-//    }
-//    while (bad != 0);
+            clipsectcnt++;
+        }
+        while (clipsectcnt < clipsectnum);
+        dir = -dir;
+    }
+    while (bad != 0);
 
-//    return(bad);
-//}
+    return(bad);
+}
 
 
 //// breadth-first search helpers

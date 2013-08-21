@@ -200,9 +200,9 @@ class input_t {
 
 //#pragma pack(push,1)
 //// XXX: r1625 changed a lot types here, among others
-////  * int32_t --> int16_t
-////  * int16_t --> int8_t
-////  * char --> int8_t
+////  * int32_t -. int16_t
+////  * int16_t -. int8_t
+////  * char -. int8_t
 //// Need to carefully think about implications!
 //// TODO: rearrange this if the opportunity arises!
 //// KEEPINSYNC lunatic/defs.ilua
@@ -270,7 +270,7 @@ class DukePlayer_t {
 //    int8_t palsfadespeed, palsfadenext, palsfadeprio, padding2_;
 
 //    // The player index. Always valid since we have no loose DukePlayer_t's
-//    // anywhere (like with spritetype_t): g_player[i].ps->wa.idx == i.
+//    // anywhere (like with spritetype_t): g_player[i].ps.wa.idx == i.
 //    struct { int32_t idx; } wa;
 //#endif
 //    int8_t padding_;
@@ -471,7 +471,7 @@ var aplWeaponFlashColor: Int32Array[] = new Array(MAX_WEAPONS);      // Color fo
 //// KEEPINSYNC lunatic/defs.ilua
 //typedef struct {
 //    int32_t cur, count;  // "cur" is the only member that is *used*
-//    int32_t gunposx, lookhalfang;  // weapon_xoffset, ps->look_ang>>1
+//    int32_t gunposx, lookhalfang;  // weapon_xoffset, ps.look_ang>>1
 //    int32_t gunposy, lookhoriz;  // gun_pos, looking_arc
 //    int32_t shade;
 //} hudweapon_t;
@@ -493,30 +493,30 @@ var g_player: playerdata_t[] = newStructArray<playerdata_t>(playerdata_t, MAXPLA
 //extern int32_t          mouseyaxismode;
 //extern int32_t          ticrandomseed;
 
-//#define SHOOT_HARDCODED_ZVEL INT32_MIN
+var SHOOT_HARDCODED_ZVEL=INT32_MIN;
 
 //int32_t     A_ShootWithZvel(int32_t i, int32_t atwith, int32_t override_zvel);
-//static inline int32_t A_Shoot(int32_t i, int32_t atwith)
-//{
-//    return A_ShootWithZvel(i, atwith, SHOOT_HARDCODED_ZVEL);
-//}
+function /*int32_t */A_Shoot(/*int32_t */i:number, /*int32_t */atwith:number):number
+{
+    return A_ShootWithZvel(i, atwith, SHOOT_HARDCODED_ZVEL);
+}
 
-//static inline void P_PalFrom(DukePlayer_t *p, uint8_t f, uint8_t r, uint8_t g, uint8_t b)
-//{
+function P_PalFrom(/*DukePlayer_t **/p:DukePlayer_t, /*uint8_t*/ f:number, /*uint8_t*/ r:number, /*uint8_t*/ g:number, /*uint8_t*/ b:number): void
+{
 //#ifdef LUNATIC
 //    // Compare with defs.ilua: player[]:_palfrom().
-//    if (p->pals.f == 0 || p->palsfadeprio <= 0)
+//    if (p.pals.f == 0 || p.palsfadeprio <= 0)
 //#endif
-//    {
-//        p->pals.f = f;
-//        p->pals.r = r;
-//        p->pals.g = g;
-//        p->pals.b = b;
+    {
+        p.pals.f = f;
+        p.pals.r = r;
+        p.pals.g = g;
+        p.pals.b = b;
 //#ifdef LUNATIC
-//        p->palsfadespeed = p->palsfadenext = 0;
+//        p.palsfadespeed = p.palsfadenext = 0;
 //#endif
-//    }
-//}
+    }
+}
 
 //int32_t     A_GetHitscanRange(int32_t i);
 //void        P_GetInput(int32_t snum);

@@ -39,57 +39,57 @@ function GTFLAGS(x: number) {return GametypeFlags[ud.coop] & x;}
 //#define TRAVERSE_SPRITE_STAT(l, o, n)    (o) = (l); ((o) != -1) && ((n) = nextspritestat[o]); (o) = (n)
 //#define TRAVERSE_CONNECT(i)              i = 0; i != -1; i = connectpoint2[i]
 
-//#define TEST(flags,mask) ((flags) & (mask))
-//#define SET(flags,mask) ((flags) |= (mask))
-//#define RESET(flags,mask) ((flags) &= ~(mask))
-//#define FLIP(flags,mask) ((flags) ^= (mask))
+function TEST(flags:number,mask:number) :number {return (flags) & (mask)?1:0;}
+function SET(flags:number,mask:number)  :number {return (flags) |= (mask)?1:0;}
+function RESET(flags:number,mask:number):number {return (flags) &= ~(mask)?1:0;}
+function FLIP(flags:number,mask:number) :number {return (flags) ^= (mask)?1:0;}
 
-//// mask definitions
+// mask definitions
 
-//#define BIT(shift)     (1u<<(shift))
+function BIT(shift:number):number {return 1<<(shift);}
 
-//#define TEST_SYNC_KEY(bits, sync_num) TEST(bits, BIT(sync_num))
+function TEST_SYNC_KEY(bits:number, sync_num:number):number {return TEST(bits, BIT(sync_num)); }
 
 //#define AFLAMABLE(X) (X==BOX||X==TREE1||X==TREE2||X==TIRE||X==CONE)
 //#define rnd(X) ((krand()>>8)>=(255-(X)))
 
-////
-//// NETWORK - REDEFINABLE SHARED (SYNC) KEYS BIT POSITIONS
-////
+//
+// NETWORK - REDEFINABLE SHARED (SYNC) KEYS BIT POSITIONS
+//
 
-//#define SK_JUMP         0
-//#define SK_CROUCH       1
-//#define SK_FIRE         2
-//#define SK_AIM_UP       3
-//#define SK_AIM_DOWN     4
-//#define SK_RUN          5
-//#define SK_LOOK_LEFT    6
-//#define SK_LOOK_RIGHT   7
-//// weapons take up 4 bits...
-//#define SK_WEAPON_BITS  8
-//#define SK_WEAPON_BITS1 9
-//#define SK_WEAPON_BITS2 10
-//#define SK_WEAPON_BITS3 11
-//#define SK_STEROIDS     12
-//#define SK_LOOK_UP      13
-//#define SK_LOOK_DOWN    14
-//#define SK_NIGHTVISION  15
-//#define SK_MEDKIT       16
-//#define SK_MULTIFLAG    17
-//#define SK_CENTER_VIEW  18
-//#define SK_HOLSTER      19
-//#define SK_INV_LEFT     20
-//#define SK_PAUSE        21
-//#define SK_QUICK_KICK   22
-//#define SK_AIMMODE      23
-//#define SK_HOLODUKE     24
-//#define SK_JETPACK      25
-//#define SK_GAMEQUIT     26
-//#define SK_INV_RIGHT    27
-//#define SK_TURNAROUND   28
-//#define SK_OPEN         29
-//#define SK_INVENTORY    30
-//#define SK_ESCAPE       31
+var SK_JUMP        = 0;
+var SK_CROUCH      = 1;
+var SK_FIRE        = 2;
+var SK_AIM_UP      = 3;
+var SK_AIM_DOWN    = 4;
+var SK_RUN         = 5;
+var SK_LOOK_LEFT   = 6;
+var SK_LOOK_RIGHT  = 7;
+// weapons take up 4 bits...
+var SK_WEAPON_BITS = 8;
+var SK_WEAPON_BITS1= 9;
+var SK_WEAPON_BITS2= 10;
+var SK_WEAPON_BITS3= 11;
+var SK_STEROIDS    = 12;
+var SK_LOOK_UP     = 13;
+var SK_LOOK_DOWN   = 14;
+var SK_NIGHTVISION = 15;
+var SK_MEDKIT      = 16;
+var SK_MULTIFLAG   = 17;
+var SK_CENTER_VIEW = 18;
+var SK_HOLSTER     = 19;
+var SK_INV_LEFT    = 20;
+var SK_PAUSE       = 21;
+var SK_QUICK_KICK  = 22;
+var SK_AIMMODE     = 23;
+var SK_HOLODUKE    = 24;
+var SK_JETPACK     = 25;
+var SK_GAMEQUIT    = 26;
+var SK_INV_RIGHT   = 27;
+var SK_TURNAROUND  = 28;
+var SK_OPEN        = 29;
+var SK_INVENTORY   = 30;
+var SK_ESCAPE      = 31;
     
 //// rotatesprite flags
 //#define ROTATE_SPRITE_TRANSLUCENT   (BIT(0))

@@ -355,7 +355,9 @@ void FX_SetReverbDelay
 )
 
 {
+#ifdef DEBUG_TODO
     MV_SetReverbDelay(delay);
+#endif
 }
 
 
@@ -371,7 +373,11 @@ int32_t FX_VoiceAvailable
 )
 
 {
+#ifdef DEBUG_TODO
     return MV_VoiceAvailable(priority);
+#else
+	return 0;
+#endif
 }
 
 /*---------------------------------------------------------------------

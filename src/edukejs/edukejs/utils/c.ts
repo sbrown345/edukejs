@@ -83,6 +83,11 @@ var labs = Math.abs;
 var fabs = Math.abs;
 var sqrt = Math.sqrt;
 
+function rand() {
+    todo("rand");
+    return 10;
+}
+
 function memcmp(buf1 : Uint8Array, buf2 : Uint8Array, count : number) : number {
     for (var i = 0; i < count; i++) {
         if(buf1[i] === buf2[i]) {

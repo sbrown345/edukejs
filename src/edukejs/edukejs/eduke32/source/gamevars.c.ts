@@ -765,8 +765,8 @@ function wtf(){
     CON_ERRPRINTF("Gv_GetVar()(){ WTF?\n"); }
 }
 
-//void __fastcall Gv_SetVar(register int32_t id, register int32_t lValue, register int32_t iActor, register int32_t iPlayer)
-//{
+function Gv_SetVar(/*int32_t */id:number, /*int32_t */lValue:number, /*int32_t */iActor:number, /*int32_t */iPlayer:number):void 
+{todoThrow();
 //    if ((unsigned)id >= (unsigned)g_gameVarCount) goto badvarid;
 
 //    //Bsprintf(g_szBuf,"SGVI: %d (\"%s\") to %d for %d %d",id,aGameVars[id].szLabel,lValue,iActor,iPlayer);
@@ -806,8 +806,8 @@ function wtf(){
 //    CON_ERRPRINTF("Gv_SetVar(): invalid index (%d) for gamevar %s from sprite %d, player %d\n",
 //               aGameVars[id].dwFlags & GAMEVAR_PERACTOR ? iActor : iPlayer,
 //               aGameVars[id].szLabel,vm.g_i,vm.g_p);
-//    return;
-//}
+    return;
+}
 
 //int32_t __fastcall Gv_GetVarX(register int32_t id)
 //{

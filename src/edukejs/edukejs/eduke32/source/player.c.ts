@@ -1,3 +1,69 @@
+/// <reference path="../../utils/assert.ts" />
+/// <reference path="../../utils/c.ts" />
+/// <reference path="../../utils/todo.ts" />
+/// <reference path="../../utils/types.ts" />
+
+/// <reference path="../../build/headers/baselayer.h.ts" />
+/// <reference path="../../build/headers/build.h.ts" />
+/// <reference path="../../build/headers/cache1d.h.ts" />
+/// <reference path="../../build/headers/compat.h.ts" />
+/// <reference path="../../build/headers/engine_priv.h.ts" />
+/// <reference path="../../build/headers/hightile.h.ts" />
+/// <reference path="../../build/headers/mdsprite.h.ts" />
+/// <reference path="../../build/headers/osd.h.ts" />
+/// <reference path="../../build/headers/pragmas.h.ts" />
+/// <reference path="../../build/headers/scancodes.h.ts" />
+
+/// <reference path="../../build/source/baselayer.c.ts" />
+/// <reference path="../../build/source/build.c.ts" />
+/// <reference path="../../build/source/compat.c.ts" />
+/// <reference path="../../build/source/crc32.c.ts" />
+/// <reference path="../../build/source/engine.c.ts" />
+/// <reference path="../../build/source/hightile.c.ts" />
+/// <reference path="../../build/source/polymost.c.ts" />
+/// <reference path="../../build/source/hightile.c.ts" />
+
+/// <reference path="../../eduke32/headers/_functio.h.ts" />
+/// <reference path="../../eduke32/headers/_rts.h.ts" />
+/// <reference path="../../eduke32/headers/actors.h.ts" />
+/// <reference path="../../eduke32/headers/common_game.h.ts" />
+/// <reference path="../../eduke32/headers/function.h.ts" />
+/// <reference path="../../eduke32/headers/game.h.ts" />
+/// <reference path="../../eduke32/headers/gamedef.h.ts" />
+/// <reference path="../../eduke32/headers/gameexec.h.ts" />
+/// <reference path="../../eduke32/headers/global.h.ts" />
+/// <reference path="../../eduke32/headers/grpscan.h.ts" />
+/// <reference path="../../eduke32/headers/macros.h.ts" />
+/// <reference path="../../eduke32/headers/player.h.ts" />
+/// <reference path="../../eduke32/headers/quotes.h.ts" />
+
+/// <reference path="../../eduke32/source/astub.c.ts" />
+/// <reference path="../../eduke32/source/common.c.ts" />
+/// <reference path="../../eduke32/source/config.c.ts" />
+/// <reference path="../../eduke32/source/game.c.ts" />
+/// <reference path="../../eduke32/source/gamedef.c.ts" />
+/// <reference path="../../eduke32/source/gameexec.c.ts" />
+/// <reference path="../../eduke32/source/gamevars.c.ts" />
+/// <reference path="../../eduke32/source/glbuild.c.ts" />
+/// <reference path="../../eduke32/source/global.c.ts" />
+/// <reference path="../../eduke32/source/grpscan.c.ts" />
+/// <reference path="../../eduke32/source/menus.c.ts" />
+/// <reference path="../../eduke32/source/namesdyn.c.ts" />
+/// <reference path="../../eduke32/source/net.c.ts" />
+/// <reference path="../../eduke32/source/osd.c.ts" />
+/// <reference path="../../eduke32/source/osdcmds.c.ts" />
+/// <reference path="../../eduke32/source/premap.c.ts" />
+/// <reference path="../../eduke32/source/rts.c.ts" />
+/// <reference path="../../eduke32/source/sector.c.ts" />
+/// <reference path="../../eduke32/source/osdfuncs.c.ts" />
+/// <reference path="../../eduke32/source/sounds.c.ts" />
+/// <reference path="../../eduke32/source/soundsdyn.c.ts" />
+/// <reference path="../../eduke32/source/winbits.c.ts" />
+/// <reference path="../../eduke32/source/winlayer.c.ts" />
+/// <reference path="../../eduke32/source/winbits.c.ts" />
+/// <reference path="../../eduke32/source/winlayer.c.ts" />
+
+
 //-------------------------------------------------------------------------
 /*
 Copyright (C) 2010 EDuke32 developers and contributors
@@ -59,49 +125,49 @@ function P_UpdateScreenPal(p: DukePlayer_t ): void
     g_restorePalette = 1+intowater;
 }
 
-//static void P_IncurDamage(DukePlayer_t *p)
-//{
-//    int32_t damage;
+function P_IncurDamage(p:DukePlayer_t ):void 
+{
+    var /*int32_t */damage:number;
 
-//    if (VM_OnEvent(EVENT_INCURDAMAGE, p.i, sprite[p.i].yvel, -1, 0) != 0)
-//        return;
+    if (VM_OnEvent(EVENT_INCURDAMAGE, p.i, sprite[p.i].yvel, -1, 0) != 0)
+        return;
 
-//    sprite[p.i].extra -= p.extra_extra8>>8;
+    sprite[p.i].extra -= p.extra_extra8>>8;
 
-//    damage = sprite[p.i].extra - p.last_extra;
+    damage = sprite[p.i].extra - p.last_extra;
 
-//    if (damage >= 0)
-//        return;
+    if (damage >= 0)
+        return;
 
-//    p.extra_extra8 = 0;
+    p.extra_extra8 = 0;
 
-//    if (p.inv_amount[GET_SHIELD] > 0)
-//    {
-//        int32_t shield_damage =  damage * (20 + (krand()%30)) / 100;
-//        damage -= shield_damage;
+    if (p.inv_amount[GET_SHIELD] > 0)
+    {
+        var/*int32_t */shield_damage =  int32(damage * (20 + (krand()%30)) / 100);
+        damage -= shield_damage;
 
-//        p.inv_amount[GET_SHIELD] += shield_damage;
+        p.inv_amount[GET_SHIELD] += shield_damage;
 
-//        if (p.inv_amount[GET_SHIELD] < 0)
-//        {
-//            damage += p.inv_amount[GET_SHIELD];
-//            p.inv_amount[GET_SHIELD] = 0;
-//        }
-//    }
+        if (p.inv_amount[GET_SHIELD] < 0)
+        {
+            damage += p.inv_amount[GET_SHIELD];
+            p.inv_amount[GET_SHIELD] = 0;
+        }
+    }
 
-//    sprite[p.i].extra = p.last_extra + damage;
-//}
+    sprite[p.i].extra = p.last_extra + damage;
+}
 
-//void P_QuickKill(DukePlayer_t *p)
-//{
-//    P_PalFrom(p, 48, 48,48,48);
+function P_QuickKill(p: DukePlayer_t): void
+{
+    P_PalFrom(p, 48, 48,48,48);
 
-//    sprite[p.i].extra = 0;
-//    sprite[p.i].cstat |= 32768;
+    sprite[p.i].extra = 0;
+    sprite[p.i].cstat |= 32768;
 
-//    if (ud.god == 0)
-//        A_DoGuts(p.i,JIBS6,8);
-//}
+    if (ud.god == 0)
+        A_DoGuts(p.i,JIBS6,8);
+}
 
 //static void A_DoWaterTracers(int32_t x1,int32_t y1,int32_t z1,int32_t x2,int32_t y2,int32_t z2,int32_t n)
 //{
@@ -818,8 +884,8 @@ function P_UpdateScreenPal(p: DukePlayer_t ): void
 //}
 
 //#define MinibossScale(s) (((s)*sprite[i].yrepeat)/80)
-//int32_t A_ShootWithZvel(int32_t i, int32_t atwith, int32_t override_zvel)
-//{
+function /*int32_t */A_ShootWithZvel(/*int32_t*/ i:number, /*int32_t */atwith:number, /*int32_t */override_zvel:number):number
+{todoThrow();
 //    int16_t sa;
 //    int32_t j, k=-1, l;
 //    int32_t vel, zvel = 0;
@@ -1652,8 +1718,8 @@ function P_UpdateScreenPal(p: DukePlayer_t ): void
 //        }
 //    }
 
-//    return -1;
-//}
+    return -1;
+}
 
 
 ////////////////////// HUD WEAPON / MISC. DISPLAY CODE ////////////////////
@@ -1906,18 +1972,18 @@ function P_UpdateScreenPal(p: DukePlayer_t ): void
 //    return 1;
 //}
 
-//void P_SetWeaponGamevars(int32_t snum, const DukePlayer_t *p)
-//{
+function P_SetWeaponGamevars(/*int32_t */snum:number, p:DukePlayer_t ):void
+{
 //#ifdef LUNATIC
-//    UNREFERENCED_PARAMETER(snum);
-//    UNREFERENCED_PARAMETER(p);
+    //UNREFERENCED_PARAMETER(snum);
+    //UNREFERENCED_PARAMETER(p);
 //#else
-//    Gv_SetVar(g_iWeaponVarID, p.curr_weapon, p.i, snum);
-//    Gv_SetVar(g_iWorksLikeVarID,
-//              ((unsigned)p.curr_weapon < MAX_WEAPONS) ? PWEAPON(snum, p.curr_weapon, WorksLike) : -1,
-//              p.i, snum);
+    Gv_SetVar(g_iWeaponVarID, p.curr_weapon, p.i, snum);
+    Gv_SetVar(g_iWorksLikeVarID,
+              (/*(unsigned)*/p.curr_weapon < MAX_WEAPONS) ? PWEAPON(snum, p.curr_weapon, WorksLike) : -1,
+              p.i, snum);
 //#endif
-//}
+}
 
 
 //static void P_FireWeapon(DukePlayer_t *p)
@@ -2968,207 +3034,207 @@ function P_GetInput(/*int32_t */snum: number): void
 //    loc.horz = horiz;
 }
 
-//static int32_t P_DoCounters(DukePlayer_t *p)
-//{
-//    int32_t snum = sprite[p.i].yvel;
+function /*int32_t */P_DoCounters(p:DukePlayer_t):number
+{
+    var /*int32_t */snum = sprite[p.i].yvel;
 
-////        j = g_player[snum].sync.avel;
-////        p.weapon_ang = -(j/5);
+//        j = g_player[snum].sync.avel;
+//        p.weapon_ang = -(j/5);
 
-//    if (snum < 0) return 1;
+    if (snum < 0) return 1;
 
-//    if (p.invdisptime > 0)
-//        p.invdisptime--;
+    if (p.invdisptime > 0)
+        p.invdisptime--;
 
-//    if (p.tipincs > 0)
-//        p.tipincs--;
+    if (p.tipincs > 0)
+        p.tipincs--;
 
-//    if (p.last_pissed_time > 0)
-//    {
-//        switch (--p.last_pissed_time)
-//        {
-//        case GAMETICSPERSEC*219:
-//            {
-//                A_PlaySound(FLUSH_TOILET,p.i);
-//                if (snum == screenpeek || GTFLAGS(GAMETYPE_COOPSOUND))
-//                    A_PlaySound(DUKE_PISSRELIEF,p.i);
-//            }
-//            break;
-//        case GAMETICSPERSEC*218:
-//            {
-//                p.holster_weapon = 0;
-//                p.weapon_pos = WEAPON_POS_RAISE;
-//            }
-//            break;
-//        }
-//    }
+    if (p.last_pissed_time > 0)
+    {
+        switch (--p.last_pissed_time)
+        {
+        case GAMETICSPERSEC*219:
+            {
+                A_PlaySound(FLUSH_TOILET,p.i);
+                if (snum == screenpeek || GTFLAGS(GAMETYPE_COOPSOUND))
+                    A_PlaySound(DUKE_PISSRELIEF,p.i);
+            }
+            break;
+        case GAMETICSPERSEC*218:
+            {
+                p.holster_weapon = 0;
+                p.weapon_pos = WEAPON_POS_RAISE;
+            }
+            break;
+        }
+    }
 
-//    if (p.crack_time > 0)
-//    {
-//        if (--p.crack_time == 0)
-//        {
-//            p.knuckle_incs = 1;
-//            p.crack_time = 777;
-//        }
-//    }
+    if (p.crack_time > 0)
+    {
+        if (--p.crack_time == 0)
+        {
+            p.knuckle_incs = 1;
+            p.crack_time = 777;
+        }
+    }
 
-//    if (p.inv_amount[GET_STEROIDS] > 0 && p.inv_amount[GET_STEROIDS] < 400)
-//    {
-//        if (--p.inv_amount[GET_STEROIDS] == 0)
-//            P_SelectNextInvItem(p);
+    if (p.inv_amount[GET_STEROIDS] > 0 && p.inv_amount[GET_STEROIDS] < 400)
+    {
+        if (--p.inv_amount[GET_STEROIDS] == 0)
+            P_SelectNextInvItem(p);
 
-//        if (!(p.inv_amount[GET_STEROIDS]&7))
-//            if (snum == screenpeek || GTFLAGS(GAMETYPE_COOPSOUND))
-//                A_PlaySound(DUKE_HARTBEAT,p.i);
-//    }
+        if (!(p.inv_amount[GET_STEROIDS]&7))
+            if (snum == screenpeek || GTFLAGS(GAMETYPE_COOPSOUND))
+                A_PlaySound(DUKE_HARTBEAT,p.i);
+    }
 
-//    if (p.heat_on && p.inv_amount[GET_HEATS] > 0)
-//    {
-//        if (--p.inv_amount[GET_HEATS] == 0)
-//        {
-//            p.heat_on = 0;
-//            P_SelectNextInvItem(p);
-//            A_PlaySound(NITEVISION_ONOFF,p.i);
-//            P_UpdateScreenPal(p);
-//        }
-//    }
+    if (p.heat_on && p.inv_amount[GET_HEATS] > 0)
+    {
+        if (--p.inv_amount[GET_HEATS] == 0)
+        {
+            p.heat_on = 0;
+            P_SelectNextInvItem(p);
+            A_PlaySound(NITEVISION_ONOFF,p.i);
+            P_UpdateScreenPal(p);
+        }
+    }
 
-//    if (p.holoduke_on >= 0)
-//    {
-//        if (--p.inv_amount[GET_HOLODUKE] <= 0)
-//        {
-//            A_PlaySound(TELEPORTER,p.i);
-//            p.holoduke_on = -1;
-//            P_SelectNextInvItem(p);
-//        }
-//    }
+    if (p.holoduke_on >= 0)
+    {
+        if (--p.inv_amount[GET_HOLODUKE] <= 0)
+        {
+            A_PlaySound(TELEPORTER,p.i);
+            p.holoduke_on = -1;
+            P_SelectNextInvItem(p);
+        }
+    }
 
-//    if (p.jetpack_on && p.inv_amount[GET_JETPACK] > 0)
-//    {
-//        if (--p.inv_amount[GET_JETPACK] <= 0)
-//        {
-//            p.jetpack_on = 0;
-//            P_SelectNextInvItem(p);
-//            A_PlaySound(DUKE_JETPACK_OFF,p.i);
-//            S_StopEnvSound(DUKE_JETPACK_IDLE,p.i);
-//            S_StopEnvSound(DUKE_JETPACK_ON,p.i);
-//        }
-//    }
+    if (p.jetpack_on && p.inv_amount[GET_JETPACK] > 0)
+    {
+        if (--p.inv_amount[GET_JETPACK] <= 0)
+        {
+            p.jetpack_on = 0;
+            P_SelectNextInvItem(p);
+            A_PlaySound(DUKE_JETPACK_OFF,p.i);
+            S_StopEnvSound(DUKE_JETPACK_IDLE,p.i);
+            S_StopEnvSound(DUKE_JETPACK_ON,p.i);
+        }
+    }
 
-//    if (p.quick_kick > 0 && sprite[p.i].pal != 1)
-//    {
-//        p.last_quick_kick = p.quick_kick+1;
+    if (p.quick_kick > 0 && sprite[p.i].pal != 1)
+    {
+        p.last_quick_kick = p.quick_kick+1;
 
-//        if (--p.quick_kick == 8)
-//            A_Shoot(p.i,KNEE);
-//    }
-//    else if (p.last_quick_kick > 0) p.last_quick_kick--;
+        if (--p.quick_kick == 8)
+            A_Shoot(p.i,KNEE);
+    }
+    else if (p.last_quick_kick > 0) p.last_quick_kick--;
 
-//    if (p.access_incs && sprite[p.i].pal != 1)
-//    {
-//        p.access_incs++;
-//        if (sprite[p.i].extra <= 0)
-//            p.access_incs = 12;
+    if (p.access_incs && sprite[p.i].pal != 1)
+    {
+        p.access_incs++;
+        if (sprite[p.i].extra <= 0)
+            p.access_incs = 12;
 
-//        if (p.access_incs == 12)
-//        {
-//            if (p.access_spritenum >= 0)
-//            {
-//                P_ActivateSwitch(snum,p.access_spritenum,1);
-//                switch (sprite[p.access_spritenum].pal)
-//                {
-//                case 0:
-//                    p.got_access &= (0xffff-0x1);
-//                    break;
-//                case 21:
-//                    p.got_access &= (0xffff-0x2);
-//                    break;
-//                case 23:
-//                    p.got_access &= (0xffff-0x4);
-//                    break;
-//                }
-//                p.access_spritenum = -1;
-//            }
-//            else
-//            {
-//                P_ActivateSwitch(snum,p.access_wallnum,0);
-//                switch (wall[p.access_wallnum].pal)
-//                {
-//                case 0:
-//                    p.got_access &= (0xffff-0x1);
-//                    break;
-//                case 21:
-//                    p.got_access &= (0xffff-0x2);
-//                    break;
-//                case 23:
-//                    p.got_access &= (0xffff-0x4);
-//                    break;
-//                }
-//            }
-//        }
+        if (p.access_incs == 12)
+        {
+            if (p.access_spritenum >= 0)
+            {
+                P_ActivateSwitch(snum,p.access_spritenum,1);
+                switch (sprite[p.access_spritenum].pal)
+                {
+                case 0:
+                    p.got_access &= (0xffff-0x1);
+                    break;
+                case 21:
+                    p.got_access &= (0xffff-0x2);
+                    break;
+                case 23:
+                    p.got_access &= (0xffff-0x4);
+                    break;
+                }
+                p.access_spritenum = -1;
+            }
+            else
+            {
+                P_ActivateSwitch(snum,p.access_wallnum,0);
+                switch (wall[p.access_wallnum].pal)
+                {
+                case 0:
+                    p.got_access &= (0xffff-0x1);
+                    break;
+                case 21:
+                    p.got_access &= (0xffff-0x2);
+                    break;
+                case 23:
+                    p.got_access &= (0xffff-0x4);
+                    break;
+                }
+            }
+        }
 
-//        if (p.access_incs > 20)
-//        {
-//            p.access_incs = 0;
-//            p.weapon_pos = WEAPON_POS_RAISE;
-//            p.kickback_pic = 0;
-//        }
-//    }
+        if (p.access_incs > 20)
+        {
+            p.access_incs = 0;
+            p.weapon_pos = WEAPON_POS_RAISE;
+            p.kickback_pic = 0;
+        }
+    }
 
-//    if (p.cursectnum >= 0 && p.scuba_on == 0 && sector[p.cursectnum].lotag == ST_2_UNDERWATER)
-//    {
-//        if (p.inv_amount[GET_SCUBA] > 0)
-//        {
-//            p.scuba_on = 1;
-//            p.inven_icon = ICON_SCUBA;
-//            P_DoQuote(QUOTE_SCUBA_ON,p);
-//        }
-//        else
-//        {
-//            if (p.airleft > 0)
-//                p.airleft--;
-//            else
-//            {
-//                p.extra_extra8 += 32;
-//                if (p.last_extra < (p.max_player_health>>1) && (p.last_extra&3) == 0)
-//                    A_PlaySound(DUKE_LONGTERM_PAIN,p.i);
-//            }
-//        }
-//    }
-//    else if (p.inv_amount[GET_SCUBA] > 0 && p.scuba_on)
-//    {
-//        p.inv_amount[GET_SCUBA]--;
-//        if (p.inv_amount[GET_SCUBA] == 0)
-//        {
-//            p.scuba_on = 0;
-//            P_SelectNextInvItem(p);
-//        }
-//    }
+    if (p.cursectnum >= 0 && p.scuba_on == 0 && sector[p.cursectnum].lotag == ST_2_UNDERWATER)
+    {
+        if (p.inv_amount[GET_SCUBA] > 0)
+        {
+            p.scuba_on = 1;
+            p.inven_icon = ICON_SCUBA;
+            P_DoQuote(QUOTE_SCUBA_ON,p);
+        }
+        else
+        {
+            if (p.airleft > 0)
+                p.airleft--;
+            else
+            {
+                p.extra_extra8 += 32;
+                if (p.last_extra < (p.max_player_health>>1) && (p.last_extra&3) == 0)
+                    A_PlaySound(DUKE_LONGTERM_PAIN,p.i);
+            }
+        }
+    }
+    else if (p.inv_amount[GET_SCUBA] > 0 && p.scuba_on)
+    {
+        p.inv_amount[GET_SCUBA]--;
+        if (p.inv_amount[GET_SCUBA] == 0)
+        {
+            p.scuba_on = 0;
+            P_SelectNextInvItem(p);
+        }
+    }
 
-//    if (p.knuckle_incs)
-//    {
-//        if (++p.knuckle_incs == 10)
-//        {
-//            if (totalclock > 1024)
-//                if (snum == screenpeek || GTFLAGS(GAMETYPE_COOPSOUND))
-//                {
+    if (p.knuckle_incs)
+    {
+        if (++p.knuckle_incs == 10)
+        {
+            if (totalclock > 1024)
+                if (snum == screenpeek || GTFLAGS(GAMETYPE_COOPSOUND))
+                {
 
-//                    if (rand()&1)
-//                        A_PlaySound(DUKE_CRACK,p.i);
-//                    else A_PlaySound(DUKE_CRACK2,p.i);
+                    if (rand()&1)
+                        A_PlaySound(DUKE_CRACK,p.i);
+                    else A_PlaySound(DUKE_CRACK2,p.i);
 
-//                }
+                }
 
-//            A_PlaySound(DUKE_CRACK_FIRST,p.i);
+            A_PlaySound(DUKE_CRACK_FIRST,p.i);
 
-//        }
-//        else if (p.knuckle_incs == 22 || TEST_SYNC_KEY(g_player[snum].sync.bits, SK_FIRE))
-//            p.knuckle_incs=0;
+        }
+        else if (p.knuckle_incs == 22 || TEST_SYNC_KEY(g_player[snum].sync.bits, SK_FIRE))
+            p.knuckle_incs=0;
 
-//        return 1;
-//    }
-//    return 0;
-//}
+        return 1;
+    }
+    return 0;
+}
 
 var WeaponPickupSprites = new Int16Array([ KNEE__STATIC, FIRSTGUNSPRITE__STATIC, SHOTGUNSPRITE__STATIC,
         CHAINGUNSPRITE__STATIC, RPGSPRITE__STATIC, HEAVYHBOMB__STATIC, SHRINKERSPRITE__STATIC, DEVISTATORSPRITE__STATIC,
@@ -3201,84 +3267,84 @@ var WeaponPickupSprites = new Int16Array([ KNEE__STATIC, FIRSTGUNSPRITE__STATIC,
 //        p.ammo_amount[weapon] = p.max_ammo_amount[weapon];
 //}
 
-//void P_AddWeaponNoSwitch(DukePlayer_t *p, int32_t weapon)
-//{
-//    int32_t snum = sprite[p.i].yvel;
+function P_AddWeaponNoSwitch(p:DukePlayer_t, /*int32_t */weapon:number):void
+{
+    var/*int32_t */snum = sprite[p.i].yvel;
 
-//    if ((p.gotweapon & (1<<weapon)) == 0)
-//    {
-//        p.gotweapon |= (1<<weapon);
+    if ((p.gotweapon & (1<<weapon)) == 0)
+    {
+        p.gotweapon |= (1<<weapon);
 
-//        if (weapon == SHRINKER_WEAPON)
-//            p.gotweapon |= (1<<GROW_WEAPON);
-//    }
+        if (weapon == SHRINKER_WEAPON)
+            p.gotweapon |= (1<<GROW_WEAPON);
+    }
 
-//    if (PWEAPON(snum, p.curr_weapon, SelectSound) > 0)
-//        S_StopEnvSound(PWEAPON(snum, p.curr_weapon, SelectSound),p.i);
+    if (PWEAPON(snum, p.curr_weapon, SelectSound) > 0)
+        S_StopEnvSound(PWEAPON(snum, p.curr_weapon, SelectSound),p.i);
 
-//    if (PWEAPON(snum, weapon, SelectSound) > 0)
-//        A_PlaySound(PWEAPON(snum, weapon, SelectSound),p.i);
-//}
+    if (PWEAPON(snum, weapon, SelectSound) > 0)
+        A_PlaySound(PWEAPON(snum, weapon, SelectSound),p.i);
+}
 
-//void P_ChangeWeapon(DukePlayer_t *p,int32_t weapon)
-//{
-//    int32_t i = 0, snum = sprite[p.i].yvel;
-//    int8_t curr_weapon = p.curr_weapon;
+function P_ChangeWeapon(p:DukePlayer_t ,/*int32_t */weapon:number):void
+{
+    var/*int32_t */i = 0, snum = sprite[p.i].yvel;
+    var/*nt8_t */curr_weapon = p.curr_weapon;
 
-//    if (p.reloading) return;
+    if (p.reloading) return;
 
-//    if (p.curr_weapon != weapon && G_HaveEvent(EVENT_CHANGEWEAPON))
-//        i = VM_OnEvent(EVENT_CHANGEWEAPON,p.i, snum, -1, weapon);
+    if (p.curr_weapon != weapon && G_HaveEvent(EVENT_CHANGEWEAPON))
+        i = VM_OnEvent(EVENT_CHANGEWEAPON,p.i, snum, -1, weapon);
 
-//    if (i == -1)
-//        return;
-//    else if (i != -2)
-//        p.curr_weapon = weapon;
+    if (i == -1)
+        return;
+    else if (i != -2)
+        p.curr_weapon = weapon;
 
-//    p.last_weapon = curr_weapon;
+    p.last_weapon = curr_weapon;
 
-//    p.random_club_frame = 0;
+    p.random_club_frame = 0;
 
-//    if (p.weapon_pos == 0)
-//        p.weapon_pos = -1;
-//    else p.weapon_pos = WEAPON_POS_LOWER;
+    if (p.weapon_pos == 0)
+        p.weapon_pos = -1;
+    else p.weapon_pos = WEAPON_POS_LOWER;
 
-//    if (p.holster_weapon)
-//    {
-//        p.weapon_pos = WEAPON_POS_RAISE;
-//        p.holster_weapon = 0;
-//        p.last_weapon = -1;
-//    }
+    if (p.holster_weapon)
+    {
+        p.weapon_pos = WEAPON_POS_RAISE;
+        p.holster_weapon = 0;
+        p.last_weapon = -1;
+    }
 
-//    p.kickback_pic = 0;
+    p.kickback_pic = 0;
 
-//    P_SetWeaponGamevars(snum, p);
-//}
+    P_SetWeaponGamevars(snum, p);
+}
 
-//void P_AddWeapon(DukePlayer_t *p,int32_t weapon)
-//{
-//    P_AddWeaponNoSwitch(p, weapon);
-//    P_ChangeWeapon(p, weapon);
-//}
+function P_AddWeapon(p:DukePlayer_t ,/*int32_t */weapon:number):void
+{
+    P_AddWeaponNoSwitch(p, weapon);
+    P_ChangeWeapon(p, weapon);
+}
 
-//void P_SelectNextInvItem(DukePlayer_t *p)
-//{
-//    if (p.inv_amount[GET_FIRSTAID] > 0)
-//        p.inven_icon = ICON_FIRSTAID;
-//    else if (p.inv_amount[GET_STEROIDS] > 0)
-//        p.inven_icon = ICON_STEROIDS;
-//    else if (p.inv_amount[GET_JETPACK] > 0)
-//        p.inven_icon = ICON_JETPACK;
-//    else if (p.inv_amount[GET_HOLODUKE] > 0)
-//        p.inven_icon = ICON_HOLODUKE;
-//    else if (p.inv_amount[GET_HEATS] > 0)
-//        p.inven_icon = ICON_HEATS;
-//    else if (p.inv_amount[GET_SCUBA] > 0)
-//        p.inven_icon = ICON_SCUBA;
-//    else if (p.inv_amount[GET_BOOTS] > 0)
-//        p.inven_icon = ICON_BOOTS;
-//    else p.inven_icon = ICON_NONE;
-//}
+function P_SelectNextInvItem(p:DukePlayer_t):void
+{
+    if (p.inv_amount[GET_FIRSTAID] > 0)
+        p.inven_icon = ICON_FIRSTAID;
+    else if (p.inv_amount[GET_STEROIDS] > 0)
+        p.inven_icon = ICON_STEROIDS;
+    else if (p.inv_amount[GET_JETPACK] > 0)
+        p.inven_icon = ICON_JETPACK;
+    else if (p.inv_amount[GET_HOLODUKE] > 0)
+        p.inven_icon = ICON_HOLODUKE;
+    else if (p.inv_amount[GET_HEATS] > 0)
+        p.inven_icon = ICON_HEATS;
+    else if (p.inv_amount[GET_SCUBA] > 0)
+        p.inven_icon = ICON_SCUBA;
+    else if (p.inv_amount[GET_BOOTS] > 0)
+        p.inven_icon = ICON_BOOTS;
+    else p.inven_icon = ICON_NONE;
+}
 
 //void P_CheckWeapon(DukePlayer_t *p)
 //{
@@ -3332,8 +3398,8 @@ var WeaponPickupSprites = new Int16Array([ KNEE__STATIC, FIRSTGUNSPRITE__STATIC,
 //}
 //#endif
 
-//static void P_CheckTouchDamage(DukePlayer_t *p, int32_t obj)
-//{
+function P_CheckTouchDamage(p:DukePlayer_t , /*int32_t */obj:number):void
+{todoThrow();
 //    if ((obj = VM_OnEvent(EVENT_CHECKTOUCHDAMAGE, p.i, sprite[p.i].yvel, -1, obj)) == -1)
 //        return;
 
@@ -3404,75 +3470,75 @@ var WeaponPickupSprites = new Int16Array([ KNEE__STATIC, FIRSTGUNSPRITE__STATIC,
 
 //        }
 //    }
-//}
+}
 
-//static int32_t P_CheckFloorDamage(DukePlayer_t *p, int32_t tex)
-//{
-//    spritetype *s = &sprite[p.i];
+function /*int32_t */P_CheckFloorDamage(p:DukePlayer_t, /*int32_t */tex: number):number
+{todoThrow();
+    //spritetype *s = &sprite[p.i];
 
-//    if ((unsigned)(tex = VM_OnEvent(EVENT_CHECKFLOORDAMAGE, p.i, sprite[p.i].yvel, -1, tex)) >= MAXTILES)
-//        return 0;
+    //if ((unsigned)(tex = VM_OnEvent(EVENT_CHECKFLOORDAMAGE, p.i, sprite[p.i].yvel, -1, tex)) >= MAXTILES)
+    //    return 0;
 
-//    switch (DYNAMICTILEMAP(tex))
-//    {
-//    case HURTRAIL__STATIC:
-//        if (rnd(32))
-//        {
-//            if (p.inv_amount[GET_BOOTS] > 0)
-//                return 1;
-//            else
-//            {
-//                if (!A_CheckSoundPlaying(p.i,DUKE_LONGTERM_PAIN))
-//                    A_PlaySound(DUKE_LONGTERM_PAIN,p.i);
+    //switch (DYNAMICTILEMAP(tex))
+    //{
+    //case HURTRAIL__STATIC:
+    //    if (rnd(32))
+    //    {
+    //        if (p.inv_amount[GET_BOOTS] > 0)
+    //            return 1;
+    //        else
+    //        {
+    //            if (!A_CheckSoundPlaying(p.i,DUKE_LONGTERM_PAIN))
+    //                A_PlaySound(DUKE_LONGTERM_PAIN,p.i);
 
-//                P_PalFrom(p, 32, 64,64,64);
+    //            P_PalFrom(p, 32, 64,64,64);
 
-//                s.extra -= 1+(krand()&3);
-//                if (!A_CheckSoundPlaying(p.i,SHORT_CIRCUIT))
-//                    A_PlaySound(SHORT_CIRCUIT,p.i);
+    //            s.extra -= 1+(krand()&3);
+    //            if (!A_CheckSoundPlaying(p.i,SHORT_CIRCUIT))
+    //                A_PlaySound(SHORT_CIRCUIT,p.i);
 
-//                return 0;
-//            }
-//        }
-//        break;
-//    case FLOORSLIME__STATIC:
-//        if (rnd(16))
-//        {
-//            if (p.inv_amount[GET_BOOTS] > 0)
-//                return 1;
-//            else
-//            {
-//                if (!A_CheckSoundPlaying(p.i,DUKE_LONGTERM_PAIN))
-//                    A_PlaySound(DUKE_LONGTERM_PAIN,p.i);
+    //            return 0;
+    //        }
+    //    }
+    //    break;
+    //case FLOORSLIME__STATIC:
+    //    if (rnd(16))
+    //    {
+    //        if (p.inv_amount[GET_BOOTS] > 0)
+    //            return 1;
+    //        else
+    //        {
+    //            if (!A_CheckSoundPlaying(p.i,DUKE_LONGTERM_PAIN))
+    //                A_PlaySound(DUKE_LONGTERM_PAIN,p.i);
 
-//                P_PalFrom(p, 32, 0,8,0);
-//                s.extra -= 1+(krand()&3);
+    //            P_PalFrom(p, 32, 0,8,0);
+    //            s.extra -= 1+(krand()&3);
 
-//                return 0;
-//            }
-//        }
-//        break;
-//    case FLOORPLASMA__STATIC:
-//        if (rnd(32))
-//        {
-//            if (p.inv_amount[GET_BOOTS] > 0)
-//                return 1;
-//            else
-//            {
-//                if (!A_CheckSoundPlaying(p.i,DUKE_LONGTERM_PAIN))
-//                    A_PlaySound(DUKE_LONGTERM_PAIN,p.i);
+    //            return 0;
+    //        }
+    //    }
+    //    break;
+    //case FLOORPLASMA__STATIC:
+    //    if (rnd(32))
+    //    {
+    //        if (p.inv_amount[GET_BOOTS] > 0)
+    //            return 1;
+    //        else
+    //        {
+    //            if (!A_CheckSoundPlaying(p.i,DUKE_LONGTERM_PAIN))
+    //                A_PlaySound(DUKE_LONGTERM_PAIN,p.i);
 
-//                P_PalFrom(p, 32, 8,0,0);
-//                s.extra -= 1+(krand()&3);
+    //            P_PalFrom(p, 32, 8,0,0);
+    //            s.extra -= 1+(krand()&3);
 
-//                return 0;
-//            }
-//        }
-//        break;
-//    }
+    //            return 0;
+    //        }
+    //    }
+    //    break;
+    //}
 
-//    return 0;
-//}
+    return 0;
+}
 
 
 //int32_t P_FindOtherPlayer(int32_t p,int32_t *d)
@@ -3498,8 +3564,8 @@ var WeaponPickupSprites = new Int16Array([ KNEE__STATIC, FIRSTGUNSPRITE__STATIC,
 //    return closest_player;
 //}
 
-//void P_FragPlayer(int32_t snum)
-//{
+function P_FragPlayer(/*int32_t */snum:number):void
+{todoThrow();
 //    DukePlayer_t *p = g_player[snum].ps;
 //    spritetype *s = &sprite[p.i];
 
@@ -3601,7 +3667,7 @@ var WeaponPickupSprites = new Int16Array([ KNEE__STATIC, FIRSTGUNSPRITE__STATIC,
 //        p.frag_ps = snum;
 //        pus = NUMPAGES;
 //    }
-//}
+}
 
 //#ifdef LUNATIC
 //# define PIPEBOMB_CONTROL(snum) (g_player[snum].ps.pipebombControl)
@@ -3609,8 +3675,8 @@ var WeaponPickupSprites = new Int16Array([ KNEE__STATIC, FIRSTGUNSPRITE__STATIC,
 //# define PIPEBOMB_CONTROL(snum) (Gv_GetVarByLabel("PIPEBOMB_CONTROL", PIPEBOMB_REMOTE, -1, snum))
 //#endif
 
-//static void P_ProcessWeapon(int32_t snum)
-//{
+function P_ProcessWeapon(/*int32_t */snum:number):void 
+{todoThrow();
 //    DukePlayer_t *const p = g_player[snum].ps;
 //    uint8_t *const kb = &p.kickback_pic;
 //    const int32_t shrunk = (sprite[p.i].yrepeat < 32);
@@ -4130,10 +4196,10 @@ var WeaponPickupSprites = new Int16Array([ KNEE__STATIC, FIRSTGUNSPRITE__STATIC,
 //            }
 //        }
 //    }
-//}
+}
 
-//static int32_t P_DoFist(DukePlayer_t *p)
-//{
+function/*int32_t */P_DoFist(p: DukePlayer_t):number
+{todoThrow();
 //    // the fist punching NUKEBUTTON
 
 //    if (++p.fist_incs == 28)
@@ -4182,45 +4248,45 @@ var WeaponPickupSprites = new Int16Array([ KNEE__STATIC, FIRSTGUNSPRITE__STATIC,
 //        return 1;
 //    }
 
-//    return 0;
-//}
+    return 0;
+}
 
 //#ifdef YAX_ENABLE
-//static void getzsofslope_player(int16_t sectnum, int32_t dax, int32_t day, int32_t *ceilz, int32_t *florz)
-//{
-//    int32_t i, didceil=0, didflor=0;
+function getzsofslope_player(/*int16_t */sectnum:number, /*int32_t */dax:number, /*int32_t */day:number, /*int32_t **/ceilz:R<number>, /*int32_t **/florz:R<number>): void 
+{
+    var /*int32_t */i:number, didceil=0, didflor=0;
 
-//    if ((sector[sectnum].ceilingstat&512)==0)
-//    {
-//        i = yax_getneighborsect(dax, day, sectnum, YAX_CEILING);
-//        if (i >= 0)
-//        {
-//            *ceilz = getceilzofslope(i, dax,day);
-//            didceil = 1;
-//        }
-//    }
+    if ((sector[sectnum].ceilingstat&512)==0)
+    {
+        i = yax_getneighborsect(dax, day, sectnum, YAX_CEILING);
+        if (i >= 0)
+        {
+            ceilz.$ = getceilzofslope(i, dax,day);
+            didceil = 1;
+        }
+    }
 
-//    if ((sector[sectnum].floorstat&512)==0)
-//    {
-//        i = yax_getneighborsect(dax, day, sectnum, YAX_FLOOR);
-//        if (i >= 0)
-//        {
-//            *florz = getflorzofslope(i, dax,day);
-//            didflor = 1;
-//        }
-//    }
+    if ((sector[sectnum].floorstat&512)==0)
+    {
+        i = yax_getneighborsect(dax, day, sectnum, YAX_FLOOR);
+        if (i >= 0)
+        {
+            florz.$ = getflorzofslope(i, dax,day);
+            didflor = 1;
+        }
+    }
 
-//    if (!didceil || !didflor)
-//    {
-//        int32_t cz, fz;
-//        getzsofslope(sectnum, dax, day, &cz, &fz);
+    if (!didceil || !didflor)
+    {
+        var /*int32_t */cz=new R<number>(), fz=new R<number>();
+        getzsofslope(sectnum, dax, day, cz, fz);
 
-//        if (!didceil)
-//            *ceilz = cz;
-//        if (!didflor)
-//            *florz = fz;
-//    }
-//}
+        if (!didceil)
+            ceilz.$ = cz.$;
+        if (!didflor)
+            florz.$ = fz.$;
+    }
+}
 //#endif
 
 //void P_UpdatePosWhenViewingCam(DukePlayer_t *p)
@@ -4236,160 +4302,175 @@ var WeaponPickupSprites = new Int16Array([ KNEE__STATIC, FIRSTGUNSPRITE__STATIC,
 //    p.rotscrnang = 0;
 //}
 
-//void P_ProcessInput(int32_t snum)
-//{
-//    DukePlayer_t *const p = g_player[snum].ps;
-//    spritetype *const s = &sprite[p.i];
+function P_ProcessInput(/*int32_t */snum:number): void
+{
+    var p = g_player[snum].ps;
+    var s = sprite[p.i];
 
-//    uint32_t sb_snum = g_player[snum].sync.bits;
+    var /*uint32_t */sb_snum = g_player[snum].sync.bits;
 
-//    int32_t j, i, k, doubvel = TICSPERFRAME, shrunk;
-//    int32_t fz, cz, hz, lz, truefdist, x, y, psectlotag;
-//    const uint8_t *const kb = &p.kickback_pic;
-//    int16_t tempsect;
+    var /*int32_t*/ j=0, i=0, k=0, doubvel = TICSPERFRAME, shrunk=0;
+    var /*int32_t*/ fz=0, cz=0, hz=0, lz=0, truefdist=0, x=0, y=0, psectlotag=0;
+    var /*const uint8_t *const */kb = new R(p.kickback_pic);
+    var/*int16_t */tempsect:number;
 
-//    if (g_player[snum].playerquitflag == 0)
-//        return;
+    if (g_player[snum].playerquitflag == 0)
+        return;
 
-//    p.player_par++;
+    p.player_par++;
 
-//    VM_OnEvent(EVENT_PROCESSINPUT, p.i, snum, -1, 0);
+    VM_OnEvent(EVENT_PROCESSINPUT, p.i, snum, -1, 0);
 
-//    if (p.cheat_phase > 0) sb_snum = 0;
+    if (p.cheat_phase > 0) sb_snum = 0;
 
-//    if (p.cursectnum == -1)
-//    {
-//        if (s.extra > 0 && ud.noclip == 0)
-//        {
-//            P_QuickKill(p);
-//            A_PlaySound(SQUISHED,p.i);
-//        }
-//        p.cursectnum = 0;
-//    }
+    if (p.cursectnum == -1)
+    {
+        if (s.extra > 0 && ud.noclip == 0)
+        {
+            P_QuickKill(p);
+            A_PlaySound(SQUISHED,p.i);
+        }
+        p.cursectnum = 0;
+    }
 
-//    psectlotag = sector[p.cursectnum].lotag;
-//    p.spritebridge = p.sbs = 0;
+    psectlotag = sector[p.cursectnum].lotag;
+    p.spritebridge = p.sbs = 0;
 
-//    shrunk = (s.yrepeat < 32);
-//    getzrange((vec3_t *)p,p.cursectnum,&cz,&hz,&fz,&lz,163L,CLIPMASK0);
+    shrunk = (s.yrepeat < 32)?1:0;
+    var $cz = new R(cz);
+    var $hz = new R(hz);
+    var $fz = new R(fz);
+    var $lz = new R(lz);
+    getzrange(/*(vec3_t *)*/p.pos,p.cursectnum,$cz,$hz,$fz,$lz,163,CLIPMASK0);
+    cz = $cz.$;
+    hz = $hz.$;
+    fz = $fz.$;
+    lz = $lz.$;
+
 
 //#ifdef YAX_ENABLE
-//    getzsofslope_player(p.cursectnum,p.pos.x,p.pos.y,&p.truecz,&p.truefz);
+    var $truecz = new R(p.truecz);
+    var $truefz = new R(p.truefz);
+    getzsofslope_player(p.cursectnum,p.pos.x,p.pos.y,$truecz,$truefz);
 //#else
-//    getzsofslope(p.cursectnum,p.pos.x,p.pos.y,&p.truecz,&p.truefz);
+    getzsofslope(p.cursectnum,p.pos.x,p.pos.y,$truecz,$truefz);
+    p.truecz = $truecz.$;
+    p.truefz = $truefz.$;
 //#endif
-//    j = p.truefz;
+    j = p.truefz;
 
-//    truefdist = klabs(p.pos.z-j);
+    truefdist = klabs(p.pos.z-j);
 
-//    if ((lz&49152) == 16384 && psectlotag == 1 && truefdist > PHEIGHT+(16<<8))
-//        psectlotag = 0;
+    if ((lz&49152) == 16384 && psectlotag == 1 && truefdist > PHEIGHT+(16<<8))
+        psectlotag = 0;
 
-//    actor[p.i].floorz = fz;
-//    actor[p.i].ceilingz = cz;
+    actor[p.i].floorz = fz;
+    actor[p.i].ceilingz = cz;
 
-//    p.ohoriz = p.horiz;
-//    p.ohorizoff = p.horizoff;
+    p.ohoriz = p.horiz;
+    p.ohorizoff = p.horizoff;
 
-//    // calculates automatic view angle for playing without a mouse
-//    if (p.aim_mode == 0 && p.on_ground && psectlotag != ST_2_UNDERWATER && (sector[p.cursectnum].floorstat&2))
-//    {
-//        x = p.pos.x+(sintable[(p.ang+512)&2047]>>5);
-//        y = p.pos.y+(sintable[p.ang&2047]>>5);
-//        tempsect = p.cursectnum;
-//        updatesector(x,y,&tempsect);
-//        if (tempsect >= 0)
-//        {
-//            k = getflorzofslope(p.cursectnum,x,y);
-//            if (p.cursectnum == tempsect)
-//                p.horizoff += mulscale16(j-k,160);
-//            else if (klabs(getflorzofslope(tempsect,x,y)-k) <= (4<<8))
-//                p.horizoff += mulscale16(j-k,160);
-//        }
-//    }
+    // calculates automatic view angle for playing without a mouse
+    if (p.aim_mode == 0 && p.on_ground && psectlotag != ST_2_UNDERWATER && (sector[p.cursectnum].floorstat&2))
+    {
+        x = p.pos.x+(sintable[(p.ang+512)&2047]>>5);
+        y = p.pos.y+(sintable[p.ang&2047]>>5);
+        tempsect = p.cursectnum;
+        var $tempsect = new R(tempsect);
+        updatesector(x,y,$tempsect);
+        tempsect = $tempsect.$;
+        if (tempsect >= 0)
+        {
+            k = getflorzofslope(p.cursectnum,x,y);
+            if (p.cursectnum == tempsect)
+                p.horizoff += mulscale16(j-k,160);
+            else if (klabs(getflorzofslope(tempsect,x,y)-k) <= (4<<8))
+                p.horizoff += mulscale16(j-k,160);
+        }
+    }
 
-//    if (p.horizoff > 0) p.horizoff -= ((p.horizoff>>3)+1);
-//    else if (p.horizoff < 0) p.horizoff += (((-p.horizoff)>>3)+1);
+    if (p.horizoff > 0) p.horizoff -= ((p.horizoff>>3)+1);
+    else if (p.horizoff < 0) p.horizoff += (((-p.horizoff)>>3)+1);
 
-//    if (hz >= 0 && (hz&49152) == 49152)
-//    {
-//        hz &= (MAXSPRITES-1);
+    if (hz >= 0 && (hz&49152) == 49152)
+    {
+        hz &= (MAXSPRITES-1);
 
-//        if (sprite[hz].statnum == STAT_ACTOR && sprite[hz].extra >= 0)
-//        {
-//            hz = 0;
-//            cz = p.truecz;
-//        }
-//    }
+        if (sprite[hz].statnum == STAT_ACTOR && sprite[hz].extra >= 0)
+        {
+            hz = 0;
+            cz = p.truecz;
+        }
+    }
 
-//    if (lz >= 0 && (lz&49152) == 49152)
-//    {
-//        j = lz&(MAXSPRITES-1);
+    if (lz >= 0 && (lz&49152) == 49152)
+    {
+        j = lz&(MAXSPRITES-1);
 
-//        if ((sprite[j].cstat&33) == 33 || (sprite[j].cstat&17) == 17)
-//        {
-//            psectlotag = 0;
-//            p.footprintcount = 0;
-//            p.spritebridge = 1;
-//            p.sbs = j;
-//        }
-//        else if (A_CheckEnemySprite(&sprite[j]) && sprite[j].xrepeat > 24 && klabs(s.z-sprite[j].z) < (84<<8))
-//        {
-//            // I think this is what makes the player slide off enemies... might be a good sprite flag to add later
-//            j = getangle(sprite[j].x-p.pos.x,sprite[j].y-p.pos.y);
-//            p.vel.x -= sintable[(j+512)&2047]<<4;
-//            p.vel.y -= sintable[j&2047]<<4;
-//        }
-//    }
+        if ((sprite[j].cstat&33) == 33 || (sprite[j].cstat&17) == 17)
+        {
+            psectlotag = 0;
+            p.footprintcount = 0;
+            p.spritebridge = 1;
+            p.sbs = j;
+        }
+        else if (A_CheckEnemySprite(sprite[j]) && sprite[j].xrepeat > 24 && klabs(s.z-sprite[j].z) < (84<<8))
+        {
+            // I think this is what makes the player slide off enemies... might be a good sprite flag to add later
+            j = getangle(sprite[j].x-p.pos.x,sprite[j].y-p.pos.y);
+            p.vel.x -= sintable[(j+512)&2047]<<4;
+            p.vel.y -= sintable[j&2047]<<4;
+        }
+    }
 
-//    if (s.extra > 0)
-//        P_IncurDamage(p);
-//    else
-//    {
-//        s.extra = 0;
-//        p.inv_amount[GET_SHIELD] = 0;
-//    }
+    if (s.extra > 0)
+        P_IncurDamage(p);
+    else
+    {
+        s.extra = 0;
+        p.inv_amount[GET_SHIELD] = 0;
+    }
 
-//    p.last_extra = s.extra;
+    p.last_extra = s.extra;
 
-//    if (p.loogcnt > 0) p.loogcnt--;
-//    else p.loogcnt = 0;
+    if (p.loogcnt > 0) p.loogcnt--;
+    else p.loogcnt = 0;
 
-//    if (p.fist_incs && P_DoFist(p)) return;
+    if (p.fist_incs && P_DoFist(p)) return;
 
-//    if (p.timebeforeexit > 1 && p.last_extra > 0)
-//    {
-//        if (--p.timebeforeexit == GAMETICSPERSEC*5)
-//        {
-//            FX_StopAllSounds();
-//            S_ClearSoundLocks();
+    if (p.timebeforeexit > 1 && p.last_extra > 0)
+    {
+        if (--p.timebeforeexit == GAMETICSPERSEC*5)
+        {
+            FX_StopAllSounds();
+            S_ClearSoundLocks();
 
-//            if (p.customexitsound >= 0)
-//            {
-//                S_PlaySound(p.customexitsound);
-//                P_DoQuote(QUOTE_WEREGONNAFRYYOURASS,p);
-//            }
-//        }
-//        else if (p.timebeforeexit == 1)
-//        {
-//            for (TRAVERSE_CONNECT(i))
-//                g_player[i].ps.gm = MODE_EOL;
+            if (p.customexitsound >= 0)
+            {
+                S_PlaySound(p.customexitsound);
+                P_DoQuote(QUOTE_WEREGONNAFRYYOURASS,p);
+            }
+        }
+        else if (p.timebeforeexit == 1)
+        {
+            for (i = 0; i != -1; i = connectpoint2[i])
+                g_player[i].ps.gm = MODE_EOL;
 
-//            ud.m_level_number = ud.level_number++;
+            ud.m_level_number = ud.level_number++;
 
-//            if (ud.from_bonus)
-//            {
-//                ud.m_level_number = ud.level_number = ud.from_bonus;
-//                ud.from_bonus = 0;
-//            }
-//            return;
-//        }
-//    }
+            if (ud.from_bonus)
+            {
+                ud.m_level_number = ud.level_number = ud.from_bonus;
+                ud.from_bonus = 0;
+            }
+            return;
+        }
+    }
 
-//    if (p.pals.f > 0)
-//    {
+    if (p.pals.f > 0)
+    {
 //#if !defined LUNATIC
-//        p.pals.f--;
+        p.pals.f--;
 //#else
 //        if (p.palsfadespeed > 0)
 //        {
@@ -4412,910 +4493,935 @@ var WeaponPickupSprites = new Int16Array([ KNEE__STATIC, FIRSTGUNSPRITE__STATIC,
 //            }
 //        }
 //#endif
-//    }
+    }
 
-//    if (p.fta > 0 && --p.fta == 0)
-//    {
-//        pub = pus = NUMPAGES;
-//        p.ftq = 0;
-//    }
+    if (p.fta > 0 && --p.fta == 0)
+    {
+        pub = pus = NUMPAGES;
+        p.ftq = 0;
+    }
 
-//    if (g_levelTextTime > 0)
-//        g_levelTextTime--;
+    if (g_levelTextTime > 0)
+        g_levelTextTime--;
 
-//    if (s.extra <= 0)
-//    {
-//        if (ud.recstat == 1 && (!g_netServer && ud.multimode < 2))
-//            G_CloseDemoWrite();
+    if (s.extra <= 0)
+    {
+        if (ud.recstat == 1 && (!g_netServer && ud.multimode < 2))
+            todoThrow("G_CloseDemoWrite();");
 
-//        if ((numplayers < 2 || g_netServer) && p.dead_flag == 0)
-//            P_FragPlayer(snum);
+        if ((numplayers < 2 || g_netServer) && p.dead_flag == 0)
+            P_FragPlayer(snum);
 
-//        if (psectlotag == ST_2_UNDERWATER)
-//        {
-//            if (p.on_warping_sector == 0)
-//            {
-//                if (klabs(p.pos.z-fz) > (PHEIGHT>>1))
-//                    p.pos.z += 348;
-//            }
-//            else
-//            {
-//                s.z -= 512;
-//                s.zvel = -348;
-//            }
+        if (psectlotag == ST_2_UNDERWATER)
+        {
+            if (p.on_warping_sector == 0)
+            {
+                if (klabs(p.pos.z-fz) > (PHEIGHT>>1))
+                    p.pos.z += 348;
+            }
+            else
+            {
+                s.z -= 512;
+                s.zvel = -348;
+            }
+            var $cursectnum = new R(p.cursectnum);
+            clipmove(/*(vec3_t *)*/p.pos,$cursectnum,
+                     0,0,164,(4<<8),(4<<8),CLIPMASK0);
+            //                        p.bobcounter += 32;
+            p.cursectnum = $cursectnum.$;
+        }
 
-//            clipmove((vec3_t *)p,&p.cursectnum,
-//                     0,0,164L,(4L<<8),(4L<<8),CLIPMASK0);
-//            //                        p.bobcounter += 32;
-//        }
+        p.opos.copyFrom(p.pos); //Bmemcpy(&p.opos.x, &p.pos.x, sizeof(vec3_t));
+        p.oang = p.ang;
+        p.opyoff = p.pyoff;
 
-//        Bmemcpy(&p.opos.x, &p.pos.x, sizeof(vec3_t));
-//        p.oang = p.ang;
-//        p.opyoff = p.pyoff;
+        p.horiz = 100;
+        p.horizoff = 0;
 
-//        p.horiz = 100;
-//        p.horizoff = 0;
+        var $cursectnum = new R(p.cursectnum);
+        updatesector(p.pos.x,p.pos.y,$cursectnum);
+        p.cursectnum = $cursectnum.$;
 
-//        updatesector(p.pos.x,p.pos.y,&p.cursectnum);
+         var $cursectnum = new R(p.cursectnum);
+        pushmove(/*(vec3_t *)*/p.pos,$cursectnum,128,(4<<8),(20<<8),CLIPMASK0);
+        p.cursectnum = $cursectnum.$;
 
-//        pushmove((vec3_t *)p,&p.cursectnum,128L,(4L<<8),(20L<<8),CLIPMASK0);
+        if (fz > cz+(16<<8) && s.pal != 1)
+            p.rotscrnang = (p.dead_flag + ((fz+p.pos.z)>>7))&2047;
 
-//        if (fz > cz+(16<<8) && s.pal != 1)
-//            p.rotscrnang = (p.dead_flag + ((fz+p.pos.z)>>7))&2047;
+        p.on_warping_sector = 0;
 
-//        p.on_warping_sector = 0;
+        return;
+    }
 
-//        return;
-//    }
+    if (p.transporter_hold > 0)
+    {
+        p.transporter_hold--;
+        if (p.transporter_hold == 0 && p.on_warping_sector)
+            p.transporter_hold = 2;
+    }
+    else if (p.transporter_hold < 0)
+        p.transporter_hold++;
 
-//    if (p.transporter_hold > 0)
-//    {
-//        p.transporter_hold--;
-//        if (p.transporter_hold == 0 && p.on_warping_sector)
-//            p.transporter_hold = 2;
-//    }
-//    else if (p.transporter_hold < 0)
-//        p.transporter_hold++;
+    if (p.newowner >= 0)
+    {todoThrow();
+        //P_UpdatePosWhenViewingCam(p);
+        //P_DoCounters(p);
 
-//    if (p.newowner >= 0)
-//    {
-//        P_UpdatePosWhenViewingCam(p);
-//        P_DoCounters(p);
+        //if (PWEAPON(0, p.curr_weapon, WorksLike) == HANDREMOTE_WEAPON)
+        //    P_ProcessWeapon(snum);
 
-//        if (PWEAPON(0, p.curr_weapon, WorksLike) == HANDREMOTE_WEAPON)
-//            P_ProcessWeapon(snum);
+        //return;
+    }
 
-//        return;
-//    }
+    p.rotscrnang -= (p.rotscrnang>>1);
 
-//    p.rotscrnang -= (p.rotscrnang>>1);
+    if (p.rotscrnang && !(p.rotscrnang>>1))
+        p.rotscrnang -= ksgn(p.rotscrnang);
 
-//    if (p.rotscrnang && !(p.rotscrnang>>1))
-//        p.rotscrnang -= ksgn(p.rotscrnang);
+    p.look_ang -= (p.look_ang>>2);
 
-//    p.look_ang -= (p.look_ang>>2);
+    if (p.look_ang && !(p.look_ang>>2))
+        p.look_ang -= ksgn(p.look_ang);
 
-//    if (p.look_ang && !(p.look_ang>>2))
-//        p.look_ang -= ksgn(p.look_ang);
+    if (TEST_SYNC_KEY(sb_snum, SK_LOOK_LEFT))
+    {
+        // look_left
+        if (VM_OnEvent(EVENT_LOOKLEFT,p.i,snum, -1, 0) == 0)
+        {
+            p.look_ang -= 152;
+            p.rotscrnang += 24;
+        }
+    }
 
-//    if (TEST_SYNC_KEY(sb_snum, SK_LOOK_LEFT))
-//    {
-//        // look_left
-//        if (VM_OnEvent(EVENT_LOOKLEFT,p.i,snum, -1, 0) == 0)
-//        {
-//            p.look_ang -= 152;
-//            p.rotscrnang += 24;
-//        }
-//    }
+    if (TEST_SYNC_KEY(sb_snum, SK_LOOK_RIGHT))
+    {
+        // look_right
+        if (VM_OnEvent(EVENT_LOOKRIGHT,p.i,snum, -1, 0) == 0)
+        {
+            p.look_ang += 152;
+            p.rotscrnang -= 24;
+        }
+    }
 
-//    if (TEST_SYNC_KEY(sb_snum, SK_LOOK_RIGHT))
-//    {
-//        // look_right
-//        if (VM_OnEvent(EVENT_LOOKRIGHT,p.i,snum, -1, 0) == 0)
-//        {
-//            p.look_ang += 152;
-//            p.rotscrnang -= 24;
-//        }
-//    }
+    if (p.on_crane >= 0)
+        todoThrow("goto HORIZONLY");;
 
-//    if (p.on_crane >= 0)
-//        goto HORIZONLY;
+    j = ksgn(g_player[snum].sync.avel);
 
-//    j = ksgn(g_player[snum].sync.avel);
+    if (s.xvel < 32 || p.on_ground == 0 || p.bobcounter == 1024)
+    {
+        if ((p.weapon_sway&2047) > (1024+96))
+            p.weapon_sway -= 96;
+        else if ((p.weapon_sway&2047) < (1024-96))
+            p.weapon_sway += 96;
+        else p.weapon_sway = 1024;
+    }
+    else p.weapon_sway = p.bobcounter;
 
-//    if (s.xvel < 32 || p.on_ground == 0 || p.bobcounter == 1024)
-//    {
-//        if ((p.weapon_sway&2047) > (1024+96))
-//            p.weapon_sway -= 96;
-//        else if ((p.weapon_sway&2047) < (1024-96))
-//            p.weapon_sway += 96;
-//        else p.weapon_sway = 1024;
-//    }
-//    else p.weapon_sway = p.bobcounter;
+    // NOTE: This silently wraps if the difference is too great, e.g. used to do
+    // that when teleported by silent SE7s.
+    s.xvel = ksqrt(uhypsq(p.pos.x-p.bobposx, p.pos.y-p.bobposy));
 
-//    // NOTE: This silently wraps if the difference is too great, e.g. used to do
-//    // that when teleported by silent SE7s.
-//    s.xvel = ksqrt(uhypsq(p.pos.x-p.bobposx, p.pos.y-p.bobposy));
+    if (p.on_ground)
+        p.bobcounter += sprite[p.i].xvel>>1;
 
-//    if (p.on_ground)
-//        p.bobcounter += sprite[p.i].xvel>>1;
+    if (ud.noclip == 0 && (/*(uint16_t)*/p.cursectnum >= MAXSECTORS || sector[p.cursectnum].floorpicnum == MIRROR))
+    {
+        p.pos.x = p.opos.x;
+        p.pos.y = p.opos.y;
+    }
+    else
+    {
+        p.opos.x = p.pos.x;
+        p.opos.y = p.pos.y;
+    }
 
-//    if (ud.noclip == 0 && ((uint16_t)p.cursectnum >= MAXSECTORS || sector[p.cursectnum].floorpicnum == MIRROR))
-//    {
-//        p.pos.x = p.opos.x;
-//        p.pos.y = p.opos.y;
-//    }
-//    else
-//    {
-//        p.opos.x = p.pos.x;
-//        p.opos.y = p.pos.y;
-//    }
+    p.bobposx = p.pos.x;
+    p.bobposy = p.pos.y;
 
-//    p.bobposx = p.pos.x;
-//    p.bobposy = p.pos.y;
+    p.opos.z = p.pos.z;
+    p.opyoff = p.pyoff;
+    p.oang = p.ang;
 
-//    p.opos.z = p.pos.z;
-//    p.opyoff = p.pyoff;
-//    p.oang = p.ang;
+    if (p.one_eighty_count < 0)
+    {
+        p.one_eighty_count += 128;
+        p.ang += 128;
+    }
 
-//    if (p.one_eighty_count < 0)
-//    {
-//        p.one_eighty_count += 128;
-//        p.ang += 128;
-//    }
+    // Shrinking code
 
-//    // Shrinking code
+    i = 40;
 
-//    i = 40;
+    if (psectlotag == ST_2_UNDERWATER)
+    {
+        // under water
+        p.jumping_counter = 0;
 
-//    if (psectlotag == ST_2_UNDERWATER)
-//    {
-//        // under water
-//        p.jumping_counter = 0;
+        p.pycount += 32;
+        p.pycount &= 2047;
+        p.pyoff = sintable[p.pycount]>>7;
 
-//        p.pycount += 32;
-//        p.pycount &= 2047;
-//        p.pyoff = sintable[p.pycount]>>7;
+        if (!A_CheckSoundPlaying(p.i,DUKE_UNDERWATER))
+            A_PlaySound(DUKE_UNDERWATER,p.i);
 
-//        if (!A_CheckSoundPlaying(p.i,DUKE_UNDERWATER))
-//            A_PlaySound(DUKE_UNDERWATER,p.i);
+        if (TEST_SYNC_KEY(sb_snum, SK_JUMP))
+        {
+            if (VM_OnEvent(EVENT_SWIMUP,p.i,snum, -1, 0) == 0)
+            {
+                // jump
+                if (p.vel.z > 0) p.vel.z = 0;
+                p.vel.z -= 348;
+                if (p.vel.z < -(256*6)) p.vel.z = -(256*6);
+            }
+        }
+        else if (TEST_SYNC_KEY(sb_snum, SK_CROUCH))
+        {
+            if (VM_OnEvent(EVENT_SWIMDOWN,p.i,snum, -1, 0) == 0)
+            {
+                // crouch
+                if (p.vel.z < 0) p.vel.z = 0;
+                p.vel.z += 348;
+                if (p.vel.z > (256*6)) p.vel.z = (256*6);
+            }
+        }
+        else
+        {
+            // normal view
+            if (p.vel.z < 0)
+            {
+                p.vel.z += 256;
+                if (p.vel.z > 0)
+                    p.vel.z = 0;
+            }
+            if (p.vel.z > 0)
+            {
+                p.vel.z -= 256;
+                if (p.vel.z < 0)
+                    p.vel.z = 0;
+            }
+        }
 
-//        if (TEST_SYNC_KEY(sb_snum, SK_JUMP))
-//        {
-//            if (VM_OnEvent(EVENT_SWIMUP,p.i,snum, -1, 0) == 0)
-//            {
-//                // jump
-//                if (p.vel.z > 0) p.vel.z = 0;
-//                p.vel.z -= 348;
-//                if (p.vel.z < -(256*6)) p.vel.z = -(256*6);
-//            }
-//        }
-//        else if (TEST_SYNC_KEY(sb_snum, SK_CROUCH))
-//        {
-//            if (VM_OnEvent(EVENT_SWIMDOWN,p.i,snum, -1, 0) == 0)
-//            {
-//                // crouch
-//                if (p.vel.z < 0) p.vel.z = 0;
-//                p.vel.z += 348;
-//                if (p.vel.z > (256*6)) p.vel.z = (256*6);
-//            }
-//        }
-//        else
-//        {
-//            // normal view
-//            if (p.vel.z < 0)
-//            {
-//                p.vel.z += 256;
-//                if (p.vel.z > 0)
-//                    p.vel.z = 0;
-//            }
-//            if (p.vel.z > 0)
-//            {
-//                p.vel.z -= 256;
-//                if (p.vel.z < 0)
-//                    p.vel.z = 0;
-//            }
-//        }
+        if (p.vel.z > 2048)
+            p.vel.z >>= 1;
 
-//        if (p.vel.z > 2048)
-//            p.vel.z >>= 1;
+        p.pos.z += p.vel.z;
 
-//        p.pos.z += p.vel.z;
+        if (p.pos.z > (fz-(15<<8)))
+            p.pos.z += ((fz-(15<<8))-p.pos.z)>>1;
 
-//        if (p.pos.z > (fz-(15<<8)))
-//            p.pos.z += ((fz-(15<<8))-p.pos.z)>>1;
+        if (p.pos.z < cz)
+        {
+            p.pos.z = cz;
+            p.vel.z = 0;
+        }
 
-//        if (p.pos.z < cz)
-//        {
-//            p.pos.z = cz;
-//            p.vel.z = 0;
-//        }
+        if (p.scuba_on && (krand()&255) < 8)
+        {
+            j = A_Spawn(p.i,WATERBUBBLE);
+            sprite[j].x +=
+                sintable[(p.ang+512+64-(g_globalRandom&128))&2047]>>6;
+            sprite[j].y +=
+                sintable[(p.ang+64-(g_globalRandom&128))&2047]>>6;
+            sprite[j].xrepeat = 3;
+            sprite[j].yrepeat = 2;
+            sprite[j].z = p.pos.z+(8<<8);
+        }
+    }
+    else if (p.jetpack_on)
+    {
+        p.on_ground = 0;
+        p.jumping_counter = 0;
+        p.hard_landing = 0;
+        p.falling_counter = 0;
 
-//        if (p.scuba_on && (krand()&255) < 8)
-//        {
-//            j = A_Spawn(p.i,WATERBUBBLE);
-//            sprite[j].x +=
-//                sintable[(p.ang+512+64-(g_globalRandom&128))&2047]>>6;
-//            sprite[j].y +=
-//                sintable[(p.ang+64-(g_globalRandom&128))&2047]>>6;
-//            sprite[j].xrepeat = 3;
-//            sprite[j].yrepeat = 2;
-//            sprite[j].z = p.pos.z+(8<<8);
-//        }
-//    }
-//    else if (p.jetpack_on)
-//    {
-//        p.on_ground = 0;
-//        p.jumping_counter = 0;
-//        p.hard_landing = 0;
-//        p.falling_counter = 0;
+        p.pycount += 32;
+        p.pycount &= 2047;
+        p.pyoff = sintable[p.pycount]>>7;
 
-//        p.pycount += 32;
-//        p.pycount &= 2047;
-//        p.pyoff = sintable[p.pycount]>>7;
+        if (p.jetpack_on < 11)
+        {
+            p.jetpack_on++;
+            p.pos.z -= (p.jetpack_on<<7); //Goin up
+        }
+        else if (p.jetpack_on == 11 && !A_CheckSoundPlaying(p.i,DUKE_JETPACK_IDLE))
+            A_PlaySound(DUKE_JETPACK_IDLE,p.i);
 
-//        if (p.jetpack_on < 11)
-//        {
-//            p.jetpack_on++;
-//            p.pos.z -= (p.jetpack_on<<7); //Goin up
-//        }
-//        else if (p.jetpack_on == 11 && !A_CheckSoundPlaying(p.i,DUKE_JETPACK_IDLE))
-//            A_PlaySound(DUKE_JETPACK_IDLE,p.i);
+        if (shrunk) j = 512;
+        else j = 2048;
 
-//        if (shrunk) j = 512;
-//        else j = 2048;
+        if (TEST_SYNC_KEY(sb_snum, SK_JUMP))         //A (soar high)
+        {
+            // jump
+            if (VM_OnEvent(EVENT_SOARUP,p.i,snum, -1, 0) == 0)
+            {
+                p.pos.z -= j;
+                p.crack_time = 777;
+            }
+        }
 
-//        if (TEST_SYNC_KEY(sb_snum, SK_JUMP))         //A (soar high)
-//        {
-//            // jump
-//            if (VM_OnEvent(EVENT_SOARUP,p.i,snum, -1, 0) == 0)
-//            {
-//                p.pos.z -= j;
-//                p.crack_time = 777;
-//            }
-//        }
+        if (TEST_SYNC_KEY(sb_snum, SK_CROUCH))   //Z (soar low)
+        {
+            // crouch
+            if (VM_OnEvent(EVENT_SOARDOWN,p.i,snum, -1, 0) == 0)
+            {
+                p.pos.z += j;
+                p.crack_time = 777;
+            }
+        }
 
-//        if (TEST_SYNC_KEY(sb_snum, SK_CROUCH))   //Z (soar low)
-//        {
-//            // crouch
-//            if (VM_OnEvent(EVENT_SOARDOWN,p.i,snum, -1, 0) == 0)
-//            {
-//                p.pos.z += j;
-//                p.crack_time = 777;
-//            }
-//        }
+        if (shrunk == 0 && (psectlotag == 0 || psectlotag == ST_2_UNDERWATER)) k = 32;
+        else k = 16;
 
-//        if (shrunk == 0 && (psectlotag == 0 || psectlotag == ST_2_UNDERWATER)) k = 32;
-//        else k = 16;
+        if (psectlotag != ST_2_UNDERWATER && p.scuba_on == 1)
+            p.scuba_on = 0;
 
-//        if (psectlotag != ST_2_UNDERWATER && p.scuba_on == 1)
-//            p.scuba_on = 0;
+        if (p.pos.z > (fz-(k<<8)))
+            p.pos.z += ((fz-(k<<8))-p.pos.z)>>1;
+        if (p.pos.z < (actor[p.i].ceilingz+(18<<8)))
+            p.pos.z = actor[p.i].ceilingz+(18<<8);
+    }
+    else if (psectlotag != ST_2_UNDERWATER)
+    {
+        p.airleft = 15 * GAMETICSPERSEC; // 13 seconds
 
-//        if (p.pos.z > (fz-(k<<8)))
-//            p.pos.z += ((fz-(k<<8))-p.pos.z)>>1;
-//        if (p.pos.z < (actor[p.i].ceilingz+(18<<8)))
-//            p.pos.z = actor[p.i].ceilingz+(18<<8);
-//    }
-//    else if (psectlotag != ST_2_UNDERWATER)
-//    {
-//        p.airleft = 15 * GAMETICSPERSEC; // 13 seconds
+        if (p.scuba_on == 1)
+            p.scuba_on = 0;
 
-//        if (p.scuba_on == 1)
-//            p.scuba_on = 0;
+        if (psectlotag == ST_1_ABOVE_WATER && p.spritebridge == 0)
+        {
+            if (shrunk == 0)
+            {
+                i = 34;
+                p.pycount += 32;
+                p.pycount &= 2047;
+                p.pyoff = sintable[p.pycount]>>6;
+            }
+            else i = 12;
 
-//        if (psectlotag == ST_1_ABOVE_WATER && p.spritebridge == 0)
-//        {
-//            if (shrunk == 0)
-//            {
-//                i = 34;
-//                p.pycount += 32;
-//                p.pycount &= 2047;
-//                p.pyoff = sintable[p.pycount]>>6;
-//            }
-//            else i = 12;
+            if (shrunk == 0 && truefdist <= PHEIGHT)
+            {
+                if (p.on_ground == 1)
+                {
+                    if (p.dummyplayersprite < 0)
+                        p.dummyplayersprite = A_Spawn(p.i,PLAYERONWATER);
+                    sprite[p.dummyplayersprite].pal = sprite[p.i].pal;
+                    sprite[p.dummyplayersprite].cstat |= 32768;
 
-//            if (shrunk == 0 && truefdist <= PHEIGHT)
-//            {
-//                if (p.on_ground == 1)
-//                {
-//                    if (p.dummyplayersprite < 0)
-//                        p.dummyplayersprite = A_Spawn(p.i,PLAYERONWATER);
-//                    sprite[p.dummyplayersprite].pal = sprite[p.i].pal;
-//                    sprite[p.dummyplayersprite].cstat |= 32768;
+                    p.footprintcount = 6;
+                    if (sector[p.cursectnum].floorpicnum == FLOORSLIME)
+                        p.footprintpal = 8;
+                    else p.footprintpal = 0;
+                    p.footprintshade = 0;
+                }
+            }
+        }
+        else
+        {
+            if (p.footprintcount > 0 && p.on_ground)
+                if (p.cursectnum >= 0 && (sector[p.cursectnum].floorstat&2) != 2)
+                {
+                    for (j=headspritesect[p.cursectnum]; j>=0; j=nextspritesect[j])
+                        if (sprite[j].picnum == FOOTPRINTS || sprite[j].picnum == FOOTPRINTS2 ||
+                                sprite[j].picnum == FOOTPRINTS3 || sprite[j].picnum == FOOTPRINTS4)
+                            if (klabs(sprite[j].x-p.pos.x) < 384 && klabs(sprite[j].y-p.pos.y) < 384)
+                                break;
 
-//                    p.footprintcount = 6;
-//                    if (sector[p.cursectnum].floorpicnum == FLOORSLIME)
-//                        p.footprintpal = 8;
-//                    else p.footprintpal = 0;
-//                    p.footprintshade = 0;
-//                }
-//            }
-//        }
-//        else
-//        {
-//            if (p.footprintcount > 0 && p.on_ground)
-//                if (p.cursectnum >= 0 && (sector[p.cursectnum].floorstat&2) != 2)
-//                {
-//                    for (j=headspritesect[p.cursectnum]; j>=0; j=nextspritesect[j])
-//                        if (sprite[j].picnum == FOOTPRINTS || sprite[j].picnum == FOOTPRINTS2 ||
-//                                sprite[j].picnum == FOOTPRINTS3 || sprite[j].picnum == FOOTPRINTS4)
-//                            if (klabs(sprite[j].x-p.pos.x) < 384 && klabs(sprite[j].y-p.pos.y) < 384)
-//                                break;
-
-//                    if (j < 0)
-//                    {
-//                        if (p.cursectnum >= 0 && sector[p.cursectnum].lotag == 0 && sector[p.cursectnum].hitag == 0)
+                    if (j < 0)
+                    {
+                        if (p.cursectnum >= 0 && sector[p.cursectnum].lotag == 0 && sector[p.cursectnum].hitag == 0)
 //#ifdef YAX_ENABLE
-//                            if (yax_getbunch(p.cursectnum, YAX_FLOOR) < 0 || (sector[p.cursectnum].floorstat&512))
+                            if (yax_getbunch(p.cursectnum, YAX_FLOOR) < 0 || (sector[p.cursectnum].floorstat&512))
 //#endif
-//                        {
-//                            switch (krand()&3)
-//                            {
-//                            case 0:
-//                                j = A_Spawn(p.i,FOOTPRINTS);
-//                                break;
-//                            case 1:
-//                                j = A_Spawn(p.i,FOOTPRINTS2);
-//                                break;
-//                            case 2:
-//                                j = A_Spawn(p.i,FOOTPRINTS3);
-//                                break;
-//                            default:
-//                                j = A_Spawn(p.i,FOOTPRINTS4);
-//                                break;
-//                            }
-//                            sprite[j].pal = p.footprintpal;
-//                            sprite[j].shade = p.footprintshade;
-//                            p.footprintcount--;
-//                        }
-//                    }
-//                }
-//        }
+                        {
+                            switch (krand()&3)
+                            {
+                            case 0:
+                                j = A_Spawn(p.i,FOOTPRINTS);
+                                break;
+                            case 1:
+                                j = A_Spawn(p.i,FOOTPRINTS2);
+                                break;
+                            case 2:
+                                j = A_Spawn(p.i,FOOTPRINTS3);
+                                break;
+                            default:
+                                j = A_Spawn(p.i,FOOTPRINTS4);
+                                break;
+                            }
+                            sprite[j].pal = p.footprintpal;
+                            sprite[j].shade = p.footprintshade;
+                            p.footprintcount--;
+                        }
+                    }
+                }
+        }
 
-//        if (p.pos.z < (fz-(i<<8)))  //falling
-//        {
-//            // not jumping or crouching
+        if (p.pos.z < (fz-(i<<8)))  //falling
+        {
+            // not jumping or crouching
 
-//            if (!TEST_SYNC_KEY(sb_snum, SK_JUMP) && !TEST_SYNC_KEY(sb_snum, SK_CROUCH) &&
-//                    p.on_ground && (sector[p.cursectnum].floorstat&2) && p.pos.z >= (fz-(i<<8)-(16<<8)))
-//                p.pos.z = fz-(i<<8);
-//            else
-//            {
-//                p.on_ground = 0;
-//                p.vel.z += (g_spriteGravity+80); // (TICSPERFRAME<<6);
-//                if (p.vel.z >= (4096+2048)) p.vel.z = (4096+2048);
-//                if (p.vel.z > 2400 && p.falling_counter < 255)
-//                {
-//                    p.falling_counter++;
-//                    if (p.falling_counter >= 38 && p.scream_voice <= FX_Ok)
-//                        p.scream_voice = A_PlaySound(DUKE_SCREAM,p.i);
-//                }
+            if (!TEST_SYNC_KEY(sb_snum, SK_JUMP) && !TEST_SYNC_KEY(sb_snum, SK_CROUCH) &&
+                    p.on_ground && (sector[p.cursectnum].floorstat&2) && p.pos.z >= (fz-(i<<8)-(16<<8)))
+                p.pos.z = fz-(i<<8);
+            else
+            {
+                p.on_ground = 0;
+                p.vel.z += (g_spriteGravity+80); // (TICSPERFRAME<<6);
+                if (p.vel.z >= (4096+2048)) p.vel.z = (4096+2048);
+                if (p.vel.z > 2400 && p.falling_counter < 255)
+                {
+                    p.falling_counter++;
+                    if (p.falling_counter >= 38 && p.scream_voice <= FX_Ok)
+                        p.scream_voice = A_PlaySound(DUKE_SCREAM,p.i);
+                }
 
-//                if ((p.pos.z+p.vel.z) >= (fz-(i<<8)) && p.cursectnum >= 0)   // hit the ground
-//                    if (sector[p.cursectnum].lotag != ST_1_ABOVE_WATER)
-//                    {
-//                        if (p.falling_counter > 62)
-//                            P_QuickKill(p);
-//                        else if (p.falling_counter > 9)
-//                        {
-//                            // Falling damage.
-//                            s.extra -= p.falling_counter-(krand()&3);
+                if ((p.pos.z+p.vel.z) >= (fz-(i<<8)) && p.cursectnum >= 0)   // hit the ground
+                    if (sector[p.cursectnum].lotag != ST_1_ABOVE_WATER)
+                    {
+                        if (p.falling_counter > 62)
+                            P_QuickKill(p);
+                        else if (p.falling_counter > 9)
+                        {
+                            // Falling damage.
+                            s.extra -= p.falling_counter-(krand()&3);
 
-//                            if (s.extra <= 0)
-//                            {
-//                                A_PlaySound(SQUISHED,p.i);
+                            if (s.extra <= 0)
+                            {
+                                A_PlaySound(SQUISHED,p.i);
 
-////                                P_PalFrom(p, 63, 63,0,0);
-//                            }
-//                            else
-//                            {
-//                                A_PlaySound(DUKE_LAND,p.i);
-//                                A_PlaySound(DUKE_LAND_HURT,p.i);
-//                            }
+//                                P_PalFrom(p, 63, 63,0,0);
+                            }
+                            else
+                            {
+                                A_PlaySound(DUKE_LAND,p.i);
+                                A_PlaySound(DUKE_LAND_HURT,p.i);
+                            }
 
-//                            P_PalFrom(p, 32, 16,0,0);
-//                        }
-//                        else if (p.vel.z > 2048)
-//                            A_PlaySound(DUKE_LAND,p.i);
-//                    }
-//            }
-//        }
-//        else
-//        {
-//            p.falling_counter = 0;
+                            P_PalFrom(p, 32, 16,0,0);
+                        }
+                        else if (p.vel.z > 2048)
+                            A_PlaySound(DUKE_LAND,p.i);
+                    }
+            }
+        }
+        else
+        {
+            p.falling_counter = 0;
 
-//            if (p.scream_voice > FX_Ok)
-//            {
-//                FX_StopSound(p.scream_voice);
-//                S_Cleanup();
-//                p.scream_voice = -1;
-//            }
+            if (p.scream_voice > FX_Ok)
+            {
+                FX_StopSound(p.scream_voice);
+                S_Cleanup();
+                p.scream_voice = -1;
+            }
 
-//            if (psectlotag != ST_1_ABOVE_WATER && psectlotag != ST_2_UNDERWATER && p.on_ground == 0 && p.vel.z > (6144>>1))
-//                p.hard_landing = p.vel.z>>10;
+            if (psectlotag != ST_1_ABOVE_WATER && psectlotag != ST_2_UNDERWATER && p.on_ground == 0 && p.vel.z > (6144>>1))
+                p.hard_landing = p.vel.z>>10;
 
-//            p.on_ground = 1;
+            p.on_ground = 1;
 
-//            if (i==40)
-//            {
-//                //Smooth on the ground
+            if (i==40)
+            {
+                //Smooth on the ground
 
-//                k = ((fz-(i<<8))-p.pos.z)>>1;
-//                if (klabs(k) < 256) k = 0;
-//                p.pos.z += k;
-//                p.vel.z -= 768;
-//                if (p.vel.z < 0) p.vel.z = 0;
-//            }
-//            else if (p.jumping_counter == 0)
-//            {
-//                p.pos.z += ((fz-(i<<7))-p.pos.z)>>1; //Smooth on the water
-//                if (p.on_warping_sector == 0 && p.pos.z > fz-(16<<8))
-//                {
-//                    p.pos.z = fz-(16<<8);
-//                    p.vel.z >>= 1;
-//                }
-//            }
+                k = ((fz-(i<<8))-p.pos.z)>>1;
+                if (klabs(k) < 256) k = 0;
+                p.pos.z += k;
+                p.vel.z -= 768;
+                if (p.vel.z < 0) p.vel.z = 0;
+            }
+            else if (p.jumping_counter == 0)
+            {
+                p.pos.z += ((fz-(i<<7))-p.pos.z)>>1; //Smooth on the water
+                if (p.on_warping_sector == 0 && p.pos.z > fz-(16<<8))
+                {
+                    p.pos.z = fz-(16<<8);
+                    p.vel.z >>= 1;
+                }
+            }
 
-//            p.on_warping_sector = 0;
+            p.on_warping_sector = 0;
 
-//            if (TEST_SYNC_KEY(sb_snum, SK_CROUCH))
-//            {
-//                // crouching
-//                if (VM_OnEvent(EVENT_CROUCH,p.i,snum, -1, 0) == 0)
-//                {
-//                    p.pos.z += (2048+768);
-//                    p.crack_time = 777;
-//                }
-//            }
+            if (TEST_SYNC_KEY(sb_snum, SK_CROUCH))
+            {
+                // crouching
+                if (VM_OnEvent(EVENT_CROUCH,p.i,snum, -1, 0) == 0)
+                {
+                    p.pos.z += (2048+768);
+                    p.crack_time = 777;
+                }
+            }
 
-//            // jumping
-//            if (!TEST_SYNC_KEY(sb_snum, SK_JUMP) && p.jumping_toggle == 1)
-//                p.jumping_toggle = 0;
-//            else if (TEST_SYNC_KEY(sb_snum, SK_JUMP) && p.jumping_toggle == 0)
-//            {
-//                if (p.jumping_counter == 0)
-//                    if ((fz-cz) > (56<<8))
-//                    {
-//                        if (VM_OnEvent(EVENT_JUMP,p.i,snum, -1, 0) == 0)
-//                        {
-//                            p.jumping_counter = 1;
-//                            p.jumping_toggle = 1;
-//                        }
-//                    }
-//            }
+            // jumping
+            if (!TEST_SYNC_KEY(sb_snum, SK_JUMP) && p.jumping_toggle == 1)
+                p.jumping_toggle = 0;
+            else if (TEST_SYNC_KEY(sb_snum, SK_JUMP) && p.jumping_toggle == 0)
+            {
+                if (p.jumping_counter == 0)
+                    if ((fz-cz) > (56<<8))
+                    {
+                        if (VM_OnEvent(EVENT_JUMP,p.i,snum, -1, 0) == 0)
+                        {
+                            p.jumping_counter = 1;
+                            p.jumping_toggle = 1;
+                        }
+                    }
+            }
 
-//            if (p.jumping_counter && !TEST_SYNC_KEY(sb_snum, SK_JUMP))
-//                p.jumping_toggle = 0;
-//        }
+            if (p.jumping_counter && !TEST_SYNC_KEY(sb_snum, SK_JUMP))
+                p.jumping_toggle = 0;
+        }
 
-//        if (p.jumping_counter)
-//        {
-//            if (!TEST_SYNC_KEY(sb_snum, SK_JUMP) && p.jumping_toggle == 1)
-//                p.jumping_toggle = 0;
+        if (p.jumping_counter)
+        {
+            if (!TEST_SYNC_KEY(sb_snum, SK_JUMP) && p.jumping_toggle == 1)
+                p.jumping_toggle = 0;
 
-//            if (p.jumping_counter < (1024+256))
-//            {
-//                if (psectlotag == ST_1_ABOVE_WATER && p.jumping_counter > 768)
-//                {
-//                    p.jumping_counter = 0;
-//                    p.vel.z = -512;
-//                }
-//                else
-//                {
-//                    p.vel.z -= (sintable[(2048-128+p.jumping_counter)&2047])/12;
-//                    p.jumping_counter += 180;
-//                    p.on_ground = 0;
-//                }
-//            }
-//            else
-//            {
-//                p.jumping_counter = 0;
-//                p.vel.z = 0;
-//            }
-//        }
+            if (p.jumping_counter < (1024+256))
+            {
+                if (psectlotag == ST_1_ABOVE_WATER && p.jumping_counter > 768)
+                {
+                    p.jumping_counter = 0;
+                    p.vel.z = -512;
+                }
+                else
+                {
+                    p.vel.z -= int32((sintable[(2048-128+p.jumping_counter)&2047])/12);
+                    p.jumping_counter += 180;
+                    p.on_ground = 0;
+                }
+            }
+            else
+            {
+                p.jumping_counter = 0;
+                p.vel.z = 0;
+            }
+        }
 
-//        p.pos.z += p.vel.z;
+        p.pos.z += p.vel.z;
 
-//        if ((psectlotag != ST_2_UNDERWATER || cz != sector[p.cursectnum].ceilingz) && p.pos.z < (cz+(4<<8)))
-//        {
-//            p.jumping_counter = 0;
-//            if (p.vel.z < 0)
-//                p.vel.x = p.vel.y = 0;
-//            p.vel.z = 128;
-//            p.pos.z = cz+(4<<8);
-//        }
-//    }
+        if ((psectlotag != ST_2_UNDERWATER || cz != sector[p.cursectnum].ceilingz) && p.pos.z < (cz+(4<<8)))
+        {
+            p.jumping_counter = 0;
+            if (p.vel.z < 0)
+                p.vel.x = p.vel.y = 0;
+            p.vel.z = 128;
+            p.pos.z = cz+(4<<8);
+        }
+    }
 
-//    if (p.fist_incs || p.transporter_hold > 2 || p.hard_landing || p.access_incs > 0 || p.knee_incs > 0 ||
-//            (PWEAPON(0, p.curr_weapon, WorksLike) == TRIPBOMB_WEAPON &&
-//             *kb > 1 && *kb < PWEAPON(0, p.curr_weapon, FireDelay)))
-//    {
-//        doubvel = 0;
-//        p.vel.x = 0;
-//        p.vel.y = 0;
-//    }
-//    else if (g_player[snum].sync.avel)            //p.ang += syncangvel * constant
-//    {
-//        int32_t tempang = g_player[snum].sync.avel<<1;
+    if (p.fist_incs || p.transporter_hold > 2 || p.hard_landing || p.access_incs > 0 || p.knee_incs > 0 ||
+            (PWEAPON(0, p.curr_weapon, WorksLike) == TRIPBOMB_WEAPON &&
+             kb.$ > 1 && kb.$ < PWEAPON(0, p.curr_weapon, FireDelay)))
+    {
+        doubvel = 0;
+        p.vel.x = 0;
+        p.vel.y = 0;
+    }
+    else if (g_player[snum].sync.avel)            //p.ang += syncangvel * constant
+    {
+        var /*int32_t */tempang = g_player[snum].sync.avel<<1;
 
-//        if (psectlotag == ST_2_UNDERWATER) p.angvel =(tempang-(tempang>>3))*ksgn(doubvel);
-//        else p.angvel = tempang*ksgn(doubvel);
+        if (psectlotag == ST_2_UNDERWATER) p.angvel =(tempang-(tempang>>3))*ksgn(doubvel);
+        else p.angvel = tempang*ksgn(doubvel);
 
-//        p.ang += p.angvel;
-//        p.ang &= 2047;
-//        p.crack_time = 777;
-//    }
+        p.ang += p.angvel;
+        p.ang &= 2047;
+        p.crack_time = 777;
+    }
 
-//    if (p.spritebridge == 0)
-//    {
-//        j = sector[s.sectnum].floorpicnum;
+    if (p.spritebridge == 0)
+    {
+        j = sector[s.sectnum].floorpicnum;
 
-//        if (j == PURPLELAVA || sector[s.sectnum].ceilingpicnum == PURPLELAVA)
-//        {
-//            if (p.inv_amount[GET_BOOTS] > 0)
-//            {
-//                p.inv_amount[GET_BOOTS]--;
-//                p.inven_icon = ICON_BOOTS;
-//                if (p.inv_amount[GET_BOOTS] <= 0)
-//                    P_SelectNextInvItem(p);
-//            }
-//            else
-//            {
-//                if (!A_CheckSoundPlaying(p.i,DUKE_LONGTERM_PAIN))
-//                    A_PlaySound(DUKE_LONGTERM_PAIN,p.i);
+        if (j == PURPLELAVA || sector[s.sectnum].ceilingpicnum == PURPLELAVA)
+        {
+            if (p.inv_amount[GET_BOOTS] > 0)
+            {
+                p.inv_amount[GET_BOOTS]--;
+                p.inven_icon = ICON_BOOTS;
+                if (p.inv_amount[GET_BOOTS] <= 0)
+                    P_SelectNextInvItem(p);
+            }
+            else
+            {
+                if (!A_CheckSoundPlaying(p.i,DUKE_LONGTERM_PAIN))
+                    A_PlaySound(DUKE_LONGTERM_PAIN,p.i);
 
-//                P_PalFrom(p, 32, 0,8,0);
-//                s.extra--;
-//            }
-//        }
+                P_PalFrom(p, 32, 0,8,0);
+                s.extra--;
+            }
+        }
 
-//        if (p.on_ground && truefdist <= PHEIGHT+(16<<8) && P_CheckFloorDamage(p, j))
-//        {
-//            P_DoQuote(QUOTE_BOOTS_ON, p);
-//            p.inv_amount[GET_BOOTS] -= 2;
-//            if (p.inv_amount[GET_BOOTS] <= 0)
-//            {
-//                p.inv_amount[GET_BOOTS] = 0;
-//                P_SelectNextInvItem(p);
-//            }
-//        }
-//    }
+        if (p.on_ground && truefdist <= PHEIGHT+(16<<8) && P_CheckFloorDamage(p, j))
+        {
+            P_DoQuote(QUOTE_BOOTS_ON, p);
+            p.inv_amount[GET_BOOTS] -= 2;
+            if (p.inv_amount[GET_BOOTS] <= 0)
+            {
+                p.inv_amount[GET_BOOTS] = 0;
+                P_SelectNextInvItem(p);
+            }
+        }
+    }
 
-//    if (g_player[snum].sync.extbits&(1))
-//        VM_OnEvent(EVENT_MOVEFORWARD,p.i,snum, -1, 0);
+    if (g_player[snum].sync.extbits&(1))
+        VM_OnEvent(EVENT_MOVEFORWARD,p.i,snum, -1, 0);
 
-//    if (g_player[snum].sync.extbits&(1<<1))
-//        VM_OnEvent(EVENT_MOVEBACKWARD,p.i,snum, -1, 0);
+    if (g_player[snum].sync.extbits&(1<<1))
+        VM_OnEvent(EVENT_MOVEBACKWARD,p.i,snum, -1, 0);
 
-//    if (g_player[snum].sync.extbits&(1<<2))
-//        VM_OnEvent(EVENT_STRAFELEFT,p.i,snum, -1, 0);
+    if (g_player[snum].sync.extbits&(1<<2))
+        VM_OnEvent(EVENT_STRAFELEFT,p.i,snum, -1, 0);
 
-//    if (g_player[snum].sync.extbits&(1<<3))
-//        VM_OnEvent(EVENT_STRAFERIGHT,p.i,snum, -1, 0);
+    if (g_player[snum].sync.extbits&(1<<3))
+        VM_OnEvent(EVENT_STRAFERIGHT,p.i,snum, -1, 0);
 
-//    if (g_player[snum].sync.extbits&(1<<4) || g_player[snum].sync.avel < 0)
-//        VM_OnEvent(EVENT_TURNLEFT,p.i,snum, -1, 0);
+    if (g_player[snum].sync.extbits&(1<<4) || g_player[snum].sync.avel < 0)
+        VM_OnEvent(EVENT_TURNLEFT,p.i,snum, -1, 0);
 
-//    if (g_player[snum].sync.extbits&(1<<5) || g_player[snum].sync.avel > 0)
-//        VM_OnEvent(EVENT_TURNRIGHT,p.i,snum, -1, 0);
+    if (g_player[snum].sync.extbits&(1<<5) || g_player[snum].sync.avel > 0)
+        VM_OnEvent(EVENT_TURNRIGHT,p.i,snum, -1, 0);
 
-//    if (p.vel.x || p.vel.y || g_player[snum].sync.fvel || g_player[snum].sync.svel)
-//    {
-//        p.crack_time = 777;
+    if (p.vel.x || p.vel.y || g_player[snum].sync.fvel || g_player[snum].sync.svel)
+    {
+        p.crack_time = 777;
 
-//        k = sintable[p.bobcounter&2047]>>12;
+        k = sintable[p.bobcounter&2047]>>12;
 
-//        if ((truefdist < PHEIGHT+(8<<8)) && (k == 1 || k == 3))
-//        {
-//            if (p.walking_snd_toggle == 0 && p.on_ground)
-//            {
-//                switch (psectlotag)
-//                {
-//                case 0:
-//                    if (lz >= 0 && (lz&49152) == 49152)
-//                        j = sprite[lz&(MAXSPRITES-1)].picnum;
-//                    else j = sector[p.cursectnum].floorpicnum;
+        if ((truefdist < PHEIGHT+(8<<8)) && (k == 1 || k == 3))
+        {
+            if (p.walking_snd_toggle == 0 && p.on_ground)
+            {
+                switch (psectlotag)
+                {
+                case 0:
+                    if (lz >= 0 && (lz&49152) == 49152)
+                        j = sprite[lz&(MAXSPRITES-1)].picnum;
+                    else j = sector[p.cursectnum].floorpicnum;
 
-//                    switch (DYNAMICTILEMAP(j))
-//                    {
-//                    case PANNEL1__STATIC:
-//                    case PANNEL2__STATIC:
-//                        A_PlaySound(DUKE_WALKINDUCTS,p.i);
-//                        p.walking_snd_toggle = 1;
-//                        break;
-//                    }
-//                    break;
+                    switch (DYNAMICTILEMAP(j))
+                    {
+                    case PANNEL1__STATIC:
+                    case PANNEL2__STATIC:
+                        A_PlaySound(DUKE_WALKINDUCTS,p.i);
+                        p.walking_snd_toggle = 1;
+                        break;
+                    }
+                    break;
 
-//                case ST_1_ABOVE_WATER:
-//                    if (!p.spritebridge)
-//                    {
-//                        if ((krand()&1) == 0)
-//                            A_PlaySound(DUKE_ONWATER,p.i);
-//                        p.walking_snd_toggle = 1;
-//                    }
-//                    break;
-//                }
-//            }
-//        }
-//        else if (p.walking_snd_toggle > 0)
-//            p.walking_snd_toggle--;
+                case ST_1_ABOVE_WATER:
+                    if (!p.spritebridge)
+                    {
+                        if ((krand()&1) == 0)
+                            A_PlaySound(DUKE_ONWATER,p.i);
+                        p.walking_snd_toggle = 1;
+                    }
+                    break;
+                }
+            }
+        }
+        else if (p.walking_snd_toggle > 0)
+            p.walking_snd_toggle--;
 
-//        if (p.jetpack_on == 0 && p.inv_amount[GET_STEROIDS] > 0 && p.inv_amount[GET_STEROIDS] < 400)
-//            doubvel <<= 1;
+        if (p.jetpack_on == 0 && p.inv_amount[GET_STEROIDS] > 0 && p.inv_amount[GET_STEROIDS] < 400)
+            doubvel <<= 1;
 
-//        p.vel.x += ((g_player[snum].sync.fvel*doubvel)<<6);
-//        p.vel.y += ((g_player[snum].sync.svel*doubvel)<<6);
+        p.vel.x += ((g_player[snum].sync.fvel*doubvel)<<6);
+        p.vel.y += ((g_player[snum].sync.svel*doubvel)<<6);
 
-//        j = 0;
+        j = 0;
 
-//        if (psectlotag == ST_2_UNDERWATER)
-//            j = 0x1400;
-//        else if (p.on_ground && (TEST_SYNC_KEY(sb_snum, SK_CROUCH) || (*kb > 10 && PWEAPON(snum, p.curr_weapon, WorksLike) == KNEE_WEAPON)))
-//            j = 0x2000;
+        if (psectlotag == ST_2_UNDERWATER)
+            j = 0x1400;
+        else if (p.on_ground && (TEST_SYNC_KEY(sb_snum, SK_CROUCH) || (kb.$ > 10 && PWEAPON(snum, p.curr_weapon, WorksLike) == KNEE_WEAPON)))
+            j = 0x2000;
 
-//        p.vel.x = mulscale16(p.vel.x,p.runspeed-j);
-//        p.vel.y = mulscale16(p.vel.y,p.runspeed-j);
+        p.vel.x = mulscale16(p.vel.x,p.runspeed-j);
+        p.vel.y = mulscale16(p.vel.y,p.runspeed-j);
 
-//        if (klabs(p.vel.x) < 2048 && klabs(p.vel.y) < 2048)
-//            p.vel.x = p.vel.y = 0;
+        if (klabs(p.vel.x) < 2048 && klabs(p.vel.y) < 2048)
+            p.vel.x = p.vel.y = 0;
 
-//        if (shrunk)
-//        {
-//            p.vel.x = mulscale16(p.vel.x,p.runspeed-(p.runspeed>>1)+(p.runspeed>>2));
-//            p.vel.y = mulscale16(p.vel.y,p.runspeed-(p.runspeed>>1)+(p.runspeed>>2));
-//        }
-//    }
+        if (shrunk)
+        {
+            p.vel.x = mulscale16(p.vel.x,p.runspeed-(p.runspeed>>1)+(p.runspeed>>2));
+            p.vel.y = mulscale16(p.vel.y,p.runspeed-(p.runspeed>>1)+(p.runspeed>>2));
+        }
+    }
 
 //HORIZONLY:
-//    if (psectlotag == ST_1_ABOVE_WATER || p.spritebridge == 1) i = p.autostep_sbw;
-//    else i = p.autostep;
+    if (psectlotag == ST_1_ABOVE_WATER || p.spritebridge == 1) i = p.autostep_sbw;
+    else i = p.autostep;
 
-//    if (p.cursectnum >= 0 && sector[p.cursectnum].lotag == ST_2_UNDERWATER) k = 0;
-//    else k = 1;
+    if (p.cursectnum >= 0 && sector[p.cursectnum].lotag == ST_2_UNDERWATER) k = 0;
+    else k = 1;
 
-//    if (ud.noclip)
-//    {
-//        p.pos.x += p.vel.x>>14;
-//        p.pos.y += p.vel.y>>14;
-//        updatesector(p.pos.x,p.pos.y,&p.cursectnum);
-//        changespritesect(p.i,p.cursectnum);
-//    }
-//    else
-//    {
+    if (ud.noclip)
+    {
+        p.pos.x += p.vel.x>>14;
+        p.pos.y += p.vel.y>>14;
+        var $cursectnum = new R(p.cursectnum);
+        updatesector(p.pos.x,p.pos.y,$cursectnum);
+        p.cursectnum = $cursectnum.$;
+        changespritesect(p.i,p.cursectnum);
+    }
+    else
+    {
 //#ifdef YAX_ENABLE
-//        int32_t sect = p.cursectnum;
-//        int16_t cb, fb;
+        var /*int32_t*/ sect = p.cursectnum;
+        var /*int16_t*/ cb:number, fb:number;
 
-//        if (sect >= 0)
-//            yax_getbunches(sect, &cb, &fb);
 
-//        // this updatesectorz conflicts with Duke3d's way of teleporting through water,
-//        // so make it a bit conditional... OTOH, this way we have an ugly z jump when
-//        // changing from above water to underwater
-//        if (sect >= 0 && !(sector[sect].lotag==ST_1_ABOVE_WATER && p.on_ground && fb>=0))
-//        {
-//            if ((fb>=0 && !(sector[sect].floorstat&512)) || (cb>=0 && !(sector[sect].ceilingstat&512)))
-//            {
-//                p.cursectnum += MAXSECTORS;  // skip initial z check, restored by updatesectorz
-//                updatesectorz(p.pos.x,p.pos.y,p.pos.z,&p.cursectnum);
-//            }
-//        }
+        if (sect >= 0) {
+            var $cb = new R(cb);
+            var $fb = new R(fb);
+            yax_getbunches(sect, $cb, $fb);
+            cb = $cb.$;
+            fb = $fb.$;
+        }
+
+        // this updatesectorz conflicts with Duke3d's way of teleporting through water,
+        // so make it a bit conditional... OTOH, this way we have an ugly z jump when
+        // changing from above water to underwater
+        if (sect >= 0 && !(sector[sect].lotag==ST_1_ABOVE_WATER && p.on_ground && fb>=0))
+        {
+            if ((fb>=0 && !(sector[sect].floorstat&512)) || (cb>=0 && !(sector[sect].ceilingstat&512)))
+            {
+                p.cursectnum += MAXSECTORS;  // skip initial z check, restored by updatesectorz
+                var $cursectnum = new R(p.cursectnum);
+                updatesectorz(p.pos.x,p.pos.y,p.pos.z,$cursectnum);
+                p.cursectnum = $cursectnum.$;
+            }
+        }
 //#endif
-//        if ((j = clipmove((vec3_t *)p,&p.cursectnum, p.vel.x,p.vel.y,164L,(4L<<8),i,CLIPMASK0)))
-//            P_CheckTouchDamage(p, j);
-//    }
+        var $cursectnum = new R(p.cursectnum);
+        if ((j = clipmove(/*(vec3_t *)*/p.pos,$cursectnum, p.vel.x,p.vel.y,164,(4<<8),i,CLIPMASK0)))
+        {
+            p.cursectnum = $cursectnum.$;
+            P_CheckTouchDamage(p, j);
+        } 
+        else 
+        {
+            p.cursectnum = $cursectnum.$;
+        }
+    }
 
-//    // This makes the player view lower when shrunk.  NOTE that it can get the
-//    // view below the sector floor (and does, when on the ground).
-//    if (p.jetpack_on == 0 && psectlotag != ST_2_UNDERWATER && psectlotag != ST_1_ABOVE_WATER && shrunk)
-//        p.pos.z += 32<<8;
+    // This makes the player view lower when shrunk.  NOTE that it can get the
+    // view below the sector floor (and does, when on the ground).
+    if (p.jetpack_on == 0 && psectlotag != ST_2_UNDERWATER && psectlotag != ST_1_ABOVE_WATER && shrunk)
+        p.pos.z += 32<<8;
 
-//    if (p.jetpack_on == 0)
-//    {
-//        if (s.xvel > 16)
-//        {
-//            if (psectlotag != ST_1_ABOVE_WATER && psectlotag != ST_2_UNDERWATER && p.on_ground)
-//            {
-//                p.pycount += 52;
-//                p.pycount &= 2047;
-//                p.pyoff =
-//                    klabs(s.xvel*sintable[p.pycount])/1596;
-//            }
-//        }
-//        else if (psectlotag != ST_2_UNDERWATER && psectlotag != ST_1_ABOVE_WATER)
-//            p.pyoff = 0;
-//    }
+    if (p.jetpack_on == 0)
+    {
+        if (s.xvel > 16)
+        {
+            if (psectlotag != ST_1_ABOVE_WATER && psectlotag != ST_2_UNDERWATER && p.on_ground)
+            {
+                p.pycount += 52;
+                p.pycount &= 2047;
+                p.pyoff =
+                    int16(klabs(s.xvel*sintable[p.pycount])/1596);
+            }
+        }
+        else if (psectlotag != ST_2_UNDERWATER && psectlotag != ST_1_ABOVE_WATER)
+            p.pyoff = 0;
+    }
 
-//    // RBG***
+    // RBG***
 
-//    p.pos.z += PHEIGHT;
-//    setsprite(p.i,(vec3_t *)&p.pos.x);
-//    p.pos.z -= PHEIGHT;
+    p.pos.z += PHEIGHT;
+    setsprite(p.i,/*(vec3_t *)&*/p.pos);
+    p.pos.z -= PHEIGHT;
 
-//    // ST_2_UNDERWATER
-//    if (p.cursectnum >= 0 && psectlotag < 3)
-//    {
-////        p.cursectnum = s.sectnum;
+    // ST_2_UNDERWATER
+    if (p.cursectnum >= 0 && psectlotag < 3)
+    {
+//        p.cursectnum = s.sectnum;
 
-//        if (!ud.noclip && sector[p.cursectnum].lotag == ST_31_TWO_WAY_TRAIN)
-//        {
-//            // XXX: POTENTIAL_OOB
-//            if (sprite[sector[p.cursectnum].hitag].xvel && actor[sector[p.cursectnum].hitag].t_data[0] == 0)
-//            {
-//                P_QuickKill(p);
-//                return;
-//            }
-//        }
-//    }
+        if (!ud.noclip && sector[p.cursectnum].lotag == ST_31_TWO_WAY_TRAIN)
+        {
+            // XXX: POTENTIAL_OOB
+            if (sprite[sector[p.cursectnum].hitag].xvel && actor[sector[p.cursectnum].hitag].t_data[0] == 0)
+            {
+                P_QuickKill(p);
+                return;
+            }
+        }
+    }
 
-//    if (p.cursectnum >= 0 && truefdist < PHEIGHT && p.on_ground &&
-//            psectlotag != ST_1_ABOVE_WATER && shrunk == 0 && sector[p.cursectnum].lotag == ST_1_ABOVE_WATER)
-//        if (!A_CheckSoundPlaying(p.i,DUKE_ONWATER))
-//            A_PlaySound(DUKE_ONWATER,p.i);
+    if (p.cursectnum >= 0 && truefdist < PHEIGHT && p.on_ground &&
+            psectlotag != ST_1_ABOVE_WATER && shrunk == 0 && sector[p.cursectnum].lotag == ST_1_ABOVE_WATER)
+        if (!A_CheckSoundPlaying(p.i,DUKE_ONWATER))
+            A_PlaySound(DUKE_ONWATER,p.i);
 
-//    if (p.cursectnum >=0 && p.cursectnum != s.sectnum)
-//        changespritesect(p.i, p.cursectnum);
+    if (p.cursectnum >=0 && p.cursectnum != s.sectnum)
+        changespritesect(p.i, p.cursectnum);
 
-//    if (p.cursectnum >= 0 && ud.noclip == 0)
-//    {
-//        j = (pushmove((vec3_t *)p,&p.cursectnum,164L,(4L<<8),(4L<<8),CLIPMASK0) < 0 && A_GetFurthestAngle(p.i,8) < 512);
+    if (p.cursectnum >= 0 && ud.noclip == 0)
+    {
+        var $cursectnum = new R(p.cursectnum);
+        j = (pushmove(/*(vec3_t *)*/p.pos,$cursectnum,164,(4<<8),(4<<8),CLIPMASK0) < 0 && A_GetFurthestAngle(p.i,8) < 512)?1:0;
+        p.cursectnum = $cursectnum.$;
 
-//        if (klabs(actor[p.i].floorz-actor[p.i].ceilingz) < (48<<8) || j)
-//        {
-//            if (!(sector[s.sectnum].lotag&0x8000) && (isanunderoperator(sector[s.sectnum].lotag) ||
-//                    isanearoperator(sector[s.sectnum].lotag)))
-//                G_ActivateBySector(s.sectnum,p.i);
-//            if (j)
-//            {
-//                P_QuickKill(p);
-//                return;
-//            }
-//        }
-//        else if (klabs(fz-cz) < (32<<8) && isanunderoperator(sector[p.cursectnum].lotag))
-//            G_ActivateBySector(p.cursectnum,p.i);
-//    }
+        if (klabs(actor[p.i].floorz-actor[p.i].ceilingz) < (48<<8) || j)
+        {
+            if (!(sector[s.sectnum].lotag&0x8000) && (isanunderoperator(sector[s.sectnum].lotag) ||
+                    isanearoperator(sector[s.sectnum].lotag)))
+                G_ActivateBySector(s.sectnum,p.i);
+            if (j)
+            {
+                P_QuickKill(p);
+                return;
+            }
+        }
+        else if (klabs(fz-cz) < (32<<8) && isanunderoperator(sector[p.cursectnum].lotag))
+            G_ActivateBySector(p.cursectnum,p.i);
+    }
 
-//    i = 0;
-//    if (TEST_SYNC_KEY(sb_snum, SK_CENTER_VIEW) || p.hard_landing)
-//        if (VM_OnEvent(EVENT_RETURNTOCENTER,p.i,snum, -1, 0) == 0)
-//            p.return_to_center = 9;
+    i = 0;
+    if (TEST_SYNC_KEY(sb_snum, SK_CENTER_VIEW) || p.hard_landing)
+        if (VM_OnEvent(EVENT_RETURNTOCENTER,p.i,snum, -1, 0) == 0)
+            p.return_to_center = 9;
 
-//    if (TEST_SYNC_KEY(sb_snum, SK_LOOK_UP))
-//    {
-//        if (VM_OnEvent(EVENT_LOOKUP,p.i,snum, -1, 0) == 0)
-//        {
-//            p.return_to_center = 9;
-//            if (TEST_SYNC_KEY(sb_snum, SK_RUN)) p.horiz += 12;
-//            p.horiz += 12;
-//            i++;
-//        }
-//    }
+    if (TEST_SYNC_KEY(sb_snum, SK_LOOK_UP))
+    {
+        if (VM_OnEvent(EVENT_LOOKUP,p.i,snum, -1, 0) == 0)
+        {
+            p.return_to_center = 9;
+            if (TEST_SYNC_KEY(sb_snum, SK_RUN)) p.horiz += 12;
+            p.horiz += 12;
+            i++;
+        }
+    }
 
-//    if (TEST_SYNC_KEY(sb_snum, SK_LOOK_DOWN))
-//    {
-//        if (VM_OnEvent(EVENT_LOOKDOWN,p.i,snum, -1, 0) == 0)
-//        {
-//            p.return_to_center = 9;
-//            if (TEST_SYNC_KEY(sb_snum, SK_RUN)) p.horiz -= 12;
-//            p.horiz -= 12;
-//            i++;
-//        }
-//    }
+    if (TEST_SYNC_KEY(sb_snum, SK_LOOK_DOWN))
+    {
+        if (VM_OnEvent(EVENT_LOOKDOWN,p.i,snum, -1, 0) == 0)
+        {
+            p.return_to_center = 9;
+            if (TEST_SYNC_KEY(sb_snum, SK_RUN)) p.horiz -= 12;
+            p.horiz -= 12;
+            i++;
+        }
+    }
 
-//    if (TEST_SYNC_KEY(sb_snum, SK_AIM_UP))
-//    {
-//        if (VM_OnEvent(EVENT_AIMUP,p.i,snum, -1, 0) == 0)
-//        {
-//            if (TEST_SYNC_KEY(sb_snum, SK_RUN)) p.horiz += 6;
-//            p.horiz += 6;
-//            i++;
-//        }
-//    }
+    if (TEST_SYNC_KEY(sb_snum, SK_AIM_UP))
+    {
+        if (VM_OnEvent(EVENT_AIMUP,p.i,snum, -1, 0) == 0)
+        {
+            if (TEST_SYNC_KEY(sb_snum, SK_RUN)) p.horiz += 6;
+            p.horiz += 6;
+            i++;
+        }
+    }
 
-//    if (TEST_SYNC_KEY(sb_snum, SK_AIM_DOWN))
-//    {
-//        if (VM_OnEvent(EVENT_AIMDOWN,p.i,snum, -1, 0) == 0)
-//        {
-//            if (TEST_SYNC_KEY(sb_snum, SK_RUN)) p.horiz -= 6;
-//            p.horiz -= 6;
-//            i++;
-//        }
-//    }
+    if (TEST_SYNC_KEY(sb_snum, SK_AIM_DOWN))
+    {
+        if (VM_OnEvent(EVENT_AIMDOWN,p.i,snum, -1, 0) == 0)
+        {
+            if (TEST_SYNC_KEY(sb_snum, SK_RUN)) p.horiz -= 6;
+            p.horiz -= 6;
+            i++;
+        }
+    }
 
-//    if (p.return_to_center > 0 && !TEST_SYNC_KEY(sb_snum, SK_LOOK_UP) && !TEST_SYNC_KEY(sb_snum, SK_LOOK_DOWN))
-//    {
-//        p.return_to_center--;
-//        p.horiz += 33-(p.horiz/3);
-//        i++;
-//    }
+    if (p.return_to_center > 0 && !TEST_SYNC_KEY(sb_snum, SK_LOOK_UP) && !TEST_SYNC_KEY(sb_snum, SK_LOOK_DOWN))
+    {
+        p.return_to_center--;
+        p.horiz += 33-int16(p.horiz/3);
+        i++;
+    }
 
-//    if (p.hard_landing > 0)
-//    {
-//        p.hard_landing--;
-//        p.horiz -= (p.hard_landing<<4);
-//    }
+    if (p.hard_landing > 0)
+    {
+        p.hard_landing--;
+        p.horiz -= (p.hard_landing<<4);
+    }
 
-//    if (i)
-//    {
-//        if (p.horiz > 95 && p.horiz < 105) p.horiz = 100;
-//        if (p.horizoff > -5 && p.horizoff < 5) p.horizoff = 0;
-//    }
+    if (i)
+    {
+        if (p.horiz > 95 && p.horiz < 105) p.horiz = 100;
+        if (p.horizoff > -5 && p.horizoff < 5) p.horizoff = 0;
+    }
 
-//    p.horiz += g_player[snum].sync.horz;
+    p.horiz += g_player[snum].sync.horz;
 
-//    if (p.horiz > HORIZ_MAX) p.horiz = HORIZ_MAX;
-//    else if (p.horiz < HORIZ_MIN) p.horiz = HORIZ_MIN;
+    if (p.horiz > HORIZ_MAX) p.horiz = HORIZ_MAX;
+    else if (p.horiz < HORIZ_MIN) p.horiz = HORIZ_MIN;
 
-//    //Shooting code/changes
+    //Shooting code/changes
 
-//    if (p.show_empty_weapon > 0)
-//    {
-//        p.show_empty_weapon--;
-//        if (p.show_empty_weapon == 0 && (p.weaponswitch & 2) && p.ammo_amount[p.curr_weapon] <= 0)
-//        {
-//            if (p.last_full_weapon == GROW_WEAPON)
-//                p.subweapon |= (1<<GROW_WEAPON);
-//            else if (p.last_full_weapon == SHRINKER_WEAPON)
-//                p.subweapon &= ~(1<<GROW_WEAPON);
-//            P_AddWeapon(p, p.last_full_weapon);
-//            return;
-//        }
-//    }
+    if (p.show_empty_weapon > 0)
+    {
+        p.show_empty_weapon--;
+        if (p.show_empty_weapon == 0 && (p.weaponswitch & 2) && p.ammo_amount[p.curr_weapon] <= 0)
+        {
+            if (p.last_full_weapon == GROW_WEAPON)
+                p.subweapon |= (1<<GROW_WEAPON);
+            else if (p.last_full_weapon == SHRINKER_WEAPON)
+                p.subweapon &= ~(1<<GROW_WEAPON);
+            P_AddWeapon(p, p.last_full_weapon);
+            return;
+        }
+    }
 
-//    if (p.knee_incs > 0)
-//    {
-//        p.horiz -= 48;
-//        p.return_to_center = 9;
+    if (p.knee_incs > 0)
+    {
+        p.horiz -= 48;
+        p.return_to_center = 9;
 
-//        if (++p.knee_incs > 15)
-//        {
-//            p.knee_incs = 0;
-//            p.holster_weapon = 0;
-//            p.weapon_pos = klabs(p.weapon_pos);
+        if (++p.knee_incs > 15)
+        {
+            p.knee_incs = 0;
+            p.holster_weapon = 0;
+            p.weapon_pos = klabs(p.weapon_pos);
 
-//            if (p.actorsqu >= 0 && sprite[p.actorsqu].statnum != MAXSTATUS && dist(&sprite[p.i],&sprite[p.actorsqu]) < 1400)
-//            {
-//                A_DoGuts(p.actorsqu,JIBS6,7);
-//                A_Spawn(p.actorsqu,BLOODPOOL);
-//                A_PlaySound(SQUISHED,p.actorsqu);
+            if (p.actorsqu >= 0 && sprite[p.actorsqu].statnum != MAXSTATUS && dist(sprite[p.i],sprite[p.actorsqu]) < 1400)
+            {
+                A_DoGuts(p.actorsqu,JIBS6,7);
+                A_Spawn(p.actorsqu,BLOODPOOL);
+                A_PlaySound(SQUISHED,p.actorsqu);
 
-//                switch (DYNAMICTILEMAP(sprite[p.actorsqu].picnum))
-//                {
-//                case FEM1__STATIC:
-//                case FEM2__STATIC:
-//                case FEM3__STATIC:
-//                case FEM4__STATIC:
-//                case FEM5__STATIC:
-//                case FEM6__STATIC:
-//                case FEM7__STATIC:
-//                case FEM8__STATIC:
-//                case FEM9__STATIC:
-//                case FEM10__STATIC:
-//                case PODFEM1__STATIC:
-//                case NAKED1__STATIC:
-//                case STATUE__STATIC:
-//                    if (sprite[p.actorsqu].yvel)
-//                        G_OperateRespawns(sprite[p.actorsqu].yvel);
-//                    A_DeleteSprite(p.actorsqu);
-//                    break;
-//                case APLAYER__STATIC:
-//                    P_QuickKill(g_player[sprite[p.actorsqu].yvel].ps);
-//                    g_player[sprite[p.actorsqu].yvel].ps.frag_ps = snum;
-//                    break;
-//                default:
-//                    if (A_CheckEnemySprite(&sprite[p.actorsqu]))
-//                        p.actors_killed++;
-//                    A_DeleteSprite(p.actorsqu);
-//                    break;
-//                }
-//            }
-//            p.actorsqu = -1;
-//        }
-//        else if (p.actorsqu >= 0)
-//            p.ang += G_GetAngleDelta(p.ang,getangle(sprite[p.actorsqu].x-p.pos.x,sprite[p.actorsqu].y-p.pos.y))>>2;
-//    }
+                switch (DYNAMICTILEMAP(sprite[p.actorsqu].picnum))
+                {
+                case FEM1__STATIC:
+                case FEM2__STATIC:
+                case FEM3__STATIC:
+                case FEM4__STATIC:
+                case FEM5__STATIC:
+                case FEM6__STATIC:
+                case FEM7__STATIC:
+                case FEM8__STATIC:
+                case FEM9__STATIC:
+                case FEM10__STATIC:
+                case PODFEM1__STATIC:
+                case NAKED1__STATIC:
+                case STATUE__STATIC:
+                    if (sprite[p.actorsqu].yvel)
+                        G_OperateRespawns(sprite[p.actorsqu].yvel);
+                    A_DeleteSprite(p.actorsqu);
+                    break;
+                case APLAYER__STATIC:
+                    P_QuickKill(g_player[sprite[p.actorsqu].yvel].ps);
+                    g_player[sprite[p.actorsqu].yvel].ps.frag_ps = snum;
+                    break;
+                default:
+                    if (A_CheckEnemySprite(sprite[p.actorsqu]))
+                        p.actors_killed++;
+                    A_DeleteSprite(p.actorsqu);
+                    break;
+                }
+            }
+            p.actorsqu = -1;
+        }
+        else if (p.actorsqu >= 0)
+            p.ang += G_GetAngleDelta(p.ang,getangle(sprite[p.actorsqu].x-p.pos.x,sprite[p.actorsqu].y-p.pos.y))>>2;
+    }
 
-//    if (P_DoCounters(p)) return;
+    if (P_DoCounters(p)) return;
 
-//    P_ProcessWeapon(snum);
-//}
+    P_ProcessWeapon(snum);
+}

@@ -49,20 +49,27 @@ var MUSIC_ID          = -65536;
 //};
 //int32_t EnumAudioDevs(struct audioenumdrv **wave, struct audioenumdev **midi, struct audioenumdev **cda);
 
-//typedef struct
-//{
-//    int16_t voice;
-//    int16_t ow;
-//    uint32_t sndist;
-//    uint32_t clock;
-//} SOUNDOWNER;
+class SOUNDOWNER
+{
+    voice:number;          //int16_t     
+    ow:number;             //int16_t     
+    sndist:number;         //uint32_t    
+    clock:number;          //uint32_t   
+    
+    constructor() {
+     this.voice=0;   
+     this.ow=0;   
+     this.sndist=0;   
+     this.clock=0;   
+    } 
+} 
 
 
 class sound_t
 {
     length: number; num: number; soundsiz: number; // 12b//    int32_t  
     filename: string; ptr: string; filename1: string; // 12b/24b
-    //    SOUNDOWNER SoundOwner[MAXSOUNDINSTANCES]; // 64b
+    SoundOwner: SOUNDOWNER [];//[MAXSOUNDINSTANCES]; // 64b
     ps: number;pe: number ;vo: number; // 6b//    int16_t
     pr: number;m: number; // 2b//    char
     constructor() {
@@ -73,6 +80,8 @@ class sound_t
         this.filename = "";
         this.ptr = "";
         this.filename1 = "";
+
+        this.SoundOwner = newStructArray<SOUNDOWNER>(SOUNDOWNER, MAXSOUNDINSTANCES);
 
         this.ps = 0;
         this.pe = 0;

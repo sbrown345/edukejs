@@ -88,7 +88,7 @@ var STAT_NETALLOC      = MAXSTATUS-1;
 
 //// These macros are there to give names to the t_data[]/T*/vm.g_t[] indices
 //// when used with actors. Greppability of source code is certainly a virtue.
-//#define AC_COUNT(t) ((t)[0])  /* the actor's count */
+function AC_COUNT(t:Int32Array):number {return t[0]; }  /* the actor's count */
 ///* The ID of the actor's current move. In C-CON, the bytecode offset to the
 // * move composite: */
 function AC_MOVE_ID(t: Int32Array): number {return (t)[1];}

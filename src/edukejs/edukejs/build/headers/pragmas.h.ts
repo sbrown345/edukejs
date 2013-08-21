@@ -2416,7 +2416,7 @@ function clearbufbyte(buffer: Uint8Array /*or other array with BYTES_PER_ELEMENT
 //static inline int32_t moddiv(int32_t a, int32_t b) { uint32_t _a=(uint32_t)a, _b=(uint32_t)b; dmval = _a/_b; return _a%_b; }
 
 function klabs(a: number): number { if (a < 0) return -a; return a; }
-//static inline int32_t ksgn(int32_t a)  { if (a > 0) return 1; if (a < 0) return -1; return 0; }
+function /*int32_t */ksgn(/*int32_t */a:number):number  { if (a > 0) return 1; if (a < 0) return -1; return 0; }
 
 //static inline int32_t umin(int32_t a, int32_t b) { if ((uint32_t)a < (uint32_t)b) return a; return b; }
 //static inline int32_t umax(int32_t a, int32_t b) { if ((uint32_t)a < (uint32_t)b) return b; return a; }

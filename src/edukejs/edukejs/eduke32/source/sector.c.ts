@@ -123,74 +123,74 @@ function /*int32_t */A_CallSound(/*int32_t */sn: number,/*int32_t */whatsprite: 
 //    return(0);
 //}
 
-//int32_t CheckDoorTile(int32_t dapic)
-//{
-//    switch (DYNAMICTILEMAP(dapic))
-//    {
-//    case DOORTILE1__STATIC:
-//    case DOORTILE2__STATIC:
-//    case DOORTILE3__STATIC:
-//    case DOORTILE4__STATIC:
-//    case DOORTILE5__STATIC:
-//    case DOORTILE6__STATIC:
-//    case DOORTILE7__STATIC:
-//    case DOORTILE8__STATIC:
-//    case DOORTILE9__STATIC:
-//    case DOORTILE10__STATIC:
-//    case DOORTILE11__STATIC:
-//    case DOORTILE12__STATIC:
-//    case DOORTILE14__STATIC:
-//    case DOORTILE15__STATIC:
-//    case DOORTILE16__STATIC:
-//    case DOORTILE17__STATIC:
-//    case DOORTILE18__STATIC:
-//    case DOORTILE19__STATIC:
-//    case DOORTILE20__STATIC:
-//    case DOORTILE21__STATIC:
-//    case DOORTILE22__STATIC:
-//    case DOORTILE23__STATIC:
-//        return 1;
-//    }
-//    return 0;
-//}
+function /*int32_t */CheckDoorTile(/*int32_t */dapic:number):number
+{
+    switch (DYNAMICTILEMAP(dapic))
+    {
+    case DOORTILE1__STATIC:
+    case DOORTILE2__STATIC:
+    case DOORTILE3__STATIC:
+    case DOORTILE4__STATIC:
+    case DOORTILE5__STATIC:
+    case DOORTILE6__STATIC:
+    case DOORTILE7__STATIC:
+    case DOORTILE8__STATIC:
+    case DOORTILE9__STATIC:
+    case DOORTILE10__STATIC:
+    case DOORTILE11__STATIC:
+    case DOORTILE12__STATIC:
+    case DOORTILE14__STATIC:
+    case DOORTILE15__STATIC:
+    case DOORTILE16__STATIC:
+    case DOORTILE17__STATIC:
+    case DOORTILE18__STATIC:
+    case DOORTILE19__STATIC:
+    case DOORTILE20__STATIC:
+    case DOORTILE21__STATIC:
+    case DOORTILE22__STATIC:
+    case DOORTILE23__STATIC:
+        return 1;
+    }
+    return 0;
+}
 
-//int32_t isanunderoperator(int32_t lotag)
-//{
-//    switch (lotag&0xff)
-//    {
-//    case ST_15_WARP_ELEVATOR:
-//    case ST_16_PLATFORM_DOWN:
-//    case ST_17_PLATFORM_UP:
-//    case ST_18_ELEVATOR_DOWN:
-//    case ST_19_ELEVATOR_UP:
-//    case ST_22_SPLITTING_DOOR:
-//    case ST_26_SPLITTING_ST_DOOR:
-//        return 1;
-//    }
-//    return 0;
-//}
+function/*int32_t */isanunderoperator(/*int32_t */lotag:number):number
+{
+    switch (lotag&0xff)
+    {
+    case ST_15_WARP_ELEVATOR:
+    case ST_16_PLATFORM_DOWN:
+    case ST_17_PLATFORM_UP:
+    case ST_18_ELEVATOR_DOWN:
+    case ST_19_ELEVATOR_UP:
+    case ST_22_SPLITTING_DOOR:
+    case ST_26_SPLITTING_ST_DOOR:
+        return 1;
+    }
+    return 0;
+}
 
-//int32_t isanearoperator(int32_t lotag)
-//{
-//    switch (lotag&0xff)
-//    {
-//    case ST_9_SLIDING_ST_DOOR:
-//    case ST_15_WARP_ELEVATOR:
-//    case ST_16_PLATFORM_DOWN:
-//    case ST_17_PLATFORM_UP:
-//    case ST_18_ELEVATOR_DOWN:
-//    case ST_19_ELEVATOR_UP:
-//    case ST_20_CEILING_DOOR:
-//    case ST_21_FLOOR_DOOR:
-//    case ST_22_SPLITTING_DOOR:
-//    case ST_23_SWINGING_DOOR:
-//    case ST_25_SLIDING_DOOR:
-//    case ST_26_SPLITTING_ST_DOOR:
-//    case ST_29_TEETH_DOOR://Toothed door
-//        return 1;
-//    }
-//    return 0;
-//}
+function /*int32_t */isanearoperator(/*int32_t */lotag:number)
+{
+    switch (lotag&0xff)
+    {
+    case ST_9_SLIDING_ST_DOOR:
+    case ST_15_WARP_ELEVATOR:
+    case ST_16_PLATFORM_DOWN:
+    case ST_17_PLATFORM_UP:
+    case ST_18_ELEVATOR_DOWN:
+    case ST_19_ELEVATOR_UP:
+    case ST_20_CEILING_DOOR:
+    case ST_21_FLOOR_DOOR:
+    case ST_22_SPLITTING_DOOR:
+    case ST_23_SWINGING_DOOR:
+    case ST_25_SLIDING_DOOR:
+    case ST_26_SPLITTING_ST_DOOR:
+    case ST_29_TEETH_DOOR://Toothed door
+        return 1;
+    }
+    return 0;
+}
 
 function A_FP_ManhattanDist(ps: DukePlayer_t, s: spritetype ): number
 {
@@ -496,8 +496,8 @@ function G_AnimateCamSprite(): void
 //    return 0;
 //}
 
-//void G_OperateSectors(int32_t sn, int32_t ii)
-//{
+function G_OperateSectors(/*int32_t */sn:number, /*int32_t */ii:number):void 
+{todoThrow();
 //    int32_t j=0, l, q, startwall, endwall;
 //    int32_t i;
 //    sectortype *sptr = &sector[sn];
@@ -965,30 +965,30 @@ function G_AnimateCamSprite(): void
 
 //        return;
 //    }
-//}
+}
 
-//void G_OperateRespawns(int32_t low)
-//{
-//    int32_t j, nexti, i = headspritestat[STAT_FX];
+function G_OperateRespawns(/*int32_t */low:number):void 
+{
+    var /*int32_t */j:number, nexti:number, i = headspritestat[STAT_FX];
 
-//    while (i >= 0)
-//    {
-//        nexti = nextspritestat[i];
-//        if ((sprite[i].lotag == low) && (sprite[i].picnum == RESPAWN))
-//        {
-//            if (A_CheckEnemyTile(sprite[i].hitag) && ud.monsters_off) break;
+    while (i >= 0)
+    {
+        nexti = nextspritestat[i];
+        if ((sprite[i].lotag == low) && (sprite[i].picnum == RESPAWN))
+        {
+            if (A_CheckEnemyTile(sprite[i].hitag) && ud.monsters_off) break;
 
-//            j = A_Spawn(i,TRANSPORTERSTAR);
-//            sprite[j].z -= (32<<8);
+            j = A_Spawn(i,TRANSPORTERSTAR);
+            sprite[j].z -= (32<<8);
 
-//            sprite[i].extra = 66-12;   // Just a way to killit
-//        }
-//        i = nexti;
-//    }
-//}
+            sprite[i].extra = 66-12;   // Just a way to killit
+        }
+        i = nexti;
+    }
+}
 
-//void G_OperateActivators(int32_t low,int32_t snum)
-//{
+function G_OperateActivators(/*int32_t */low:number,/*int32_t */snum:number): void 
+{todoThrow();
 //    int32_t i, j, k;
 //    int16_t *p;
 //    walltype *wal;
@@ -1081,7 +1081,7 @@ function G_AnimateCamSprite(): void
 //    }
 
 //    G_OperateRespawns(low);
-//}
+}
 
 //void G_OperateMasterSwitches(int32_t low)
 //{
@@ -1121,8 +1121,8 @@ function G_AnimateCamSprite(): void
 //    }
 //}
 
-//int32_t P_ActivateSwitch(int32_t snum,int32_t w,int32_t switchissprite)
-//{
+function /*int32_t */P_ActivateSwitch(/*int32_t */snum:number,/*int32_t */w:number,/*int32_t */switchissprite:number):number
+{todoThrow();
 //    int32_t switchpal, switchpicnum;
 //    int32_t i, x, lotag,hitag,picnum,correctdips = 1, numdips = 0;
 //    vec3_t davector;
@@ -1580,28 +1580,28 @@ function G_AnimateCamSprite(): void
 
 //        return 1;
 //    }
-//    return 0;
-//}
+    return 0;
+}
 
-//void G_ActivateBySector(int32_t sect,int32_t j)
-//{
-//    int32_t i = headspritesect[sect];
-//    int32_t didit = 0;
+function G_ActivateBySector(/*int32_t*/ sect:number,/*int32_t */j:number): void 
+{
+    var/*int32_t */i = headspritesect[sect];
+    var /*int32_t */didit = 0;
 
-//    while (i >= 0)
-//    {
-//        if (sprite[i].picnum == ACTIVATOR)
-//        {
-//            G_OperateActivators(sprite[i].lotag,-1);
-//            didit = 1;
-//            //            return;
-//        }
-//        i = nextspritesect[i];
-//    }
+    while (i >= 0)
+    {
+        if (sprite[i].picnum == ACTIVATOR)
+        {
+            G_OperateActivators(sprite[i].lotag,-1);
+            didit = 1;
+            //            return;
+        }
+        i = nextspritesect[i];
+    }
 
-//    if (didit == 0)
-//        G_OperateSectors(sect,j);
-//}
+    if (didit == 0)
+        G_OperateSectors(sect,j);
+}
 
 //static void BreakWall(int32_t newpn,int32_t spr,int32_t dawallnum)
 //{

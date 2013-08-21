@@ -798,25 +798,25 @@ function /*int32_t */FX_VoiceAvailable
 //}
 
 
-///*---------------------------------------------------------------------
-//   Function: FX_StopSound
+/*---------------------------------------------------------------------
+   Function: FX_StopSound
 
-//   Halts playback of a specific voice
-//---------------------------------------------------------------------*/
+   Halts playback of a specific voice
+---------------------------------------------------------------------*/
 
-//int32_t FX_StopSound(int32_t handle)
-//{
-//    int32_t status;
+function /*int32_t */FX_StopSound(/*int32_t */handle:number):number
+{
+    var /*int32_t */status:number;
+    todoUnimportant("FX_StopSound");
+    //status = MV_Kill(handle);
+    //if (status != MV_Ok)
+    //{
+    //    FX_SetErrorCode(FX_MultiVocError);
+    //    return FX_Warning;
+    //}
 
-//    status = MV_Kill(handle);
-//    if (status != MV_Ok)
-//    {
-//        FX_SetErrorCode(FX_MultiVocError);
-//        return FX_Warning;
-//    }
-
-//    return FX_Ok;
-//}
+    return FX_Ok;
+}
 
 
 ///*---------------------------------------------------------------------

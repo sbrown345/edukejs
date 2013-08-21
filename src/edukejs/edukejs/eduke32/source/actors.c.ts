@@ -711,38 +711,38 @@ function A_AddToDeleteQueue(/*int32_t */i: number): void
 //    }
 //}
 
-//void A_DoGuts(int32_t sp, int32_t gtype, int32_t n)
-//{
-//    int32_t gutz,floorz;
-//    int32_t i,a,j,sx = 32,sy = 32;
+function A_DoGuts(/*int32_t*/ sp:number, /*int32_t */gtype:number, /*int32_t */n:number):void
+{todoThrow();
+    //int32_t gutz,floorz;
+    //int32_t i,a,j,sx = 32,sy = 32;
 
-//    const spritetype *const s = &sprite[sp];
+    //const spritetype *const s = &sprite[sp];
 
-//    if (A_CheckEnemySprite(s) && s.xrepeat < 16)
-//        sx = sy = 8;
+    //if (A_CheckEnemySprite(s) && s.xrepeat < 16)
+    //    sx = sy = 8;
 
-//    gutz = s.z-(8<<8);
-//    floorz = getflorzofslope(s.sectnum,s.x,s.y);
+    //gutz = s.z-(8<<8);
+    //floorz = getflorzofslope(s.sectnum,s.x,s.y);
 
-//    if (gutz > (floorz-(8<<8)))
-//        gutz = floorz-(8<<8);
+    //if (gutz > (floorz-(8<<8)))
+    //    gutz = floorz-(8<<8);
 
-//    if (s.picnum == COMMANDER)
-//        gutz -= (24<<8);
+    //if (s.picnum == COMMANDER)
+    //    gutz -= (24<<8);
 
-//    for (j=n; j>0; j--)
-//    {
-//        a = krand()&2047;
-//        i = A_InsertSprite(s.sectnum,s.x+(krand()&255)-128,s.y+(krand()&255)-128,gutz-(krand()&8191),gtype,-32,sx,sy,a,48+(krand()&31),-512-(krand()&2047),sp,5);
-//        if (sprite[i].picnum == JIBS2)
-//        {
-//            sprite[i].xrepeat >>= 2;
-//            sprite[i].yrepeat >>= 2;
-//        }
+    //for (j=n; j>0; j--)
+    //{
+    //    a = krand()&2047;
+    //    i = A_InsertSprite(s.sectnum,s.x+(krand()&255)-128,s.y+(krand()&255)-128,gutz-(krand()&8191),gtype,-32,sx,sy,a,48+(krand()&31),-512-(krand()&2047),sp,5);
+    //    if (sprite[i].picnum == JIBS2)
+    //    {
+    //        sprite[i].xrepeat >>= 2;
+    //        sprite[i].yrepeat >>= 2;
+    //    }
 
-//        sprite[i].pal = s.pal;
-//    }
-//}
+    //    sprite[i].pal = s.pal;
+    //}
+}
 
 //void A_DoGutsDir(int32_t sp, int32_t gtype, int32_t n)
 //{
@@ -8388,8 +8388,8 @@ function G_MoveWorld(): void
             }
 
             {
-                var /*int32_t */p, pl = A_FindPlayer(sprite[i], p);
-                VM_OnEvent(EVENT_GAME,i, pl, p, 0);
+                var /*int32_t */p:R<number> = new R<number>(0), pl = A_FindPlayer(sprite[i], p);
+                VM_OnEvent(EVENT_GAME,i, pl, p.$, 0);
             }
 
             i = j;

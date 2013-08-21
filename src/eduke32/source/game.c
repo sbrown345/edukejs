@@ -12073,8 +12073,10 @@ int32_t G_DoMoveThings(void)
 
         if (ud.pause_on == 0)
         { 
-            P_ProcessInput(i);
+             P_ProcessInput(i);
+#ifdef DEBUG_TODO
             P_CheckSectors(i);
+#endif
         }
     }
 

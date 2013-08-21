@@ -248,40 +248,40 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //    return 0;
 //}
 
-//int32_t A_GetFurthestAngle(int32_t iActor, int32_t angs)
-//{
-//    spritetype *s = &sprite[iActor];
+function /*int32_t */A_GetFurthestAngle(/*int32_t */iActor:number, /*int32_t */angs:number)
+{
+    var s = sprite[iActor];
 
-//    if (s.picnum != APLAYER && (AC_COUNT(actor[iActor].t_data)&63) > 2)
-//        return s.ang + 1024;
+    if (s.picnum != APLAYER && (AC_COUNT(actor[iActor].t_data)&63) > 2)
+        return s.ang + 1024;
 
-//    {
-//        int32_t furthest_angle=0;
-//        int32_t d, j;
-//        int32_t greatestd = INT32_MIN;
-//        int32_t angincs=2048/angs;
-//        hitdata_t hit;
+    {
+        var /*int32_t*/ furthest_angle=0;
+        var /*int32_t*/ d:number, j:number;
+        var /*int32_t*/ greatestd = INT32_MIN;
+        var /*int32_t*/ angincs=2048/angs;
+        var hit:hitdata_t;
 
-//        for (j=s.ang; j<(2048+s.ang); j+=angincs)
-//        {
-//            s.z -= (8<<8);
-//            hitscan((const vec3_t *)s, s.sectnum,
-//                    sintable[(j+512)&2047],
-//                    sintable[j&2047],0,
-//                    &hit,CLIPMASK1);
-//            s.z += (8<<8);
-//            d = klabs(hit.pos.x-s.x) + klabs(hit.pos.y-s.y);
+        for (j=s.ang; j<(2048+s.ang); j+=angincs)
+        {
+            s.z -= (8<<8);
+            hitscan(/*(const vec3_t *)*/new vec3_t(s.x, s.y, s.z), s.sectnum,
+                    sintable[(j+512)&2047],
+                    sintable[j&2047],0,
+                    hit,CLIPMASK1);
+            s.z += (8<<8);
+            d = klabs(hit.pos.x-s.x) + klabs(hit.pos.y-s.y);
 
-//            if (d > greatestd)
-//            {
-//                greatestd = d;
-//                furthest_angle = j;
-//            }
-//        }
+            if (d > greatestd)
+            {
+                greatestd = d;
+                furthest_angle = j;
+            }
+        }
 
-//        return furthest_angle&2047;
-//    }
-//}
+        return furthest_angle&2047;
+    }
+}
 
 //int32_t A_FurthestVisiblePoint(int32_t iActor, spritetype *ts, int32_t *dax, int32_t *day)
 //{
@@ -445,23 +445,23 @@ function A_Fall(/*int32_t*/ iActor: number): void
         }
 }
 
-//int32_t G_GetAngleDelta(int32_t a,int32_t na)
-//{
-//    a &= 2047;
-//    na &= 2047;
+function /*int32_t */G_GetAngleDelta(/*int32_t */a:number,/*int32_t */na:number):number
+{
+    a &= 2047;
+    na &= 2047;
 
-//    if (klabs(a-na) < 1024)
-//    {
-////        OSD_Printf("G_GetAngleDelta() returning %d\n",na-a);
-//        return (na-a);
-//    }
+    if (klabs(a-na) < 1024)
+    {
+//        OSD_Printf("G_GetAngleDelta() returning %d\n",na-a);
+        return (na-a);
+    }
 
-//    if (na > 1024) na -= 2048;
-//    if (a > 1024) a -= 2048;
+    if (na > 1024) na -= 2048;
+    if (a > 1024) a -= 2048;
 
-////    OSD_Printf("G_GetAngleDelta() returning %d\n",na-a);
-//    return (na-a);
-//}
+//    OSD_Printf("G_GetAngleDelta() returning %d\n",na-a);
+    return (na-a);
+}
 
 //GAMEEXEC_STATIC void VM_AlterAng(int32_t movflags)
 //{

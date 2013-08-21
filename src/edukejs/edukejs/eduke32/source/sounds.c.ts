@@ -300,8 +300,8 @@ function S_StopMusic(): void
 //    }
 }
 
-//void S_Cleanup(void)
-//{
+function S_Cleanup():void
+{todoUnimportant("S_Cleanup");
 //    // process from our own local copy of the delete queue so we don't hold the lock long
 //    uint32_t ldq[128], ldnum;
 
@@ -366,7 +366,7 @@ function S_StopMusic(): void
 //        g_soundlocks[num]--;
 //    }
 //    while (ldnum);
-//}
+}
 
 //// returns number of bytes read
 //int32_t S_LoadSound(uint32_t num)
@@ -916,21 +916,21 @@ function S_ClearSoundLocks()
 //            rts_lumplockbyte[i] = 199;
 }
 
-//int32_t A_CheckSoundPlaying(int32_t i, int32_t num)
-//{
-//    if (num > g_maxSoundPos || num < 0) return 0;
+function/*int32_t */A_CheckSoundPlaying(/*int32_t */i:number, /*int32_t */num:number):number
+{
+    if (num > g_maxSoundPos || num < 0) return 0;
 
-//    if (g_sounds[num].num > 0 && i >= 0)
-//    {
-//        int32_t j=MAXSOUNDINSTANCES-1;
+    if (g_sounds[num].num > 0 && i >= 0)
+    {
+        var /*int32_t */j=MAXSOUNDINSTANCES-1;
 
-//        for (; j>=0; j--)
-//            if (g_sounds[num].SoundOwner[j].ow == i)
-//                return 1;
-//    }
+        for (; j>=0; j--)
+            if (g_sounds[num].SoundOwner[j].ow == i)
+                return 1;
+    }
 
-//    return (i == -1) ? g_sounds[num].num : 0;
-//}
+    return (i == -1) ? g_sounds[num].num : 0;
+}
 
 //// Check if actor <i> is playing any sound.
 //int32_t A_CheckAnySoundPlaying(int32_t i)
