@@ -12029,7 +12029,7 @@ var tempWhile = 0;
         if (g_player[myconnectindex].ps.gm&MODE_DEMO)
             todoThrow("goto MAIN_LOOP_RESTART;");
     }
-    while (tempWhile++ < 3);
+    while (tempWhile++ < 1);
     dlogFlush();
     //while (1);
     throw "todo";

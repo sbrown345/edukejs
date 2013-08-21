@@ -11930,7 +11930,7 @@ skipframe:
 #ifdef DEBUG_TODO
 	while (1);
 #else
-    while (tempWhile++ < 3);
+    while (tempWhile++ < 1);
 	exit(0);//temp
 #endif
 
