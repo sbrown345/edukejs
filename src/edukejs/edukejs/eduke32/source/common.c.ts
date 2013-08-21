@@ -388,13 +388,13 @@ function G_MultiPskyInit(): void
 //    if (Bstrchr(buf,'.') == 0)
 //        Bstrcat(buf,".grp");
 //
-//    s->str = Bstrdup(buf);
+//    s.str = Bstrdup(buf);
 //
 //    if (CommandGrps)
 //    {
 //        struct strllist *t;
-//        for (t = CommandGrps; t->next; t=t->next) ;
-//        t->next = s;
+//        for (t = CommandGrps; t.next; t=t.next) ;
+//        t.next = s;
 //        return;
 //    }
 //    CommandGrps = s;
@@ -403,13 +403,13 @@ function G_MultiPskyInit(): void
 //void G_AddPath(const char *buffer)
 //{
 //    struct strllist *s = (struct strllist *)Bcalloc(1,sizeof(struct strllist));
-//    s->str = Bstrdup(buffer);
+//    s.str = Bstrdup(buffer);
 //
 //    if (CommandPaths)
 //    {
 //        struct strllist *t;
-//        for (t = CommandPaths; t->next; t=t->next) ;
-//        t->next = s;
+//        for (t = CommandPaths; t.next; t=t.next) ;
+//        t.next = s;
 //        return;
 //    }
 //    CommandPaths = s;
@@ -475,11 +475,11 @@ function G_MultiPskyInit(): void
 ////// FILE NAME / DIRECTORY LISTS ////
 //void fnlist_clearnames(fnlist_t *fnl)
 //{
-//    klistfree(fnl->finddirs);
-//    klistfree(fnl->findfiles);
+//    klistfree(fnl.finddirs);
+//    klistfree(fnl.findfiles);
 //
-//    fnl->finddirs = fnl->findfiles = NULL;
-//    fnl->numfiles = fnl->numdirs = 0;
+//    fnl.finddirs = fnl.findfiles = NULL;
+//    fnl.numfiles = fnl.numdirs = 0;
 //}
 //
 //// dirflags, fileflags:
@@ -493,14 +493,14 @@ function G_MultiPskyInit(): void
 //    fnlist_clearnames(fnl);
 //
 //    if (dirflags != -1)
-//        fnl->finddirs = klistpath(dirname, "*", CACHE1D_FIND_DIR|dirflags);
+//        fnl.finddirs = klistpath(dirname, "*", CACHE1D_FIND_DIR|dirflags);
 //    if (fileflags != -1)
-//        fnl->findfiles = klistpath(dirname, pattern, CACHE1D_FIND_FILE|fileflags);
+//        fnl.findfiles = klistpath(dirname, pattern, CACHE1D_FIND_FILE|fileflags);
 //
-//    for (r=fnl->finddirs; r; r=r->next)
-//        fnl->numdirs++;
-//    for (r=fnl->findfiles; r; r=r->next)
-//        fnl->numfiles++;
+//    for (r=fnl.finddirs; r; r=r.next)
+//        fnl.numdirs++;
+//    for (r=fnl.findfiles; r; r=r.next)
+//        fnl.numfiles++;
 //
 //    return(0);
 //}
@@ -522,9 +522,9 @@ function G_MultiPskyInit(): void
 //
 //        fnlist_getnames(&fnlist, dirname, extensions[i], -1, 0);
 //
-//        for (rec=fnlist.findfiles; rec; rec=rec->next)
+//        for (rec=fnlist.findfiles; rec; rec=rec.next)
 //        {
-//            Bsnprintf(buf, sizeof(buf), "%s/%s", dirname, rec->name);
+//            Bsnprintf(buf, sizeof(buf), "%s/%s", dirname, rec.name);
 //            initprintf("Using group file \"%s\".\n", buf);
 //            initgroupfile(buf);
 //        }
@@ -565,41 +565,53 @@ function G_MultiPskyInit(): void
 //    // If 'fn' has no extension suffixed, append one.
 //    return (Bsnprintf(wbuf, wbufsiz, "%s%s", fn, haveext ? "" : ext) >= wbufsiz);
 //}
-//
-//
-//// Approximations to 2D and 3D Euclidean distances. Initial EDuke32 SVN import says
-//// in jmact/mathutil.c: "Ken's reverse-engineering job".
-//// Note that jmact/mathutil.c contains practically the same code, but where the
-//// individual x/y(/z) distances are passed instead.
-//int32_t ldist(const spritetype *s1, const spritetype *s2)
-//{
-//    int32_t x = klabs(s1->x-s2->x);
-//    int32_t y = klabs(s1->y-s2->y);
-//
-//    if (x<y) swaplong(&x,&y);
-//
-//    {
-//        int32_t t = y + (y>>1);
-//        return (x - (x>>5) - (x>>7)  + (t>>2) + (t>>6));
-//    }
-//}
-//
-//int32_t dist(const spritetype *s1, const spritetype *s2)
-//{
-//    int32_t x = klabs(s1->x-s2->x);
-//    int32_t y = klabs(s1->y-s2->y);
-//    int32_t z = klabs((s1->z-s2->z)>>4);
-//
-//    if (x<y) swaplong(&x,&y);
-//    if (x<z) swaplong(&x,&z);
-//
-//    {
-//        int32_t t = y + z;
-//        return (x - (x>>4) + (t>>2) + (t>>3));
-//    }
-//}
-//
-//
+
+
+// Approximations to 2D and 3D Euclidean distances. Initial EDuke32 SVN import says
+// in jmact/mathutil.c: "Ken's reverse-engineering job".
+// Note that jmact/mathutil.c contains practically the same code, but where the
+// individual x/y(/z) distances are passed instead.
+function /*int32_t */ldist(/*const spritetype **/s1:spritetype, /*const spritetype **/s2:spritetype):number
+{
+    var /*int32_t*/ x = klabs(s1.x-s2.x);
+    var /*int32_t*/ y = klabs(s1.y-s2.y);
+
+    if (x<y) {
+        var t = y;
+        y = x;
+        x = t;
+    }
+
+    {
+        var /*int32_t */t = y + (y>>1);
+        return (x - (x>>5) - (x>>7)  + (t>>2) + (t>>6));
+    }
+}
+
+function /*int32_t */dist(/*const spritetype **/s1:spritetype, /*const spritetype **/s2:spritetype): number
+{
+    var /*int32_t*/ x = klabs(s1.x-s2.x);
+    var /*int32_t*/ y = klabs(s1.y-s2.y);
+    var /*int32_t*/ z = klabs((s1.z-s2.z)>>4);
+
+    if (x<y) {
+        var t = y;
+        y = x;
+        x = t;
+    };
+    if (x<z) {
+        var t = z;
+        z = x;
+        x = t;
+    }
+
+    {
+        var /*int32_t */t = y + z;
+        return (x - (x>>4) + (t>>2) + (t>>3));
+    }
+}
+
+
 
 /**
  * Clear OSD background

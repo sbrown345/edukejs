@@ -345,36 +345,37 @@ function FX_SetReverb
 //}
 
 
-///*---------------------------------------------------------------------
-//   Function: FX_SetReverbDelay
+/*---------------------------------------------------------------------
+   Function: FX_SetReverbDelay
 
-//   Sets the delay level of reverb to add to mix.
-//---------------------------------------------------------------------*/
+   Sets the delay level of reverb to add to mix.
+---------------------------------------------------------------------*/
 
-//void FX_SetReverbDelay
-//(
-//    int32_t delay
-//)
+function FX_SetReverbDelay
+(
+    /*int32_t */delay:number
+):void
 
-//{
-//    MV_SetReverbDelay(delay);
-//}
+{
+    todo("MV_SetReverbDelay(delay);");
+}
 
 
-///*---------------------------------------------------------------------
-//   Function: FX_VoiceAvailable
+/*---------------------------------------------------------------------
+   Function: FX_VoiceAvailable
 
-//   Checks if a voice can be play at the specified priority.
-//---------------------------------------------------------------------*/
+   Checks if a voice can be play at the specified priority.
+---------------------------------------------------------------------*/
 
-//int32_t FX_VoiceAvailable
-//(
-//    int32_t priority
-//)
+function /*int32_t */FX_VoiceAvailable
+(
+    /*int32_t */priority:number
+):number
 
-//{
-//    return MV_VoiceAvailable(priority);
-//}
+{
+    todo("return MV_VoiceAvailable(priority);");
+    return 0;//todo
+}
 
 ///*---------------------------------------------------------------------
 //Function: FX_PauseVoice

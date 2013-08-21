@@ -60,6 +60,18 @@
 	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=AF1BE1DA1AB267408AD136E596221EA3/Shortcut/@EntryValue">swaplong</s:String>
 	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=AF1BE1DA1AB267408AD136E596221EA3/ShortenQualifiedReferences/@EntryValue">True</s:Boolean>
 	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=AF1BE1DA1AB267408AD136E596221EA3/Text/@EntryValue">{var t=$b$; $b$=$a$; $a$=t;}</s:String>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=BDCE00D61EAEE14EA7B0EFAEE6352776/@KeyIndexDefined">True</s:Boolean>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=BDCE00D61EAEE14EA7B0EFAEE6352776/Applicability/=Live/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=BDCE00D61EAEE14EA7B0EFAEE6352776/Field/=j/@KeyIndexDefined">True</s:Boolean>
+	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=BDCE00D61EAEE14EA7B0EFAEE6352776/Field/=j/Order/@EntryValue">0</s:Int64>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=BDCE00D61EAEE14EA7B0EFAEE6352776/Field/=Statnum/@KeyIndexDefined">True</s:Boolean>
+	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=BDCE00D61EAEE14EA7B0EFAEE6352776/Field/=Statnum/Order/@EntryValue">1</s:Int64>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=BDCE00D61EAEE14EA7B0EFAEE6352776/Reformat/@EntryValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=BDCE00D61EAEE14EA7B0EFAEE6352776/Scope/=139FF4CE89E7094686FDA7BF5FFBBE92/@KeyIndexDefined">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=BDCE00D61EAEE14EA7B0EFAEE6352776/Scope/=139FF4CE89E7094686FDA7BF5FFBBE92/Type/@EntryValue">Everywhere</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=BDCE00D61EAEE14EA7B0EFAEE6352776/Shortcut/@EntryValue">SPRITES_OF</s:String>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=BDCE00D61EAEE14EA7B0EFAEE6352776/ShortenQualifiedReferences/@EntryValue">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=BDCE00D61EAEE14EA7B0EFAEE6352776/Text/@EntryValue">$j$=headspritestat[STAT_$Statnum$]; $j$&gt;=0; $j$=nextspritestat[$j$]</s:String>
 	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=C5348376C2BD3247B026846EF00F1FAF/@KeyIndexDefined">True</s:Boolean>
 	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=C5348376C2BD3247B026846EF00F1FAF/Applicability/=Live/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=C5348376C2BD3247B026846EF00F1FAF/Field/=globalpicnum/@KeyIndexDefined">True</s:Boolean>

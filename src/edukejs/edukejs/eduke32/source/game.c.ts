@@ -12029,7 +12029,7 @@ var tempWhile = 0;
         if (g_player[myconnectindex].ps.gm&MODE_DEMO)
             todoThrow("goto MAIN_LOOP_RESTART;");
     }
-    while (tempWhile++ < 1);
+    while (tempWhile++ < 2);
     //dlogFlush();
     //while (1);
     throw "todo";
@@ -12142,7 +12142,7 @@ function /*int32_t */G_DoMoveThings(): number
 
     g_moveThingsCount++;
 
-    if (ud.recstat == 1) G_DemoRecord();
+    if (ud.recstat == 1) todoThrow("G_DemoRecord();");
 
     everyothertime++;
     if (g_earthquakeTime > 0) g_earthquakeTime--;
@@ -12161,7 +12161,7 @@ function /*int32_t */G_DoMoveThings(): number
             if (GametypeFlags[ud.coop] & GAMETYPE_TDM)
             {
                 actor[g_player[i].ps.i].picnum = APLAYERTOP;
-                P_QuickKill(g_player[i].ps);
+                todoThrow("P_QuickKill(g_player[i].ps);");
             }
         }
         if (GametypeFlags[ud.coop] & GAMETYPE_TDM)
@@ -12185,7 +12185,7 @@ function /*int32_t */G_DoMoveThings(): number
 //    Net_CorrectPrediction();
 
     if (g_netServer)
-        Net_SendServerUpdates();
+        todoThrow("Net_SendServerUpdates();");
 
     if ((everyothertime&1) == 0)
     {
@@ -12194,12 +12194,12 @@ function /*int32_t */G_DoMoveThings(): number
 
         if (g_netServer && (everyothertime % 10) == 0)
 		{
-            Net_SendMapUpdate();
+            todoThrow("Net_SendMapUpdate();");
 		}
     }
 
     if (g_netClient)   //Slave
-        Net_SendClientUpdate();
+        todoThrow("Net_SendClientUpdate();");
 
     return 0;
 }

@@ -1381,135 +1381,135 @@ function A_MoveDummyPlayers(): void
 function G_MoveFX(): void
 {
     var /*int32_t */i = headspritestat[STAT_FX];
-    todoThrow();
-//    while (i >= 0)
-//    {
-//        spritetype *const s = &sprite[i];
-//        const int32_t nexti = nextspritestat[i];
+    BOLT:
+    while (i >= 0)
+    {
+        var s = sprite[i];
+        var /*const int32_t */nexti = nextspritestat[i];
 
-//        switch (DYNAMICTILEMAP(s.picnum))
-//        {
-//        case RESPAWN__STATIC:
-//            if (sprite[i].extra == 66)
-//            {
-//                /*int32_t j =*/ A_Spawn(i,sprite[i].hitag);
-//                //                    sprite[j].pal = sprite[i].pal;
-//                KILLIT(i);
-//            }
-//            else if (sprite[i].extra > (66-13))
-//                sprite[i].extra++;
-//            break;
+        switch (DYNAMICTILEMAP(s.picnum))
+        {
+        case RESPAWN__STATIC:
+            if (sprite[i].extra == 66)
+            {
+                /*int32_t j =*/ A_Spawn(i,sprite[i].hitag);
+                //                    sprite[j].pal = sprite[i].pal;
+                {A_DeleteSprite(i); continue BOLT;}//KILLIT(i);
+            }
+            else if (sprite[i].extra > (66-13))
+                sprite[i].extra++;
+            break;
 
-//        case MUSICANDSFX__STATIC:
-//        {
-//            const int32_t ht = s.hitag;
-//            DukePlayer_t *const peekps = g_player[screenpeek].ps;
+        case MUSICANDSFX__STATIC:
+        {
+            var /*const int32_t */ht = s.hitag;
+            var peekps = g_player[screenpeek].ps;
 
-//            if (actor[i].t_data[1] != ud.config.SoundToggle)
-//            {
-//                // If sound playback was toggled, restart.
-//                actor[i].t_data[1] = ud.config.SoundToggle;
-//                actor[i].t_data[0] = 0;
-//            }
+            if (actor[i].t_data[1] != ud.config.SoundToggle)
+            {
+                // If sound playback was toggled, restart.
+                actor[i].t_data[1] = ud.config.SoundToggle;
+                actor[i].t_data[0] = 0;
+            }
 
-//            if (s.lotag >= 1000 && s.lotag < 2000)
-//            {
-//                int32_t x = ldist(&sprite[peekps.i],s);
+            if (s.lotag >= 1000 && s.lotag < 2000)
+            {
+                var /*int32_t */x = ldist(sprite[peekps.i],s);
 
-//                if (g_fakeMultiMode==2)
-//                {
-//                    // HACK for splitscreen mod
-//                    int32_t otherdist = ldist(&sprite[g_player[1].ps.i],s);
-//                    x = min(x, otherdist);
-//                }
+                if (g_fakeMultiMode==2)
+                {
+                    // HACK for splitscreen mod
+                    var /*int32_t */otherdist = ldist(sprite[g_player[1].ps.i],s);
+                    x = min(x, otherdist);
+                }
 
-//                if (x < ht && actor[i].t_data[0] == 0)
-//                {
-//                    FX_SetReverb(s.lotag - 1000);
-//                    actor[i].t_data[0] = 1;
-//                }
-//                if (x >= ht && actor[i].t_data[0] == 1)
-//                {
-//                    FX_SetReverb(0);
-//                    FX_SetReverbDelay(0);
-//                    actor[i].t_data[0] = 0;
-//                }
-//            }
-//            else if (s.lotag < 999 && (unsigned)sector[s.sectnum].lotag < 9 &&  // ST_9_SLIDING_ST_DOOR
-//                         ud.config.AmbienceToggle && sector[sprite[i].sectnum].floorz != sector[sprite[i].sectnum].ceilingz)
-//            {
-//                if (g_sounds[s.lotag].m&2)
-//                {
-//                    int32_t x = dist(&sprite[peekps.i],s);
+                if (x < ht && actor[i].t_data[0] == 0)
+                {
+                    FX_SetReverb(s.lotag - 1000);
+                    actor[i].t_data[0] = 1;
+                }
+                if (x >= ht && actor[i].t_data[0] == 1)
+                {
+                    FX_SetReverb(0);
+                    FX_SetReverbDelay(0);
+                    actor[i].t_data[0] = 0;
+                }
+            }
+            else if (s.lotag < 999 && /*(unsigned)*/sector[s.sectnum].lotag < 9 &&  // ST_9_SLIDING_ST_DOOR
+                         ud.config.AmbienceToggle && sector[sprite[i].sectnum].floorz != sector[sprite[i].sectnum].ceilingz)
+            {
+                if (g_sounds[s.lotag].m&2)
+                {
+                    var /*int32_t */ x = dist(sprite[peekps.i],s);
 
-//                    if (g_fakeMultiMode==2)
-//                    {
-//                        // HACK for splitscreen mod
-//                        int32_t otherdist = dist(&sprite[g_player[1].ps.i],s);
-//                        x = min(x, otherdist);
-//                    }
+                    if (g_fakeMultiMode==2)
+                    {
+                        // HACK for splitscreen mod
+                        var /*int32_t */otherdist = dist(sprite[g_player[1].ps.i],s);
+                        x = min(x, otherdist);
+                    }
 
-//                    if (x < ht && actor[i].t_data[0] == 0 && FX_VoiceAvailable(g_sounds[s.lotag].pr-1))
-//                    {
-//                        // Start playing an ambience sound.
+                    if (x < ht && actor[i].t_data[0] == 0 && FX_VoiceAvailable(g_sounds[s.lotag].pr-1))
+                    {
+                        // Start playing an ambience sound.
 
-//                        char om = g_sounds[s.lotag].m;
-//                        if (g_numEnvSoundsPlaying == ud.config.NumVoices)
-//                        {
-//                            int32_t j;
+                        var /*char */om = g_sounds[s.lotag].m;
+                        if (g_numEnvSoundsPlaying == ud.config.NumVoices)
+                        {
+                            var /*nt32_t */j:number;
 
-//                            for (SPRITES_OF(STAT_FX, j))
-//                                if (j != i && S_IsAmbientSFX(j) && actor[j].t_data[0] == 1 &&
-//                                        dist(&sprite[j], &sprite[peekps.i]) > x)
-//                                {
-//                                    S_StopEnvSound(sprite[j].lotag,j);
-//                                    break;
-//                                }
+                            for (j = headspritestat[STAT_FX]; j >= 0; j = nextspritestat[j] /*SPRITES_OF(STAT_FX, j)*/)
+                                if (j != i && S_IsAmbientSFX(j) && actor[j].t_data[0] == 1 &&
+                                        dist(sprite[j], sprite[peekps.i]) > x)
+                                {
+                                    S_StopEnvSound(sprite[j].lotag,j);
+                                    break;
+                                }
 
-//                            if (j == -1)
-//                                goto BOLT;
-//                        }
+                            if (j == -1)
+                                { i = nexti; continue BOLT; }
+                        }
 
-//                        g_sounds[s.lotag].m |= 1;
-//                        A_PlaySound(s.lotag,i);
-//                        g_sounds[s.lotag].m = om;
-//                        actor[i].t_data[0] = 1;
-//                        actor[i].t_data[8] = 1;  // AMBIENT_SFX_PLAYING
-//                    }
-//                    else if (x >= ht && actor[i].t_data[0] == 1)
-//                    {
-//                        // Stop playing ambience sound because we're out of its range.
+                        g_sounds[s.lotag].m |= 1;
+                        A_PlaySound(s.lotag,i);
+                        g_sounds[s.lotag].m = om;
+                        actor[i].t_data[0] = 1;
+                        actor[i].t_data[8] = 1;  // AMBIENT_SFX_PLAYING
+                    }
+                    else if (x >= ht && actor[i].t_data[0] == 1)
+                    {
+                        // Stop playing ambience sound because we're out of its range.
 
-//                        // actor[i].t_data[0] = 0;
-//                        actor[i].t_data[8] = 0;
-//                        S_StopEnvSound(s.lotag,i);
-//                    }
-//                }
+                        // actor[i].t_data[0] = 0;
+                        actor[i].t_data[8] = 0;
+                        S_StopEnvSound(s.lotag,i);
+                    }
+                }
 
-//                if (g_sounds[s.lotag].m&16)
-//                {
-//                    // Randomly playing global sounds (flyby of planes, screams, ...)
+                if (g_sounds[s.lotag].m&16)
+                {
+                    // Randomly playing global sounds (flyby of planes, screams, ...)
 
-//                    if (actor[i].t_data[4] > 0)
-//                        actor[i].t_data[4]--;
-//                    else
-//                    {
-//                        int32_t p;
-//                        for (TRAVERSE_CONNECT(p))
-//                            if (p == myconnectindex && g_player[p].ps.cursectnum == s.sectnum)
-//                            {
-//                                S_PlaySound(s.lotag + (unsigned)g_globalRandom % (s.hitag+1));
-//                                actor[i].t_data[4] = GAMETICSPERSEC*40 + g_globalRandom%(GAMETICSPERSEC*40);
-//                            }
-//                    }
-//                }
-//            }
-//            break;
-//        }
-//        }
+                    if (actor[i].t_data[4] > 0)
+                        actor[i].t_data[4]--;
+                    else
+                    {
+                        var/*int32_t */p: number;
+                        for (p = 0; p != -1; p = connectpoint2[p])
+                            if (p == myconnectindex && g_player[p].ps.cursectnum == s.sectnum)
+                            {
+                                S_PlaySound(s.lotag + /*(unsigned)*/g_globalRandom % (s.hitag+1));
+                                actor[i].t_data[4] = GAMETICSPERSEC*40 + g_globalRandom%(GAMETICSPERSEC*40);
+                            }
+                    }
+                }
+            }
+            break;
+        }
+        }
 //BOLT:
-//        i = nexti;
-//    }
+        i = nexti;
+    }
 }
 
 //ACTOR_STATIC void G_MoveFallers(void)
