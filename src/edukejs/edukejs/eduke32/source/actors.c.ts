@@ -1176,12 +1176,12 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //    }
 //}
 
-//void A_MoveDummyPlayers(void)
-//{
-//    int32_t i = headspritestat[STAT_DUMMYPLAYER];
+function A_MoveDummyPlayers(): void
+{
+    var /*int32_t */i = headspritestat[STAT_DUMMYPLAYER];
 
-//    while (i >= 0)
-//    {
+    while (i >= 0)
+    {todoThrow();
 //        const int32_t p = sprite[sprite[i].owner].yvel;
 //        DukePlayer_t *const ps = g_player[p].ps;
 
@@ -1217,8 +1217,8 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 
 //BOLT:
 //        i = nexti;
-//    }
-//}
+    }
+}
 
 
 //static int32_t P_Submerge(int32_t j, int32_t p, DukePlayer_t *ps, int32_t sect, int32_t othersect);
@@ -1378,10 +1378,10 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //    }
 //}
 
-//ACTOR_STATIC void G_MoveFX(void)
-//{
-//    int32_t i = headspritestat[STAT_FX];
-
+function G_MoveFX(): void
+{
+    var /*int32_t */i = headspritestat[STAT_FX];
+    todoThrow();
 //    while (i >= 0)
 //    {
 //        spritetype *const s = &sprite[i];
@@ -1510,7 +1510,7 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
 //BOLT:
 //        i = nexti;
 //    }
-//}
+}
 
 //ACTOR_STATIC void G_MoveFallers(void)
 //{
@@ -8321,82 +8321,82 @@ function A_CheckSwitchTile(i: number): number
     return 0;
 }
 
-//void G_MoveWorld(void)
-//{
-//    int32_t k = MAXSTATUS-1;
+function G_MoveWorld(): void
+{
+    var /*int32_t */k = MAXSTATUS-1;
 
-//    do
-//    {
-//        int32_t i = headspritestat[k];
+    do
+    {
+        var /*int32_t */i = headspritestat[k];
 
-//        while (i >= 0)
-//        {
-//            const int32_t j = nextspritestat[i];
+        while (i >= 0)
+        {
+            var /*const int32_t */j = nextspritestat[i];
 
-//            if (!G_HaveEvent(EVENT_PREGAME) || A_CheckSpriteFlags(i, SPRITE_NOEVENTCODE))
-//            {
-//                i = j;
-//                continue;
-//            }
+            if (!G_HaveEvent(EVENT_PREGAME) || A_CheckSpriteFlags(i, SPRITE_NOEVENTCODE))
+            {
+                i = j;
+                continue;
+            }
 
-//            {
-//                int32_t p, pl = A_FindPlayer(&sprite[i], &p);
-//                VM_OnEvent(EVENT_PREGAME, i, pl, p, 0);
-//            }
+            {
+                var /*int32_t */p = new R<number>(0), pl = A_FindPlayer(sprite[i], p);
+                VM_OnEvent(EVENT_PREGAME, i, pl, p.$, 0);
+            }
 
-//            i = j;
-//        }
-//    }
-//    while (k--);
+            i = j;
+        }
+    }
+    while (k--);
+    todo("MOVE STUFF");todo("MOVE STUFF");todo("MOVE STUFF");
+    //G_MoveZombieActors();     //ST 2
+    //G_MoveWeapons();          //ST 4
+    //G_MoveTransports();       //ST 9
 
-//    G_MoveZombieActors();     //ST 2
-//    G_MoveWeapons();          //ST 4
-//    G_MoveTransports();       //ST 9
+    //G_MovePlayers();          //ST 10
+    //G_MoveFallers();          //ST 12
+    //G_MoveMisc();             //ST 5
 
-//    G_MovePlayers();          //ST 10
-//    G_MoveFallers();          //ST 12
-//    G_MoveMisc();             //ST 5
+    //G_MoveActors();           //ST 1
 
-//    G_MoveActors();           //ST 1
+    //// XXX: Has to be before effectors, in particular movers?
+    //// TODO: lights in moving sectors ought to be interpolated
+    //G_DoEffectorLights();
 
-//    // XXX: Has to be before effectors, in particular movers?
-//    // TODO: lights in moving sectors ought to be interpolated
-//    G_DoEffectorLights();
+    //G_MoveEffectors();        //ST 3
 
-//    G_MoveEffectors();        //ST 3
+    //G_MoveStandables();       //ST 6
 
-//    G_MoveStandables();       //ST 6
+    k = MAXSTATUS-1;
 
-//    k = MAXSTATUS-1;
+    do
+    {
+        var /*int32_t */i = headspritestat[k];
 
-//    do
-//    {
-//        int32_t i = headspritestat[k];
-
-//        while (i >= 0)
-//        {
-//            const int32_t j = nextspritestat[i];
+        while (i >= 0)
+        {
+            var/*const int32_t */j = nextspritestat[i];
 
 //#ifdef POLYMER
-//            if (getrendermode() == REND_POLYMER)
-//                A_DoLight(i);
+            if (getrendermode() == REND_POLYMER)
+                todoThrow("A_DoLight(i);");
 //#endif
-//            if (!G_HaveEvent(EVENT_GAME) || A_CheckSpriteFlags(i, SPRITE_NOEVENTCODE))
-//            {
-//                i = j;
-//                continue;
-//            }
+            if (!G_HaveEvent(EVENT_GAME) || A_CheckSpriteFlags(i, SPRITE_NOEVENTCODE))
+            {
+                i = j;
+                continue;
+            }
 
-//            {
-//                int32_t p, pl = A_FindPlayer(&sprite[i], &p);
-//                VM_OnEvent(EVENT_GAME,i, pl, p, 0);
-//            }
+            {
+                var /*int32_t */p, pl = A_FindPlayer(sprite[i], p);
+                VM_OnEvent(EVENT_GAME,i, pl, p, 0);
+            }
 
-//            i = j;
-//        }
-//    }
-//    while (k--);
+            i = j;
+        }
+    }
+    while (k--);
 
-//    G_DoSectorAnimations();
-//    G_MoveFX();               //ST 11
-//}
+    todo("G_DoSectorAnimations();")
+    G_MoveFX();              //ST 11
+}

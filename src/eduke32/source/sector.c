@@ -2440,6 +2440,7 @@ void G_AlignWarpElevators(void)
 
 void P_HandleSharedKeys(int32_t snum)
 {
+#ifdef DEBUG_TODO
     int32_t i, k = 0, dainv;
     uint32_t sb_snum = g_player[snum].sync->bits, j;
     DukePlayer_t *p = g_player[snum].ps;
@@ -2948,6 +2949,7 @@ CHECKINV1:
             if (VM_OnEvent(EVENT_TURNAROUND,p->i,snum, -1, 0) == 0)
                 p->one_eighty_count = -1024;
     }
+#endif
 }
 
 int32_t A_CheckHitSprite(int32_t i, int16_t *hitsp)

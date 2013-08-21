@@ -463,7 +463,7 @@ function gametext(x: number,y: number,t:string,s: number,dabits: number): number
 //#define gametextscaled(x,y,t,s,dabits) G_PrintGameText(1,STARTALPHANUM, x,y,t,s,0,dabits,0, 0, xdim-1, ydim-1, 65536)
 function gametextpal(x: number,y: number,t: string,s: number,p: number): number {todo("");return -1;/*G_PrintGameText(0,STARTALPHANUM, x,y,t,s,p,26,0, 0, xdim-1, ydim-1, 65536);*/}
 //#define gametextpalbits(x,y,t,s,p,dabits) G_PrintGameText(0,STARTALPHANUM, x,y,t,s,p,dabits,0, 0, xdim-1, ydim-1, 65536)
-//#define A_CheckSpriteFlags(iActor, iType) (((g_tile[sprite[iActor].picnum].flags^actor[iActor].flags) & iType) != 0)
+function A_CheckSpriteFlags(iActor:number, iType:number):number {return((g_tile[sprite[iActor].picnum].flags^actor[iActor].flags) & iType) != 0 ? 1:0;}
 //// (unsigned)iPicnum check: AMC TC Rusty Nails, bayonet MG alt. fire, iPicnum == -1 (via aplWeaponShoots)
 function A_CheckSpriteTileFlags(iPicnum: number, iType: number): number {return (iPicnum < MAXTILES) && (g_tile[iPicnum].flags & iType) != 0 ? 1 : 0;}
 //#define G_EnterText(x, y, t, dalen, c) _EnterText(0,x,y,t,dalen,c)

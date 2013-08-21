@@ -11930,7 +11930,7 @@ skipframe:
 #ifdef DEBUG_TODO
 	while (1);
 #else
-    while (tempWhile++ < 1);
+    while (tempWhile++ < 3);
 	exit(0);//temp
 #endif
 
@@ -11947,7 +11947,6 @@ GAME_STATIC GAME_INLINE int32_t G_MoveLoop()
 
 int32_t G_DoMoveThings(void)
 {
-#ifdef DEBUG_TODO
 	int32_t i;
 
     ud.camerasprite = -1;
@@ -12073,7 +12072,7 @@ int32_t G_DoMoveThings(void)
         P_HandleSharedKeys(i);
 
         if (ud.pause_on == 0)
-        {
+        { 
             P_ProcessInput(i);
             P_CheckSectors(i);
         }
@@ -12100,7 +12099,6 @@ int32_t G_DoMoveThings(void)
 
     if (g_netClient)   //Slave
         Net_SendClientUpdate();
-#endif
     return 0;
 }
 

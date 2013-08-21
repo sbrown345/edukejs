@@ -8285,7 +8285,7 @@ void G_MoveWorld(void)
         }
     }
     while (k--);
-
+#ifdef DEBUG_TODO
     G_MoveZombieActors();     //ST 2
     G_MoveWeapons();          //ST 4
     G_MoveTransports();       //ST 9
@@ -8303,7 +8303,7 @@ void G_MoveWorld(void)
     G_MoveEffectors();        //ST 3
 
     G_MoveStandables();       //ST 6
-
+#endif
     k = MAXSTATUS-1;
 
     do
@@ -8334,6 +8334,8 @@ void G_MoveWorld(void)
     }
     while (k--);
 
+#ifdef DEBUG_TODO
     G_DoSectorAnimations();
+#endif
     G_MoveFX();               //ST 11
 }

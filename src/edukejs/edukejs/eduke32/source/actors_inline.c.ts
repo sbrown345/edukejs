@@ -103,12 +103,11 @@ function A_SetSprite(/*int32_t*/ i: number,/*uint32_t*/ cliptype: number): numbe
     return (A_MoveSprite(i,davect,cliptype)==0)?1:0;
 }
 
-
-//EXTERN_INLINE void G_UpdateInterpolations(void)  //Stick at beginning of G_DoMoveThings
-//{
-//    int32_t i=g_numInterpolations-1;
-//    for (; i>=0; i--) oldipos[i] = *curipos[i];
-//}
+function G_UpdateInterpolations() : void //Stick at beginning of G_DoMoveThings
+{
+    var i=g_numInterpolations-1;
+    for (; i>=0; i--) oldipos[i] = /* * ??? */curipos[i];
+}
 
 
 function G_RestoreInterpolations(): void//Stick at end of drawscreen

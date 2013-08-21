@@ -70,7 +70,7 @@ var animwall: animwalltype[] = newStructArray<animwalltype>(animwalltype, MAXANI
 var ScriptQuotes: Uint8Array[] = new Array<Uint8Array>(MAXQUOTES),ScriptQuoteRedefinitions: Uint8Array[] = new Array<Uint8Array>(MAXQUOTES); ////G_EXTERN char *
 var label : Uint8Array;//G_EXTERN char *label;
 var EnvMusicFilename: string[] = new Array<string>(MAXVOLUMES+1);//[MAXVOLUMES+1][BMAX_PATH];
-//G_EXTERN char g_RTSPlaying: number;
+var /*char */g_RTSPlaying: number = 0;
 var g_musicIndex: number; //G_EXTERN int32_t 
 var g_loadFromGroupOnly = 0;//char
 var g_numSkills : number; // char

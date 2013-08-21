@@ -216,13 +216,13 @@ var g_clipMapFiles: string[] = NULL;
 var g_clipMapFilesNum: number = 0; //int32_t 
 //#endif
 
-//extern int32_t lastvisinc;
+var /*int32_t */lastvisinc=0;
 
 g_Shareware = 0;
 
-//#define MAXUSERQUOTES 6
+var MAXUSERQUOTES=6;
 //int32_t quotebot, quotebotgoal;
-//static int32_t user_quote_time[MAXUSERQUOTES];
+var user_quote_time = new Int32Array(MAXUSERQUOTES);
 //static char user_quote[MAXUSERQUOTES][178];
 //// char typebuflen,typebuf[41];
 
@@ -12030,7 +12030,7 @@ var tempWhile = 0;
             todoThrow("goto MAIN_LOOP_RESTART;");
     }
     while (tempWhile++ < 1);
-    dlogFlush();
+    //dlogFlush();
     //while (1);
     throw "todo";
     G_GameExit(" ");
@@ -12040,36 +12040,35 @@ var tempWhile = 0;
 
 function /*int32_t*/ G_MoveLoop():number
 {
-    todo("G_MoveLoop");
     Net_GetPackets();
 
     return G_DoMoveThings();
 }
 
 function /*int32_t */G_DoMoveThings(): number
-{todo("G_DoMoveThings");
-//    int32_t i;
+{
+    var  /*int32_t */i:number;
 
-//    ud.camerasprite = -1;
-//    lockclock += TICSPERFRAME;
+    ud.camerasprite = -1;
+    lockclock += TICSPERFRAME;
 
-//    // Moved lower so it is restored correctly by demo diffs:
-//    //if (g_earthquakeTime > 0) g_earthquakeTime--;
+    // Moved lower so it is restored correctly by demo diffs:
+    //if (g_earthquakeTime > 0) g_earthquakeTime--;
 
-//    if (g_RTSPlaying > 0) g_RTSPlaying--;
+    if (g_RTSPlaying > 0) g_RTSPlaying--;
 
-//    for (i=0; i<MAXUSERQUOTES; i++)
-//        if (user_quote_time[i])
-//        {
-//            user_quote_time[i]--;
-//            if (user_quote_time[i] > ud.msgdisptime)
-//                user_quote_time[i] = ud.msgdisptime;
-//            if (!user_quote_time[i]) pub = NUMPAGES;
-//        }
+    for (i=0; i<MAXUSERQUOTES; i++)
+        if (user_quote_time[i])
+        {
+            user_quote_time[i]--;
+            if (user_quote_time[i] > ud.msgdisptime)
+                user_quote_time[i] = ud.msgdisptime;
+            if (!user_quote_time[i]) pub = NUMPAGES;
+        }
 
-//    // Name display when aiming at opponents
-//    if (ud.idplayers && (g_netServer || ud.multimode > 1) && !g_fakeMultiMode)
-//    {
+    // Name display when aiming at opponents
+    if (ud.idplayers && (g_netServer || ud.multimode > 1) && !g_fakeMultiMode)
+    {todoThrow();
 //        hitdata_t hit;
 //        DukePlayer_t *const p = g_player[screenpeek].ps;
 
@@ -12100,106 +12099,107 @@ function /*int32_t */G_DoMoveThings(): number
 //            }
 //            else if (p.fta > 2) p.fta -= 3;
 //        }
-//    }
+    }
 
-//    if (g_showShareware > 0)
-//    {
-//        g_showShareware--;
-//        if (g_showShareware == 0)
-//        {
-//            pus = NUMPAGES;
-//            pub = NUMPAGES;
-//        }
-//    }
+    if (g_showShareware > 0)
+    {
+        g_showShareware--;
+        if (g_showShareware == 0)
+        {
+            pus = NUMPAGES;
+            pub = NUMPAGES;
+        }
+    }
 
-//    // Moved lower so it is restored correctly by diffs:
-////    everyothertime++;
-
-//    if (g_netServer || g_netClient)
-//        randomseed = ticrandomseed;
-
-//    for (TRAVERSE_CONNECT(i))
-//        Bmemcpy(g_player[i].sync, &inputfifo[(g_netServer && myconnectindex == i)][i],
-//                sizeof(input_t));
-
-//    G_UpdateInterpolations();
-
-//    /*
-//        j = -1;
-//        for (TRAVERSE_CONNECT(i))
-//        {
-//            if (g_player[i].playerquitflag == 0 || TEST_SYNC_KEY(g_player[i].sync.bits,SK_GAMEQUIT) == 0)
-//            {
-//                j = i;
-//                continue;
-//            }
-
-//            G_CloseDemoWrite();
-
-//            g_player[i].playerquitflag = 0;
-//        }
-//    */
-
-//    g_moveThingsCount++;
-
-//    if (ud.recstat == 1) G_DemoRecord();
-
+    // Moved lower so it is restored correctly by diffs:
 //    everyothertime++;
-//    if (g_earthquakeTime > 0) g_earthquakeTime--;
 
-//    if (ud.pause_on == 0)
-//    {
-//        g_globalRandom = krand();
-//        A_MoveDummyPlayers();//ST 13
-//    }
+    if (g_netServer || g_netClient)
+        randomseed = ticrandomseed;
 
-//    for (TRAVERSE_CONNECT(i))
-//    {
-//        if (g_player[i].sync.extbits&(1<<6))
-//        {
-//            g_player[i].ps.team = g_player[i].pteam;
-//            if (GametypeFlags[ud.coop] & GAMETYPE_TDM)
-//            {
-//                actor[g_player[i].ps.i].picnum = APLAYERTOP;
-//                P_QuickKill(g_player[i].ps);
-//            }
-//        }
-//        if (GametypeFlags[ud.coop] & GAMETYPE_TDM)
-//            g_player[i].ps.palookup = g_player[i].pcolor = G_GetTeamPalette(g_player[i].ps.team);
+    for (i = 0; i != -1; i = connectpoint2[i])
+        g_player[i].sync.copyFrom(inputfifo[(g_netServer && myconnectindex == i)?1:0][i]);
+        //Bmemcpy(g_player[i].sync, &inputfifo[(g_netServer && myconnectindex == i)][i],
+        //        sizeof(input_t));
 
-//        if (sprite[g_player[i].ps.i].pal != 1)
-//            sprite[g_player[i].ps.i].pal = g_player[i].pcolor;
+    G_UpdateInterpolations();
 
-//        P_HandleSharedKeys(i);
+    /*
+        j = -1;
+        for (TRAVERSE_CONNECT(i))
+        {
+            if (g_player[i].playerquitflag == 0 || TEST_SYNC_KEY(g_player[i].sync.bits,SK_GAMEQUIT) == 0)
+            {
+                j = i;
+                continue;
+            }
 
-//        if (ud.pause_on == 0)
-//        {
-//            P_ProcessInput(i);
-//            P_CheckSectors(i);
-//        }
-//    }
+            G_CloseDemoWrite();
 
-//    if (ud.pause_on == 0)
-//        G_MoveWorld();
+            g_player[i].playerquitflag = 0;
+        }
+    */
 
-////    Net_CorrectPrediction();
+    g_moveThingsCount++;
 
-//    if (g_netServer)
-//        Net_SendServerUpdates();
+    if (ud.recstat == 1) G_DemoRecord();
 
-//    if ((everyothertime&1) == 0)
-//    {
-//        G_AnimateWalls();
-//        A_MoveCyclers();
+    everyothertime++;
+    if (g_earthquakeTime > 0) g_earthquakeTime--;
 
-//        if (g_netServer && (everyothertime % 10) == 0)
-//		{
-//            Net_SendMapUpdate();
-//		}
-//    }
+    if (ud.pause_on == 0)
+    {
+        g_globalRandom = krand();
+        A_MoveDummyPlayers();//ST 13
+    }
 
-//    if (g_netClient)   //Slave
-//        Net_SendClientUpdate();
+    for (i = 0; i != -1; i = connectpoint2[i])
+    {
+        if (g_player[i].sync.extbits&(1<<6))
+        {
+            g_player[i].ps.team = g_player[i].pteam;
+            if (GametypeFlags[ud.coop] & GAMETYPE_TDM)
+            {
+                actor[g_player[i].ps.i].picnum = APLAYERTOP;
+                P_QuickKill(g_player[i].ps);
+            }
+        }
+        if (GametypeFlags[ud.coop] & GAMETYPE_TDM)
+            g_player[i].ps.palookup = g_player[i].pcolor = G_GetTeamPalette(g_player[i].ps.team);
+
+        if (sprite[g_player[i].ps.i].pal != 1)
+            sprite[g_player[i].ps.i].pal = g_player[i].pcolor;
+
+        P_HandleSharedKeys(i);
+
+        if (ud.pause_on == 0)
+        {
+            todo("P_ProcessInput(i);");
+            todo("P_CheckSectors(i);");
+        }
+    }
+
+    if (ud.pause_on == 0)
+        G_MoveWorld();
+
+//    Net_CorrectPrediction();
+
+    if (g_netServer)
+        Net_SendServerUpdates();
+
+    if ((everyothertime&1) == 0)
+    {
+        todo("G_AnimateWalls(); ");
+        todo("A_MoveCyclers();  ");
+
+        if (g_netServer && (everyothertime % 10) == 0)
+		{
+            Net_SendMapUpdate();
+		}
+    }
+
+    if (g_netClient)   //Slave
+        Net_SendClientUpdate();
 
     return 0;
 }

@@ -38,6 +38,16 @@
 	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=A2CEDAE8E785FD469A7B4891E8BA03C2/Shortcut/@EntryValue">ref2</s:String>
 	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=A2CEDAE8E785FD469A7B4891E8BA03C2/ShortenQualifiedReferences/@EntryValue">True</s:Boolean>
 	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=A2CEDAE8E785FD469A7B4891E8BA03C2/Text/@EntryValue">$VAR_NAME$ = $$VAR_NAME$.$;</s:String>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=AB77620D69922E489D30005076B126D9/@KeyIndexDefined">True</s:Boolean>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=AB77620D69922E489D30005076B126D9/Applicability/=Live/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=AB77620D69922E489D30005076B126D9/Field/=i/@KeyIndexDefined">True</s:Boolean>
+	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=AB77620D69922E489D30005076B126D9/Field/=i/Order/@EntryValue">0</s:Int64>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=AB77620D69922E489D30005076B126D9/Reformat/@EntryValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=AB77620D69922E489D30005076B126D9/Scope/=139FF4CE89E7094686FDA7BF5FFBBE92/@KeyIndexDefined">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=AB77620D69922E489D30005076B126D9/Scope/=139FF4CE89E7094686FDA7BF5FFBBE92/Type/@EntryValue">Everywhere</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=AB77620D69922E489D30005076B126D9/Shortcut/@EntryValue">TRAVERSE_CONNECT</s:String>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=AB77620D69922E489D30005076B126D9/ShortenQualifiedReferences/@EntryValue">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=AB77620D69922E489D30005076B126D9/Text/@EntryValue">$i$ = 0; $i$ != -1; $i$ = connectpoint2[$i$]</s:String>
 	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=AF1BE1DA1AB267408AD136E596221EA3/@KeyIndexDefined">True</s:Boolean>
 	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=AF1BE1DA1AB267408AD136E596221EA3/Applicability/=Live/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=AF1BE1DA1AB267408AD136E596221EA3/Field/=a/@KeyIndexDefined">True</s:Boolean>
