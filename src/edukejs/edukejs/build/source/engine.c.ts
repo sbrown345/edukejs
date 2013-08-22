@@ -11651,7 +11651,7 @@ function /*int32_t */setsprite(/*int16_t*/ spritenum: number, /*const vec3_t **/
     var tempsectnum = sprite[spritenum].sectnum;
 
     if (/*(void *)*/newpos != /*(void *)&*/sprite[spritenum]) 
-        {newpos.x = sprite[spritenum].x;newpos.y = sprite[spritenum].y;newpos.z = sprite[spritenum].z;}//Bmemcpy(&sprite[spritenum], newpos, sizeof(vec3_t));
+        {sprite[spritenum].x = newpos.x; sprite[spritenum].y = newpos.y; sprite[spritenum].z = newpos.z;}//Bmemcpy(&sprite[spritenum], newpos, sizeof(vec3_t));
 
     var $tempsectnum = new R(tempsectnum);
     updatesector(newpos.x,newpos.y,$tempsectnum);
