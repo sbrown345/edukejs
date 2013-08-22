@@ -3473,69 +3473,69 @@ function P_CheckTouchDamage(p:DukePlayer_t , /*int32_t */obj:number):void
 }
 
 function /*int32_t */P_CheckFloorDamage(p:DukePlayer_t, /*int32_t */tex: number):number
-{todoThrow();
-    //spritetype *s = &sprite[p.i];
+{
+    var s = sprite[p.i];
 
-    //if ((unsigned)(tex = VM_OnEvent(EVENT_CHECKFLOORDAMAGE, p.i, sprite[p.i].yvel, -1, tex)) >= MAXTILES)
-    //    return 0;
+    if ((tex = VM_OnEvent(EVENT_CHECKFLOORDAMAGE, p.i, sprite[p.i].yvel, -1, tex)) >= MAXTILES)
+        return 0;
 
-    //switch (DYNAMICTILEMAP(tex))
-    //{
-    //case HURTRAIL__STATIC:
-    //    if (rnd(32))
-    //    {
-    //        if (p.inv_amount[GET_BOOTS] > 0)
-    //            return 1;
-    //        else
-    //        {
-    //            if (!A_CheckSoundPlaying(p.i,DUKE_LONGTERM_PAIN))
-    //                A_PlaySound(DUKE_LONGTERM_PAIN,p.i);
+    switch (DYNAMICTILEMAP(tex))
+    {
+    case HURTRAIL__STATIC:
+        if (rnd(32))
+        {
+            if (p.inv_amount[GET_BOOTS] > 0)
+                return 1;
+            else
+            {
+                if (!A_CheckSoundPlaying(p.i,DUKE_LONGTERM_PAIN))
+                    A_PlaySound(DUKE_LONGTERM_PAIN,p.i);
 
-    //            P_PalFrom(p, 32, 64,64,64);
+                P_PalFrom(p, 32, 64,64,64);
 
-    //            s.extra -= 1+(krand()&3);
-    //            if (!A_CheckSoundPlaying(p.i,SHORT_CIRCUIT))
-    //                A_PlaySound(SHORT_CIRCUIT,p.i);
+                s.extra -= 1+(krand()&3);
+                if (!A_CheckSoundPlaying(p.i,SHORT_CIRCUIT))
+                    A_PlaySound(SHORT_CIRCUIT,p.i);
 
-    //            return 0;
-    //        }
-    //    }
-    //    break;
-    //case FLOORSLIME__STATIC:
-    //    if (rnd(16))
-    //    {
-    //        if (p.inv_amount[GET_BOOTS] > 0)
-    //            return 1;
-    //        else
-    //        {
-    //            if (!A_CheckSoundPlaying(p.i,DUKE_LONGTERM_PAIN))
-    //                A_PlaySound(DUKE_LONGTERM_PAIN,p.i);
+                return 0;
+            }
+        }
+        break;
+    case FLOORSLIME__STATIC:
+        if (rnd(16))
+        {
+            if (p.inv_amount[GET_BOOTS] > 0)
+                return 1;
+            else
+            {
+                if (!A_CheckSoundPlaying(p.i,DUKE_LONGTERM_PAIN))
+                    A_PlaySound(DUKE_LONGTERM_PAIN,p.i);
 
-    //            P_PalFrom(p, 32, 0,8,0);
-    //            s.extra -= 1+(krand()&3);
+                P_PalFrom(p, 32, 0,8,0);
+                s.extra -= 1+(krand()&3);
 
-    //            return 0;
-    //        }
-    //    }
-    //    break;
-    //case FLOORPLASMA__STATIC:
-    //    if (rnd(32))
-    //    {
-    //        if (p.inv_amount[GET_BOOTS] > 0)
-    //            return 1;
-    //        else
-    //        {
-    //            if (!A_CheckSoundPlaying(p.i,DUKE_LONGTERM_PAIN))
-    //                A_PlaySound(DUKE_LONGTERM_PAIN,p.i);
+                return 0;
+            }
+        }
+        break;
+    case FLOORPLASMA__STATIC:
+        if (rnd(32))
+        {
+            if (p.inv_amount[GET_BOOTS] > 0)
+                return 1;
+            else
+            {
+                if (!A_CheckSoundPlaying(p.i,DUKE_LONGTERM_PAIN))
+                    A_PlaySound(DUKE_LONGTERM_PAIN,p.i);
 
-    //            P_PalFrom(p, 32, 8,0,0);
-    //            s.extra -= 1+(krand()&3);
+                P_PalFrom(p, 32, 8,0,0);
+                s.extra -= 1+(krand()&3);
 
-    //            return 0;
-    //        }
-    //    }
-    //    break;
-    //}
+                return 0;
+            }
+        }
+        break;
+    }
 
     return 0;
 }
