@@ -11178,8 +11178,10 @@ function loadpics(filename: string, askedsize: number): number
             var picanmArray = new Uint8Array(localnumtiles<<2);
             kread(fil,new Ptr(picanmArray), localnumtiles<<2); 
             for (var j = 0; j < (localnumtiles<<2) / 4; j++) {
-                picanm[j].setProps(picanmArray.buffer, j); // todo: better way!!
+                picanm[localtilestart+j].setProps(picanmArray.buffer, j); // todo: better way!!//kreadStructs(fil, sprite, numsprites, spritetype.typeInfo);
             }
+            
+
 
             for (i=localtilestart; i<=localtileend; i++)
             {
@@ -13924,6 +13926,8 @@ function mul32(n: number, m: number): number {
     //if (0)
     //{
 function beginagain() {
+
+        dlog(DEBUG_GETZRANGE,  "beginagain clipsectnum:  %i\n", clipsectnum);
         // replace sector and wall with clip map
         mapinfo_set(origmapinfo, clipmapinfo);
         clipsectcnt = clipsectnum;  // should be a nop, "safety"...
@@ -14066,6 +14070,7 @@ restart_grand:
                 getzsofslope(k, pos.x,pos.y, $daz,$daz2);
                 daz = $daz.$;
                 daz2 = $daz2.$;
+				dlog(DEBUG_GETZRANGE,  "getzrange daz: %i, daz2: %i\n", daz, daz2);
 
 //#ifdef HAVE_CLIPSHAPE_FEATURE
                 if (curspr)
@@ -14159,6 +14164,7 @@ restart_grand:
                         k = $k.$;
                         daz2 = daz - k;
                         clipyou = 1;
+						dlog(DEBUG_GETZRANGE,  "getzrange sprites case 0 spr.z: %i, k: %i, daz: %i, daz2: %i\n", spr.z, k, daz, daz2);
                     }
                     break;
 

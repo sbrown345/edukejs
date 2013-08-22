@@ -4337,7 +4337,6 @@ function P_ProcessInput(/*int32_t */snum:number): void
     p.spritebridge = p.sbs = 0;
 
     shrunk = (s.yrepeat < 32)?1:0;
-    dlog(DEBUG_GETZRANGE,  "getzrange b4 cz %i, hz %i, fz %i, lz %i\n", cz,hz,fz,lz);
     var $cz = new R(cz);
     var $hz = new R(hz);
     var $fz = new R(fz);

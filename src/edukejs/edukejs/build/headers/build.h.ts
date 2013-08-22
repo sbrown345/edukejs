@@ -977,19 +977,25 @@ var PICANM_ANIMTYPE_NONE = 0,
 
 // NOTE: If the layout of this struct is changed, loadpics() must be modified
 // accordingly.
-class picanm_t {
+class picanm_t implements ITypeInfo {
      num: number;  // animate number //uint8_t
      xofs: number; yofs: number; //int8_t
      sf: number;  // anim. speed and flags //uint8_t
-     size: number;
 
     setProps(ab: ArrayBuffer, offsetIndex: number) {
-        var dv = new DataView(ab, offsetIndex * this.size);
+        var dv = new DataView(ab, offsetIndex * picanm_t.size);
         this.num = dv.getUint8(0);
         this.xofs = dv.getInt8(1);
         this.yofs = dv.getInt8(2);
         this.sf = dv.getUint8(3);
     }
+
+    public static typeInfo = [
+        ["num", "uint8_t"], 
+        ["xofs", "int8_t"],
+        ["sf", "int8_t"],
+        ["size", "uint8_t"]
+    ];
 
     constructor() {
         this.num=0;

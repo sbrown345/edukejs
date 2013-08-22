@@ -13735,6 +13735,7 @@ void getzrange(const vec3_t *pos, int16_t sectnum,
     if (0)
     {
 beginagain:
+        dlog(DEBUG_GETZRANGE,  "beginagain clipsectnum:  %i\n", clipsectnum);
         // replace sector and wall with clip map
         mapinfo_set(&origmapinfo, &clipmapinfo);
         clipsectcnt = clipsectnum;  // should be a nop, "safety"...
@@ -13860,6 +13861,7 @@ restart_grand:
 #endif
                 //It actually got here, through all the continue's!!!
                 getzsofslope(k, pos->x,pos->y, &daz,&daz2);
+				dlog(DEBUG_GETZRANGE,  "getzrange daz: %i, daz2: %i\n", daz, daz2);
 
 #ifdef HAVE_CLIPSHAPE_FEATURE
                 if (curspr)
@@ -13943,6 +13945,7 @@ restart_grand:
                         daz = spr->z + spriteheightofs(j, &k, 1);
                         daz2 = daz - k;
                         clipyou = 1;
+						dlog(DEBUG_GETZRANGE,  "getzrange sprites case 0 spr.z: %i, k: %i, daz: %i, daz2: %i\n", spr->z, k, daz, daz2);
                     }
                     break;
 
