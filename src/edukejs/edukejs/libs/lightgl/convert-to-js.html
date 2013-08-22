@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <textarea style="width:100%;height:300px;" id="trace" onchange="convert();"></textarea>
+        <textarea style="width:100%;height:300px;"  id="js"></textarea>
+
+        <script>
+            function convert() {
+                var lines = trace.value.split("\n");
+                var output = "";
+                for (var i = 0; i < lines.length; i++) {
+                    var line = lines[i].trim();
+                    if (line.length > 3) {
+                        line = line.replace("GL_", "gl.");
+                        output += "gl." + line[2].toLowerCase() + line.substr(3);
+                        output += "\n";
+                    }
+                }
+
+                js.value = output;
+            }
+        </script>
+    </body>
+</html>
+
+
+
+<!--
+
+glViewport(0, 0, 1024, 768)
+glClearColor(0.000000, 0.000000, 0.000000, 0.000000)
+glClear(GL_COLOR_BUFFER_BIT)
+glViewport(0, 0, 1024, 768)
+glMatrixMode(GL_PROJECTION)
+glPushMatrix()
+glLoadMatrixf(10C9F6FC)
+glDisable(GL_BLEND)
+glDisable(GL_ALPHA_TEST)
+glColor4f(1.000000, 1.000000, 1.000000, 1.000000)
+glBegin(GL_TRIANGLE_FAN)
+glTexCoord2d(0.000000, 0.000000)
+glVertex3d(-0.000976, 0.000731, 0.000977)
+glTexCoord2d(0.624698, 0.000000)
+glVertex3d(0.000977, 0.000731, 0.000977)
+glTexCoord2d(0.624698, 0.780743)
+glVertex3d(0.000977, -0.000732, 0.000977)
+glTexCoord2d(0.000000, 0.780743)
+glVertex3d(-0.000976, -0.000732, 0.000977)
+glEnd()
+glMatrixMode(GL_PROJECTION)
+glPopMatrix()
+glMatrixMode(GL_MODELVIEW)
+glPopMatrix()
+    
+    
+    
+    
+    
+    -->

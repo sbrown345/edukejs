@@ -3915,7 +3915,7 @@ function P_ProcessWeapon(/*int32_t */snum:number):void
                     if (p.ammo_amount[p.curr_weapon] > 0)
                     {
                         (kb.$) = 1;
-                        p.hbomb_hold_delay = !p.hbomb_hold_delay;
+                        p.hbomb_hold_delay = !p.hbomb_hold_delay?1:0;
                         if (PWEAPON(snum, p.curr_weapon, InitialSound) > 0)
                             A_PlaySound(PWEAPON(snum, p.curr_weapon, InitialSound), p.i);
                     }
@@ -4116,7 +4116,7 @@ function P_ProcessWeapon(/*int32_t */snum:number):void
                 else
                 {
                     if (PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_AUTOMATIC &&
-                            (PWEAPON(snum, p.curr_weapon, WorksLike)==KNEE_WEAPON?1:p.ammo_amount[p.curr_weapon] > 0))
+                            (PWEAPON(snum, p.curr_weapon, WorksLike)==KNEE_WEAPON?1:p.ammo_amount[p.curr_weapon] > 0?1:0))
                     {
                         if (TEST_SYNC_KEY(sb_snum, SK_FIRE))
                         {
@@ -4129,7 +4129,7 @@ function P_ProcessWeapon(/*int32_t */snum:number):void
                     else kb.$ = 0;
 
                     if (PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_RESET &&
-                            ((PWEAPON(snum, p.curr_weapon, WorksLike) == KNEE_WEAPON)?1:p.ammo_amount[p.curr_weapon] > 0))
+                            ((PWEAPON(snum, p.curr_weapon, WorksLike) == KNEE_WEAPON)?1:p.ammo_amount[p.curr_weapon] > 0?1:0))
                     {
                         if (TEST_SYNC_KEY(sb_snum, SK_FIRE)) kb.$ = 1;
                         else kb.$ = 0;
@@ -4137,7 +4137,7 @@ function P_ProcessWeapon(/*int32_t */snum:number):void
                 }
             }
             else if (kb.$ >= PWEAPON(snum, p.curr_weapon, FireDelay) && (kb.$) < PWEAPON(snum, p.curr_weapon, TotalTime)
-                     && ((PWEAPON(snum, p.curr_weapon, WorksLike) == KNEE_WEAPON)?1:p.ammo_amount[p.curr_weapon] > 0))
+                     && ((PWEAPON(snum, p.curr_weapon, WorksLike) == KNEE_WEAPON)?1:p.ammo_amount[p.curr_weapon] > 0?1:0))
             {
                 if (PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_AUTOMATIC)
                 {

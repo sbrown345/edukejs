@@ -1371,6 +1371,7 @@ function drawpoly(dpx: Float64Array, dpy: Float64Array, /*int32_t*/ n:number, /*
 //#ifdef YAX_ENABLE
     if (g_nodraw) return;
 //#endif
+    dlog(DEBUG_POLY, "drawpoly dpx: [%f, %f, %f, %f] dpy: [%f, %f, %f, %f], n: %i, method: %i\n",dpx[0], dpx[1], dpx[2], dpx[3], dpy[0], dpy[1], dpy[2], dpy[3], n, method);
     dlog(DEBUG_POLYMOST_DRAWALLS, "drawpoly dpx: [%f, %f, %f, %f] dpy: [%f, %f, %f, %f], n: %i, method: %i\n",dpx[0], dpx[1], dpx[2], dpx[3], dpy[0], dpy[1], dpy[2], dpy[3], n, method);
     if (n == 3)
     {

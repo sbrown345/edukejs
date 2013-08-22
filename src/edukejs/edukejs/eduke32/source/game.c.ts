@@ -12029,8 +12029,8 @@ var tempWhile = 0;
         if (g_player[myconnectindex].ps.gm&MODE_DEMO)
             todoThrow("goto MAIN_LOOP_RESTART;");
     }
-    while (tempWhile++ < 1000);
-    //dlogFlush();
+    while (tempWhile++ < 2 /*26*/);
+    dlogFlush();
     //while (1);
     throw "todo";
     G_GameExit(" ");
