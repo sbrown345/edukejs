@@ -2024,7 +2024,7 @@ function domost(/*float*/ x0: number, /*float */y0: number, /*float */x1: number
 
     alpha = 0.0;
 
-    //dlog(DEBUG_MOSTS, "x0 %f, y0 %f, x1 %f, y1 %f\n", x0, y0, x1, y1);
+    dlog(DEBUG_POLYMOST_DRAWALLS, "domost x0: %f, y0: %f, x1: %f, y1: %f\n", x0,y0,x1,y1);
     //for (var l = 0; l < VSPMAX; l++) {
     //    dlog(DEBUG_MOSTS, "domost vsp[%i].n == %i\n", l, vsp[l].n);
     //}
@@ -2043,12 +2043,14 @@ function domost(/*float*/ x0: number, /*float */y0: number, /*float */x1: number
         y0 += .01; y1 += .01; //necessary?
     }
     
+    dlog(DEBUG_POLYMOST_DRAWALLS, "domost 2nd bit x0: %f, y0: %f, x1: %f, y1: %f\n", x0,y0,x1,y1);
     slop = (y1-y0)/(x1-x0);
     for (i=vsp[0].n; i; i=newi)
     {
         dlog(DEBUG_POLYMOST_DRAWALLS, "for vsp n stuff i: %i, dir: %i\n", i, dir);
         newi = vsp[i].n; nx0 = vsp[i].x; nx1 = vsp[newi].x;
-        if ((x0 >= nx1) || (nx0 >= x1) || (vsp[i].ctag <= 0)) continue;
+		dlog(DEBUG_POLYMOST_DRAWALLS, "for vsp newi: %i, nx0: %f, nx1: %f\n", newi, nx0, nx1); 
+        if ((x0 >= nx1) || (nx0 >= x1) || (vsp[i].ctag <= 0))  { dlog(DEBUG_POLYMOST_DRAWALLS, "for vsp continue vsp[i].ctag %i\n", vsp[i].ctag); continue;}
         dx = nx1-nx0;
         cy[0] = vsp[i].cy[0]; cv[0] = vsp[i].cy[1]-cy[0];
         cy[1] = vsp[i].fy[0]; cv[1] = vsp[i].fy[1]-cy[1];
@@ -2056,7 +2058,7 @@ function domost(/*float*/ x0: number, /*float */y0: number, /*float */x1: number
         scnt = 0;
 
         //Test if left edge requires split (x0,y0) (nx0,cy(0)),<dx,cv(0)>
-        dlog(DEBUG_POLYMOST_DRAWALLS, "(x0 %f > nx0 %f) && (x0 %f < nx1%f )\n", x0 , nx0,x0, nx1);
+        dlog(DEBUG_POLYMOST_DRAWALLS, "(x0 %f > nx0 %f) && (x0 %f < nx1 %f )\n", x0 , nx0,x0, nx1);
         if ((x0 > nx0) && (x0 < nx1))
         {
             t = (x0-nx0)*cv[dir] - (y0-cy[dir])*dx;
@@ -2073,7 +2075,7 @@ function domost(/*float*/ x0: number, /*float */y0: number, /*float */x1: number
             if ((fabs(n) <= fabs(d)) && (d *n >= 0) && (d != 0))
             {
                 t = n/d; nx = float32((x1-x0)*t + x0);//throw "todo: floats always get turned into 64bit float    new Float32Array([0.1])[0] == 0.10000000149011612 == (double)(float)0.1";
-                dlog(DEBUG_POLYMOST_DRAWALLS, "t: %f, nx: %f, nx0: %f, nx1: %f\n", t, nx, nx0, nx1);
+                dlog(DEBUG_POLYMOST_DRAWALLS, "t: %f, nx: %f, nx0: %f, nx1: %f d: %f, n: %f\n", t, nx, nx0, nx1, d, n);
                 if ((nx > nx0) && (nx < nx1))
                 {
                     spx[scnt] = nx; /* spy[scnt] = (y1-y0)*t + y0; */
@@ -2081,10 +2083,11 @@ function domost(/*float*/ x0: number, /*float */y0: number, /*float */x1: number
                 }
             }
         }
-
+        
         //Nice hack to avoid full sort later :)
         if ((scnt >= 2) && (spx[scnt-1] < spx[scnt-2]))
         {
+            dlog(DEBUG_POLYMOST_DRAWALLS, "do hack\n");
             f = spx[scnt-1]; spx[scnt-1] = spx[scnt-2]; spx[scnt-2] = f;
             /* f = spy[scnt-1]; spy[scnt-1] = spy[scnt-2]; spy[scnt-2] = f; */
             j = spt[scnt-1]; spt[scnt-1] = spt[scnt-2]; spt[scnt-2] = j;
@@ -2093,6 +2096,7 @@ function domost(/*float*/ x0: number, /*float */y0: number, /*float */x1: number
         //Test if right edge requires split
         if ((x1 > nx0) && (x1 < nx1))
         {
+            dlog(DEBUG_POLYMOST_DRAWALLS, "right edge requires split\n");
             t = (x1-nx0)*cv[dir] - (y1-cy[dir])*dx;
             if (((!dir) && (t < 0)) || ((dir) && (t > 0)))
                 { spx[scnt] = x1; /* spy[scnt] = y1; */ spt[scnt] = -1; scnt++;dlog(DEBUG_POLYMOST_DRAWALLS, "3) scnt++: %i\n", scnt);  }
@@ -2107,6 +2111,7 @@ function domost(/*float*/ x0: number, /*float */y0: number, /*float */x1: number
         vsp[i].tag = vsp[newi].tag = -1;
         for (z=0; z<=scnt; z++,i=vcnt)
         {
+			dlog(DEBUG_POLYMOST_DRAWALLS, "domost vsp z: %i, scnt: %i\n", z, scnt);
             if (z < scnt)
             {
                 vcnt = vsinsaft(vsp, i);
@@ -2119,7 +2124,6 @@ function domost(/*float*/ x0: number, /*float */y0: number, /*float */x1: number
                 vsp[vcnt].tag = spt[z];
             }
 
-            dlog(DEBUG_POLYMOST_DRAWALLS, "domost vsp z: %i:\n", z);
             for (var l = 0; l < VSPMAX; l++) {
                 dlog(DEBUG_POLYMOST_DRAWALLS, "[%i].n:%i ", l, vsp[l].n);
             }
@@ -2232,18 +2236,26 @@ function domost(/*float*/ x0: number, /*float */y0: number, /*float */x1: number
 
     while (i)
     {
+		dlog(DEBUG_POLYMOST_DRAWALLS, "Combine %i\n", i);
         ni = vsp[i].n;
 
         if ((vsp[i].cy[0] >= vsp[i].fy[0]) && (vsp[i].cy[1] >= vsp[i].fy[1]))
+        {
             vsp[i].ctag = vsp[i].ftag = -1;
-
+			dlog(DEBUG_POLYMOST_DRAWALLS, "ctag %i\n", vsp[i].ctag);
+        }
         if ((vsp[i].ctag == vsp[ni].ctag) && (vsp[i].ftag == vsp[ni].ftag))
         {
             vsp[i].cy[1] = vsp[ni].cy[1];
             vsp[i].fy[1] = vsp[ni].fy[1];
             vsdel(vsp, ni);
+			dlog(DEBUG_POLYMOST_DRAWALLS, "vsdel ni %i\n", ni);
         }
-        else i = ni;
+        else 
+		{
+			i = ni;
+			dlog(DEBUG_POLYMOST_DRAWALLS, "i=ni %i\n", i);
+		}
     }
 }
 
