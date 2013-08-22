@@ -51,7 +51,7 @@ function BIT(shift:number):number {return 1<<(shift);}
 function TEST_SYNC_KEY(bits:number, sync_num:number):number {return TEST(bits, BIT(sync_num)); }
 
 //#define AFLAMABLE(X) (X==BOX||X==TREE1||X==TREE2||X==TIRE||X==CONE)
-//#define rnd(X) ((krand()>>8)>=(255-(X)))
+function rnd(X:number):number { return (krand()>>8)>=(255-(X))?1:0; }
 
 //
 // NETWORK - REDEFINABLE SHARED (SYNC) KEYS BIT POSITIONS
