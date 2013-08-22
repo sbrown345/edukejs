@@ -13805,6 +13805,7 @@ restart_grand:
         startwall = sec->wallptr; endwall = startwall + sec->wallnum;
         for (j=startwall,wal=&wall[startwall]; j<endwall; j++,wal++)
         {
+            dlog(DEBUG_GETZRANGE,  "getzrange walls j: %i\n", j);
             k = wal->nextsector;
             if (k >= 0)
             {
@@ -13921,7 +13922,7 @@ restart_grand:
         {
             const spritetype *const spr = &sprite[j];
             const int32_t cstat = spr->cstat;
-
+            dlog(DEBUG_GETZRANGE,  "getzrange sprites j: %i, cstat: %i\n", j, cstat);
             if (cstat&dasprclipmask)
             {
                 int32_t clipyou = 0;
@@ -13932,6 +13933,7 @@ restart_grand:
 #endif
                 x1 = spr->x; y1 = spr->y;
 
+                dlog(DEBUG_GETZRANGE,  "getzrange sprites x1: %i, y1: %i\n", x1, y1);
                 switch (cstat&48)
                 {
                 case 0:

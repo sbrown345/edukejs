@@ -13841,12 +13841,9 @@ function updatesectorz(/*int32_t*/ x: number, /*int32_t*/ y: number, /*int32_t*/
 //
 function/*int32_t*/ krand(): number
 {
-    //return 10; //- breaks animation
     // c method arguments eval in the opposite direction to js
-    //
     // todo: search for all methods that have multiple krand() or krand etc - reverse argument order
-    // and swap values around so they eval in the same order as the C version (regex: krand.+krand      and krand().+krand())
-    randomseed = (mul32(randomseed, 27584621) + 1) | 0;
+    randomseed = ((randomseed * 1664525) + 221297)|0;
 	dlog(DEBUG_KRAND, "krand %u\n", randomseed>>>16);
     return randomseed >>> 16;
 
@@ -14010,6 +14007,7 @@ restart_grand:
         startwall = sec.wallptr; endwall = startwall + sec.wallnum;
         for (j = startwall, wal = wall[walIdx = startwall]; j < endwall; j++, wal = wall[++walIdx])
         {
+            dlog(DEBUG_GETZRANGE,  "getzrange walls j: %i\n", j);
             k = wal.nextsector;
             if (k >= 0)
             {
@@ -14138,7 +14136,7 @@ restart_grand:
         {
             var /*const spritetype *const */spr = sprite[j];
             var /*const int32_t */cstat = spr.cstat;
-
+            dlog(DEBUG_GETZRANGE,  "getzrange sprites j: %i, cstat: %i\n", j, cstat);
             if (cstat&dasprclipmask)
             {
                 var /*int32_t */clipyou = 0;
@@ -14149,6 +14147,7 @@ restart_grand:
 //#endif
                 x1 = spr.x; y1 = spr.y;
 
+                dlog(DEBUG_GETZRANGE,  "getzrange sprites x1: %i, y1: %i\n", x1, y1);
                 switch (cstat&48)
                 {
                 case 0:

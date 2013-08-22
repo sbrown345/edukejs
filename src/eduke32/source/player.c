@@ -4273,7 +4273,9 @@ void P_ProcessInput(int32_t snum)
     p->spritebridge = p->sbs = 0;
 
     shrunk = (s->yrepeat < 32);
+    dlog(DEBUG_GETZRANGE,  "getzrange b4 cz %i, hz %i, fz %i, lz %i\n", cz,hz,fz,lz);
     getzrange((vec3_t *)p,p->cursectnum,&cz,&hz,&fz,&lz,163L,CLIPMASK0);
+    dlog(DEBUG_GETZRANGE,  "getzrange after cz %i, hz %i, fz %i, lz %i\n", cz,hz,fz,lz);
 
 #ifdef YAX_ENABLE
     getzsofslope_player(p->cursectnum,p->pos.x,p->pos.y,&p->truecz,&p->truefz);

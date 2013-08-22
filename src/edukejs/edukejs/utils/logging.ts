@@ -2,13 +2,15 @@
 var SKIP_ALL_LOGGING = false;
 
 var DEBUG_COMPILE = false;
-var DEBUG_KRAND = false;
+var DEBUG_KRAND = true;
 var DEBUG_MOSTS = false;
-var DEBUG_POLY = true;
+var DEBUG_POLY = false;
 var DEBUG_POLYMOST_DRAWALLS = false;
 var DEBUG_PALETTE = false;
 var DEBUG_SCRIPT_CHANGE = false;
 var DEBUG_LOAD_TILE_ART = false;
+var DEBUG_PLAYER_POS = true;
+var DEBUG_GETZRANGE = true;
 
 var dlog = function (log: boolean, format: string, ...args: any[]) {
     if(!log || SKIP_ALL_LOGGING) return;
