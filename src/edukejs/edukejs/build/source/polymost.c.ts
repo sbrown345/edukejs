@@ -2047,10 +2047,10 @@ function domost(/*float*/ x0: number, /*float */y0: number, /*float */x1: number
     slop = (y1-y0)/(x1-x0);
     for (i=vsp[0].n; i; i=newi)
     {
-        dlog(DEBUG_POLYMOST_DRAWALLS, "for vsp n stuff i: %i, dir: %i\n", i, dir);
+        dlog(DEBUG_POLYMOST_DRAWALLS, "for vsp n stuff i: %i, dir: %i,  vsp[i].ctag: %i\n", i, dir, vsp[i].ctag);
         newi = vsp[i].n; nx0 = vsp[i].x; nx1 = vsp[newi].x;
-		dlog(DEBUG_POLYMOST_DRAWALLS, "for vsp newi: %i, nx0: %f, nx1: %f\n", newi, nx0, nx1); 
-        if ((x0 >= nx1) || (nx0 >= x1) || (vsp[i].ctag <= 0))  { dlog(DEBUG_POLYMOST_DRAWALLS, "for vsp continue vsp[i].ctag %i\n", vsp[i].ctag); continue;}
+		dlog(DEBUG_POLYMOST_DRAWALLS, "for vsp newi: %i, (x0 %f > nx1 %f): %i (nx0 %f > x1 %f): %i\n", newi, x0, nx1, (x0 > nx1)?1:0, nx0, x1,  (nx0 > x1)?1:0);
+		if ((x0 > nx1) || (nx0 > x1) || (vsp[i].ctag <= 0)) { dlog(DEBUG_POLYMOST_DRAWALLS, "for vsp continue\n"); continue;}
         dx = nx1-nx0;
         cy[0] = vsp[i].cy[0]; cv[0] = vsp[i].cy[1]-cy[0];
         cy[1] = vsp[i].fy[0]; cv[1] = vsp[i].fy[1]-cy[1];
@@ -2076,11 +2076,13 @@ function domost(/*float*/ x0: number, /*float */y0: number, /*float */x1: number
             {
                 t = n/d; nx = float32((x1-x0)*t + x0);//throw "todo: floats always get turned into 64bit float    new Float32Array([0.1])[0] == 0.10000000149011612 == (double)(float)0.1";
                 dlog(DEBUG_POLYMOST_DRAWALLS, "t: %f, nx: %f, nx0: %f, nx1: %f d: %f, n: %f\n", t, nx, nx0, nx1, d, n);
+				dlog(DEBUG_POLYMOST_DRAWALLS, "test inter:(nx %f > nx0 %f): %i && (nx %f < nx1 %f): %i, (nx > nx0) && (nx < nx1): %i \n", nx, nx0, (nx > nx0)?1:0, nx, nx1,  (nx < nx1)?1:0, (nx > nx0) && (nx < nx1)?1:0);
                 if ((nx > nx0) && (nx < nx1))
                 {
                     spx[scnt] = nx; /* spy[scnt] = (y1-y0)*t + y0; */
                     spt[scnt] = j; scnt++;dlog(DEBUG_POLYMOST_DRAWALLS, "2) scnt++: %i\n", scnt); 
                 }
+                else dlog(DEBUG_POLYMOST_DRAWALLS, "test inter bit false\n", scnt); 
             }
         }
         
@@ -2094,20 +2096,22 @@ function domost(/*float*/ x0: number, /*float */y0: number, /*float */x1: number
         }
 
         //Test if right edge requires split
+        dlog(DEBUG_POLYMOST_DRAWALLS, "TEST right edge requires split\n");
         if ((x1 > nx0) && (x1 < nx1))
         {
             dlog(DEBUG_POLYMOST_DRAWALLS, "right edge requires split\n");
             t = (x1-nx0)*cv[dir] - (y1-cy[dir])*dx;
             if (((!dir) && (t < 0)) || ((dir) && (t > 0)))
                 { spx[scnt] = x1; /* spy[scnt] = y1; */ spt[scnt] = -1; scnt++;dlog(DEBUG_POLYMOST_DRAWALLS, "3) scnt++: %i\n", scnt);  }
-        }
+        } else dlog(DEBUG_POLYMOST_DRAWALLS, "right edge doesn't require split\n");
 
-        dlog(DEBUG_POLYMOST_DRAWALLS, "domost vsp: i: %i, scnt: %i\n", i, scnt);
-        for (var l = 0; l < VSPMAX; l++) {
-            dlog(DEBUG_POLYMOST_DRAWALLS, "[%i].n:%i ", l, vsp[l].n);
-        }
-        dlog(DEBUG_POLYMOST_DRAWALLS, "\n");
+        //dlog(DEBUG_POLYMOST_DRAWALLS, "domost vsp: i: %i, scnt: %i\n", i, scnt);
+        //for (var l = 0; l < VSPMAX; l++) {
+        //    dlog(DEBUG_POLYMOST_DRAWALLS, "[%i].n:%i ", l, vsp[l].n);
+        //}
+        //dlog(DEBUG_POLYMOST_DRAWALLS, "\n");
 
+		dlog(DEBUG_POLYMOST_DRAWALLS, "scnt: %i,  vcnt: %i\n", scnt, vcnt);
         vsp[i].tag = vsp[newi].tag = -1;
         for (z=0; z<=scnt; z++,i=vcnt)
         {
@@ -2124,10 +2128,10 @@ function domost(/*float*/ x0: number, /*float */y0: number, /*float */x1: number
                 vsp[vcnt].tag = spt[z];
             }
 
-            for (var l = 0; l < VSPMAX; l++) {
-                dlog(DEBUG_POLYMOST_DRAWALLS, "[%i].n:%i ", l, vsp[l].n);
-            }
-            dlog(DEBUG_POLYMOST_DRAWALLS, "\n");
+            //for (var l = 0; l < VSPMAX; l++) {
+            //    dlog(DEBUG_POLYMOST_DRAWALLS, "[%i].n:%i ", l, vsp[l].n);
+            //}
+            //dlog(DEBUG_POLYMOST_DRAWALLS, "\n");
 
             ni = vsp[i].n; if (!ni) {dlog(DEBUG_POLYMOST_DRAWALLS, "!ni\n");continue;} //this 'if' fixes many bugs!
             dlog(DEBUG_POLYMOST_DRAWALLS, "ni: %i x0: %f  dx0: %f \n",ni, x0, vsp[i].x);

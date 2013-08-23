@@ -12031,7 +12031,7 @@ var tempWhile = 0;
 
         dlog(DEBUG_PLAYER_POS, "p pos x:%i y:%i z%i, vel x:%i y:%i, z%i \n", g_player[0].ps.pos.x, g_player[0].ps.pos.y, g_player[0].ps.pos.z, g_player[0].ps.vel.x, g_player[0].ps.vel.y, g_player[0].ps.vel.z);
     }
-    while (tempWhile++ < 3 /*26*/);
+    while (tempWhile++ < 2 /*26*/);
     dlogFlush();
     //while (1);
     throw "todo";
