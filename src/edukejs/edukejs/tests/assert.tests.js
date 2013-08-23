@@ -1,5 +1,7 @@
 ﻿/// <reference path="libs/qunit.js" />
 ///// <reference path="../utils/assert.js" />
+/// <reference path="../libs/lightgl.js" />
+/// <reference path="../libs/webgl-debug.js" />
 /// <reference path="../eduke.js" />
 
 test("isUint8", function () {
@@ -87,6 +89,14 @@ test("Bsprintf", function () {
     //strictEqual(array.toString(), "test 5.5 20 tset again", "array matches");
 });
 
+test("memset", function () {
+    var arr = new Uint8Array([1, 1, 1, 1, 1]);
+    debugger
+    memset(new P(arr.buffer), 0, 3);
+    var normalArray = Array.apply([], arr);
+    strictEqual(normalArray, [0, 0, 0, 1, 1], "array matches");
+});
+    
 test("memcmp", function () {
     strictEqual(memcmp(new Uint8Array([97, 98]), [97, 98], 2), 0, "array matches");
     strictEqual(memcmp(new Uint8Array([100, 98]), [98, 99], 2), 1, "buf1 is greater");

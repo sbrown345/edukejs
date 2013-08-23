@@ -169,7 +169,11 @@ class P {
     }
 
     constructor(buffer: ArrayBuffer, indexOffset: number = 0) {
-        this.buf = buffer;
+        if(buffer["buffer"])
+            this.buf = buffer["buffer"]; // typescript wasn't warning about typed arrays, so force it to deal with either
+        else
+            this.buf = buffer;
+
         this.arr = new Uint8Array(buffer);
         this.idx = indexOffset;
     }
