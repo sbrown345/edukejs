@@ -1424,9 +1424,7 @@ void drawpoly(double *dpx, double *dpy, int32_t n, int32_t method)
         // just submit the geometry and don't mess with textures.
         if (getrendermode() == REND_POLYMOST)
         {
-#ifdef DEBUG_GL_SIMPLE_OFF
             bglBindTexture(GL_TEXTURE_2D, pth ? pth->glpic : 0);
-#endif
             if (srepeat)
                 bglTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_REPEAT);
             if (trepeat)
