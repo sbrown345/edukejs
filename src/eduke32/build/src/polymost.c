@@ -1999,6 +1999,8 @@ void domost(float x0, float y0, float x1, float y1)
             if ((fabs(n) <= fabs(d)) && (d *n >= 0) && (d != 0))
             {
                 t = n/d; nx = (x1-x0)*t + x0;
+				nx0+=.01;
+                nx1+=.01;
                 dlog(DEBUG_POLYMOST_DRAWALLS, "t: %f, nx: %f, nx0: %f, nx1: %f d: %f, n: %f\n", t, nx, nx0, nx1, d, n);
 				dlog(DEBUG_POLYMOST_DRAWALLS, "test inter:(nx %f > nx0 %f): %i && (nx %f < nx1 %f): %i, (nx > nx0) && (nx < nx1): %i \n", nx, nx0, (nx > nx0)?1:0, nx, nx1,  (nx < nx1)?1:0, (nx > nx0) && (nx < nx1)?1:0);
                 if ((nx > nx0) && (nx < nx1))
