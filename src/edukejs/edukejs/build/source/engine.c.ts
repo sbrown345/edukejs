@@ -8983,7 +8983,7 @@ function /*int32_t */drawrooms(/*int32_t*/ daposx: number, /*int32_t*/ daposy: n
 
     if ((xyaspect != oxyaspect) || (xdimen != oxdimen) || (viewingrange != oviewingrange))
         dosetaspect();
-
+    
     Bmemset(new P(gotsector), 0, ((numsectors+7)>>3));
 
     if (getrendermode() != REND_CLASSIC

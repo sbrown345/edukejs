@@ -3145,7 +3145,10 @@ static void polymost_drawalls(int32_t bunch)
 
         if (nextsectnum >= 0)
             if ((!(gotsector[nextsectnum>>3]&pow2char[nextsectnum&7])) && (testvisiblemost(x0,x1)))
+            {
+                dlog(DEBUG_DRAW_ROOMS, "bunch front: polymost_scansector\n"); 
                 polymost_scansector(nextsectnum);
+            }
     }
 }
 
@@ -3160,9 +3163,11 @@ static int32_t polymost_bunchfront(int32_t b1, int32_t b2)
     if (x1b1 >= x1b2)
     {
         for (i=b2f; dxb2[i]<=x1b1; i=p2[i]);
+        dlog(DEBUG_DRAW_ROOMS, "polymost_bunchfront 1st return i: %i, b1f: %i\n", i, b1f); 
         return(wallfront(b1f,i));
     }
     for (i=b1f; dxb2[i]<=x1b2; i=p2[i]);
+    dlog(DEBUG_DRAW_ROOMS, "polymost_bunchfront 2nd return i: %i, b2f: %i\n", i, b2f); 
     return(wallfront(i,b2f));
 }
 
@@ -3180,9 +3185,10 @@ void polymost_scansector(int32_t sectnum)
     do
     {
         sectnum = sectorborder[--sectorbordercnt];
-
+        dlog(DEBUG_POLYMOST_DRAWALLS_SCANSECTOR, "polymost_scansector do sectnum: %i, sectorbordercnt: %i\n",sectnum, sectorbordercnt);
         for (z=headspritesect[sectnum]; z>=0; z=nextspritesect[z])
         {
+            dlog(DEBUG_POLYMOST_DRAWALLS_SCANSECTOR, "for sprite sect z: %i\n",z);
             spr = &sprite[z];
             if ((((spr->cstat&0x8000) == 0) || (showinvisibility)) &&
                     (spr->xrepeat > 0) && (spr->yrepeat > 0))
@@ -3197,7 +3203,9 @@ void polymost_scansector(int32_t sectnum)
             }
         }
 
+        dlog(DEBUG_POLYMOST_DRAWALLS_SCANSECTOR, "b4 update gotsector[%i]: %i pow2char[%i]: %i\n", sectnum>>3, gotsector[sectnum>>3],sectnum&7,pow2char[sectnum&7]);
         gotsector[sectnum>>3] |= pow2char[sectnum&7];
+        dlog(DEBUG_POLYMOST_DRAWALLS_SCANSECTOR, "update gotsector[%i]: %i pow2char[%i]: %i\n", sectnum>>3, gotsector[sectnum>>3],sectnum&7,pow2char[sectnum&7]);
 
         bunchfrst = numbunches;
         numscansbefore = numscans;
@@ -3207,19 +3215,28 @@ void polymost_scansector(int32_t sectnum)
         xp2 = 0; yp2 = 0;
         for (z=startwall,wal=&wall[z]; z<endwall; z++,wal++)
         {
+            dlog(DEBUG_POLYMOST_DRAWALLS_SCANSECTOR, "for wall z: %i\n",z);
             wal2 = &wall[wal->point2];
             x1 = wal->x-globalposx; y1 = wal->y-globalposy;
             x2 = wal2->x-globalposx; y2 = wal2->y-globalposy;
 
             nextsectnum = wal->nextsector; //Scan close sectors
+            dlog(DEBUG_POLYMOST_DRAWALLS_SCANSECTOR, "nextsectnum: %i, wal.cstat: %i\n",nextsectnum, wal->cstat);
+            dlog(DEBUG_POLYMOST_DRAWALLS_SCANSECTOR, "yax_nomaskpass==0 || !yax_isislandwall(z, (!yax_globalcf)?1:0) || (yax_nomaskdidit=1, 0) %i\n",yax_nomaskpass==0 || !yax_isislandwall(z, (!yax_globalcf)?1:0) || (yax_nomaskdidit=1, 0)?1:0);
+            dlog(DEBUG_POLYMOST_DRAWALLS_SCANSECTOR, "(nextsectnum >= 0) && (!(wal.cstat&32)) && (!(gotsector[nextsectnum>>3]&pow2char[nextsectnum&7])) %i\n",(nextsectnum >= 0) && (!(wal->cstat&32)) && (!(gotsector[nextsectnum>>3]&pow2char[nextsectnum&7]))?1:0);
+            dlog(DEBUG_POLYMOST_DRAWALLS_SCANSECTOR, "gotsector[nextsectnum>>3] %i, pow2char[nextsectnum&7] %i\n",gotsector[nextsectnum>>3],pow2char[nextsectnum&7]);
 #ifdef YAX_ENABLE
             if (yax_nomaskpass==0 || !yax_isislandwall(z, !yax_globalcf) || (yax_nomaskdidit=1, 0))
 #endif
             if ((nextsectnum >= 0) && (!(wal->cstat&32)) && (!(gotsector[nextsectnum>>3]&pow2char[nextsectnum&7])))
             {
                 d = (double)x1*(double)y2 - (double)x2*(double)y1; xp1 = (double)(x2-x1); yp1 = (double)(y2-y1);
+				dlog(DEBUG_POLYMOST_DRAWALLS_SCANSECTOR, "d*d: %f other: %f \n", d*d , (xp1*xp1 + yp1*yp1)*(SCISDIST*SCISDIST*260.0));
                 if (d*d <= (xp1*xp1 + yp1*yp1)*(SCISDIST*SCISDIST*260.0))
+				{
                     sectorborder[sectorbordercnt++] = nextsectnum;
+					dlog(DEBUG_POLYMOST_DRAWALLS_SCANSECTOR, "polymost_scansector sectorbordercnt++ %i\n", sectorbordercnt);
+				}
             }
 
             if ((z == startwall) || (wall[z-1].point2 != z))
@@ -3249,10 +3266,12 @@ void polymost_scansector(int32_t sectnum)
                 { p2[numscans-1] = scanfirst; scanfirst = numscans; }
         }
 
+        dlog(DEBUG_POLYMOST_DRAWALLS_SCANSECTOR, "polymost_scansector numscansbefore: %i, numscans: %i\n",numscansbefore, numscans);
         for (z=numscansbefore; z<numscans; z++)
             if ((wall[thewall[z]].point2 != thewall[p2[z]]) || (dxb2[z] > dxb1[p2[z]]))
             {
                 bunchfirst[numbunches++] = p2[z]; p2[z] = -1;
+                dlog(DEBUG_POLYMOST_DRAWALLS_SCANSECTOR, "polymost_scansector numbunches++ %i\n", numbunches);
 #ifdef YAX_ENABLE
                 if (scansector_retfast)
                     return;
@@ -3540,6 +3559,7 @@ void polymost_drawrooms()
         if (globalcursectnum < 0) globalcursectnum = i;
     }
 
+    dlog(DEBUG_DRAW_ROOMS, "drawrooms > polymost_scansector: %i\n", globalcursectnum); 
     polymost_scansector(globalcursectnum);
 
     if (inpreparemirror)
@@ -3561,19 +3581,25 @@ void polymost_drawrooms()
 
     while (numbunches > 0)
     {
+        dlog(DEBUG_DRAW_ROOMS, "numbunches: %i\n", numbunches); 
         memset(ptempbuf,0,numbunches+3); ptempbuf[0] = 1;
 
         closest = 0;              //Almost works, but not quite :(
         for (i=1; i<numbunches; i++)
         {
-            j = polymost_bunchfront(i,closest); if (j < 0) continue;
+			j = polymost_bunchfront(i,closest); 
+            dlog(DEBUG_DRAW_ROOMS, "j 1st: %i\n", j); 
+            if (j < 0) {dlog(DEBUG_DRAW_ROOMS, "//Almost works, but not quite :( continue\n"); continue;}
             ptempbuf[i] = 1;
             if (!j) { ptempbuf[closest] = 1; closest = i; }
         }
         for (i=0; i<numbunches; i++) //Double-check
         {
+            dlog(DEBUG_DRAW_ROOMS, "ptempbuf[i] %i\n", ptempbuf[i]);
             if (ptempbuf[i]) continue;
-            j = polymost_bunchfront(i,closest); if (j < 0) continue;
+            j = polymost_bunchfront(i,closest);  
+            dlog(DEBUG_DRAW_ROOMS, "j 2nd: %i\n", j);
+            if (j < 0) {dlog(DEBUG_DRAW_ROOMS, "//Double-check continue\n"); continue;}
             ptempbuf[i] = 1;
             if (!j) { ptempbuf[closest] = 1; closest = i; i = 0; }
         }
