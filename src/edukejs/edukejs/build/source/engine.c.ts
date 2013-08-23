@@ -389,9 +389,9 @@ var yax_globalbunch = -1;                                                       
 ////   i==MAXDRAWS: base level
 ////   i<MAXDRAWS: MAXDRAWS-i-1 is level towards ceiling
 ////   i>MAXDRAWS: i-MAXDRAWS-1 is level towards floor
-//static int16_t yax_spritesortcnt[1 + 2*YAX_MAXDRAWS];
-//static uint16_t yax_tsprite[1 + 2*YAX_MAXDRAWS][MAXSPRITESONSCREEN];
-//static uint8_t yax_tsprfrombunch[1 + 2*YAX_MAXDRAWS][MAXSPRITESONSCREEN];
+var yax_spritesortcnt = new Int16Array(1 + 2*YAX_MAXDRAWS);
+var yax_tsprite:Uint16Array[] = multiDimArray<Uint16Array>(Uint16Array, 1 + 2*YAX_MAXDRAWS, MAXSPRITESONSCREEN); //static uint16_t yax_tsprite[1 + 2*YAX_MAXDRAWS][MAXSPRITESONSCREEN];
+var yax_tsprfrombunch:Uint8Array[] = multiDimArray<Uint8Array>(Uint8Array, 1 + 2*YAX_MAXDRAWS, MAXSPRITESONSCREEN); //static uint8_t yax_tsprfrombunch[1 + 2*YAX_MAXDRAWS][MAXSPRITESONSCREEN];
 
 //// drawn sectors
 //uint8_t yax_gotsector[MAXSECTORS>>3];  // engine internal
@@ -2579,74 +2579,87 @@ var palfadedelta = 0; //char
 // returns: 0=continue sprite collecting;
 //          1=break out of sprite collecting;
 function /*int32_t */engine_addtsprite(/*int16_t */z: number, /*int16_t */sectnum: number): number
-{todo("engine_addtsprite");
-//    var spr = sprite[z];
-////#ifdef YAX_ENABLE
-//    var /*int16_t */cb: number, fb: number, sortcnt = ??;
-//    var /*int32_t */spheight, spzofs;
+{
+    var spr = sprite[z];
+//#ifdef YAX_ENABLE
+    var /*int16_t */cb: number, fb: number, sortcnt: number;
+    var /*int32_t */spheight, spzofs;
 
-//    if (g_nodraw==0)
-//    {
-//        if (numyaxbunches==0)
-//        {
-////#endif
-//            if (spritesortcnt >= MAXSPRITESONSCREEN)
-//                return 1;
+    if (g_nodraw==0)
+    {
+        if (numyaxbunches==0)
+        {
+//#endif
+            if (spritesortcnt >= MAXSPRITESONSCREEN)
+                return 1;
 
-//            Bmemcpy(&tsprite[spritesortcnt], spr, sizeof(spritetype));
-//            tsprite[spritesortcnt++].owner = z;
+            ITypeInfoCopier(tsprite[spritesortcnt], spr, spritetype.typeInfo);//Bmemcpy(&tsprite[spritesortcnt], spr, sizeof(spritetype));
+            tsprite[spritesortcnt++].owner = z;
 
-////#ifdef YAX_ENABLE
-//        }
-//    }
-//    else
-////#ifdef YAX_ENABLE
-//        if (yax_nomaskpass==0)
-////#endif
-//    {
-//        sortcnt = &yax_spritesortcnt[yax_globallev];
-//        if (*sortcnt >= MAXSPRITESONSCREEN)
-//            return 1;
+//#ifdef YAX_ENABLE
+        }
+    }
+    else
+//#ifdef YAX_ENABLE
+        if (yax_nomaskpass==0)
+//#endif
+    {debugger;
+        sortcnt = yax_globallev;//*&yax_spritesortcnt[yax_globallev];
+        if ($sortcnt()/**sortcnt */>= MAXSPRITESONSCREEN)
+            return 1;
 
-//        yax_tsprite[yax_globallev][*sortcnt] = z;
-//        if (yax_globalbunch >= 0)
-//        {
-//            yax_tsprite[yax_globallev][*sortcnt] |= (MAXSPRITES|(MAXSPRITES<<1));
-//            yax_tsprfrombunch[yax_globallev][*sortcnt] = yax_globalbunch;
-//        }
-//        (*sortcnt)++;
+        yax_tsprite[yax_globallev][$sortcnt()] = z;
+        if (yax_globalbunch >= 0)
+        {
+            yax_tsprite[yax_globallev][$sortcnt()] |= (MAXSPRITES|(MAXSPRITES<<1));
+            yax_tsprfrombunch[yax_globallev][$sortcnt()] = yax_globalbunch;
+        }
+        $sortcntIncrement();//(*sortcnt)++;
 
-//        // now check whether the tsprite needs duplication into another level
-//        if ((spr.cstat&48)==32)
-//            return 0;
+        // now check whether the tsprite needs duplication into another level
+        if ((spr.cstat&48)==32)
+            return 0;
 
-//        yax_getbunches(sectnum, &cb, &fb);
-//        if (cb < 0 && fb < 0)
-//            return 0;
+        var $cb = new R(cb);
+        var $fb = new R(fb);
+        yax_getbunches(sectnum, $cb, $fb);
+        cb = $cb.$;
+        fb = $fb.$;
+        if (cb < 0 && fb < 0)
+            return 0;
 
-//        spzofs = spriteheightofs(z, &spheight, 1);
+        var $spheight = new R(spheight);
+        spzofs = spriteheightofs(z, $spheight, 1);
+        spheight = $spheight.$;
 
-//        // TODO: get*zofslope?
-//        if (cb>=0 && spr.z+spzofs-spheight < sector[sectnum].ceilingz)
-//        {
-//            sortcnt = &yax_spritesortcnt[yax_globallev-1];
-//            if (*sortcnt < MAXSPRITESONSCREEN)
-//            {
-//                yax_tsprite[yax_globallev-1][*sortcnt] = z|MAXSPRITES;
-//                (*sortcnt)++;
-//            }
-//        }
-//        if (fb>=0 && spr.z+spzofs > sector[sectnum].floorz)
-//        {
-//            sortcnt = &yax_spritesortcnt[yax_globallev+1];
-//            if (*sortcnt < MAXSPRITESONSCREEN)
-//            {
-//                yax_tsprite[yax_globallev+1][*sortcnt] = z|(MAXSPRITES<<1);
-//                (*sortcnt)++;
-//            }
-//        }
-//    }
-////#endif
+        // TODO: get*zofslope?
+        if (cb>=0 && spr.z+spzofs-spheight < sector[sectnum].ceilingz)
+        {
+            sortcnt = yax_globallev-1;//&yax_spritesortcnt[yax_globallev-1];
+            if ($sortcnt() < MAXSPRITESONSCREEN)
+            {
+                yax_tsprite[yax_globallev-1][$sortcnt()] = z|MAXSPRITES;
+                $sortcntIncrement();
+            }
+        }
+        if (fb>=0 && spr.z+spzofs > sector[sectnum].floorz)
+        {
+            sortcnt = yax_globallev+1;//&yax_spritesortcnt[yax_globallev+1];
+            if ($sortcnt() < MAXSPRITESONSCREEN)
+            {
+                yax_tsprite[yax_globallev+1][$sortcnt()] = z|(MAXSPRITES<<1);
+                $sortcntIncrement();
+            }
+        }
+    }
+//#endif
+
+    function $sortcnt():number {
+        return yax_spritesortcnt[sortcnt];
+    }
+    function $sortcntIncrement():void {
+        yax_spritesortcnt[sortcnt]++;
+    }
 
     return 0;
 }
