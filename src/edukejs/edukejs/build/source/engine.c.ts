@@ -8531,26 +8531,26 @@ function /*int32_t */rintersect(/*int32_t*/ x1:number, /*int32_t*/ y1:number, /*
 //    return (rintersect(x1, y1, z1, vx, vy, vz, x3, y3, x4, y4, intx, inty, intz) != -1);
 //}
 
-////
-//// keepaway (internal)
-////
-//static inline void keepaway(int32_t *x, int32_t *y, int32_t w)
-//{
-//    int32_t dx, dy, ox, oy, x1, y1;
-//    char first;
+//
+// keepaway (internal)
+//
+function keepaway(/*int32_t **/x: R<number>, /*int32_t **/y:R<number>, /*int32_t */w:number): void
+{
+    var /*int32_t */dx:number, dy:number, ox:number, oy:number, x1:number, y1:number;
+    var /*char */first:number;
 
-//    x1 = clipit[w].x1; dx = clipit[w].x2-x1;
-//    y1 = clipit[w].y1; dy = clipit[w].y2-y1;
-//    ox = ksgn(-dy); oy = ksgn(dx);
-//    first = (klabs(dx) <= klabs(dy));
+    x1 = clipit[w].x1; dx = clipit[w].x2-x1;
+    y1 = clipit[w].y1; dy = clipit[w].y2-y1;
+    ox = ksgn(-dy); oy = ksgn(dx);
+    first = (klabs(dx) <= klabs(dy))?1:0;
 
-//    while (1)
-//    {
-//        if (dx*(*y-y1) > (*x-x1)*dy) return;
-//        if (first == 0) *x += ox; else *y += oy;
-//        first ^= 1;
-//    }
-//}
+    while (1)
+    {
+        if (dx*(y.$-y1) > (x.$-x1)*dy) return;
+        if (first == 0) x.$ += ox; else y.$ += oy;
+        first ^= 1;
+    }
+}
 
 
 //
@@ -13328,44 +13328,47 @@ function /*int32_t */clipmove(pos: IVec3, /*int16_t **/sectnum: R<number>,
         inty = $inty.$;
         if (hitwall >= 0)
         {
-            todoThrow();
-            //var /*const int32_t */lx = clipit[hitwall].x2-clipit[hitwall].x1;
-            //var /*const int32_t */ly = clipit[hitwall].y2-clipit[hitwall].y1;
-            //const uint64_t tempull = (int64_t)lx*(int64_t)lx + (int64_t)ly*(int64_t)ly;
+            var /*const int32_t */lx = clipit[hitwall].x2-clipit[hitwall].x1;
+            var /*const int32_t */ly = clipit[hitwall].y2-clipit[hitwall].y1;
+            var /*const uint64_t */tempull = /*(int64_t)*/lx*/*(int64_t)*/lx + /*(int64_t)*/ly*/*(int64_t)*/ly;
 
-            //if (tempull > 0 && tempull < INT32_MAX)
-            //{
-            //    tempint2 = (int32_t)tempull;
+            if (tempull > 0 && tempull < INT32_MAX)
+            {
+                tempint2 = /*(int32_t)*/tempull;
 
-            //    tempint1 = (goalx-intx)*lx + (goaly-inty)*ly;
+                tempint1 = (goalx-intx)*lx + (goaly-inty)*ly;
 
-            //    if ((klabs(tempint1)>>11) < tempint2)
-            //        i = divscale20(tempint1,tempint2);
-            //    else
-            //        i = 0;
-            //    goalx = mulscale20(lx,i)+intx;
-            //    goaly = mulscale20(ly,i)+inty;
-            //}
+                if ((klabs(tempint1)>>11) < tempint2)
+                    i = divscale20(tempint1,tempint2);
+                else
+                    i = 0;
+                goalx = mulscale20(lx,i)+intx;
+                goaly = mulscale20(ly,i)+inty;
+            }
 
-            //tempint1 = dmulscale6(lx,oxvect,ly,oyvect);
-            //for (i=cnt+1; i<=clipmoveboxtracenum; i++)
-            //{
-            //    j = hitwalls[i];
-            //    tempint2 = dmulscale6(clipit[j].x2-clipit[j].x1, oxvect,
-            //                          clipit[j].y2-clipit[j].y1, oyvect);
-            //    if ((tempint1^tempint2) < 0)
-            //    {
-            //        updatesector(pos.x,pos.y,sectnum);
-            //        return retval;
-            //    }
-            //}
+            tempint1 = dmulscale6(lx,oxvect,ly,oyvect);
+            for (i=cnt+1; i<=clipmoveboxtracenum; i++)
+            {
+                j = hitwalls[i];
+                tempint2 = dmulscale6(clipit[j].x2-clipit[j].x1, oxvect,
+                                      clipit[j].y2-clipit[j].y1, oyvect);
+                if ((tempint1^tempint2) < 0)
+                {
+                    updatesector(pos.x,pos.y,sectnum);
+                    return retval;
+                }
+            }
 
-            //keepaway(&goalx, &goaly, hitwall);
-            //xvect = (goalx-intx)<<14;
-            //yvect = (goaly-inty)<<14;
+            var $goalx = new R(goalx);
+            var $goaly = new R(goaly);
+            keepaway($goalx, $goaly, hitwall);
+            goalx = $goalx.$;
+            goaly = $goaly.$;
+            xvect = (goalx-intx)<<14;
+            yvect = (goaly-inty)<<14;
 
-            //if (cnt == clipmoveboxtracenum) retval = clipobjectval[hitwall];
-            //hitwalls[cnt] = hitwall;
+            if (cnt == clipmoveboxtracenum) retval = clipobjectval[hitwall];
+            hitwalls[cnt] = hitwall;
         }
         cnt--;
 

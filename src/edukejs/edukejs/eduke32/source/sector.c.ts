@@ -1611,8 +1611,8 @@ function G_ActivateBySector(/*int32_t*/ sect:number,/*int32_t */j:number): void
 //    A_SpawnWallGlass(spr,dawallnum,10);
 //}
 
-//void A_DamageWall(int32_t spr,int32_t dawallnum,const vec3_t *pos,int32_t atwith)
-//{
+function A_DamageWall(/*int32_t */spr:number,/*int32_t */dawallnum:number,/*const vec3_t **/pos:vec3_t,/*int32_t */atwith:number): void
+{todoThrow();
 //    int16_t sn = -1;
 //    int32_t j, i, darkestwall;
 //    walltype *wal = &wall[dawallnum];
@@ -1870,7 +1870,7 @@ function G_ActivateBySector(/*int32_t*/ sect:number,/*int32_t */j:number): void
 //        }
 //        break;
 //    }
-//}
+}
 
 //int32_t Sect_DamageCeiling(int32_t sn)
 //{
