@@ -13269,8 +13269,24 @@ function /*int32_t */clipmove(pos: IVec3, /*int16_t **/sectnum: R<number>,
 
                     rxi[0] = x1;
                     rxi[1] = y1;
-                    todoThrow("get_floorspr_points(spr, 0, 0, &rxi[0], &rxi[1], &rxi[2], &rxi[3],");
-                    todoThrow("          &ryi[0], &ryi[1], &ryi[2], &ryi[3]);");
+                    var $rxi0 = new R(rxi[0]);
+                    var $rxi1 = new R(rxi[1]);
+                    var $rxi2 = new R(rxi[2]);
+                    var $rxi3 = new R(rxi[3]);
+                    var $ryi0 = new R(ryi[0]);
+                    var $ryi1 = new R(ryi[1]);
+                    var $ryi2 = new R(ryi[2]);
+                    var $ryi3 = new R(ryi[3]);
+                    get_floorspr_points(spr, 0, 0, $rxi0, $rxi1, $rxi2, $rxi3,
+                              $ryi0, $ryi1, $ryi2, $ryi3);
+                    rxi[0] = $rxi0.$;
+                    rxi[1] = $rxi1.$;
+                    rxi[2] = $rxi2.$;
+                    rxi[3] = $rxi3.$;
+                    ryi[0] = $ryi0.$;
+                    ryi[1] = $ryi1.$;
+                    ryi[2] = $ryi2.$;
+                    ryi[3] = $ryi3.$;
 
                     dax = mulscale14(sintable[(spr.ang-256+512)&2047],walldist);
                     day = mulscale14(sintable[(spr.ang-256)&2047],walldist);
