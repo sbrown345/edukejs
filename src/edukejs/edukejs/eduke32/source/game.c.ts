@@ -1370,21 +1370,21 @@ var minitext_lowercase = 0;         //static int32_t
 //    G_ScreenTextShadow(1, 1, MINIFONT, x, y, 65536, 0, 0, t, 0, p, sb, 0, 4, 8, 1, 0, f, 0, 0, xdim-1, ydim-1);
 //}
 
-//void G_AddUserQuote(const char *daquote)
-//{
-//    int32_t i;
+function G_AddUserQuote(/*const char **/daquote:Uint8Array):void
+{todoThrow();
+    //int32_t i;
 
-//    for (i=MAXUSERQUOTES-1; i>0; i--)
-//    {
-//        Bstrcpy(user_quote[i],user_quote[i-1]);
-//        user_quote_time[i] = user_quote_time[i-1];
-//    }
-//    Bstrcpy(user_quote[0],daquote);
-//    OSD_Printf("%s\n",daquote);
+    //for (i=MAXUSERQUOTES-1; i>0; i--)
+    //{
+    //    Bstrcpy(user_quote[i],user_quote[i-1]);
+    //    user_quote_time[i] = user_quote_time[i-1];
+    //}
+    //Bstrcpy(user_quote[0],daquote);
+    //OSD_Printf("%s\n",daquote);
 
-//    user_quote_time[0] = ud.msgdisptime;
-//    pub = NUMPAGES;
-//}
+    //user_quote_time[0] = ud.msgdisptime;
+    //pub = NUMPAGES;
+}
 
 //void G_HandleSpecialKeys(void)
 //{
@@ -5032,9 +5032,9 @@ function Yax_SetBunchInterpolation(/*int32_t*/ sectnum: number, /*int32_t*/ cf: 
         return;
     
     for (i = headsectbunch[YAX_CEILING][bunchnum]; i != -1; i = nextsectbunch[YAX_CEILING][i] /*SECTORS_OF_BUNCH(bunchnum, YAX_CEILING, i)*/)
-        G_SetInterpolation(new R(sector[i].ceilingz));
+        G_SetInterpolation(new AnimatePtr(sector, i, "ceilingz"));
     for (i = headsectbunch[YAX_FLOOR][bunchnum]; i != -1; i = nextsectbunch[YAX_FLOOR][i] /*SECTORS_OF_BUNCH(bunchnum, YAX_FLOOR, i)*/)
-        G_SetInterpolation(new R(sector[i].floorz));
+        G_SetInterpolation(new AnimatePtr(sector, i, "floorz"));
 }
 //#else
 //# define Yax_SetBunchInterpolation(sectnum, cf)
@@ -6458,9 +6458,7 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
                 actor[i].t_data[3] = sector[sect].ceilingz;
                 actor[i].t_data[4] = 1;
                 sector[sect].ceilingz = sp.z;
-                var $ceilingz = new R(sector[sect].ceilingz);
-                G_SetInterpolation($ceilingz);
-                sector[sect].ceilingz = $ceilingz.$;
+                G_SetInterpolation(new AnimatePtr(sector, sect, "ceilingz" /*sector[sect].ceilingz*/));
                 break;
             case SE_35:
                 sector[sect].ceilingz = sp.z;
@@ -6584,8 +6582,8 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 
                 if (numplayers < 2 && !g_netServer)
                 {
-                    G_SetInterpolation(new R(sector[sect].floorz));
-                    G_SetInterpolation(new R(sector[sect].ceilingz));
+                    G_SetInterpolation(new AnimatePtr(sector, sect, "floorz"/*sector[sect].floorz*/));
+                    G_SetInterpolation(new AnimatePtr(sector, sect, "ceilingz" /*sector[sect].ceilingz*/));
                 }
 
                 break;
@@ -6679,7 +6677,7 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
                 for (s=startwall; s<endwall; s++)
                     if (wall[s].hitag == 0) wall[s].hitag = 9999;
 
-                G_SetInterpolation(new R(sector[sect].floorz));
+                G_SetInterpolation(new AnimatePtr(sector, sect, "floorz"/*sector[sect].floorz*/));
                 Yax_SetBunchInterpolation(sect, YAX_FLOOR);
             }
             break;
@@ -6700,7 +6698,7 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
                 for (s=startwall; s<endwall; s++)
                     if (wall[s].hitag == 0) wall[s].hitag = 9999;
 
-                G_SetInterpolation(new R(sector[sect].ceilingz));
+                G_SetInterpolation(new AnimatePtr(sector, sect, "ceilingz" /*sector[sect].ceilingz*/));
                 Yax_SetBunchInterpolation(sect, YAX_CEILING);
             }
             break;

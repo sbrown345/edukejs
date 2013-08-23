@@ -52,7 +52,7 @@ var MAXSKILLS=7;
 var g_numInterpolations: number;   //G_EXTERN int32_t 
 var g_interpolationLock: number;   //G_EXTERN int32_t 
 var oldipos = new Int32Array(MAXINTERPOLATIONS);
-var curipos = new Int32Array(MAXINTERPOLATIONS); //G_EXTERN int32_t *   ! pointers
+var curipos = new Array<AnimatePtr>(MAXINTERPOLATIONS); //G_EXTERN int32_t *   ! pointers
 var bakipos = new Int32Array(MAXINTERPOLATIONS);
 var connectpoint2 = new Int32Array(MAXPLAYERS);
 
@@ -85,7 +85,7 @@ var avg = new input_t();
 var loc = new input_t();
 //G_EXTERN input_t recsync[RECSYNCBUFSIZ];
 var SpriteDeletionQueue = new Int16Array(1024),g_spriteDeleteQueuePos: number; //G_EXTERN int16_t 
-//G_EXTERN int16_t animatesect[MAXANIMATES];
+var animatesect = new Int16Array(MAXANIMATES);
 var camsprite: number;//G_EXTERN int16_t
 var cyclers = multiDimArray(Int16Array, MAXCYCLERS, 6),g_numCyclers: number; //G_EXTERN int16_t 
 var g_globalRandom: number;//G_EXTERN int16_t 
@@ -95,8 +95,8 @@ var g_numClouds: number,clouds = new Int16Array(128),cloudx = new Int16Array(128
 var myang: number,omyang: number,mycursectnum: number,myjumpingcounter: number;  //G_EXTERN int16_t 
 var myhoriz: number,omyhoriz: number,myhorizoff: number,omyhorizoff: number;     //G_EXTERN int16_t 
 var neartagsector: number,neartagwall: number,neartagsprite: number;             //G_EXTERN int16_t 
-//G_EXTERN int32_t *animateptr[MAXANIMATES];
-var animategoa = new Int32Array(MAXANIMATES),animatevel = new Int32Array(MAXANIMATES),g_animateCount: number; //G_EXTERN int32_t 
+var /*G_EXTERN int32_t **/animateptr = new Array(MAXANIMATES);
+var animategoal = new Int32Array(MAXANIMATES),animatevel = new Int32Array(MAXANIMATES),g_animateCount: number; //G_EXTERN int32_t 
 var cloudtotalclock:number;//G_EXTERN int32_t 
 var fricxv:number,fricyv:number;                             //G_EXTERN int32_t 
 var g_currentFrameRate:number;                               //G_EXTERN int32_t 

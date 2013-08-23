@@ -2121,7 +2121,7 @@ function G_EnterLevel(g: number): number
 
     G_ClearFIFO();
 
-    for (i=g_numInterpolations-1; i>=0; i--) bakipos[i] = curipos[i];// *curipos[i];
+    for (i=g_numInterpolations-1; i>=0; i--) bakipos[i] = curipos[i].getValue();// *curipos[i];
 
     g_restorePalette = -1;
 

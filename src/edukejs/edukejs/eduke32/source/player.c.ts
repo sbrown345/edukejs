@@ -3579,108 +3579,108 @@ function /*int32_t */P_CheckFloorDamage(p:DukePlayer_t, /*int32_t */tex: number)
 //}
 
 function P_FragPlayer(/*int32_t */snum:number):void
-{todoThrow();
-//    DukePlayer_t *p = g_player[snum].ps;
-//    spritetype *s = &sprite[p.i];
+{
+    var p = g_player[snum].ps;
+    var s = sprite[p.i];
 
-//    if (g_netServer || g_netClient)
-//        randomseed = ticrandomseed;
+    if (g_netServer || g_netClient)
+        randomseed = ticrandomseed;
 
-//    if (s.pal != 1)
-//    {
-//        P_PalFrom(p, 63, 63,0,0);
+    if (s.pal != 1)
+    {
+        P_PalFrom(p, 63, 63,0,0);
 
-//        p.pos.z -= (16<<8);
-//        s.z -= (16<<8);
+        p.pos.z -= (16<<8);
+        s.z -= (16<<8);
 
-//        p.dead_flag = (512-((krand()&1)<<10)+(krand()&255)-512)&2047;
-//        if (p.dead_flag == 0)
-//            p.dead_flag++;
+        p.dead_flag = (512-((krand()&1)<<10)+(krand()&255)-512)&2047;
+        if (p.dead_flag == 0)
+            p.dead_flag++;
 //#ifndef NETCODE_DISABLE
-//        if (g_netServer)
-//        {
-//            packbuf[0] = PACKET_FRAG;
-//            packbuf[1] = snum;
-//            packbuf[2] = p.frag_ps;
-//            packbuf[3] = actor[p.i].picnum;
-//            *(int32_t *)&packbuf[4] = ticrandomseed;
-//            packbuf[8] = myconnectindex;
+        if (g_netServer)
+        {todoThrow();
+            //packbuf[0] = PACKET_FRAG;
+            //packbuf[1] = snum;
+            //packbuf[2] = p.frag_ps;
+            //packbuf[3] = actor[p.i].picnum;
+            //*(int32_t *)&packbuf[4] = ticrandomseed;
+            //packbuf[8] = myconnectindex;
 
-//            enet_host_broadcast(g_netServer, CHAN_GAMESTATE, enet_packet_create(packbuf, 9, ENET_PACKET_FLAG_RELIABLE));
-//        }
+            //enet_host_broadcast(g_netServer, CHAN_GAMESTATE, enet_packet_create(packbuf, 9, ENET_PACKET_FLAG_RELIABLE));
+        }
 //#endif
-//    }
+    }
 
-//    p.jetpack_on = 0;
-//    p.holoduke_on = -1;
+    p.jetpack_on = 0;
+    p.holoduke_on = -1;
 
-//    S_StopEnvSound(DUKE_JETPACK_IDLE,p.i);
-//    if (p.scream_voice > FX_Ok)
-//    {
-//        FX_StopSound(p.scream_voice);
-//        S_Cleanup();
-//        //                S_TestSoundCallback(DUKE_SCREAM);
-//        p.scream_voice = -1;
-//    }
+    S_StopEnvSound(DUKE_JETPACK_IDLE,p.i);
+    if (p.scream_voice > FX_Ok)
+    {
+        FX_StopSound(p.scream_voice);
+        S_Cleanup();
+        //                S_TestSoundCallback(DUKE_SCREAM);
+        p.scream_voice = -1;
+    }
 
-//    if (s.pal != 1 && (s.cstat&32768) == 0) s.cstat = 0;
+    if (s.pal != 1 && (s.cstat&32768) == 0) s.cstat = 0;
 
-//    if ((g_netServer || ud.multimode > 1) && (s.pal != 1 || (s.cstat&32768)))
-//    {
-//        if (p.frag_ps != snum)
-//        {
-//            if (GTFLAGS(GAMETYPE_TDM) && g_player[p.frag_ps].ps.team == g_player[snum].ps.team)
-//                g_player[p.frag_ps].ps.fraggedself++;
-//            else
-//            {
-//                g_player[p.frag_ps].ps.frag++;
-//                g_player[p.frag_ps].frags[snum]++;
-//                g_player[snum].frags[snum]++; // deaths
-//            }
+    if ((g_netServer || ud.multimode > 1) && (s.pal != 1 || (s.cstat&32768)))
+    {
+        if (p.frag_ps != snum)
+        {todoThrow();
+            //if (GTFLAGS(GAMETYPE_TDM) && g_player[p.frag_ps].ps.team == g_player[snum].ps.team)
+            //    g_player[p.frag_ps].ps.fraggedself++;
+            //else
+            //{
+            //    g_player[p.frag_ps].ps.frag++;
+            //    g_player[p.frag_ps].frags[snum]++;
+            //    g_player[snum].frags[snum]++; // deaths
+            //}
 
-//            if (snum == screenpeek)
-//            {
-//                Bsprintf(ScriptQuotes[QUOTE_RESERVED],"Killed by %s",&g_player[p.frag_ps].user_name[0]);
-//                P_DoQuote(QUOTE_RESERVED,p);
-//            }
-//            else
-//            {
-//                Bsprintf(ScriptQuotes[QUOTE_RESERVED2],"Killed %s",&g_player[snum].user_name[0]);
-//                P_DoQuote(QUOTE_RESERVED2,g_player[p.frag_ps].ps);
-//            }
+            //if (snum == screenpeek)
+            //{
+            //    Bsprintf(ScriptQuotes[QUOTE_RESERVED],"Killed by %s",&g_player[p.frag_ps].user_name[0]);
+            //    P_DoQuote(QUOTE_RESERVED,p);
+            //}
+            //else
+            //{
+            //    Bsprintf(ScriptQuotes[QUOTE_RESERVED2],"Killed %s",&g_player[snum].user_name[0]);
+            //    P_DoQuote(QUOTE_RESERVED2,g_player[p.frag_ps].ps);
+            //}
 
-//            if (ud.obituaries)
-//            {
-//                Bsprintf(tempbuf,ScriptQuotes[OBITQUOTEINDEX+(krand()%g_numObituaries)],
-//                         &g_player[p.frag_ps].user_name[0],
-//                         &g_player[snum].user_name[0]);
-//                G_AddUserQuote(tempbuf);
-//            }
-//            else krand();
-//        }
-//        else
-//        {
-//            if (actor[p.i].picnum != APLAYERTOP)
-//            {
-//                p.fraggedself++;
-//                if ((unsigned)p.wackedbyactor < MAXTILES && A_CheckEnemyTile(sprite[p.wackedbyactor].picnum))
-//                    Bsprintf(tempbuf,ScriptQuotes[OBITQUOTEINDEX+(krand()%g_numObituaries)],"A monster",&g_player[snum].user_name[0]);
-//                else if (actor[p.i].picnum == NUKEBUTTON)
-//                    Bsprintf(tempbuf,"^02%s^02 tried to leave",&g_player[snum].user_name[0]);
-//                else
-//                {
-//                    // random suicide death string
-//                    Bsprintf(tempbuf,ScriptQuotes[SUICIDEQUOTEINDEX+(krand()%g_numSelfObituaries)],&g_player[snum].user_name[0]);
-//                }
-//            }
-//            else Bsprintf(tempbuf,"^02%s^02 switched to team %d",&g_player[snum].user_name[0],p.team+1);
+            //if (ud.obituaries)
+            //{
+            //    Bsprintf(tempbuf,ScriptQuotes[OBITQUOTEINDEX+(krand()%g_numObituaries)],
+            //             &g_player[p.frag_ps].user_name[0],
+            //             &g_player[snum].user_name[0]);
+            //    G_AddUserQuote(tempbuf);
+            //}
+            //else krand();
+        }
+        else
+        {
+            if (actor[p.i].picnum != APLAYERTOP)
+            {todoThrow();
+                //p.fraggedself++;
+                //if ((unsigned)p.wackedbyactor < MAXTILES && A_CheckEnemyTile(sprite[p.wackedbyactor].picnum))
+                //    Bsprintf(tempbuf,ScriptQuotes[OBITQUOTEINDEX+(krand()%g_numObituaries)],"A monster",&g_player[snum].user_name[0]);
+                //else if (actor[p.i].picnum == NUKEBUTTON)
+                //    Bsprintf(tempbuf,"^02%s^02 tried to leave",&g_player[snum].user_name[0]);
+                //else
+                //{
+                //    // random suicide death string
+                //    Bsprintf(tempbuf,ScriptQuotes[SUICIDEQUOTEINDEX+(krand()%g_numSelfObituaries)],&g_player[snum].user_name[0]);
+                //}
+            }
+            else Bsprintf(tempbuf,"^02%s^02 switched to team %d",g_player[snum].user_name[0],p.team+1);
 
-//            if (ud.obituaries)
-//                G_AddUserQuote(tempbuf);
-//        }
-//        p.frag_ps = snum;
-//        pus = NUMPAGES;
-//    }
+            if (ud.obituaries)
+                G_AddUserQuote(tempbuf);
+        }
+        p.frag_ps = snum;
+        pus = NUMPAGES;
+    }
 }
 
 //#ifdef LUNATIC

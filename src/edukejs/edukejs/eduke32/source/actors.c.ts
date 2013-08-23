@@ -104,21 +104,20 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 //int32_t otherp;
 
-function G_SetInterpolation(/*int32_t * */posptr: R<number>): number
+function G_SetInterpolation(/*int32_t * */posptr: AnimatePtr): number
 {
-    todo("G_SetInterpolation");
-    //int32_t i=g_numInterpolations-1;
+    var /*int32_t */i=g_numInterpolations-1;
 
-    //if (g_numInterpolations >= MAXINTERPOLATIONS)
-    //    return 1;
+    if (g_numInterpolations >= MAXINTERPOLATIONS)
+        return 1;
 
-    //for (; i>=0; i--)
-    //    if (curipos[i] == posptr)
-    //        return 0;
+    for (; i>=0; i--)
+        if (curipos[i].equals(posptr))
+            return 0;
 
-    //curipos[g_numInterpolations] = posptr;
-    //oldipos[g_numInterpolations] = *posptr;
-    //g_numInterpolations++;
+    curipos[g_numInterpolations] = posptr;
+    oldipos[g_numInterpolations] = posptr.getValue();
+    g_numInterpolations++;
     return 0;
 }
 
@@ -144,15 +143,15 @@ function G_DoInterpolations(/*int32_t*/ smoothratio: number): void       //Stick
     {
         return;
     }
-    todo("G_DoInterpolations");
-    //for (; i>=0; i--)
-    //{
-    //    bakipos[i] = *curipos[i];
-    //    odelta = ndelta;
-    //    ndelta = (*curipos[i])-oldipos[i];
-    //    if (odelta != ndelta) j = mulscale16(ndelta,smoothratio);
-    //    *curipos[i] = oldipos[i]+j;
-    //}
+    
+    for (; i>=0; i--)
+    {
+        bakipos[i] = curipos[i].getValue();
+        odelta = ndelta;
+        ndelta = curipos[i].getValue()-oldipos[i];
+        if (odelta != ndelta) j = mulscale16(ndelta,smoothratio);
+        curipos[i].setValue(oldipos[i]+j);
+    }
 }
 
 //void G_ClearCameraView(DukePlayer_t *ps)
@@ -698,18 +697,18 @@ function A_AddToDeleteQueue(/*int32_t */i: number): void
     g_spriteDeleteQueuePos = (g_spriteDeleteQueuePos+1)%g_spriteDeleteQueueSize;
 }
 
-//void A_SpawnMultiple(int32_t sp, int32_t pic, int32_t n)
-//{
-//    int32_t j;
-//    spritetype *s = &sprite[sp];
+function A_SpawnMultiple(/*int32_t */sp:number, /*int32_t */pic:number, /*int32_t */n:number): void
+{
+    var /*int32_t */j:number;
+    var s = sprite[sp];
 
-//    for (; n>0; n--)
-//    {
-//        j = A_InsertSprite(s.sectnum,s.x,s.y,s.z-(krand()%(47<<8)),pic,-32,8,8,krand()&2047,0,0,sp,5);
-//        A_Spawn(-1, j);
-//        sprite[j].cstat = krand()&12;
-//    }
-//}
+    for (; n>0; n--)
+    {
+        j = A_InsertSprite(s.sectnum,s.x,s.y,s.z-(krand()%(47<<8)),pic,-32,8,8,krand()&2047,0,0,sp,5);
+        A_Spawn(-1, j);
+        sprite[j].cstat = krand()&12;
+    }
+}
 
 function A_DoGuts(/*int32_t*/ sp:number, /*int32_t */gtype:number, /*int32_t */n:number):void
 {todoThrow();
@@ -8388,7 +8387,7 @@ function G_MoveWorld(): void
             }
 
             {
-                var /*int32_t */p:R<number> = new R<number>(0), pl = A_FindPlayer(sprite[i], p);
+                var /*int32_t */p = new R<number>(0), pl = A_FindPlayer(sprite[i], p);
                 VM_OnEvent(EVENT_GAME,i, pl, p.$, 0);
             }
 

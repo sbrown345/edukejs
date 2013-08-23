@@ -106,7 +106,7 @@ function A_SetSprite(/*int32_t*/ i: number,/*uint32_t*/ cliptype: number): numbe
 function G_UpdateInterpolations() : void //Stick at beginning of G_DoMoveThings
 {
     var i=g_numInterpolations-1;
-    for (; i>=0; i--) oldipos[i] = /* * ??? */curipos[i];
+    for (; i>=0; i--) oldipos[i] = /* * ??? */curipos[i].getValue();
 }
 
 
@@ -117,7 +117,7 @@ function G_RestoreInterpolations(): void//Stick at end of drawscreen
     if (--g_interpolationLock)
         return;
 
-    for (; i>=0; i--) curipos[i] = bakipos[i];//*curipos[i] = bakipos[i];
+    for (; i>=0; i--) curipos[i].setValue(bakipos[i]);//*curipos[i] = bakipos[i];
 }
 
 function G_CheckForSpaceCeiling(/*int32_t*/ sectnum: number): number

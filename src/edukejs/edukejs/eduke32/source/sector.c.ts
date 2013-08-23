@@ -1,3 +1,65 @@
+/// <reference path="../../utils/assert.ts" />
+/// <reference path="../../utils/c.ts" />
+/// <reference path="../../utils/todo.ts" />
+/// <reference path="../../utils/types.ts" />
+
+/// <reference path="../../build/headers/baselayer.h.ts" />
+/// <reference path="../../build/headers/build.h.ts" />
+/// <reference path="../../build/headers/cache1d.h.ts" />
+/// <reference path="../../build/headers/compat.h.ts" />
+/// <reference path="../../build/headers/engine_priv.h.ts" />
+/// <reference path="../../build/headers/hightile.h.ts" />
+/// <reference path="../../build/headers/mdsprite.h.ts" />
+/// <reference path="../../build/headers/osd.h.ts" />
+/// <reference path="../../build/headers/pragmas.h.ts" />
+/// <reference path="../../build/headers/scancodes.h.ts" />
+
+/// <reference path="../../build/source/baselayer.c.ts" />
+/// <reference path="../../build/source/build.c.ts" />
+/// <reference path="../../build/source/compat.c.ts" />
+/// <reference path="../../build/source/crc32.c.ts" />
+/// <reference path="../../build/source/engine.c.ts" />
+/// <reference path="../../build/source/polymost.c.ts" />
+/// <reference path="../../build/source/hightile.c.ts" />
+
+/// <reference path="../../eduke32/headers/_functio.h.ts" />
+/// <reference path="../../eduke32/headers/_rts.h.ts" />
+/// <reference path="../../eduke32/headers/actors.h.ts" />
+/// <reference path="../../eduke32/headers/common_game.h.ts" />
+/// <reference path="../../eduke32/headers/duke3d.h.ts" />
+/// <reference path="../../eduke32/headers/function.h.ts" />
+/// <reference path="../../eduke32/headers/gameexec.h.ts" />
+/// <reference path="../../eduke32/headers/global.h.ts" />
+/// <reference path="../../eduke32/headers/grpscan.h.ts" />
+/// <reference path="../../eduke32/headers/game.h.ts" />
+/// <reference path="../../eduke32/headers/gamedef.h.ts" />
+/// <reference path="../../eduke32/headers/player.h.ts" />
+/// <reference path="../../eduke32/headers/quotes.h.ts" />
+
+/// <reference path="../../eduke32/source/actors.c.ts" />
+/// <reference path="../../eduke32/source/astub.c.ts" />
+/// <reference path="../../eduke32/source/common.c.ts" />
+/// <reference path="../../eduke32/source/game.c.ts" />
+/// <reference path="../../eduke32/source/gamedef.c.ts" />
+/// <reference path="../../eduke32/source/gameexec.c.ts" />
+/// <reference path="../../eduke32/source/gamevars.c.ts" />
+/// <reference path="../../eduke32/source/glbuild.c.ts" />
+/// <reference path="../../eduke32/source/global.c.ts" />
+/// <reference path="../../eduke32/source/grpscan.c.ts" />
+/// <reference path="../../eduke32/source/menus.c.ts" />
+/// <reference path="../../eduke32/source/namesdyn.c.ts" />
+/// <reference path="../../eduke32/source/net.c.ts" />
+/// <reference path="../../eduke32/source/osd.c.ts" />
+/// <reference path="../../eduke32/source/osdcmds.c.ts" />
+/// <reference path="../../eduke32/source/player.c.ts" />
+/// <reference path="../../eduke32/source/premap.c.ts" />
+/// <reference path="../../eduke32/source/osdfuncs.c.ts" />
+/// <reference path="../../eduke32/source/soundsdyn.c.ts" />
+/// <reference path="../../eduke32/source/winbits.c.ts" />
+/// <reference path="../../eduke32/source/winlayer.c.ts" />
+/// <reference path="../../eduke32/source/winbits.c.ts" />
+/// <reference path="../../eduke32/source/winlayer.c.ts" />
+
 //-------------------------------------------------------------------------
 /*
 Copyright (C) 2010 EDuke32 developers and contributors
@@ -307,41 +369,83 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
 //    }
 //}
 
-//int32_t GetAnimationGoal(const int32_t *animptr)
-//{
-//    int32_t i = g_animateCount-1;
+class AnimatePtr {
+    obj: any;
+    array: any[];
+    idx: number;
+    key: string;
 
-//    for (; i>=0; i--)
-//        if (animptr == animateptr[i])
-//            return i;
-//    return -1;
-//}
+    constructor(array: any[], idx: number, key: string) {
+        this.obj = array[idx]; // another ref to test  - maybe do this instead of the array/idx
+        this.array = array;
+        this.idx = idx;
+        this.key = key;
+    }
 
-//int32_t SetAnimation(int32_t animsect,int32_t *animptr, int32_t thegoal, int32_t thevel)
-//{
-//    int32_t i = 0, j = g_animateCount;
+    getValue():number {
+        if (this.obj != this.array[this.idx]) debugger
+        return this.array[this.idx][this.key];
+    }
 
-//    if (g_animateCount >= MAXANIMATES)
-//        return(-1);
+    setValue(v:number):void {
+        if (this.obj != this.array[this.idx]) debugger
+        this.array[this.idx][this.key] = v;
+    }
 
-//    for (; i<g_animateCount; i++)
-//        if (animptr == animateptr[i])
-//        {
-//            j = i;
-//            break;
-//        }
+    equals(ptr: AnimatePtr):number {
+        return (ptr.obj == this.obj && ptr.key == this.key)?1:0;
+    }
 
-//    animatesect[j] = animsect;
-//    animateptr[j] = animptr;
-//    animategoal[j] = thegoal;
-//    animatevel[j] = (thegoal >= *animptr) ? thevel : -thevel;
+//    AnimatePtr.prototype.get = function() {
+//    if (this.obj != this.array[this.idx]) debugger
+//    return this.array[this.idx][this.key];
+//};
 
-//    if (j == g_animateCount) g_animateCount++;
+//    AnimatePtr.prototype.set = function (v) {
+//        if (this.obj != this.array[this.idx]) debugger
+//        this.array[this.idx][this.key] = v;
+//    };
 
-//    G_SetInterpolation(animptr);
+//    AnimatePtr.prototype.equals = function (ptr) {
+//        return ptr.obj == this.obj && ptr.key == this.key;
+//    };
+}
 
-//    return(j);
-//}
+function /*int32_t */GetAnimationGoal(/*const int32_t **/animptr: AnimatePtr):number
+{
+    var /*int32_t */i = g_animateCount-1;
+
+    for (; i>=0; i--)
+        if (animptr == animateptr[i])
+            return i;
+    return -1;
+}
+
+function /*int32_t */SetAnimation(/*int32_t */animsect:number,/*int32_t **/animptr: AnimatePtr, /*int32_t */thegoal:number, /*int32_t */thevel:number)
+{
+    var /*int32_t */i = 0, j = g_animateCount;
+
+    if (g_animateCount >= MAXANIMATES)
+        return(-1);
+
+    for (; i<g_animateCount; i++)
+        if (animptr.equals(animateptr[i]))
+        {
+            j = i;
+            break;
+        }
+
+    animatesect[j] = animsect;
+    animateptr[j] = animptr;
+    animategoal[j] = thegoal;
+    animatevel[j] = (thegoal >= animptr.getValue()) ? thevel : -thevel;
+
+    if (j == g_animateCount) g_animateCount++;
+
+    G_SetInterpolation(animptr);
+
+    return(j);
+}
 
 function G_AnimateCamSprite(): void
 {
@@ -466,505 +570,505 @@ function G_AnimateCamSprite(): void
 //    }
 //}
 
-//int32_t G_ActivateWarpElevators(int32_t s,int32_t d) //Parm = sectoreffectornum
-//{
-//    int32_t i = headspritestat[STAT_EFFECTOR], sn = sprite[s].sectnum;
+function /*int32_t */G_ActivateWarpElevators(/*int32_t */s,/*int32_t */d):number //Parm = sectoreffectornum
+{
+    var /*int32_t */i = headspritestat[STAT_EFFECTOR], sn = sprite[s].sectnum;
 
-//    while (i >= 0)
-//    {
-//        if (sprite[i].lotag == SE_17_WARP_ELEVATOR && sprite[i].hitag == sprite[s].hitag)
-//            if ((klabs(sector[sn].floorz-actor[s].t_data[2]) > sprite[i].yvel) ||
-//                (sector[sprite[i].sectnum].hitag == (sector[sn].hitag-d)))
-//                break;
-//        i = nextspritestat[i];
-//    }
+    while (i >= 0)
+    {
+        if (sprite[i].lotag == SE_17_WARP_ELEVATOR && sprite[i].hitag == sprite[s].hitag)
+            if ((klabs(sector[sn].floorz-actor[s].t_data[2]) > sprite[i].yvel) ||
+                (sector[sprite[i].sectnum].hitag == (sector[sn].hitag-d)))
+                break;
+        i = nextspritestat[i];
+    }
 
-//    if (i == -1)
-//        return 1; // No find
-//    else
-//        A_PlaySound(d ? ELEVATOR_ON : ELEVATOR_OFF, s);
+    if (i == -1)
+        return 1; // No find
+    else
+        A_PlaySound(d ? ELEVATOR_ON : ELEVATOR_OFF, s);
 
-//    i = headspritestat[STAT_EFFECTOR];
-//    do
-//    {
-//        if (sprite[i].lotag == SE_17_WARP_ELEVATOR && sprite[i].hitag == sprite[s].hitag)
-//            actor[i].t_data[0] = actor[i].t_data[1] = d; //Make all check warp
-//        i = nextspritestat[i];
-//    }
-//    while (i >= 0);
+    i = headspritestat[STAT_EFFECTOR];
+    do
+    {
+        if (sprite[i].lotag == SE_17_WARP_ELEVATOR && sprite[i].hitag == sprite[s].hitag)
+            actor[i].t_data[0] = actor[i].t_data[1] = d; //Make all check warp
+        i = nextspritestat[i];
+    }
+    while (i >= 0);
 
-//    return 0;
-//}
+    return 0;
+}
 
 function G_OperateSectors(/*int32_t */sn:number, /*int32_t */ii:number):void 
-{todoThrow();
-//    int32_t j=0, l, q, startwall, endwall;
-//    int32_t i;
-//    sectortype *sptr = &sector[sn];
-
-//    switch (sptr.lotag&(0xffff-49152))
-//    {
-
-//    case ST_30_ROTATE_RISE_BRIDGE:
-//        j = sector[sn].hitag;
-//        if (actor[j].tempang == 0 || actor[j].tempang == 256)
-//            A_CallSound(sn,ii);
-//        if (sprite[j].extra == 1)
-//            sprite[j].extra = 3;
-//        else sprite[j].extra = 1;
-//        break;
-
-//    case ST_31_TWO_WAY_TRAIN:
-
-//        j = sector[sn].hitag;
-//        if (actor[j].t_data[4] == 0)
-//            actor[j].t_data[4] = 1;
-
-//        A_CallSound(sn,ii);
-//        break;
-
-//    case ST_26_SPLITTING_ST_DOOR: //The split doors
-//        if (GetAnimationGoal(&sptr.ceilingz) == -1) //if the door has stopped
-//        {
-//            g_haltSoundHack = 1;
-//            sptr.lotag &= 0xff00;
-//            sptr.lotag |= ST_22_SPLITTING_DOOR;
-//            G_OperateSectors(sn,ii);
-//            sptr.lotag &= 0xff00;
-//            sptr.lotag |= ST_9_SLIDING_ST_DOOR;
-//            G_OperateSectors(sn,ii);
-//            sptr.lotag &= 0xff00;
-//            sptr.lotag |= ST_26_SPLITTING_ST_DOOR;
-//        }
-//        return;
-
-//    case ST_9_SLIDING_ST_DOOR:
-//    {
-//        int32_t dax,day,dax2,day2,sp;
-//        int32_t wallfind[2];
-
-//        startwall = sptr.wallptr;
-//        endwall = startwall+sptr.wallnum-1;
-
-//        sp = sptr.extra>>4;
-
-//        //first find center point by averaging all points
-//        dax = 0L, day = 0L;
-//        for (i=startwall; i<=endwall; i++)
-//        {
-//            dax += wall[i].x;
-//            day += wall[i].y;
-//        }
-//        dax /= (endwall-startwall+1);
-//        day /= (endwall-startwall+1);
-
-//        //find any points with either same x or same y coordinate
-//        //  as center (dax, day) - should be 2 points found.
-//        wallfind[0] = -1;
-//        wallfind[1] = -1;
-//        for (i=startwall; i<=endwall; i++)
-//            if ((wall[i].x == dax) || (wall[i].y == day))
-//            {
-//                if (wallfind[0] == -1)
-//                    wallfind[0] = i;
-//                else wallfind[1] = i;
-//            }
-
-//        for (j=0; j<2; j++)
-//        {
-//            if ((wall[wallfind[j]].x == dax) && (wall[wallfind[j]].y == day))
-//            {
-//                //find what direction door should open by averaging the
-//                //  2 neighboring points of wallfind[0] & wallfind[1].
-//                i = wallfind[j]-1;
-//                if (i < startwall) i = endwall;
-//                dax2 = ((wall[i].x+wall[wall[wallfind[j]].point2].x)>>1)-wall[wallfind[j]].x;
-//                day2 = ((wall[i].y+wall[wall[wallfind[j]].point2].y)>>1)-wall[wallfind[j]].y;
-//                if (dax2 != 0)
-//                {
-//                    dax2 = wall[wall[wall[wallfind[j]].point2].point2].x;
-//                    dax2 -= wall[wall[wallfind[j]].point2].x;
-//                    SetAnimation(sn,&wall[wallfind[j]].x,wall[wallfind[j]].x+dax2,sp);
-//                    SetAnimation(sn,&wall[i].x,wall[i].x+dax2,sp);
-//                    SetAnimation(sn,&wall[wall[wallfind[j]].point2].x,wall[wall[wallfind[j]].point2].x+dax2,sp);
-//                    A_CallSound(sn,ii);
-//                }
-//                else if (day2 != 0)
-//                {
-//                    day2 = wall[wall[wall[wallfind[j]].point2].point2].y;
-//                    day2 -= wall[wall[wallfind[j]].point2].y;
-//                    SetAnimation(sn,&wall[wallfind[j]].y,wall[wallfind[j]].y+day2,sp);
-//                    SetAnimation(sn,&wall[i].y,wall[i].y+day2,sp);
-//                    SetAnimation(sn,&wall[wall[wallfind[j]].point2].y,wall[wall[wallfind[j]].point2].y+day2,sp);
-//                    A_CallSound(sn,ii);
-//                }
-//            }
-//            else
-//            {
-//                i = wallfind[j]-1;
-//                if (i < startwall) i = endwall;
-//                dax2 = ((wall[i].x+wall[wall[wallfind[j]].point2].x)>>1)-wall[wallfind[j]].x;
-//                day2 = ((wall[i].y+wall[wall[wallfind[j]].point2].y)>>1)-wall[wallfind[j]].y;
-//                if (dax2 != 0)
-//                {
-//                    SetAnimation(sn,&wall[wallfind[j]].x,dax,sp);
-//                    SetAnimation(sn,&wall[i].x,dax+dax2,sp);
-//                    SetAnimation(sn,&wall[wall[wallfind[j]].point2].x,dax+dax2,sp);
-//                    A_CallSound(sn,ii);
-//                }
-//                else if (day2 != 0)
-//                {
-//                    SetAnimation(sn,&wall[wallfind[j]].y,day,sp);
-//                    SetAnimation(sn,&wall[i].y,day+day2,sp);
-//                    SetAnimation(sn,&wall[wall[wallfind[j]].point2].y,day+day2,sp);
-//                    A_CallSound(sn,ii);
-//                }
-//            }
-//        }
-
-//    }
-//    return;
-
-//    case ST_15_WARP_ELEVATOR://Warping elevators
-
-//        if (sprite[ii].picnum != APLAYER) return;
-//        //            if(ps[sprite[ii].yvel].select_dir == 1) return;
-
-//        i = headspritesect[sn];
-//        while (i >= 0)
-//        {
-//            if (sprite[i].picnum==SECTOREFFECTOR && sprite[i].lotag == SE_17_WARP_ELEVATOR) break;
-//            i = nextspritesect[i];
-//        }
-
-//        if (sprite[ii].sectnum == sn)
-//        {
-//            if (G_ActivateWarpElevators(i,-1))
-//                G_ActivateWarpElevators(i,1);
-//            else if (G_ActivateWarpElevators(i,1))
-//                G_ActivateWarpElevators(i,-1);
-//            return;
-//        }
-//        else
-//        {
-//            if (sptr.floorz > sprite[i].z)
-//                G_ActivateWarpElevators(i,-1);
-//            else
-//                G_ActivateWarpElevators(i,1);
-//        }
-
-//        return;
-
-//    case ST_16_PLATFORM_DOWN:
-//    case ST_17_PLATFORM_UP:
-
-//        i = GetAnimationGoal(&sptr.floorz);
-
-//        if (i == -1)
-//        {
-//            i = nextsectorneighborz(sn,sptr.floorz,1,1);
-//            if (i == -1)
-//            {
-//                i = nextsectorneighborz(sn,sptr.floorz,1,-1);
-//                if (i == -1) return;
-//                j = sector[i].floorz;
-//                SetAnimation(sn,&sptr.floorz,j,sptr.extra);
-//            }
-//            else
-//            {
-//                j = sector[i].floorz;
-//                SetAnimation(sn,&sptr.floorz,j,sptr.extra);
-//            }
-//            A_CallSound(sn,ii);
-//        }
-
-//        return;
-
-//    case ST_18_ELEVATOR_DOWN:
-//    case ST_19_ELEVATOR_UP:
-
-//        i = GetAnimationGoal(&sptr.floorz);
-
-//        if (i==-1)
-//        {
-//            i = nextsectorneighborz(sn,sptr.floorz,1,-1);
-//            if (i==-1) i = nextsectorneighborz(sn,sptr.floorz,1,1);
-//            if (i==-1) return;
-//            j = sector[i].floorz;
-//            q = sptr.extra;
-//            l = sptr.ceilingz-sptr.floorz;
-//            SetAnimation(sn,&sptr.floorz,j,q);
-//            SetAnimation(sn,&sptr.ceilingz,j+l,q);
-//            A_CallSound(sn,ii);
-//        }
-//        return;
-
-//    case ST_29_TEETH_DOOR:
-
-//        i = headspritestat[STAT_EFFECTOR]; //Effectors
-//        while (i >= 0)
-//        {
-//            if ((sprite[i].lotag == SE_22_TEETH_DOOR) &&
-//                    (sprite[i].hitag == sptr.hitag))
-//            {
-//                sector[sprite[i].sectnum].extra = -sector[sprite[i].sectnum].extra;
-
-//                actor[i].t_data[0] = sn;
-//                actor[i].t_data[1] = 1;
-//            }
-//            i = nextspritestat[i];
-//        }
-
-//        A_CallSound(sn, ii);
-
-//        sptr.lotag ^= 0x8000;
-
-//        if (sptr.lotag&0x8000)
-//        {
-//            j = nextsectorneighborz(sn,sptr.ceilingz,-1,-1);
-//            if (j == -1) j = nextsectorneighborz(sn,sptr.ceilingz,1,1);
-//            if (j == -1)
-//            {
-//                OSD_Printf("WARNING: ST29: null sector!\n");
-//                return;
-//            }
-//            j = sector[j].ceilingz;
-//        }
-//        else
-//        {
-//            j = nextsectorneighborz(sn,sptr.ceilingz,1,1);
-//            if (j == -1) j = nextsectorneighborz(sn,sptr.ceilingz,-1,-1);
-//            if (j == -1)
-//            {
-//                OSD_Printf("WARNING: ST29: null sector!\n");
-//                return;
-//            }
-//            j = sector[j].floorz;
-//        }
-
-//        SetAnimation(sn,&sptr.ceilingz,j,sptr.extra);
-
-//        return;
-
-//    case ST_20_CEILING_DOOR:
-
-//REDODOOR:
-
-//        if (sptr.lotag&0x8000)
-//        {
-//            i = headspritesect[sn];
-//            while (i >= 0)
-//            {
-//                if (sprite[i].statnum == STAT_EFFECTOR && sprite[i].lotag==SE_9_DOWN_OPEN_DOOR_LIGHTS)
-//                {
-//                    j = sprite[i].z;
-//                    break;
-//                }
-//                i = nextspritesect[i];
-//            }
-//            if (i==-1)
-//                j = sptr.floorz;
-//        }
-//        else
-//        {
-//            j = nextsectorneighborz(sn,sptr.ceilingz,-1,-1);
-
-//            if (j >= 0) j = sector[j].ceilingz;
-//            else
-//            {
-//                sptr.lotag |= 32768;
-//                goto REDODOOR;
-//            }
-//        }
-
-//        sptr.lotag ^= 0x8000;
-
-//        SetAnimation(sn,&sptr.ceilingz,j,sptr.extra);
-//        A_CallSound(sn,ii);
-
-//        return;
-
-//    case ST_21_FLOOR_DOOR:
-//        i = GetAnimationGoal(&sptr.floorz);
-//        if (i >= 0)
-//        {
-//            if (animategoal[sn] == sptr.ceilingz)
-//                animategoal[i] = sector[nextsectorneighborz(sn,sptr.ceilingz,1,1)].floorz;
-//            else animategoal[i] = sptr.ceilingz;
-//            j = animategoal[i];
-//        }
-//        else
-//        {
-//            if (sptr.ceilingz == sptr.floorz)
-//                j = sector[nextsectorneighborz(sn,sptr.ceilingz,1,1)].floorz;
-//            else j = sptr.ceilingz;
-
-//            sptr.lotag ^= 0x8000;
-
-//            if (SetAnimation(sn,&sptr.floorz,j,sptr.extra) >= 0)
-//                A_CallSound(sn,ii);
-//        }
-//        return;
-
-//    case ST_22_SPLITTING_DOOR:
-
-//        // REDODOOR22:
-
-//        if ((sptr.lotag&0x8000))
-//        {
-//            q = (sptr.ceilingz+sptr.floorz)>>1;
-//            j = SetAnimation(sn,&sptr.floorz,q,sptr.extra);
-//            j = SetAnimation(sn,&sptr.ceilingz,q,sptr.extra);
-//        }
-//        else
-//        {
-//            int32_t fneigh=nextsectorneighborz(sn,sptr.floorz,1,1);
-//            int32_t cneigh=nextsectorneighborz(sn,sptr.ceilingz,-1,-1);
-
-//            if (fneigh>=0 && cneigh>=0)
-//            {
-//                j = SetAnimation(sn, &sptr.floorz, sector[fneigh].floorz, sptr.extra);
-//                j = SetAnimation(sn, &sptr.ceilingz, sector[cneigh].ceilingz, sptr.extra);
-//            }
-//            else
-//            {
-//                OSD_Printf("WARNING: ST22: null sector: floor neighbor=%d, ceiling neighbor=%d!\n",
-//                           fneigh, cneigh);
-//                sptr.lotag ^= 0x8000;
-//            }
-//        }
-
-//        sptr.lotag ^= 0x8000;
-
-//        A_CallSound(sn,ii);
-
-//        return;
-
-//    case ST_23_SWINGING_DOOR: //Swingdoor
-
-//        j = -1;
-//        q = 0;
-
-//        i = headspritestat[STAT_EFFECTOR];
-//        while (i >= 0)
-//        {
-//            if (sprite[i].lotag == SE_11_SWINGING_DOOR && sprite[i].sectnum == sn && !actor[i].t_data[4])
-//            {
-//                j = i;
-//                break;
-//            }
-//            i = nextspritestat[i];
-//        }
-//        if (i<0)
-//        {
-//            OSD_Printf("WARNING: SE23 i<0!\n");
-//            return;
-//        }    // JBF
-//        l = sector[sprite[i].sectnum].lotag&0x8000;
-
-//        if (j >= 0)
-//        {
-//            i = headspritestat[STAT_EFFECTOR];
-//            while (i >= 0)
-//            {
-//                if (l == (sector[sprite[i].sectnum].lotag&0x8000) && sprite[i].lotag == SE_11_SWINGING_DOOR && sprite[j].hitag == sprite[i].hitag && !actor[i].t_data[4])
-//                {
-//                    if (sector[sprite[i].sectnum].lotag&0x8000) sector[sprite[i].sectnum].lotag &= 0x7fff;
-//                    else sector[sprite[i].sectnum].lotag |= 0x8000;
-//                    actor[i].t_data[4] = 1;
-//                    actor[i].t_data[3] = -actor[i].t_data[3];
-//                    if (q == 0)
-//                    {
-//                        A_CallSound(sn,i);
-//                        q = 1;
-//                    }
-//                }
-//                i = nextspritestat[i];
-//            }
-//        }
-//        return;
-
-//    case ST_25_SLIDING_DOOR: //Subway type sliding doors
-
-//        j = headspritestat[STAT_EFFECTOR];
-//        while (j >= 0)//Find the sprite
-//        {
-//            if ((sprite[j].lotag) == SE_15_SLIDING_DOOR && sprite[j].sectnum == sn)
-//                break; //Found the sectoreffector.
-//            j = nextspritestat[j];
-//        }
-
-//        if (j < 0)
-//            return;
-
-//        i = headspritestat[STAT_EFFECTOR];
-//        while (i >= 0)
-//        {
-//            if (sprite[i].hitag==sprite[j].hitag)
-//            {
-//                if (sprite[i].lotag == SE_15_SLIDING_DOOR)
-//                {
-//                    sector[sprite[i].sectnum].lotag ^= 0x8000; // Toggle the open or close
-//                    sprite[i].ang += 1024;
-//                    if (actor[i].t_data[4]) A_CallSound(sprite[i].sectnum,i);
-//                    A_CallSound(sprite[i].sectnum,i);
-//                    if (sector[sprite[i].sectnum].lotag&0x8000) actor[i].t_data[4] = 1;
-//                    else actor[i].t_data[4] = 2;
-//                }
-//            }
-//            i = nextspritestat[i];
-//        }
-//        return;
-
-//    case ST_27_STRETCH_BRIDGE:  //Extended bridge
-
-//        j = headspritestat[STAT_EFFECTOR];
-//        while (j >= 0)
-//        {
-//            if ((sprite[j].lotag&0xff)==SE_20_STRETCH_BRIDGE && sprite[j].sectnum == sn)  //Bridge
-//            {
-
-//                sector[sn].lotag ^= 0x8000;
-//                if (sector[sn].lotag&0x8000) //OPENING
-//                    actor[j].t_data[0] = 1;
-//                else actor[j].t_data[0] = 2;
-//                A_CallSound(sn,ii);
-//                break;
-//            }
-//            j = nextspritestat[j];
-//        }
-//        return;
-
-
-//    case ST_28_DROP_FLOOR:
-//        //activate the rest of them
-
-//        j = headspritesect[sn];
-//        while (j >= 0)
-//        {
-//            if (sprite[j].statnum==STAT_EFFECTOR && (sprite[j].lotag&0xff)==SE_21_DROP_FLOOR)
-//                break; //Found it
-//            j = nextspritesect[j];
-//        }
-
-//        if (j >= 0)  // PK: The matching SE21 might have gone, see SE_21_KILLIT in actors.c
-//        {
-//            j = sprite[j].hitag;
-
-//            l = headspritestat[STAT_EFFECTOR];
-//            while (l >= 0)
-//            {
-//                if ((sprite[l].lotag&0xff)==SE_21_DROP_FLOOR && !actor[l].t_data[0] &&
-//                    (sprite[l].hitag) == j)
-//                    actor[l].t_data[0] = 1;
-//                l = nextspritestat[l];
-//            }
-
-//            A_CallSound(sn,ii);
-//        }
-
-//        return;
-//    }
+{
+    var /*int32_t */j=0, l:number, q:number, startwall:number, endwall:number;
+    var /*int32_t */i:number;
+    var sptr = sector[sn];
+
+    switch (sptr.lotag&(0xffff-49152))
+    {
+
+    case ST_30_ROTATE_RISE_BRIDGE:
+        j = sector[sn].hitag;
+        if (actor[j].tempang == 0 || actor[j].tempang == 256)
+            A_CallSound(sn,ii);
+        if (sprite[j].extra == 1)
+            sprite[j].extra = 3;
+        else sprite[j].extra = 1;
+        break;
+
+    case ST_31_TWO_WAY_TRAIN:
+
+        j = sector[sn].hitag;
+        if (actor[j].t_data[4] == 0)
+            actor[j].t_data[4] = 1;
+
+        A_CallSound(sn,ii);
+        break;
+
+    case ST_26_SPLITTING_ST_DOOR: //The split doors
+        if (GetAnimationGoal(/*&sptr->ceilingz*/ new AnimatePtr(sector, sn, "ceilingz")) == -1) //if the door has stopped
+        {
+            g_haltSoundHack = 1;
+            sptr.lotag &= 0xff00;
+            sptr.lotag |= ST_22_SPLITTING_DOOR;
+            G_OperateSectors(sn,ii);
+            sptr.lotag &= 0xff00;
+            sptr.lotag |= ST_9_SLIDING_ST_DOOR;
+            G_OperateSectors(sn,ii);
+            sptr.lotag &= 0xff00;
+            sptr.lotag |= ST_26_SPLITTING_ST_DOOR;
+        }
+        return;
+
+    case ST_9_SLIDING_ST_DOOR:
+    {
+        var /*int32_t */dax:number,day:number,dax2:number,day2:number,sp:number;
+        var /*int32_t */wallfind = new Int32Array(2);
+
+        startwall = sptr.wallptr;
+        endwall = startwall+sptr.wallnum-1;
+
+        sp = sptr.extra>>4;
+
+        //first find center point by averaging all points
+        dax = 0, day = 0;
+        for (i=startwall; i<=endwall; i++)
+        {
+            dax += wall[i].x;
+            day += wall[i].y;
+        }
+        dax /= (endwall-startwall+1);
+        day /= (endwall-startwall+1);
+
+        //find any points with either same x or same y coordinate
+        //  as center (dax, day) - should be 2 points found.
+        wallfind[0] = -1;
+        wallfind[1] = -1;
+        for (i=startwall; i<=endwall; i++)
+            if ((wall[i].x == dax) || (wall[i].y == day))
+            {
+                if (wallfind[0] == -1)
+                    wallfind[0] = i;
+                else wallfind[1] = i;
+            }
+
+        for (j=0; j<2; j++)
+        {todoThrow();
+            //if ((wall[wallfind[j]].x == dax) && (wall[wallfind[j]].y == day))
+            //{
+            //    //find what direction door should open by averaging the
+            //    //  2 neighboring points of wallfind[0] & wallfind[1].
+            //    i = wallfind[j]-1;
+            //    if (i < startwall) i = endwall;
+            //    dax2 = ((wall[i].x+wall[wall[wallfind[j]].point2].x)>>1)-wall[wallfind[j]].x;
+            //    day2 = ((wall[i].y+wall[wall[wallfind[j]].point2].y)>>1)-wall[wallfind[j]].y;
+            //    if (dax2 != 0)
+            //    {
+            //        dax2 = wall[wall[wall[wallfind[j]].point2].point2].x;
+            //        dax2 -= wall[wall[wallfind[j]].point2].x;
+            //        SetAnimation(sn,&wall[wallfind[j]].x,wall[wallfind[j]].x+dax2,sp);
+            //        SetAnimation(sn,&wall[i].x,wall[i].x+dax2,sp);
+            //        SetAnimation(sn,&wall[wall[wallfind[j]].point2].x,wall[wall[wallfind[j]].point2].x+dax2,sp);
+            //        A_CallSound(sn,ii);
+            //    }
+            //    else if (day2 != 0)
+            //    {
+            //        day2 = wall[wall[wall[wallfind[j]].point2].point2].y;
+            //        day2 -= wall[wall[wallfind[j]].point2].y;
+            //        SetAnimation(sn,&wall[wallfind[j]].y,wall[wallfind[j]].y+day2,sp);
+            //        SetAnimation(sn,&wall[i].y,wall[i].y+day2,sp);
+            //        SetAnimation(sn,&wall[wall[wallfind[j]].point2].y,wall[wall[wallfind[j]].point2].y+day2,sp);
+            //        A_CallSound(sn,ii);
+            //    }
+            //}
+            //else
+            //{
+            //    i = wallfind[j]-1;
+            //    if (i < startwall) i = endwall;
+            //    dax2 = ((wall[i].x+wall[wall[wallfind[j]].point2].x)>>1)-wall[wallfind[j]].x;
+            //    day2 = ((wall[i].y+wall[wall[wallfind[j]].point2].y)>>1)-wall[wallfind[j]].y;
+            //    if (dax2 != 0)
+            //    {
+            //        SetAnimation(sn,&wall[wallfind[j]].x,dax,sp);
+            //        SetAnimation(sn,&wall[i].x,dax+dax2,sp);
+            //        SetAnimation(sn,&wall[wall[wallfind[j]].point2].x,dax+dax2,sp);
+            //        A_CallSound(sn,ii);
+            //    }
+            //    else if (day2 != 0)
+            //    {
+            //        SetAnimation(sn,&wall[wallfind[j]].y,day,sp);
+            //        SetAnimation(sn,&wall[i].y,day+day2,sp);
+            //        SetAnimation(sn,&wall[wall[wallfind[j]].point2].y,day+day2,sp);
+            //        A_CallSound(sn,ii);
+            //    }
+            //}
+        }
+
+    }
+    return;
+
+    case ST_15_WARP_ELEVATOR://Warping elevators
+
+        if (sprite[ii].picnum != APLAYER) return;
+        //            if(ps[sprite[ii].yvel].select_dir == 1) return;
+
+        i = headspritesect[sn];
+        while (i >= 0)
+        {
+            if (sprite[i].picnum==SECTOREFFECTOR && sprite[i].lotag == SE_17_WARP_ELEVATOR) break;
+            i = nextspritesect[i];
+        }
+
+        if (sprite[ii].sectnum == sn)
+        {
+            if (G_ActivateWarpElevators(i,-1))
+                G_ActivateWarpElevators(i,1);
+            else if (G_ActivateWarpElevators(i,1))
+                G_ActivateWarpElevators(i,-1);
+            return;
+        }
+        else
+        {
+            if (sptr.floorz > sprite[i].z)
+                G_ActivateWarpElevators(i,-1);
+            else
+                G_ActivateWarpElevators(i,1);
+        }
+
+        return;
+
+    case ST_16_PLATFORM_DOWN:
+    case ST_17_PLATFORM_UP:
+
+        i = GetAnimationGoal(new AnimatePtr(sector, sn, "floorz"));
+
+        if (i == -1)
+        {
+            i = nextsectorneighborz(sn,sptr.floorz,1,1);
+            if (i == -1)
+            {
+                i = nextsectorneighborz(sn,sptr.floorz,1,-1);
+                if (i == -1) return;
+                j = sector[i].floorz;
+                SetAnimation(sn,new AnimatePtr(sector, sn, "floorz"),j,sptr.extra);
+            }
+            else
+            {
+                j = sector[i].floorz;
+                SetAnimation(sn,new AnimatePtr(sector, sn, "floorz"),j,sptr.extra);
+            }
+            A_CallSound(sn,ii);
+        }
+
+        return;
+
+    case ST_18_ELEVATOR_DOWN:
+    case ST_19_ELEVATOR_UP:
+
+        i = GetAnimationGoal(new AnimatePtr(sector, sn, "floorz"));
+
+        if (i==-1)
+        {
+            i = nextsectorneighborz(sn,sptr.floorz,1,-1);
+            if (i==-1) i = nextsectorneighborz(sn,sptr.floorz,1,1);
+            if (i==-1) return;
+            j = sector[i].floorz;
+            q = sptr.extra;
+            l = sptr.ceilingz-sptr.floorz;
+            SetAnimation(sn,new AnimatePtr(sector, sn, "floorz"),j,q);
+            SetAnimation(sn,new AnimatePtr(sector, sn, "ceilingz"),j+l,q);
+            A_CallSound(sn,ii);
+        }
+        return;
+
+    case ST_29_TEETH_DOOR:
+
+        i = headspritestat[STAT_EFFECTOR]; //Effectors
+        while (i >= 0)
+        {
+            if ((sprite[i].lotag == SE_22_TEETH_DOOR) &&
+                    (sprite[i].hitag == sptr.hitag))
+            {
+                sector[sprite[i].sectnum].extra = -sector[sprite[i].sectnum].extra;
+
+                actor[i].t_data[0] = sn;
+                actor[i].t_data[1] = 1;
+            }
+            i = nextspritestat[i];
+        }
+
+        A_CallSound(sn, ii);
+
+        sptr.lotag ^= 0x8000;
+
+        if (sptr.lotag&0x8000)
+        {
+            j = nextsectorneighborz(sn,sptr.ceilingz,-1,-1);
+            if (j == -1) j = nextsectorneighborz(sn,sptr.ceilingz,1,1);
+            if (j == -1)
+            {
+                OSD_Printf("WARNING: ST29: null sector!\n");
+                return;
+            }
+            j = sector[j].ceilingz;
+        }
+        else
+        {
+            j = nextsectorneighborz(sn,sptr.ceilingz,1,1);
+            if (j == -1) j = nextsectorneighborz(sn,sptr.ceilingz,-1,-1);
+            if (j == -1)
+            {
+                OSD_Printf("WARNING: ST29: null sector!\n");
+                return;
+            }
+            j = sector[j].floorz;
+        }
+
+        SetAnimation(sn,new AnimatePtr(sector, sn, "ceilingz"),j,sptr.extra);
+
+        return;
+
+    case ST_20_CEILING_DOOR:
+
+REDODOOR:
+while(true) {
+        if (sptr.lotag&0x8000)
+        {
+            i = headspritesect[sn];
+            while (i >= 0)
+            {
+                if (sprite[i].statnum == STAT_EFFECTOR && sprite[i].lotag==SE_9_DOWN_OPEN_DOOR_LIGHTS)
+                {
+                    j = sprite[i].z;
+                    break;
+                }
+                i = nextspritesect[i];
+            }
+            if (i==-1)
+                j = sptr.floorz;
+        }
+        else
+        {
+            j = nextsectorneighborz(sn,sptr.ceilingz,-1,-1);
+
+            if (j >= 0) j = sector[j].ceilingz;
+            else
+            {
+                sptr.lotag |= 32768;
+                continue REDODOOR;
+            }
+        }
+break;/*REDODOOR*/}
+        sptr.lotag ^= 0x8000;
+
+        SetAnimation(sn,new AnimatePtr(sector, sn, "ceilingz"),j,sptr.extra);
+        A_CallSound(sn,ii);
+
+        return;
+
+    case ST_21_FLOOR_DOOR:
+        i = GetAnimationGoal(new AnimatePtr(sector, sn, "floorz"));
+        if (i >= 0)
+        {
+            if (animategoal[sn] == sptr.ceilingz)
+                animategoal[i] = sector[nextsectorneighborz(sn,sptr.ceilingz,1,1)].floorz;
+            else animategoal[i] = sptr.ceilingz;
+            j = animategoal[i];
+        }
+        else
+        {
+            if (sptr.ceilingz == sptr.floorz)
+                j = sector[nextsectorneighborz(sn,sptr.ceilingz,1,1)].floorz;
+            else j = sptr.ceilingz;
+
+            sptr.lotag ^= 0x8000;
+
+            if (SetAnimation(sn,new AnimatePtr(sector, sn, "floorz"),j,sptr.extra) >= 0)
+                A_CallSound(sn,ii);
+        }
+        return;
+
+    case ST_22_SPLITTING_DOOR:
+
+        // REDODOOR22:
+
+        if ((sptr.lotag&0x8000))
+        {
+            q = (sptr.ceilingz+sptr.floorz)>>1;
+            j = SetAnimation(sn,new AnimatePtr(sector, sn, "floorz"),q,sptr.extra);
+            j = SetAnimation(sn,new AnimatePtr(sector, sn, "ceilingz"),q,sptr.extra);
+        }
+        else
+        {
+            var /*int32_t*/ fneigh=nextsectorneighborz(sn,sptr.floorz,1,1);
+            var /*int32_t*/ cneigh=nextsectorneighborz(sn,sptr.ceilingz,-1,-1);
+
+            if (fneigh>=0 && cneigh>=0)
+            {
+                j = SetAnimation(sn, new AnimatePtr(sector, sn, "floorz"), sector[fneigh].floorz, sptr.extra);
+                j = SetAnimation(sn, new AnimatePtr(sector, sn, "ceilingz"), sector[cneigh].ceilingz, sptr.extra);
+            }
+            else
+            {
+                OSD_Printf("WARNING: ST22: null sector: floor neighbor=%d, ceiling neighbor=%d!\n",
+                           fneigh, cneigh);
+                sptr.lotag ^= 0x8000;
+            }
+        }
+
+        sptr.lotag ^= 0x8000;
+
+        A_CallSound(sn,ii);
+
+        return;
+
+    case ST_23_SWINGING_DOOR: //Swingdoor
+
+        j = -1;
+        q = 0;
+
+        i = headspritestat[STAT_EFFECTOR];
+        while (i >= 0)
+        {
+            if (sprite[i].lotag == SE_11_SWINGING_DOOR && sprite[i].sectnum == sn && !actor[i].t_data[4])
+            {
+                j = i;
+                break;
+            }
+            i = nextspritestat[i];
+        }
+        if (i<0)
+        {
+            OSD_Printf("WARNING: SE23 i<0!\n");
+            return;
+        }    // JBF
+        l = sector[sprite[i].sectnum].lotag&0x8000;
+
+        if (j >= 0)
+        {
+            i = headspritestat[STAT_EFFECTOR];
+            while (i >= 0)
+            {
+                if (l == (sector[sprite[i].sectnum].lotag&0x8000) && sprite[i].lotag == SE_11_SWINGING_DOOR && sprite[j].hitag == sprite[i].hitag && !actor[i].t_data[4])
+                {
+                    if (sector[sprite[i].sectnum].lotag&0x8000) sector[sprite[i].sectnum].lotag &= 0x7fff;
+                    else sector[sprite[i].sectnum].lotag |= 0x8000;
+                    actor[i].t_data[4] = 1;
+                    actor[i].t_data[3] = -actor[i].t_data[3];
+                    if (q == 0)
+                    {
+                        A_CallSound(sn,i);
+                        q = 1;
+                    }
+                }
+                i = nextspritestat[i];
+            }
+        }
+        return;
+
+    case ST_25_SLIDING_DOOR: //Subway type sliding doors
+
+        j = headspritestat[STAT_EFFECTOR];
+        while (j >= 0)//Find the sprite
+        {
+            if ((sprite[j].lotag) == SE_15_SLIDING_DOOR && sprite[j].sectnum == sn)
+                break; //Found the sectoreffector.
+            j = nextspritestat[j];
+        }
+
+        if (j < 0)
+            return;
+
+        i = headspritestat[STAT_EFFECTOR];
+        while (i >= 0)
+        {
+            if (sprite[i].hitag==sprite[j].hitag)
+            {
+                if (sprite[i].lotag == SE_15_SLIDING_DOOR)
+                {
+                    sector[sprite[i].sectnum].lotag ^= 0x8000; // Toggle the open or close
+                    sprite[i].ang += 1024;
+                    if (actor[i].t_data[4]) A_CallSound(sprite[i].sectnum,i);
+                    A_CallSound(sprite[i].sectnum,i);
+                    if (sector[sprite[i].sectnum].lotag&0x8000) actor[i].t_data[4] = 1;
+                    else actor[i].t_data[4] = 2;
+                }
+            }
+            i = nextspritestat[i];
+        }
+        return;
+
+    case ST_27_STRETCH_BRIDGE:  //Extended bridge
+
+        j = headspritestat[STAT_EFFECTOR];
+        while (j >= 0)
+        {
+            if ((sprite[j].lotag&0xff)==SE_20_STRETCH_BRIDGE && sprite[j].sectnum == sn)  //Bridge
+            {
+
+                sector[sn].lotag ^= 0x8000;
+                if (sector[sn].lotag&0x8000) //OPENING
+                    actor[j].t_data[0] = 1;
+                else actor[j].t_data[0] = 2;
+                A_CallSound(sn,ii);
+                break;
+            }
+            j = nextspritestat[j];
+        }
+        return;
+
+
+    case ST_28_DROP_FLOOR:
+        //activate the rest of them
+
+        j = headspritesect[sn];
+        while (j >= 0)
+        {
+            if (sprite[j].statnum==STAT_EFFECTOR && (sprite[j].lotag&0xff)==SE_21_DROP_FLOOR)
+                break; //Found it
+            j = nextspritesect[j];
+        }
+
+        if (j >= 0)  // PK: The matching SE21 might have gone, see SE_21_KILLIT in actors.c
+        {
+            j = sprite[j].hitag;
+
+            l = headspritestat[STAT_EFFECTOR];
+            while (l >= 0)
+            {
+                if ((sprite[l].lotag&0xff)==SE_21_DROP_FLOOR && !actor[l].t_data[0] &&
+                    (sprite[l].hitag) == j)
+                    actor[l].t_data[0] = 1;
+                l = nextspritestat[l];
+            }
+
+            A_CallSound(sn,ii);
+        }
+
+        return;
+    }
 }
 
 function G_OperateRespawns(/*int32_t */low:number):void 
