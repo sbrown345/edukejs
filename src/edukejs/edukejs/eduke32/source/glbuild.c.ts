@@ -39,7 +39,8 @@ function logAndValidate(functionName: string, args: any[]): void {
 
 var gl: WebGLRenderingContext = WebGLDebugUtils.makeDebugContext(GL.create({}), undefined, logAndValidate);
 //var gl: WebGLRenderingContext= GL.create({});
-document.body.appendChild(gl.canvas);
+if(document.body /*qunit*/)
+    document.body.appendChild(gl.canvas);
 gl.canvas.width = 1024;
 gl.canvas.height = 768;
 
