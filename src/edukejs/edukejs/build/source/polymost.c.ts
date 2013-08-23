@@ -2040,7 +2040,7 @@ function domost(/*float*/ x0: number, /*float */y0: number, /*float */x1: number
         f = x0; x0 = x1; x1 = f;
         f = y0; y0 = y1; y1 = f;
         dir = 0; //clip umost (ceiling)
-        y0 += .01; y1 += .01; //necessary?
+        //y0 += .01; y1 += .01; //necessary?
     }
     
     dlog(DEBUG_POLYMOST_DRAWALLS, "domost 2nd bit x0: %f, y0: %f, x1: %f, y1: %f\n", x0,y0,x1,y1);
