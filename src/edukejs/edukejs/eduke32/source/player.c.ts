@@ -2840,7 +2840,7 @@ function P_GetInput(/*int32_t */snum: number): void
 //    else
 //        running = ud.auto_run^BUTTON(gamefunc_Run); // modern
 
-//    svel = vel = angvel = horiz = 0;
+    svel = vel = angvel = horiz = 0;
 
 //    if (BUTTON(gamefunc_Strafe))
 //    {
@@ -3002,6 +3002,7 @@ function P_GetInput(/*int32_t */snum: number): void
     //loc.extbits |= (BUTTON(gamefunc_Strafe_Right) || (svel < 0))<<3;
 
     tempHC(function() {
+        loc.bits = 0;
         //if(tempKeyDown[38] || tempKeyDown[40] || tempKeyDown[37] || tempKeyDown[39] )debugger;
         if(tempKeyDown[38])//up
             vel += 100;
@@ -3011,6 +3012,18 @@ function P_GetInput(/*int32_t */snum: number): void
             angvel -= 20;
         if(tempKeyDown[39])//right
             angvel += 20;
+        if(tempKeyDown[33])//look up pg up
+            horiz += 20;
+        if(tempKeyDown[34])//look down pg down
+            horiz -= 20;
+        if(tempKeyDown[65]) // a
+            loc.bits |=   1<<SK_JUMP;
+        if(tempKeyDown[90]) //m z
+            loc.bits |=   1<<SK_CROUCH;
+        if(tempKeyDown[88])//strafe left x
+            svel += 50;
+        if(tempKeyDown[67])//strafe right c
+            svel -= 50;
     });
 
     //if (G_HaveEvent(EVENT_PROCESSINPUT) || G_HaveEvent(EVENT_TURNLEFT))

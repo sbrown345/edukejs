@@ -324,56 +324,64 @@ function /*int32_t */A_GetFurthestAngle(/*int32_t */iActor:number, /*int32_t */a
 //    }
 //}
 
-function A_GetZLimits(/*int32_t */iActor:  number): number
+function A_GetZLimits(/*int32_t */iActor:  number): void
 {
-    todoThrow();return -22222222222222222222222222222222222222;
-//    var s = sprite[iActor];
+    var s = sprite[iActor];
 
-////    if (s.statnum == STAT_PLAYER || s.statnum == STAT_STANDABLE || s.statnum == STAT_ZOMBIEACTOR || s.statnum == STAT_ACTOR || s.statnum == STAT_PROJECTILE)
-//    {
-//        var hz,lz,zr = 127;    
-//        var cstat = s.cstat;   
+//    if (s.statnum == STAT_PLAYER || s.statnum == STAT_STANDABLE || s.statnum == STAT_ZOMBIEACTOR || s.statnum == STAT_ACTOR || s.statnum == STAT_PROJECTILE)
+    {
+        var hz:number,lz:number,zr = 127;    
+        var cstat = s.cstat;   
 
-//        s.cstat = 0;
+        s.cstat = 0;
 
-//        if (s.statnum == STAT_PROJECTILE)
-//            zr = 4;
+        if (s.statnum == STAT_PROJECTILE)
+            zr = 4;
 
-//        s.z -= ZOFFSET;
-//        getzrange(s,s.sectnum,&actor[iActor].ceilingz,&hz,&actor[iActor].floorz,&lz,zr,CLIPMASK0);
-//        s.z += ZOFFSET;
+        s.z -= ZOFFSET;
+        var $cz = new R(actor[iActor].ceilingz);
+        var $hz = new R(hz);
+        var $fz = new R(actor[iActor].floorz);
+        var $lz = new R(lz);
+        getzrange(s,s.sectnum,$cz,$hz,$fz,$lz,zr,CLIPMASK0);
+        actor[iActor].ceilingz = $cz.$;
+        hz = $hz.$;
+        actor[iActor].floorz = $fz.$;
+        lz = $lz.$;
 
-//        s.cstat = cstat;
+        s.z += ZOFFSET;
 
-//        actor[iActor].flags &= ~SPRITE_NOFLOORSHADOW;
+        s.cstat = cstat;
 
-//        if ((lz&49152) == 49152 && (sprite[lz&(MAXSPRITES-1)].cstat&48) == 0)
-//        {
-//            const spritetype *hitspr = &sprite[lz&(MAXSPRITES-1)];
+        actor[iActor].flags &= ~SPRITE_NOFLOORSHADOW;
 
-//            lz &= (MAXSPRITES-1);
+        if ((lz&49152) == 49152 && (sprite[lz&(MAXSPRITES-1)].cstat&48) == 0)
+        {
+            var hitspr = sprite[lz&(MAXSPRITES-1)];
 
-//            if ((A_CheckEnemySprite(hitspr) && hitspr.pal != 1 && s.statnum != STAT_PROJECTILE)
-//                    || (hitspr.picnum == APLAYER && A_CheckEnemySprite(s)))
-//            {
-//                actor[iActor].flags |= SPRITE_NOFLOORSHADOW;  // No shadows on actors
-//                s.xvel = -256;
-//                A_SetSprite(iActor,CLIPMASK0);
-//            }
-//            else if (s.statnum == STAT_PROJECTILE && hitspr.picnum == APLAYER && s.owner==lz)
-//            {
-//                actor[iActor].ceilingz = sector[s.sectnum].ceilingz;
-//                actor[iActor].floorz   = sector[s.sectnum].floorz;
-//            }
-//        }
-//    }
-//    /*
-//        else
-//        {
-//            actor[iActor].ceilingz = sector[s.sectnum].ceilingz;
-//            actor[iActor].floorz   = sector[s.sectnum].floorz;
-//        }
-//    */
+            lz &= (MAXSPRITES-1);
+
+            if ((A_CheckEnemySprite(hitspr) && hitspr.pal != 1 && s.statnum != STAT_PROJECTILE)
+                    || (hitspr.picnum == APLAYER && A_CheckEnemySprite(s)))
+            {
+                actor[iActor].flags |= SPRITE_NOFLOORSHADOW;  // No shadows on actors
+                s.xvel = -256;
+                A_SetSprite(iActor,CLIPMASK0);
+            }
+            else if (s.statnum == STAT_PROJECTILE && hitspr.picnum == APLAYER && s.owner==lz)
+            {
+                actor[iActor].ceilingz = sector[s.sectnum].ceilingz;
+                actor[iActor].floorz   = sector[s.sectnum].floorz;
+            }
+        }
+    }
+    /*
+        else
+        {
+            actor[iActor].ceilingz = sector[s.sectnum].ceilingz;
+            actor[iActor].floorz   = sector[s.sectnum].floorz;
+        }
+    */
 }
 
 function A_Fall(/*int32_t*/ iActor: number): void

@@ -5364,76 +5364,74 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
             break;
         case BLOODPOOL__STATIC:
         case PUKE__STATIC:
-        todoThrow();
-        //{
-        //    var s1: number;
-        //    s1 = sp.sectnum;
-        //    todoThrow();
-        //    updatesector(sp.x+108,sp.y+108,&s1);
-        //    if (s1 >= 0 && sector[s1].floorz == sector[sp.sectnum].floorz)
-        //    {
-        //        updatesector(sp.x-108,sp.y-108,&s1);
-        //        if (s1 >= 0 && sector[s1].floorz == sector[sp.sectnum].floorz)
-        //        {
-        //            updatesector(sp.x+108,sp.y-108,&s1);
-        //            if (s1 >= 0 && sector[s1].floorz == sector[sp.sectnum].floorz)
-        //            {
-        //                updatesector(sp.x-108,sp.y+108,&s1);
-        //                if (s1 >= 0 && sector[s1].floorz != sector[sp.sectnum].floorz)
-        //                {
-        //                    sp.xrepeat = sp.yrepeat = 0;
-        //                    changespritestat(i, STAT_MISC);
-        //                    break;
-        //                }
+        {
+            var s1: R<number>;
+            s1 = new R(sp.sectnum);
+            updatesector(sp.x+108,sp.y+108,s1);
+            if (s1.$ >= 0 && sector[s1.$].floorz == sector[sp.sectnum].floorz)
+            {
+                updatesector(sp.x-108,sp.y-108,s1);
+                if (s1.$ >= 0 && sector[s1.$].floorz == sector[sp.sectnum].floorz)
+                {
+                    updatesector(sp.x+108,sp.y-108,s1);
+                    if (s1.$ >= 0 && sector[s1.$].floorz == sector[sp.sectnum].floorz)
+                    {
+                        updatesector(sp.x-108,sp.y+108,s1);
+                        if (s1.$ >= 0 && sector[s1.$].floorz != sector[sp.sectnum].floorz)
+                        {
+                            sp.xrepeat = sp.yrepeat = 0;
+                            changespritestat(i, STAT_MISC);
+                            break;
+                        }
 
-        //            }
-        //            else
-        //            {
-        //                sp.xrepeat = sp.yrepeat = 0;
-        //                changespritestat(i, STAT_MISC);
-        //                break;
-        //            }
+                    }
+                    else
+                    {
+                        sp.xrepeat = sp.yrepeat = 0;
+                        changespritestat(i, STAT_MISC);
+                        break;
+                    }
 
-        //        }
-        //        else
-        //        {
-        //            sp.xrepeat = sp.yrepeat = 0;
-        //            changespritestat(i, STAT_MISC);
-        //            break;
-        //        }
+                }
+                else
+                {
+                    sp.xrepeat = sp.yrepeat = 0;
+                    changespritestat(i, STAT_MISC);
+                    break;
+                }
 
-        //    }
-        //    else
-        //    {
-        //        sp.xrepeat = sp.yrepeat = 0;
-        //        changespritestat(i, STAT_MISC);
-        //        break;
-        //    }
+            }
+            else
+            {
+                sp.xrepeat = sp.yrepeat = 0;
+                changespritestat(i, STAT_MISC);
+                break;
+            }
 
-        //}
+        }
 
-        //if (sector[sprite[i].sectnum].lotag == ST_1_ABOVE_WATER)
-        //{
-        //    changespritestat(i, STAT_MISC);
-        //    break;
-        //}
+        if (sector[sprite[i].sectnum].lotag == ST_1_ABOVE_WATER)
+        {
+            changespritestat(i, STAT_MISC);
+            break;
+        }
 
-        //if (j >= 0 && sp.picnum != PUKE)
-        //{
-        //    if (sprite[j].pal == 1)
-        //        sp.pal = 1;
-        //    else if (sprite[j].pal != 6 && sprite[j].picnum != NUKEBARREL && sprite[j].picnum != TIRE)
-        //    {
-        //        if (sprite[j].picnum == FECES)
-        //            sp.pal = 7; // Brown
-        //        else sp.pal = 2; // Red
-        //    }
-        //    else sp.pal = 0;  // green
+        if (j >= 0 && sp.picnum != PUKE)
+        {
+            if (sprite[j].pal == 1)
+                sp.pal = 1;
+            else if (sprite[j].pal != 6 && sprite[j].picnum != NUKEBARREL && sprite[j].picnum != TIRE)
+            {
+                if (sprite[j].picnum == FECES)
+                    sp.pal = 7; // Brown
+                else sp.pal = 2; // Red
+            }
+            else sp.pal = 0;  // green
 
-        //    if (sprite[j].picnum == TIRE)
-        //        sp.shade = 127;
-        //}
-        //sp.cstat |= 32;
+            if (sprite[j].picnum == TIRE)
+                sp.shade = 127;
+        }
+        sp.cstat |= 32;
         case FECES__STATIC:
             if (j >= 0)
                 sp.xrepeat = sp.yrepeat = 1;
@@ -11123,7 +11121,7 @@ function G_MaybeAllocPlayer(/*int32_t */pnum : number)
 //EDUKE32_STATIC_ASSERT(sizeof(DukePlayer_t)%4 == 0);
 
 var tempWhile = 0;
-/*int32_t*/ function app_main(/*int32_t*/ argc: number, /*const char ***/argv: string[])
+/*int32_t*/ function app_main(/*int32_t*/ argc: number, /*const char ***/argv: string[]): void/*number*/
 {
     path("app_main");
     var i = 0, j: number;
@@ -12038,9 +12036,8 @@ var tempWhile = 0;
     //while (tempWhile++ < 26 /*26*/);
     
     //while (1);
-    throw "todo";
-    G_GameExit(" ");
-    return 0;  // not reached (duh)
+    //G_GameExit(" ");
+    //return 0;  // not reached (duh)
 }
 
 

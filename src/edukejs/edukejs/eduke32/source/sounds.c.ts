@@ -698,8 +698,7 @@ function S_Cleanup():void
 //}
 
 function S_PlaySound(/*int32_t*/ num: number): number
-{
-    todoThrow();return -99999999999999999999999999999;
+{todoUnimportant("S_PlaySound");
 //    int32_t pitch;
 //    int32_t voice, j;
 
@@ -753,7 +752,7 @@ function S_PlaySound(/*int32_t*/ num: number): number
 //    if (voice <= FX_Ok)
 //    {
 //        g_soundlocks[num]--;
-//        return -1;
+        return -1;
 //    }
 
 //    g_sounds[num].num++;
