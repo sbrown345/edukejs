@@ -929,13 +929,14 @@ function texture_setup(dameth: number): void
 //    }
 }
 
+var /*int32_t*/fullbrightloadingpass = 0;
 function gloadtile_art(dapic: number, dapal: number, dashade: number, dameth: number, pth:pthtyp, doalloc: number): number
 {
     var pic: coltype[];
     var xsiz: number, ysiz: number; //int32_t 
     var hasalpha = 0, hasfullbright = 0;//char
 
-    var fullbrightloadingpass = 0;//static int32_t 
+    //static int32_t fullbrightloadingpass = 0;
 
     var tsizx = tilesizx[dapic];//int32_t 
     var tsizy = tilesizy[dapic];//int32_t 
@@ -1054,16 +1055,15 @@ function gloadtile_art(dapic: number, dapal: number, dashade: number, dameth: nu
 
     if (hasfullbright && !fullbrightloadingpass)
     {
-        todoThrow();
-    //    // Load the ONLY texture that'll be assembled with the regular one to
-    //    // make the final texture with fullbright pixels.
-    //    fullbrightloadingpass = 1;
-    //    pth.ofb = (pthtyp *)Bcalloc(1,sizeof(pthtyp));
-    //    if (!pth.ofb) return 1;
-    //    pth.flags |= (1<<4);
-    //    if (gloadtile_art(dapic, dapal, 0, dameth, pth.ofb, 1)) return 1;
+        // Load the ONLY texture that'll be assembled with the regular one to
+        // make the final texture with fullbright pixels.
+        fullbrightloadingpass = 1;
+        pth.ofb = new pthtyp();// = (pthtyp *)Bcalloc(1,sizeof(pthtyp));
+        if (!pth.ofb) return 1;
+        pth.flags |= (1<<4);
+        if (gloadtile_art(dapic, dapal, 0, dameth, pth.ofb, 1)) return 1;
 
-    //    fullbrightloadingpass = 0;
+        fullbrightloadingpass = 0;
     }
 
     return 0;
@@ -1561,18 +1561,18 @@ function drawpoly(dpx: Float64Array, dpy: Float64Array, /*int32_t*/ n:number, /*
         if ((!(method&3)) && (!fullbrightdrawingpass))
         {
             bglDisable(GL_BLEND);
-            todoUnimportant("bglDisable(GL_ALPHA_TEST);");
+            bglDisable(GL_ALPHA_TEST);
         }
         else
-        { todoThrow();
-//            float al = 0.0; // PLAG : default alphacut was 0.32 before goodalpha
-//            if (pth && pth.hicr && pth.hicr.alphacut >= 0.0) al = pth.hicr.alphacut;
-//            if (alphahackarray[globalpicnum])
-//                al=alphahackarray[globalpicnum];
-//            if (!waloff[globalpicnum]) al = 0.0;	// invalid textures ignore the alpha cutoff settings
-//            bglEnable(GL_BLEND);
-//            bglEnable(GL_ALPHA_TEST);
-//            bglAlphaFunc(GL_GREATER,al);
+        {
+            var /*float */al = 0.0; // PLAG : default alphacut was 0.32 before goodalpha
+            if (pth && pth.hicr && pth.hicr.alphacut >= 0.0) al = pth.hicr.alphacut;
+            if (alphahackarray[globalpicnum])
+                al=alphahackarray[globalpicnum];
+            if (!waloff[globalpicnum]) al = 0.0;	// invalid textures ignore the alpha cutoff settings
+            bglEnable(GL_BLEND);
+            bglEnable(GL_ALPHA_TEST);
+            bglAlphaFunc(GL_GREATER,al);
         }
 
         if (!dorot)
@@ -1809,7 +1809,7 @@ function drawpoly(dpx: Float64Array, dpy: Float64Array, /*int32_t*/ n:number, /*
         }
 
         if (fullbrightdrawingpass == 1) // tile has fullbright colors ?
-        {todoThrow();
+        {
             var shadeforfullbrightpass = globalshade; // save the current shade     int32_t
             fullbrightdrawingpass = 2;
             globalshade = -128; // fullbright

@@ -12979,54 +12979,54 @@ function /*int32_t */G_DoMoveThings(): number
 //}
 //#endif
 
-//void A_SpawnWallGlass(int32_t i,int32_t wallnum,int32_t n)
-//{
-//    int32_t j, xv, yv, z, x1, y1;
-//    int16_t sect;
-//    int32_t a;
+function A_SpawnWallGlass(/*int32_t*/ i:number,/*int32_t */wallnum:number,/*int32_t */n:number):void
+{todoThrow();
+    //int32_t j, xv, yv, z, x1, y1;
+    //int16_t sect;
+    //int32_t a;
 
-//    sect = -1;
+    //sect = -1;
 
-//    if (wallnum < 0)
-//    {
-//        for (j=n-1; j >= 0 ; j--)
-//        {
-//            a = sprite[i].ang-256+(krand()&511)+1024;
-//            A_InsertSprite(sprite[i].sectnum,sprite[i].x,sprite[i].y,sprite[i].z,GLASSPIECES+(j%3),-32,36,36,a,32+(krand()&63),1024-(krand()&1023),i,5);
-//        }
-//        return;
-//    }
+    //if (wallnum < 0)
+    //{
+    //    for (j=n-1; j >= 0 ; j--)
+    //    {
+    //        a = sprite[i].ang-256+(krand()&511)+1024;
+    //        A_InsertSprite(sprite[i].sectnum,sprite[i].x,sprite[i].y,sprite[i].z,GLASSPIECES+(j%3),-32,36,36,a,32+(krand()&63),1024-(krand()&1023),i,5);
+    //    }
+    //    return;
+    //}
 
-//    j = n+1;
+    //j = n+1;
 
-//    x1 = wall[wallnum].x;
-//    y1 = wall[wallnum].y;
+    //x1 = wall[wallnum].x;
+    //y1 = wall[wallnum].y;
 
-//    xv = wall[wall[wallnum].point2].x-x1;
-//    yv = wall[wall[wallnum].point2].y-y1;
+    //xv = wall[wall[wallnum].point2].x-x1;
+    //yv = wall[wall[wallnum].point2].y-y1;
 
-//    x1 -= ksgn(yv);
-//    y1 += ksgn(xv);
+    //x1 -= ksgn(yv);
+    //y1 += ksgn(xv);
 
-//    xv /= j;
-//    yv /= j;
+    //xv /= j;
+    //yv /= j;
 
-//    for (j=n; j>0; j--)
-//    {
-//        x1 += xv;
-//        y1 += yv;
+    //for (j=n; j>0; j--)
+    //{
+    //    x1 += xv;
+    //    y1 += yv;
 
-//        updatesector(x1,y1,&sect);
-//        if (sect >= 0)
-//        {
-//            z = sector[sect].floorz-(krand()&(klabs(sector[sect].ceilingz-sector[sect].floorz)));
-//            if (z < -(32<<8) || z > (32<<8))
-//                z = sprite[i].z-(32<<8)+(krand()&((64<<8)-1));
-//            a = sprite[i].ang-1024;
-//            A_InsertSprite(sprite[i].sectnum,x1,y1,z,GLASSPIECES+(j%3),-32,36,36,a,32+(krand()&63),-(krand()&1023),i,5);
-//        }
-//    }
-//}
+    //    updatesector(x1,y1,&sect);
+    //    if (sect >= 0)
+    //    {
+    //        z = sector[sect].floorz-(krand()&(klabs(sector[sect].ceilingz-sector[sect].floorz)));
+    //        if (z < -(32<<8) || z > (32<<8))
+    //            z = sprite[i].z-(32<<8)+(krand()&((64<<8)-1));
+    //        a = sprite[i].ang-1024;
+    //        A_InsertSprite(sprite[i].sectnum,x1,y1,z,GLASSPIECES+(j%3),-32,36,36,a,32+(krand()&63),-(krand()&1023),i,5);
+    //    }
+    //}
+}
 
 //void A_SpawnGlass(int32_t i,int32_t n)
 //{
@@ -13063,8 +13063,8 @@ function /*int32_t */G_DoMoveThings(): number
 //    }
 //}
 
-//void A_SpawnRandomGlass(int32_t i,int32_t wallnum,int32_t n)
-//{
+function A_SpawnRandomGlass(/*int32_t*/ i:number,/*int32_t*/ wallnum:number,/*int32_t*/ n:number):void
+{todoThrow();
 //    int32_t j, xv, yv, z, x1, y1;
 //    int16_t sect = -1;
 //    int32_t a, k;
@@ -13100,7 +13100,7 @@ function /*int32_t */G_DoMoveThings(): number
 //        k = A_InsertSprite(sprite[i].sectnum,x1,y1,z,GLASSPIECES+(j%3),-32,36,36,a,32+(krand()&63),-(krand()&2047),i,5);
 //        sprite[k].pal = krand()&7;
 //    }
-//}
+}
 
 //static void G_SetupGameButtons(void)
 //{

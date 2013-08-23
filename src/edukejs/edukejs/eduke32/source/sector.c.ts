@@ -1603,273 +1603,279 @@ function G_ActivateBySector(/*int32_t*/ sect:number,/*int32_t */j:number): void
         G_OperateSectors(sect,j);
 }
 
-//static void BreakWall(int32_t newpn,int32_t spr,int32_t dawallnum)
-//{
-//    wall[dawallnum].picnum = newpn;
-//    A_PlaySound(VENT_BUST,spr);
-//    A_PlaySound(GLASS_HEAVYBREAK,spr);
-//    A_SpawnWallGlass(spr,dawallnum,10);
-//}
+function BreakWall(/*int32_t*/ newpn:number,/*int32_t */spr:number,/*int32_t */dawallnum:number): void
+{
+    wall[dawallnum].picnum = newpn;
+    A_PlaySound(VENT_BUST,spr);
+    A_PlaySound(GLASS_HEAVYBREAK,spr);
+    A_SpawnWallGlass(spr,dawallnum,10);
+}
 
 function A_DamageWall(/*int32_t */spr:number,/*int32_t */dawallnum:number,/*const vec3_t **/pos:vec3_t,/*int32_t */atwith:number): void
-{todoThrow();
-//    int16_t sn = -1;
-//    int32_t j, i, darkestwall;
-//    walltype *wal = &wall[dawallnum];
+{
+    var /*int16_t */sn = -1;
+    var /*int32_t */j:number, i:number, darkestwall:number;
+    var wal = wall[dawallnum];
 
-//    if (wal.overpicnum == MIRROR && wal.pal != 4 && A_CheckSpriteTileFlags(atwith,SPRITE_PROJECTILE) && (SpriteProjectile[spr].workslike & PROJECTILE_RPG))
-//    {
-//        if (wal.nextwall == -1 || wall[wal.nextwall].pal != 4)
-//        {
-//            A_SpawnWallGlass(spr,dawallnum,70);
-//            wal.cstat &= ~16;
-//            wal.overpicnum = MIRRORBROKE;
-//            A_PlaySound(GLASS_HEAVYBREAK,spr);
-//            return;
-//        }
-//    }
+    if (wal.overpicnum == MIRROR && wal.pal != 4 && A_CheckSpriteTileFlags(atwith,SPRITE_PROJECTILE) && (SpriteProjectile[spr].workslike & PROJECTILE_RPG))
+    {
+        if (wal.nextwall == -1 || wall[wal.nextwall].pal != 4)
+        {
+            A_SpawnWallGlass(spr,dawallnum,70);
+            wal.cstat &= ~16;
+            wal.overpicnum = MIRRORBROKE;
+            A_PlaySound(GLASS_HEAVYBREAK,spr);
+            return;
+        }
+    }
 
-//    if (wal.overpicnum == MIRROR && wal.pal != 4)
-//    {
-//        switch (DYNAMICTILEMAP(atwith))
-//        {
-//        case HEAVYHBOMB__STATIC:
-//        case RADIUSEXPLOSION__STATIC:
-//        case RPG__STATIC:
-//        case HYDRENT__STATIC:
-//        case SEENINE__STATIC:
-//        case OOZFILTER__STATIC:
-//        case EXPLODINGBARREL__STATIC:
-//            if (wal.nextwall == -1 || wall[wal.nextwall].pal != 4)
-//            {
-//                A_SpawnWallGlass(spr,dawallnum,70);
-//                wal.cstat &= ~16;
-//                wal.overpicnum = MIRRORBROKE;
-//                A_PlaySound(GLASS_HEAVYBREAK,spr);
-//                return;
-//            }
-//        }
-//    }
+    if (wal.overpicnum == MIRROR && wal.pal != 4)
+    {
+        switch (DYNAMICTILEMAP(atwith))
+        {
+        case HEAVYHBOMB__STATIC:
+        case RADIUSEXPLOSION__STATIC:
+        case RPG__STATIC:
+        case HYDRENT__STATIC:
+        case SEENINE__STATIC:
+        case OOZFILTER__STATIC:
+        case EXPLODINGBARREL__STATIC:
+            if (wal.nextwall == -1 || wall[wal.nextwall].pal != 4)
+            {
+                A_SpawnWallGlass(spr,dawallnum,70);
+                wal.cstat &= ~16;
+                wal.overpicnum = MIRRORBROKE;
+                A_PlaySound(GLASS_HEAVYBREAK,spr);
+                return;
+            }
+        }
+    }
 
-//    if (((wal.cstat&16) || wal.overpicnum == BIGFORCE) && wal.nextsector >= 0)
-//        if (sector[wal.nextsector].floorz > pos.z)
-//            if (sector[wal.nextsector].floorz-sector[wal.nextsector].ceilingz)
-//            {
-//                int32_t switchpicnum = wal.overpicnum;
-//                if (switchpicnum > W_FORCEFIELD && switchpicnum <= W_FORCEFIELD+2)
-//                    switchpicnum = W_FORCEFIELD;
-//                switch (DYNAMICTILEMAP(switchpicnum))
-//                {
-//                case W_FORCEFIELD__STATIC:
-//                    //case W_FORCEFIELD+1:
-//                    //case W_FORCEFIELD+2:
-//                    wal.extra = 1; // tell the forces to animate
-//                case BIGFORCE__STATIC:
-//                    updatesector(pos.x,pos.y,&sn);
-//                    if (sn < 0) return;
+    if (((wal.cstat&16) || wal.overpicnum == BIGFORCE) && wal.nextsector >= 0)
+        if (sector[wal.nextsector].floorz > pos.z)
+            if (sector[wal.nextsector].floorz-sector[wal.nextsector].ceilingz)
+            {
+                var /*int32_t */switchpicnum = wal.overpicnum;
+                if (switchpicnum > W_FORCEFIELD && switchpicnum <= W_FORCEFIELD+2)
+                    switchpicnum = W_FORCEFIELD;
+                switch (DYNAMICTILEMAP(switchpicnum))
+                {
+                case W_FORCEFIELD__STATIC:
+                    //case W_FORCEFIELD+1:
+                    //case W_FORCEFIELD+2:
+                    wal.extra = 1; // tell the forces to animate
+                case BIGFORCE__STATIC:
+                    var $sn = new R(sn);
+                    updatesector(pos.x,pos.y,$sn);
+                    sn = $sn.$;
+                    if (sn < 0) return;
 
-//                    if (atwith == -1)
-//                        i = A_InsertSprite(sn,pos.x,pos.y,pos.z,FORCERIPPLE,-127,8,8,0,0,0,spr,5);
-//                    else
-//                    {
-//                        if (atwith == CHAINGUN)
-//                            i = A_InsertSprite(sn,pos.x,pos.y,pos.z,FORCERIPPLE,-127,16+sprite[spr].xrepeat,16+sprite[spr].yrepeat,0,0,0,spr,5);
-//                        else i = A_InsertSprite(sn,pos.x,pos.y,pos.z,FORCERIPPLE,-127,32,32,0,0,0,spr,5);
-//                    }
+                    if (atwith == -1)
+                        i = A_InsertSprite(sn,pos.x,pos.y,pos.z,FORCERIPPLE,-127,8,8,0,0,0,spr,5);
+                    else
+                    {
+                        if (atwith == CHAINGUN)
+                            i = A_InsertSprite(sn,pos.x,pos.y,pos.z,FORCERIPPLE,-127,16+sprite[spr].xrepeat,16+sprite[spr].yrepeat,0,0,0,spr,5);
+                        else i = A_InsertSprite(sn,pos.x,pos.y,pos.z,FORCERIPPLE,-127,32,32,0,0,0,spr,5);
+                    }
 
-//                    sprite[i].cstat |= 18+128;
-//                    sprite[i].ang = getangle(wal.x-wall[wal.point2].x,
-//                                  wal.y-wall[wal.point2].y)-512;
+                    sprite[i].cstat |= 18+128;
+                    sprite[i].ang = getangle(wal.x-wall[wal.point2].x,
+                                  wal.y-wall[wal.point2].y)-512;
 
-//                    A_PlaySound(SOMETHINGHITFORCE,i);
+                    A_PlaySound(SOMETHINGHITFORCE,i);
 
-//                    return;
+                    return;
 
-//                case FANSPRITE__STATIC:
-//                    wal.overpicnum = FANSPRITEBROKE;
-//                    wal.cstat &= 65535-65;
-//                    if (wal.nextwall >= 0)
-//                    {
-//                        wall[wal.nextwall].overpicnum = FANSPRITEBROKE;
-//                        wall[wal.nextwall].cstat &= 65535-65;
-//                    }
-//                    A_PlaySound(VENT_BUST,spr);
-//                    A_PlaySound(GLASS_BREAKING,spr);
-//                    return;
+                case FANSPRITE__STATIC:
+                    wal.overpicnum = FANSPRITEBROKE;
+                    wal.cstat &= 65535-65;
+                    if (wal.nextwall >= 0)
+                    {
+                        wall[wal.nextwall].overpicnum = FANSPRITEBROKE;
+                        wall[wal.nextwall].cstat &= 65535-65;
+                    }
+                    A_PlaySound(VENT_BUST,spr);
+                    A_PlaySound(GLASS_BREAKING,spr);
+                    return;
 
-//                case GLASS__STATIC:
-//                    updatesector(pos.x,pos.y,&sn);
-//                    if (sn < 0) return;
-//                    wal.overpicnum=GLASS2;
-//                    A_SpawnWallGlass(spr,dawallnum,10);
-//                    wal.cstat = 0;
+                case GLASS__STATIC:
+                    var $sn = new R(sn);
+                    updatesector(pos.x,pos.y,$sn);
+                    sn = $sn.$;
+                    if (sn < 0) return;
+                    wal.overpicnum=GLASS2;
+                    A_SpawnWallGlass(spr,dawallnum,10);
+                    wal.cstat = 0;
 
-//                    if (wal.nextwall >= 0)
-//                        wall[wal.nextwall].cstat = 0;
+                    if (wal.nextwall >= 0)
+                        wall[wal.nextwall].cstat = 0;
 
-//                    i = A_InsertSprite(sn,pos.x,pos.y,pos.z,SECTOREFFECTOR,0,0,0,g_player[0].ps.ang,0,0,spr,3);
-//                    sprite[i].lotag = 128;
-//                    actor[i].t_data[1] = 5;
-//                    actor[i].t_data[2] = dawallnum;
-//                    A_PlaySound(GLASS_BREAKING,i);
-//                    return;
-//                case STAINGLASS1__STATIC:
-//                    updatesector(pos.x,pos.y,&sn);
-//                    if (sn < 0) return;
-//                    A_SpawnRandomGlass(spr,dawallnum,80);
-//                    wal.cstat = 0;
-//                    if (wal.nextwall >= 0)
-//                        wall[wal.nextwall].cstat = 0;
-//                    A_PlaySound(VENT_BUST,spr);
-//                    A_PlaySound(GLASS_BREAKING,spr);
-//                    return;
-//                }
-//            }
+                    i = A_InsertSprite(sn,pos.x,pos.y,pos.z,SECTOREFFECTOR,0,0,0,g_player[0].ps.ang,0,0,spr,3);
+                    sprite[i].lotag = 128;
+                    actor[i].t_data[1] = 5;
+                    actor[i].t_data[2] = dawallnum;
+                    A_PlaySound(GLASS_BREAKING,i);
+                    return;
+                case STAINGLASS1__STATIC:
+                    var $sn = new R(sn);
+                    updatesector(pos.x,pos.y,$sn);
+                    sn = $sn.$;
+                    if (sn < 0) return;
+                    A_SpawnRandomGlass(spr,dawallnum,80);
+                    wal.cstat = 0;
+                    if (wal.nextwall >= 0)
+                        wall[wal.nextwall].cstat = 0;
+                    A_PlaySound(VENT_BUST,spr);
+                    A_PlaySound(GLASS_BREAKING,spr);
+                    return;
+                }
+            }
 
-//    switch (DYNAMICTILEMAP(wal.picnum))
-//    {
-//    case COLAMACHINE__STATIC:
-//    case VENDMACHINE__STATIC:
-//        BreakWall(wal.picnum+2,spr,dawallnum);
-//        A_PlaySound(VENT_BUST,spr);
-//        return;
+    switch (DYNAMICTILEMAP(wal.picnum))
+    {
+    case COLAMACHINE__STATIC:
+    case VENDMACHINE__STATIC:
+        BreakWall(wal.picnum+2,spr,dawallnum);
+        A_PlaySound(VENT_BUST,spr);
+        return;
 
-//    case OJ__STATIC:
-//    case FEMPIC2__STATIC:
-//    case FEMPIC3__STATIC:
+    case OJ__STATIC:
+    case FEMPIC2__STATIC:
+    case FEMPIC3__STATIC:
 
-//    case SCREENBREAK6__STATIC:
-//    case SCREENBREAK7__STATIC:
-//    case SCREENBREAK8__STATIC:
+    case SCREENBREAK6__STATIC:
+    case SCREENBREAK7__STATIC:
+    case SCREENBREAK8__STATIC:
 
-//    case SCREENBREAK1__STATIC:
-//    case SCREENBREAK2__STATIC:
-//    case SCREENBREAK3__STATIC:
-//    case SCREENBREAK4__STATIC:
-//    case SCREENBREAK5__STATIC:
+    case SCREENBREAK1__STATIC:
+    case SCREENBREAK2__STATIC:
+    case SCREENBREAK3__STATIC:
+    case SCREENBREAK4__STATIC:
+    case SCREENBREAK5__STATIC:
 
-//    case SCREENBREAK9__STATIC:
-//    case SCREENBREAK10__STATIC:
-//    case SCREENBREAK11__STATIC:
-//    case SCREENBREAK12__STATIC:
-//    case SCREENBREAK13__STATIC:
-//    case SCREENBREAK14__STATIC:
-//    case SCREENBREAK15__STATIC:
-//    case SCREENBREAK16__STATIC:
-//    case SCREENBREAK17__STATIC:
-//    case SCREENBREAK18__STATIC:
-//    case SCREENBREAK19__STATIC:
-//    case BORNTOBEWILDSCREEN__STATIC:
+    case SCREENBREAK9__STATIC:
+    case SCREENBREAK10__STATIC:
+    case SCREENBREAK11__STATIC:
+    case SCREENBREAK12__STATIC:
+    case SCREENBREAK13__STATIC:
+    case SCREENBREAK14__STATIC:
+    case SCREENBREAK15__STATIC:
+    case SCREENBREAK16__STATIC:
+    case SCREENBREAK17__STATIC:
+    case SCREENBREAK18__STATIC:
+    case SCREENBREAK19__STATIC:
+    case BORNTOBEWILDSCREEN__STATIC:
 
-//        A_SpawnWallGlass(spr,dawallnum,30);
-//        wal.picnum=W_SCREENBREAK+(krand()%3);
-//        A_PlaySound(GLASS_HEAVYBREAK,spr);
-//        return;
+        A_SpawnWallGlass(spr,dawallnum,30);
+        wal.picnum=W_SCREENBREAK+(krand()%3);
+        A_PlaySound(GLASS_HEAVYBREAK,spr);
+        return;
 
-//    case W_TECHWALL5__STATIC:
-//    case W_TECHWALL6__STATIC:
-//    case W_TECHWALL7__STATIC:
-//    case W_TECHWALL8__STATIC:
-//    case W_TECHWALL9__STATIC:
-//        BreakWall(wal.picnum+1,spr,dawallnum);
-//        return;
-//    case W_MILKSHELF__STATIC:
-//        BreakWall(W_MILKSHELFBROKE,spr,dawallnum);
-//        return;
+    case W_TECHWALL5__STATIC:
+    case W_TECHWALL6__STATIC:
+    case W_TECHWALL7__STATIC:
+    case W_TECHWALL8__STATIC:
+    case W_TECHWALL9__STATIC:
+        BreakWall(wal.picnum+1,spr,dawallnum);
+        return;
+    case W_MILKSHELF__STATIC:
+        BreakWall(W_MILKSHELFBROKE,spr,dawallnum);
+        return;
 
-//    case W_TECHWALL10__STATIC:
-//        BreakWall(W_HITTECHWALL10,spr,dawallnum);
-//        return;
+    case W_TECHWALL10__STATIC:
+        BreakWall(W_HITTECHWALL10,spr,dawallnum);
+        return;
 
-//    case W_TECHWALL1__STATIC:
-//    case W_TECHWALL11__STATIC:
-//    case W_TECHWALL12__STATIC:
-//    case W_TECHWALL13__STATIC:
-//    case W_TECHWALL14__STATIC:
-//        BreakWall(W_HITTECHWALL1,spr,dawallnum);
-//        return;
+    case W_TECHWALL1__STATIC:
+    case W_TECHWALL11__STATIC:
+    case W_TECHWALL12__STATIC:
+    case W_TECHWALL13__STATIC:
+    case W_TECHWALL14__STATIC:
+        BreakWall(W_HITTECHWALL1,spr,dawallnum);
+        return;
 
-//    case W_TECHWALL15__STATIC:
-//        BreakWall(W_HITTECHWALL15,spr,dawallnum);
-//        return;
+    case W_TECHWALL15__STATIC:
+        BreakWall(W_HITTECHWALL15,spr,dawallnum);
+        return;
 
-//    case W_TECHWALL16__STATIC:
-//        BreakWall(W_HITTECHWALL16,spr,dawallnum);
-//        return;
+    case W_TECHWALL16__STATIC:
+        BreakWall(W_HITTECHWALL16,spr,dawallnum);
+        return;
 
-//    case W_TECHWALL2__STATIC:
-//        BreakWall(W_HITTECHWALL2,spr,dawallnum);
-//        return;
+    case W_TECHWALL2__STATIC:
+        BreakWall(W_HITTECHWALL2,spr,dawallnum);
+        return;
 
-//    case W_TECHWALL3__STATIC:
-//        BreakWall(W_HITTECHWALL3,spr,dawallnum);
-//        return;
+    case W_TECHWALL3__STATIC:
+        BreakWall(W_HITTECHWALL3,spr,dawallnum);
+        return;
 
-//    case W_TECHWALL4__STATIC:
-//        BreakWall(W_HITTECHWALL4,spr,dawallnum);
-//        return;
+    case W_TECHWALL4__STATIC:
+        BreakWall(W_HITTECHWALL4,spr,dawallnum);
+        return;
 
-//    case ATM__STATIC:
-//        wal.picnum = ATMBROKE;
-//        A_SpawnMultiple(spr, MONEY, 1+(krand()&7));
-//        A_PlaySound(GLASS_HEAVYBREAK,spr);
-//        break;
+    case ATM__STATIC:
+        wal.picnum = ATMBROKE;
+        A_SpawnMultiple(spr, MONEY, 1+(krand()&7));
+        A_PlaySound(GLASS_HEAVYBREAK,spr);
+        break;
 
-//    case WALLLIGHT1__STATIC:
-//    case WALLLIGHT2__STATIC:
-//    case WALLLIGHT3__STATIC:
-//    case WALLLIGHT4__STATIC:
-//    case TECHLIGHT2__STATIC:
-//    case TECHLIGHT4__STATIC:
+    case WALLLIGHT1__STATIC:
+    case WALLLIGHT2__STATIC:
+    case WALLLIGHT3__STATIC:
+    case WALLLIGHT4__STATIC:
+    case TECHLIGHT2__STATIC:
+    case TECHLIGHT4__STATIC:
 
-//        if (rnd(128))
-//            A_PlaySound(GLASS_HEAVYBREAK,spr);
-//        else A_PlaySound(GLASS_BREAKING,spr);
-//        A_SpawnWallGlass(spr,dawallnum,30);
+        if (rnd(128))
+            A_PlaySound(GLASS_HEAVYBREAK,spr);
+        else A_PlaySound(GLASS_BREAKING,spr);
+        A_SpawnWallGlass(spr,dawallnum,30);
 
-//        if (wal.picnum == WALLLIGHT1)
-//            wal.picnum = WALLLIGHTBUST1;
+        if (wal.picnum == WALLLIGHT1)
+            wal.picnum = WALLLIGHTBUST1;
 
-//        if (wal.picnum == WALLLIGHT2)
-//            wal.picnum = WALLLIGHTBUST2;
+        if (wal.picnum == WALLLIGHT2)
+            wal.picnum = WALLLIGHTBUST2;
 
-//        if (wal.picnum == WALLLIGHT3)
-//            wal.picnum = WALLLIGHTBUST3;
+        if (wal.picnum == WALLLIGHT3)
+            wal.picnum = WALLLIGHTBUST3;
 
-//        if (wal.picnum == WALLLIGHT4)
-//            wal.picnum = WALLLIGHTBUST4;
+        if (wal.picnum == WALLLIGHT4)
+            wal.picnum = WALLLIGHTBUST4;
 
-//        if (wal.picnum == TECHLIGHT2)
-//            wal.picnum = TECHLIGHTBUST2;
+        if (wal.picnum == TECHLIGHT2)
+            wal.picnum = TECHLIGHTBUST2;
 
-//        if (wal.picnum == TECHLIGHT4)
-//            wal.picnum = TECHLIGHTBUST4;
+        if (wal.picnum == TECHLIGHT4)
+            wal.picnum = TECHLIGHTBUST4;
 
-//        if (!wal.lotag) return;
+        if (!wal.lotag) return;
 
-//        sn = wal.nextsector;
-//        if (sn < 0) return;
-//        darkestwall = 0;
+        sn = wal.nextsector;
+        if (sn < 0) return;
+        darkestwall = 0;
 
-//        wal = &wall[sector[sn].wallptr];
-//        for (i=sector[sn].wallnum; i > 0; i--,wal++)
-//            if (wal.shade > darkestwall)
-//                darkestwall=wal.shade;
+        wal = wall[sector[sn].wallptr];
+        for (i=sector[sn].wallnum; i > 0; i--,wal++)
+            if (wal.shade > darkestwall)
+                darkestwall=wal.shade;
 
-//        j = krand()&1;
-//        i= headspritestat[STAT_EFFECTOR];
-//        while (i >= 0)
-//        {
-//            if (sprite[i].hitag == wall[dawallnum].lotag && sprite[i].lotag == SE_3_RANDOM_LIGHTS_AFTER_SHOT_OUT)
-//            {
-//                actor[i].t_data[2] = j;
-//                actor[i].t_data[3] = darkestwall;
-//                actor[i].t_data[4] = 1;
-//            }
-//            i = nextspritestat[i];
-//        }
-//        break;
-//    }
+        j = krand()&1;
+        i= headspritestat[STAT_EFFECTOR];
+        while (i >= 0)
+        {
+            if (sprite[i].hitag == wall[dawallnum].lotag && sprite[i].lotag == SE_3_RANDOM_LIGHTS_AFTER_SHOT_OUT)
+            {
+                actor[i].t_data[2] = j;
+                actor[i].t_data[3] = darkestwall;
+                actor[i].t_data[4] = 1;
+            }
+            i = nextspritestat[i];
+        }
+        break;
+    }
 }
 
 //int32_t Sect_DamageCeiling(int32_t sn)

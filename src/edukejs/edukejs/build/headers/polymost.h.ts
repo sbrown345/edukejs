@@ -91,11 +91,30 @@ class pthtyp
     effects: number;    //char
     flags: number;      // 1 = clamped (dameth&4), 2 = hightile, 4 = skybox face, 8 = hasalpha, 16 = hasfullbright, 128 = invalidated //char
     skyface: number;    //char
-    hicr: hicreplctyp;  //char
+    hicr: hicreplctyp;  
 
     sizx: number; sizy: number; //uint16_t
     scalex: number; scaley: number; //float 
     ofb: pthtyp; // only fullbright //struct pthtyp_t *
+
+    constructor() {
+        this.init();
+    }
+
+    init() {
+        this.next = null;
+        this.glpic = null;
+        this.picnum = 0;
+        this.palnum = 0;
+        this.shade = 0;
+        this.effects = 0;
+        this.flags = 0;
+        this.skyface = 0;
+        this.hicr = null;
+        this.sizx = 0; this.sizy = 0;
+        this.scalex = 0.0; this.scaley = 0.0;
+        this.ofb = null;
+    }
 } /*pthtyp*/;
 
 //extern int32_t gloadtile_art(int32_t,int32_t,int32_t,int32_t,pthtyp *,int32_t);

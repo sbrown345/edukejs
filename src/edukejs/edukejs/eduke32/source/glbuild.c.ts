@@ -54,6 +54,8 @@ var GL_TEXTURE_2D = gl.TEXTURE_2D;
 var GL_TEXTURE = gl.TEXTURE;
 var GL_MODELVIEW = gl.MODELVIEW;
 var GL_BLEND = gl.BLEND;
+var GL_ALPHA_TEST = -99000;//todo?gl.ALPHA_TEST;
+var GL_GREATER = gl.GREATER;//todo?gl.ALPHA_TEST;
 var GL_RGB = gl.RGB;
 var GL_RGBA = gl.RGBA;
 var GL_PROJECTION = gl.PROJECTION;
@@ -88,7 +90,7 @@ var GL_LEQUAL = gl.LEQUAL;
 var bglClearColor = gl.clearColor.bind(gl);//bglClearColorProcPtr;
 var bglClear = gl.clear.bind(gl);//bglClearProcPtr;
 var bglColorMask = gl.colorMask.bind(gl); //bglColorMaskProcPtr 
-//bglAlphaFuncProcPtr bglAlphaFunc;
+var bglAlphaFunc = function (arg1:any,arg2:any) {todo("alphaFunc");}//gl.alphaFunc.bind(gl); //bglAlphaFuncProcPtr  //http://stackoverflow.com/questions/7277047/alphafunctions-in-webgl
 //bglBlendFuncProcPtr bglBlendFunc;
 //bglBlendEquationProcPtr bglBlendEquation;
 //bglCullFaceProcPtr bglCullFace;
