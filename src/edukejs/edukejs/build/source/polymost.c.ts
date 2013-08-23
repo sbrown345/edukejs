@@ -1561,7 +1561,7 @@ function drawpoly(dpx: Float64Array, dpy: Float64Array, /*int32_t*/ n:number, /*
         if ((!(method&3)) && (!fullbrightdrawingpass))
         {
             bglDisable(GL_BLEND);
-            todo("bglDisable(GL_ALPHA_TEST);");
+            todoUnimportant("bglDisable(GL_ALPHA_TEST);");
         }
         else
         { todoThrow();
@@ -1785,7 +1785,7 @@ function drawpoly(dpx: Float64Array, dpy: Float64Array, /*int32_t*/ n:number, /*
             bglEnd();
         }
 
-        todo("texture stuff while (texunits >= GL_TEXTURE0_ARB");
+        todoUnimportant("texture stuff while (texunits >= GL_TEXTURE0_ARB");
         //while (texunits >= GL_TEXTURE0_ARB)
         //{
         //    bglActiveTextureARB(texunits);
@@ -4604,7 +4604,7 @@ function polymost_dorotatesprite(sx: number, sy: number, z: number, a: number, p
         bglLoadIdentity();
 
         bglDisable(GL_DEPTH_TEST);
-        todo("bglDisable(GL_ALPHA_TEST);");
+        todoUnimportant("bglDisable(GL_ALPHA_TEST);");
         bglEnable(GL_TEXTURE_2D);
 //        
 //# ifdef POLYMER

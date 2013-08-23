@@ -37,7 +37,8 @@ function logAndValidate(functionName: string, args: any[]): void {
    validateNoneOfTheArgsAreUndefined (functionName, args);
 }
 
-var gl: WebGLRenderingContext = WebGLDebugUtils.makeDebugContext(GL.create({}), undefined, logAndValidate);
+
+var gl: WebGLRenderingContext = DEBUG_WEBGL_UTIL ? WebGLDebugUtils.makeDebugContext(GL.create({}), undefined, logAndValidate) : GL.create({});
 //var gl: WebGLRenderingContext= GL.create({});
 if(document.body /*qunit*/)
     document.body.appendChild(gl.canvas);
@@ -194,20 +195,21 @@ var bglGenTextures = function(/*GLsizei (int)*/ n: number, /*GLuint **/textures:
 //bglDeleteTexturesProcPtr bglDeleteTextures;
 var bglBindTexture =  gl.bindTexture.bind(gl);//bglBindTextureProcPtr 
 var bglTexImage2D = function(target: number, level: number, internalformat: number, width: number, height: number, border: number, format: number, type: number, pixels: ArrayBufferView) {
-var can = <HTMLCanvasElement>document.createElement("canvas"),
-	  ctx = can.getContext('2d');
-      can.height = width;
-      can.width = height;  
-    var img = ctx.createImageData(width, height);
-    for (var i=0; i<img.data.length; i++) {
-        img.data[i] = pixels[i];
+    if(DEBUG_APPEND_TEXTURES_TO_BODY) {
+        var can = <HTMLCanvasElement>document.createElement("canvas"),
+	      ctx = can.getContext('2d');
+          can.height = width;
+          can.width = height;  
+        var img = ctx.createImageData(width, height);
+        for (var i=0; i<img.data.length; i++) {
+            img.data[i] = pixels[i];
+        }
+        ctx.putImageData(img, 0, 0);
+        document.body.appendChild(can);
+
+        //http://stackoverflow.com/questions/3792027/webgl-and-the-power-of-two-problem
+        //resize: http://www.khronos.org/webgl/wiki/WebGL_and_OpenGL_Differences#Non-Power_of_Two_Texture_Support
     }
-    ctx.putImageData(img, 0, 0);
-    document.body.appendChild(can);
-
-    //http://stackoverflow.com/questions/3792027/webgl-and-the-power-of-two-problem
-    //resize: http://www.khronos.org/webgl/wiki/WebGL_and_OpenGL_Differences#Non-Power_of_Two_Texture_Support
-
     if(internalformat != format) {
         todoThrow("internalformat must === format");
     }
