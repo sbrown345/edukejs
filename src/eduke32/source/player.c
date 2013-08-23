@@ -2679,6 +2679,7 @@ int32_t g_emuJumpTics = 0;
 void P_GetInput(int32_t snum)
 {
 #ifdef DEBUG_TODO
+#else
     int32_t j, daang;
     static ControlInfo info[2];
     static int32_t turnheldtime; //MED

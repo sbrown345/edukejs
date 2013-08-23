@@ -2729,31 +2729,33 @@ function P_DoWeaponSpawn(p: DukePlayer_t):void
 //    P_DisplaySpit(snum);
 //}
 
-//#define TURBOTURNTIME (TICRATE/8) // 7
-//#define NORMALTURN   15
-//#define PREAMBLETURN 5
-//#define NORMALKEYMOVE 40
-//#define MAXVEL       ((NORMALKEYMOVE*2)+10)
-//#define MAXSVEL      ((NORMALKEYMOVE*2)+10)
-//#define MAXANGVEL    127
-//#define MAXHORIZ     127
+var TURBOTURNTIME =(TICRATE/8)|0; // 7
+var NORMALTURN   =15;
+var PREAMBLETURN =5;
+var NORMALKEYMOVE =40;
+var MAXVEL       =((NORMALKEYMOVE*2)+10);
+var MAXSVEL      =((NORMALKEYMOVE*2)+10);
+var MAXANGVEL    =127;
+var MAXHORIZ     =127;
 
 var g_myAimMode = 0, g_myAimStat = 0, g_oldAimStat = 0; //int32_t 
 var /*int32_t */mouseyaxismode = -1;
 var /*int32_t */g_emuJumpTics = 0;
 
+var /*int32_t*/ turnheldtime = 0;
+var /*int32_t*/ lastcontroltime = 0;
 function P_GetInput(/*int32_t */snum: number): void
 {todo("P_GetInput");
-//    int32_t j, daang;
-//    static ControlInfo info[2];
-//    static int32_t turnheldtime; //MED
-//    static int32_t lastcontroltime; //MED
+    var /*int32_t */j:number, daang:number;
+    //static ControlInfo info[2];
+    //static int32_t turnheldtime; //MED
+    //static int32_t lastcontroltime; //MED
 
-//    int32_t tics, running;
-//    int32_t turnamount;
-//    int32_t keymove;
-//    int32_t momx = 0,momy = 0;
-//    DukePlayer_t *p = g_player[snum].ps;
+    var /*int32_t*/ tics:number, running:number;
+    var /*int32_t*/ turnamount:number;
+    var /*int32_t*/ keymove:number;
+    var /*int32_t*/ momx = 0,momy = 0;
+    var p = g_player[snum].ps;
 
 //    if ((p.gm & (MODE_MENU|MODE_TYPE)) || (ud.pause_on && !KB_KeyPressed(sc_Pause)))
 //    {
@@ -2861,17 +2863,17 @@ function P_GetInput(/*int32_t */snum: number): void
 //    info[1].dz = info[0].dz % (1<<6);
 //    vel = -info[0].dz>>6;
 
-////     OSD_Printf("running: %d\n", running);
-//    if (running)
-//    {
-//        turnamount = NORMALTURN<<1;
-//        keymove = NORMALKEYMOVE<<1;
-//    }
-//    else
-//    {
-//        turnamount = NORMALTURN;
-//        keymove = NORMALKEYMOVE;
-//    }
+//     OSD_Printf("running: %d\n", running);
+    if (running)
+    {
+        turnamount = NORMALTURN<<1;
+        keymove = NORMALKEYMOVE<<1;
+    }
+    else
+    {
+        turnamount = NORMALTURN;
+        keymove = NORMALKEYMOVE;
+    }
 
 //    if (BUTTON(gamefunc_Strafe))
 //    {
@@ -2911,14 +2913,14 @@ function P_GetInput(/*int32_t */snum: number): void
 //    if (BUTTON(gamefunc_Move_Backward) && !(g_player[snum].ps.movement_lock&2))
 //        vel += -keymove;
 
-//    if (vel < -MAXVEL) vel = -MAXVEL;
-//    if (vel > MAXVEL) vel = MAXVEL;
-//    if (svel < -MAXSVEL) svel = -MAXSVEL;
-//    if (svel > MAXSVEL) svel = MAXSVEL;
-//    if (angvel < -MAXANGVEL) angvel = -MAXANGVEL;
-//    if (angvel > MAXANGVEL) angvel = MAXANGVEL;
-//    if (horiz < -MAXHORIZ) horiz = -MAXHORIZ;
-//    if (horiz > MAXHORIZ) horiz = MAXHORIZ;
+    if (vel < -MAXVEL) vel = -MAXVEL;
+    if (vel > MAXVEL) vel = MAXVEL;
+    if (svel < -MAXSVEL) svel = -MAXSVEL;
+    if (svel > MAXSVEL) svel = MAXSVEL;
+    if (angvel < -MAXANGVEL) angvel = -MAXANGVEL;
+    if (angvel > MAXANGVEL) angvel = MAXANGVEL;
+    if (horiz < -MAXHORIZ) horiz = -MAXHORIZ;
+    if (horiz > MAXHORIZ) horiz = MAXHORIZ;
 
 //    j=0;
 
@@ -2993,17 +2995,29 @@ function P_GetInput(/*int32_t */snum: number): void
 //    if (PWEAPON(snum, g_player[snum].ps.curr_weapon, Flags) & WEAPON_SEMIAUTO && BUTTON(gamefunc_Fire))
 //        CONTROL_ClearButton(gamefunc_Fire);
 
-//    loc.extbits = 0;
-//    loc.extbits |= (BUTTON(gamefunc_Move_Forward) || (vel > 0));
-//    loc.extbits |= (BUTTON(gamefunc_Move_Backward) || (vel < 0))<<1;
-//    loc.extbits |= (BUTTON(gamefunc_Strafe_Left) || (svel > 0))<<2;
-//    loc.extbits |= (BUTTON(gamefunc_Strafe_Right) || (svel < 0))<<3;
+    loc.extbits = 0;
+    //loc.extbits |= (BUTTON(gamefunc_Move_Forward) || (vel > 0));
+    //loc.extbits |= (BUTTON(gamefunc_Move_Backward) || (vel < 0))<<1;
+    //loc.extbits |= (BUTTON(gamefunc_Strafe_Left) || (svel > 0))<<2;
+    //loc.extbits |= (BUTTON(gamefunc_Strafe_Right) || (svel < 0))<<3;
 
-//    if (G_HaveEvent(EVENT_PROCESSINPUT) || G_HaveEvent(EVENT_TURNLEFT))
-//        loc.extbits |= BUTTON(gamefunc_Turn_Left)<<4;
+    tempHC(function() {
+        //if(tempKeyDown[38] || tempKeyDown[40] || tempKeyDown[37] || tempKeyDown[39] )debugger;
+        if(tempKeyDown[38])//up
+            vel += 100;
+        if(tempKeyDown[40])//down
+            vel -= 100;
+        if(tempKeyDown[37])//left
+            angvel -= 20;
+        if(tempKeyDown[39])//right
+            angvel += 20;
+    });
 
-//    if (G_HaveEvent(EVENT_PROCESSINPUT) || G_HaveEvent(EVENT_TURNRIGHT))
-//        loc.extbits |= BUTTON(gamefunc_Turn_Right)<<5;
+    //if (G_HaveEvent(EVENT_PROCESSINPUT) || G_HaveEvent(EVENT_TURNLEFT))
+    //    loc.extbits |= BUTTON(gamefunc_Turn_Left)<<4;
+
+    //if (G_HaveEvent(EVENT_PROCESSINPUT) || G_HaveEvent(EVENT_TURNRIGHT))
+    //    loc.extbits |= BUTTON(gamefunc_Turn_Right)<<5;
 
 //    // used for changing team
 //    loc.extbits |= (g_player[snum].pteam != g_player[snum].ps.team)<<6;
@@ -3016,22 +3030,22 @@ function P_GetInput(/*int32_t */snum: number): void
 //        return;
 //    }
 
-//    daang = p.ang;
+    daang = p.ang;
 
-//    momx = mulscale9(vel,sintable[(daang+2560)&2047]);
-//    momy = mulscale9(vel,sintable[(daang+2048)&2047]);
+    momx = mulscale9(vel,sintable[(daang+2560)&2047]);
+    momy = mulscale9(vel,sintable[(daang+2048)&2047]);
 
-//    momx += mulscale9(svel,sintable[(daang+2048)&2047]);
-//    momy += mulscale9(svel,sintable[(daang+1536)&2047]);
+    momx += mulscale9(svel,sintable[(daang+2048)&2047]);
+    momy += mulscale9(svel,sintable[(daang+1536)&2047]);
 
-//    momx += fricxv;
-//    momy += fricyv;
+    momx += fricxv;
+    momy += fricyv;
 
-//    loc.fvel = momx;
-//    loc.svel = momy;
+    loc.fvel = momx;
+    loc.svel = momy;
 
-//    loc.avel = angvel;
-//    loc.horz = horiz;
+    loc.avel = angvel;
+    loc.horz = horiz;
 }
 
 function /*int32_t */P_DoCounters(p:DukePlayer_t):number

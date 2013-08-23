@@ -23,6 +23,7 @@
 /// <reference path="../../build/source/engine.c.ts" />
 /// <reference path="../../build/source/polymost.c.ts" />
 /// <reference path="../../build/source/hightile.c.ts" />
+/// <reference path="../../build/source/rawinput.c.ts" />
 
 /// <reference path="../../eduke32/headers/_functio.h.ts" />
 /// <reference path="../../eduke32/headers/_rts.h.ts" />
