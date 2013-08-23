@@ -1561,7 +1561,7 @@ function drawpoly(dpx: Float64Array, dpy: Float64Array, /*int32_t*/ n:number, /*
         if ((!(method&3)) && (!fullbrightdrawingpass))
         {
             bglDisable(GL_BLEND);
-            bglDisable(GL_ALPHA_TEST);
+            todo("bglDisable(GL_ALPHA_TEST);");
         }
         else
         {
@@ -3410,7 +3410,7 @@ function polymost_drawrooms(): void
                 bglClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
         bglDisable(GL_BLEND);
-        bglEnable(GL_TEXTURE_2D);
+        todo("bglEnable(GL_TEXTURE_2D);");
         //bglTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE); //default anyway
         bglEnable(GL_DEPTH_TEST);
         bglDepthFunc(GL_ALWAYS); //NEVER,LESS,(,L)EQUAL,GREATER,(NOT,G)EQUAL,ALWAYS
@@ -4609,7 +4609,7 @@ function polymost_dorotatesprite(sx: number, sy: number, z: number, a: number, p
 
         bglDisable(GL_DEPTH_TEST);
         todoUnimportant("bglDisable(GL_ALPHA_TEST);");
-        bglEnable(GL_TEXTURE_2D);
+        todo("bglEnable(GL_TEXTURE_2D);");
 //        
 //# ifdef POLYMER
         if (getrendermode() == REND_POLYMER) {

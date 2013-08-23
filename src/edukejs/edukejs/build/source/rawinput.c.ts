@@ -111,7 +111,7 @@ var KeyboardState = new Uint8Array(256); // VKeys
 var tempKeyDown = {};
 tempHC(function() {
     window.onkeydown = function(e) {
-        console.log("keydown", e.keyCode);
+        //console.log("keydown", e.keyCode);
         tempKeyDown[e.keyCode] = true;
     };
     window.onkeyup = function(e) {
