@@ -1352,12 +1352,12 @@ function gloadtile_art(dapic: number, dapal: number, dashade: number, dameth: nu
 // drawpoly's hack globals
 var pow2xsplit = 0, skyclamphack = 0; //static int32_t 
 var alpha = 0.0;
-
+var drawpoly_dd = new Float64Array(16), drawpoly_uu = new Float64Array(16), drawpoly_vv = new Float64Array(16), drawpoly_px = new Float64Array(16), drawpoly_py = new Float64Array(16);
 function drawpoly(dpx: Float64Array, dpy: Float64Array, /*int32_t*/ n:number, /*int32_t*/ method: number): void
 {
     var ngdx = 0.0, ngdy = 0.0, ngdo = 0.0, ngux = 0.0, nguy = 0.0, nguo = 0.0;             //double 
     var ngvx = 0.0, ngvy = 0.0, ngvo = 0.0, dp= 0.0, up= 0.0, vp= 0.0, du0 = 0.0, du1 = 0.0, dui = 0.0, duj = 0.0;     //double 
-    var f = 0.0, r = 0.0, ox = 0.0, oy = 0.0, oz = 0.0, ox2 = 0.0, oy2 = 0.0, oz2 = 0.0, dd = new Float64Array(16), uu = new Float64Array(16), vv = new Float64Array(16), px = new Float64Array(16), py = new Float64Array(16), uoffs=0.0;     //double 
+    var f = 0.0, r = 0.0, ox = 0.0, oy = 0.0, oz = 0.0, ox2 = 0.0, oy2 = 0.0, oz2 = 0.0, dd = drawpoly_dd, uu = drawpoly_uu, vv = drawpoly_vv, px = drawpoly_px, py = drawpoly_py, uoffs=0.0;     //double 
     var i=0, j=0, k=0, nn=0, ix0=0, ix1=0, tsizx=0, tsizy=0; //int32_t
     var xx=0, yy=0, dorot=0; //int32_t
 //#ifdef USE_OPENGL
@@ -2011,6 +2011,10 @@ function fpEq(x: number, y: number) :boolean {
 
 var /*int32_t */domostpolymethod = 0;
 
+
+var domost_dpx = new Float64Array(4),  domost_dpy = new Float64Array(4);
+var /*float*/  domost_spx = new Float32Array(4), /*spy[4],*/  domost_cy = new Float32Array(2),  domost_cv = new Float32Array(4);
+var domost_spt=new Int32Array(4);
 function domost(/*float*/ x0: number, /*float */y0: number, /*float */x1: number, /*float */y1: number): void
 {
     x0 = float32(x0);
@@ -2018,10 +2022,10 @@ function domost(/*float*/ x0: number, /*float */y0: number, /*float */x1: number
     x1 = float32(x1);
     y1 = float32(y1);
 
-    var dpx = new Float64Array(4), dpy = new Float64Array(4);
+    var dpx =  domost_dpx, dpy =  domost_dpy;
     var /*float*/ d=0.0, f=0.0, n=0.0, t=0.0, slop=0.0, dx=0.0, dx0=0.0, dx1=0.0, nx=0.0, nx0=0.0, ny0=0.0, nx1=0.0, ny1=0.0;
-    var /*float*/ spx = new Float32Array(4), /*spy[4],*/ cy = new Float32Array(2), cv = new Float32Array(4);
-    var /*int32_t*/ i=0, j=0, k=0, z=0, ni=0, vcnt=0, scnt=0, newi=0, dir=0, spt=new Int32Array(4);
+    var /*float*/ spx =  domost_spx, /*spy[4],*/ cy =  domost_cy, cv =  domost_cv;
+    var /*int32_t*/ i=0, j=0, k=0, z=0, ni=0, vcnt=0, scnt=0, newi=0, dir=0, spt=domost_spt;
 
     alpha = 0.0;
 
