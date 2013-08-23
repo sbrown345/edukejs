@@ -11880,8 +11880,9 @@ var tempWhile = 0;
     ud.warp_on = 0;
     KB_KeyDown[sc_Pause] = 0;   // JBF: I hate the pause key
 
-    do //main loop
-    {
+    //do //main loop
+    //{
+    function main_loop() {
         var /*static uint32_t */nextrender = 0, framewaiting = 0;
         var /*uint32_t */j: number;
 
@@ -12030,9 +12031,17 @@ var tempWhile = 0;
             todoThrow("goto MAIN_LOOP_RESTART;");
 
         dlog(DEBUG_PLAYER_POS, "p pos x:%i y:%i z%i, vel x:%i y:%i, z%i \n", g_player[0].ps.pos.x, g_player[0].ps.pos.y, g_player[0].ps.pos.z, g_player[0].ps.vel.x, g_player[0].ps.vel.y, g_player[0].ps.vel.z);
+
+        //if(1)
+        if(tempWhile++ < 26)
+            requestAnimationFrame(main_loop); // todo: async code for stuff like logo animations
+        else 
+            dlogFlush();
     }
-    while (tempWhile++ < 26 /*26*/);
-    dlogFlush();
+    main_loop();
+    //}
+    //while (tempWhile++ < 26 /*26*/);
+    
     //while (1);
     throw "todo";
     G_GameExit(" ");
