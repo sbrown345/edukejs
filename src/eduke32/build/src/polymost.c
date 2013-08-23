@@ -1974,7 +1974,7 @@ void domost(float x0, float y0, float x1, float y1)
         dlog(DEBUG_POLYMOST_DRAWALLS, "for vsp n stuff i: %i, dir: %i\n", i, dir);
         newi = vsp[i].n; nx0 = vsp[i].x; nx1 = vsp[newi].x;
 		dlog(DEBUG_POLYMOST_DRAWALLS, "for vsp newi: %i, nx0: %f, nx1: %f\n", newi, nx0, nx1); 
-		if ((x0 >= nx1) || (nx0 >= x1) || (vsp[i].ctag <= 0)) { dlog(DEBUG_POLYMOST_DRAWALLS, "for vsp continue vsp[i].ctag %i\n", vsp[i].ctag); continue;}
+		if ((x0 > nx1) || (nx0 > x1) || (vsp[i].ctag <= 0)) { dlog(DEBUG_POLYMOST_DRAWALLS, "for vsp continue vsp[i].ctag %i\n", vsp[i].ctag); continue;}
         dx = nx1-nx0;
         cy[0] = vsp[i].cy[0]; cv[0] = vsp[i].cy[1]-cy[0];
         cy[1] = vsp[i].fy[0]; cv[1] = vsp[i].fy[1]-cy[1];
