@@ -11699,48 +11699,49 @@ function /*int32_t */ setspritez(/*int16_t */spritenum: number, /*const vec3_t *
 
 
 ////
-//// nextsectorneighborz
-////
-//// -1: ceiling or up
-////  1: floor or down
-//int32_t nextsectorneighborz(int16_t sectnum, int32_t thez, int16_t topbottom, int16_t direction)
-//{
-//    int32_t nextz = (direction==1) ? INT32_MAX : INT32_MIN;
-//    int32_t sectortouse = -1;
+// nextsectorneighborz
+//
+// -1: ceiling or up
+//  1: floor or down
+function /*int32_t */nextsectorneighborz(/*int16_t*/ sectnum:number, /*int32_t */thez:number, /*int16_t */topbottom:number, /*int16_t */direction:number)
+{
+    var/*int32_t */nextz = (direction==1) ? INT32_MAX : INT32_MIN;
+    var /*int32_t */sectortouse = -1;
 
-//    walltype *wal = &wall[sector[sectnum].wallptr];
-//    int32_t i = sector[sectnum].wallnum;
+    var walIdx = sector[sectnum].wallptr, wal: walltype;
+    var /*int32_t */i = sector[sectnum].wallnum;
 
-//    do
-//    {
-//        const int32_t ns = wal.nextsector;
+    do
+    {
+        wal =  wall[walIdx];
+        var /*const int32_t */ns = wal.nextsector;
 
-//        if (ns >= 0)
-//        {
-//            const int32_t testz = (topbottom==1) ?
-//                sector[ns].floorz : sector[ns].ceilingz;
+        if (ns >= 0)
+        {
+            var/*const int32_t */testz = (topbottom==1) ?
+                sector[ns].floorz : sector[ns].ceilingz;
 
-//            int32_t ok;
+            var /*int32_t */ok:number;
 
-//            if (direction == 1)
-//                ok = (testz > thez && testz < nextz);
-//            else
-//                ok = (testz < thez && testz > nextz);
+            if (direction == 1)
+                ok = (testz > thez && testz < nextz)?1:0;
+            else
+                ok = (testz < thez && testz > nextz)?1:0;
 
-//            if (ok)
-//            {
-//                nextz = testz;
-//                sectortouse = wal.nextsector;
-//            }
-//        }
+            if (ok)
+            {
+                nextz = testz;
+                sectortouse = wal.nextsector;
+            }
+        }
 
-//        wal++;
-//        i--;
-//    }
-//    while (i != 0);
+        walIdx++;
+        i--;
+    }
+    while (i != 0);
 
-//    return(sectortouse);
-//}
+    return(sectortouse);
+}
 
 
 ////

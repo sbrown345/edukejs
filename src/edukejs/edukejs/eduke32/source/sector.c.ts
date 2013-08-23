@@ -43,7 +43,7 @@ function /*int32_t */A_CallSound(/*int32_t */sn: number,/*int32_t */whatsprite: 
         g_haltSoundHack = 0;
         return -1;
     }
-    todoThrow();return 99999999999999999999999999999999;
+    todo("A_CallSound");
     //for (SPRITES_OF_SECT(sn, i))
     //{
     //    if (sprite[i].picnum == MUSICANDSFX && (unsigned)sprite[i].lotag < 1000)  // XXX: in other places, 999
@@ -77,7 +77,7 @@ function /*int32_t */A_CallSound(/*int32_t */sn: number,/*int32_t */whatsprite: 
     //        return sprite[i].lotag;
     //    }
     //}
-    //return -1;
+    return -1;
 }
 
 //int32_t G_CheckActivatorMotion(int32_t lotag)

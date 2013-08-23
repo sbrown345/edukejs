@@ -1181,42 +1181,42 @@ function A_MoveDummyPlayers(): void
     var /*int32_t */i = headspritestat[STAT_DUMMYPLAYER];
 
     while (i >= 0)
-    {todoThrow();
-//        const int32_t p = sprite[sprite[i].owner].yvel;
-//        DukePlayer_t *const ps = g_player[p].ps;
+    {
+        var /*const int32_t */p = sprite[sprite[i].owner].yvel;
+        var ps = g_player[p].ps;
 
-//        const int32_t nexti = nextspritestat[i];
-//        const int32_t psectnum = ps.cursectnum;
+        var /*int32_t*/ nexti = nextspritestat[i];
+        var /*int32_t*/ psectnum = ps.cursectnum;
 
-//        if (ps.on_crane >= 0 || (psectnum >= 0 && sector[psectnum].lotag != ST_1_ABOVE_WATER) || sprite[ps.i].extra <= 0)
-//        {
-//            ps.dummyplayersprite = -1;
-//            KILLIT(i);
-//        }
-//        else
-//        {
-//            if (ps.on_ground && ps.on_warping_sector == 1 && psectnum >= 0 && sector[psectnum].lotag == ST_1_ABOVE_WATER)
-//            {
-//                sprite[i].cstat = 257;
-//                sprite[i].z = sector[sprite[i].sectnum].ceilingz+(27<<8);
-//                sprite[i].ang = ps.ang;
-//                if (actor[i].t_data[0] == 8)
-//                    actor[i].t_data[0] = 0;
-//                else actor[i].t_data[0]++;
-//            }
-//            else
-//            {
-//                if (sector[sprite[i].sectnum].lotag != ST_2_UNDERWATER) sprite[i].z = sector[sprite[i].sectnum].floorz;
-//                sprite[i].cstat = 32768;
-//            }
-//        }
+        if (ps.on_crane >= 0 || (psectnum >= 0 && sector[psectnum].lotag != ST_1_ABOVE_WATER) || sprite[ps.i].extra <= 0)
+        {
+            ps.dummyplayersprite = -1;
+            A_DeleteSprite(i); i = nexti; continue;//KILLIT(i);
+        }
+        else
+        {
+            if (ps.on_ground && ps.on_warping_sector == 1 && psectnum >= 0 && sector[psectnum].lotag == ST_1_ABOVE_WATER)
+            {
+                sprite[i].cstat = 257;
+                sprite[i].z = sector[sprite[i].sectnum].ceilingz+(27<<8);
+                sprite[i].ang = ps.ang;
+                if (actor[i].t_data[0] == 8)
+                    actor[i].t_data[0] = 0;
+                else actor[i].t_data[0]++;
+            }
+            else
+            {
+                if (sector[sprite[i].sectnum].lotag != ST_2_UNDERWATER) sprite[i].z = sector[sprite[i].sectnum].floorz;
+                sprite[i].cstat = 32768;
+            }
+        }
 
-//        sprite[i].x += (ps.pos.x-ps.opos.x);
-//        sprite[i].y += (ps.pos.y-ps.opos.y);
-//        setsprite(i, (vec3_t *)&sprite[i]);
+        sprite[i].x += (ps.pos.x-ps.opos.x);
+        sprite[i].y += (ps.pos.y-ps.opos.y);
+        setsprite(i, sprite[i]);
 
 //BOLT:
-//        i = nexti;
+        i = nexti;
     }
 }
 

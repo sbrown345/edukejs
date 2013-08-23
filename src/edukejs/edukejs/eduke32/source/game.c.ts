@@ -5589,55 +5589,54 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
         case FOOTPRINTS2__STATIC:
         case FOOTPRINTS3__STATIC:
         case FOOTPRINTS4__STATIC:
-                todoThrow();
-            //if (j >= 0)
-            //{
-            //    var s1 = sp.sectnum;//int16_t
-            //    updatesector(sp.x+84,sp.y+84,&s1);
-            //    if (s1 >= 0 && sector[s1].floorz == sector[sp.sectnum].floorz)
-            //    {
-            //        updatesector(sp.x-84,sp.y-84,&s1);
-            //        if (s1 >= 0 && sector[s1].floorz == sector[sp.sectnum].floorz)
-            //        {
-            //            updatesector(sp.x+84,sp.y-84,&s1);
-            //            if (s1 >= 0 && sector[s1].floorz == sector[sp.sectnum].floorz)
-            //            {
-            //                updatesector(sp.x-84,sp.y+84,&s1);
-            //                if (s1 >= 0 && sector[s1].floorz != sector[sp.sectnum].floorz)
-            //                {
-            //                    sp.xrepeat = sp.yrepeat = 0;
-            //                    changespritestat(i, STAT_MISC);
-            //                    break;
-            //                }
-            //            }
-            //            else
-            //            {
-            //                sp.xrepeat = sp.yrepeat = 0;
-            //                break;
-            //            }
-            //        }
-            //        else
-            //        {
-            //            sp.xrepeat = sp.yrepeat = 0;
-            //            break;
-            //        }
-            //    }
-            //    else
-            //    {
-            //        sp.xrepeat = sp.yrepeat = 0;
-            //        break;
-            //    }
+            if (j >= 0)
+            {
+                var s1 = new R(sp.sectnum);//int16_t
+                updatesector(sp.x+84,sp.y+84,s1);
+                if (s1.$ >= 0 && sector[s1.$].floorz == sector[sp.sectnum].floorz)
+                {
+                    updatesector(sp.x-84,sp.y-84,s1);
+                    if (s1.$ >= 0 && sector[s1.$].floorz == sector[sp.sectnum].floorz)
+                    {
+                        updatesector(sp.x+84,sp.y-84,s1);
+                        if (s1.$ >= 0 && sector[s1.$].floorz == sector[sp.sectnum].floorz)
+                        {
+                            updatesector(sp.x-84,sp.y+84,s1);
+                            if (s1.$ >= 0 && sector[s1.$].floorz != sector[sp.sectnum].floorz)
+                            {
+                                sp.xrepeat = sp.yrepeat = 0;
+                                changespritestat(i, STAT_MISC);
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            sp.xrepeat = sp.yrepeat = 0;
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        sp.xrepeat = sp.yrepeat = 0;
+                        break;
+                    }
+                }
+                else
+                {
+                    sp.xrepeat = sp.yrepeat = 0;
+                    break;
+                }
 
-            //    sp.cstat = 32+((g_player[sprite[j].yvel].ps.footprintcount&1)<<2);
-            //    sp.ang = sprite[j].ang;
-            //}
+                sp.cstat = 32+((g_player[sprite[j].yvel].ps.footprintcount&1)<<2);
+                sp.ang = sprite[j].ang;
+            }
 
-            //sp.z = sector[sect].floorz;
-            //if (sector[sect].lotag != ST_1_ABOVE_WATER && sector[sect].lotag != ST_2_UNDERWATER)
-            //    sp.xrepeat = sp.yrepeat = 32;
+            sp.z = sector[sect].floorz;
+            if (sector[sect].lotag != ST_1_ABOVE_WATER && sector[sect].lotag != ST_2_UNDERWATER)
+                sp.xrepeat = sp.yrepeat = 32;
 
-            //A_AddToDeleteQueue(i);
-            //changespritestat(i, STAT_MISC);
+            A_AddToDeleteQueue(i);
+            changespritestat(i, STAT_MISC);
             break;
 
         case PODFEM1__STATIC:
@@ -5878,47 +5877,46 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
             break;
 
         case CRANE__STATIC:
-            todoThrow();
-            //sp.cstat |= 64|257;
+            sp.cstat |= 64|257;
 
-            //sp.picnum += 2;
-            //sp.z = sector[sect].ceilingz+(48<<8);
-            //actor[i].t_data[4] = tempwallptr;
+            sp.picnum += 2;
+            sp.z = sector[sect].ceilingz+(48<<8);
+            actor[i].t_data[4] = tempwallptr;
 
-            //msx[tempwallptr] = sp.x;
-            //msy[tempwallptr] = sp.y;
-            //msx[tempwallptr+2] = sp.z;
+            msx[tempwallptr] = sp.x;
+            msy[tempwallptr] = sp.y;
+            msx[tempwallptr+2] = sp.z;
 
-            //s = headspritestat[STAT_DEFAULT];
-            //while (s >= 0)
-            //{
-            //    if (sprite[s].picnum == CRANEPOLE && sprite[i].hitag == (sprite[s].hitag))
-            //    {
-            //        msy[tempwallptr+2] = s;
+            s = headspritestat[STAT_DEFAULT];
+            while (s >= 0)
+            {
+                if (sprite[s].picnum == CRANEPOLE && sprite[i].hitag == (sprite[s].hitag))
+                {
+                    msy[tempwallptr+2] = s;
 
-            //        actor[i].t_data[1] = sprite[s].sectnum;
+                    actor[i].t_data[1] = sprite[s].sectnum;
 
-            //        sprite[s].xrepeat = 48;
-            //        sprite[s].yrepeat = 128;
+                    sprite[s].xrepeat = 48;
+                    sprite[s].yrepeat = 128;
 
-            //        msx[tempwallptr+1] = sprite[s].x;
-            //        msy[tempwallptr+1] = sprite[s].y;
+                    msx[tempwallptr+1] = sprite[s].x;
+                    msy[tempwallptr+1] = sprite[s].y;
 
-            //        sprite[s].x = sp.x;
-            //        sprite[s].y = sp.y;
-            //        sprite[s].z = sp.z;
-            //        sprite[s].shade = sp.shade;
+                    sprite[s].x = sp.x;
+                    sprite[s].y = sp.y;
+                    sprite[s].z = sp.z;
+                    sprite[s].shade = sp.shade;
 
-            //        setsprite(s,(vec3_t *)&sprite[s]);
-            //        break;
-            //    }
-            //    s = nextspritestat[s];
-            //}
+                    setsprite(s,sprite[s]);
+                    break;
+                }
+                s = nextspritestat[s];
+            }
 
-            //tempwallptr += 3;
-            //sp.owner = -1;
-            //sp.extra = 8;
-            //changespritestat(i, STAT_STANDABLE);
+            tempwallptr += 3;
+            sp.owner = -1;
+            sp.extra = 8;
+            changespritestat(i, STAT_STANDABLE);
             break;
 
         case TRASH__STATIC:
@@ -6557,39 +6555,38 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
                 break;
 
             case SE_17_WARP_ELEVATOR:
-                todoThrow();
-                //actor[i].t_data[2] = sector[sect].floorz; //Stopping loc
+                actor[i].t_data[2] = sector[sect].floorz; //Stopping loc
 
-                //j = nextsectorneighborz(sect,sector[sect].floorz,-1,-1);
-                //if (j >= 0)
-                //{
-                //    actor[i].t_data[3] = sector[j].ceilingz;
-                //}
-                //else
-                //{
-                //    // use elevator sector's ceiling as heuristic
-                //    actor[i].t_data[3] = sector[sect].ceilingz;
+                j = nextsectorneighborz(sect,sector[sect].floorz,-1,-1);
+                if (j >= 0)
+                {
+                    actor[i].t_data[3] = sector[j].ceilingz;
+                }
+                else
+                {
+                    // use elevator sector's ceiling as heuristic
+                    actor[i].t_data[3] = sector[sect].ceilingz;
 
-                //    OSD_Printf(OSD_ERROR "WARNING: SE17 sprite %d using own sector's ceilingz to "
-                //               "determine when to warp. Sector %d adjacent to a door?\n", i, sect);
-                //}
+                    OSD_Printf(OSD_ERROR +"WARNING: SE17 sprite %d using own sector's ceilingz to "+
+                               "determine when to warp. Sector %d adjacent to a door?\n", i, sect);
+                }
 
-                //j = nextsectorneighborz(sect,sector[sect].ceilingz,1,1);
-                //if (j >= 0)
-                //    actor[i].t_data[4] = sector[j].floorz;
-                //else
-                //{
-                //    // XXX: we should return to the menu for this and similar failures
-                //    Bsprintf_nowarn(tempbuf, "SE 17 (warp elevator) setup failed: sprite %d at (%d, %d)",
-                //             i, TrackerCast(sprite[i].x), TrackerCast(sprite[i].y));
-                //    G_GameExit(tempbuf);
-                //}
+                j = nextsectorneighborz(sect,sector[sect].ceilingz,1,1);
+                if (j >= 0)
+                    actor[i].t_data[4] = sector[j].floorz;
+                else
+                {
+                    // XXX: we should return to the menu for this and similar failures
+                    Bsprintf_nowarn(tempbuf, "SE 17 (warp elevator) setup failed: sprite %d at (%d, %d)",
+                             i, TrackerCast(sprite[i].x), TrackerCast(sprite[i].y));
+                    G_GameExit(tempbuf.toString());
+                }
 
-                //if (numplayers < 2 && !g_netServer)
-                //{
-                //    G_SetInterpolation(&sector[sect].floorz);
-                //    G_SetInterpolation(&sector[sect].ceilingz);
-                //}
+                if (numplayers < 2 && !g_netServer)
+                {
+                    G_SetInterpolation(new R(sector[sect].floorz));
+                    G_SetInterpolation(new R(sector[sect].ceilingz));
+                }
 
                 break;
 
