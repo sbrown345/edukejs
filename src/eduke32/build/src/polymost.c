@@ -1967,14 +1967,14 @@ void domost(float x0, float y0, float x1, float y1)
         //y0 += .01; y1 += .01; //necessary?
     }
 
-    dlog(DEBUG_POLYMOST_DRAWALLS, "domost 2nd bit x0: %f, y0: %f, x1: %f, y1: %f\n", x0,y0,x1,y1);
+    dlog(DEBUG_POLYMOST_DRAWALLS_DOMOSTS_DETAIL, "domost 2nd bit x0: %f, y0: %f, x1: %f, y1: %f\n", x0,y0,x1,y1);
     slop = (y1-y0)/(x1-x0);
     for (i=vsp[0].n; i; i=newi)
     {
-        dlog(DEBUG_POLYMOST_DRAWALLS, "for vsp n stuff i: %i, dir: %i,  vsp[i].ctag: %i\n", i, dir, vsp[i].ctag);
+        dlog(DEBUG_POLYMOST_DRAWALLS_DOMOSTS_DETAIL, "for vsp n stuff i: %i, dir: %i,  vsp[i].ctag: %i\n", i, dir, vsp[i].ctag);
         newi = vsp[i].n; nx0 = vsp[i].x; nx1 = vsp[newi].x;
-		dlog(DEBUG_POLYMOST_DRAWALLS, "for vsp newi: %i, (x0 %f > nx1 %f): %i (nx0 %f > x1 %f): %i\n", newi, x0, nx1, (x0 > nx1)?1:0, nx0, x1,  (nx0 > x1)?1:0);
-		if ((x0 > nx1) || (nx0 > x1) || (vsp[i].ctag <= 0)) { dlog(DEBUG_POLYMOST_DRAWALLS, "for vsp continue\n"); continue;}
+		dlog(DEBUG_POLYMOST_DRAWALLS_DOMOSTS_DETAIL, "for vsp newi: %i, (x0 %f > nx1 %f): %i (nx0 %f > x1 %f): %i\n", newi, x0, nx1, (x0 > nx1)?1:0, nx0, x1,  (nx0 > x1)?1:0);
+		if ((x0 > nx1) || (nx0 > x1) || (vsp[i].ctag <= 0)) { dlog(DEBUG_POLYMOST_DRAWALLS_DOMOSTS_DETAIL, "for vsp continue\n"); continue;}
         dx = nx1-nx0;
         cy[0] = vsp[i].cy[0]; cv[0] = vsp[i].cy[1]-cy[0];
         cy[1] = vsp[i].fy[0]; cv[1] = vsp[i].fy[1]-cy[1];
@@ -1982,13 +1982,13 @@ void domost(float x0, float y0, float x1, float y1)
         scnt = 0;
 
         //Test if left edge requires split (x0,y0) (nx0,cy(0)),<dx,cv(0)>
-        dlog(DEBUG_POLYMOST_DRAWALLS, "(x0 %f > nx0 %f) && (x0 %f < nx1 %f )\n", x0 , nx0,x0, nx1);
+        dlog(DEBUG_POLYMOST_DRAWALLS_DOMOSTS_DETAIL, "(x0 %f > nx0 %f) && (x0 %f < nx1 %f )\n", x0 , nx0,x0, nx1);
         if ((x0 > nx0) && (x0 < nx1))
         {
             t = (x0-nx0)*cv[dir] - (y0-cy[dir])*dx;
-            dlog(DEBUG_POLYMOST_DRAWALLS, "t: %f\n", t);
+            dlog(DEBUG_POLYMOST_DRAWALLS_DOMOSTS_DETAIL, "t: %f\n", t);
             if (((!dir) && (t < 0)) || ((dir) && (t > 0)))
-                { spx[scnt] = x0; /*spy[scnt] = y0;*/ spt[scnt] = -1; scnt++;dlog(DEBUG_POLYMOST_DRAWALLS, "1) scnt++: %i\n", scnt);  }
+                { spx[scnt] = x0; /*spy[scnt] = y0;*/ spt[scnt] = -1; scnt++;dlog(DEBUG_POLYMOST_DRAWALLS_DOMOSTS_DETAIL, "1) scnt++: %i\n", scnt);  }
         }
 
         //Test for intersection on umost (j == 0) and dmost (j == 1)
@@ -2001,47 +2001,47 @@ void domost(float x0, float y0, float x1, float y1)
                 t = n/d; nx = (x1-x0)*t + x0;
 				nx0+=.01;
                 nx1+=.01;
-                dlog(DEBUG_POLYMOST_DRAWALLS, "t: %f, nx: %f, nx0: %f, nx1: %f d: %f, n: %f\n", t, nx, nx0, nx1, d, n);
-				dlog(DEBUG_POLYMOST_DRAWALLS, "test inter:(nx %f > nx0 %f): %i && (nx %f < nx1 %f): %i, (nx > nx0) && (nx < nx1): %i \n", nx, nx0, (nx > nx0)?1:0, nx, nx1,  (nx < nx1)?1:0, (nx > nx0) && (nx < nx1)?1:0);
+                dlog(DEBUG_POLYMOST_DRAWALLS_DOMOSTS_DETAIL, "t: %f, nx: %f, nx0: %f, nx1: %f d: %f, n: %f\n", t, nx, nx0, nx1, d, n);
+				dlog(DEBUG_POLYMOST_DRAWALLS_DOMOSTS_DETAIL, "test inter:(nx %f > nx0 %f): %i && (nx %f < nx1 %f): %i, (nx > nx0) && (nx < nx1): %i \n", nx, nx0, (nx > nx0)?1:0, nx, nx1,  (nx < nx1)?1:0, (nx > nx0) && (nx < nx1)?1:0);
                 if ((nx > nx0) && (nx < nx1))
                 {
                     spx[scnt] = nx; /* spy[scnt] = (y1-y0)*t + y0; */
-                    spt[scnt] = j; scnt++;dlog(DEBUG_POLYMOST_DRAWALLS, "2) scnt++: %i\n", scnt); 
+                    spt[scnt] = j; scnt++;dlog(DEBUG_POLYMOST_DRAWALLS_DOMOSTS_DETAIL, "2) scnt++: %i\n", scnt); 
                 }
-                else dlog(DEBUG_POLYMOST_DRAWALLS, "test inter bit false\n", scnt); 
+                else dlog(DEBUG_POLYMOST_DRAWALLS_DOMOSTS_DETAIL, "test inter bit false\n", scnt); 
             }
         }
 
         //Nice hack to avoid full sort later :)
         if ((scnt >= 2) && (spx[scnt-1] < spx[scnt-2]))
         {
-            dlog(DEBUG_POLYMOST_DRAWALLS, "do hack\n");
+            dlog(DEBUG_POLYMOST_DRAWALLS_DOMOSTS_DETAIL, "do hack\n");
             f = spx[scnt-1]; spx[scnt-1] = spx[scnt-2]; spx[scnt-2] = f;
             /* f = spy[scnt-1]; spy[scnt-1] = spy[scnt-2]; spy[scnt-2] = f; */
             j = spt[scnt-1]; spt[scnt-1] = spt[scnt-2]; spt[scnt-2] = j;
         }
 
         //Test if right edge requires split
-        dlog(DEBUG_POLYMOST_DRAWALLS, "TEST right edge requires split\n");
+        dlog(DEBUG_POLYMOST_DRAWALLS_DOMOSTS_DETAIL, "TEST right edge requires split\n");
         if ((x1 > nx0) && (x1 < nx1))
         {
-            dlog(DEBUG_POLYMOST_DRAWALLS, "right edge requires split\n");
+            dlog(DEBUG_POLYMOST_DRAWALLS_DOMOSTS_DETAIL, "right edge requires split\n");
             t = (x1-nx0)*cv[dir] - (y1-cy[dir])*dx;
             if (((!dir) && (t < 0)) || ((dir) && (t > 0)))
-                { spx[scnt] = x1; /* spy[scnt] = y1; */ spt[scnt] = -1; scnt++;dlog(DEBUG_POLYMOST_DRAWALLS, "3) scnt++: %i\n", scnt);  }
-        } else dlog(DEBUG_POLYMOST_DRAWALLS, "right edge doesn't require split\n");
+                { spx[scnt] = x1; /* spy[scnt] = y1; */ spt[scnt] = -1; scnt++;dlog(DEBUG_POLYMOST_DRAWALLS_DOMOSTS_DETAIL, "3) scnt++: %i\n", scnt);  }
+        } else dlog(DEBUG_POLYMOST_DRAWALLS_DOMOSTS_DETAIL, "right edge doesn't require split\n");
 
-		//dlog(DEBUG_POLYMOST_DRAWALLS, "domost vsp: i: %i, scnt: %i\n", i, scnt);
+		//dlog(DEBUG_POLYMOST_DRAWALLS_DOMOSTS_DETAIL, "domost vsp: i: %i, scnt: %i\n", i, scnt);
         //for (int l = 0; l < VSPMAX; l++) {
-        //    dlog(DEBUG_POLYMOST_DRAWALLS, "[%i].n:%i ", l, vsp[l].n);
+        //    dlog(DEBUG_POLYMOST_DRAWALLS_DOMOSTS_DETAIL, "[%i].n:%i ", l, vsp[l].n);
         //}
-        //dlog(DEBUG_POLYMOST_DRAWALLS, "\n");
+        //dlog(DEBUG_POLYMOST_DRAWALLS_DOMOSTS_DETAIL, "\n");
 
-		dlog(DEBUG_POLYMOST_DRAWALLS, "scnt: %i,  vcnt: %i\n", scnt, vcnt);
+		dlog(DEBUG_POLYMOST_DRAWALLS_DOMOSTS_DETAIL, "scnt: %i,  vcnt: %i\n", scnt, vcnt);
         vsp[i].tag = vsp[newi].tag = -1;
         for (z=0; z<=scnt; z++,i=vcnt)
         {
-			dlog(DEBUG_POLYMOST_DRAWALLS, "domost vsp z: %i, scnt: %i\n", z, scnt);
+			dlog(DEBUG_POLYMOST_DRAWALLS_DOMOSTS_DETAIL, "domost vsp z: %i, scnt: %i\n", z, scnt);
             if (z < scnt)
             {
                 vcnt = vsinsaft(vsp, i);
@@ -2055,15 +2055,15 @@ void domost(float x0, float y0, float x1, float y1)
             }
 
 			//for (int l = 0; l < VSPMAX; l++) {
-			//	dlog(DEBUG_POLYMOST_DRAWALLS, "[%i].n:%i ", l, vsp[l].n);
+			//	dlog(DEBUG_POLYMOST_DRAWALLS_DOMOSTS_DETAIL, "[%i].n:%i ", l, vsp[l].n);
 			//}
-			//dlog(DEBUG_POLYMOST_DRAWALLS, "\n");
+			//dlog(DEBUG_POLYMOST_DRAWALLS_DOMOSTS_DETAIL, "\n");
 
-            ni = vsp[i].n; if (!ni) {dlog(DEBUG_POLYMOST_DRAWALLS, "!ni\n");continue;} //this 'if' fixes many bugs!
-            dlog(DEBUG_POLYMOST_DRAWALLS, "ni: %i x0: %f  dx0: %f \n",ni, x0, vsp[i].x);
-            dx0 = vsp[i].x; if (x0 > dx0) {dlog(DEBUG_POLYMOST_DRAWALLS, "x0 > dx0\n");continue;}
-            dx1 = vsp[ni].x; if (x1 < dx1) {dlog(DEBUG_POLYMOST_DRAWALLS, "x1 < dx1\n");continue;}
-            dlog(DEBUG_POLYMOST_DRAWALLS, "ni: %i dx0: %f dx1: %f\n",ni, dx0, dx1);
+            ni = vsp[i].n; if (!ni) {dlog(DEBUG_POLYMOST_DRAWALLS_DOMOSTS_DETAIL, "!ni\n");continue;} //this 'if' fixes many bugs!
+            dlog(DEBUG_POLYMOST_DRAWALLS_DOMOSTS_DETAIL, "ni: %i x0: %f  dx0: %f \n",ni, x0, vsp[i].x);
+            dx0 = vsp[i].x; if (x0 > dx0) {dlog(DEBUG_POLYMOST_DRAWALLS_DOMOSTS_DETAIL, "x0 > dx0\n");continue;}
+            dx1 = vsp[ni].x; if (x1 < dx1) {dlog(DEBUG_POLYMOST_DRAWALLS_DOMOSTS_DETAIL, "x1 < dx1\n");continue;}
+            dlog(DEBUG_POLYMOST_DRAWALLS_DOMOSTS_DETAIL, "ni: %i dx0: %f dx1: %f\n",ni, dx0, dx1);
             ny0 = (dx0-x0)*slop + y0;
             ny1 = (dx1-x0)*slop + y0;
 
@@ -2165,12 +2165,12 @@ void domost(float x0, float y0, float x1, float y1)
     i = vsp[0].n;
     while (i)
     {
-		dlog(DEBUG_POLYMOST_DRAWALLS, "Combine %i\n", i);
+		dlog(DEBUG_POLYMOST_DRAWALLS_DOMOSTS_DETAIL, "Combine %i\n", i);
         ni = vsp[i].n;
         if ((vsp[i].cy[0] >= vsp[i].fy[0]) && (vsp[i].cy[1] >= vsp[i].fy[1]))
 		{
             vsp[i].ctag = vsp[i].ftag = -1;
-			dlog(DEBUG_POLYMOST_DRAWALLS, "ctag %i\n", vsp[i].ctag);
+			dlog(DEBUG_POLYMOST_DRAWALLS_DOMOSTS_DETAIL, "ctag %i\n", vsp[i].ctag);
 		}
 
         if ((vsp[i].ctag == vsp[ni].ctag) && (vsp[i].ftag == vsp[ni].ftag))
@@ -2178,12 +2178,12 @@ void domost(float x0, float y0, float x1, float y1)
             vsp[i].cy[1] = vsp[ni].cy[1];
             vsp[i].fy[1] = vsp[ni].fy[1];
             vsdel(vsp, ni);
-			dlog(DEBUG_POLYMOST_DRAWALLS, "vsdel ni %i\n", ni);
+			dlog(DEBUG_POLYMOST_DRAWALLS_DOMOSTS_DETAIL, "vsdel ni %i\n", ni);
         }
         else 
 		{
 			i = ni;
-			dlog(DEBUG_POLYMOST_DRAWALLS, "i=ni %i\n", i);
+			dlog(DEBUG_POLYMOST_DRAWALLS_DOMOSTS_DETAIL, "i=ni %i\n", i);
 		}
     }
 }

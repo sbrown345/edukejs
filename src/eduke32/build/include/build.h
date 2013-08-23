@@ -1398,8 +1398,9 @@ static inline void pop_nofog(void)
 #define DEBUG_COMPILE 0
 #define DEBUG_KRAND 1
 #define DEBUG_MOSTS 1
-#define DEBUG_POLY 1
+#define DEBUG_POLY 0
 #define DEBUG_POLYMOST_DRAWALLS 1
+#define DEBUG_POLYMOST_DRAWALLS_DOMOSTS_DETAIL 0
 #define DEBUG_PALETTE 0
 #define DEBUG_LOAD_TILE_ART 0
 #define DEBUG_PLAYER_POS 1
