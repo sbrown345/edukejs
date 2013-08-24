@@ -12031,7 +12031,7 @@ var tempWhile = 0;
         else 
             dlogFlush();
     }
-    main_loop();
+    requestAnimationFrame(main_loop);
     //}
     //while (tempWhile++ < 26 /*26*/);
     
