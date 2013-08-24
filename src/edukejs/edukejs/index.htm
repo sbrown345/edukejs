@@ -34,7 +34,9 @@
             }
             
             fileHandles[4] = new Ptr(grpData);
-            WinMain(null, null, "-nosetup -map E1L1.MAP", 10);
+            var commandLine = "-nosetup -map ";
+            commandLine += window.location.search ? window.location.search.substr(1) + ".MAP" : "E1L1.MAP";
+            WinMain(null, null, commandLine, 10);
         }
     </script>
 </body>
