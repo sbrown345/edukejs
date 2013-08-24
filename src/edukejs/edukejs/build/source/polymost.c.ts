@@ -1353,6 +1353,7 @@ function gloadtile_art(dapic: number, dapal: number, dashade: number, dameth: nu
 var pow2xsplit = 0, skyclamphack = 0; //static int32_t 
 var alpha = 0.0;
 var drawpoly_dd = new Float64Array(16), drawpoly_uu = new Float64Array(16), drawpoly_vv = new Float64Array(16), drawpoly_px = new Float64Array(16), drawpoly_py = new Float64Array(16);
+var drawpoly_pc = new Float32Array(4);
 function drawpoly(dpx: Float64Array, dpy: Float64Array, /*int32_t*/ n:number, /*int32_t*/ method: number): void
 {
     var ngdx = 0.0, ngdy = 0.0, ngdo = 0.0, ngux = 0.0, nguy = 0.0, nguo = 0.0;             //double 
@@ -1586,7 +1587,7 @@ function drawpoly(dpx: Float64Array, dpy: Float64Array, /*int32_t*/ n:number, /*
         }
 
         {
-            var pc = new Float32Array(4);
+            var pc = drawpoly_pc;
             pc[0] = pc[1] = pc[2] = getshadefactor(globalshade);
 
             switch (method&3)
@@ -1954,13 +1955,14 @@ function /*int32_t */vsinsaft(/*vsptyp **/vsp: vsptyp[], /*int32_t */i: number)
 {
     var /*int32_t */r: number;
     vsinsaftCount++;
-    dlog(DEBUG_MOSTS, "vsinsaft: Count %i, i: %i\n", vsinsaftCount, i);
-    dlog(DEBUG_MOSTS, "start vsinsaft vsp:\n");
-    for (var l = 0; l < VSPMAX; l++) {
-        dlog(DEBUG_MOSTS, "[%i].n:%i ", l, vsp[l].n);
+    if(DEBUG_MOSTS) {
+        dlog(DEBUG_MOSTS, "vsinsaft: Count %i, i: %i\n", vsinsaftCount, i);
+        dlog(DEBUG_MOSTS, "start vsinsaft vsp:\n");
+        for (var l = 0; l < VSPMAX; l++) {
+            dlog(DEBUG_MOSTS, "[%i].n:%i ", l, vsp[l].n);
+        }
+        dlog(DEBUG_MOSTS, "\n");
     }
-    dlog(DEBUG_MOSTS, "\n");
-
     //i = next element from empty list
     r = vsp[VSPMAX-1].n;
     vsp[vsp[r].n].p = VSPMAX-1;
@@ -1972,11 +1974,13 @@ function /*int32_t */vsinsaft(/*vsptyp **/vsp: vsptyp[], /*int32_t */i: number)
     vsp[r].p = i; vsp[r].n = vsp[i].n;
     vsp[vsp[i].n].p = r; vsp[i].n = r;
 
-    dlog(DEBUG_MOSTS, "after vsinsaft vsp:\n");
-    for (var l = 0; l < VSPMAX; l++) {
-        dlog(DEBUG_MOSTS, "[%i].n:%i ", l, vsp[l].n);
+    if(DEBUG_MOSTS) {
+        dlog(DEBUG_MOSTS, "after vsinsaft vsp:\n");
+        for (var l = 0; l < VSPMAX; l++) {
+            dlog(DEBUG_MOSTS, "[%i].n:%i ", l, vsp[l].n);
+        }
+        dlog(DEBUG_MOSTS, "\n");
     }
-    dlog(DEBUG_MOSTS, "\n");
     return(r);
 }
 
@@ -2279,12 +2283,14 @@ var /*float */global_cf_xpanning:number, global_cf_ypanning:number, global_cf_he
 var /*int32_t */global_cf_shade: number, global_cf_pal: number;
 var global_getzofslope_func: (a1: number, a2: number, a3: number) => number;//static int32_t (*global_getzofslope_func)(int16_t, int32_t, int32_t);
 //
+var pin_ft =  new Float64Array(4);
+var pin_px =  new Float64Array(3), pin_py = new Float64Array(3), pin_dd = new Float64Array(3), pin_uu = new Float64Array(3), pin_vv = new Float64Array(3);
 function polymost_internal_nonparallaxed(/*double*/ nx0:number, /*double*/ ny0:number, /*double*/ nx1:number, /*double*/ ny1:number, /*double*/ ryp0:number, /*double*/ ryp1:number,
                                             /*double*/ x0:number, /*double*/ x1:number, /*double*/ cf_y0:number, /*double*/ cf_y1:number, /*int32_t*/ have_floor:number,
                                             /*int32_t*/ sectnum:number):void 
 {
-    var /*double */ft = new Float64Array(4), fx=0.0, fy=0.0, ox=0.0, oy=0.0, oz=0.0, ox2=0.0, oy2=0.0;
-    var /*double */px = new Float64Array(3), py = new Float64Array(3), dd = new Float64Array(3), uu = new Float64Array(3), vv = new Float64Array(3), r=0.0;
+    var /*double */ft = pin_ft, fx=0.0, fy=0.0, ox=0.0, oy=0.0, oz=0.0, ox2=0.0, oy2=0.0;
+    var /*double */px = pin_px, py = pin_py, dd = pin_dd, uu = pin_uu, vv = pin_vv, r=0.0;
     var /*int32_t */i: number;
 
     var sec = sector[sectnum];
