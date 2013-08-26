@@ -33,8 +33,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //#ifndef __game_h__
 //#define __game_h__
 
-//#define USERQUOTE_LEFTOFFSET    5
-//#define USERQUOTE_RIGHTOFFSET   14
+var USERQUOTE_LEFTOFFSET   =5;
+var USERQUOTE_RIGHTOFFSET  =14;
 
 //enum GametypeFlags_t {
 var GAMETYPE_COOP                   = 0x00000001,
@@ -456,8 +456,8 @@ function/* int32_t */G_GetTeamPalette(/*int32_t*/ team: number): number
 //extern char forcegl;
 //#endif
 
-//#define minitextshade(x, y, t, s, p, sb) minitext_(x,y,t,s,p,sb)
-var minitext = minitext_;//#define minitext(x, y, t, p, sb) minitext_(x,y,t,0,p,sb)
+function minitextshade(/*int32_t */x:number,/*int32_t */y:number,/*const char **/t:string,/*int32_t */s:number,/*int32_t */p:number,/*int32_t */sb:number):number {return minitext_(x,y,t,s,p,sb);}
+function minitext(/*int32_t */x:number,/*int32_t */y:number,/*const char **/t:string,/*int32_t */p:number,/*int32_t */sb:number):number {return minitext_(x,y,t,0,p,sb);}
 function menutext(x: number,y: number,s: number,p:number,t: string): number {todo("menutext game.h");return -1;/*menutext_(x,y,s,p,/*(char *)#1#OSD_StripColors(menutextbuf,t),10+16);*/}
 function gametext(x: number,y: number,t:string,s: number,dabits: number): number{todo(" gamtexte");return -1;/*G_PrintGameText(0,STARTALPHANUM, x,y,t,s,0,dabits,0, 0, xdim-1, ydim-1, 65536)*/};
 //#define gametextscaled(x,y,t,s,dabits) G_PrintGameText(1,STARTALPHANUM, x,y,t,s,0,dabits,0, 0, xdim-1, ydim-1, 65536)

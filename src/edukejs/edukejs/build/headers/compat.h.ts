@@ -623,7 +623,7 @@ var Bmemcmp = memcmp;
 //# define Bscanf scanf
 var Bprintf  = printf;
 //# define Bsscanf sscanf
-var Bsprintf = function (buf: Uint8Array, format: string, ...args: any[]) {
+function Bsprintf (buf: Uint8Array, format: string, ...args: any[]):number {
     args.unshift(format);
     var output = sprintf.apply(this, args);
     var i: number;
@@ -631,6 +631,8 @@ var Bsprintf = function (buf: Uint8Array, format: string, ...args: any[]) {
         buf[i] = output.charCodeAt(i);
     }
     buf[i] = 0;
+
+    return output.length;
 };
 //# ifdef _MSC_VER
 //#  define Bsnprintf _snprintf

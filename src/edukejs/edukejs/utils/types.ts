@@ -174,7 +174,7 @@ class P {
         else
             this.buf = buffer;
 
-        this.arr = new Uint8Array(buffer);
+        this.arr = new Uint8Array(this.buf);
         this.idx = indexOffset;
     }
 }

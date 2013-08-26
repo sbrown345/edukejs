@@ -377,18 +377,18 @@ function /*int32_t */textsc(/*int32_t */sc:number):number
     return scale(sc,ud.textscale,100);
 }
 
-//static void G_PatchStatusBar(int32_t x1, int32_t y1, int32_t x2, int32_t y2)
-//{
-//    int32_t scl = sbarsc(65536);
-//    int32_t tx = sbarx16((320<<15) - (tilesizx[BOTTOMSTATUSBAR]<<15)); // centered
-//    int32_t ty = sbary(200-tilesizy[BOTTOMSTATUSBAR]);
+function G_PatchStatusBar(/*int32_t*/ x1:number, /*int32_t */y1:number, /*int32_t */x2:number, /*int32_t */y2:number):void 
+{
+    var /*int32_t*/ scl = sbarsc(65536);
+    var /*int32_t*/ tx = sbarx16((320<<15) - (tilesizx[BOTTOMSTATUSBAR]<<15)); // centered
+    var /*int32_t*/ ty = sbary(200-tilesizy[BOTTOMSTATUSBAR]);
 
-//    int32_t clx1 = sbarsc(scale(x1,xdim,320)), cly1 = sbarsc(scale(y1,ydim,200));
-//    int32_t clx2 = sbarsc(scale(x2,xdim,320)), cly2 = sbarsc(scale(y2,ydim,200));
-//    int32_t clofx = (xdim - sbarsc(xdim)) >> 1, clofy = (ydim - sbarsc(ydim));
+    var /*int32_t*/clx1 = sbarsc(scale(x1,xdim,320)), cly1 = sbarsc(scale(y1,ydim,200));
+    var /*int32_t*/clx2 = sbarsc(scale(x2,xdim,320)), cly2 = sbarsc(scale(y2,ydim,200));
+    var /*int32_t*/clofx = (xdim - sbarsc(xdim)) >> 1, clofy = (ydim - sbarsc(ydim));
 
-//    rotatesprite(tx,ty,scl,0,BOTTOMSTATUSBAR,4,0,10+16+64,clx1+clofx,cly1+clofy,clx2+clofx-1,cly2+clofy-1);
-//}
+    rotatesprite(tx,ty,scl,0,BOTTOMSTATUSBAR,4,0,10+16+64,clx1+clofx,cly1+clofy,clx2+clofx-1,cly2+clofy-1);
+}
 
 function P_SetGamePalette(player: DukePlayer_t, palid: number, $set: number): void
 {
@@ -513,314 +513,322 @@ function P_SetGamePalette(player: DukePlayer_t, palid: number, $set: number): vo
 //        return *t - '!' + font; // uses ASCII order
 //}
 
-//#define NUMHACKACTIVE ((f & TEXT_GAMETEXTNUMHACK) && t >= '0' && t <= '9')
+function NUMHACKACTIVE(t:string, f:number):boolean { return (f & TEXT_GAMETEXTNUMHACK) && t >= '0' && t <= '9'; }
 
-//// qstrdim
-//vec2_t G_ScreenTextSize(const int32_t font,
-//                        int32_t x, int32_t y, const int32_t z, const int32_t blockangle,
-//                        const char *str, const int32_t o,
-//                        int32_t xspace, int32_t yline, int32_t xbetween, int32_t ybetween,
-//                        const int32_t f,
-//                        int32_t x1, int32_t y1, int32_t x2, int32_t y2)
-//{
-//    vec2_t size = { 0, 0, }; // eventually the return value
-//    vec2_t pos = { 0, 0, }; // holds the coordinate position as we draw each character tile of the string
-//    vec2_t extent = { 0, 0, }; // holds the x-width of each character and the greatest y-height of each line
-//    vec2_t offset = { 0, 0, }; // temporary; holds the last movement made in both directions
+// qstrdim
+function G_ScreenTextSize( /*int32_t*/  font:number,
+                        /*int32_t*/  x:number, /*int32_t*/  y:number,  /*int32_t*/  z:number,  /*int32_t*/  blockangle:number,
+                         /*char **/str:string,  /*int32_t*/  o,
+                        /*int32_t*/  xspace:number, /*int32_t*/  yline:number, /*int32_t*/  xbetween:number, /*int32_t*/  ybetween:number,
+                         /*int32_t*/  f:number,
+                        /*int32_t*/  x1:number, /*int32_t*/  y1:number, /*int32_t*/  x2:number, /*int32_t*/  y2:number): vec2_t 
+{todoThrow();return new vec2_t();
+    //var size = new vec2_t(); // eventually the return value
+    //var pos = new vec2_t(); // holds the coordinate position as we draw each character tile of the string
+    //var extent = new vec2_t(); // holds the x-width of each character and the greatest y-height of each line
+    //var offset = new vec2_t(); // temporary; holds the last movement made in both directions
 
-//    int32_t tile;
-//    char t;
+    //var /*int32_t */tile:number;
+    //var /*char */t:number;
 
-//    // set the start and end points depending on direction
-//    int32_t iter = (f & TEXT_BACKWARDS) ? -1 : 1; // iteration direction
+    //// set the start and end points depending on direction
+    //var /*int32_t */iter = (f & TEXT_BACKWARDS) ? -1 : 1; // iteration direction
 
-//    const char *end;
-//    const char *text;
+    //var /*const char **/end:string;
+    //var /*const char **/text:string;
 
-//    if (str == NULL)
-//        return size;
+    //if (str == NULL)
+    //    return size;
 
-//    end = (f & TEXT_BACKWARDS) ? str-1 : Bstrchr(str,'\0');
-//    text = (f & TEXT_BACKWARDS) ? Bstrchr(str,'\0')-1 : str;
+    //end = (f & TEXT_BACKWARDS) ? str-1 : Bstrchr(str,'\0');
+    //text = (f & TEXT_BACKWARDS) ? Bstrchr(str,'\0')-1 : str;
 
-//    // optimization: justification in both directions
-//    if ((f & TEXT_XJUSTIFY) && (f & TEXT_YJUSTIFY))
-//    {
-//        size.x = xbetween;
-//        size.y = ybetween;
-//        return size;
-//    }
+    //// optimization: justification in both directions
+    //if ((f & TEXT_XJUSTIFY) && (f & TEXT_YJUSTIFY))
+    //{
+    //    size.x = xbetween;
+    //    size.y = ybetween;
+    //    return size;
+    //}
 
-//    // for best results, we promote 320x200 coordinates to full precision before any math
-//    if (!(o & ROTATESPRITE_FULL16))
-//    {
-//        x <<= 16;
-//        y <<= 16;
-//        xspace <<= 16;
-//        yline <<= 16;
-//        xbetween <<= 16;
-//        ybetween <<= 16;
-//    }
-//    // coordinate values should be shifted left by 16
+    //// for best results, we promote 320x200 coordinates to full precision before any math
+    //if (!(o & ROTATESPRITE_FULL16))
+    //{
+    //    x <<= 16;
+    //    y <<= 16;
+    //    xspace <<= 16;
+    //    yline <<= 16;
+    //    xbetween <<= 16;
+    //    ybetween <<= 16;
+    //}
+    //// coordinate values should be shifted left by 16
 
-//    // handle zooming where applicable
-//    xspace = scale(xspace, z, 65536);
-//    yline = scale(yline, z, 65536);
-//    xbetween = scale(xbetween, z, 65536);
-//    ybetween = scale(ybetween, z, 65536);
-//    // size/width/height/spacing/offset values should be multiplied or scaled by $z, zoom (since 100% is 65536, the same as 1<<16)
+    //// handle zooming where applicable
+    //xspace = scale(xspace, z, 65536);
+    //yline = scale(yline, z, 65536);
+    //xbetween = scale(xbetween, z, 65536);
+    //ybetween = scale(ybetween, z, 65536);
+    //// size/width/height/spacing/offset values should be multiplied or scaled by $z, zoom (since 100% is 65536, the same as 1<<16)
 
-//    // loop through the string
-//    while ((t = *text) && text != end)
-//    {
-//        // handle escape sequences
-//        if (t == '^' && Bisdigit(*(text+iter)) && !(f & TEXT_LITERALESCAPE))
-//        {
-//            text += iter + iter;
-//            if (Bisdigit(*text))
-//                text += iter;
-//            continue;
-//        }
+    //// loop through the string
+    //while ((t = *text) && text != end)
+    //{
+    //    // handle escape sequences
+    //    if (t == '^' && Bisdigit(*(text+iter)) && !(f & TEXT_LITERALESCAPE))
+    //    {
+    //        text += iter + iter;
+    //        if (Bisdigit(*text))
+    //            text += iter;
+    //        continue;
+    //    }
 
-//        // handle case bits
-//        if (f & TEXT_UPPERCASE)
-//        {
-//            if (f & TEXT_INVERTCASE) // optimization...?
-//            { // v^ important that these two ifs remain separate due to the else below
-//                if (Bisupper(t))
-//                    t = Btolower(t);
-//            }
-//            else if (Bislower(t))
-//                t = Btoupper(t);
-//        }
-//        else if (f & TEXT_INVERTCASE)
-//        {
-//            if (Bisupper(t))
-//                t = Btolower(t);
-//            else if (Bislower(t))
-//                t = Btoupper(t);
-//        }
+    //    // handle case bits
+    //    if (f & TEXT_UPPERCASE)
+    //    {
+    //        if (f & TEXT_INVERTCASE) // optimization...?
+    //        { // v^ important that these two ifs remain separate due to the else below
+    //            if (Bisupper(t))
+    //                t = Btolower(t);
+    //        }
+    //        else if (Bislower(t))
+    //            t = Btoupper(t);
+    //    }
+    //    else if (f & TEXT_INVERTCASE)
+    //    {
+    //        if (Bisupper(t))
+    //            t = Btolower(t);
+    //        else if (Bislower(t))
+    //            t = Btoupper(t);
+    //    }
 
-//        // translate the character to a tilenum
-//        tile = G_GetStringTile(font, &t, f);
+    //    // translate the character to a tilenum
+    //    tile = G_GetStringTile(font, &t, f);
 
-//        // reset this here because we haven't printed anything yet this loop
-//        extent.x = 0;
+    //    // reset this here because we haven't printed anything yet this loop
+    //    extent.x = 0;
 
-//        // reset this here because the act of printing something on this line means that we include the margin above in the total size
-//        offset.y = 0;
+    //    // reset this here because the act of printing something on this line means that we include the margin above in the total size
+    //    offset.y = 0;
 
-//        // handle each character itself in the context of screen drawing
-//        switch (t)
-//        {
-//            case '\t':
-//            case ' ':
-//                // width
-//                extent.x = xspace;
+    //    // handle each character itself in the context of screen drawing
+    //    switch (t)
+    //    {
+    //        case '\t':
+    //        case ' ':
+    //            // width
+    //            extent.x = xspace;
 
-//                if (f & (TEXT_INTERNALSPACE|TEXT_TILESPACE))
-//                {
-//                    char space = '.'; // this is subject to change as an implementation detail
-//                    if (f & TEXT_TILESPACE)
-//                        space = '\x7F'; // tile after '~'
-//                    tile = G_GetStringTile(font, &space, f);
+    //            if (f & (TEXT_INTERNALSPACE|TEXT_TILESPACE))
+    //            {
+    //                var /*char */space = '.'; // this is subject to change as an implementation detail
+    //                if (f & TEXT_TILESPACE)
+    //                    space = '\x7F'; // tile after '~'
+    //                tile = G_GetStringTile(font, &space, f);
 
-//                    extent.x += (tilesizx[tile] * z);
-//                }
+    //                extent.x += (tilesizx[tile] * z);
+    //            }
 
-//                // prepare the height // near-CODEDUP the other two near-CODEDUPs for this section
-//                {
-//                    int32_t tempyextent = yline;
+    //            // prepare the height // near-CODEDUP the other two near-CODEDUPs for this section
+    //            {
+    //                var /*int32_t */tempyextent = yline;
 
-//                    if (f & (TEXT_INTERNALLINE|TEXT_TILELINE))
-//                    {
-//                        char line = 'A'; // this is subject to change as an implementation detail
-//                        if (f & TEXT_TILELINE)
-//                            line = '\x7F'; // tile after '~'
-//                        tile = G_GetStringTile(font, &line, f);
+    //                if (f & (TEXT_INTERNALLINE|TEXT_TILELINE))
+    //                {
+    //                    var /*char */line = 'A'; // this is subject to change as an implementation detail
+    //                    if (f & TEXT_TILELINE)
+    //                        line = '\x7F'; // tile after '~'
+    //                    tile = G_GetStringTile(font, &line, f);
 
-//                        tempyextent += tilesizy[tile] * z;
-//                    }
+    //                    tempyextent += tilesizy[tile] * z;
+    //                }
 
-//                    SetIfGreater(&extent.y, tempyextent);
-//                }
+    //                if (tempyextent > extent.y)
+    //                    extent.y = tempyextent;
+    //            }
 
-//                if (t == '\t')
-//                    extent.x <<= 2; // *= 4
+    //            if (t == '\t')
+    //                extent.x <<= 2; // *= 4
 
-//                break;
+    //            break;
 
-//            case '\n': // near-CODEDUP "if (wrap)"
-//                // save the position
-//                if (!(f & TEXT_XOFFSETZERO)) // we want the entire offset to count as the character width
-//                    pos.x -= offset.x;
-//                SetIfGreater(&size.x, pos.x);
+    //        case '\n': // near-CODEDUP "if (wrap)"
+    //            // save the position
+    //            if (!(f & TEXT_XOFFSETZERO)) // we want the entire offset to count as the character width
+    //                pos.x -= offset.x;
+    //            if (size.x > pos.x)
+    //                pos.x = size.x;
 
-//                // reset the position
-//                pos.x = 0;
+    //            // reset the position
+    //            pos.x = 0;
 
-//                // prepare the height
-//                {
-//                    int32_t tempyextent = yline;
+    //            // prepare the height
+    //            {
+    //                var /*int32_t */tempyextent = yline;
 
-//                    if (f & (TEXT_INTERNALLINE|TEXT_TILELINE))
-//                    {
-//                        char line = 'A'; // this is subject to change as an implementation detail
-//                        if (f & TEXT_TILELINE)
-//                            line = '\x7F'; // tile after '~'
-//                        tile = G_GetStringTile(font, &line, f);
+    //                if (f & (TEXT_INTERNALLINE|TEXT_TILELINE))
+    //                {
+    //                    var /*char */line = 'A'; // this is subject to change as an implementation detail
+    //                    if (f & TEXT_TILELINE)
+    //                        line = '\x7F'; // tile after '~'
+    //                    tile = G_GetStringTile(font, &line, f);
 
-//                        tempyextent += tilesizy[tile] * z;
-//                    }
+    //                    tempyextent += tilesizy[tile] * z;
+    //                }
 
-//                    SetIfGreater(&extent.y, tempyextent);
-//                }
+    //                if (extent.y > tempyextent)
+    //                    tempyextent = extent.y;
+    //            }
 
-//                // move down the line height
-//                if (!(f & TEXT_YOFFSETZERO))
-//                    pos.y += extent.y;
+    //            // move down the line height
+    //            if (!(f & TEXT_YOFFSETZERO))
+    //                pos.y += extent.y;
 
-//                // reset the current height
-//                extent.y = 0;
+    //            // reset the current height
+    //            extent.y = 0;
 
-//                // line spacing
-//                offset.y = (f & TEXT_YJUSTIFY) ? 0 : ybetween; // ternary to prevent overflow
-//                pos.y += offset.y;
+    //            // line spacing
+    //            offset.y = (f & TEXT_YJUSTIFY) ? 0 : ybetween; // ternary to prevent overflow
+    //            pos.y += offset.y;
 
-//                break;
+    //            break;
 
-//            default:
-//                // width
-//                extent.x = tilesizx[tile] * z;
+    //        default:
+    //            // width
+    //            extent.x = tilesizx[tile] * z;
 
-//                // obnoxious hardcoded functionality from gametext
-//                if (NUMHACKACTIVE)
-//                {
-//                    char numeral = '0'; // this is subject to change as an implementation detail
-//                    extent.x = (tilesizx[G_GetStringTile(font, &numeral, f)]-1) * z;
-//                }
+    //            // obnoxious hardcoded functionality from gametext
+    //            if (NUMHACKACTIVE(t, f))
+    //            {
+    //                var /*char */numeral = '0'; // this is subject to change as an implementation detail
+    //                extent.x = (tilesizx[G_GetStringTile(font, &numeral, f)]-1) * z;
+    //            }
 
-//                // height
-//                SetIfGreater(&extent.y, (tilesizy[tile] * z));
+    //            // height
+    //            if ((tilesizy[tile] * z) > extent.y)
+    //                extent.y = (tilesizy[tile] * z);
 
-//                break;
-//        }
+    //            break;
+    //    }
 
-//        // incrementing the coordinate counters
-//        offset.x = 0;
+    //    // incrementing the coordinate counters
+    //    offset.x = 0;
 
-//        // advance the x coordinate
-//        if (!(f & TEXT_XOFFSETZERO) || NUMHACKACTIVE)
-//            offset.x += extent.x;
+    //    // advance the x coordinate
+    //    if (!(f & TEXT_XOFFSETZERO) || NUMHACKACTIVE(t, f))
+    //        offset.x += extent.x;
 
-//        // account for text spacing
-//        if (!NUMHACKACTIVE // this "if" line ONLY == replicating hardcoded stuff
-//            && t != '\n'
-//            && !(f & TEXT_XJUSTIFY)) // to prevent overflow
-//            offset.x += xbetween;
+    //    // account for text spacing
+    //    if (!NUMHACKACTIVE(t, f) // this "if" line ONLY == replicating hardcoded stuff
+    //        && t != '\n'
+    //        && !(f & TEXT_XJUSTIFY)) // to prevent overflow
+    //        offset.x += xbetween;
 
-//        // line wrapping
-//        if ((f & TEXT_LINEWRAP) && !(f & TEXT_XRIGHT) && !(f & TEXT_XCENTER) && blockangle % 512 == 0)
-//        {
-//            int32_t wrap = 0;
-//            const int32_t ang = blockangle % 2048;
+    //    // line wrapping
+    //    if ((f & TEXT_LINEWRAP) && !(f & TEXT_XRIGHT) && !(f & TEXT_XCENTER) && blockangle % 512 == 0)
+    //    {
+    //        var /*int32_t */wrap = 0;
+    //        var /*const int32_t */ang = blockangle % 2048;
 
-//            // this is the only place in qstrdim where angle actually affects direction, but only in the wrapping measurement
-//            switch (ang)
-//            {
-//                case 0:
-//                    wrap = (x + (pos.x + offset.x) > ((o & 2) ? (320<<16) : ((x2 - USERQUOTE_RIGHTOFFSET)<<16)));
-//                    break;
-//                case 512:
-//                    wrap = (y + (pos.x + offset.x) > ((o & 2) ? (200<<16) : ((y2 - USERQUOTE_RIGHTOFFSET)<<16)));
-//                    break;
-//                case 1024:
-//                    wrap = (x - (pos.x + offset.x) < ((o & 2) ? 0 : ((x1 + USERQUOTE_RIGHTOFFSET)<<16)));
-//                    break;
-//                case 1536:
-//                    wrap = (y - (pos.x + offset.x) < ((o & 2) ? 0 : ((y1 + USERQUOTE_RIGHTOFFSET)<<16)));
-//                    break;
-//            }
-//            if (wrap) // near-CODEDUP "case '\n':"
-//            {
-//                // save the position
-//                SetIfGreater(&size.x, pos.x);
+    //        // this is the only place in qstrdim where angle actually affects direction, but only in the wrapping measurement
+    //        switch (ang)
+    //        {
+    //            case 0:
+    //                wrap = (x + (pos.x + offset.x) > ((o & 2) ? (320<<16) : ((x2 - USERQUOTE_RIGHTOFFSET)<<16)));
+    //                break;
+    //            case 512:
+    //                wrap = (y + (pos.x + offset.x) > ((o & 2) ? (200<<16) : ((y2 - USERQUOTE_RIGHTOFFSET)<<16)));
+    //                break;
+    //            case 1024:
+    //                wrap = (x - (pos.x + offset.x) < ((o & 2) ? 0 : ((x1 + USERQUOTE_RIGHTOFFSET)<<16)));
+    //                break;
+    //            case 1536:
+    //                wrap = (y - (pos.x + offset.x) < ((o & 2) ? 0 : ((y1 + USERQUOTE_RIGHTOFFSET)<<16)));
+    //                break;
+    //        }
+    //        if (wrap) // near-CODEDUP "case '\n':"
+    //        {
+    //            // save the position
+    //            if (size.x > pos.x)
+    //                pos.x = size.x;
 
-//                // reset the position
-//                pos.x = 0;
+    //            // reset the position
+    //            pos.x = 0;
 
-//                // prepare the height
-//                {
-//                    int32_t tempyextent = yline;
+    //            // prepare the height
+    //            {
+    //                var /*int32_t */tempyextent = yline;
 
-//                    if (f & (TEXT_INTERNALLINE|TEXT_TILELINE))
-//                    {
-//                        char line = 'A'; // this is subject to change as an implementation detail
-//                        if (f & TEXT_TILELINE)
-//                            line = '\x7F'; // tile after '~'
-//                        tile = G_GetStringTile(font, &line, f);
+    //                if (f & (TEXT_INTERNALLINE|TEXT_TILELINE))
+    //                {
+    //                    var /*char */line = 'A'; // this is subject to change as an implementation detail
+    //                    if (f & TEXT_TILELINE)
+    //                        line = '\x7F'; // tile after '~'
+    //                    tile = G_GetStringTile(font, &line, f);
 
-//                        tempyextent += tilesizy[tile] * z;
-//                    }
+    //                    tempyextent += tilesizy[tile] * z;
+    //                }
 
-//                    SetIfGreater(&extent.y, tempyextent);
-//                }
+    //                if (tempyextent > extent.y)
+    //                    extent.y = tempyextent;
+    //            }
 
-//                // move down the line height
-//                if (!(f & TEXT_YOFFSETZERO))
-//                    pos.y += extent.y;
+    //            // move down the line height
+    //            if (!(f & TEXT_YOFFSETZERO))
+    //                pos.y += extent.y;
 
-//                // reset the current height
-//                extent.y = 0;
+    //            // reset the current height
+    //            extent.y = 0;
 
-//                // line spacing
-//                offset.y = (f & TEXT_YJUSTIFY) ? 0 : ybetween; // ternary to prevent overflow
-//                pos.y += offset.y;
-//            }
-//            else
-//                pos.x += offset.x;
-//        }
-//        else
-//            pos.x += offset.x;
+    //            // line spacing
+    //            offset.y = (f & TEXT_YJUSTIFY) ? 0 : ybetween; // ternary to prevent overflow
+    //            pos.y += offset.y;
+    //        }
+    //        else
+    //            pos.x += offset.x;
+    //    }
+    //    else
+    //        pos.x += offset.x;
 
-//        // save some trouble with calculation in case the line breaks
-//        if (!(f & TEXT_XOFFSETZERO) || NUMHACKACTIVE)
-//            offset.x -= extent.x;
+    //    // save some trouble with calculation in case the line breaks
+    //    if (!(f & TEXT_XOFFSETZERO) || NUMHACKACTIVE(t, f))
+    //        offset.x -= extent.x;
 
-//        // iterate to the next character in the string
-//        text += iter;
-//    }
+    //    // iterate to the next character in the string
+    //    text += iter;
+    //}
 
-//    // calculate final size
-//    if (!(f & TEXT_XOFFSETZERO))
-//        pos.x -= offset.x;
+    //// calculate final size
+    //if (!(f & TEXT_XOFFSETZERO))
+    //    pos.x -= offset.x;
 
-//    if (!(f & TEXT_YOFFSETZERO))
-//    {
-//        pos.y -= offset.y;
-//        pos.y += extent.y;
-//    }
-//    else
-//        pos.y += ybetween;
+    //if (!(f & TEXT_YOFFSETZERO))
+    //{
+    //    pos.y -= offset.y;
+    //    pos.y += extent.y;
+    //}
+    //else
+    //    pos.y += ybetween;
 
-//    SetIfGreater(&size.x, pos.x);
-//    SetIfGreater(&size.y, pos.y);
+    //if (pos.x > size.x)
+    //    size.x = pos.x;
+    //if (pos.y > size.y)
+    //    size.y = pos.y;
 
-//    // justification where only one of the two directions is set, so we have to iterate
-//    if (f & TEXT_XJUSTIFY)
-//        size.x = xbetween;
-//    if (f & TEXT_YJUSTIFY)
-//        size.y = ybetween;
+    //// justification where only one of the two directions is set, so we have to iterate
+    //if (f & TEXT_XJUSTIFY)
+    //    size.x = xbetween;
+    //if (f & TEXT_YJUSTIFY)
+    //    size.y = ybetween;
 
-//    // return values in the same manner we receive them
-//    if (!(o & ROTATESPRITE_FULL16))
-//    {
-//        size.x >>= 16;
-//        size.y >>= 16;
-//    }
+    //// return values in the same manner we receive them
+    //if (!(o & ROTATESPRITE_FULL16))
+    //{
+    //    size.x >>= 16;
+    //    size.y >>= 16;
+    //}
 
-//    return size;
-//}
+    return size;
+}
 
 //void G_AddCoordsFromRotation(vec2_t *coords, const vec2_t *unitDirection, const int32_t magnitude)
 //{
@@ -1113,7 +1121,7 @@ function P_SetGamePalette(player: DukePlayer_t, palid: number, $set: number): vo
 //                extent.x = tilesizx[tile] * z;
 
 //                // obnoxious hardcoded functionality from gametext
-//                if (NUMHACKACTIVE)
+//                if (NUMHACKACTIVE(t, f))
 //                {
 //                    char numeral = '0'; // this is subject to change as an implementation detail
 //                    extent.x = (tilesizx[G_GetStringTile(font, &numeral, f)]-1) * z;
@@ -1130,11 +1138,11 @@ function P_SetGamePalette(player: DukePlayer_t, palid: number, $set: number): vo
 //            int32_t xoffset = 0;
 
 //            // advance the x coordinate
-//            if (!(f & TEXT_XOFFSETZERO) || NUMHACKACTIVE)
+//            if (!(f & TEXT_XOFFSETZERO) || NUMHACKACTIVE(t, f))
 //                xoffset += extent.x;
 
 //            // account for text spacing
-//            if (!NUMHACKACTIVE // this "if" line ONLY == replicating hardcoded stuff
+//            if (!NUMHACKACTIVE(t, f) // this "if" line ONLY == replicating hardcoded stuff
 //                && t != '\n')
 //                xoffset += xbetween;
 
@@ -1576,53 +1584,53 @@ function G_AddUserQuote(/*const char **/daquote:Uint8Array):void
 //}
 //#endif
 
-//#define POLYMOSTTRANS (1)
-//#define POLYMOSTTRANS2 (1|32)
+var POLYMOSTTRANS= (1);
+var POLYMOSTTRANS2= (1|32);
 
-//// Draws inventory numbers in the HUD for both the full and mini status bars.
-//// yofs: in hud_scale-independent, (<<16)-scaled, 0-200-normalized y coords.
-//static void G_DrawInvNum(int32_t x, int32_t yofs, int32_t y, char num1, char ha, int32_t sbits)
-//{
-//    char dabuf[16];
-//    int32_t i, shd = (x < 0);
+// Draws inventory numbers in the HUD for both the full and mini status bars.
+// yofs: in hud_scale-independent, (<<16)-scaled, 0-200-normalized y coords.
+function G_DrawInvNum(/*int32_t*/ x:number, /*int32_t */yofs:number, /*int32_t */y:number, /*char */num1:number, /*char */ha:number, /*int32_t */sbits:number): void
+{
+    //char dabuf[16];
+    var /*int32_t */i:number, shd = (x < 0);
 
-//    const int32_t sbscale = sbarsc(65536);
-//    const int32_t sby = yofs+sbary(y), sbyp1 = yofs+sbary(y+1);
+    var/* int32_t*/ sbscale = sbarsc(65536);
+    var/* int32_t*/ sby = yofs+sbary(y), sbyp1 = yofs+sbary(y+1);
 
-//    if (shd) x = -x;
+    if (shd) x = -x;
 
-//    Bsprintf(dabuf, "%d", num1);
+    var dabuf = num1.toString().toUint8Array();//Bsprintf(dabuf, "%d", num1);
 
-//    if (num1 > 99)
-//    {
-//        if (shd && ud.screen_size == 4 && getrendermode() >= REND_POLYMOST && althud_shadows)
-//        {
-//            for (i=0; i<=2; i++)
-//                rotatesprite_fs(sbarx(x+(-4+4*i)+1),sbyp1,sbscale,0,THREEBYFIVE+dabuf[i]-'0',
-//                                127, 4, POLYMOSTTRANS|sbits);
-//        }
+    if (num1 > 99)
+    {
+        if (shd && ud.screen_size == 4 && getrendermode() >= REND_POLYMOST && althud_shadows)
+        {
+            for (i=0; i<=2; i++)
+                rotatesprite_fs(sbarx(x+(-4+4*i)+1),sbyp1,sbscale,0,THREEBYFIVE+dabuf[i]-'0'.charCodeAt(0),
+                                127, 4, POLYMOSTTRANS|sbits);
+        }
 
-//        for (i=0; i<=2; i++)
-//            rotatesprite_fs(sbarx(x+(-4+4*i)),sby,sbscale,0,THREEBYFIVE+dabuf[i]-'0',ha, 0, sbits);
-//        return;
-//    }
+        for (i=0; i<=2; i++)
+            rotatesprite_fs(sbarx(x+(-4+4*i)),sby,sbscale,0,THREEBYFIVE+dabuf[i]-'0'.charCodeAt(0),ha, 0, sbits);
+        return;
+    }
 
-//    if (num1 > 9)
-//    {
-//        if (shd && ud.screen_size == 4 && getrendermode() >= REND_POLYMOST && althud_shadows)
-//        {
-//            rotatesprite_fs(sbarx(x+1),sbyp1,sbscale,0,THREEBYFIVE+dabuf[0]-'0',127,4,POLYMOSTTRANS|sbits);
-//            rotatesprite_fs(sbarx(x+4+1),sbyp1,sbscale,0,THREEBYFIVE+dabuf[1]-'0',127,4,POLYMOSTTRANS|sbits);
-//        }
+    if (num1 > 9)
+    {
+        if (shd && ud.screen_size == 4 && getrendermode() >= REND_POLYMOST && althud_shadows)
+        {
+            rotatesprite_fs(sbarx(x+1),sbyp1,sbscale,0,THREEBYFIVE+dabuf[0]-'0'.charCodeAt(0),127,4,POLYMOSTTRANS|sbits);
+            rotatesprite_fs(sbarx(x+4+1),sbyp1,sbscale,0,THREEBYFIVE+dabuf[1]-'0'.charCodeAt(0),127,4,POLYMOSTTRANS|sbits);
+        }
 
-//        rotatesprite_fs(sbarx(x),sby,sbscale,0,THREEBYFIVE+dabuf[0]-'0',ha,0,sbits);
-//        rotatesprite_fs(sbarx(x+4),sby,sbscale,0,THREEBYFIVE+dabuf[1]-'0',ha,0,sbits);
-//        return;
-//    }
+        rotatesprite_fs(sbarx(x),sby,sbscale,0,THREEBYFIVE+dabuf[0]-'0'.charCodeAt(0),ha,0,sbits);
+        rotatesprite_fs(sbarx(x+4),sby,sbscale,0,THREEBYFIVE+dabuf[1]-'0'.charCodeAt(0),ha,0,sbits);
+        return;
+    }
 
-//    rotatesprite_fs(sbarx(x+4+1),sbyp1,sbscale,0,THREEBYFIVE+dabuf[0]-'0',ha,4,sbits);
-//    rotatesprite_fs(sbarx(x+4),sby,sbscale,0,THREEBYFIVE+dabuf[0]-'0',ha,0,sbits);
-//}
+    rotatesprite_fs(sbarx(x+4+1),sbyp1,sbscale,0,THREEBYFIVE+dabuf[0]-'0'.charCodeAt(0),ha,4,sbits);
+    rotatesprite_fs(sbarx(x+4),sby,sbscale,0,THREEBYFIVE+dabuf[0]-'0'.charCodeAt(0),ha,0,sbits);
+}
 
 //static void G_DrawWeapNum(int16_t ind,int32_t x,int32_t y,int32_t num1, int32_t num2,int32_t ha)
 //{
@@ -1793,82 +1801,83 @@ function G_AddUserQuote(/*const char **/daquote:Uint8Array):void
 //    }
 //}
 
-//// yofs: in hud_scale-independent, (<<16)-scaled, 0-200-normalized y coords.
-//static void G_DrawDigiNum_(int32_t x, int32_t yofs, int32_t y, int32_t n, char s, int32_t cs)
-//{
-//    if (!(cs & ROTATESPRITE_FULL16))
-//    {
-//        x <<= 16;
-//        y <<= 16;
-//    }
+// yofs: in hud_scale-independent, (<<16)-scaled, 0-200-normalized y coords.
+function G_DrawDigiNum_(/*int32_t */x:number, /*int32_t */yofs:number, /*int32_t */y:number, /*int32_t */n:number, /*char */s:string , /*int32_t */cs:number):void
+{
+    if (!(cs & ROTATESPRITE_FULL16))
+    {
+        x <<= 16;
+        y <<= 16;
+    }
 
-//    G_DrawTXDigiNumZ(DIGITALNUM, sbarx16(x), yofs + sbary16(y), n, s, 0, cs|ROTATESPRITE_FULL16, 0, 0, xdim-1, ydim-1, sbarsc(65536));
-//}
+    G_DrawTXDigiNumZ(DIGITALNUM, sbarx16(x), yofs + sbary16(y), n, s, 0, cs|ROTATESPRITE_FULL16, 0, 0, xdim-1, ydim-1, sbarsc(65536));
+}
 
-//static inline void G_DrawDigiNum(int32_t x, int32_t y, int32_t n, char s, int32_t cs)
-//{
-//    G_DrawDigiNum_(x, 0, y, n, s, cs);
-//}
+function G_DrawDigiNum(/*int32_t*/ x:number, /*int32_t */y:number, /*int32_t */n:number, /*char */s:string, /*int32_t */cs:number):void
+{
+    G_DrawDigiNum_(x, 0, y, n, s, cs);
+}
 
-//void G_DrawTXDigiNumZ(int32_t starttile, int32_t x,int32_t y,int32_t n,int32_t s,int32_t pal,
-//                      int32_t cs,int32_t x1, int32_t y1, int32_t x2, int32_t y2, int32_t z)
-//{
-//    char b[12];
-//    Bsprintf(b,"%d",n);
+function G_DrawTXDigiNumZ(/*int32_t*/ starttile:number, /*int32_t */x:number,/*int32_t */y:number,/*int32_t */n:number,/*int32_t */s:number,/*int32_t */pal:number,
+                      /*int32_t*/ cs:number,/*int32_t */x1:number, /*int32_t */y1:number, /*int32_t */x2:number, /*int32_t */y2:number, /*int32_t */z:number): void
+{
+    //char b[12];
+    //Bsprintf(b,"%d",n);
+    var b = n.toString();
 
-//    if (!(cs & ROTATESPRITE_FULL16))
-//    {
-//        x <<= 16;
-//        y <<= 16;
-//    }
+    if (!(cs & ROTATESPRITE_FULL16))
+    {
+        x <<= 16;
+        y <<= 16;
+    }
 
-//    G_ScreenText(starttile, x, y, z, 0, 0, b, s, pal, cs|2|ROTATESPRITE_FULL16, 0, (4<<16), (8<<16), (1<<16), 0, TEXT_XCENTER|TEXT_DIGITALNUMBER, x1, y1, x2, y2);
-//}
+    G_ScreenText(starttile, x, y, z, 0, 0, b, s, pal, cs|2|ROTATESPRITE_FULL16, 0, (4<<16), (8<<16), (1<<16), 0, TEXT_XCENTER|TEXT_DIGITALNUMBER, x1, y1, x2, y2);
+}
 
-//static void G_DrawAltDigiNum(int32_t x, int32_t y, int32_t n, char s, int32_t cs)
-//{
-//    int32_t i, j = 0, k, p, c;
-//    char b[12];
-//    int32_t rev = (x < 0);
-//    int32_t shd = (y < 0);
+function G_DrawAltDigiNum(/*int32_t*/ x:number, /*int32_t */y:number, /*int32_t */n:number, /*char */s:number, /*int32_t */cs:number): void 
+{
+    var /*int32_t */i:number, j = 0, k:number, p:number, c:number;
+    var /*char */b = new Uint8Array(12);
+    var /*int32_t*/ rev = (x < 0);
+    var /*int32_t*/ shd = (y < 0);
 
-//    const int32_t sbscale = sbarsc(65536);
+    var /*const int32_t */sbscale = sbarsc(65536);
 
-//    if (rev) x = -x;
-//    if (shd) y = -y;
+    if (rev) x = -x;
+    if (shd) y = -y;
 
-//    i = Bsprintf(b,"%d",n);
+    i = Bsprintf(b,"%d",n);
 
-//    for (k=i-1; k>=0; k--)
-//    {
-//        p = althud_numbertile + b[k]-'0';
-//        j += tilesizx[p]+1;
-//    }
-//    c = x-(j>>1);
+    for (k=i-1; k>=0; k--)
+    {
+        p = althud_numbertile + b[k]-'0'.charCodeAt(0);
+        j += tilesizx[p]+1;
+    }
+    c = x-(j>>1);
 
-//    if (rev)
-//    {
-//        for (k=0; k<i; k++)
-//        {
-//            p = althud_numbertile + b[k]-'0';
-//            if (shd && getrendermode() >= REND_POLYMOST && althud_shadows)
-//                rotatesprite_fs(sbarxr(c+j-1),sbary(y+1),sbscale,0,p,127,4,cs|POLYMOSTTRANS2);
-//            rotatesprite_fs(sbarxr(c+j),sbary(y),sbscale,0,p,s,althud_numberpal,cs);
-//            j -= tilesizx[p]+1;
-//        }
-//        return;
-//    }
+    if (rev)
+    {
+        for (k=0; k<i; k++)
+        {
+            p = althud_numbertile + b[k]-'0'.charCodeAt(0);
+            if (shd && getrendermode() >= REND_POLYMOST && althud_shadows)
+                rotatesprite_fs(sbarxr(c+j-1),sbary(y+1),sbscale,0,p,127,4,cs|POLYMOSTTRANS2);
+            rotatesprite_fs(sbarxr(c+j),sbary(y),sbscale,0,p,s,althud_numberpal,cs);
+            j -= tilesizx[p]+1;
+        }
+        return;
+    }
 
-//    j = 0;
-//    for (k=0; k<i; k++)
-//    {
-//        p = althud_numbertile + b[k]-'0';
-//        if (shd && getrendermode() >= REND_POLYMOST && althud_shadows)
-//            rotatesprite_fs(sbarx(c+j+1),sbary(y+1),sbscale,0,p,127,4,cs|POLYMOSTTRANS2);
-//        rotatesprite_fs(sbarx(c+j),sbary(y),sbscale,0,p,s,althud_numberpal,cs);
-//        j += tilesizx[p]+1;
-//    }
-//}
+    j = 0;
+    for (k=0; k<i; k++)
+    {
+        p = althud_numbertile + b[k]-'0'.charCodeAt(0);
+        if (shd && getrendermode() >= REND_POLYMOST && althud_shadows)
+            rotatesprite_fs(sbarx(c+j+1),sbary(y+1),sbscale,0,p,127,4,cs|POLYMOSTTRANS2);
+        rotatesprite_fs(sbarx(c+j),sbary(y),sbscale,0,p,s,althud_numberpal,cs);
+        j += tilesizx[p]+1;
+    }
+}
 
 //static int32_t invensc(int32_t maximum) // used to reposition the inventory icon selector as the HUD scales
 //{
@@ -1974,56 +1983,56 @@ function G_DrawFrags():void
         Bsprintf(tempbuf, "%d", ps.frag-ps.fraggedself);
         minitext(17+50+(73*(i&3)), 2+((i&28)<<1), tempbuf, ps.palookup, 2+8+16);
     }
-//}
+}
 
-//static int32_t G_GetInvAmount(const DukePlayer_t *p)
-//{
-//    switch (p.inven_icon)
-//    {
-//    case ICON_FIRSTAID:
-//        return p.inv_amount[GET_FIRSTAID];
-//    case ICON_STEROIDS:
-//        return ((p.inv_amount[GET_STEROIDS]+3)>>2);
-//    case ICON_HOLODUKE:
-//        return ((p.inv_amount[GET_HOLODUKE]+15)/24);
-//    case ICON_JETPACK:
-//        return ((p.inv_amount[GET_JETPACK]+15)>>4);
-//    case ICON_HEATS:
-//        return p.inv_amount[GET_HEATS]/12;
-//    case ICON_SCUBA:
-//        return ((p.inv_amount[GET_SCUBA]+63)>>6);
-//    case ICON_BOOTS:
-//        return (p.inv_amount[GET_BOOTS]>>1);
-//    }
+function /*int32_t */G_GetInvAmount(p:DukePlayer_t):number
+{
+    switch (p.inven_icon)
+    {
+    case ICON_FIRSTAID:
+        return p.inv_amount[GET_FIRSTAID];
+    case ICON_STEROIDS:
+        return ((p.inv_amount[GET_STEROIDS]+3)>>2);
+    case ICON_HOLODUKE:
+        return ((p.inv_amount[GET_HOLODUKE]+15)/24);
+    case ICON_JETPACK:
+        return ((p.inv_amount[GET_JETPACK]+15)>>4);
+    case ICON_HEATS:
+        return p.inv_amount[GET_HEATS]/12;
+    case ICON_SCUBA:
+        return ((p.inv_amount[GET_SCUBA]+63)>>6);
+    case ICON_BOOTS:
+        return (p.inv_amount[GET_BOOTS]>>1);
+    }
 
-//    return -1;
-//}
+    return -1;
+}
 
-//static int32_t G_GetInvOn(const DukePlayer_t *p)
-//{
-//    switch (p.inven_icon)
-//    {
-//    case ICON_HOLODUKE:
-//        return p.holoduke_on;
-//    case ICON_JETPACK:
-//        return p.jetpack_on;
-//    case ICON_HEATS:
-//        return p.heat_on;
-//    }
+function /*int32_t*/ G_GetInvOn(p:DukePlayer_t):number
+{
+    switch (p.inven_icon)
+    {
+    case ICON_HOLODUKE:
+        return p.holoduke_on;
+    case ICON_JETPACK:
+        return p.jetpack_on;
+    case ICON_HEATS:
+        return p.heat_on;
+    }
 
-//    return 0x80000000;
-//}
+    return 0x80000000|0;
+}
 
-//static int32_t G_GetMorale(int32_t p_i, int32_t snum)
-//{
+function /*int32_t */G_GetMorale(/*int32_t */p_i:number, /*int32_t */snum:number):number
+{
 //#if !defined LUNATIC
-//    return Gv_GetVarByLabel("PLR_MORALE",-1, p_i, snum);
+    return Gv_GetVarByLabel("PLR_MORALE",-1, p_i, snum);
 //#else
 //    UNREFERENCED_PARAMETER(p_i);
 //    UNREFERENCED_PARAMETER(snum);
 //    return -1;
 //#endif
-//}
+}
 
 function G_DrawStatusBar(/*int32_t */snum:number):void
 {
@@ -2078,7 +2087,7 @@ function G_DrawStatusBar(/*int32_t */snum:number):void
         {
             // ALTERNATIVE STATUS BAR
 
-            static int32_t ammo_sprites[MAX_WEAPONS];
+            var /*static*/ammo_sprites = new Int32Array(MAX_WEAPONS);
 
             if (ammo_sprites[0] == 0)
             {
@@ -2087,11 +2096,11 @@ function G_DrawStatusBar(/*int32_t */snum:number):void
                    but we don't want to have to recreate the values in memory every time
                    the HUD is drawn */
 
-                int32_t asprites[MAX_WEAPONS] = { BOOTS, AMMO, SHOTGUNAMMO, BATTERYAMMO,
+                var asprites/*[MAX_WEAPONS]*/ = new Int32Array([ BOOTS, AMMO, SHOTGUNAMMO, BATTERYAMMO,
                                                   RPGAMMO, HBOMBAMMO, CRYSTALAMMO, DEVISTATORAMMO,
                                                   TRIPBOMBSPRITE, FREEZEAMMO+1, HBOMBAMMO, GROWAMMO
-                                                };
-                Bmemcpy(ammo_sprites, asprites, sizeof(ammo_sprites));
+                                                ]);
+                Bmemcpy(new P(ammo_sprites), new P(asprites), sizeof(ammo_sprites));
             }
 
 //            rotatesprite_fs(sbarx(5+1),sbary(200-25+1),sb15h,0,SIXPAK,0,4,10+16+1+32);
@@ -2104,7 +2113,7 @@ function G_DrawStatusBar(/*int32_t */snum:number):void
                 G_DrawAltDigiNum(40,-(200-22),1,-16,10+16+256);
             else if (!althud_flashing || p.last_extra > (p.max_player_health>>2) || totalclock&32)
             {
-                int32_t s = -8;
+                var /*int32_t */s = -8;
                 if (althud_flashing && p.last_extra > p.max_player_health)
                     s += (sintable[(totalclock<<5)&2047]>>10);
                 G_DrawAltDigiNum(40,-(200-22),p.last_extra,s,10+16+256);
@@ -2115,7 +2124,7 @@ function G_DrawStatusBar(/*int32_t */snum:number):void
             rotatesprite_fs(sbarx(62),sbary(200-25),sb15h,0,SHIELD,0,0,10+16+256);
 
             {
-                int32_t lAmount = G_GetMorale(p.i, snum);
+                var /*int32_t */lAmount = G_GetMorale(p.i, snum);
                 if (lAmount == -1)
                     lAmount = p.inv_amount[GET_SHIELD];
                 G_DrawAltDigiNum(105,-(200-22),lAmount,-16,10+16+256);
@@ -2150,9 +2159,9 @@ function G_DrawStatusBar(/*int32_t */snum:number):void
 
             if (p.inven_icon)
             {
-                const int32_t orient = 10+16+permbit+256;
+                var /*const int32_t */orient = 10+16+permbit+256;
 
-                i = ((unsigned)p.inven_icon < ICON_MAX) ? item_icons[p.inven_icon] : -1;
+                i = (/*(unsigned)*/p.inven_icon < ICON_MAX) ? item_icons[p.inven_icon] : -1;
                 if (i >= 0)
                 {
                     if (getrendermode() >= REND_POLYMOST && althud_shadows)
@@ -2167,7 +2176,7 @@ function G_DrawStatusBar(/*int32_t */snum:number):void
                 i = G_GetInvAmount(p);
                 j = G_GetInvOn(p);
 
-                G_DrawInvNum(-(284-30-o),0,200-6-3,(uint8_t)i,0,10+permbit+256);
+                G_DrawInvNum(-(284-30-o),0,200-6-3,/*(uint8_t)*/i,0,10+permbit+256);
 
                 if (j > 0)
                 {
@@ -2175,7 +2184,7 @@ function G_DrawStatusBar(/*int32_t */snum:number):void
                         minitextshade(288-30-o+1,180-3+1,"On",127,4, POLYMOSTTRANS+orient+ROTATESPRITE_MAX);
                     minitext(288-30-o,180-3,"On",0, orient+ROTATESPRITE_MAX);
                 }
-                else if ((uint32_t)j != 0x80000000)
+                else if (uint32(j) != 0x80000000)
                 {
                     if (getrendermode() >= REND_POLYMOST && althud_shadows)
                         minitextshade(284-30-o+1,180-3+1,"Off",127,4, POLYMOSTTRANS+orient+ROTATESPRITE_MAX);
@@ -2193,11 +2202,11 @@ function G_DrawStatusBar(/*int32_t */snum:number):void
         else
         {
             // ORIGINAL MINI STATUS BAR
-            int32_t orient = 2+8+16+256, yofs=0, yofssh=0;
+            var /*int32_t */orient = 2+8+16+256, yofs=0, yofssh=0;
 
             if (g_fakeMultiMode)
             {
-                const int32_t sidebyside = (ud.screen_size!=0);
+                var /*const int32_t */sidebyside = (ud.screen_size!=0)?1:0;
 
                 if (sidebyside && snum==1)
                 {
@@ -2216,7 +2225,7 @@ function G_DrawStatusBar(/*int32_t */snum:number):void
 
             // health
             {
-                int32_t health = (sprite[p.i].pal == 1 && p.last_extra < 2) ? 1 : p.last_extra;
+                var /*int32_t */health = (sprite[p.i].pal == 1 && p.last_extra < 2) ? 1 : p.last_extra;
                 G_DrawDigiNum_(20, yofssh, 200-17, health, -16, orient);
             }
 
@@ -2234,7 +2243,7 @@ function G_DrawStatusBar(/*int32_t */snum:number):void
             {
 //                orient |= permbit;
 
-                i = ((unsigned)p.inven_icon < ICON_MAX) ? item_icons[p.inven_icon] : -1;
+                i = (/*(unsigned)*/p.inven_icon < ICON_MAX) ? item_icons[p.inven_icon] : -1;
                 if (i >= 0)
                     rotatesprite_fs(sbarx(231-o), yofssh+sbary(200-21), sb16, 0, i, 0, 0, orient);
 
@@ -2247,11 +2256,11 @@ function G_DrawStatusBar(/*int32_t */snum:number):void
                 i = G_GetInvAmount(p);
                 j = G_GetInvOn(p);
 
-                G_DrawInvNum(284-30-o, yofssh, 200-6, (uint8_t)i, 0, orient&~16);
+                G_DrawInvNum(284-30-o, yofssh, 200-6, /*(uint8_t)*/i, 0, orient&~16);
 
                 if (j > 0)
                     minitext(288-30-o, 180, "On", 0, orient);
-                else if ((uint32_t)j != 0x80000000)
+                else if (uint32(j) != 0x80000000)
                     minitext(284-30-o, 180, "Off", 2, orient);
 
                 if (p.inven_icon >= ICON_SCUBA)
@@ -2291,7 +2300,7 @@ function G_DrawStatusBar(/*int32_t */snum:number):void
     }
 
     {
-        int32_t lAmount = G_GetMorale(p.i, snum);
+        var/*int32_t */lAmount = G_GetMorale(p.i, snum);
         if (lAmount == -1)
             lAmount = p.inv_amount[GET_SHIELD];
         if (sbar.inv_amount[GET_SHIELD] != lAmount)
@@ -2351,14 +2360,14 @@ function G_DrawStatusBar(/*int32_t */snum:number):void
     }
 
     {
-        static const int32_t check_items[] = {
+        var /*static const int32_t */check_items = [
             GET_FIRSTAID, GET_STEROIDS, GET_HOLODUKE, GET_JETPACK,
             GET_HEATS, GET_SCUBA, GET_BOOTS
-        };
+        ];
 
-        for (i=0; i<(int32_t)sizeof(check_items)/(int32_t)sizeof(check_items[0]); i++)
+        for (i=0; i<check_items.length; i++)
         {
-            int32_t item = check_items[i];
+            var item = check_items[i];
 
             if (sbar.inv_amount[item] != p.inv_amount[item])
             {
@@ -2367,14 +2376,14 @@ function G_DrawStatusBar(/*int32_t */snum:number):void
             }
         }
     }
-#if 0
-    if (u == 0)
-        return;
-#else
+//#if 0
+//    if (u == 0)
+//        return;
+//#else
     // FIXME: full status bar draws rectangles in the wrong places when it's
     // updated partially.
     u = -1;
-#endif
+//#endif
 
     //0 - update health
     //1 - update armor
@@ -2432,7 +2441,7 @@ function G_DrawStatusBar(/*int32_t */snum:number):void
     }
     if (u&2)
     {
-        int32_t lAmount = G_GetMorale(p.i, snum);
+        var /*int32_t */lAmount = G_GetMorale(p.i, snum);
 
         if (u != -1)
             G_PatchStatusBar(52,SBY+17,75,SBY+17+11);
@@ -2471,7 +2480,7 @@ function G_DrawStatusBar(/*int32_t */snum:number):void
 
             if (u&(2048+4096))
             {
-                i = ((unsigned)p.inven_icon < ICON_MAX) ? item_icons[p.inven_icon] : -1;
+                i = (/*(unsigned)*/p.inven_icon < ICON_MAX) ? item_icons[p.inven_icon] : -1;
                 // XXX: i < 0?
                 rotatesprite_fs(sbarx(231-o),sbary(SBY+13),sb16,0,i,0,0,10+16+permbit);
                 minitext(292-30-o,SBY+24,"%",6,10+16+permbit + ROTATESPRITE_MAX);
@@ -2483,13 +2492,13 @@ function G_DrawStatusBar(/*int32_t */snum:number):void
                 j = G_GetInvOn(p);
 
                 if (j > 0) minitext(288-30-o,SBY+14,"On",0,10+16+permbit  + ROTATESPRITE_MAX);
-                else if ((uint32_t)j != 0x80000000) minitext(284-30-o,SBY+14,"Off",2,10+16+permbit + ROTATESPRITE_MAX);
+                else if (uint32(j) != 0x80000000) minitext(284-30-o,SBY+14,"Off",2,10+16+permbit + ROTATESPRITE_MAX);
             }
 
             if (u&8192)
             {
                 i = G_GetInvAmount(p);
-                G_DrawInvNum(284-30-o,0,SBY+28,(uint8_t)i,0,10+permbit);
+                G_DrawInvNum(284-30-o,0,SBY+28,/*(uint8_t)*/i,0,10+permbit);
             }
         }
     }

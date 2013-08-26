@@ -62,7 +62,7 @@ var connectpoint2 = new Int32Array(MAXPLAYERS);
 
 var myconnectindex: number = 0, numplayers: number;
 
-//G_EXTERN DukeStatus_t sbar;
+var sbar = new DukeStatus_t();
 //G_EXTERN actor_t actor[MAXSPRITES];
 //// g_tile: tile-specific data THAT DOES NOT CHANGE during the course of a game
 //G_EXTERN tiledata_t g_tile[MAXTILES];

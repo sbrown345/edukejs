@@ -2537,7 +2537,7 @@ function P_DisplayWeapon(/*int32_t */snum:number):void
                         if ((p.kickback_pic) < (PWEAPON(0, p.curr_weapon, TotalTime)))
                         {
 
-                            var /*static uint8_t */throw_frames = [0,0,0,0,0,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2];
+                            var /*static uint8_t */throw_frames = new Uint8Array([0,0,0,0,0,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2]);
 
                             if ((p.kickback_pic) < 7)
                                 gun_pos -= 10*(p.kickback_pic);        //D
@@ -2561,7 +2561,7 @@ function P_DisplayWeapon(/*int32_t */snum:number):void
             case HANDREMOTE_WEAPON:
                 if (VM_OnEvent(EVENT_DRAWWEAPON,g_player[screenpeek].ps.i,screenpeek, -1, 0) == 0)
                 {
-                    var /*static uint8_t */remote_frames = [0,1,1,2,1,1,0,0,0,0,0];
+                    var /*static uint8_t */remote_frames = new Uint8Array([0,1,1,2,1,1,0,0,0,0,0]);
 
                     if (p.kickback_pic >= ARRAY_SIZE(remote_frames))
                         break;
@@ -2578,7 +2578,7 @@ function P_DisplayWeapon(/*int32_t */snum:number):void
                 {
                     if ((p.kickback_pic) < (PWEAPON(0, DEVISTATOR_WEAPON, TotalTime)+1) && (p.kickback_pic) > 0)
                     {
-                        var /*static uint8_t */cycloidy = [0,4,12,24,12,4,0];
+                        var /*static uint8_t */cycloidy = new Uint8Array([0,4,12,24,12,4,0]);
 
                         if (p.kickback_pic >= ARRAY_SIZE(cycloidy))
                             break;
@@ -2618,7 +2618,7 @@ function P_DisplayWeapon(/*int32_t */snum:number):void
                 {
                     if ((p.kickback_pic) < (PWEAPON(snum, p.curr_weapon, TotalTime)+1) && (p.kickback_pic) > 0)
                     {
-                        var /*static uint8_t */cat_frames = [ 0,0,1,1,2,2 ];
+                        var /*static uint8_t */cat_frames = new Uint8Array([ 0,0,1,1,2,2 ]);
 
                         if (p.kickback_pic%6 >= ARRAY_SIZE(cat_frames))
                             break;
