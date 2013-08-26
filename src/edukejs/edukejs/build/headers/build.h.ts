@@ -1202,12 +1202,25 @@ function getrendermode(): number
 //            you call the loadboard function.
 //***************************************************************************/
 
-//typedef struct {
-//    int32_t x, y;
-//} vec2_t;
+interface IVec2 {
+    x: number; y: number;//    int32_t
+}
+
+class vec2_t implements IVec2{
+    x: number; y: number;//    int32_t
+
+    constructor(x = 0, y = 0) {
+        this.init(x, y);
+    }
+
+    init(x = 0, y = 0) {
+        this.x = x;
+        this.y = y;
+    }
+};
 
 interface IVec3 {
-    x: number; y: number; z: number;
+    x: number; y: number; z: number;//    int32_t
 }
 
 class vec3_t implements IVec3{

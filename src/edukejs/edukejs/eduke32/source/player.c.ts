@@ -2160,7 +2160,7 @@ function P_DoWeaponSpawn(p: DukePlayer_t):void
 //}
 
 
-//static int32_t fistsign;
+var /*int32_t */fistsign=0;
 
 //void P_DisplayWeapon(int32_t snum)
 //{

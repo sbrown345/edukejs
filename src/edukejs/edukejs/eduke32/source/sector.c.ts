@@ -570,7 +570,7 @@ function G_AnimateCamSprite(): void
 //    }
 //}
 
-function /*int32_t */G_ActivateWarpElevators(/*int32_t */s,/*int32_t */d):number //Parm = sectoreffectornum
+function /*int32_t */G_ActivateWarpElevators(/*int32_t */s:number,/*int32_t */d:number):number //Parm = sectoreffectornum
 {
     var /*int32_t */i = headspritestat[STAT_EFFECTOR], sn = sprite[s].sectnum;
 

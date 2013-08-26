@@ -3423,7 +3423,6 @@ static void G_FadePalaccum(const palaccum_t *pa)
 
 void G_DisplayRest(int32_t smoothratio)
 {
-#ifdef DEBUG_TODO
     int32_t i, j;
     palaccum_t tint = PALACCUM_INITIALIZER;
 
@@ -3621,6 +3620,8 @@ void G_DisplayRest(int32_t smoothratio)
         G_DrawStatusBar(1);
         G_PrintGameQuotes(1);
     }
+
+#ifdef DEBUG_TODO
 
     G_PrintGameQuotes(screenpeek);
 

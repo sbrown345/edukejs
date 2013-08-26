@@ -117,7 +117,7 @@ var g_tripbombLaserMode:number;////G_EXTERN int32_t
 var msx= new Int32Array(2048),msy= new Int32Array(2048);//G_EXTERN int32_t 
 var neartaghitdist:number,lockclock:number,g_startArmorAmount:number;//G_EXTERN int32_t
 var playerswhenstarted : number; ////G_EXTERN int32_t
-var screenpeek: number;
+var screenpeek: number=0;
 var startofdynamicinterpolations: number;         //G_EXTERN int32_t 
 var vel: number=0,svel: number=0,angvel: number=0,horiz: number=0,ototalclock: number=0;    //G_EXTERN int32_t 
 //G_EXTERN intptr_t *g_parsingActorPtr;

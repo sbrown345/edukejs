@@ -367,15 +367,15 @@ function G_DefaultRtsFile(): string
 //    return (200<<16) - sbarsc(200<<16) + sbarsc(y);
 //}
 
-//int32_t textsc(int32_t sc)
-//{
-//    // prevent ridiculousness to a degree
-//    if (xdim <= 320) return sc;
-//    else if (xdim <= 640) return scale(sc,min(200,ud.textscale),100);
-//    else if (xdim <= 800) return scale(sc,min(300,ud.textscale),100);
-//    else if (xdim <= 1024) return scale(sc,min(350,ud.textscale),100);
-//    return scale(sc,ud.textscale,100);
-//}
+function /*int32_t */textsc(/*int32_t */sc:number):number
+{
+    // prevent ridiculousness to a degree
+    if (xdim <= 320) return sc;
+    else if (xdim <= 640) return scale(sc,min(200,ud.textscale),100);
+    else if (xdim <= 800) return scale(sc,min(300,ud.textscale),100);
+    else if (xdim <= 1024) return scale(sc,min(350,ud.textscale),100);
+    return scale(sc,ud.textscale,100);
+}
 
 //static void G_PatchStatusBar(int32_t x1, int32_t y1, int32_t x2, int32_t y2)
 //{
@@ -1248,74 +1248,74 @@ function P_SetGamePalette(player: DukePlayer_t, palid: number, $set: number): vo
 //    return size;
 //}
 
-//// flags
-////  4: small font, wrap strings?
-//int32_t G_PrintGameText(int32_t hack, int32_t tile, int32_t x,  int32_t y,  const char *t,
-//                        int32_t s,    int32_t p,    int32_t o,
-//                        int32_t x1,   int32_t y1,   int32_t x2, int32_t y2, int32_t z)
-//{
-//    vec2_t dim;
-//    int32_t f = TEXT_GAMETEXTNUMHACK;
-//    int32_t xbetween = 0;
-//    const int32_t orient = (hack & 4) || (hack & 1) ? (8|16|(o&1)|(o&32)) : (2|o);
+// flags
+//  4: small font, wrap strings?
+function/*int32_t */G_PrintGameText(/*int32_t*/ hack:number, /*int32_t*/ tile:number, /*int32_t*/ x:number,  /*int32_t*/ y:number,  t:string,
+                        /*int32_t*/ s:number,    /*int32_t*/ p:number,    /*int32_t*/ o:number,
+                        /*int32_t*/ x1:number,   /*int32_t*/ y1:number,   /*int32_t*/ x2:number, /*int32_t*/ y2:number, /*int32_t*/ z:number):number
+{
+    var /*vec2_t */dim = new vec2_t();
+    var /*int32_t */f = TEXT_GAMETEXTNUMHACK;
+    var/*int32_t */xbetween = 0;
+    var /*const int32_t */orient = ((hack & 4) || (hack & 1) ? (8|16|(o&1)|(o&32)) : (2|o))?1:0;
 
-//    if (t == NULL)
-//        return -1;
+    if (t == NULL)
+        return -1;
 
-//    if (!(o & ROTATESPRITE_FULL16))
-//    {
-//        x <<= 16;
-//        y <<= 16;
-//    }
+    if (!(o & ROTATESPRITE_FULL16))
+    {
+        x <<= 16;
+        y <<= 16;
+    }
 
-//    if (hack & 4)
-//    {
-//        x = textsc(x);
-//        z = textsc(z);
-//        f |= TEXT_LINEWRAP;
-//    }
+    if (hack & 4)
+    {
+        x = textsc(x);
+        z = textsc(z);
+        f |= TEXT_LINEWRAP;
+    }
+    
+    if (hack & 8)
+    {
+        f |= TEXT_XOFFSETZERO;
+        xbetween = 8;
+    }
 
-//    if (hack & 8)
-//    {
-//        f |= TEXT_XOFFSETZERO;
-//        xbetween = 8;
-//    }
+    // order is important, this bit comes after the rest
+    if ((hack & 2) && !window.NAM) // squishtext
+        --xbetween;
 
-//    // order is important, this bit comes after the rest
-//    if ((hack & 2) && !NAM) // squishtext
-//        --xbetween;
+    if (x == (160<<16))
+        f |= TEXT_XCENTER;
 
-//    if (x == (160<<16))
-//        f |= TEXT_XCENTER;
+    todoThrow("dim = G_ScreenText(tile, x, y, z, 0, 0, t, s, p, orient|ROTATESPRITE_FULL16, 0, (5<<16), (8<<16), (xbetween<<16), 0, f, x1, y1, x2, y2);");
 
-//    dim = G_ScreenText(tile, x, y, z, 0, 0, t, s, p, orient|ROTATESPRITE_FULL16, 0, (5<<16), (8<<16), (xbetween<<16), 0, f, x1, y1, x2, y2);
+    x += dim.x;
 
-//    x += dim.x;
+    if (!(o & ROTATESPRITE_FULL16))
+        x >>= 16;
 
-//    if (!(o & ROTATESPRITE_FULL16))
-//        x >>= 16;
+    return x;
+}
 
-//    return x;
-//}
+function/*int32_t */G_GameTextLen(/*int32_t */x:number,t:string)
+{todoThrow();
+    //var dim:vec2_t;
 
-//int32_t G_GameTextLen(int32_t x,const char *t)
-//{
-//    vec2_t dim;
+    //if (t == NULL)
+    //    return -1;
 
-//    if (t == NULL)
-//        return -1;
+    //dim = G_ScreenTextSize(STARTALPHANUM, x, 0, textsc(65536), 0, t, 2, 5, 8, 0, 0, TEXT_GAMETEXTNUMHACK, 0, 0, xdim-1, ydim-1);
 
-//    dim = G_ScreenTextSize(STARTALPHANUM, x, 0, textsc(65536L), 0, t, 2, 5, 8, 0, 0, TEXT_GAMETEXTNUMHACK, 0, 0, xdim-1, ydim-1);
+    //x += dim.x;
 
-//    x += dim.x;
+    return x;
+}
 
-//    return x;
-//}
-
-//int32_t mpgametext(int32_t y,const char *t,int32_t s,int32_t dabits)
-//{
-//    return G_PrintGameText(4,STARTALPHANUM, 5,y,t,s,0,dabits,0, 0, xdim-1, ydim-1, 65536);
-//}
+function /*int32_t */mpgametext(/*int32_t */y:number,t:string,/*int32_t */s:number,/*int32_t */dabits:number):number
+{
+    return G_PrintGameText(4,STARTALPHANUM, 5,y,t,s,0,dabits,0, 0, xdim-1, ydim-1, 65536);
+}
 
 //// minitext_yofs: in hud_scale-independent, (<<16)-scaled, 0-200-normalized y coords,
 //// (sb&ROTATESPRITE_MAX) only.
@@ -1324,7 +1324,7 @@ var minitext_lowercase = 0;         //static int32_t
 //int32_t minitext_(int32_t x,int32_t y,const char *t,int32_t s,int32_t p,int32_t sb)
 //{
 //    vec2_t dim;
-//    int32_t z = 65536L;
+//    int32_t z = 65536;
 //    int32_t f = 0;
 
 //    if (t == NULL)
@@ -1466,7 +1466,7 @@ function G_AddUserQuote(/*const char **/daquote:Uint8Array):void
 //                break;
 
 //            Bsprintf(tempbuf,"Locked- %d: Leng:%d, Lock:%d",i,cac[i].leng,*cac[i].lock);
-//            printext256(0L,k,31,-1,tempbuf,1);
+//            printext256(0,k,31,-1,tempbuf,1);
 //            k += 6;
 //        }
 
@@ -1782,7 +1782,7 @@ function G_AddUserQuote(/*const char **/daquote:Uint8Array):void
 //                      (cw == TRIPBOMB_WEAPON));
 //    }
 
-//    if (u&65536L)
+//    if (u&65536)
 //    {
 //        if (u != -1) G_PatchStatusBar(158,190,162+29,190+6); //original code: (166,190,166+8,190+6);
 
@@ -1802,7 +1802,7 @@ function G_AddUserQuote(/*const char **/daquote:Uint8Array):void
 //        y <<= 16;
 //    }
 
-//    G_DrawTXDigiNumZ(DIGITALNUM, sbarx16(x), yofs + sbary16(y), n, s, 0, cs|ROTATESPRITE_FULL16, 0, 0, xdim-1, ydim-1, sbarsc(65536L));
+//    G_DrawTXDigiNumZ(DIGITALNUM, sbarx16(x), yofs + sbary16(y), n, s, 0, cs|ROTATESPRITE_FULL16, 0, 0, xdim-1, ydim-1, sbarsc(65536));
 //}
 
 //static inline void G_DrawDigiNum(int32_t x, int32_t y, int32_t n, char s, int32_t cs)
@@ -1875,85 +1875,85 @@ function G_AddUserQuote(/*const char **/daquote:Uint8Array):void
 //    return scale(maximum << 16, ud.statusbarscale - 36, 100 - 36);
 //}
 
-//static void G_DrawInventory(const DukePlayer_t *p)
-//{
-//    int32_t n, j = 0, x = 0, y;
+function G_DrawInventory(p:DukePlayer_t ): void
+{todoThrow();
+    //var /*int32_t */n:number, j = 0, x = 0, y:number;
 
-//    n = (p.inv_amount[GET_JETPACK] > 0)<<3;
-//    if (n&8) j++;
-//    n |= (p.inv_amount[GET_SCUBA] > 0)<<5;
-//    if (n&32) j++;
-//    n |= (p.inv_amount[GET_STEROIDS] > 0)<<1;
-//    if (n&2) j++;
-//    n |= (p.inv_amount[GET_HOLODUKE] > 0)<<2;
-//    if (n&4) j++;
-//    n |= (p.inv_amount[GET_FIRSTAID] > 0);
-//    if (n&1) j++;
-//    n |= (p.inv_amount[GET_HEATS] > 0)<<4;
-//    if (n&16) j++;
-//    n |= (p.inv_amount[GET_BOOTS] > 0)<<6;
-//    if (n&64) j++;
+    //n = (p.inv_amount[GET_JETPACK] > 0)<<3;
+    //if (n&8) j++;
+    //n |= (p.inv_amount[GET_SCUBA] > 0)<<5;
+    //if (n&32) j++;
+    //n |= (p.inv_amount[GET_STEROIDS] > 0)<<1;
+    //if (n&2) j++;
+    //n |= (p.inv_amount[GET_HOLODUKE] > 0)<<2;
+    //if (n&4) j++;
+    //n |= (p.inv_amount[GET_FIRSTAID] > 0);
+    //if (n&1) j++;
+    //n |= (p.inv_amount[GET_HEATS] > 0)<<4;
+    //if (n&16) j++;
+    //n |= (p.inv_amount[GET_BOOTS] > 0)<<6;
+    //if (n&64) j++;
 
-//    x = (160-(j*11))<<16; // nearly center
+    //x = (160-(j*11))<<16; // nearly center
 
-//    j = 0;
+    //j = 0;
 
-//    if (ud.screen_size < 8) // mini-HUDs or no HUD
-//    {
-//        y = 172<<16;
+    //if (ud.screen_size < 8) // mini-HUDs or no HUD
+    //{
+    //    y = 172<<16;
 
-//        if (ud.screen_size == 4 && ud.althud) // modern mini-HUD
-//            y -= invensc(tilesizy[BIGALPHANUM]+10); // slide on the y-axis
-//    }
-//    else // full HUD
-//    {
-//        y = (200<<16) - (sbarsc(tilesizy[BOTTOMSTATUSBAR]<<16) + (12<<16) + (tilesizy[BOTTOMSTATUSBAR]<<(16-1)));
+    //    if (ud.screen_size == 4 && ud.althud) // modern mini-HUD
+    //        y -= invensc(tilesizy[BIGALPHANUM]+10); // slide on the y-axis
+    //}
+    //else // full HUD
+    //{
+    //    y = (200<<16) - (sbarsc(tilesizy[BOTTOMSTATUSBAR]<<16) + (12<<16) + (tilesizy[BOTTOMSTATUSBAR]<<(16-1)));
 
-//        if (!ud.statusbarmode) // original non-overlay mode
-//            y += sbarsc(tilesizy[BOTTOMSTATUSBAR]<<16)>>1; // account for the viewport y-size as the HUD scales
-//    }
+    //    if (!ud.statusbarmode) // original non-overlay mode
+    //        y += sbarsc(tilesizy[BOTTOMSTATUSBAR]<<16)>>1; // account for the viewport y-size as the HUD scales
+    //}
 
-//    if (ud.screen_size == 4 && !ud.althud) // classic mini-HUD
-//        x += invensc(ud.multimode > 1 ? 56 : 65); // slide on the x-axis
+    //if (ud.screen_size == 4 && !ud.althud) // classic mini-HUD
+    //    x += invensc(ud.multimode > 1 ? 56 : 65); // slide on the x-axis
 
-//    while (j <= 9)
-//    {
-//        if (n&(1<<j))
-//        {
-//            switch (n&(1<<j))
-//            {
-//            case 1:
-//                rotatesprite_win(x,y,65536L,0,FIRSTAID_ICON,0,0,2+16);
-//                break;
-//            case 2:
-//                rotatesprite_win(x+(1<<16),y,65536L,0,STEROIDS_ICON,0,0,2+16);
-//                break;
-//            case 4:
-//                rotatesprite_win(x+(2<<16),y,65536L,0,HOLODUKE_ICON,0,0,2+16);
-//                break;
-//            case 8:
-//                rotatesprite_win(x,y,65536L,0,JETPACK_ICON,0,0,2+16);
-//                break;
-//            case 16:
-//                rotatesprite_win(x,y,65536L,0,HEAT_ICON,0,0,2+16);
-//                break;
-//            case 32:
-//                rotatesprite_win(x,y,65536L,0,AIRTANK_ICON,0,0,2+16);
-//                break;
-//            case 64:
-//                rotatesprite_win(x,y-(1<<16),65536L,0,BOOT_ICON,0,0,2+16);
-//                break;
-//            }
+    //while (j <= 9)
+    //{
+    //    if (n&(1<<j))
+    //    {
+    //        switch (n&(1<<j))
+    //        {
+    //        case 1:
+    //            rotatesprite_win(x,y,65536,0,FIRSTAID_ICON,0,0,2+16);
+    //            break;
+    //        case 2:
+    //            rotatesprite_win(x+(1<<16),y,65536,0,STEROIDS_ICON,0,0,2+16);
+    //            break;
+    //        case 4:
+    //            rotatesprite_win(x+(2<<16),y,65536,0,HOLODUKE_ICON,0,0,2+16);
+    //            break;
+    //        case 8:
+    //            rotatesprite_win(x,y,65536,0,JETPACK_ICON,0,0,2+16);
+    //            break;
+    //        case 16:
+    //            rotatesprite_win(x,y,65536,0,HEAT_ICON,0,0,2+16);
+    //            break;
+    //        case 32:
+    //            rotatesprite_win(x,y,65536,0,AIRTANK_ICON,0,0,2+16);
+    //            break;
+    //        case 64:
+    //            rotatesprite_win(x,y-(1<<16),65536,0,BOOT_ICON,0,0,2+16);
+    //            break;
+    //        }
 
-//            x += 22<<16;
+    //        x += 22<<16;
 
-//            if (p.inven_icon == j+1)
-//                rotatesprite_win(x-(2<<16),y+(19<<16),65536L,1024,ARROW,-32,0,2+16);
-//        }
+    //        if (p.inven_icon == j+1)
+    //            rotatesprite_win(x-(2<<16),y+(19<<16),65536,1024,ARROW,-32,0,2+16);
+    //    }
 
-//        j++;
-//    }
-//}
+    //    j++;
+    //}
+}
 
 //void G_DrawFrags(void)
 //{
@@ -2025,8 +2025,8 @@ function G_AddUserQuote(/*const char **/daquote:Uint8Array):void
 //#endif
 //}
 
-//static void G_DrawStatusBar(int32_t snum)
-//{
+function G_DrawStatusBar(/*int32_t */snum:number):void
+{console.error("todo G_DrawStatusBar");
 //    const DukePlayer_t *const p = g_player[snum].ps;
 //    int32_t i, j, o, u;
 //    int32_t permbit = 0;
@@ -2304,7 +2304,7 @@ function G_AddUserQuote(/*const char **/daquote:Uint8Array):void
 //    if (sbar.curr_weapon != p.curr_weapon)
 //    {
 //        sbar.curr_weapon = p.curr_weapon;
-//        u |= (4+8+16+32+64+128+256+512+1024+65536L);
+//        u |= (4+8+16+32+64+128+256+512+1024+65536);
 //    }
 
 //    for (i=1; i<MAX_WEAPONS; i++)
@@ -2314,7 +2314,7 @@ function G_AddUserQuote(/*const char **/daquote:Uint8Array):void
 //            sbar.ammo_amount[i] = p.ammo_amount[i];
 //            if (i < 9)
 //                u |= ((2<<i)+1024);
-//            else u |= 65536L+1024;
+//            else u |= 65536+1024;
 //        }
 
 //        if ((sbar.gotweapon & (1<<i)) != (p.gotweapon & (1<<i)))
@@ -2325,7 +2325,7 @@ function G_AddUserQuote(/*const char **/daquote:Uint8Array):void
 
 //            if (i < 9)
 //                u |= ((2<<i)+1024);
-//            else u |= 65536L+1024;
+//            else u |= 65536+1024;
 //        }
 //    }
 
@@ -2420,7 +2420,7 @@ function G_AddUserQuote(/*const char **/daquote:Uint8Array):void
 //        }
 //    }
 
-//    if (u&(4+8+16+32+64+128+256+512+65536L))
+//    if (u&(4+8+16+32+64+128+256+512+65536))
 //        G_DrawWeapAmounts(p,96,SBY+16,u);
 
 //    if (u&1)
@@ -2493,7 +2493,7 @@ function G_AddUserQuote(/*const char **/daquote:Uint8Array):void
 //            }
 //        }
 //    }
-//}
+}
 
 //#define COLOR_RED 248
 //#define COLOR_WHITE 31
@@ -2622,36 +2622,36 @@ var g_spriteStat =  {
 //    return 2+8+16+1+32;
 //}
 
-//static int32_t calc_ybase(int32_t begy)
-//{
-//    int32_t k = begy;
+function/*int32_t */calc_ybase(/*int32_t */begy:number):number
+{
+    var /*int32_t */k = begy;
 
-//    if (GTFLAGS(GAMETYPE_FRAGBAR) && (ud.screen_size > 0 && !g_fakeMultiMode)
-//            && (g_netServer || ud.multimode > 1))
-//    {
-//        int32_t i, j = 0;
+    if (GTFLAGS(GAMETYPE_FRAGBAR) && (ud.screen_size > 0 && !g_fakeMultiMode)
+            && (g_netServer || ud.multimode > 1))
+    {
+        var/*int32_t */i:number, j = 0;
 
-//        k += 8;
-//        for (TRAVERSE_CONNECT(i))
-//            if (i > j)
-//                j = i;
+        k += 8;
+        for (i = 0; i != -1; i = connectpoint2[i])
+            if (i > j)
+                j = i;
 
-//        if (j >= 4 && j <= 8) k += 8;
-//        else if (j > 8 && j <= 12) k += 16;
-//        else if (j > 12) k += 24;
-//    }
+        if (j >= 4 && j <= 8) k += 8;
+        else if (j > 8 && j <= 12) k += 16;
+        else if (j > 12) k += 24;
+    }
 
-//    return k;
-//}
+    return k;
+}
 
-//// this handles both multiplayer and item pickup message type text
-//// both are passed on to gametext
-//void G_PrintGameQuotes(int32_t snum)
-//{
-//    int32_t i, j, k;
+// this handles both multiplayer and item pickup message type text
+// both are passed on to gametext
+function G_PrintGameQuotes(/*int32_t*/ snum:number):void 
+{todoThrow();
+//    var i:number, j:number, k:number;
 
-//    const DukePlayer_t *const ps = g_player[snum].ps;
-//    const int32_t reserved_quote = (ps.ftq >= QUOTE_RESERVED && ps.ftq <= QUOTE_RESERVED3);
+//    var ps = g_player[snum].ps;
+//    var /*const int32_t */reserved_quote = (ps.ftq >= QUOTE_RESERVED && ps.ftq <= QUOTE_RESERVED3)?1:0;
 //    // NOTE: QUOTE_RESERVED4 is not included.
 
 //    k = calc_ybase(1);
@@ -2665,7 +2665,7 @@ var g_spriteStat =  {
 
 //    for (i=MAXUSERQUOTES-1; i>=0; i--)
 //    {
-//        int32_t sh, l;
+//        var /*int32_t */sh:number, l:number;
 
 //        if (user_quote_time[i] <= 0)
 //            continue;
@@ -2695,7 +2695,7 @@ var g_spriteStat =  {
 
 //    if (ScriptQuotes[ps.ftq] == NULL)
 //    {
-//        OSD_Printf(OSD_ERROR "%s %d null quote %d\n",__FILE__,__LINE__,ps.ftq);
+//        OSD_Printf(OSD_ERROR + "%s %d null quote %d\n","__FILE__","__LINE__",ps.ftq);
 //        return;
 //    }
 
@@ -2712,16 +2712,16 @@ var g_spriteStat =  {
 //        }
 //        else
 //        {
-//#ifdef GEKKO
-//            k = 16;
-//#else
+////#ifdef GEKKO
+////            k = 16;
+////#else
 //            k = 0;
-//#endif
+////#endif
 //        }
 //    }
 
 //    {
-//        int32_t pal = 0;
+//        var/*int32_t */pal = 0;
 
 //        if (g_fakeMultiMode)
 //        {
@@ -2729,7 +2729,7 @@ var g_spriteStat =  {
 
 //            if (snum==1)
 //            {
-//                const int32_t sidebyside = (ud.screen_size != 0);
+//                var /*const int32_t */sidebyside = (ud.screen_size != 0)?1:0;
 
 //                // NOTE: setting gametext's x -= 80 doesn't do the expected thing.
 //                // Needs looking into.
@@ -2739,12 +2739,12 @@ var g_spriteStat =  {
 //                    k += 101;
 //            }
 //        }
-
-//        gametextpalbits(160, k, ScriptQuotes[ps.ftq],
-//                        hud_glowingquotes ? quotepulseshade : 0,
-//                        pal, texto(ps.fta));
+//        todoThrow();
+//        //gametextpalbits(160, k, ScriptQuotes[ps.ftq],
+//        //                hud_glowingquotes ? quotepulseshade : 0,
+//        //                pal, texto(ps.fta));
 //    }
-//}
+}
 
 function P_DoQuote(/*int32_t*/ q: number, /*DukePlayer_t **/p: DukePlayer_t): void
 {todoThrow("P_DoQuote");
@@ -2874,7 +2874,7 @@ function G_FadePalette(/*int32_t*/ r: number,/*int32_t */g: number,/*int32_t */b
 //            setpalettefade(r,g,b,end);  // have to set to end fade value if we break!
 //            return;
 //        }
-//        rotatesprite_fs(0,0,65536L,0,tile,0,0,2+8+16+(ud.bgstretch?1024:0));
+//        rotatesprite_fs(0,0,65536,0,tile,0,0,2+8+16+(ud.bgstretch?1024:0));
 //        G_FadePalette(r,g,b,start);
 
 //        start += step;
@@ -2901,14 +2901,14 @@ function G_FadePalette(/*int32_t*/ r: number,/*int32_t */g: number,/*int32_t */b
 //        P_SetGamePalette(g_player[myconnectindex].ps, BASEPAL, 1);    // JBF 20040308
 //        fadepal(0,0,0, 0,63,7);
 //        I_ClearAllInput();
-//        rotatesprite_fs(0,0,65536L,0,3291,0,0,2+8+16+64+(ud.bgstretch?1024:0));
+//        rotatesprite_fs(0,0,65536,0,3291,0,0,2+8+16+64+(ud.bgstretch?1024:0));
 //        fadepaltile(0,0,0, 63,0,-7, 3291);
 //        while (!I_CheckAllInput())
 //            G_HandleAsync();
 
 //        fadepaltile(0,0,0, 0,63,7, 3291);
 //        I_ClearAllInput();
-//        rotatesprite_fs(0,0,65536L,0,3290,0,0,2+8+16+64+(ud.bgstretch?1024:0));
+//        rotatesprite_fs(0,0,65536,0,3290,0,0,2+8+16+64+(ud.bgstretch?1024:0));
 //        fadepaltile(0,0,0, 63,0,-7,3290);
 //        while (!I_CheckAllInput())
 //            G_HandleAsync();
@@ -2923,7 +2923,7 @@ function G_FadePalette(/*int32_t*/ r: number,/*int32_t */g: number,/*int32_t */b
 //        fadepal(0,0,0, 0,63,7);
 //        I_ClearAllInput();
 //        totalclock = 0;
-//        rotatesprite_fs(0,0,65536L,0,TENSCREEN,0,0,2+8+16+64+(ud.bgstretch?1024:0));
+//        rotatesprite_fs(0,0,65536,0,TENSCREEN,0,0,2+8+16+64+(ud.bgstretch?1024:0));
 //        fadepaltile(0,0,0, 63,0,-7,TENSCREEN);
 //        while (!I_CheckAllInput() && totalclock < 2400)
 //            G_HandleAsync();
@@ -3004,8 +3004,8 @@ function G_GameExit(/*const char **/msg : string) : void
 //    }
 //}
 
-//static void G_DrawOverheadMap(int32_t cposx, int32_t cposy, int32_t czoom, int16_t cang)
-//{
+function G_DrawOverheadMap(/*int32_t*/ cposx:number, /*int32_t */cposy:number, /*int32_t */czoom:number, /*int16_t */cang:number): void
+{todoThrow();
 //    int32_t i, j, k, l, x1, y1, x2=0, y2=0, x3, y3, x4, y4, ox, oy, xoff, yoff;
 //    int32_t dax, day, cosang, sinang, xspan, yspan, sprx, spry;
 //    int32_t xrepeat, yrepeat, z1, z2, startwall, endwall, tilenum, daang;
@@ -3294,7 +3294,7 @@ function G_GameExit(/*const char **/msg : string) : void
 //                             (g_player[p].ps.cursectnum > -1)?sector[g_player[p].ps.cursectnum].floorpal:0, 0);
 //        }
 //    }
-//}
+}
 
 //#define CROSSHAIR_PAL (MAXPALOOKUPS-RESERVEDPALS-1)
 
@@ -3443,44 +3443,44 @@ function G_SetCrosshairColor(r: number, g: number, b: number): void
 //#endif
 
 
-//////////// TINT ACCUMULATOR //////////
+////////// TINT ACCUMULATOR //////////
 
-//typedef struct {
-//    int32_t r,g,b;
-//    // f: 0-63 scale
-//    int32_t maxf, sumf;
-//} palaccum_t;
+class palaccum_t {
+    r:number;g:number;b:number;//int32_t
+    // f: 0-63 scale
+    maxf:number; sumf:number;//int32_t
+}
 
 //#define PALACCUM_INITIALIZER { 0, 0, 0, 0, 0 }
 
-///* For a picture frame F and n tints C_1, C_2, ... C_n weighted a_1, a_2,
-// * ... a_n (on a 0-1 scale), the faded frame is calculated as
-// *
-// *    F_new := (1-max_i(a_i))*F + d*sum_i(a_i), where
-// *
-// *    d := max_i(a_i)/sum_i(a_i).
-// *
-// * This means that
-// *  1) tint application is independent of their order.
-// *  2) going from n+1 to n tints is continuous when the leaving one has faded.
-// *
-// * But note that for more than one tint, the composite tint will in general
-// * change its hue as the ratio of the weights of the individual ones changes.
-// */
-//static void palaccum_add(palaccum_t *pa, const palette_t *pal, int32_t f)
-//{
-//    f = clamp(f, 0, 63);
-//    if (f == 0)
-//        return;
+/* For a picture frame F and n tints C_1, C_2, ... C_n weighted a_1, a_2,
+ * ... a_n (on a 0-1 scale), the faded frame is calculated as
+ *
+ *    F_new := (1-max_i(a_i))*F + d*sum_i(a_i), where
+ *
+ *    d := max_i(a_i)/sum_i(a_i).
+ *
+ * This means that
+ *  1) tint application is independent of their order.
+ *  2) going from n+1 to n tints is continuous when the leaving one has faded.
+ *
+ * But note that for more than one tint, the composite tint will in general
+ * change its hue as the ratio of the weights of the individual ones changes.
+ */
+function palaccum_add(pa:palaccum_t , pal:palette_t, /*int32_t */f:number):void
+{
+    f = clamp(f, 0, 63);
+    if (f == 0)
+        return;
 
-//    pa.maxf = max(pa.maxf, f);
-//    pa.sumf += f;
+    pa.maxf = max(pa.maxf, f);
+    pa.sumf += f;
 
-//    // TODO: we need to do away with this 0-63 scale weirdness someday.
-//    pa.r += f*clamp(pal.r, 0, 63);
-//    pa.g += f*clamp(pal.g, 0, 63);
-//    pa.b += f*clamp(pal.b, 0, 63);
-//}
+    // TODO: we need to do away with this 0-63 scale weirdness someday.
+    pa.r += f*clamp(pal.r, 0, 63);
+    pa.g += f*clamp(pal.g, 0, 63);
+    pa.b += f*clamp(pal.b, 0, 63);
+}
 
 //static void G_FadePalaccum(const palaccum_t *pa)
 //{
@@ -3492,205 +3492,205 @@ function G_SetCrosshairColor(r: number, g: number, b: number): void
 
 function G_DisplayRest(/*int32_t */smoothratio: number): void
 {todo("G_DisplayRest");
-//    int32_t i, j;
-//    palaccum_t tint = PALACCUM_INITIALIZER;
+    var /*int32_t */i:number, j:number;
+    var tint = new palaccum_t();//var /*palaccum_t */tint = PALACCUM_INITIALIZER;
 
-//    DukePlayer_t *const pp = g_player[screenpeek].ps;
-//    DukePlayer_t *const pp2 = g_fakeMultiMode==2 ? g_player[1].ps : NULL;
-//    int32_t cposx, cposy, cang;
+    var pp = g_player[screenpeek].ps;
+    var pp2 = g_fakeMultiMode==2 ? g_player[1].ps : NULL;
+    var/*int32_t */cposx:number, cposy:number, cang:number;
 
 //#ifdef USE_OPENGL
-//    // this takes care of fullscreen tint for OpenGL
-//    if (getrendermode() >= REND_POLYMOST)
-//    {
-//        if (pp.palette == WATERPAL)
-//        {
-//            static const palette_t wp = { 224, 192, 255, 0 };
-//            Bmemcpy(&hictinting[MAXPALOOKUPS-1], &wp, sizeof(palette_t));
-//        }
-//        else if (pp.palette == SLIMEPAL)
-//        {
-//            static const palette_t sp = { 208, 255, 192, 0 };
-//            Bmemcpy(&hictinting[MAXPALOOKUPS-1], &sp, sizeof(palette_t));
-//        }
-//        else
-//        {
-//            hictinting[MAXPALOOKUPS-1].r = 255;
-//            hictinting[MAXPALOOKUPS-1].g = 255;
-//            hictinting[MAXPALOOKUPS-1].b = 255;
-//        }
-//    }
+    // this takes care of fullscreen tint for OpenGL
+    if (getrendermode() >= REND_POLYMOST)
+    {
+        if (pp.palette == WATERPAL)
+        {
+            var wp = new palette_t(224, 192, 255, 0);
+            todoThrow("Bmemcpy(&hictinting[MAXPALOOKUPS-1], &wp, sizeof(palette_t));");
+        }
+        else if (pp.palette == SLIMEPAL)
+        {
+            var sp  = new palette_t( 208, 255, 192, 0);
+            todoThrow("Bmemcpy(&hictinting[MAXPALOOKUPS-1], &sp, sizeof(palette_t));");
+        }
+        else
+        {
+            hictinting[MAXPALOOKUPS-1].r = 255;
+            hictinting[MAXPALOOKUPS-1].g = 255;
+            hictinting[MAXPALOOKUPS-1].b = 255;
+        }
+    }
 //#endif  // USE_OPENGL
 
-//    palaccum_add(&tint, &pp.pals, pp.pals.f);
-//    if (pp2)
-//        palaccum_add(&tint, &pp2.pals, pp2.pals.f);
-//    {
-//        static const palette_t loogiepal = { 0, 63, 0, 0 };
+    palaccum_add(tint, pp.pals, pp.pals.f);
+    if (pp2)
+        palaccum_add(tint, pp2.pals, pp2.pals.f);
+    {
+        var loogiepal = new palette_t(0, 63, 0, 0);
 
-//        palaccum_add(&tint, &loogiepal, pp.loogcnt>>1);
-//        if (pp2)
-//            palaccum_add(&tint, &loogiepal, pp2.loogcnt>>1);
-//    }
+        palaccum_add(tint, loogiepal, pp.loogcnt>>1);
+        if (pp2)
+            palaccum_add(tint, loogiepal, pp2.loogcnt>>1);
+    }
 
-//    if (g_restorePalette)
-//    {
-//        // reset a normal palette
-//        static uint32_t omovethingscnt;
+    if (g_restorePalette)
+    {
+        // reset a normal palette
+        var /*static uint32_t */omovethingscnt=0;
 
-//        if (g_restorePalette < 2 || omovethingscnt+1 == g_moveThingsCount)
-//        {
-//            int32_t pal = pp.palette;
-//            const int32_t opal = pal;
+        if (g_restorePalette < 2 || omovethingscnt+1 == g_moveThingsCount)
+        {
+            var /*int32_t */pal = pp.palette;
+            var /*const int32_t */opal = pal;
 
-//            if (pp2)  // splitscreen HACK: BASEPAL trumps all, then it's arbitrary.
-//                pal = min(pal, pp2.palette);
+            if (pp2)  // splitscreen HACK: BASEPAL trumps all, then it's arbitrary.
+                pal = min(pal, pp2.palette);
 
-//            // g_restorePalette < 0: reset tinting, too (e.g. when loading new game)
-//            P_SetGamePalette(pp, pal, 2 + (g_restorePalette>0)*16);
+            // g_restorePalette < 0: reset tinting, too (e.g. when loading new game)
+            P_SetGamePalette(pp, pal, 2 + (g_restorePalette>0?1:0)*16);
 
-//            if (pp2)  // keep first player's pal as its member!
-//                pp.palette = opal;
+            if (pp2)  // keep first player's pal as its member!
+                pp.palette = opal;
 
-//            g_restorePalette = 0;
-//        }
-//        else
-//        {
-//            // delay setting the palette by one game tic
-//            omovethingscnt = g_moveThingsCount;
-//        }
-//    }
+            g_restorePalette = 0;
+        }
+        else
+        {
+            // delay setting the palette by one game tic
+            omovethingscnt = g_moveThingsCount;
+        }
+    }
 
-//    if (ud.show_help)
-//    {
-//        switch (ud.show_help)
-//        {
-//        case 1:
-//            rotatesprite_fs(0,0,65536L,0,TEXTSTORY,0,0,10+16+64);
-//            break;
-//        case 2:
-//            rotatesprite_fs(0,0,65536L,0,F1HELP,0,0,10+16+64);
-//            break;
-//        }
+    if (ud.show_help)
+    {
+        switch (ud.show_help)
+        {
+        case 1:
+            rotatesprite_fs(0,0,65536,0,TEXTSTORY,0,0,10+16+64);
+            break;
+        case 2:
+            rotatesprite_fs(0,0,65536,0,F1HELP,0,0,10+16+64);
+            break;
+        }
+        todoThrow();
+        //if (I_ReturnTrigger())
+        //{
+        //    I_ReturnTriggerClear();
+        //    ud.show_help = 0;
+        //    if ((!g_netServer && ud.multimode < 2) && ud.recstat != 2)
+        //    {
+        //        ready2send = 1;
+        //        totalclock = ototalclock;
+        //    }
+        //    G_UpdateScreenArea();
+        //}
 
-//        if (I_ReturnTrigger())
-//        {
-//            I_ReturnTriggerClear();
-//            ud.show_help = 0;
-//            if ((!g_netServer && ud.multimode < 2) && ud.recstat != 2)
-//            {
-//                ready2send = 1;
-//                totalclock = ototalclock;
-//            }
-//            G_UpdateScreenArea();
-//        }
+        return;
+    }
 
-//        return;
-//    }
+    i = pp.cursectnum;
+    if (i > -1)
+    {
+        var walIdx:number = sector[i].wallptr, wal:walltype = wall[walIdx];
 
-//    i = pp.cursectnum;
-//    if (i > -1)
-//    {
-//        const walltype *wal = &wall[sector[i].wallptr];
+        show2dsector[i>>3] |= (1<<(i&7));
+        for (j=sector[i].wallnum; j>0; j--,wal=wall[++walIdx])
+        {
+            i = wal.nextsector;
+            if (i < 0) continue;
+            if (wal.cstat&0x0071) continue;
+            if (wall[wal.nextwall].cstat&0x0071) continue;
+            if (sector[i].lotag == 32767) continue;
+            if (sector[i].ceilingz >= sector[i].floorz) continue;
+            show2dsector[i>>3] |= (1<<(i&7));
+        }
+    }
 
-//        show2dsector[i>>3] |= (1<<(i&7));
-//        for (j=sector[i].wallnum; j>0; j--,wal++)
-//        {
-//            i = wal.nextsector;
-//            if (i < 0) continue;
-//            if (wal.cstat&0x0071) continue;
-//            if (wall[wal.nextwall].cstat&0x0071) continue;
-//            if (sector[i].lotag == 32767) continue;
-//            if (sector[i].ceilingz >= sector[i].floorz) continue;
-//            show2dsector[i>>3] |= (1<<(i&7));
-//        }
-//    }
+    if (ud.camerasprite == -1)
+    {
+        if (ud.overhead_on != 2)
+        {
+            if (pp.newowner >= 0)
+                todoThrow("G_DrawCameraText(pp.newowner);");
+            else
+            {
+                P_DisplayWeapon(screenpeek);
+                if (pp2)  // HACK
+                    P_DisplayWeapon(1);
 
-//    if (ud.camerasprite == -1)
-//    {
-//        if (ud.overhead_on != 2)
-//        {
-//            if (pp.newowner >= 0)
-//                G_DrawCameraText(pp.newowner);
-//            else
-//            {
-//                P_DisplayWeapon(screenpeek);
-//                if (pp2)  // HACK
-//                    P_DisplayWeapon(1);
+                if (pp.over_shoulder_on == 0)
+                    P_DisplayScuba(screenpeek);
+                if (pp2 && pp2.over_shoulder_on == 0)  // HACK
+                    P_DisplayScuba(1);
+            }
+            G_MoveClouds();
+        }
 
-//                if (pp.over_shoulder_on == 0)
-//                    P_DisplayScuba(screenpeek);
-//                if (pp2 && pp2.over_shoulder_on == 0)  // HACK
-//                    P_DisplayScuba(1);
-//            }
-//            G_MoveClouds();
-//        }
+        if (ud.overhead_on > 0)
+        {
+            // smoothratio = min(max(smoothratio,0),65536);
+            smoothratio = calc_smoothratio(totalclock, ototalclock);
+            G_DoInterpolations(smoothratio);
 
-//        if (ud.overhead_on > 0)
-//        {
-//            // smoothratio = min(max(smoothratio,0),65536);
-//            smoothratio = calc_smoothratio(totalclock, ototalclock);
-//            G_DoInterpolations(smoothratio);
+            if (ud.scrollmode == 0)
+            {
+                if (pp.newowner == -1 && !ud.pause_on)
+                {
+                    cposx = pp.opos.x + mulscale16(pp.pos.x-pp.opos.x, smoothratio);
+                    cposy = pp.opos.y + mulscale16(pp.pos.y-pp.opos.y, smoothratio);
+                    cang = pp.oang + mulscale16(((pp.ang+1024-pp.oang)&2047)-1024, smoothratio);
+                }
+                else
+                {
+                    cposx = pp.opos.x;
+                    cposy = pp.opos.y;
+                    cang = pp.oang;
+                }
+            }
+            else
+            {
+                if (!ud.pause_on)
+                {
+                    ud.fola += ud.folavel>>3;
+                    ud.folx += (ud.folfvel*sintable[(512+2048-ud.fola)&2047])>>14;
+                    ud.foly += (ud.folfvel*sintable[(512+1024-512-ud.fola)&2047])>>14;
+                }
+                cposx = ud.folx;
+                cposy = ud.foly;
+                cang = ud.fola;
+            }
 
-//            if (ud.scrollmode == 0)
-//            {
-//                if (pp.newowner == -1 && !ud.pause_on)
-//                {
-//                    cposx = pp.opos.x + mulscale16(pp.pos.x-pp.opos.x, smoothratio);
-//                    cposy = pp.opos.y + mulscale16(pp.pos.y-pp.opos.y, smoothratio);
-//                    cang = pp.oang + mulscale16(((pp.ang+1024-pp.oang)&2047)-1024, smoothratio);
-//                }
-//                else
-//                {
-//                    cposx = pp.opos.x;
-//                    cposy = pp.opos.y;
-//                    cang = pp.oang;
-//                }
-//            }
-//            else
-//            {
-//                if (!ud.pause_on)
-//                {
-//                    ud.fola += ud.folavel>>3;
-//                    ud.folx += (ud.folfvel*sintable[(512+2048-ud.fola)&2047])>>14;
-//                    ud.foly += (ud.folfvel*sintable[(512+1024-512-ud.fola)&2047])>>14;
-//                }
-//                cposx = ud.folx;
-//                cposy = ud.foly;
-//                cang = ud.fola;
-//            }
+            if (ud.overhead_on == 2)
+            {
+                clearview(0);
+                todoThrow("drawmapview(cposx,cposy,pp.zoom,cang);");
+            }
+            G_DrawOverheadMap(cposx,cposy,pp.zoom,cang);
 
-//            if (ud.overhead_on == 2)
-//            {
-//                clearview(0L);
-//                drawmapview(cposx,cposy,pp.zoom,cang);
-//            }
-//            G_DrawOverheadMap(cposx,cposy,pp.zoom,cang);
+            G_RestoreInterpolations();
 
-//            G_RestoreInterpolations();
+            if (ud.overhead_on == 2)
+            {todoThrow();
+                //var/* int32_t */a = (ud.screen_size > 0) ? 147 : 179;
+                //minitext(5,a+6,EpisodeNames[ud.volume_number],0,2+8+16+256);
+                //minitext(5,a+6+6,MapInfo[ud.volume_number*MAXLEVELS + ud.level_number].name,0,2+8+16+256);
+            }
+        }
+    }
 
-//            if (ud.overhead_on == 2)
-//            {
-//                const int32_t a = (ud.screen_size > 0) ? 147 : 179;
-//                minitext(5,a+6,EpisodeNames[ud.volume_number],0,2+8+16+256);
-//                minitext(5,a+6+6,MapInfo[ud.volume_number*MAXLEVELS + ud.level_number].name,0,2+8+16+256);
-//            }
-//        }
-//    }
+    if (pp.invdisptime > 0) G_DrawInventory(pp);
 
-//    if (pp.invdisptime > 0) G_DrawInventory(pp);
+    if (VM_OnEvent(EVENT_DISPLAYSBAR, g_player[screenpeek].ps.i, screenpeek, -1, 0) == 0)
+        G_DrawStatusBar(screenpeek);
 
-//    if (VM_OnEvent(EVENT_DISPLAYSBAR, g_player[screenpeek].ps.i, screenpeek, -1, 0) == 0)
-//        G_DrawStatusBar(screenpeek);
+    // HACK
+    if (g_fakeMultiMode==2)
+    {
+        G_DrawStatusBar(1);
+        todoThrow("G_PrintGameQuotes(1);");
+    }
 
-//    // HACK
-//    if (g_fakeMultiMode==2)
-//    {
-//        G_DrawStatusBar(1);
-//        G_PrintGameQuotes(1);
-//    }
-
-//    G_PrintGameQuotes(screenpeek);
+    G_PrintGameQuotes(screenpeek);
 
 //    if (ud.show_level_text && hud_showmapname && g_levelTextTime > 1)
 //    {
@@ -3793,7 +3793,7 @@ function G_DisplayRest(/*int32_t */smoothratio: number): void
 //            {
 //                j = min(max((G_GetAngleDelta(getangle(g_player[i].ps.pos.x-g_player[myconnectindex].ps.pos.x,
 //                                                      g_player[i].ps.pos.y-g_player[myconnectindex].ps.pos.y),g_player[myconnectindex].ps.ang))>>1,-160),160);
-//                rotatesprite_win((160-j)<<16,100L<<16,65536L,0,DUKEICON,0,0,2+1);
+//                rotatesprite_win((160-j)<<16,100L<<16,65536,0,DUKEICON,0,0,2+1);
 //            }
 //        }
 //    }
@@ -3892,7 +3892,7 @@ function G_DisplayRest(/*int32_t */smoothratio: number): void
 //    if (VOLUMEONE)
 //    {
 //        if (ud.show_help == 0 && g_showShareware > 0 && (g_player[myconnectindex].ps.gm&MODE_MENU) == 0)
-//            rotatesprite_fs((320-50)<<16,9<<16,65536L,0,BETAVERSION,0,0,2+8+16+128);
+//            rotatesprite_fs((320-50)<<16,9<<16,65536,0,BETAVERSION,0,0,2+8+16+128);
 //    }
 
 //    if (!Demo_IsProfiling())
@@ -4023,9 +4023,9 @@ function G_DrawBackground(): void
 //        {
 //            for (y=y1; y<y2; y+=tilesizy[bgtile])
 //                for (x=0; x<xdim; x+=tilesizx[bgtile])
-//                    rotatesprite_fs(x<<16,y<<16,65536L,0,bgtile,16,0,8+16+64);
+//                    rotatesprite_fs(x<<16,y<<16,65536,0,bgtile,16,0,8+16+64);
 //        }
-//        else rotatesprite_fs(320<<15,200<<15,65536L,0,bgtile,16,0,2+8+64+(ud.bgstretch?1024:0));
+//        else rotatesprite_fs(320<<15,200<<15,65536,0,bgtile,16,0,2+8+64+(ud.bgstretch?1024:0));
 //        return;
 //    }
 
@@ -4036,21 +4036,21 @@ function G_DrawBackground(): void
 //        // across top
 //        for (y=0; y<windowy1; y+=tilesizy[dapicnum])
 //            for (x=0; x<xdim; x+=tilesizx[dapicnum])
-//                rotatesprite(x<<16,y<<16,65536L,0,dapicnum,8,0,8+16+64,0,y1,xdim-1,windowy1-1);
+//                rotatesprite(x<<16,y<<16,65536,0,dapicnum,8,0,8+16+64,0,y1,xdim-1,windowy1-1);
 
 //        // sides
 //        rx = windowx2-windowx2%tilesizx[dapicnum];
 //        for (y=windowy1-windowy1%tilesizy[dapicnum]; y<windowy2; y+=tilesizy[dapicnum])
 //            for (x=0; x<windowx1 || x+rx<xdim; x+=tilesizx[dapicnum])
 //            {
-//                rotatesprite(x<<16,y<<16,65536L,0,dapicnum,8,0,8+16+64,0,windowy1,windowx1-1,windowy2-1);
-//                rotatesprite((x+rx)<<16,y<<16,65536L,0,dapicnum,8,0,8+16+64,windowx2,windowy1,xdim-1,windowy2-1);
+//                rotatesprite(x<<16,y<<16,65536,0,dapicnum,8,0,8+16+64,0,windowy1,windowx1-1,windowy2-1);
+//                rotatesprite((x+rx)<<16,y<<16,65536,0,dapicnum,8,0,8+16+64,windowx2,windowy1,xdim-1,windowy2-1);
 //            }
 
 //        // along bottom
 //        for (y=windowy2-(windowy2%tilesizy[dapicnum]); y<y2; y+=tilesizy[dapicnum])
 //            for (x=0; x<xdim; x+=tilesizx[dapicnum])
-//                rotatesprite(x<<16,y<<16,65536L,0,dapicnum,8,0,8+16+64,0,windowy2,xdim-1,y2-1);
+//                rotatesprite(x<<16,y<<16,65536,0,dapicnum,8,0,8+16+64,0,windowy2,xdim-1,y2-1);
 //    }
 
 //    // draw in the bits to the left and right of the non-fullsize status bar
@@ -4061,8 +4061,8 @@ function G_DrawBackground(): void
 //        for (y=y2-y2%tilesizy[dapicnum]; y<ydim; y+=tilesizy[dapicnum])
 //            for (x=0; x<xdim>>1; x+=tilesizx[dapicnum])
 //            {
-//                rotatesprite(x<<16,y<<16,65536L,0,dapicnum,8,0,8+16+64,0,y2,x2,ydim-1);
-//                rotatesprite((xdim-x)<<16,y<<16,65536L,0,dapicnum,8,0,8+16+64,xdim-x2-1,y2,xdim-1,ydim-1);
+//                rotatesprite(x<<16,y<<16,65536,0,dapicnum,8,0,8+16+64,0,y2,x2,ydim-1);
+//                rotatesprite((xdim-x)<<16,y<<16,65536,0,dapicnum,8,0,8+16+64,xdim-x2-1,y2,xdim-1,ydim-1);
 //            }
 
 //    }
@@ -4083,20 +4083,20 @@ function G_DrawBackground(): void
 
 //        for (y=y1+4; y<y2-4; y+=64)
 //        {
-//            rotatesprite(x1<<16,y<<16,65536L,0,VIEWBORDER,0,0,8+16+64,x1,y1,x2,y2);
-//            rotatesprite((x2+1)<<16,(y+64)<<16,65536L,1024,VIEWBORDER,0,0,8+16+64,x1,y1,x2,y2);
+//            rotatesprite(x1<<16,y<<16,65536,0,VIEWBORDER,0,0,8+16+64,x1,y1,x2,y2);
+//            rotatesprite((x2+1)<<16,(y+64)<<16,65536,1024,VIEWBORDER,0,0,8+16+64,x1,y1,x2,y2);
 //        }
 
 //        for (x=x1+4; x<x2-4; x+=64)
 //        {
-//            rotatesprite((x+64)<<16,y1<<16,65536L,512,VIEWBORDER,0,0,8+16+64,x1,y1,x2,y2);
-//            rotatesprite(x<<16,(y2+1)<<16,65536L,1536,VIEWBORDER,0,0,8+16+64,x1,y1,x2,y2);
+//            rotatesprite((x+64)<<16,y1<<16,65536,512,VIEWBORDER,0,0,8+16+64,x1,y1,x2,y2);
+//            rotatesprite(x<<16,(y2+1)<<16,65536,1536,VIEWBORDER,0,0,8+16+64,x1,y1,x2,y2);
 //        }
 
-//        rotatesprite(x1<<16,y1<<16,65536L,0,VIEWBORDER+1,0,0,8+16+64,x1,y1,x2,y2);
-//        rotatesprite((x2+1)<<16,y1<<16,65536L,512,VIEWBORDER+1,0,0,8+16+64,x1,y1,x2,y2);
-//        rotatesprite((x2+1)<<16,(y2+1)<<16,65536L,1024,VIEWBORDER+1,0,0,8+16+64,x1,y1,x2,y2);
-//        rotatesprite(x1<<16,(y2+1)<<16,65536L,1536,VIEWBORDER+1,0,0,8+16+64,x1,y1,x2,y2);
+//        rotatesprite(x1<<16,y1<<16,65536,0,VIEWBORDER+1,0,0,8+16+64,x1,y1,x2,y2);
+//        rotatesprite((x2+1)<<16,y1<<16,65536,512,VIEWBORDER+1,0,0,8+16+64,x1,y1,x2,y2);
+//        rotatesprite((x2+1)<<16,(y2+1)<<16,65536,1024,VIEWBORDER+1,0,0,8+16+64,x1,y1,x2,y2);
+//        rotatesprite(x1<<16,(y2+1)<<16,65536,1536,VIEWBORDER+1,0,0,8+16+64,x1,y1,x2,y2);
 //    }
 
 //    pus = pub = NUMPAGES;
@@ -10282,7 +10282,7 @@ function G_CheckCommandLine(argc: number, argv: string[]) : void
 //    I_ClearAllInput();
 
 //    setview(0,0,xdim-1,ydim-1);
-//    clearallviews(0L);
+//    clearallviews(0);
 //    G_FadePalette(0,0,0,63);
 
 //    flushperms();
@@ -10307,7 +10307,7 @@ function G_CheckCommandLine(argc: number, argv: string[]) : void
 //                I_ClearAllInput();
 //            }
 
-//            clearallviews(0L);
+//            clearallviews(0);
 //            nextpage();
 
 //            if (logoflags & LOGO_STOPANIMSOUNDS)
@@ -10334,7 +10334,7 @@ function G_CheckCommandLine(argc: number, argv: string[]) : void
 //                P_SetGamePalette(g_player[myconnectindex].ps, DREALMSPAL, 8+2+1);    // JBF 20040308
 //                fadepal(0,0,0, 0,63,7);
 //                flushperms();
-//                rotatesprite_fs(0,0,65536L,0,DREALMS,0,0,2+8+16+(ud.bgstretch?1024:0));
+//                rotatesprite_fs(0,0,65536,0,DREALMS,0,0,2+8+16+(ud.bgstretch?1024:0));
 //                nextpage();
 //                fadepaltile(0,0,0, 63,0,-7,DREALMS);
 //                totalclock = 0;
@@ -10342,7 +10342,7 @@ function G_CheckCommandLine(argc: number, argv: string[]) : void
 //                {
 //                    clearallviews(0);
 
-//                    rotatesprite_fs(0,0,65536L,0,DREALMS,0,0,2+8+16+64+(ud.bgstretch?1024:0));
+//                    rotatesprite_fs(0,0,65536,0,DREALMS,0,0,2+8+16+64+(ud.bgstretch?1024:0));
 
 //                    G_HandleAsync();
 
@@ -10358,7 +10358,7 @@ function G_CheckCommandLine(argc: number, argv: string[]) : void
 //            I_ClearInputWaiting();
 //        }
 
-//        clearallviews(0L);
+//        clearallviews(0);
 //        nextpage();
 
 //        if (logoflags & LOGO_TITLESCREEN)
@@ -10368,7 +10368,7 @@ function G_CheckCommandLine(argc: number, argv: string[]) : void
 //            //g_player[myconnectindex].ps.palette = titlepal;
 //            P_SetGamePalette(g_player[myconnectindex].ps, TITLEPAL, 8+2+1);   // JBF 20040308
 //            flushperms();
-//            rotatesprite_fs(0,0,65536L,0,BETASCREEN,0,0,2+8+16);
+//            rotatesprite_fs(0,0,65536,0,BETASCREEN,0,0,2+8+16);
 //            KB_FlushKeyboardQueue();
 //            fadepaltile(0,0,0, 63,0,-7,BETASCREEN);
 //            totalclock = 0;
@@ -10377,7 +10377,7 @@ function G_CheckCommandLine(argc: number, argv: string[]) : void
 //            {
 //                clearallviews(0);
 
-//                rotatesprite_fs(0,0,65536L,0,BETASCREEN,0,0,2+8+16+64+(ud.bgstretch?1024:0));
+//                rotatesprite_fs(0,0,65536,0,BETASCREEN,0,0,2+8+16+64+(ud.bgstretch?1024:0));
 //                if (logoflags & LOGO_DUKENUKEM)
 //                {
 //                    if (totalclock > 120 && totalclock < (120+60))
@@ -10457,7 +10457,7 @@ function G_CheckCommandLine(argc: number, argv: string[]) : void
 //    }
 
 //    flushperms();
-//    clearallviews(0L);
+//    clearallviews(0);
 //    nextpage();
 
 //    //g_player[myconnectindex].ps.palette = palette;
@@ -10465,7 +10465,7 @@ function G_CheckCommandLine(argc: number, argv: string[]) : void
 //    S_PlaySound(NITEVISION_ONOFF);
 
 //    //G_FadePalette(0,0,0,0);
-//    clearallviews(0L);
+//    clearallviews(0);
 //}
 
 //static void G_Cleanup(void)
@@ -11616,7 +11616,7 @@ var tempWhile = 0;
         i = 1-i;
     }
 
-    if (quitevent) return 4;
+    if (quitevent) todoThrow("return 4");
 
     {
         var defsfile = G_DefFile();
@@ -11781,11 +11781,11 @@ var tempWhile = 0;
     if (ud.warp_on > 1 && (!g_netServer && ud.multimode < 2))
     {
         todoThrow();
-//        clearview(0L);
+//        clearview(0);
 //        //g_player[myconnectindex].ps.palette = palette;
 //        //G_FadePalette(0,0,0,0);
 //        P_SetGamePalette(g_player[myconnectindex].ps, BASEPAL, 0);    // JBF 20040308
-//        rotatesprite_fs(320<<15,200<<15,65536L,0,LOADSCREEN,0,0,2+8+64+(ud.bgstretch?1024:0));
+//        rotatesprite_fs(320<<15,200<<15,65536,0,LOADSCREEN,0,0,2+8+64+(ud.bgstretch?1024:0));
 //        menutext(160,105,0,0,"LOADING SAVED GAME...");
 //        nextpage();
 
@@ -12221,7 +12221,7 @@ function /*int32_t */G_DoMoveThings(): number
 //    {
 //        fadepal(0,0,0, 0,63,7);
 //        I_ClearAllInput();
-//        rotatesprite_fs(0,0,65536L,0,ORDERING+i,0,0,2+8+16+64+(ud.bgstretch?1024:0));
+//        rotatesprite_fs(0,0,65536,0,ORDERING+i,0,0,2+8+16+64+(ud.bgstretch?1024:0));
 //        fadepal(0,0,0, 63,0,-7);
 //        while (!I_CheckAllInput())
 //            G_HandleAsync();
@@ -12264,8 +12264,8 @@ function /*int32_t */G_DoMoveThings(): number
 //        if (ud.lockout == 0)
 //        {
 //            P_SetGamePalette(g_player[myconnectindex].ps, ENDINGPAL, 8+2+1); // JBF 20040308
-//            clearallviews(0L);
-//            rotatesprite_fs(0,50<<16,65536L,0,VICTORY1,0,0,2+8+16+64+128+(ud.bgstretch?1024:0));
+//            clearallviews(0);
+//            rotatesprite_fs(0,50<<16,65536,0,VICTORY1,0,0,2+8+16+64+128+(ud.bgstretch?1024:0));
 //            nextpage();
 //            fadepal(0,0,0, 63,0,-1);
 
@@ -12274,8 +12274,8 @@ function /*int32_t */G_DoMoveThings(): number
 
 //            while (1)
 //            {
-//                clearallviews(0L);
-//                rotatesprite_fs(0,50<<16,65536L,0,VICTORY1,0,0,2+8+16+64+128+(ud.bgstretch?1024:0));
+//                clearallviews(0);
+//                rotatesprite_fs(0,50<<16,65536,0,VICTORY1,0,0,2+8+16+64+128+(ud.bgstretch?1024:0));
 
 //                // boss
 //                if (totalclock > 390 && totalclock < 780)
@@ -12287,7 +12287,7 @@ function /*int32_t */G_DoMoveThings(): number
 //                            S_PlaySound(SQUISHED);
 //                            bonuscnt++;
 //                        }
-//                        rotatesprite_fs(bossmove[t+3]<<16,bossmove[t+4]<<16,65536L,0,bossmove[t+2],0,0,2+8+16+64+128+(ud.bgstretch?1024:0));
+//                        rotatesprite_fs(bossmove[t+3]<<16,bossmove[t+4]<<16,65536,0,bossmove[t+2],0,0,2+8+16+64+128+(ud.bgstretch?1024:0));
 //                    }
 
 //                // Breathe
@@ -12295,7 +12295,7 @@ function /*int32_t */G_DoMoveThings(): number
 //                {
 //                    if (totalclock >= 750)
 //                    {
-//                        rotatesprite_fs(86<<16,59<<16,65536L,0,VICTORY1+8,0,0,2+8+16+64+128+(ud.bgstretch?1024:0));
+//                        rotatesprite_fs(86<<16,59<<16,65536,0,VICTORY1+8,0,0,2+8+16+64+128+(ud.bgstretch?1024:0));
 //                        if (totalclock >= 750 && bonuscnt == 2)
 //                        {
 //                            S_PlaySound(DUKETALKTOBOSS);
@@ -12311,7 +12311,7 @@ function /*int32_t */G_DoMoveThings(): number
 //                                S_PlaySound(BOSSTALKTODUKE);
 //                                bonuscnt++;
 //                            }
-//                            rotatesprite_fs(breathe[t+3]<<16,breathe[t+4]<<16,65536L,0,breathe[t+2],0,0,2+8+16+64+128+(ud.bgstretch?1024:0));
+//                            rotatesprite_fs(breathe[t+3]<<16,breathe[t+4]<<16,65536,0,breathe[t+2],0,0,2+8+16+64+128+(ud.bgstretch?1024:0));
 //                        }
 //                }
 
@@ -12328,7 +12328,7 @@ function /*int32_t */G_DoMoveThings(): number
 //        I_ClearInputWaiting();
 //        P_SetGamePalette(g_player[myconnectindex].ps, BASEPAL, 8+2+1);   // JBF 20040308
 
-//        rotatesprite_fs(0,0,65536L,0,3292,0,0,2+8+16+64+(ud.bgstretch?1024:0));
+//        rotatesprite_fs(0,0,65536,0,3292,0,0,2+8+16+64+(ud.bgstretch?1024:0));
 //        fadepal(0,0,0, 63,0,-1);
 //        G_HandleEventsWhileNoInput();
 //        fadepal(0,0,0, 0,63,1);
@@ -12339,14 +12339,14 @@ function /*int32_t */G_DoMoveThings(): number
 
 //    case 1:
 //        S_StopMusic();
-//        clearallviews(0L);
+//        clearallviews(0);
 //        nextpage();
 
 //        if (ud.lockout == 0)
 //        {
 //            G_PlayAnim("cineov2.anm",1);
 //            I_ClearInputWaiting();
-//            clearallviews(0L);
+//            clearallviews(0);
 //            nextpage();
 //        }
 
@@ -12356,7 +12356,7 @@ function /*int32_t */G_DoMoveThings(): number
 //        setview(0,0,xdim-1,ydim-1);
 //        I_ClearInputWaiting();
 //        P_SetGamePalette(g_player[myconnectindex].ps, BASEPAL, 8+2+1);   // JBF 20040308
-//        rotatesprite_fs(0,0,65536L,0,3293,0,0,2+8+16+64+(ud.bgstretch?1024:0));
+//        rotatesprite_fs(0,0,65536,0,3293,0,0,2+8+16+64+(ud.bgstretch?1024:0));
 //        fadepal(0,0,0, 63,0,-1);
 //        G_HandleEventsWhileNoInput();
 //        fadepal(0,0,0, 0,63,1);
@@ -12367,20 +12367,20 @@ function /*int32_t */G_DoMoveThings(): number
 //        setview(0,0,xdim-1,ydim-1);
 
 //        S_StopMusic();
-//        clearallviews(0L);
+//        clearallviews(0);
 //        nextpage();
 
 //        if (ud.lockout == 0)
 //        {
 //            I_ClearInputWaiting();
 //            G_PlayAnim("vol4e1.anm",8);
-//            clearallviews(0L);
+//            clearallviews(0);
 //            nextpage();
 //            G_PlayAnim("vol4e2.anm",10);
-//            clearallviews(0L);
+//            clearallviews(0);
 //            nextpage();
 //            G_PlayAnim("vol4e3.anm",11);
-//            clearallviews(0L);
+//            clearallviews(0);
 //            nextpage();
 //        }
 
@@ -12392,7 +12392,7 @@ function /*int32_t */G_DoMoveThings(): number
 //        G_FadePalette(0,0,0,0);
 //        P_SetGamePalette(g_player[myconnectindex].ps, BASEPAL, 8+2+1);   // JBF 20040308
 ////        G_FadePalette(0,0,0,63);
-//        clearallviews(0L);
+//        clearallviews(0);
 //        menutext(160,60,0,0,"Thanks to all our");
 //        menutext(160,60+16,0,0,"fans for giving");
 //        menutext(160,60+16+16,0,0,"us big heads.");
@@ -12406,7 +12406,7 @@ function /*int32_t */G_DoMoveThings(): number
 //        G_HandleEventsWhileNoInput();
 //        fadepal(0,0,0, 0,63,3);
 
-//        clearallviews(0L);
+//        clearallviews(0);
 //        nextpage();
 
 //        G_PlayAnim("DUKETEAM.ANM",4);
@@ -12414,7 +12414,7 @@ function /*int32_t */G_DoMoveThings(): number
 //        I_ClearInputWaiting();
 //        G_HandleEventsWhileNoInput();
 
-//        clearallviews(0L);
+//        clearallviews(0);
 //        nextpage();
 //        G_FadePalette(0,0,0,63);
 
@@ -12426,7 +12426,7 @@ function /*int32_t */G_DoMoveThings(): number
 
 //    case 2:
 //        S_StopMusic();
-//        clearallviews(0L);
+//        clearallviews(0);
 //        nextpage();
 //        if (ud.lockout == 0)
 //        {
@@ -12436,7 +12436,7 @@ function /*int32_t */G_DoMoveThings(): number
 //            ototalclock = totalclock+200;
 //            while (totalclock < ototalclock)
 //                G_HandleAsync();
-//            clearallviews(0L);
+//            clearallviews(0);
 //            nextpage();
 
 //            FX_StopAllSounds();
@@ -12476,7 +12476,7 @@ function /*int32_t */G_DoMoveThings(): number
 //            S_ClearSoundLocks();
 //            S_PlaySound(ENDSEQVOL3SND4);
 
-//            clearallviews(0L);
+//            clearallviews(0);
 //            nextpage();
 
 //            G_PlayAnim("DUKETEAM.ANM",4);
@@ -12484,7 +12484,7 @@ function /*int32_t */G_DoMoveThings(): number
 //            I_ClearInputWaiting();
 //            G_HandleEventsWhileNoInput();
 
-//            clearallviews(0L);
+//            clearallviews(0);
 //            nextpage();
 //            G_FadePalette(0,0,0,63);
 //        }
@@ -12493,7 +12493,7 @@ function /*int32_t */G_DoMoveThings(): number
 //        FX_StopAllSounds();
 //        S_ClearSoundLocks();
 
-//        clearallviews(0L);
+//        clearallviews(0);
 
 //        break;
 //    }
@@ -12530,13 +12530,13 @@ function /*int32_t */G_DoMoveThings(): number
 
 //    fadepal(0,0,0, 0,63,7);
 //    setview(0,0,xdim-1,ydim-1);
-//    clearallviews(0L);
+//    clearallviews(0);
 //    nextpage();
 //    flushperms();
 
 //    FX_StopAllSounds();
 //    S_ClearSoundLocks();
-//    FX_SetReverb(0L);
+//    FX_SetReverb(0);
 //    CONTROL_BindsEnabled = 1; // so you can use your screenshot bind on the score screens
 
 //    if (bonusonly)
@@ -12562,10 +12562,10 @@ function /*int32_t */G_DoMoveThings(): number
 //        if (!(ud.config.MusicToggle == 0 || ud.config.MusicDevice < 0))
 //            S_PlaySound(BONUSMUSIC);
 
-//        rotatesprite_fs(0,0,65536L,0,MENUSCREEN,16,0,2+8+16+64+(ud.bgstretch?1024:0));
-//        rotatesprite_fs(160<<16,34<<16,65536L,0,INGAMEDUKETHREEDEE,0,0,10);
+//        rotatesprite_fs(0,0,65536,0,MENUSCREEN,16,0,2+8+16+64+(ud.bgstretch?1024:0));
+//        rotatesprite_fs(160<<16,34<<16,65536,0,INGAMEDUKETHREEDEE,0,0,10);
 //        if (PLUTOPAK)   // JBF 20030804
-//            rotatesprite_fs((260)<<16,36<<16,65536L,0,PLUTOPAKSPRITE+2,0,0,2+8);
+//            rotatesprite_fs((260)<<16,36<<16,65536,0,PLUTOPAKSPRITE+2,0,0,2+8);
 //        gametext(160,58+2,"Multiplayer Totals",0,2+8+16);
 //        gametext(160,58+10,MapInfo[(ud.volume_number*MAXLEVELS)+ud.last_level-1].name,0,2+8+16);
 
@@ -12647,7 +12647,7 @@ function /*int32_t */G_DoMoveThings(): number
 //    if (bonusonly || (g_netServer || ud.multimode > 1)) return;
 
 //    gfx_offset = (ud.volume_number==1) ? 5 : 0;
-//    rotatesprite_fs(0,0,65536L,0,BONUSSCREEN+gfx_offset,0,0,2+8+16+64+128+(ud.bgstretch?1024:0));
+//    rotatesprite_fs(0,0,65536,0,BONUSSCREEN+gfx_offset,0,0,2+8+16+64+128+(ud.bgstretch?1024:0));
 
 //    if (lastmapname)
 //        menutext(160,20-6,0,0,lastmapname);
@@ -12700,7 +12700,7 @@ function /*int32_t */G_DoMoveThings(): number
 //        {
 //            clearallviews(0);
 
-//            rotatesprite_fs(0,0,65536L,0,BONUSSCREEN+gfx_offset,0,0,2+8+16+64+128+(ud.bgstretch?1024:0));
+//            rotatesprite_fs(0,0,65536,0,BONUSSCREEN+gfx_offset,0,0,2+8+16+64+128+(ud.bgstretch?1024:0));
 
 //            if (totalclock > 1000000000 && totalclock < 1000000320)
 //            {
@@ -12730,11 +12730,11 @@ function /*int32_t */G_DoMoveThings(): number
 //                case 1:
 //                case 4:
 //                case 5:
-//                    rotatesprite_fs(199<<16,31<<16,65536L,0,BONUSSCREEN+3+gfx_offset,0,0,2+8+16+64+128+(ud.bgstretch?1024:0));
+//                    rotatesprite_fs(199<<16,31<<16,65536,0,BONUSSCREEN+3+gfx_offset,0,0,2+8+16+64+128+(ud.bgstretch?1024:0));
 //                    break;
 //                case 2:
 //                case 3:
-//                    rotatesprite_fs(199<<16,31<<16,65536L,0,BONUSSCREEN+4+gfx_offset,0,0,2+8+16+64+128+(ud.bgstretch?1024:0));
+//                    rotatesprite_fs(199<<16,31<<16,65536,0,BONUSSCREEN+4+gfx_offset,0,0,2+8+16+64+128+(ud.bgstretch?1024:0));
 //                    break;
 //                }
 //            }
@@ -12745,10 +12745,10 @@ function /*int32_t */G_DoMoveThings(): number
 //                {
 //                case 1:
 //                case 3:
-//                    rotatesprite_fs(199<<16,31<<16,65536L,0,BONUSSCREEN+1+gfx_offset,0,0,2+8+16+64+128+(ud.bgstretch?1024:0));
+//                    rotatesprite_fs(199<<16,31<<16,65536,0,BONUSSCREEN+1+gfx_offset,0,0,2+8+16+64+128+(ud.bgstretch?1024:0));
 //                    break;
 //                case 2:
-//                    rotatesprite_fs(199<<16,31<<16,65536L,0,BONUSSCREEN+2+gfx_offset,0,0,2+8+16+64+128+(ud.bgstretch?1024:0));
+//                    rotatesprite_fs(199<<16,31<<16,65536,0,BONUSSCREEN+2+gfx_offset,0,0,2+8+16+64+128+(ud.bgstretch?1024:0));
 //                    break;
 //                }
 //            }
@@ -12943,19 +12943,19 @@ function /*int32_t */G_DoMoveThings(): number
 
 //    if (!actor[i].t_data[0])
 //    {
-//        rotatesprite_win(24<<16,33<<16,65536L,0,CAMCORNER,0,0,2);
-//        rotatesprite_win((320-26)<<16,34<<16,65536L,0,CAMCORNER+1,0,0,2);
-//        rotatesprite_win(22<<16,163<<16,65536L,512,CAMCORNER+1,0,0,2+4);
-//        rotatesprite_win((310-10)<<16,163<<16,65536L,512,CAMCORNER+1,0,0,2);
+//        rotatesprite_win(24<<16,33<<16,65536,0,CAMCORNER,0,0,2);
+//        rotatesprite_win((320-26)<<16,34<<16,65536,0,CAMCORNER+1,0,0,2);
+//        rotatesprite_win(22<<16,163<<16,65536,512,CAMCORNER+1,0,0,2+4);
+//        rotatesprite_win((310-10)<<16,163<<16,65536,512,CAMCORNER+1,0,0,2);
 //        if (totalclock&16)
-//            rotatesprite_win(46<<16,32<<16,65536L,0,CAMLIGHT,0,0,2);
+//            rotatesprite_win(46<<16,32<<16,65536,0,CAMLIGHT,0,0,2);
 //    }
 //    else
 //    {
 //        flipbits = (totalclock<<1)&48;
 //        for (x=0; x<394; x+=64)
 //            for (y=0; y<200; y+=64)
-//                rotatesprite_win(x<<16,y<<16,65536L,0,STATIC,0,0,2+flipbits);
+//                rotatesprite_win(x<<16,y<<16,65536,0,STATIC,0,0,2+flipbits);
 //    }
 //}
 

@@ -2583,7 +2583,7 @@ function /*int32_t */engine_addtsprite(/*int16_t */z: number, /*int16_t */sectnu
     var spr = sprite[z];
 //#ifdef YAX_ENABLE
     var /*int16_t */cb: number, fb: number, sortcnt: number;
-    var /*int32_t */spheight, spzofs;
+    var /*int32_t */spheight: number, spzofs: number;
 
     if (g_nodraw==0)
     {
