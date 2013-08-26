@@ -468,13 +468,20 @@ var aplWeaponSelectSound: Int32Array[] = new Array(MAX_WEAPONS);     // Sound fo
 var aplWeaponFlashColor: Int32Array[] = new Array(MAX_WEAPONS);      // Color for polymer muzzle flash                               extern intptr_t         
 //#endif
 
-//// KEEPINSYNC lunatic/defs.ilua
-//typedef struct {
-//    int32_t cur, count;  // "cur" is the only member that is *used*
-//    int32_t gunposx, lookhalfang;  // weapon_xoffset, ps.look_ang>>1
-//    int32_t gunposy, lookhoriz;  // gun_pos, looking_arc
-//    int32_t shade;
-//} hudweapon_t;
+// KEEPINSYNC lunatic/defs.ilua
+class hudweapon_t {
+    /*int32_t*/ cur:number; count:number;  // "cur" is the only member that is *used*
+    /*int32_t*/ gunposx:number; lookhalfang:number;  // weapon_xoffset, ps.look_ang>>1
+    /*int32_t*/ gunposy:number; lookhoriz:number;  // gun_pos, looking_arc
+    /*int32_t*/ shade:number;
+
+    constructor() {
+        this.cur=0; this.count=0;  // "cur"
+        this.gunposx=0; this.lookhalfang=0;
+        this.gunposy=0; this.lookhoriz=0;
+        this.shade=0;;
+    }
+}
 
 assert.areEqual(2, MOVEFIFOSIZ);
 var inputfifo: input_t[][] = [newStructArray(input_t, MAXPLAYERS), newStructArray(input_t, MAXPLAYERS)]; 

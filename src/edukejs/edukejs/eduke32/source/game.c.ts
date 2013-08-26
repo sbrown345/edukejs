@@ -188,7 +188,7 @@ var water_pal = new Uint8Array(768),slime_pal = new Uint8Array(768),title_pal = 
 
 var basepaltable = [ palette, water_pal, slime_pal, dre_alms, title_pal, ending_pal /*NULL*/ /*anim_pal*/ ];
 
-//int8_t g_noFloorPal[MAXPALOOKUPS];  // 1 if sprite pal should not be taken over from floor pal
+var g_noFloorPal = new Int8Array(MAXPALOOKUPS);  // 1 if sprite pal should not be taken over from floor pal
 
 var voting = -1;                           //int32_t 
 var vote_map = -1, vote_episode = -1;      //int32_t 

@@ -1318,13 +1318,13 @@ class hitdata_t {
 //void   printext256(int32_t xpos, int32_t ypos, int16_t col, int16_t backcol,
 //                   const char *name, char fontsize) ATTRIBUTE((nonnull(5)));
 
-//////////// specialized rotatesprite wrappers for (very) often used cases //////////
-//static inline void rotatesprite(int32_t sx, int32_t sy, int32_t z, int16_t a, int16_t picnum,
-//                                int8_t dashade, char dapalnum, int32_t dastat,
-//                                int32_t cx1, int32_t cy1, int32_t cx2, int32_t cy2)
-//{
-//    rotatesprite_(sx, sy, z, a, picnum, dashade, dapalnum, dastat, 0, cx1, cy1, cx2, cy2);
-//}
+////////// specialized rotatesprite wrappers for (very) often used cases //////////
+function rotatesprite(/*int32_t*/ sx:number, /*int32_t*/ sy:number, /*int32_t*/ z:number, /*int16_t*/ a:number, /*int16_t*/ picnum:number,
+                                /*int8_t*/ dashade:number, /*char*/ dapalnum:number, /*int32_t*/ dastat:number,
+                                /*int32_t*/ cx1:number, /*int32_t*/ cy1:number, /*int32_t*/ cx2:number, /*int32_t*/ cy2:number):void 
+{
+    rotatesprite_(sx, sy, z, a, picnum, dashade, dapalnum, dastat, 0, cx1, cy1, cx2, cy2);
+}
 // Don't clip at all, i.e. the whole screen real estate is available:
 function rotatesprite_fs(sx: number, sy: number, z: number, a: number, picnum: number,
                                    dashade: number, dapalnum: number, dastat: number): void
