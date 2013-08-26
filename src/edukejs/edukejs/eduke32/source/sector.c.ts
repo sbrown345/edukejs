@@ -1719,7 +1719,7 @@ function A_DamageWall(/*int32_t */spr:number,/*int32_t */dawallnum:number,/*cons
 {
     var /*int16_t */sn = -1;
     var /*int32_t */j:number, i:number, darkestwall:number;
-    var wal = wall[dawallnum];
+    var walIdx = dawallnum, wal = wall[walIdx];
 
     if (wal.overpicnum == MIRROR && wal.pal != 4 && A_CheckSpriteTileFlags(atwith,SPRITE_PROJECTILE) && (SpriteProjectile[spr].workslike & PROJECTILE_RPG))
     {
@@ -1962,7 +1962,7 @@ function A_DamageWall(/*int32_t */spr:number,/*int32_t */dawallnum:number,/*cons
         darkestwall = 0;
 
         wal = wall[sector[sn].wallptr];
-        for (i=sector[sn].wallnum; i > 0; i--,wal++)
+        for (i=sector[sn].wallnum; i > 0; i--,wal=wall[++walIdx])
             if (wal.shade > darkestwall)
                 darkestwall=wal.shade;
 

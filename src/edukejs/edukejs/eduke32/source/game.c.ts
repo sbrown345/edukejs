@@ -326,33 +326,33 @@ function G_DefaultRtsFile(): string
 //};
 
 
-//static int32_t sbarsc(int32_t sc)
-//{
-//    return scale(sc,ud.statusbarscale,100);
-//}
+function /*int32_t*/  sbarsc(/*int32_t*/ sc:number):number
+{
+    return scale(sc,ud.statusbarscale,100);
+}
 
-//static int32_t sbarx(int32_t x)
-//{
-//    if (ud.screen_size == 4) return sbarsc(x<<16);
-//    return (((320<<16) - sbarsc(320<<16)) >> 1) + sbarsc(x<<16);
-//}
+function /*int32_t*/  sbarx(/*int32_t*/ x:number):number
+{
+    if (ud.screen_size == 4) return sbarsc(x<<16);
+    return (((320<<16) - sbarsc(320<<16)) >> 1) + sbarsc(x<<16);
+}
 
-//static int32_t sbarxr(int32_t x)
-//{
-//    if (ud.screen_size == 4) return (320<<16) - sbarsc(x<<16);
-//    return (((320<<16) - sbarsc(320<<16)) >> 1) + sbarsc(x<<16);
-//}
+function /*int32_t*/  sbarxr(/*int32_t*/ x:number):number
+{
+    if (ud.screen_size == 4) return (320<<16) - sbarsc(x<<16);
+    return (((320<<16) - sbarsc(320<<16)) >> 1) + sbarsc(x<<16);
+}
 
-//static int32_t sbary(int32_t y)
-//{
-//    return (200<<16) - sbarsc(200<<16) + sbarsc(y<<16);
-//}
+function /*int32_t*/  sbary(/*int32_t*/ y:number):number
+{
+    return (200<<16) - sbarsc(200<<16) + sbarsc(y<<16);
+}
 
-//static int32_t sbarx16(int32_t x)
-//{
-//    if (ud.screen_size == 4) return sbarsc(x);
-//    return (((320<<16) - sbarsc(320<<16)) >> 1) + sbarsc(x);
-//}
+function /*int32_t*/  sbarx16(/*int32_t*/ x:number):number
+{
+    if (ud.screen_size == 4) return sbarsc(x);
+    return (((320<<16) - sbarsc(320<<16)) >> 1) + sbarsc(x);
+}
 
 //#if 0 // enable if ever needed
 //static int32_t sbarxr16(int32_t x)
@@ -362,10 +362,10 @@ function G_DefaultRtsFile(): string
 //}
 //#endif
 
-//static int32_t sbary16(int32_t y)
-//{
-//    return (200<<16) - sbarsc(200<<16) + sbarsc(y);
-//}
+function /*int32_t*/ sbary16(/*int32_t*/ y:number):number
+{
+    return (200<<16) - sbarsc(200<<16) + sbarsc(y);
+}
 
 function /*int32_t */textsc(/*int32_t */sc:number):number
 {
@@ -1317,49 +1317,49 @@ function /*int32_t */mpgametext(/*int32_t */y:number,t:string,/*int32_t */s:numb
     return G_PrintGameText(4,STARTALPHANUM, 5,y,t,s,0,dabits,0, 0, xdim-1, ydim-1, 65536);
 }
 
-//// minitext_yofs: in hud_scale-independent, (<<16)-scaled, 0-200-normalized y coords,
-//// (sb&ROTATESPRITE_MAX) only.
+// minitext_yofs: in hud_scale-independent, (<<16)-scaled, 0-200-normalized y coords,
+// (sb&ROTATESPRITE_MAX) only.
 var minitext_yofs = 0;              //static int32_t
 var minitext_lowercase = 0;         //static int32_t
-//int32_t minitext_(int32_t x,int32_t y,const char *t,int32_t s,int32_t p,int32_t sb)
-//{
-//    vec2_t dim;
-//    int32_t z = 65536;
-//    int32_t f = 0;
+function /*int32_t */minitext_(/*int32_t */x:number,/*int32_t */y:number,/*const char **/t:string,/*int32_t */s:number,/*int32_t */p:number,/*int32_t */sb:number):number
+{
+    var dim:vec2_t ;
+    var /*int32_t */z = 65536;
+    var /*int32_t */f = 0;
 
-//    if (t == NULL)
-//    {
-//        OSD_Printf("minitext: NULL text!\n");
-//        return 0;
-//    }
+    if (t == NULL)
+    {
+        OSD_Printf("minitext: NULL text!\n");
+        return 0;
+    }
 
-//    if (!(sb & ROTATESPRITE_FULL16))
-//    {
-//        x<<=16;
-//        y<<=16;
-//    }
+    if (!(sb & ROTATESPRITE_FULL16))
+    {
+        x<<=16;
+        y<<=16;
+    }
 
-//    if (!minitext_lowercase)
-//        f |= TEXT_UPPERCASE;
+    if (!minitext_lowercase)
+        f |= TEXT_UPPERCASE;
 
-//    if (sb & ROTATESPRITE_MAX)
-//    {
-//        x = sbarx16(x);
-//        y = minitext_yofs+sbary16(y);
-//        z = sbarsc(z);
-//    }
+    if (sb & ROTATESPRITE_MAX)
+    {
+        x = sbarx16(x);
+        y = minitext_yofs+sbary16(y);
+        z = sbarsc(z);
+    }
 
-//    sb &= (ROTATESPRITE_MAX-1)|RS_CENTERORIGIN;
+    sb &= (ROTATESPRITE_MAX-1)|RS_CENTERORIGIN;
 
-//    dim = G_ScreenText(MINIFONT, x, y, z, 0, 0, t, s, p, sb|ROTATESPRITE_FULL16, 0, (4<<16), (8<<16), (1<<16), 0, f, 0, 0, xdim-1, ydim-1);
+    dim = G_ScreenText(MINIFONT, x, y, z, 0, 0, t, s, p, sb|ROTATESPRITE_FULL16, 0, (4<<16), (8<<16), (1<<16), 0, f, 0, 0, xdim-1, ydim-1);
 
-//    x += dim.x;
+    x += dim.x;
 
-//    if (!(sb & ROTATESPRITE_FULL16))
-//        x >>= 16;
+    if (!(sb & ROTATESPRITE_FULL16))
+        x >>= 16;
 
-//    return x;
-//}
+    return x;
+}
 //void creditsminitext(int32_t x,int32_t y,const char *t,int32_t p,int32_t sb)
 //{
 //    int32_t f = TEXT_XCENTER;
@@ -1955,25 +1955,25 @@ function G_DrawInventory(p:DukePlayer_t ): void
     //}
 }
 
-//void G_DrawFrags(void)
-//{
-//    int32_t i, j = 0;
-//    const int32_t orient = 2+8+16+64;
+function G_DrawFrags():void
+{
+    var/*int32_t */i:number, j = 0;
+    var/*int32_t */orient = 2+8+16+64;
 
-//    for (TRAVERSE_CONNECT(i))
-//        if (i > j)
-//            j = i;
+    for (i = 0; i != -1; i = connectpoint2[i])
+        if (i > j)
+            j = i;
 
-//    for (i=0; i<=(j>>2); i++)
-//        rotatesprite_fs(0,(8*i)<<16,65600, 0, FRAGBAR, 0,0,orient);
+    for (i=0; i<=(j>>2); i++)
+        rotatesprite_fs(0,(8*i)<<16,65600, 0, FRAGBAR, 0,0,orient);
 
-//    for (TRAVERSE_CONNECT(i))
-//    {
-//        const DukePlayer_t *ps = g_player[i].ps;
-//        minitext(21+(73*(i&3)), 2+((i&28)<<1), g_player[i].user_name, ps.palookup, 2+8+16);
-//        Bsprintf(tempbuf, "%d", ps.frag-ps.fraggedself);
-//        minitext(17+50+(73*(i&3)), 2+((i&28)<<1), tempbuf, ps.palookup, 2+8+16);
-//    }
+    for (i = 0; i != -1; i = connectpoint2[i])
+    {
+        var ps = g_player[i].ps;
+        minitext(21+(73*(i&3)), 2+((i&28)<<1), g_player[i].user_name, ps.palookup, 2+8+16);
+        Bsprintf(tempbuf, "%d", ps.frag-ps.fraggedself);
+        minitext(17+50+(73*(i&3)), 2+((i&28)<<1), tempbuf, ps.palookup, 2+8+16);
+    }
 //}
 
 //static int32_t G_GetInvAmount(const DukePlayer_t *p)
@@ -2026,473 +2026,473 @@ function G_DrawInventory(p:DukePlayer_t ): void
 //}
 
 function G_DrawStatusBar(/*int32_t */snum:number):void
-{console.error("todo G_DrawStatusBar");
-//    const DukePlayer_t *const p = g_player[snum].ps;
-//    int32_t i, j, o, u;
-//    int32_t permbit = 0;
-
-//    const int32_t ss = g_fakeMultiMode ? 4 : ud.screen_size;
-//    const int32_t althud = g_fakeMultiMode ? 0 : ud.althud;
-
-//    const int32_t SBY = (200-tilesizy[BOTTOMSTATUSBAR]);
-
-//    const int32_t sb15 = sbarsc(32768), sb15h = sbarsc(49152);
-//    const int32_t sb16 = sbarsc(65536);
-
-//    static int32_t item_icons[8];
-
-//    if (ss < 4)
-//        return;
-
-//    if (item_icons[0] == 0)
-//    {
-//        int32_t iicons[8] = { -1, FIRSTAID_ICON, STEROIDS_ICON, HOLODUKE_ICON,
-//                              JETPACK_ICON, HEAT_ICON, AIRTANK_ICON, BOOT_ICON };
-//        Bmemcpy(item_icons, iicons, sizeof(item_icons));
-//    }
-
-//    if (getrendermode() >= REND_POLYMOST) pus = NUMPAGES;   // JBF 20040101: always redraw in GL
-
-//    if ((g_netServer || ud.multimode > 1) && ((GametypeFlags[ud.coop] & GAMETYPE_FRAGBAR) || g_fakeMultiMode))
-//    {
-//        if (pus)
-//            G_DrawFrags();
-//        else
-//        {
-//            for (TRAVERSE_CONNECT(i))
-//                if (g_player[i].ps.frag != sbar.frag[i])
-//                {
-//                    G_DrawFrags();
-//                    break;
-//                }
-
-//        }
-//        for (TRAVERSE_CONNECT(i))
-//            if (i != myconnectindex)
-//                sbar.frag[i] = g_player[i].ps.frag;
-//    }
-
-//    if (ss == 4)   //DRAW MINI STATUS BAR:
-//    {
-//        if (althud)
-//        {
-//            // ALTERNATIVE STATUS BAR
-
-//            static int32_t ammo_sprites[MAX_WEAPONS];
-
-//            if (ammo_sprites[0] == 0)
-//            {
-//                /* this looks stupid but it lets us initialize static memory to dynamic values
-//                   these values can be changed from the CONs with dynamic tile remapping
-//                   but we don't want to have to recreate the values in memory every time
-//                   the HUD is drawn */
-
-//                int32_t asprites[MAX_WEAPONS] = { BOOTS, AMMO, SHOTGUNAMMO, BATTERYAMMO,
-//                                                  RPGAMMO, HBOMBAMMO, CRYSTALAMMO, DEVISTATORAMMO,
-//                                                  TRIPBOMBSPRITE, FREEZEAMMO+1, HBOMBAMMO, GROWAMMO
-//                                                };
-//                Bmemcpy(ammo_sprites, asprites, sizeof(ammo_sprites));
-//            }
-
-////            rotatesprite_fs(sbarx(5+1),sbary(200-25+1),sb15h,0,SIXPAK,0,4,10+16+1+32);
-////            rotatesprite_fs(sbarx(5),sbary(200-25),sb15h,0,SIXPAK,0,0,10+16);
-//            if (getrendermode() >= REND_POLYMOST && althud_shadows)
-//                rotatesprite_fs(sbarx(2+1),sbary(200-21+1),sb15h,0,COLA,127,4,10+16+256+POLYMOSTTRANS2);
-//            rotatesprite_fs(sbarx(2),sbary(200-21),sb15h,0,COLA,0,0,10+16+256);
-
-//            if (sprite[p.i].pal == 1 && p.last_extra < 2)
-//                G_DrawAltDigiNum(40,-(200-22),1,-16,10+16+256);
-//            else if (!althud_flashing || p.last_extra > (p.max_player_health>>2) || totalclock&32)
-//            {
-//                int32_t s = -8;
-//                if (althud_flashing && p.last_extra > p.max_player_health)
-//                    s += (sintable[(totalclock<<5)&2047]>>10);
-//                G_DrawAltDigiNum(40,-(200-22),p.last_extra,s,10+16+256);
-//            }
-
-//            if (getrendermode() >= REND_POLYMOST && althud_shadows)
-//                rotatesprite_fs(sbarx(62+1),sbary(200-25+1),sb15h,0,SHIELD,127,4,10+16+POLYMOSTTRANS2+256);
-//            rotatesprite_fs(sbarx(62),sbary(200-25),sb15h,0,SHIELD,0,0,10+16+256);
-
-//            {
-//                int32_t lAmount = G_GetMorale(p.i, snum);
-//                if (lAmount == -1)
-//                    lAmount = p.inv_amount[GET_SHIELD];
-//                G_DrawAltDigiNum(105,-(200-22),lAmount,-16,10+16+256);
-//            }
-
-//            if (getrendermode() >= REND_POLYMOST && althud_shadows)
-//            {
-//                if (p.got_access&1) rotatesprite_fs(sbarxr(39-1),sbary(200-43+1),sb15,0,ACCESSCARD,127,4,10+16+POLYMOSTTRANS2+512);
-//                if (p.got_access&4) rotatesprite_fs(sbarxr(34-1),sbary(200-41+1),sb15,0,ACCESSCARD,127,4,10+16+POLYMOSTTRANS2+512);
-//                if (p.got_access&2) rotatesprite_fs(sbarxr(29-1),sbary(200-39+1),sb15,0,ACCESSCARD,127,4,10+16+POLYMOSTTRANS2+512);
-//            }
-
-//            if (p.got_access&1) rotatesprite_fs(sbarxr(39),sbary(200-43),sb15,0,ACCESSCARD,0,0,10+16+512);
-//            if (p.got_access&4) rotatesprite_fs(sbarxr(34),sbary(200-41),sb15,0,ACCESSCARD,0,23,10+16+512);
-//            if (p.got_access&2) rotatesprite_fs(sbarxr(29),sbary(200-39),sb15,0,ACCESSCARD,0,21,10+16+512);
-
-//            i = (p.curr_weapon == PISTOL_WEAPON) ? 16384 : 32768;
-
-//            if (getrendermode() >= REND_POLYMOST && althud_shadows)
-//                rotatesprite_fs(sbarxr(57-1),sbary(200-15+1),sbarsc(i),0,ammo_sprites[p.curr_weapon],127,4,10+POLYMOSTTRANS2+512);
-//            rotatesprite_fs(sbarxr(57),sbary(200-15),sbarsc(i),0,ammo_sprites[p.curr_weapon],0,0,10+512);
-
-//            if (p.curr_weapon == HANDREMOTE_WEAPON) i = HANDBOMB_WEAPON;
-//            else i = p.curr_weapon;
-
-//            if (p.curr_weapon != KNEE_WEAPON &&
-//                    (!althud_flashing || totalclock&32 || p.ammo_amount[i] > (p.max_ammo_amount[i]/10)))
-//                G_DrawAltDigiNum(-20,-(200-22),p.ammo_amount[i],-16,10+16+512);
-
-//            o = 102;
-//            permbit = 0;
-
-//            if (p.inven_icon)
-//            {
-//                const int32_t orient = 10+16+permbit+256;
-
-//                i = ((unsigned)p.inven_icon < ICON_MAX) ? item_icons[p.inven_icon] : -1;
-//                if (i >= 0)
-//                {
-//                    if (getrendermode() >= REND_POLYMOST && althud_shadows)
-//                        rotatesprite_fs(sbarx(231-o+1),sbary(200-21-2+1),sb16,0,i,127,4, orient+POLYMOSTTRANS2);
-//                    rotatesprite_fs(sbarx(231-o),sbary(200-21-2),sb16,0,i,0,0,orient);
-//                }
-
-//                if (getrendermode() >= REND_POLYMOST && althud_shadows)
-//                    minitextshade(292-30-o+1,190-3+1,"%",127,4, POLYMOSTTRANS+orient+ROTATESPRITE_MAX);
-//                minitext(292-30-o,190-3,"%",6, orient+ROTATESPRITE_MAX);
-
-//                i = G_GetInvAmount(p);
-//                j = G_GetInvOn(p);
-
-//                G_DrawInvNum(-(284-30-o),0,200-6-3,(uint8_t)i,0,10+permbit+256);
-
-//                if (j > 0)
-//                {
-//                    if (getrendermode() >= REND_POLYMOST && althud_shadows)
-//                        minitextshade(288-30-o+1,180-3+1,"On",127,4, POLYMOSTTRANS+orient+ROTATESPRITE_MAX);
-//                    minitext(288-30-o,180-3,"On",0, orient+ROTATESPRITE_MAX);
-//                }
-//                else if ((uint32_t)j != 0x80000000)
-//                {
-//                    if (getrendermode() >= REND_POLYMOST && althud_shadows)
-//                        minitextshade(284-30-o+1,180-3+1,"Off",127,4, POLYMOSTTRANS+orient+ROTATESPRITE_MAX);
-//                    minitext(284-30-o,180-3,"Off",2, orient+ROTATESPRITE_MAX);
-//                }
-
-//                if (p.inven_icon >= ICON_SCUBA)
-//                {
-//                    if (getrendermode() >= REND_POLYMOST && althud_shadows)
-//                        minitextshade(284-35-o+1,180-3+1,"Auto",127,4, POLYMOSTTRANS+orient+ROTATESPRITE_MAX);
-//                    minitext(284-35-o,180-3,"Auto",2, orient+ROTATESPRITE_MAX);
-//                }
-//            }
-//        }
-//        else
-//        {
-//            // ORIGINAL MINI STATUS BAR
-//            int32_t orient = 2+8+16+256, yofs=0, yofssh=0;
-
-//            if (g_fakeMultiMode)
-//            {
-//                const int32_t sidebyside = (ud.screen_size!=0);
-
-//                if (sidebyside && snum==1)
-//                {
-//                    orient |= RS_CENTERORIGIN;
-//                }
-//                else if (!sidebyside && snum==0)
-//                {
-//                    yofs = -100;
-//                    yofssh = yofs<<16;
-//                }
-//            }
-
-//            rotatesprite_fs(sbarx(5), yofssh+sbary(200-28), sb16, 0, HEALTHBOX, 0, 21, orient);
-//            if (p.inven_icon)
-//                rotatesprite_fs(sbarx(69), yofssh+sbary(200-30), sb16, 0, INVENTORYBOX, 0, 21, orient);
-
-//            // health
-//            {
-//                int32_t health = (sprite[p.i].pal == 1 && p.last_extra < 2) ? 1 : p.last_extra;
-//                G_DrawDigiNum_(20, yofssh, 200-17, health, -16, orient);
-//            }
-
-//            rotatesprite_fs(sbarx(37), yofssh+sbary(200-28), sb16, 0, AMMOBOX, 0, 21, orient);
-
-//            if (p.curr_weapon == HANDREMOTE_WEAPON)
-//                i = HANDBOMB_WEAPON;
-//            else
-//                i = p.curr_weapon;
-//            G_DrawDigiNum_(53, yofssh, 200-17, p.ammo_amount[i], -16, orient);
-
-//            o = 158;
-//            permbit = 0;
-//            if (p.inven_icon)
-//            {
-////                orient |= permbit;
-
-//                i = ((unsigned)p.inven_icon < ICON_MAX) ? item_icons[p.inven_icon] : -1;
-//                if (i >= 0)
-//                    rotatesprite_fs(sbarx(231-o), yofssh+sbary(200-21), sb16, 0, i, 0, 0, orient);
-
-//                // scale by status bar size
-//                orient |= ROTATESPRITE_MAX;
-
-//                minitext_yofs = yofssh;
-//                minitext(292-30-o, 190, "%", 6, orient);
-
-//                i = G_GetInvAmount(p);
-//                j = G_GetInvOn(p);
-
-//                G_DrawInvNum(284-30-o, yofssh, 200-6, (uint8_t)i, 0, orient&~16);
-
-//                if (j > 0)
-//                    minitext(288-30-o, 180, "On", 0, orient);
-//                else if ((uint32_t)j != 0x80000000)
-//                    minitext(284-30-o, 180, "Off", 2, orient);
-
-//                if (p.inven_icon >= ICON_SCUBA)
-//                    minitext(284-35-o, 180, "Auto", 2, orient);
-
-//                minitext_yofs = 0;
-//            }
-//        }
-
-//        return;
-//    }
-
-//    //DRAW/UPDATE FULL STATUS BAR:
-
-//    if (pus)
-//    {
-//        pus = 0;
-//        u = -1;
-//    }
-//    else u = 0;
-
-//    if (sbar.frag[myconnectindex] != p.frag)
-//    {
-//        sbar.frag[myconnectindex] = p.frag;
-//        u |= 32768;
-//    }
-//    if (sbar.got_access != p.got_access)
-//    {
-//        sbar.got_access = p.got_access;
-//        u |= 16384;
-//    }
-
-//    if (sbar.last_extra != p.last_extra)
-//    {
-//        sbar.last_extra = p.last_extra;
-//        u |= 1;
-//    }
-
-//    {
-//        int32_t lAmount = G_GetMorale(p.i, snum);
-//        if (lAmount == -1)
-//            lAmount = p.inv_amount[GET_SHIELD];
-//        if (sbar.inv_amount[GET_SHIELD] != lAmount)
-//        {
-//            sbar.inv_amount[GET_SHIELD] = lAmount;
-//            u |= 2;
-//        }
-//    }
-
-//    if (sbar.curr_weapon != p.curr_weapon)
-//    {
-//        sbar.curr_weapon = p.curr_weapon;
-//        u |= (4+8+16+32+64+128+256+512+1024+65536);
-//    }
-
-//    for (i=1; i<MAX_WEAPONS; i++)
-//    {
-//        if (sbar.ammo_amount[i] != p.ammo_amount[i])
-//        {
-//            sbar.ammo_amount[i] = p.ammo_amount[i];
-//            if (i < 9)
-//                u |= ((2<<i)+1024);
-//            else u |= 65536+1024;
-//        }
-
-//        if ((sbar.gotweapon & (1<<i)) != (p.gotweapon & (1<<i)))
-//        {
-//            if (p.gotweapon & (1<<i))
-//                sbar.gotweapon |= 1<<i;
-//            else sbar.gotweapon &= ~(1<<i);
-
-//            if (i < 9)
-//                u |= ((2<<i)+1024);
-//            else u |= 65536+1024;
-//        }
-//    }
-
-//    if (sbar.inven_icon != p.inven_icon)
-//    {
-//        sbar.inven_icon = p.inven_icon;
-//        u |= (2048+4096+8192);
-//    }
-//    if (sbar.holoduke_on != p.holoduke_on)
-//    {
-//        sbar.holoduke_on = p.holoduke_on;
-//        u |= (4096+8192);
-//    }
-//    if (sbar.jetpack_on != p.jetpack_on)
-//    {
-//        sbar.jetpack_on = p.jetpack_on;
-//        u |= (4096+8192);
-//    }
-//    if (sbar.heat_on != p.heat_on)
-//    {
-//        sbar.heat_on = p.heat_on;
-//        u |= (4096+8192);
-//    }
-
-//    {
-//        static const int32_t check_items[] = {
-//            GET_FIRSTAID, GET_STEROIDS, GET_HOLODUKE, GET_JETPACK,
-//            GET_HEATS, GET_SCUBA, GET_BOOTS
-//        };
-
-//        for (i=0; i<(int32_t)sizeof(check_items)/(int32_t)sizeof(check_items[0]); i++)
-//        {
-//            int32_t item = check_items[i];
-
-//            if (sbar.inv_amount[item] != p.inv_amount[item])
-//            {
-//                sbar.inv_amount[item] = p.inv_amount[item];
-//                u |= 8192;
-//            }
-//        }
-//    }
-//#if 0
-//    if (u == 0)
-//        return;
-//#else
-//    // FIXME: full status bar draws rectangles in the wrong places when it's
-//    // updated partially.
-//    u = -1;
-//#endif
-
-//    //0 - update health
-//    //1 - update armor
-//    //2 - update PISTOL_WEAPON ammo
-//    //3 - update SHOTGUN_WEAPON ammo
-//    //4 - update CHAINGUN_WEAPON ammo
-//    //5 - update RPG_WEAPON ammo
-//    //6 - update HANDBOMB_WEAPON ammo
-//    //7 - update SHRINKER_WEAPON ammo
-//    //8 - update DEVISTATOR_WEAPON ammo
-//    //9 - update TRIPBOMB_WEAPON ammo
-//    //10 - update ammo display
-//    //11 - update inventory icon
-//    //12 - update inventory on/off
-//    //13 - update inventory %
-//    //14 - update keys
-//    //15 - update kills
-//    //16 - update FREEZE_WEAPON ammo
-
-//    if (u == -1)
-//    {
-//        G_PatchStatusBar(0,0,320,200);
-//        if ((g_netServer || ud.multimode > 1) && (GametypeFlags[ud.coop] & GAMETYPE_FRAGBAR))
-//            rotatesprite_fs(sbarx(277+1),sbary(SBY+7-1),sb16,0,KILLSICON,0,0,10+16);
-//    }
-
-//    if ((g_netServer || ud.multimode > 1) && (GametypeFlags[ud.coop] & GAMETYPE_FRAGBAR))
-//    {
-//        if (u&32768)
-//        {
-//            if (u != -1) G_PatchStatusBar(276,SBY+17,299,SBY+17+10);
-//            G_DrawDigiNum(287,SBY+17,max(p.frag-p.fraggedself,0),-16,10+16);
-//        }
-//    }
-//    else
-//    {
-//        if (u&16384)
-//        {
-//            if (u != -1) G_PatchStatusBar(275,SBY+18,299,SBY+18+12);
-//            if (p.got_access&4) rotatesprite_fs(sbarx(275),sbary(SBY+16),sb16,0,ACCESS_ICON,0,23,10+16);
-//            if (p.got_access&2) rotatesprite_fs(sbarx(288),sbary(SBY+16),sb16,0,ACCESS_ICON,0,21,10+16);
-//            if (p.got_access&1) rotatesprite_fs(sbarx(281),sbary(SBY+23),sb16,0,ACCESS_ICON,0,0,10+16);
-//        }
-//    }
-
-//    if (u&(4+8+16+32+64+128+256+512+65536))
-//        G_DrawWeapAmounts(p,96,SBY+16,u);
-
-//    if (u&1)
-//    {
-//        if (u != -1) G_PatchStatusBar(20,SBY+17,43,SBY+17+11);
-//        if (sprite[p.i].pal == 1 && p.last_extra < 2)
-//            G_DrawDigiNum(32,SBY+17,1,-16,10+16);
-//        else G_DrawDigiNum(32,SBY+17,p.last_extra,-16,10+16);
-//    }
-//    if (u&2)
-//    {
-//        int32_t lAmount = G_GetMorale(p.i, snum);
-
-//        if (u != -1)
-//            G_PatchStatusBar(52,SBY+17,75,SBY+17+11);
-
-//        if (lAmount == -1)
-//            G_DrawDigiNum(64,SBY+17,p.inv_amount[GET_SHIELD],-16,10+16);
-//        else
-//            G_DrawDigiNum(64,SBY+17,lAmount,-16,10+16);
-//    }
-
-//    if (u&1024)
-//    {
-//        if (u != -1) G_PatchStatusBar(196,SBY+17,219,SBY+17+11);
-//        if (p.curr_weapon != KNEE_WEAPON)
-//        {
-//            if (p.curr_weapon == HANDREMOTE_WEAPON) i = HANDBOMB_WEAPON;
-//            else i = p.curr_weapon;
-//            G_DrawDigiNum(230-22,SBY+17,p.ammo_amount[i],-16,10+16);
-//        }
-//    }
-
-//    if (u&(2048+4096+8192))
-//    {
-//        if (u != -1)
-//        {
-//            if (u&(2048+4096))
-//                G_PatchStatusBar(231,SBY+13,265,SBY+13+18);
-//            else
-//                G_PatchStatusBar(250,SBY+24,261,SBY+24+6);
-//        }
-
-//        if (p.inven_icon)
-//        {
-//            o = 0;
-////            permbit = 128;
-
-//            if (u&(2048+4096))
-//            {
-//                i = ((unsigned)p.inven_icon < ICON_MAX) ? item_icons[p.inven_icon] : -1;
-//                // XXX: i < 0?
-//                rotatesprite_fs(sbarx(231-o),sbary(SBY+13),sb16,0,i,0,0,10+16+permbit);
-//                minitext(292-30-o,SBY+24,"%",6,10+16+permbit + ROTATESPRITE_MAX);
-//                if (p.inven_icon >= ICON_SCUBA) minitext(284-35-o,SBY+14,"Auto",2,10+16+permbit + ROTATESPRITE_MAX);
-//            }
-
-//            if (u&(2048+4096))
-//            {
-//                j = G_GetInvOn(p);
-
-//                if (j > 0) minitext(288-30-o,SBY+14,"On",0,10+16+permbit  + ROTATESPRITE_MAX);
-//                else if ((uint32_t)j != 0x80000000) minitext(284-30-o,SBY+14,"Off",2,10+16+permbit + ROTATESPRITE_MAX);
-//            }
-
-//            if (u&8192)
-//            {
-//                i = G_GetInvAmount(p);
-//                G_DrawInvNum(284-30-o,0,SBY+28,(uint8_t)i,0,10+permbit);
-//            }
-//        }
-//    }
+{
+    var p = g_player[snum].ps;
+    var /*int32_t*/ i:number, j:number, o:number, u:number;
+    var /*int32_t*/ permbit = 0;
+
+    var /*int32_t*/ ss = g_fakeMultiMode ? 4 : ud.screen_size;
+    var /*int32_t*/ althud = g_fakeMultiMode ? 0 : ud.althud;
+
+    var /*int32_t*/ SBY = (200-tilesizy[BOTTOMSTATUSBAR]);
+
+    var /*int32_t*/ sb15 = sbarsc(32768), sb15h = sbarsc(49152);
+    var /*int32_t*/ sb16 = sbarsc(65536);
+
+    var /*int32_t*/ item_icons = new Int32Array(8);
+
+    if (ss < 4)
+        return;
+
+    if (item_icons[0] == 0)
+    {
+        var iicons = new Int32Array([ -1, FIRSTAID_ICON, STEROIDS_ICON, HOLODUKE_ICON,
+                              JETPACK_ICON, HEAT_ICON, AIRTANK_ICON, BOOT_ICON ]);
+        Bmemcpy(new P(item_icons), new P(iicons), sizeof(item_icons));
+    }
+
+    if (getrendermode() >= REND_POLYMOST) pus = NUMPAGES;   // JBF 20040101: always redraw in GL
+
+    if ((g_netServer || ud.multimode > 1) && ((GametypeFlags[ud.coop] & GAMETYPE_FRAGBAR) || g_fakeMultiMode))
+    {
+        if (pus)
+            G_DrawFrags();
+        else
+        {
+            for (i = 0; i != -1; i = connectpoint2[i])
+                if (g_player[i].ps.frag != sbar.frag[i])
+                {
+                    G_DrawFrags();
+                    break;
+                }
+
+        }
+        for (i = 0; i != -1; i = connectpoint2[i])
+            if (i != myconnectindex)
+                sbar.frag[i] = g_player[i].ps.frag;
+    }
+
+    if (ss == 4)   //DRAW MINI STATUS BAR:
+    {
+        if (althud)
+        {
+            // ALTERNATIVE STATUS BAR
+
+            static int32_t ammo_sprites[MAX_WEAPONS];
+
+            if (ammo_sprites[0] == 0)
+            {
+                /* this looks stupid but it lets us initialize static memory to dynamic values
+                   these values can be changed from the CONs with dynamic tile remapping
+                   but we don't want to have to recreate the values in memory every time
+                   the HUD is drawn */
+
+                int32_t asprites[MAX_WEAPONS] = { BOOTS, AMMO, SHOTGUNAMMO, BATTERYAMMO,
+                                                  RPGAMMO, HBOMBAMMO, CRYSTALAMMO, DEVISTATORAMMO,
+                                                  TRIPBOMBSPRITE, FREEZEAMMO+1, HBOMBAMMO, GROWAMMO
+                                                };
+                Bmemcpy(ammo_sprites, asprites, sizeof(ammo_sprites));
+            }
+
+//            rotatesprite_fs(sbarx(5+1),sbary(200-25+1),sb15h,0,SIXPAK,0,4,10+16+1+32);
+//            rotatesprite_fs(sbarx(5),sbary(200-25),sb15h,0,SIXPAK,0,0,10+16);
+            if (getrendermode() >= REND_POLYMOST && althud_shadows)
+                rotatesprite_fs(sbarx(2+1),sbary(200-21+1),sb15h,0,COLA,127,4,10+16+256+POLYMOSTTRANS2);
+            rotatesprite_fs(sbarx(2),sbary(200-21),sb15h,0,COLA,0,0,10+16+256);
+
+            if (sprite[p.i].pal == 1 && p.last_extra < 2)
+                G_DrawAltDigiNum(40,-(200-22),1,-16,10+16+256);
+            else if (!althud_flashing || p.last_extra > (p.max_player_health>>2) || totalclock&32)
+            {
+                int32_t s = -8;
+                if (althud_flashing && p.last_extra > p.max_player_health)
+                    s += (sintable[(totalclock<<5)&2047]>>10);
+                G_DrawAltDigiNum(40,-(200-22),p.last_extra,s,10+16+256);
+            }
+
+            if (getrendermode() >= REND_POLYMOST && althud_shadows)
+                rotatesprite_fs(sbarx(62+1),sbary(200-25+1),sb15h,0,SHIELD,127,4,10+16+POLYMOSTTRANS2+256);
+            rotatesprite_fs(sbarx(62),sbary(200-25),sb15h,0,SHIELD,0,0,10+16+256);
+
+            {
+                int32_t lAmount = G_GetMorale(p.i, snum);
+                if (lAmount == -1)
+                    lAmount = p.inv_amount[GET_SHIELD];
+                G_DrawAltDigiNum(105,-(200-22),lAmount,-16,10+16+256);
+            }
+
+            if (getrendermode() >= REND_POLYMOST && althud_shadows)
+            {
+                if (p.got_access&1) rotatesprite_fs(sbarxr(39-1),sbary(200-43+1),sb15,0,ACCESSCARD,127,4,10+16+POLYMOSTTRANS2+512);
+                if (p.got_access&4) rotatesprite_fs(sbarxr(34-1),sbary(200-41+1),sb15,0,ACCESSCARD,127,4,10+16+POLYMOSTTRANS2+512);
+                if (p.got_access&2) rotatesprite_fs(sbarxr(29-1),sbary(200-39+1),sb15,0,ACCESSCARD,127,4,10+16+POLYMOSTTRANS2+512);
+            }
+
+            if (p.got_access&1) rotatesprite_fs(sbarxr(39),sbary(200-43),sb15,0,ACCESSCARD,0,0,10+16+512);
+            if (p.got_access&4) rotatesprite_fs(sbarxr(34),sbary(200-41),sb15,0,ACCESSCARD,0,23,10+16+512);
+            if (p.got_access&2) rotatesprite_fs(sbarxr(29),sbary(200-39),sb15,0,ACCESSCARD,0,21,10+16+512);
+
+            i = (p.curr_weapon == PISTOL_WEAPON) ? 16384 : 32768;
+
+            if (getrendermode() >= REND_POLYMOST && althud_shadows)
+                rotatesprite_fs(sbarxr(57-1),sbary(200-15+1),sbarsc(i),0,ammo_sprites[p.curr_weapon],127,4,10+POLYMOSTTRANS2+512);
+            rotatesprite_fs(sbarxr(57),sbary(200-15),sbarsc(i),0,ammo_sprites[p.curr_weapon],0,0,10+512);
+
+            if (p.curr_weapon == HANDREMOTE_WEAPON) i = HANDBOMB_WEAPON;
+            else i = p.curr_weapon;
+
+            if (p.curr_weapon != KNEE_WEAPON &&
+                    (!althud_flashing || totalclock&32 || p.ammo_amount[i] > (p.max_ammo_amount[i]/10)))
+                G_DrawAltDigiNum(-20,-(200-22),p.ammo_amount[i],-16,10+16+512);
+
+            o = 102;
+            permbit = 0;
+
+            if (p.inven_icon)
+            {
+                const int32_t orient = 10+16+permbit+256;
+
+                i = ((unsigned)p.inven_icon < ICON_MAX) ? item_icons[p.inven_icon] : -1;
+                if (i >= 0)
+                {
+                    if (getrendermode() >= REND_POLYMOST && althud_shadows)
+                        rotatesprite_fs(sbarx(231-o+1),sbary(200-21-2+1),sb16,0,i,127,4, orient+POLYMOSTTRANS2);
+                    rotatesprite_fs(sbarx(231-o),sbary(200-21-2),sb16,0,i,0,0,orient);
+                }
+
+                if (getrendermode() >= REND_POLYMOST && althud_shadows)
+                    minitextshade(292-30-o+1,190-3+1,"%",127,4, POLYMOSTTRANS+orient+ROTATESPRITE_MAX);
+                minitext(292-30-o,190-3,"%",6, orient+ROTATESPRITE_MAX);
+
+                i = G_GetInvAmount(p);
+                j = G_GetInvOn(p);
+
+                G_DrawInvNum(-(284-30-o),0,200-6-3,(uint8_t)i,0,10+permbit+256);
+
+                if (j > 0)
+                {
+                    if (getrendermode() >= REND_POLYMOST && althud_shadows)
+                        minitextshade(288-30-o+1,180-3+1,"On",127,4, POLYMOSTTRANS+orient+ROTATESPRITE_MAX);
+                    minitext(288-30-o,180-3,"On",0, orient+ROTATESPRITE_MAX);
+                }
+                else if ((uint32_t)j != 0x80000000)
+                {
+                    if (getrendermode() >= REND_POLYMOST && althud_shadows)
+                        minitextshade(284-30-o+1,180-3+1,"Off",127,4, POLYMOSTTRANS+orient+ROTATESPRITE_MAX);
+                    minitext(284-30-o,180-3,"Off",2, orient+ROTATESPRITE_MAX);
+                }
+
+                if (p.inven_icon >= ICON_SCUBA)
+                {
+                    if (getrendermode() >= REND_POLYMOST && althud_shadows)
+                        minitextshade(284-35-o+1,180-3+1,"Auto",127,4, POLYMOSTTRANS+orient+ROTATESPRITE_MAX);
+                    minitext(284-35-o,180-3,"Auto",2, orient+ROTATESPRITE_MAX);
+                }
+            }
+        }
+        else
+        {
+            // ORIGINAL MINI STATUS BAR
+            int32_t orient = 2+8+16+256, yofs=0, yofssh=0;
+
+            if (g_fakeMultiMode)
+            {
+                const int32_t sidebyside = (ud.screen_size!=0);
+
+                if (sidebyside && snum==1)
+                {
+                    orient |= RS_CENTERORIGIN;
+                }
+                else if (!sidebyside && snum==0)
+                {
+                    yofs = -100;
+                    yofssh = yofs<<16;
+                }
+            }
+
+            rotatesprite_fs(sbarx(5), yofssh+sbary(200-28), sb16, 0, HEALTHBOX, 0, 21, orient);
+            if (p.inven_icon)
+                rotatesprite_fs(sbarx(69), yofssh+sbary(200-30), sb16, 0, INVENTORYBOX, 0, 21, orient);
+
+            // health
+            {
+                int32_t health = (sprite[p.i].pal == 1 && p.last_extra < 2) ? 1 : p.last_extra;
+                G_DrawDigiNum_(20, yofssh, 200-17, health, -16, orient);
+            }
+
+            rotatesprite_fs(sbarx(37), yofssh+sbary(200-28), sb16, 0, AMMOBOX, 0, 21, orient);
+
+            if (p.curr_weapon == HANDREMOTE_WEAPON)
+                i = HANDBOMB_WEAPON;
+            else
+                i = p.curr_weapon;
+            G_DrawDigiNum_(53, yofssh, 200-17, p.ammo_amount[i], -16, orient);
+
+            o = 158;
+            permbit = 0;
+            if (p.inven_icon)
+            {
+//                orient |= permbit;
+
+                i = ((unsigned)p.inven_icon < ICON_MAX) ? item_icons[p.inven_icon] : -1;
+                if (i >= 0)
+                    rotatesprite_fs(sbarx(231-o), yofssh+sbary(200-21), sb16, 0, i, 0, 0, orient);
+
+                // scale by status bar size
+                orient |= ROTATESPRITE_MAX;
+
+                minitext_yofs = yofssh;
+                minitext(292-30-o, 190, "%", 6, orient);
+
+                i = G_GetInvAmount(p);
+                j = G_GetInvOn(p);
+
+                G_DrawInvNum(284-30-o, yofssh, 200-6, (uint8_t)i, 0, orient&~16);
+
+                if (j > 0)
+                    minitext(288-30-o, 180, "On", 0, orient);
+                else if ((uint32_t)j != 0x80000000)
+                    minitext(284-30-o, 180, "Off", 2, orient);
+
+                if (p.inven_icon >= ICON_SCUBA)
+                    minitext(284-35-o, 180, "Auto", 2, orient);
+
+                minitext_yofs = 0;
+            }
+        }
+
+        return;
+    }
+
+    //DRAW/UPDATE FULL STATUS BAR:
+
+    if (pus)
+    {
+        pus = 0;
+        u = -1;
+    }
+    else u = 0;
+
+    if (sbar.frag[myconnectindex] != p.frag)
+    {
+        sbar.frag[myconnectindex] = p.frag;
+        u |= 32768;
+    }
+    if (sbar.got_access != p.got_access)
+    {
+        sbar.got_access = p.got_access;
+        u |= 16384;
+    }
+
+    if (sbar.last_extra != p.last_extra)
+    {
+        sbar.last_extra = p.last_extra;
+        u |= 1;
+    }
+
+    {
+        int32_t lAmount = G_GetMorale(p.i, snum);
+        if (lAmount == -1)
+            lAmount = p.inv_amount[GET_SHIELD];
+        if (sbar.inv_amount[GET_SHIELD] != lAmount)
+        {
+            sbar.inv_amount[GET_SHIELD] = lAmount;
+            u |= 2;
+        }
+    }
+
+    if (sbar.curr_weapon != p.curr_weapon)
+    {
+        sbar.curr_weapon = p.curr_weapon;
+        u |= (4+8+16+32+64+128+256+512+1024+65536);
+    }
+
+    for (i=1; i<MAX_WEAPONS; i++)
+    {
+        if (sbar.ammo_amount[i] != p.ammo_amount[i])
+        {
+            sbar.ammo_amount[i] = p.ammo_amount[i];
+            if (i < 9)
+                u |= ((2<<i)+1024);
+            else u |= 65536+1024;
+        }
+
+        if ((sbar.gotweapon & (1<<i)) != (p.gotweapon & (1<<i)))
+        {
+            if (p.gotweapon & (1<<i))
+                sbar.gotweapon |= 1<<i;
+            else sbar.gotweapon &= ~(1<<i);
+
+            if (i < 9)
+                u |= ((2<<i)+1024);
+            else u |= 65536+1024;
+        }
+    }
+
+    if (sbar.inven_icon != p.inven_icon)
+    {
+        sbar.inven_icon = p.inven_icon;
+        u |= (2048+4096+8192);
+    }
+    if (sbar.holoduke_on != p.holoduke_on)
+    {
+        sbar.holoduke_on = p.holoduke_on;
+        u |= (4096+8192);
+    }
+    if (sbar.jetpack_on != p.jetpack_on)
+    {
+        sbar.jetpack_on = p.jetpack_on;
+        u |= (4096+8192);
+    }
+    if (sbar.heat_on != p.heat_on)
+    {
+        sbar.heat_on = p.heat_on;
+        u |= (4096+8192);
+    }
+
+    {
+        static const int32_t check_items[] = {
+            GET_FIRSTAID, GET_STEROIDS, GET_HOLODUKE, GET_JETPACK,
+            GET_HEATS, GET_SCUBA, GET_BOOTS
+        };
+
+        for (i=0; i<(int32_t)sizeof(check_items)/(int32_t)sizeof(check_items[0]); i++)
+        {
+            int32_t item = check_items[i];
+
+            if (sbar.inv_amount[item] != p.inv_amount[item])
+            {
+                sbar.inv_amount[item] = p.inv_amount[item];
+                u |= 8192;
+            }
+        }
+    }
+#if 0
+    if (u == 0)
+        return;
+#else
+    // FIXME: full status bar draws rectangles in the wrong places when it's
+    // updated partially.
+    u = -1;
+#endif
+
+    //0 - update health
+    //1 - update armor
+    //2 - update PISTOL_WEAPON ammo
+    //3 - update SHOTGUN_WEAPON ammo
+    //4 - update CHAINGUN_WEAPON ammo
+    //5 - update RPG_WEAPON ammo
+    //6 - update HANDBOMB_WEAPON ammo
+    //7 - update SHRINKER_WEAPON ammo
+    //8 - update DEVISTATOR_WEAPON ammo
+    //9 - update TRIPBOMB_WEAPON ammo
+    //10 - update ammo display
+    //11 - update inventory icon
+    //12 - update inventory on/off
+    //13 - update inventory %
+    //14 - update keys
+    //15 - update kills
+    //16 - update FREEZE_WEAPON ammo
+
+    if (u == -1)
+    {
+        G_PatchStatusBar(0,0,320,200);
+        if ((g_netServer || ud.multimode > 1) && (GametypeFlags[ud.coop] & GAMETYPE_FRAGBAR))
+            rotatesprite_fs(sbarx(277+1),sbary(SBY+7-1),sb16,0,KILLSICON,0,0,10+16);
+    }
+
+    if ((g_netServer || ud.multimode > 1) && (GametypeFlags[ud.coop] & GAMETYPE_FRAGBAR))
+    {
+        if (u&32768)
+        {
+            if (u != -1) G_PatchStatusBar(276,SBY+17,299,SBY+17+10);
+            G_DrawDigiNum(287,SBY+17,max(p.frag-p.fraggedself,0),-16,10+16);
+        }
+    }
+    else
+    {
+        if (u&16384)
+        {
+            if (u != -1) G_PatchStatusBar(275,SBY+18,299,SBY+18+12);
+            if (p.got_access&4) rotatesprite_fs(sbarx(275),sbary(SBY+16),sb16,0,ACCESS_ICON,0,23,10+16);
+            if (p.got_access&2) rotatesprite_fs(sbarx(288),sbary(SBY+16),sb16,0,ACCESS_ICON,0,21,10+16);
+            if (p.got_access&1) rotatesprite_fs(sbarx(281),sbary(SBY+23),sb16,0,ACCESS_ICON,0,0,10+16);
+        }
+    }
+
+    if (u&(4+8+16+32+64+128+256+512+65536))
+        G_DrawWeapAmounts(p,96,SBY+16,u);
+
+    if (u&1)
+    {
+        if (u != -1) G_PatchStatusBar(20,SBY+17,43,SBY+17+11);
+        if (sprite[p.i].pal == 1 && p.last_extra < 2)
+            G_DrawDigiNum(32,SBY+17,1,-16,10+16);
+        else G_DrawDigiNum(32,SBY+17,p.last_extra,-16,10+16);
+    }
+    if (u&2)
+    {
+        int32_t lAmount = G_GetMorale(p.i, snum);
+
+        if (u != -1)
+            G_PatchStatusBar(52,SBY+17,75,SBY+17+11);
+
+        if (lAmount == -1)
+            G_DrawDigiNum(64,SBY+17,p.inv_amount[GET_SHIELD],-16,10+16);
+        else
+            G_DrawDigiNum(64,SBY+17,lAmount,-16,10+16);
+    }
+
+    if (u&1024)
+    {
+        if (u != -1) G_PatchStatusBar(196,SBY+17,219,SBY+17+11);
+        if (p.curr_weapon != KNEE_WEAPON)
+        {
+            if (p.curr_weapon == HANDREMOTE_WEAPON) i = HANDBOMB_WEAPON;
+            else i = p.curr_weapon;
+            G_DrawDigiNum(230-22,SBY+17,p.ammo_amount[i],-16,10+16);
+        }
+    }
+
+    if (u&(2048+4096+8192))
+    {
+        if (u != -1)
+        {
+            if (u&(2048+4096))
+                G_PatchStatusBar(231,SBY+13,265,SBY+13+18);
+            else
+                G_PatchStatusBar(250,SBY+24,261,SBY+24+6);
+        }
+
+        if (p.inven_icon)
+        {
+            o = 0;
+//            permbit = 128;
+
+            if (u&(2048+4096))
+            {
+                i = ((unsigned)p.inven_icon < ICON_MAX) ? item_icons[p.inven_icon] : -1;
+                // XXX: i < 0?
+                rotatesprite_fs(sbarx(231-o),sbary(SBY+13),sb16,0,i,0,0,10+16+permbit);
+                minitext(292-30-o,SBY+24,"%",6,10+16+permbit + ROTATESPRITE_MAX);
+                if (p.inven_icon >= ICON_SCUBA) minitext(284-35-o,SBY+14,"Auto",2,10+16+permbit + ROTATESPRITE_MAX);
+            }
+
+            if (u&(2048+4096))
+            {
+                j = G_GetInvOn(p);
+
+                if (j > 0) minitext(288-30-o,SBY+14,"On",0,10+16+permbit  + ROTATESPRITE_MAX);
+                else if ((uint32_t)j != 0x80000000) minitext(284-30-o,SBY+14,"Off",2,10+16+permbit + ROTATESPRITE_MAX);
+            }
+
+            if (u&8192)
+            {
+                i = G_GetInvAmount(p);
+                G_DrawInvNum(284-30-o,0,SBY+28,(uint8_t)i,0,10+permbit);
+            }
+        }
+    }
 }
 
 //#define COLOR_RED 248
@@ -2647,7 +2647,7 @@ function/*int32_t */calc_ybase(/*int32_t */begy:number):number
 // this handles both multiplayer and item pickup message type text
 // both are passed on to gametext
 function G_PrintGameQuotes(/*int32_t*/ snum:number):void 
-{todoThrow();
+{todo();
 //    var i:number, j:number, k:number;
 
 //    var ps = g_player[snum].ps;
@@ -2985,24 +2985,24 @@ function G_GameExit(/*const char **/msg : string) : void
 }
 
 
-//static inline void G_MoveClouds(void)
-//{
-//    int32_t i;
+function G_MoveClouds():void
+{
+    var /*int32_t */i:number;
 
-//    if (totalclock <= cloudtotalclock && totalclock >= (cloudtotalclock-7))
-//        return;
+    if (totalclock <= cloudtotalclock && totalclock >= (cloudtotalclock-7))
+        return;
 
-//    cloudtotalclock = totalclock+6;
+    cloudtotalclock = totalclock+6;
 
-//    for (i=g_numClouds-1; i>=0; i--)
-//    {
-//        cloudx[i] += (sintable[(g_player[screenpeek].ps.ang+512)&2047]>>9);
-//        cloudy[i] += (sintable[g_player[screenpeek].ps.ang&2047]>>9);
+    for (i=g_numClouds-1; i>=0; i--)
+    {
+        cloudx[i] += (sintable[(g_player[screenpeek].ps.ang+512)&2047]>>9);
+        cloudy[i] += (sintable[g_player[screenpeek].ps.ang&2047]>>9);
 
-//        sector[clouds[i]].ceilingxpanning = cloudx[i]>>6;
-//        sector[clouds[i]].ceilingypanning = cloudy[i]>>6;
-//    }
-//}
+        sector[clouds[i]].ceilingxpanning = cloudx[i]>>6;
+        sector[clouds[i]].ceilingypanning = cloudy[i]>>6;
+    }
+}
 
 function G_DrawOverheadMap(/*int32_t*/ cposx:number, /*int32_t */cposy:number, /*int32_t */czoom:number, /*int16_t */cang:number): void
 {todoThrow();

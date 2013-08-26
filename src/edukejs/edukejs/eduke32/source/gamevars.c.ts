@@ -766,47 +766,48 @@ function wtf(){
 }
 
 function Gv_SetVar(/*int32_t */id:number, /*int32_t */lValue:number, /*int32_t */iActor:number, /*int32_t */iPlayer:number):void 
-{todoThrow();
-//    if ((unsigned)id >= (unsigned)g_gameVarCount) goto badvarid;
+{
+    if (/*(unsigned)*/id >= /*(unsigned)*/g_gameVarCount) {badvarid();return;}
 
-//    //Bsprintf(g_szBuf,"SGVI: %d (\"%s\") to %d for %d %d",id,aGameVars[id].szLabel,lValue,iActor,iPlayer);
-//    //AddLog(g_szBuf);
+    //Bsprintf(g_szBuf,"SGVI: %d (\"%s\") to %d for %d %d",id,aGameVars[id].szLabel,lValue,iActor,iPlayer);
+    //AddLog(g_szBuf);
 
-//    switch (aGameVars[id].dwFlags & (GAMEVAR_USER_MASK|GAMEVAR_PTR_MASK))
-//    {
-//    default:
-//        aGameVars[id].val.lValue=lValue;
-//        return;
-//    case GAMEVAR_PERPLAYER:
-//        if ((unsigned)iPlayer > MAXPLAYERS-1) goto badindex;
-//        // for the current player
-//        aGameVars[id].val.plValues[iPlayer]=lValue;
-//        return;
-//    case GAMEVAR_PERACTOR:
-//        if ((unsigned)iActor > MAXSPRITES-1) goto badindex;
-//        aGameVars[id].val.plValues[iActor]=lValue;
-//        return;
-//    case GAMEVAR_INTPTR:
-//        *((int32_t *)aGameVars[id].val.lValue)=(int32_t)lValue;
-//        return;
-//    case GAMEVAR_SHORTPTR:
-//        *((int16_t *)aGameVars[id].val.lValue)=(int16_t)lValue;
-//        return;
-//    case GAMEVAR_CHARPTR:
-//        *((uint8_t *)aGameVars[id].val.lValue)=(uint8_t)lValue;
-//        return;
-//    }
+    switch (aGameVars[id].dwFlags & (GAMEVAR_USER_MASK|GAMEVAR_PTR_MASK))
+    {
+    default:
+        aGameVars[id].val.lValue=lValue;
+        return;
+    case GAMEVAR_PERPLAYER:
+        if (iPlayer > MAXPLAYERS-1) {badindex();return;}
+        // for the current player
+        aGameVars[id].val.plValues[iPlayer]=lValue;
+        return;
+    case GAMEVAR_PERACTOR:
+        if (iActor > MAXSPRITES-1) {badindex();return;}
+        aGameVars[id].val.plValues[iActor]=lValue;
+        return;
+    case GAMEVAR_INTPTR:
+        todoThrow("*((int32_t *)aGameVars[id].val.lValue)=(int32_t)lValue;");
+        return;
+    case GAMEVAR_SHORTPTR:
+        todoThrow("*((int16_t *)aGameVars[id].val.lValue)=(int16_t)lValue;");
+        return;
+    case GAMEVAR_CHARPTR:
+        todoThrow("*((uint8_t *)aGameVars[id].val.lValue)=(uint8_t)lValue;");
+        return;
+    }
 
-//badvarid:
-//    CON_ERRPRINTF("Gv_SetVar(): invalid gamevar (%d) from sprite %d (%d), player %d\n",
-//                  id,vm.g_i,TrackerCast(sprite[vm.g_i].picnum),vm.g_p);
-//    return;
-
-//badindex:
-//    CON_ERRPRINTF("Gv_SetVar(): invalid index (%d) for gamevar %s from sprite %d, player %d\n",
-//               aGameVars[id].dwFlags & GAMEVAR_PERACTOR ? iActor : iPlayer,
-//               aGameVars[id].szLabel,vm.g_i,vm.g_p);
+function badvarid():void {
+    CON_ERRPRINTF("Gv_SetVar(): invalid gamevar (%d) from sprite %d (%d), player %d\n",
+                  id,vm.g_i,TrackerCast(sprite[vm.g_i].picnum),vm.g_p);
     return;
+}
+function badindex():void {
+    CON_ERRPRINTF("Gv_SetVar(): invalid index (%d) for gamevar %s from sprite %d, player %d\n",
+               aGameVars[id].dwFlags & GAMEVAR_PERACTOR ? iActor : iPlayer,
+               aGameVars[id].szLabel,vm.g_i,vm.g_p);
+    return;
+}
 }
 
 //int32_t __fastcall Gv_GetVarX(register int32_t id)

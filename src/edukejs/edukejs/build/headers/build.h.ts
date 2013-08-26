@@ -1332,11 +1332,11 @@ function rotatesprite_fs(sx: number, sy: number, z: number, a: number, picnum: n
     rotatesprite_(sx, sy, z, a, picnum, dashade, dapalnum, dastat, 0, 0,0,xdim-1,ydim-1);
 }
 
-//static inline void rotatesprite_win(int32_t sx, int32_t sy, int32_t z, int16_t a, int16_t picnum,
-//                                    int8_t dashade, char dapalnum, int32_t dastat)
-//{
-//    rotatesprite_(sx, sy, z, a, picnum, dashade, dapalnum, dastat, 0, windowx1,windowy1,windowx2,windowy2);
-//}
+function rotatesprite_win(/*int32_t*/ sx:number, /*int32_t*/ sy:number, /*int32_t*/ z:number, /*int16_t*/ a:number, /*int16_t*/ picnum:number,
+                                    /*int8_t*/ dashade:number, /*char*/ dapalnum:number, /*int32_t*/ dastat:number): void
+{
+    rotatesprite_(sx, sy, z, a, picnum, dashade, dapalnum, dastat, 0, windowx1,windowy1,windowx2,windowy2);
+}
 
 //void bfirst_search_init(int16_t *list, uint8_t *bitmap, int32_t *eltnumptr, int32_t maxnum, int16_t firstelt);
 //void bfirst_search_try(int16_t *list, uint8_t *bitmap, int32_t *eltnumptr, int16_t elt);

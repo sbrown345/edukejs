@@ -457,7 +457,7 @@ function/* int32_t */G_GetTeamPalette(/*int32_t*/ team: number): number
 //#endif
 
 //#define minitextshade(x, y, t, s, p, sb) minitext_(x,y,t,s,p,sb)
-//#define minitext(x, y, t, p, sb) minitext_(x,y,t,0,p,sb)
+var minitext = minitext_;//#define minitext(x, y, t, p, sb) minitext_(x,y,t,0,p,sb)
 function menutext(x: number,y: number,s: number,p:number,t: string): number {todo("menutext game.h");return -1;/*menutext_(x,y,s,p,/*(char *)#1#OSD_StripColors(menutextbuf,t),10+16);*/}
 function gametext(x: number,y: number,t:string,s: number,dabits: number): number{todo(" gamtexte");return -1;/*G_PrintGameText(0,STARTALPHANUM, x,y,t,s,0,dabits,0, 0, xdim-1, ydim-1, 65536)*/};
 //#define gametextscaled(x,y,t,s,dabits) G_PrintGameText(1,STARTALPHANUM, x,y,t,s,0,dabits,0, 0, xdim-1, ydim-1, 65536)

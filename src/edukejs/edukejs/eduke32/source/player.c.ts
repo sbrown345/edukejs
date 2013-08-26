@@ -94,7 +94,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //#include "enet/enet.h"
 
 var /*int32_t */lastvisinc=0;
-var hudweap: hudweapon_t ;
+var hudweap = new hudweapon_t();
 
 var /*int32_t */g_snum=0;
 
@@ -1722,29 +1722,29 @@ function /*int32_t */A_ShootWithZvel(/*int32_t*/ i:number, /*int32_t */atwith:nu
 }
 
 
-////////////////////// HUD WEAPON / MISC. DISPLAY CODE ////////////////////
+//////////////////// HUD WEAPON / MISC. DISPLAY CODE ////////////////////
 
-//static void P_DisplaySpit(int32_t snum)
-//{
-//    int32_t i, a, x, y, z;
-//    DukePlayer_t *const ps = g_player[snum].ps;
+function P_DisplaySpit(/*int32_t */snum:number): void
+{
+    var /*int32_t */i:number, a:number, x:number, y:number, z:number;
+    var ps = g_player[snum].ps;
 
-//    if (ps.loogcnt == 0)
-//        return;
+    if (ps.loogcnt == 0)
+        return;
 
-//    y = (ps.loogcnt<<2);
+    y = (ps.loogcnt<<2);
 
-//    for (i=0; i<ps.numloogs; i++)
-//    {
-//        a = klabs(sintable[((ps.loogcnt+i)<<5)&2047])>>5;
-//        z = 4096+((ps.loogcnt+i)<<9);
-//        x = (-g_player[snum].sync.avel)+(sintable[((ps.loogcnt+i)<<6)&2047]>>10);
+    for (i=0; i<ps.numloogs; i++)
+    {
+        a = klabs(sintable[((ps.loogcnt+i)<<5)&2047])>>5;
+        z = 4096+((ps.loogcnt+i)<<9);
+        x = (-g_player[snum].sync.avel)+(sintable[((ps.loogcnt+i)<<6)&2047]>>10);
 
-//        rotatesprite_fs(
-//            (ps.loogiex[i]+x)<<16,(200+ps.loogiey[i]-y)<<16,z-(i<<8),256-a,
-//            LOOGIE,0,0,2);
-//    }
-//}
+        rotatesprite_fs(
+            (ps.loogiex[i]+x)<<16,(200+ps.loogiey[i]-y)<<16,z-(i<<8),256-a,
+            LOOGIE,0,0,2);
+    }
+}
 
 function /*int32_t */P_GetHudPal(p:DukePlayer_t)
 {
@@ -1785,7 +1785,7 @@ function /*int32_t */P_DisplayFist(/*int32_t */gs:number,/*int32_t */snum:number
 
     // XXX: this is outdated, doesn't handle above/below split.
     if (g_fakeMultiMode==2)
-        wx[(g_snum==0)] = (wx[0]+wx[1])/2+1;
+        wx[(g_snum==0)?1:0] = (wx[0]+wx[1])/2+1;
 
     rotatesprite(
         (-fisti+222+(g_player[snum].sync.avel>>4))<<16,
@@ -1804,15 +1804,15 @@ function /*int32_t */weapsc(/*int32_t */sc:number):number
     return scale(sc, ud.weaponscale, 100);
 }
 
-var /*int32_t */g_dts_yadd:number;
+var /*int32_t */g_dts_yadd:number = 0;
 
 function G_DrawTileScaled(/*int32_t*/ x:number, /*int32_t */y:number, /*int32_t */tilenum:number, /*int32_t */shade:number, /*int32_t */orientation:number, /*int32_t */p:number):void
 {
     var /*int32_t*/ ang = 0;
     var /*int32_t*/ xoff = 192;
 
-    var /*int32_t*/ wx = new Int32Array[windowx1, windowx2]);
-    var /*int32_t*/ wy = new Int32Array[windowy1, windowy2]);
+    var /*int32_t*/ wx = new Int32Array([windowx1, windowx2]);
+    var /*int32_t*/ wy = new Int32Array([windowy1, windowy2]);
     var /*int32_t*/ yofs = 0;
 
     switch (hudweap.cur)
@@ -1843,14 +1843,14 @@ function G_DrawTileScaled(/*int32_t*/ x:number, /*int32_t */y:number, /*int32_t 
         if (sidebyside)
         {
             orientation &= ~8;
-            wx[(g_snum==0)] = (wx[0]+wx[1])/2 + 2;
+            wx[(g_snum==0)?1:0] = (wx[0]+wx[1])/2 + 2;
         }
         else
         {
             orientation |= 8;
             if (g_snum==0)
                 yofs = -(100<<16);
-            wy[(g_snum==0)] = (wy[0]+wy[1])/2 + 2;
+            wy[(g_snum==0)?1:0] = (wy[0]+wy[1])/2 + 2;
         }
     }
 
@@ -1923,7 +1923,7 @@ function  G_DrawWeaponTile(/*int32_t*/ x:number, /*int32_t */y:number, /*int32_t
     }
 }
 
-function ARRAY_SIZE(Ar:Array):number {return Ar.length;}
+function ARRAY_SIZE(Ar:Int8Array):number {return Ar.length;}
 
 function/* int32_t */P_DisplayKnee(/*int32_t*/ gs:number,/*int32_t */snum:number)
 {
@@ -1935,7 +1935,7 @@ function/* int32_t */P_DisplayKnee(/*int32_t*/ gs:number,/*int32_t */snum:number
     if (ps.knee_incs == 0 || ps.knee_incs >= ARRAY_SIZE(knee_y) || sprite[ps.i].extra <= 0)
         return 0;
 
-    looking_arc = knee_y[ps.knee_incs] + klabs(ps.look_ang)/9;
+    looking_arc = knee_y[ps.knee_incs] + klabs(ps.look_ang)/9|0;
 
     looking_arc -= (ps.hard_landing<<3);
 
@@ -1956,7 +1956,7 @@ function/* int32_t */P_DisplayKnuckles(/*int32_t*/ gs:number,/*int32_t */snum:nu
 
     var ps = g_player[snum].ps;
 
-    if (ps.knuckle_incs == 0 || (unsigned) (ps.knuckle_incs>>1) >= ARRAY_SIZE(knuckle_frames) || sprite[ps.i].extra <= 0)
+    if (ps.knuckle_incs == 0 || /*(unsigned)*/ (ps.knuckle_incs>>1) >= ARRAY_SIZE(knuckle_frames) || sprite[ps.i].extra <= 0)
         return 0;
 
     looking_arc = int32(klabs(ps.look_ang)/9);
@@ -2065,96 +2065,96 @@ function P_DoWeaponSpawn(p: DukePlayer_t):void
 
 }
 
-//void P_DisplayScuba(int32_t snum)
-//{
-//    if (g_player[snum].ps.scuba_on)
-//    {
-//        int32_t p = P_GetHudPal(g_player[snum].ps);
+function P_DisplayScuba(/*int32_t */snum:number): void
+{
+    if (g_player[snum].ps.scuba_on)
+    {
+        var /*int32_t */p = P_GetHudPal(g_player[snum].ps);
 
-//        g_snum = snum;
+        g_snum = snum;
 //#ifdef USE_OPENGL
-//        if (getrendermode() >= REND_POLYMOST)
-//            G_DrawTileScaled(44, (200-tilesizy[SCUBAMASK]), SCUBAMASK, 0, 2+16+DRAWEAP_CENTER, p);
+        if (getrendermode() >= REND_POLYMOST)
+            G_DrawTileScaled(44, (200-tilesizy[SCUBAMASK]), SCUBAMASK, 0, 2+16+DRAWEAP_CENTER, p);
 //#endif
-//        G_DrawTileScaled(43, (200-tilesizy[SCUBAMASK]), SCUBAMASK, 0, 2+16+DRAWEAP_CENTER, p);
-//        G_DrawTileScaled(320-43, (200-tilesizy[SCUBAMASK]), SCUBAMASK, 0, 2+4+16+DRAWEAP_CENTER, p);
-//    }
-//}
+        G_DrawTileScaled(43, (200-tilesizy[SCUBAMASK]), SCUBAMASK, 0, 2+16+DRAWEAP_CENTER, p);
+        G_DrawTileScaled(320-43, (200-tilesizy[SCUBAMASK]), SCUBAMASK, 0, 2+4+16+DRAWEAP_CENTER, p);
+    }
+}
 
 function /*int32_t */P_DisplayTip(/*int32_t */gs:number,/*int32_t */snum:number):number
-{todoThrow();
-    //int32_t p,looking_arc, tipy;
+{
+    var /*int32_t */p:number,looking_arc:number, tipy:number;
 
-    //static const int16_t tip_y[] = {
-    //    0,-8,-16,-32,-64,
-    //    -84,-108,-108,-108,-108,
-    //    -108,-108,-108,-108,-108,
-    //    -108,-96,-72,-64,-32,
-    //    -16, /* EDuke32: */ 0, 16, 32, 48,
-    //    // At y coord 64, the hand is already not shown.
-    //};
+    var tip_y = new Int16Array([
+        0,-8,-16,-32,-64,
+        -84,-108,-108,-108,-108,
+        -108,-108,-108,-108,-108,
+        -108,-96,-72,-64,-32,
+        -16, /* EDuke32: */ 0, 16, 32, 48,
+        // At y coord 64, the hand is already not shown.
+    ]);
 
-    //const DukePlayer_t *const ps = g_player[snum].ps;
+    var ps = g_player[snum].ps;
 
-    //if (ps.tipincs == 0)
-    //    return 0;
+    if (ps.tipincs == 0)
+        return 0;
 
-    //// Report that the tipping hand has been drawn so that the otherwise
-    //// selected weapon is not drawn.
-    //if (ps.tipincs >= ARRAY_SIZE(tip_y))
-    //    return 1;
+    // Report that the tipping hand has been drawn so that the otherwise
+    // selected weapon is not drawn.
+    if (ps.tipincs >= ARRAY_SIZE(tip_y))
+        return 1;
 
-    //looking_arc = klabs(ps.look_ang)/9;
-    //looking_arc -= (ps.hard_landing<<3);
+    looking_arc = klabs(ps.look_ang)/9;
+    looking_arc -= (ps.hard_landing<<3);
 
-    //p = P_GetHudPal(ps);
+    p = P_GetHudPal(ps);
 
-    //tipy = tip_y[ps.tipincs]>>1;
+    tipy = tip_y[ps.tipincs]>>1;
 
-    //G_DrawTileScaled(170+(g_player[snum].sync.avel>>4)-(ps.look_ang>>1),
-    //                 tipy+looking_arc+240-((ps.horiz-ps.horizoff)>>4),
-    //                 TIP+((26-ps.tipincs)>>4),gs,DRAWEAP_CENTER,p);
+    G_DrawTileScaled(170+(g_player[snum].sync.avel>>4)-(ps.look_ang>>1),
+                     tipy+looking_arc+240-((ps.horiz-ps.horizoff)>>4),
+                     TIP+((26-ps.tipincs)>>4),gs,DRAWEAP_CENTER,p);
 
     return 1;
 }
 
 function/*int32_t*/ P_DisplayAccess(/*int32_t*/ gs:number,/*int32_t */snum:number):number
-{todoThrow();
-//    static const int16_t access_y[] = {
-//        0,-8,-16,-32,-64,
-//        -84,-108,-108,-108,-108,
-//        -108,-108,-108,-108,-108,
-//        -108,-96,-72,-64,-32,
-//        -16
-//    };
+{
+    var access_y = new Int16Array([
+        0,-8,-16,-32,-64,
+        -84,-108,-108,-108,-108,
+        -108,-108,-108,-108,-108,
+        -108,-96,-72,-64,-32,
+        -16
+    ]);
 
-//    int32_t looking_arc, p = 0;
-//    const DukePlayer_t *const ps = g_player[snum].ps;
+    var looking_arc:number, p = 0;
+    var ps = g_player[snum].ps;
 
-//    if (ps.access_incs == 0 || ps.access_incs >= ARRAY_SIZE(access_y) || sprite[ps.i].extra <= 0)
-//        return 0;
+    if (ps.access_incs == 0 || ps.access_incs >= ARRAY_SIZE(access_y) || sprite[ps.i].extra <= 0)
+        return 0;
 
-//    looking_arc = access_y[ps.access_incs] + klabs(ps.look_ang)/9 -
-//                  (ps.hard_landing<<3);
+    looking_arc = access_y[ps.access_incs] + klabs(ps.look_ang)/9 -
+                  (ps.hard_landing<<3);
 
-//    if (ps.access_spritenum >= 0)
-//        p = sprite[ps.access_spritenum].pal;
+    if (ps.access_spritenum >= 0)
+        p = sprite[ps.access_spritenum].pal;
 
-//    if ((ps.access_incs-3) > 0 && (ps.access_incs-3)>>3)
-//    {
-//        guniqhudid = 200;
-//        G_DrawTileScaled(170+(g_player[snum].sync.avel>>4)-(ps.look_ang>>1)+(access_y[ps.access_incs]>>2),
-//                         looking_arc+266-((ps.horiz-ps.horizoff)>>4),HANDHOLDINGLASER+(ps.access_incs>>3),
-//                         gs,DRAWEAP_CENTER,p);
-//        guniqhudid = 0;
-//    }
-//    else
-//    {
-//        guniqhudid = 201;
-//        G_DrawTileScaled(170+(g_player[snum].sync.avel>>4)-(ps.look_ang>>1)+(access_y[ps.access_incs]>>2),
-//                         looking_arc+266-((ps.horiz-ps.horizoff)>>4),HANDHOLDINGACCESS,gs,4+DRAWEAP_CENTER,p);
-//        guniqhudid = 0;
-//    }
+    if ((ps.access_incs-3) > 0 && (ps.access_incs-3)>>3)
+    {
+        guniqhudid = 200;
+        G_DrawTileScaled(170+(g_player[snum].sync.avel>>4)-(ps.look_ang>>1)+(access_y[ps.access_incs]>>2),
+                         looking_arc+266-((ps.horiz-ps.horizoff)>>4),HANDHOLDINGLASER+(ps.access_incs>>3),
+                         gs,DRAWEAP_CENTER,p);
+        guniqhudid = 0;
+    }
+    else
+    {
+        guniqhudid = 201;
+        G_DrawTileScaled(170+(g_player[snum].sync.avel>>4)-(ps.look_ang>>1)+(access_y[ps.access_incs]>>2),
+                         looking_arc+266-((ps.horiz-ps.horizoff)>>4),HANDHOLDINGACCESS,gs,4+DRAWEAP_CENTER,p);
+        guniqhudid = 0;
+    }
 
     return 1;
 }
@@ -2168,7 +2168,7 @@ function P_DisplayWeapon(/*int32_t */snum:number):void
     var /*int32_t */weapon_xoffset=0, i=0, j=0;
     var /*int32_t */o = 0,pal = 0;
     var p = g_player[snum].ps;
-    var kb = p.kickback_pic;
+    //var kb = p.kickback_pic;// js: replaced
     var /*int32_t */gs:number;
 
     g_snum = snum;
@@ -2190,7 +2190,7 @@ function P_DisplayWeapon(/*int32_t */snum:number):void
 
     if (ud.weaponsway)
     {
-        weapon_xoffset -= (sintable[((p.weapon_sway>>1)+512)&2047]/(1024+512));
+        weapon_xoffset -= (sintable[((p.weapon_sway>>1)+512)&2047]/(1024+512)|0);
 
         if (sprite[p.i].xrepeat < 32)
             gun_pos -= klabs(sintable[(p.weapon_sway<<2)&2047]>>9);
@@ -2211,7 +2211,7 @@ function P_DisplayWeapon(/*int32_t */snum:number):void
     hudweap.cur=cw;
     hudweap.gunposx=weapon_xoffset;
     hudweap.shade=gs;
-    hudweap.count=*kb;
+    hudweap.count=p.kickback_pic;
     hudweap.lookhalfang=p.look_ang>>1;
 
     if (VM_OnEvent(EVENT_DISPLAYWEAPON, p.i, screenpeek, -1, 0) == 0)
@@ -2255,7 +2255,7 @@ function P_DisplayWeapon(/*int32_t */snum:number):void
         }
         else
         {
-            int32_t doanim = !(sprite[p.i].pal == 1 || ud.pause_on || g_player[myconnectindex].ps.gm&MODE_MENU);
+            var/*int32_t */doanim = !(sprite[p.i].pal == 1 || ud.pause_on || g_player[myconnectindex].ps.gm&MODE_MENU);
             pal = P_GetHudPal(p);
 
             switch (cw)
@@ -2263,13 +2263,13 @@ function P_DisplayWeapon(/*int32_t */snum:number):void
             case KNEE_WEAPON:
                 if (VM_OnEvent(EVENT_DRAWWEAPON,g_player[screenpeek].ps.i,screenpeek, -1, 0) == 0)
                 {
-                    if ((*kb) > 0)
+                    if ((p.kickback_pic) > 0)
                     {
                         if (pal == 0)
                             pal = p.palookup;
 
                         guniqhudid = cw;
-                        if ((*kb) < 5 || (*kb) > 9)
+                        if ((p.kickback_pic) < 5 || (p.kickback_pic) > 9)
                             G_DrawTileScaled(weapon_xoffset+220-(p.look_ang>>1),
                             looking_arc+250-gun_pos,KNEE,gs,o,pal);
                         else
@@ -2286,9 +2286,9 @@ function P_DisplayWeapon(/*int32_t */snum:number):void
                     weapon_xoffset += 8;
                     gun_pos -= 10;
 
-                    if ((*kb) > 6)
-                        looking_arc += ((*kb)<<3);
-                    else if ((*kb) < 4)
+                    if ((p.kickback_pic) > 6)
+                        looking_arc += ((p.kickback_pic)<<3);
+                    else if ((p.kickback_pic) < 4)
                     {
                         guniqhudid = cw<<2;
                         G_DrawWeaponTile(weapon_xoffset+142-(p.look_ang>>1),
@@ -2298,12 +2298,12 @@ function P_DisplayWeapon(/*int32_t */snum:number):void
                     guniqhudid = cw;
                     G_DrawWeaponTile(weapon_xoffset+130-(p.look_ang>>1),
                         looking_arc+249-gun_pos,
-                        HANDHOLDINGLASER+((*kb)>>2),gs,o,pal,0);
+                        HANDHOLDINGLASER+((p.kickback_pic)>>2),gs,o,pal,0);
 
                     guniqhudid = cw<<1;
                     G_DrawWeaponTile(weapon_xoffset+152-(p.look_ang>>1),
                         looking_arc+249-gun_pos,
-                        HANDHOLDINGLASER+((*kb)>>2),gs,o|4,pal,0);
+                        HANDHOLDINGLASER+((p.kickback_pic)>>2),gs,o|4,pal,0);
                     guniqhudid = 0;
                 }
                 break;
@@ -2311,13 +2311,13 @@ function P_DisplayWeapon(/*int32_t */snum:number):void
             case RPG_WEAPON:
                 if (VM_OnEvent(EVENT_DRAWWEAPON,g_player[screenpeek].ps.i,screenpeek, -1, 0) == 0)
                 {
-                    weapon_xoffset -= sintable[(768+((*kb)<<7))&2047]>>11;
-                    gun_pos += sintable[(768+((*kb)<<7))&2047]>>11;
+                    weapon_xoffset -= sintable[(768+((p.kickback_pic)<<7))&2047]>>11;
+                    gun_pos += sintable[(768+((p.kickback_pic)<<7))&2047]>>11;
 
-                    if (*kb > 0 && *kb < 8)
+                    if (p.kickback_pic > 0 && p.kickback_pic < 8)
                     {
                         G_DrawWeaponTile(weapon_xoffset+164,(looking_arc<<1)+176-gun_pos,
-                            RPGGUN+((*kb)>>1),gs,o|512,pal,0);
+                            RPGGUN+((p.kickback_pic)>>1),gs,o|512,pal,0);
                     }
 
                     G_DrawWeaponTile(weapon_xoffset+164,(looking_arc<<1)+176-gun_pos,
@@ -2330,7 +2330,7 @@ function P_DisplayWeapon(/*int32_t */snum:number):void
                 {
                     weapon_xoffset -= 8;
 
-                    switch (*kb)
+                    switch (p.kickback_pic)
                     {
                     case 1:
                     case 2:
@@ -2353,14 +2353,14 @@ function P_DisplayWeapon(/*int32_t */snum:number):void
                     case 10:
                     case 11:
                     case 12:
-                        if (*kb > 1 && *kb < 5)
+                        if (p.kickback_pic > 1 && p.kickback_pic < 5)
                         {
                             gun_pos -= 40;
                             weapon_xoffset += 20;
 
                             guniqhudid = cw<<1;
                             G_DrawWeaponTile(weapon_xoffset+178-(p.look_ang>>1),looking_arc+194-gun_pos,
-                                SHOTGUN+1+((*(kb)-1)>>1),-128,o,pal,0);
+                                SHOTGUN+1+((p.kickback_pic-1)>>1),-128,o,pal,0);
                         }
                         guniqhudid = cw;
                         G_DrawWeaponTile(weapon_xoffset+158-(p.look_ang>>1),looking_arc+220-gun_pos,
@@ -2417,15 +2417,15 @@ function P_DisplayWeapon(/*int32_t */snum:number):void
             case CHAINGUN_WEAPON:
                 if (VM_OnEvent(EVENT_DRAWWEAPON,g_player[screenpeek].ps.i,screenpeek, -1, 0) == 0)
                 {
-                    if (*kb > 0)
+                    if (p.kickback_pic > 0)
                     {
-                        gun_pos -= sintable[(*kb)<<7]>>12;
+                        gun_pos -= sintable[(p.kickback_pic)<<7]>>12;
 
                         if (doanim)
                             weapon_xoffset += 1-(rand()&3);
                     }
 
-                    switch (*kb)
+                    switch (p.kickback_pic)
                     {
                     case 0:
                         G_DrawWeaponTile(weapon_xoffset+178-(p.look_ang>>1),looking_arc+233-gun_pos,
@@ -2433,25 +2433,25 @@ function P_DisplayWeapon(/*int32_t */snum:number):void
                         break;
 
                     default:
-                        if (*kb > PWEAPON(0, CHAINGUN_WEAPON, FireDelay) && *kb < PWEAPON(0, CHAINGUN_WEAPON, TotalTime))
+                        if (p.kickback_pic > PWEAPON(0, CHAINGUN_WEAPON, FireDelay) && p.kickback_pic < PWEAPON(0, CHAINGUN_WEAPON, TotalTime))
                         {
                             i = 0;
                             if (doanim) i = rand()&7;
-                            G_DrawWeaponTile(i+weapon_xoffset-4+140-(p.look_ang>>1),i+looking_arc-((*kb)>>1)+208-gun_pos,
-                                CHAINGUN+5+((*kb-4)/5),gs,o,pal,0);
+                            G_DrawWeaponTile(i+weapon_xoffset-4+140-(p.look_ang>>1),i+looking_arc-((p.kickback_pic)>>1)+208-gun_pos,
+                                CHAINGUN+5+((p.kickback_pic-4)/5),gs,o,pal,0);
                             if (doanim) i = rand()&7;
-                            G_DrawWeaponTile(i+weapon_xoffset-4+184-(p.look_ang>>1),i+looking_arc-((*kb)>>1)+208-gun_pos,
-                                CHAINGUN+5+((*kb-4)/5),gs,o,pal,0);
+                            G_DrawWeaponTile(i+weapon_xoffset-4+184-(p.look_ang>>1),i+looking_arc-((p.kickback_pic)>>1)+208-gun_pos,
+                                CHAINGUN+5+((p.kickback_pic-4)/5),gs,o,pal,0);
                         }
 
-                        if (*kb < PWEAPON(0, CHAINGUN_WEAPON, TotalTime)-4)
+                        if (p.kickback_pic < PWEAPON(0, CHAINGUN_WEAPON, TotalTime)-4)
                         {
                             i = 0;
                             if (doanim) i = rand()&7;
-                            G_DrawWeaponTile(i+weapon_xoffset-4+162-(p.look_ang>>1),i+looking_arc-((*kb)>>1)+208-gun_pos,
-                                CHAINGUN+5+((*kb-2)/5),gs,o,pal,0);
+                            G_DrawWeaponTile(i+weapon_xoffset-4+162-(p.look_ang>>1),i+looking_arc-((p.kickback_pic)>>1)+208-gun_pos,
+                                CHAINGUN+5+((p.kickback_pic-2)/5),gs,o,pal,0);
                             G_DrawWeaponTile(weapon_xoffset+178-(p.look_ang>>1),looking_arc+233-gun_pos,
-                                CHAINGUN+1+((*kb)>>1),gs,o,pal,0);
+                                CHAINGUN+1+((p.kickback_pic)>>1),gs,o,pal,0);
                         }
                         else G_DrawWeaponTile(weapon_xoffset+178-(p.look_ang>>1),looking_arc+233-gun_pos,
                             CHAINGUN+1,gs,o,pal,0);
@@ -2467,57 +2467,57 @@ function P_DisplayWeapon(/*int32_t */snum:number):void
             case PISTOL_WEAPON:
                 if (VM_OnEvent(EVENT_DRAWWEAPON,g_player[screenpeek].ps.i,screenpeek, -1, 0) == 0)
                 {
-                    if ((*kb) < PWEAPON(0, PISTOL_WEAPON, TotalTime)+1)
+                    if ((p.kickback_pic) < PWEAPON(0, PISTOL_WEAPON, TotalTime)+1)
                     {
-                        static uint8_t kb_frames[] = { 0, 1, 2 };
-                        int32_t l = 195-12+weapon_xoffset;
+                        var /*static uint8_t */kb_frames = [ 0, 1, 2 ];
+                        var/*int32_t */l = 195-12+weapon_xoffset;
 
-                        if ((*kb) == PWEAPON(0, PISTOL_WEAPON, FireDelay))
+                        if ((p.kickback_pic) == PWEAPON(0, PISTOL_WEAPON, FireDelay))
                             l -= 3;
 
                         guniqhudid = cw;
-                        G_DrawWeaponTile((l-(p.look_ang>>1)),(looking_arc+244-gun_pos),FIRSTGUN+kb_frames[*kb>2?0:*kb],gs,2,pal,0);
+                        G_DrawWeaponTile((l-(p.look_ang>>1)),(looking_arc+244-gun_pos),FIRSTGUN+kb_frames[p.kickback_pic>2?0:p.kickback_pic],gs,2,pal,0);
                         guniqhudid = 0;
                     }
                     else
                     {
 
-                        if ((*kb) < PWEAPON(0, PISTOL_WEAPON, Reload)-17)
+                        if ((p.kickback_pic) < PWEAPON(0, PISTOL_WEAPON, Reload)-17)
                         {
                             guniqhudid = cw;
                             G_DrawWeaponTile(194-(p.look_ang>>1),looking_arc+230-gun_pos,FIRSTGUN+4,gs,o|512,pal,0);
                             guniqhudid = 0;
                         }
-                        else if ((*kb) < PWEAPON(0, PISTOL_WEAPON, Reload)-12)
+                        else if ((p.kickback_pic) < PWEAPON(0, PISTOL_WEAPON, Reload)-12)
                         {
-                            G_DrawWeaponTile(244-((*kb)<<3)-(p.look_ang>>1),looking_arc+130-gun_pos+((*kb)<<4),FIRSTGUN+6,gs,o|512,pal,0);
+                            G_DrawWeaponTile(244-((p.kickback_pic)<<3)-(p.look_ang>>1),looking_arc+130-gun_pos+((p.kickback_pic)<<4),FIRSTGUN+6,gs,o|512,pal,0);
                             guniqhudid = cw;
                             G_DrawWeaponTile(224-(p.look_ang>>1),looking_arc+220-gun_pos,FIRSTGUN+5,gs,o|512,pal,0);
                             guniqhudid = 0;
                         }
-                        else if ((*kb) < PWEAPON(0, PISTOL_WEAPON, Reload)-7)
+                        else if ((p.kickback_pic) < PWEAPON(0, PISTOL_WEAPON, Reload)-7)
                         {
-                            G_DrawWeaponTile(124+((*kb)<<1)-(p.look_ang>>1),looking_arc+430-gun_pos-((*kb)<<3),FIRSTGUN+6,gs,o|512,pal,0);
+                            G_DrawWeaponTile(124+((p.kickback_pic)<<1)-(p.look_ang>>1),looking_arc+430-gun_pos-((p.kickback_pic)<<3),FIRSTGUN+6,gs,o|512,pal,0);
                             guniqhudid = cw;
                             G_DrawWeaponTile(224-(p.look_ang>>1),looking_arc+220-gun_pos,FIRSTGUN+5,gs,o|512,pal,0);
                             guniqhudid = 0;
                         }
 
-                        else if ((*kb) < PWEAPON(0, PISTOL_WEAPON, Reload)-4)
+                        else if ((p.kickback_pic) < PWEAPON(0, PISTOL_WEAPON, Reload)-4)
                         {
                             G_DrawWeaponTile(184-(p.look_ang>>1),looking_arc+235-gun_pos,FIRSTGUN+8,gs,o|512,pal,0);
                             guniqhudid = cw;
                             G_DrawWeaponTile(224-(p.look_ang>>1),looking_arc+210-gun_pos,FIRSTGUN+5,gs,o|512,pal,0);
                             guniqhudid = 0;
                         }
-                        else if ((*kb) < PWEAPON(0, PISTOL_WEAPON, Reload)-2)
+                        else if ((p.kickback_pic) < PWEAPON(0, PISTOL_WEAPON, Reload)-2)
                         {
                             G_DrawWeaponTile(164-(p.look_ang>>1),looking_arc+245-gun_pos,FIRSTGUN+8,gs,o|512,pal,0);
                             guniqhudid = cw;
                             G_DrawWeaponTile(224-(p.look_ang>>1),looking_arc+220-gun_pos,FIRSTGUN+5,gs,o|512,pal,0);
                             guniqhudid = 0;
                         }
-                        else if ((*kb) < PWEAPON(0, PISTOL_WEAPON, Reload))
+                        else if ((p.kickback_pic) < PWEAPON(0, PISTOL_WEAPON, Reload))
                         {
                             guniqhudid = cw;
                             G_DrawWeaponTile(194-(p.look_ang>>1),looking_arc+235-gun_pos,FIRSTGUN+5,gs,o|512,pal,0);
@@ -2532,24 +2532,24 @@ function P_DisplayWeapon(/*int32_t */snum:number):void
                 if (VM_OnEvent(EVENT_DRAWWEAPON,g_player[screenpeek].ps.i,screenpeek, -1, 0) == 0)
                 {
                     guniqhudid = cw;
-                    if ((*kb))
+                    if ((p.kickback_pic))
                     {
-                        if ((*kb) < (PWEAPON(0, p.curr_weapon, TotalTime)))
+                        if ((p.kickback_pic) < (PWEAPON(0, p.curr_weapon, TotalTime)))
                         {
 
-                            static uint8_t throw_frames[] = {0,0,0,0,0,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2};
+                            var /*static uint8_t */throw_frames = [0,0,0,0,0,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2];
 
-                            if ((*kb) < 7)
-                                gun_pos -= 10*(*kb);        //D
-                            else if ((*kb) < 12)
-                                gun_pos += 20*((*kb)-10); //U
-                            else if ((*kb) < 20)
-                                gun_pos -= 9*((*kb)-14);  //D
+                            if ((p.kickback_pic) < 7)
+                                gun_pos -= 10*(p.kickback_pic);        //D
+                            else if ((p.kickback_pic) < 12)
+                                gun_pos += 20*((p.kickback_pic)-10); //U
+                            else if ((p.kickback_pic) < 20)
+                                gun_pos -= 9*((p.kickback_pic)-14);  //D
 
-                            if (*kb >= ARRAY_SIZE(throw_frames))
+                            if (p.kickback_pic >= ARRAY_SIZE(throw_frames))
                                 break;
 
-                            G_DrawWeaponTile(weapon_xoffset+190-(p.look_ang>>1),looking_arc+250-gun_pos,HANDTHROW+throw_frames[(*kb)],gs,o,pal,0);
+                            G_DrawWeaponTile(weapon_xoffset+190-(p.look_ang>>1),looking_arc+250-gun_pos,HANDTHROW+throw_frames[(p.kickback_pic)],gs,o,pal,0);
                         }
                     }
                     else
@@ -2561,14 +2561,14 @@ function P_DisplayWeapon(/*int32_t */snum:number):void
             case HANDREMOTE_WEAPON:
                 if (VM_OnEvent(EVENT_DRAWWEAPON,g_player[screenpeek].ps.i,screenpeek, -1, 0) == 0)
                 {
-                    static uint8_t remote_frames[] = {0,1,1,2,1,1,0,0,0,0,0};
+                    var /*static uint8_t */remote_frames = [0,1,1,2,1,1,0,0,0,0,0];
 
-                    if (*kb >= ARRAY_SIZE(remote_frames))
+                    if (p.kickback_pic >= ARRAY_SIZE(remote_frames))
                         break;
 
                     weapon_xoffset = -48;
                     guniqhudid = cw;
-                    G_DrawWeaponTile(weapon_xoffset+150-(p.look_ang>>1),looking_arc+258-gun_pos,HANDREMOTE+remote_frames[(*kb)],gs,o,pal,0);
+                    G_DrawWeaponTile(weapon_xoffset+150-(p.look_ang>>1),looking_arc+258-gun_pos,HANDREMOTE+remote_frames[(p.kickback_pic)],gs,o,pal,0);
                     guniqhudid = 0;
                 }
                 break;
@@ -2576,19 +2576,19 @@ function P_DisplayWeapon(/*int32_t */snum:number):void
             case DEVISTATOR_WEAPON:
                 if (VM_OnEvent(EVENT_DRAWWEAPON,g_player[screenpeek].ps.i,screenpeek, -1, 0) == 0)
                 {
-                    if ((*kb) < (PWEAPON(0, DEVISTATOR_WEAPON, TotalTime)+1) && (*kb) > 0)
+                    if ((p.kickback_pic) < (PWEAPON(0, DEVISTATOR_WEAPON, TotalTime)+1) && (p.kickback_pic) > 0)
                     {
-                        static uint8_t cycloidy[] = {0,4,12,24,12,4,0};
+                        var /*static uint8_t */cycloidy = [0,4,12,24,12,4,0];
 
-                        if (*kb >= ARRAY_SIZE(cycloidy))
+                        if (p.kickback_pic >= ARRAY_SIZE(cycloidy))
                             break;
 
-                        i = ksgn((*kb)>>2);
+                        i = ksgn((p.kickback_pic)>>2);
 
                         if (p.hbomb_hold_delay)
                         {
                             guniqhudid = cw;
-                            G_DrawWeaponTile((cycloidy[*kb]>>1)+weapon_xoffset+268-(p.look_ang>>1),cycloidy[*kb]+looking_arc+238-gun_pos,DEVISTATOR+i,-32,o,pal,0);
+                            G_DrawWeaponTile((cycloidy[p.kickback_pic]>>1)+weapon_xoffset+268-(p.look_ang>>1),cycloidy[p.kickback_pic]+looking_arc+238-gun_pos,DEVISTATOR+i,-32,o,pal,0);
                             guniqhudid = cw<<1;
                             G_DrawWeaponTile(weapon_xoffset+30-(p.look_ang>>1),looking_arc+240-gun_pos,DEVISTATOR,gs,o|4,pal,0);
                             guniqhudid = 0;
@@ -2596,7 +2596,7 @@ function P_DisplayWeapon(/*int32_t */snum:number):void
                         else
                         {
                             guniqhudid = cw<<1;
-                            G_DrawWeaponTile(-(cycloidy[*kb]>>1)+weapon_xoffset+30-(p.look_ang>>1),cycloidy[*kb]+looking_arc+240-gun_pos,DEVISTATOR+i,-32,o|4,pal,0);
+                            G_DrawWeaponTile(-(cycloidy[p.kickback_pic]>>1)+weapon_xoffset+30-(p.look_ang>>1),cycloidy[p.kickback_pic]+looking_arc+240-gun_pos,DEVISTATOR+i,-32,o|4,pal,0);
                             guniqhudid = cw;
                             G_DrawWeaponTile(weapon_xoffset+268-(p.look_ang>>1),looking_arc+238-gun_pos,DEVISTATOR,gs,o,pal,0);
                             guniqhudid = 0;
@@ -2616,11 +2616,11 @@ function P_DisplayWeapon(/*int32_t */snum:number):void
             case FREEZE_WEAPON:
                 if (VM_OnEvent(EVENT_DRAWWEAPON,g_player[screenpeek].ps.i,screenpeek, -1, 0) == 0)
                 {
-                    if ((*kb) < (PWEAPON(snum, p.curr_weapon, TotalTime)+1) && (*kb) > 0)
+                    if ((p.kickback_pic) < (PWEAPON(snum, p.curr_weapon, TotalTime)+1) && (p.kickback_pic) > 0)
                     {
-                        static uint8_t cat_frames[] = { 0,0,1,1,2,2 };
+                        var /*static uint8_t */cat_frames = [ 0,0,1,1,2,2 ];
 
-                        if (*kb%6 >= ARRAY_SIZE(cat_frames))
+                        if (p.kickback_pic%6 >= ARRAY_SIZE(cat_frames))
                             break;
 
                         if (doanim)
@@ -2632,7 +2632,7 @@ function P_DisplayWeapon(/*int32_t */snum:number):void
                         guniqhudid = 0;
                         G_DrawWeaponTile(weapon_xoffset+210-(p.look_ang>>1),looking_arc+261-gun_pos,FREEZE+2,-32,o|512,pal,0);
                         guniqhudid = cw;
-                        G_DrawWeaponTile(weapon_xoffset+210-(p.look_ang>>1),looking_arc+235-gun_pos,FREEZE+3+cat_frames[*kb%6],-32,o|512,pal,0);
+                        G_DrawWeaponTile(weapon_xoffset+210-(p.look_ang>>1),looking_arc+235-gun_pos,FREEZE+3+cat_frames[p.kickback_pic%6],-32,o|512,pal,0);
                         guniqhudid = 0;
                     }
                     else
@@ -2650,7 +2650,7 @@ function P_DisplayWeapon(/*int32_t */snum:number):void
                     weapon_xoffset += 28;
                     looking_arc += 18;
 
-                    if ((*kb) < PWEAPON(snum, p.curr_weapon, TotalTime) && (*kb) > 0)
+                    if ((p.kickback_pic) < PWEAPON(snum, p.curr_weapon, TotalTime) && (p.kickback_pic) > 0)
                     {
                         if (doanim)
                         {
@@ -2660,7 +2660,7 @@ function P_DisplayWeapon(/*int32_t */snum:number):void
 
                         guniqhudid = cw<<1;
                         G_DrawWeaponTile(weapon_xoffset+184-(p.look_ang>>1),
-                                         looking_arc+240-gun_pos,SHRINKER+3+((*kb)&3),-32,
+                                         looking_arc+240-gun_pos,SHRINKER+3+((p.kickback_pic)&3),-32,
                                          o,2,1);
 
                         guniqhudid = cw;
@@ -2690,7 +2690,7 @@ function P_DisplayWeapon(/*int32_t */snum:number):void
                     weapon_xoffset += 28;
                     looking_arc += 18;
 
-                    if (((*kb) > 0) && ((*kb) < PWEAPON(snum, p.curr_weapon, TotalTime)))
+                    if (((p.kickback_pic) > 0) && ((p.kickback_pic) < PWEAPON(snum, p.curr_weapon, TotalTime)))
                     {
                         if (doanim)
                         {
@@ -2699,7 +2699,7 @@ function P_DisplayWeapon(/*int32_t */snum:number):void
                         }
                         guniqhudid = cw<<1;
                         G_DrawWeaponTile(weapon_xoffset+184-(p.look_ang>>1),
-                            looking_arc+240-gun_pos,SHRINKER+3+((*kb)&3),-32,
+                            looking_arc+240-gun_pos,SHRINKER+3+((p.kickback_pic)&3),-32,
                             o,0,1);
                         guniqhudid = cw;
                         G_DrawWeaponTile(weapon_xoffset+188-(p.look_ang>>1),
@@ -3020,6 +3020,10 @@ function P_GetInput(/*int32_t */snum: number): void
             loc.bits |=   1<<SK_JUMP;
         if(tempKeyDown[90]) //m z
             loc.bits |=   1<<SK_CROUCH;
+        if(tempKeyDown[17]) //ctrl
+            loc.bits |=   1<<SK_FIRE;
+        if(tempKeyDown[32]) //space
+            loc.bits |=   1<<SK_OPEN;
         if(tempKeyDown[88])//strafe left x
             svel += 50;
         if(tempKeyDown[67])//strafe right c
