@@ -836,390 +836,390 @@ function G_ScreenTextSize( /*int32_t*/  font:number,
 //    coords.y += scale(magnitude, unitDirection.y, 16384);
 //}
 
-//// screentext
-//vec2_t G_ScreenText(const int32_t font,
-//                    int32_t x, int32_t y, const int32_t z, const int32_t blockangle, const int32_t charangle,
-//                    const char *str, const int32_t shade, int32_t pal, int32_t o, const int32_t alpha,
-//                    int32_t xspace, int32_t yline, int32_t xbetween, int32_t ybetween, const int32_t f,
-//                    const int32_t x1, const int32_t y1, const int32_t x2, const int32_t y2)
-//{
-//    vec2_t size = { 0, 0, }; // eventually the return value
-//    vec2_t origin = { 0, 0, }; // where to start, depending on the alignment
-//    vec2_t pos = { 0, 0, }; // holds the coordinate position as we draw each character tile of the string
-//    vec2_t extent = { 0, 0, }; // holds the x-width of each character and the greatest y-height of each line
-//    const vec2_t Xdirection = { sintable[(blockangle+512)&2047], sintable[blockangle&2047], };
-//    const vec2_t Ydirection = { sintable[(blockangle+1024)&2047], sintable[(blockangle+512)&2047], };
-
-//    int32_t tile;
-//    char t;
-
-//    // set the start and end points depending on direction
-//    int32_t iter = (f & TEXT_BACKWARDS) ? -1 : 1; // iteration direction
-
-//    const char *end;
-//    const char *text;
-
-//    if (str == NULL)
-//        return size;
-
-//    end = (f & TEXT_BACKWARDS) ? str-1 : Bstrchr(str,'\0');
-//    text = (f & TEXT_BACKWARDS) ? Bstrchr(str,'\0')-1 : str;
-
-//    // for best results, we promote 320x200 coordinates to full precision before any math
-//    if (!(o & ROTATESPRITE_FULL16))
-//    {
-//        x <<= 16;
-//        y <<= 16;
-//        xspace <<= 16;
-//        yline <<= 16;
-//        xbetween <<= 16;
-//        ybetween <<= 16;
-//    }
-//    // coordinate values should be shifted left by 16
-
-//    // eliminate conflicts, necessary here to get the correct size value
-//    // especially given justification's special handling in G_ScreenTextSize()
-//    if ((f & TEXT_XRIGHT) || (f & TEXT_XCENTER) || (f & TEXT_XJUSTIFY) || (f & TEXT_YJUSTIFY) || blockangle % 512 != 0)
-//        o &= ~TEXT_LINEWRAP;
-
-//    // size is the return value, and we need it for alignment
-//    size = G_ScreenTextSize(font, x, y, z, blockangle, str, o | ROTATESPRITE_FULL16, xspace, yline, (f & TEXT_XJUSTIFY) ? 0 : xbetween, (f & TEXT_YJUSTIFY) ? 0 : ybetween, f & ~(TEXT_XJUSTIFY|TEXT_YJUSTIFY), x1, y1, x2, y2);
-
-//    // handle zooming where applicable
-//    xspace = scale(xspace, z, 65536);
-//    yline = scale(yline, z, 65536);
-//    xbetween = scale(xbetween, z, 65536);
-//    ybetween = scale(ybetween, z, 65536);
-//    // size/width/height/spacing/offset values should be multiplied or scaled by $z, zoom (since 100% is 65536, the same as 1<<16)
-
-//    // alignment
-//    // near-CODEDUP "case '\n':"
-//    {
-//        int32_t lines = G_GetStringNumLines(text, end, iter);
-
-//        if ((f & TEXT_XJUSTIFY) || (f & TEXT_XRIGHT) || (f & TEXT_XCENTER))
-//        {
-//            const int32_t length = G_GetStringLineLength(text, end, iter);
-
-//            int32_t linewidth = size.x;
-
-//            if (lines != 1)
-//            {
-//                char *line = G_GetSubString(text, end, iter, length);
-
-//                linewidth = G_ScreenTextSize(font, x, y, z, blockangle, line, o | ROTATESPRITE_FULL16, xspace, yline, 0, 0, f & ~(TEXT_XJUSTIFY|TEXT_YJUSTIFY|TEXT_BACKWARDS), x1, y1, x2, y2).x;
-
-//                Bfree(line);
-//            }
-
-//            if (f & TEXT_XJUSTIFY)
-//            {
-//                size.x = xbetween;
-
-//                xbetween = (length == 1) ? 0 : ((xbetween - linewidth) / (length - 1));
-
-//                linewidth = size.x;
-//            }
-
-//            if (f & TEXT_XRIGHT)
-//                origin.x = -linewidth;
-//            else if (f & TEXT_XCENTER)
-//                origin.x = -(linewidth / 2);
-//        }
-
-//        if (f & TEXT_YJUSTIFY)
-//        {
-//            const int32_t tempswap = ybetween;
-//            ybetween = (lines == 1) ? 0 : ((ybetween - size.y) / (lines - 1));
-//            size.y = tempswap;
-//        }
-
-//        if (f & TEXT_YBOTTOM)
-//            origin.y = -size.y;
-//        else if (f & TEXT_YCENTER)
-//            origin.y = -(size.y / 2);
-//    }
-
-//    // loop through the string
-//    while ((t = *text) && text != end)
-//    {
-//        int32_t orientation = o;
-//        int32_t angle = blockangle + charangle;
-
-//        // handle escape sequences
-//        if (t == '^' && Bisdigit(*(text+iter)) && !(f & TEXT_LITERALESCAPE))
-//        {
-//            char smallbuf[4];
-
-//            text += iter;
-//            smallbuf[0] = *text;
-
-//            text += iter;
-//            if (Bisdigit(*text))
-//            {
-//                smallbuf[1] = *text;
-//                smallbuf[2] = '\0';
-//                text += iter;
-//            }
-//            else
-//                smallbuf[1] = '\0';
-
-//            if (!(f & TEXT_IGNOREESCAPE))
-//                pal = Batoi(smallbuf);
-
-//            continue;
-//        }
-
-//        // handle case bits
-//        if (f & TEXT_UPPERCASE)
-//        {
-//            if (f & TEXT_INVERTCASE) // optimization...?
-//            { // v^ important that these two ifs remain separate due to the else below
-//                if (Bisupper(t))
-//                    t = Btolower(t);
-//            }
-//            else if (Bislower(t))
-//                t = Btoupper(t);
-//        }
-//        else if (f & TEXT_INVERTCASE)
-//        {
-//            if (Bisupper(t))
-//                t = Btolower(t);
-//            else if (Bislower(t))
-//                t = Btoupper(t);
-//        }
-
-//        // translate the character to a tilenum
-//        tile = G_GetStringTile(font, &t, f);
-
-//        switch (t)
-//        {
-//            case '\t':
-//            case ' ':
-//            case '\n':
-//            case '\x7F':
-//                break;
-
-//            default:
-//            {
-//                vec2_t location = { x, y, };
-
-//                G_AddCoordsFromRotation(&location, &Xdirection, origin.x);
-//                G_AddCoordsFromRotation(&location, &Ydirection, origin.y);
-
-//                G_AddCoordsFromRotation(&location, &Xdirection, pos.x);
-//                G_AddCoordsFromRotation(&location, &Ydirection, pos.y);
-
-//                rotatesprite_(location.x, location.y, z, angle, tile, shade, pal, orientation, alpha, x1, y1, x2, y2);
-
-//                break;
-//            }
-//        }
-
-//        // reset this here because we haven't printed anything yet this loop
-//        extent.x = 0;
-
-//        // handle each character itself in the context of screen drawing
-//        switch (t)
-//        {
-//            case '\t':
-//            case ' ':
-//                // width
-//                extent.x = xspace;
-
-//                if (f & (TEXT_INTERNALSPACE|TEXT_TILESPACE))
-//                {
-//                    char space = '.'; // this is subject to change as an implementation detail
-//                    if (f & TEXT_TILESPACE)
-//                        space = '\x7F'; // tile after '~'
-//                    tile = G_GetStringTile(font, &space, f);
-
-//                    extent.x += (tilesizx[tile] * z);
-//                }
-
-//                // prepare the height // near-CODEDUP the other two near-CODEDUPs for this section
-//                {
-//                    int32_t tempyextent = yline;
-
-//                    if (f & (TEXT_INTERNALLINE|TEXT_TILELINE))
-//                    {
-//                        char line = 'A'; // this is subject to change as an implementation detail
-//                        if (f & TEXT_TILELINE)
-//                            line = '\x7F'; // tile after '~'
-//                        tile = G_GetStringTile(font, &line, f);
-
-//                        tempyextent += tilesizy[tile] * z;
-//                    }
-
-//                    SetIfGreater(&extent.y, tempyextent);
-//                }
-
-//                if (t == '\t')
-//                    extent.x <<= 2; // *= 4
-
-//                break;
-
-//            case '\n': // near-CODEDUP "if (wrap)"
-//                // reset the position
-//                pos.x = 0;
-
-//                // prepare the height
-//                {
-//                    int32_t tempyextent = yline;
-
-//                    if (f & (TEXT_INTERNALLINE|TEXT_TILELINE))
-//                    {
-//                        char line = 'A'; // this is subject to change as an implementation detail
-//                        if (f & TEXT_TILELINE)
-//                            line = '\x7F'; // tile after '~'
-//                        tile = G_GetStringTile(font, &line, f);
-
-//                        tempyextent += tilesizy[tile] * z;
-//                    }
-
-//                    SetIfGreater(&extent.y, tempyextent);
-//                }
-
-//                // move down the line height
-//                if (!(f & TEXT_YOFFSETZERO))
-//                    pos.y += extent.y;
-
-//                // reset the current height
-//                extent.y = 0;
-
-//                // line spacing
-//                pos.y += ybetween;
-
-//                // near-CODEDUP "alignments"
-//                if ((f & TEXT_XJUSTIFY) || (f & TEXT_XRIGHT) || (f & TEXT_XCENTER))
-//                {
-//                    const int32_t length = G_GetStringLineLength(text, end, iter);
-
-//                    char *line = G_GetSubString(text, end, iter, length);
-
-//                    int32_t linewidth = G_ScreenTextSize(font, x, y, z, blockangle, line, o | ROTATESPRITE_FULL16, xspace, yline, 0, 0, f & ~(TEXT_XJUSTIFY|TEXT_YJUSTIFY|TEXT_BACKWARDS), x1, y1, x2, y2).x;
-
-//                    Bfree(line);
-
-//                    if (f & TEXT_XJUSTIFY)
-//                    {
-//                        xbetween = (length == 1) ? 0 : ((xbetween - linewidth) / (length - 1));
-
-//                        linewidth = size.x;
-//                    }
-
-//                    if (f & TEXT_XRIGHT)
-//                        origin.x = -linewidth;
-//                    else if (f & TEXT_XCENTER)
-//                        origin.x = -(linewidth / 2);
-//                }
-
-//                break;
-
-//            default:
-//                // width
-//                extent.x = tilesizx[tile] * z;
-
-//                // obnoxious hardcoded functionality from gametext
-//                if (NUMHACKACTIVE(t, f))
-//                {
-//                    char numeral = '0'; // this is subject to change as an implementation detail
-//                    extent.x = (tilesizx[G_GetStringTile(font, &numeral, f)]-1) * z;
-//                }
-
-//                // height
-//                SetIfGreater(&extent.y, (tilesizy[tile] * z));
-
-//                break;
-//        }
-
-//        // incrementing the coordinate counters
-//        {
-//            int32_t xoffset = 0;
-
-//            // advance the x coordinate
-//            if (!(f & TEXT_XOFFSETZERO) || NUMHACKACTIVE(t, f))
-//                xoffset += extent.x;
-
-//            // account for text spacing
-//            if (!NUMHACKACTIVE(t, f) // this "if" line ONLY == replicating hardcoded stuff
-//                && t != '\n')
-//                xoffset += xbetween;
-
-//            // line wrapping
-//            if (f & TEXT_LINEWRAP)
-//            {
-//                int32_t wrap = 0;
-//                const int32_t ang = blockangle % 2048;
-
-//                // it's safe to make some assumptions and not go through G_AddCoordsFromRotation() since we limit to four directions
-//                switch (ang)
-//                {
-//                    case 0:
-//                        wrap = (x + (pos.x + xoffset) > ((orientation & 2) ? (320<<16) : ((x2 - USERQUOTE_RIGHTOFFSET)<<16)));
-//                        break;
-//                    case 512:
-//                        wrap = (y + (pos.x + xoffset) > ((orientation & 2) ? (200<<16) : ((y2 - USERQUOTE_RIGHTOFFSET)<<16)));
-//                        break;
-//                    case 1024:
-//                        wrap = (x - (pos.x + xoffset) < ((orientation & 2) ? 0 : ((x1 + USERQUOTE_RIGHTOFFSET)<<16)));
-//                        break;
-//                    case 1536:
-//                        wrap = (y - (pos.x + xoffset) < ((orientation & 2) ? 0 : ((y1 + USERQUOTE_RIGHTOFFSET)<<16)));
-//                        break;
-//                }
-//                if (wrap) // near-CODEDUP "case '\n':"
-//                {
-//                    // reset the position
-//                    pos.x = 0;
-
-//                    // prepare the height
-//                    {
-//                        int32_t tempyextent = yline;
-
-//                        if (f & (TEXT_INTERNALLINE|TEXT_TILELINE))
-//                        {
-//                            char line = 'A'; // this is subject to change as an implementation detail
-//                            if (f & TEXT_TILELINE)
-//                                line = '\x7F'; // tile after '~'
-//                            tile = G_GetStringTile(font, &line, f);
-
-//                            tempyextent += tilesizy[tile] * z;
-//                        }
-
-//                        SetIfGreater(&extent.y, tempyextent);
-//                    }
-
-//                    // move down the line height
-//                    if (!(f & TEXT_YOFFSETZERO))
-//                        pos.y += extent.y;
-
-//                    // reset the current height
-//                    extent.y = 0;
-
-//                    // line spacing
-//                    pos.y += ybetween;
-//                }
-//                else
-//                    pos.x += xoffset;
-//            }
-//            else
-//                pos.x += xoffset;
-//        }
-
-//        // iterate to the next character in the string
-//        text += iter;
-//    }
-
-//    // return values in the same manner we receive them
-//    if (!(o & ROTATESPRITE_FULL16))
-//    {
-//        size.x >>= 16;
-//        size.y >>= 16;
-//    }
-
-//    return size;
-//}
+// screentext
+ function G_ScreenText(/*int32_t*/ font:number,
+                    /*int32_t*/ x:number, /*int32_t */y:number, /*int32_t*/ z:number, /*int32_t*/ blockangle:number, /*int32_t*/ charangle:number,
+                    str:string, /*int32_t*/ shade:number, /*int32_t*/ pal:number, /*int32_t*/ o:number, /*int32_t*/ alpha:number,
+                    /*int32_t*/ xspace:number, /*int32_t*/ yline:number, /*int32_t*/ xbetween:number, /*int32_t*/ ybetween:number, /*int32_t*/ f:number,
+                    /*int32_t*/ x1:number, /*int32_t*/ y1:number, /*int32_t*/ x2:number, /*int32_t*/ y2:number): vec2_t
+{todoThrow("screen text: " + str);
+    //vec2_t size = { 0, 0, }; // eventually the return value
+    //vec2_t origin = { 0, 0, }; // where to start, depending on the alignment
+    //vec2_t pos = { 0, 0, }; // holds the coordinate position as we draw each character tile of the string
+    //vec2_t extent = { 0, 0, }; // holds the x-width of each character and the greatest y-height of each line
+    //const vec2_t Xdirection = { sintable[(blockangle+512)&2047], sintable[blockangle&2047], };
+    //const vec2_t Ydirection = { sintable[(blockangle+1024)&2047], sintable[(blockangle+512)&2047], };
+
+    //int32_t tile;
+    //char t;
+
+    //// set the start and end points depending on direction
+    //int32_t iter = (f & TEXT_BACKWARDS) ? -1 : 1; // iteration direction
+
+    //const char *end;
+    //const char *text;
+
+    //if (str == NULL)
+    //    return size;
+
+    //end = (f & TEXT_BACKWARDS) ? str-1 : Bstrchr(str,'\0');
+    //text = (f & TEXT_BACKWARDS) ? Bstrchr(str,'\0')-1 : str;
+
+    //// for best results, we promote 320x200 coordinates to full precision before any math
+    //if (!(o & ROTATESPRITE_FULL16))
+    //{
+    //    x <<= 16;
+    //    y <<= 16;
+    //    xspace <<= 16;
+    //    yline <<= 16;
+    //    xbetween <<= 16;
+    //    ybetween <<= 16;
+    //}
+    //// coordinate values should be shifted left by 16
+
+    //// eliminate conflicts, necessary here to get the correct size value
+    //// especially given justification's special handling in G_ScreenTextSize()
+    //if ((f & TEXT_XRIGHT) || (f & TEXT_XCENTER) || (f & TEXT_XJUSTIFY) || (f & TEXT_YJUSTIFY) || blockangle % 512 != 0)
+    //    o &= ~TEXT_LINEWRAP;
+
+    //// size is the return value, and we need it for alignment
+    //size = G_ScreenTextSize(font, x, y, z, blockangle, str, o | ROTATESPRITE_FULL16, xspace, yline, (f & TEXT_XJUSTIFY) ? 0 : xbetween, (f & TEXT_YJUSTIFY) ? 0 : ybetween, f & ~(TEXT_XJUSTIFY|TEXT_YJUSTIFY), x1, y1, x2, y2);
+
+    //// handle zooming where applicable
+    //xspace = scale(xspace, z, 65536);
+    //yline = scale(yline, z, 65536);
+    //xbetween = scale(xbetween, z, 65536);
+    //ybetween = scale(ybetween, z, 65536);
+    //// size/width/height/spacing/offset values should be multiplied or scaled by $z, zoom (since 100% is 65536, the same as 1<<16)
+
+    //// alignment
+    //// near-CODEDUP "case '\n':"
+    //{
+    //    int32_t lines = G_GetStringNumLines(text, end, iter);
+
+    //    if ((f & TEXT_XJUSTIFY) || (f & TEXT_XRIGHT) || (f & TEXT_XCENTER))
+    //    {
+    //        const int32_t length = G_GetStringLineLength(text, end, iter);
+
+    //        int32_t linewidth = size.x;
+
+    //        if (lines != 1)
+    //        {
+    //            char *line = G_GetSubString(text, end, iter, length);
+
+    //            linewidth = G_ScreenTextSize(font, x, y, z, blockangle, line, o | ROTATESPRITE_FULL16, xspace, yline, 0, 0, f & ~(TEXT_XJUSTIFY|TEXT_YJUSTIFY|TEXT_BACKWARDS), x1, y1, x2, y2).x;
+
+    //            Bfree(line);
+    //        }
+
+    //        if (f & TEXT_XJUSTIFY)
+    //        {
+    //            size.x = xbetween;
+
+    //            xbetween = (length == 1) ? 0 : ((xbetween - linewidth) / (length - 1));
+
+    //            linewidth = size.x;
+    //        }
+
+    //        if (f & TEXT_XRIGHT)
+    //            origin.x = -linewidth;
+    //        else if (f & TEXT_XCENTER)
+    //            origin.x = -(linewidth / 2);
+    //    }
+
+    //    if (f & TEXT_YJUSTIFY)
+    //    {
+    //        const int32_t tempswap = ybetween;
+    //        ybetween = (lines == 1) ? 0 : ((ybetween - size.y) / (lines - 1));
+    //        size.y = tempswap;
+    //    }
+
+    //    if (f & TEXT_YBOTTOM)
+    //        origin.y = -size.y;
+    //    else if (f & TEXT_YCENTER)
+    //        origin.y = -(size.y / 2);
+    //}
+
+    //// loop through the string
+    //while ((t = *text) && text != end)
+    //{
+    //    int32_t orientation = o;
+    //    int32_t angle = blockangle + charangle;
+
+    //    // handle escape sequences
+    //    if (t == '^' && Bisdigit(*(text+iter)) && !(f & TEXT_LITERALESCAPE))
+    //    {
+    //        char smallbuf[4];
+
+    //        text += iter;
+    //        smallbuf[0] = *text;
+
+    //        text += iter;
+    //        if (Bisdigit(*text))
+    //        {
+    //            smallbuf[1] = *text;
+    //            smallbuf[2] = '\0';
+    //            text += iter;
+    //        }
+    //        else
+    //            smallbuf[1] = '\0';
+
+    //        if (!(f & TEXT_IGNOREESCAPE))
+    //            pal = Batoi(smallbuf);
+
+    //        continue;
+    //    }
+
+    //    // handle case bits
+    //    if (f & TEXT_UPPERCASE)
+    //    {
+    //        if (f & TEXT_INVERTCASE) // optimization...?
+    //        { // v^ important that these two ifs remain separate due to the else below
+    //            if (Bisupper(t))
+    //                t = Btolower(t);
+    //        }
+    //        else if (Bislower(t))
+    //            t = Btoupper(t);
+    //    }
+    //    else if (f & TEXT_INVERTCASE)
+    //    {
+    //        if (Bisupper(t))
+    //            t = Btolower(t);
+    //        else if (Bislower(t))
+    //            t = Btoupper(t);
+    //    }
+
+    //    // translate the character to a tilenum
+    //    tile = G_GetStringTile(font, &t, f);
+
+    //    switch (t)
+    //    {
+    //        case '\t':
+    //        case ' ':
+    //        case '\n':
+    //        case '\x7F':
+    //            break;
+
+    //        default:
+    //        {
+    //            vec2_t location = { x, y, };
+
+    //            G_AddCoordsFromRotation(&location, &Xdirection, origin.x);
+    //            G_AddCoordsFromRotation(&location, &Ydirection, origin.y);
+
+    //            G_AddCoordsFromRotation(&location, &Xdirection, pos.x);
+    //            G_AddCoordsFromRotation(&location, &Ydirection, pos.y);
+
+    //            rotatesprite_(location.x, location.y, z, angle, tile, shade, pal, orientation, alpha, x1, y1, x2, y2);
+
+    //            break;
+    //        }
+    //    }
+
+    //    // reset this here because we haven't printed anything yet this loop
+    //    extent.x = 0;
+
+    //    // handle each character itself in the context of screen drawing
+    //    switch (t)
+    //    {
+    //        case '\t':
+    //        case ' ':
+    //            // width
+    //            extent.x = xspace;
+
+    //            if (f & (TEXT_INTERNALSPACE|TEXT_TILESPACE))
+    //            {
+    //                char space = '.'; // this is subject to change as an implementation detail
+    //                if (f & TEXT_TILESPACE)
+    //                    space = '\x7F'; // tile after '~'
+    //                tile = G_GetStringTile(font, &space, f);
+
+    //                extent.x += (tilesizx[tile] * z);
+    //            }
+
+    //            // prepare the height // near-CODEDUP the other two near-CODEDUPs for this section
+    //            {
+    //                int32_t tempyextent = yline;
+
+    //                if (f & (TEXT_INTERNALLINE|TEXT_TILELINE))
+    //                {
+    //                    char line = 'A'; // this is subject to change as an implementation detail
+    //                    if (f & TEXT_TILELINE)
+    //                        line = '\x7F'; // tile after '~'
+    //                    tile = G_GetStringTile(font, &line, f);
+
+    //                    tempyextent += tilesizy[tile] * z;
+    //                }
+
+    //                SetIfGreater(&extent.y, tempyextent);
+    //            }
+
+    //            if (t == '\t')
+    //                extent.x <<= 2; // *= 4
+
+    //            break;
+
+    //        case '\n': // near-CODEDUP "if (wrap)"
+    //            // reset the position
+    //            pos.x = 0;
+
+    //            // prepare the height
+    //            {
+    //                int32_t tempyextent = yline;
+
+    //                if (f & (TEXT_INTERNALLINE|TEXT_TILELINE))
+    //                {
+    //                    char line = 'A'; // this is subject to change as an implementation detail
+    //                    if (f & TEXT_TILELINE)
+    //                        line = '\x7F'; // tile after '~'
+    //                    tile = G_GetStringTile(font, &line, f);
+
+    //                    tempyextent += tilesizy[tile] * z;
+    //                }
+
+    //                SetIfGreater(&extent.y, tempyextent);
+    //            }
+
+    //            // move down the line height
+    //            if (!(f & TEXT_YOFFSETZERO))
+    //                pos.y += extent.y;
+
+    //            // reset the current height
+    //            extent.y = 0;
+
+    //            // line spacing
+    //            pos.y += ybetween;
+
+    //            // near-CODEDUP "alignments"
+    //            if ((f & TEXT_XJUSTIFY) || (f & TEXT_XRIGHT) || (f & TEXT_XCENTER))
+    //            {
+    //                const int32_t length = G_GetStringLineLength(text, end, iter);
+
+    //                char *line = G_GetSubString(text, end, iter, length);
+
+    //                int32_t linewidth = G_ScreenTextSize(font, x, y, z, blockangle, line, o | ROTATESPRITE_FULL16, xspace, yline, 0, 0, f & ~(TEXT_XJUSTIFY|TEXT_YJUSTIFY|TEXT_BACKWARDS), x1, y1, x2, y2).x;
+
+    //                Bfree(line);
+
+    //                if (f & TEXT_XJUSTIFY)
+    //                {
+    //                    xbetween = (length == 1) ? 0 : ((xbetween - linewidth) / (length - 1));
+
+    //                    linewidth = size.x;
+    //                }
+
+    //                if (f & TEXT_XRIGHT)
+    //                    origin.x = -linewidth;
+    //                else if (f & TEXT_XCENTER)
+    //                    origin.x = -(linewidth / 2);
+    //            }
+
+    //            break;
+
+    //        default:
+    //            // width
+    //            extent.x = tilesizx[tile] * z;
+
+    //            // obnoxious hardcoded functionality from gametext
+    //            if (NUMHACKACTIVE(t, f))
+    //            {
+    //                char numeral = '0'; // this is subject to change as an implementation detail
+    //                extent.x = (tilesizx[G_GetStringTile(font, &numeral, f)]-1) * z;
+    //            }
+
+    //            // height
+    //            SetIfGreater(&extent.y, (tilesizy[tile] * z));
+
+    //            break;
+    //    }
+
+    //    // incrementing the coordinate counters
+    //    {
+    //        int32_t xoffset = 0;
+
+    //        // advance the x coordinate
+    //        if (!(f & TEXT_XOFFSETZERO) || NUMHACKACTIVE(t, f))
+    //            xoffset += extent.x;
+
+    //        // account for text spacing
+    //        if (!NUMHACKACTIVE(t, f) // this "if" line ONLY == replicating hardcoded stuff
+    //            && t != '\n')
+    //            xoffset += xbetween;
+
+    //        // line wrapping
+    //        if (f & TEXT_LINEWRAP)
+    //        {
+    //            int32_t wrap = 0;
+    //            const int32_t ang = blockangle % 2048;
+
+    //            // it's safe to make some assumptions and not go through G_AddCoordsFromRotation() since we limit to four directions
+    //            switch (ang)
+    //            {
+    //                case 0:
+    //                    wrap = (x + (pos.x + xoffset) > ((orientation & 2) ? (320<<16) : ((x2 - USERQUOTE_RIGHTOFFSET)<<16)));
+    //                    break;
+    //                case 512:
+    //                    wrap = (y + (pos.x + xoffset) > ((orientation & 2) ? (200<<16) : ((y2 - USERQUOTE_RIGHTOFFSET)<<16)));
+    //                    break;
+    //                case 1024:
+    //                    wrap = (x - (pos.x + xoffset) < ((orientation & 2) ? 0 : ((x1 + USERQUOTE_RIGHTOFFSET)<<16)));
+    //                    break;
+    //                case 1536:
+    //                    wrap = (y - (pos.x + xoffset) < ((orientation & 2) ? 0 : ((y1 + USERQUOTE_RIGHTOFFSET)<<16)));
+    //                    break;
+    //            }
+    //            if (wrap) // near-CODEDUP "case '\n':"
+    //            {
+    //                // reset the position
+    //                pos.x = 0;
+
+    //                // prepare the height
+    //                {
+    //                    int32_t tempyextent = yline;
+
+    //                    if (f & (TEXT_INTERNALLINE|TEXT_TILELINE))
+    //                    {
+    //                        char line = 'A'; // this is subject to change as an implementation detail
+    //                        if (f & TEXT_TILELINE)
+    //                            line = '\x7F'; // tile after '~'
+    //                        tile = G_GetStringTile(font, &line, f);
+
+    //                        tempyextent += tilesizy[tile] * z;
+    //                    }
+
+    //                    SetIfGreater(&extent.y, tempyextent);
+    //                }
+
+    //                // move down the line height
+    //                if (!(f & TEXT_YOFFSETZERO))
+    //                    pos.y += extent.y;
+
+    //                // reset the current height
+    //                extent.y = 0;
+
+    //                // line spacing
+    //                pos.y += ybetween;
+    //            }
+    //            else
+    //                pos.x += xoffset;
+    //        }
+    //        else
+    //            pos.x += xoffset;
+    //    }
+
+    //    // iterate to the next character in the string
+    //    text += iter;
+    //}
+
+    //// return values in the same manner we receive them
+    //if (!(o & ROTATESPRITE_FULL16))
+    //{
+    //    size.x >>= 16;
+    //    size.y >>= 16;
+    //}
+
+    return size;
+}
 
 //vec2_t G_ScreenTextShadow(int32_t sx, int32_t sy,
 //                          const int32_t font,
@@ -1713,8 +1713,8 @@ function G_DrawInvNum(/*int32_t*/ x:number, /*int32_t */yofs:number, /*int32_t *
 //        rotatesprite_fs(sbarx(x+25),sby,sbscale,0,THREEBYFIVE+dabuf[0]-'0',ha,0,10);
 //}
 
-//static void G_DrawWeapAmounts(const DukePlayer_t *p,int32_t x,int32_t y,int32_t u)
-//{
+function G_DrawWeapAmounts(p:DukePlayer_t,/*int32_t */x:number,/*int32_t */y:number,/*int32_t */u:number):void
+{todoThrow();
 //    int32_t cw = p.curr_weapon;
 
 //    if (u&4)
@@ -1799,7 +1799,7 @@ function G_DrawInvNum(/*int32_t*/ x:number, /*int32_t */yofs:number, /*int32_t *
 //                      (((p.gotweapon & (1<<FREEZE_WEAPON)) == 0)*9)+12-18*
 //                      (cw == FREEZE_WEAPON));
 //    }
-//}
+}
 
 // yofs: in hud_scale-independent, (<<16)-scaled, 0-200-normalized y coords.
 function G_DrawDigiNum_(/*int32_t */x:number, /*int32_t */yofs:number, /*int32_t */y:number, /*int32_t */n:number, /*char */s:string , /*int32_t */cs:number):void
@@ -2504,54 +2504,55 @@ function G_DrawStatusBar(/*int32_t */snum:number):void
     }
 }
 
-//#define COLOR_RED 248
-//#define COLOR_WHITE 31
-//#define LOW_FPS 30
+var COLOR_RED =248;
+var COLOR_WHITE =31;
+var LOW_FPS =30;
 
-//static void G_PrintFPS(void)
-//{
-//    // adapted from ZDoom because I like it better than what we had
-//    // applicable ZDoom code available under GPL from csDoom
-//    static int32_t FrameCount = 0;
-//    static int32_t LastCount = 0;
-//    static int32_t LastSec = 0;
-//    static int32_t LastMS = 0;
-//    int32_t ms = getticks();
-//    int32_t howlong = ms - LastMS;
-//    if (howlong >= 0)
-//    {
-//        int32_t thisSec = ms/1000;
-//        int32_t x = (xdim <= 640);
+function G_PrintFPS(): void
+{
+    todoUnimportant("G_PrintFPS");
+    //// adapted from ZDoom because I like it better than what we had
+    //// applicable ZDoom code available under GPL from csDoom
+    //static int32_t FrameCount = 0;
+    //static int32_t LastCount = 0;
+    //static int32_t LastSec = 0;
+    //static int32_t LastMS = 0;
+    //int32_t ms = getticks();
+    //int32_t howlong = ms - LastMS;
+    //if (howlong >= 0)
+    //{
+    //    int32_t thisSec = ms/1000;
+    //    int32_t x = (xdim <= 640);
 
-//        if (ud.tickrate)
-//        {
-//            int32_t chars = Bsprintf(tempbuf, "%d ms (%3u fps)", howlong, LastCount);
+    //    if (ud.tickrate)
+    //    {
+    //        int32_t chars = Bsprintf(tempbuf, "%d ms (%3u fps)", howlong, LastCount);
 
-//            printext256(windowx2-(chars<<(3-x))+1,windowy1+2,0,-1,tempbuf,x);
-//            printext256(windowx2-(chars<<(3-x)),windowy1+1,
-//                        (LastCount < LOW_FPS) ? COLOR_RED : COLOR_WHITE,-1,tempbuf,x);
+    //        printext256(windowx2-(chars<<(3-x))+1,windowy1+2,0,-1,tempbuf,x);
+    //        printext256(windowx2-(chars<<(3-x)),windowy1+1,
+    //                    (LastCount < LOW_FPS) ? COLOR_RED : COLOR_WHITE,-1,tempbuf,x);
 
-//            // lag meter
-//            if (g_netClientPeer)
-//            {
-//                chars = Bsprintf(tempbuf, "%d +- %d ms", (g_netClientPeer.lastRoundTripTime + g_netClientPeer.roundTripTime)/2,
-//                                 (g_netClientPeer.lastRoundTripTimeVariance + g_netClientPeer.roundTripTimeVariance)/2);
+    //        // lag meter
+    //        if (g_netClientPeer)
+    //        {
+    //            chars = Bsprintf(tempbuf, "%d +- %d ms", (g_netClientPeer.lastRoundTripTime + g_netClientPeer.roundTripTime)/2,
+    //                             (g_netClientPeer.lastRoundTripTimeVariance + g_netClientPeer.roundTripTimeVariance)/2);
 
-//                printext256(windowx2-(chars<<(3-x))+1,windowy1+10+2,0,-1,tempbuf,x);
-//                printext256(windowx2-(chars<<(3-x)),windowy1+10+1,g_netClientPeer.lastRoundTripTime > 200 ? COLOR_RED : COLOR_WHITE,-1,tempbuf,x);
-//            }
-//        }
+    //            printext256(windowx2-(chars<<(3-x))+1,windowy1+10+2,0,-1,tempbuf,x);
+    //            printext256(windowx2-(chars<<(3-x)),windowy1+10+1,g_netClientPeer.lastRoundTripTime > 200 ? COLOR_RED : COLOR_WHITE,-1,tempbuf,x);
+    //        }
+    //    }
 
-//        if (thisSec - LastSec)
-//        {
-//            g_currentFrameRate = LastCount = FrameCount / (thisSec - LastSec);
-//            LastSec = thisSec;
-//            FrameCount = 0;
-//        }
-//        FrameCount++;
-//    }
-//    LastMS = ms;
-//}
+    //    if (thisSec - LastSec)
+    //    {
+    //        g_currentFrameRate = LastCount = FrameCount / (thisSec - LastSec);
+    //        LastSec = thisSec;
+    //        FrameCount = 0;
+    //    }
+    //    FrameCount++;
+    //}
+    //LastMS = ms;
+}
 
 //// yxaspect and viewingrange just before the 'main' drawrooms call
 var /*int32_t */dr_yxaspect: number, dr_viewingrange: number;
@@ -2565,8 +2566,8 @@ var g_spriteStat =  {
 
 //#endif
 
-//static void G_PrintCoords(int32_t snum)
-//{
+function G_PrintCoords(/*int32_t */snum:number):void
+{todoUnimportant("G_PrintCoords");
 //    const int32_t x = 250;
 //    int32_t y = 16;
 
@@ -2620,7 +2621,7 @@ var g_spriteStat =  {
 //    y += 7;
 //    Bsprintf(tempbuf,"VR=%.03f  YX=%.03f",(double)dr_viewingrange/65536.0,(double)dr_yxaspect/65536.0);
 //    printext256(x,y+72,31,-1,tempbuf,0);
-//}
+}
 
 
 //// orientation flags depending on time that a quote has still to be displayed
@@ -3305,7 +3306,7 @@ function G_DrawOverheadMap(/*int32_t*/ cposx:number, /*int32_t */cposy:number, /
 //    }
 }
 
-//#define CROSSHAIR_PAL (MAXPALOOKUPS-RESERVEDPALS-1)
+var CROSSHAIR_PAL = (MAXPALOOKUPS-RESERVEDPALS-1);
 
 var CrosshairColors = new palette_t(255, 255, 255, 0);
 //palette_t DefaultCrosshairColors = { 0, 0, 0, 0 };
@@ -3701,79 +3702,79 @@ function G_DisplayRest(/*int32_t */smoothratio: number): void
 
     G_PrintGameQuotes(screenpeek);
 
-//    if (ud.show_level_text && hud_showmapname && g_levelTextTime > 1)
-//    {
-//        int32_t bits = 10+16;
+    if (ud.show_level_text && hud_showmapname && g_levelTextTime > 1)
+    {
+        var /*int32_t */bits = 10+16;
 
-//        if (g_levelTextTime < 3)
-//            bits |= 1+32;
-//        else if (g_levelTextTime < 5)
-//            bits |= 1;
+        if (g_levelTextTime < 3)
+            bits |= 1+32;
+        else if (g_levelTextTime < 5)
+            bits |= 1;
 
-//        if (MapInfo[(ud.volume_number*MAXLEVELS) + ud.level_number].name != NULL)
-//        {
-//            if (currentboardfilename[0] != 0 && ud.volume_number == 0 && ud.level_number == 7)
-//                menutext_(160,75,-g_levelTextTime+22/*quotepulseshade*/,0,currentboardfilename,bits);
-//            else menutext_(160,75,-g_levelTextTime+22/*quotepulseshade*/,0,MapInfo[(ud.volume_number*MAXLEVELS) + ud.level_number].name,bits);
-//        }
-//    }
+        if (MapInfo[(ud.volume_number*MAXLEVELS) + ud.level_number].name != NULL)
+        {
+            if (currentboardfilename[0] != 0 && ud.volume_number == 0 && ud.level_number == 7)
+                menutext_(160,75,-g_levelTextTime+22/*quotepulseshade*/,0,currentboardfilename,bits);
+            else menutext_(160,75,-g_levelTextTime+22/*quotepulseshade*/,0,MapInfo[(ud.volume_number*MAXLEVELS) + ud.level_number].name,bits);
+        }
+    }
+    todoUnimportant("I_EscapeTrigger etc");
+    //if (I_EscapeTrigger() && ud.overhead_on == 0
+    //        && ud.show_help == 0
+    //        && g_player[myconnectindex].ps.newowner == -1)
+    //{
+    //    if ((g_player[myconnectindex].ps.gm&MODE_MENU) == MODE_MENU && g_currentMenu < 51)
+    //    {
+    //        I_EscapeTriggerClear();
+    //        S_PlaySound(EXITMENUSOUND);
+    //        g_player[myconnectindex].ps.gm &= ~MODE_MENU;
+    //        if ((!g_netServer && ud.multimode < 2) && ud.recstat != 2)
+    //        {
+    //            ready2send = 1;
+    //            totalclock = ototalclock;
+    //            CAMERACLOCK = totalclock;
+    //            CAMERADIST = 65536;
+    //        }
+    //        walock[TILE_SAVESHOT] = 199;
+    //        G_UpdateScreenArea();
+    //    }
+    //    else if ((g_player[myconnectindex].ps.gm&MODE_MENU) != MODE_MENU &&
+    //             g_player[myconnectindex].ps.newowner == -1 &&
+    //             (g_player[myconnectindex].ps.gm&MODE_TYPE) != MODE_TYPE)
+    //    {
+    //        I_EscapeTriggerClear();
+    //        FX_StopAllSounds();
+    //        S_ClearSoundLocks();
 
-//    if (I_EscapeTrigger() && ud.overhead_on == 0
-//            && ud.show_help == 0
-//            && g_player[myconnectindex].ps.newowner == -1)
-//    {
-//        if ((g_player[myconnectindex].ps.gm&MODE_MENU) == MODE_MENU && g_currentMenu < 51)
-//        {
-//            I_EscapeTriggerClear();
-//            S_PlaySound(EXITMENUSOUND);
-//            g_player[myconnectindex].ps.gm &= ~MODE_MENU;
-//            if ((!g_netServer && ud.multimode < 2) && ud.recstat != 2)
-//            {
-//                ready2send = 1;
-//                totalclock = ototalclock;
-//                CAMERACLOCK = totalclock;
-//                CAMERADIST = 65536;
-//            }
-//            walock[TILE_SAVESHOT] = 199;
-//            G_UpdateScreenArea();
-//        }
-//        else if ((g_player[myconnectindex].ps.gm&MODE_MENU) != MODE_MENU &&
-//                 g_player[myconnectindex].ps.newowner == -1 &&
-//                 (g_player[myconnectindex].ps.gm&MODE_TYPE) != MODE_TYPE)
-//        {
-//            I_EscapeTriggerClear();
-//            FX_StopAllSounds();
-//            S_ClearSoundLocks();
+    //        S_MenuSound();
 
-//            S_MenuSound();
+    //        g_player[myconnectindex].ps.gm |= MODE_MENU;
 
-//            g_player[myconnectindex].ps.gm |= MODE_MENU;
+    //        if ((!g_netServer && ud.multimode < 2) && ud.recstat != 2) ready2send = 0;
 
-//            if ((!g_netServer && ud.multimode < 2) && ud.recstat != 2) ready2send = 0;
+    //        if (g_player[myconnectindex].ps.gm&MODE_GAME) M_ChangeMenu(50);
+    //        else M_ChangeMenu(MENU_MAIN);
+    //        screenpeek = myconnectindex;
+    //    }
+    //}
 
-//            if (g_player[myconnectindex].ps.gm&MODE_GAME) M_ChangeMenu(50);
-//            else M_ChangeMenu(MENU_MAIN);
-//            screenpeek = myconnectindex;
-//        }
-//    }
+    if (G_HaveEvent(EVENT_DISPLAYREST))
+    {
+        var /*int32_t */vr=viewingrange, asp=yxaspect;
+        VM_OnEvent(EVENT_DISPLAYREST, g_player[screenpeek].ps.i, screenpeek, -1, 0);
+        setaspect(vr, asp);
+    }
 
-//    if (G_HaveEvent(EVENT_DISPLAYREST))
-//    {
-//        int32_t vr=viewingrange, asp=yxaspect;
-//        VM_OnEvent(EVENT_DISPLAYREST, g_player[screenpeek].ps.i, screenpeek, -1, 0);
-//        setaspect(vr, asp);
-//    }
+    if (g_player[myconnectindex].ps.newowner == -1 && ud.overhead_on == 0 && ud.crosshair && ud.camerasprite == -1)
+    {
+        var /*int32_t */a = VM_OnEvent(EVENT_DISPLAYCROSSHAIR, g_player[screenpeek].ps.i, screenpeek, -1, 0);
 
-//    if (g_player[myconnectindex].ps.newowner == -1 && ud.overhead_on == 0 && ud.crosshair && ud.camerasprite == -1)
-//    {
-//        int32_t a = VM_OnEvent(EVENT_DISPLAYCROSSHAIR, g_player[screenpeek].ps.i, screenpeek, -1, 0);
+        if (a == 0 || a > 1)
+        {
+            var/*int32_t */x:number, y:number;
 
-//        if (a == 0 || a > 1)
-//        {
-//            int32_t x, y;
-
-//            if (a == 0)
-//                a = CROSSHAIR;
+            if (a == 0)
+                a = CROSSHAIR;
 
 //#ifdef GEKKO
 //            readmouseabsxy(&x, &y);
@@ -3783,16 +3784,16 @@ function G_DisplayRest(/*int32_t */smoothratio: number): void
 //                y = (y*5)/12;
 //            }
 //            else
-//#endif
-//            {
-//                x = 160;
-//                y = 100;
-//            }
+////#endif
+            {
+                x = 160;
+                y = 100;
+            }
 
-//            rotatesprite_win((x-(g_player[myconnectindex].ps.look_ang>>1))<<16,y<<16,scale(65536,ud.crosshairscale,100),
-//                             0,a,0,CROSSHAIR_PAL,2+1);
-//        }
-//    }
+            rotatesprite_win((x-(g_player[myconnectindex].ps.look_ang>>1))<<16,y<<16,scale(65536,ud.crosshairscale,100),
+                             0,a,0,CROSSHAIR_PAL,2+1);
+        }
+    }
 //#if 0
 //    if (GametypeFlags[ud.coop] & GAMETYPE_TDM)
 //    {
@@ -3808,126 +3809,133 @@ function G_DisplayRest(/*int32_t */smoothratio: number): void
 //    }
 //#endif
 
-//    if (ud.pause_on==1 && (g_player[myconnectindex].ps.gm&MODE_MENU) == 0)
-//        menutext(160,100,0,0,"Game Paused");
+    if (ud.pause_on==1 && (g_player[myconnectindex].ps.gm&MODE_MENU) == 0)
+        menutext(160,100,0,0,"Game Paused");
 
-//    if (ud.coords)
-//        G_PrintCoords(screenpeek);
+    if (ud.coords)
+        G_PrintCoords(screenpeek);
 
 //#ifdef YAX_DEBUG
-//    M32_drawdebug();
+    //M32_drawdebug();
 //#endif
 
 //#ifdef USE_OPENGL
-//    {
-//        extern int32_t mdpause;
+    {
+        todoUnimportant("mdpause");
+        //extern int32_t mdpause;
 
-//        mdpause = 0;
-//        if (ud.pause_on || (ud.recstat==2 && (g_demo_paused && g_demo_goalCnt==0)) || (g_player[myconnectindex].ps.gm&MODE_MENU && numplayers < 2))
-//            mdpause = 1;
-//    }
+        //mdpause = 0;
+        //if (ud.pause_on || (ud.recstat==2 && (g_demo_paused && g_demo_goalCnt==0)) || (g_player[myconnectindex].ps.gm&MODE_MENU && numplayers < 2))
+        //    mdpause = 1;
+    }
 //#endif
 
-//    G_PrintFPS();
+    G_PrintFPS();
 
-//    // JBF 20040124: display level stats in screen corner
-//    if ((ud.overhead_on != 2 && ud.levelstats) && (g_player[myconnectindex].ps.gm&MODE_MENU) == 0)
-//    {
-//        const DukePlayer_t *myps = g_player[myconnectindex].ps;
+    // JBF 20040124: display level stats in screen corner
+    if ((ud.overhead_on != 2 && ud.levelstats) && (g_player[myconnectindex].ps.gm&MODE_MENU) == 0)
+    {
+        var myps = g_player[myconnectindex].ps;
 
-//        if (ud.screen_size == 4)
-//            i = sbarsc(ud.althud?tilesizy[BIGALPHANUM]+10:tilesizy[INVENTORYBOX]+2);
-//        else if (ud.screen_size > 2)
-//            i = sbarsc(tilesizy[BOTTOMSTATUSBAR]+1);
-//        else
-//            i = 2;
+        if (ud.screen_size == 4)
+            i = sbarsc(ud.althud?tilesizy[BIGALPHANUM]+10:tilesizy[INVENTORYBOX]+2);
+        else if (ud.screen_size > 2)
+            i = sbarsc(tilesizy[BOTTOMSTATUSBAR]+1);
+        else
+            i = 2;
 
-//        j = scale(2,ud.config.ScreenWidth,320);
+        j = scale(2,ud.config.ScreenWidth,320);
 
 
-//        Bsprintf(tempbuf,"T:^15%d:%02d.%02d",
-//                 (myps.player_par/(REALGAMETICSPERSEC*60)),
-//                 (myps.player_par/REALGAMETICSPERSEC)%60,
-//                 ((myps.player_par%REALGAMETICSPERSEC)*33)/10
-//                );
-//        G_PrintGameText(8+4+1,STARTALPHANUM, j,scale(200-i,ud.config.ScreenHeight,200)-textsc(21),
-//                        tempbuf,0,10,26,0, 0, xdim-1, ydim-1, 65536);
+        Bsprintf(tempbuf,"T:^15%d:%02d.%02d",
+                 (myps.player_par/(REALGAMETICSPERSEC*60)),
+                 (myps.player_par/REALGAMETICSPERSEC)%60,
+                 ((myps.player_par%REALGAMETICSPERSEC)*33)/10
+                );
+        G_PrintGameText(8+4+1,STARTALPHANUM, j,scale(200-i,ud.config.ScreenHeight,200)-textsc(21),
+                        tempbuf.toString(),0,10,26,0, 0, xdim-1, ydim-1, 65536);
 
-//        if (ud.player_skill > 3 || ((g_netServer || ud.multimode > 1) && !GTFLAGS(GAMETYPE_PLAYERSFRIENDLY)))
-//            Bsprintf(tempbuf,"K:^15%d",(ud.multimode>1 &&!GTFLAGS(GAMETYPE_PLAYERSFRIENDLY))?
-//                     myps.frag-myps.fraggedself:myps.actors_killed);
-//        else
-//        {
-//            if (myps.actors_killed >= myps.max_actors_killed)
-//                Bsprintf(tempbuf,"K:%d/%d",myps.actors_killed,
-//                         myps.max_actors_killed>myps.actors_killed?
-//                         myps.max_actors_killed:myps.actors_killed);
-//            else
-//                Bsprintf(tempbuf,"K:^15%d/%d",myps.actors_killed,
-//                         myps.max_actors_killed>myps.actors_killed?
-//                         myps.max_actors_killed:myps.actors_killed);
-//        }
+        if (ud.player_skill > 3 || ((g_netServer || ud.multimode > 1) && !GTFLAGS(GAMETYPE_PLAYERSFRIENDLY)))
+            Bsprintf(tempbuf,"K:^15%d",(ud.multimode>1 &&!GTFLAGS(GAMETYPE_PLAYERSFRIENDLY))?
+                     myps.frag-myps.fraggedself:myps.actors_killed);
+        else
+        {
+            if (myps.actors_killed >= myps.max_actors_killed)
+                Bsprintf(tempbuf,"K:%d/%d",myps.actors_killed,
+                         myps.max_actors_killed>myps.actors_killed?
+                         myps.max_actors_killed:myps.actors_killed);
+            else
+                Bsprintf(tempbuf,"K:^15%d/%d",myps.actors_killed,
+                         myps.max_actors_killed>myps.actors_killed?
+                         myps.max_actors_killed:myps.actors_killed);
+        }
 
-//        G_PrintGameText(8+4+1,STARTALPHANUM, j,scale(200-i,ud.config.ScreenHeight,200)-textsc(14),
-//                        tempbuf,0,10,26,0, 0, xdim-1, ydim-1, 65536);
+        G_PrintGameText(8+4+1,STARTALPHANUM, j,scale(200-i,ud.config.ScreenHeight,200)-textsc(14),
+                        tempbuf.toString(),0,10,26,0, 0, xdim-1, ydim-1, 65536);
 
-//        if (myps.secret_rooms == myps.max_secret_rooms)
-//            Bsprintf(tempbuf,"S:%d/%d", myps.secret_rooms, myps.max_secret_rooms);
-//        else Bsprintf(tempbuf,"S:^15%d/%d", myps.secret_rooms, myps.max_secret_rooms);
+        if (myps.secret_rooms == myps.max_secret_rooms)
+            Bsprintf(tempbuf,"S:%d/%d", myps.secret_rooms, myps.max_secret_rooms);
+        else Bsprintf(tempbuf,"S:^15%d/%d", myps.secret_rooms, myps.max_secret_rooms);
 
-//        G_PrintGameText(8+4+1,STARTALPHANUM, j,scale(200-i,ud.config.ScreenHeight,200)-textsc(7),
-//                        tempbuf,0,10,26,0, 0, xdim-1, ydim-1, 65536);
-//    }
+        G_PrintGameText(8+4+1,STARTALPHANUM, j,scale(200-i,ud.config.ScreenHeight,200)-textsc(7),
+                        tempbuf.toString(),0,10,26,0, 0, xdim-1, ydim-1, 65536);
+    }
 
-//    if (g_player[myconnectindex].gotvote == 0 && voting != -1 && voting != myconnectindex)
-//    {
-//        Bsprintf(tempbuf,"%s^00 has called a vote for map",g_player[voting].user_name);
-//        gametext(160,40,tempbuf,0,2+8+16);
-//        Bsprintf(tempbuf,"%s (E%dL%d)",MapInfo[vote_episode*MAXLEVELS + vote_map].name,vote_episode+1,vote_map+1);
-//        gametext(160,48,tempbuf,0,2+8+16);
-//        gametext(160,70,"Press F1 to Accept, F2 to Decline",0,2+8+16);
-//    }
+    if (g_player[myconnectindex].gotvote == 0 && voting != -1 && voting != myconnectindex)
+    {
+        Bsprintf(tempbuf,"%s^00 has called a vote for map",g_player[voting].user_name);
+        gametext(160,40,tempbuf.toString(),0,2+8+16);
+        Bsprintf(tempbuf,"%s (E%dL%d)",MapInfo[vote_episode*MAXLEVELS + vote_map].name,vote_episode+1,vote_map+1);
+        gametext(160,48,tempbuf.toString(),0,2+8+16);
+        gametext(160,70,"Press F1 to Accept, F2 to Decline",0,2+8+16);
+    }
 
-//    if (BUTTON(gamefunc_Show_DukeMatch_Scores))
-//        G_ShowScores();
+    todoUnimportant();
+    //if (BUTTON(gamefunc_Show_DukeMatch_Scores))
+    //    G_ShowScores();
 
-//    if (g_Debug)
-//        G_ShowCacheLocks();
+    if (g_Debug)
+        todoThrow("G_ShowCacheLocks();");
 
 //#ifdef LUNATIC
 //    El_DisplayErrors();
 //#endif
 
-//    if (VOLUMEONE)
-//    {
-//        if (ud.show_help == 0 && g_showShareware > 0 && (g_player[myconnectindex].ps.gm&MODE_MENU) == 0)
-//            rotatesprite_fs((320-50)<<16,9<<16,65536,0,BETAVERSION,0,0,2+8+16+128);
-//    }
+    if (window.VOLUMEONE)
+    {
+        if (ud.show_help == 0 && g_showShareware > 0 && (g_player[myconnectindex].ps.gm&MODE_MENU) == 0)
+            rotatesprite_fs((320-50)<<16,9<<16,65536,0,BETAVERSION,0,0,2+8+16+128);
+    }
 
-//    if (!Demo_IsProfiling())
-//    {
-//        if (g_player[myconnectindex].ps.gm&MODE_TYPE)
-//            Net_SendMessage();
-//        else
-//            M_DisplayMenus();
-//    }
+    todoUnimportant("Demo_IsProfiling");
+    //if (!Demo_IsProfiling())
+    //{
+    //    if (g_player[myconnectindex].ps.gm&MODE_TYPE)
+    //        Net_SendMessage();
+    //    else
+    //        M_DisplayMenus();
+    //}
 
-//    {
-//        static int32_t applied = 0;
+    {
+        /*static int32_t */applied = 0;
 
-//        if (tint.maxf)
-//        {
-//            G_FadePalaccum(&tint);
-//            applied = 1;
-//        }
-//        else if (applied)
-//        {
-//            // be sure to always un-apply a tint.
-//            setpalettefade(0,0,0, 0);
-//            applied = 0;
-//        }
-//    }
+        if (tint.maxf)
+        {
+            todoThrow();
+            //G_FadePalaccum(&tint);
+            //applied = 1;
+        }
+        else if (applied)
+        {
+            // be sure to always un-apply a tint.
+            setpalettefade(0,0,0, 0);
+            applied = 0;
+        }
+    }
 }
+
+var applied:number;
+
 
 //static void G_DoThirdPerson(const DukePlayer_t *pp, vec3_t *vect, int16_t *vsectnum, int32_t ang, int32_t horiz)
 //{

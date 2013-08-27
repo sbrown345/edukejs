@@ -3621,8 +3621,6 @@ void G_DisplayRest(int32_t smoothratio)
         G_PrintGameQuotes(1);
     }
 
-#ifdef DEBUG_TODO
-
     G_PrintGameQuotes(screenpeek);
 
     if (ud.show_level_text && hud_showmapname && g_levelTextTime > 1)
@@ -3851,7 +3849,6 @@ void G_DisplayRest(int32_t smoothratio)
             applied = 0;
         }
     }
-#endif
 }
 
 static void G_DoThirdPerson(const DukePlayer_t *pp, vec3_t *vect, int16_t *vsectnum, int32_t ang, int32_t horiz)

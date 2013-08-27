@@ -1562,7 +1562,7 @@ function drawpoly(dpx: Float64Array, dpy: Float64Array, /*int32_t*/ n:number, /*
         if ((!(method&3)) && (!fullbrightdrawingpass))
         {
             bglDisable(GL_BLEND);
-            todo("bglDisable(GL_ALPHA_TEST);");
+            todoUnimportant("bglDisable(GL_ALPHA_TEST);");
         }
         else
         {
@@ -1572,7 +1572,7 @@ function drawpoly(dpx: Float64Array, dpy: Float64Array, /*int32_t*/ n:number, /*
                 al=alphahackarray[globalpicnum];
             if (!waloff[globalpicnum]) al = 0.0;	// invalid textures ignore the alpha cutoff settings
             bglEnable(GL_BLEND);
-            bglEnable(GL_ALPHA_TEST);
+            todoUnimportant("bglEnable(GL_ALPHA_TEST);");
             bglAlphaFunc(GL_GREATER,al);
         }
 
