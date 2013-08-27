@@ -4119,7 +4119,7 @@ function G_DrawBackground(): void
 //    pus = pub = NUMPAGES;
 }
 
-//static int32_t ror_sprite = -1;
+var /*static int32_t */ror_sprite = -1;
 
 //extern float r_ambientlight;
 
@@ -4620,13 +4620,12 @@ function G_DrawRooms(/*int32_t*/ snum: number, /*int32_t */smoothratio: number):
         }
         else
         {
-            todoThrow();
-            //// looking through viewscreen
-            //Bmemcpy(&CAMERA(pos), &p.pos, sizeof(vec3_t));
-            //ud.cameraang = p.ang + p.look_ang;
-            //ud.camerahoriz = 100+sprite[p.newowner].shade;
-            //ud.camerasect = sprite[p.newowner].sectnum;
-            //smoothratio = 65536;
+            // looking through viewscreen
+            ud.camerapos.copyFrom(p.pos);
+            ud.cameraang = p.ang + p.look_ang;
+            ud.camerahoriz = 100+sprite[p.newowner].shade;
+            ud.camerasect = sprite[p.newowner].sectnum;
+            smoothratio = 65536;
         }
 
         cz = actor[p.i].ceilingz;
@@ -4728,7 +4727,7 @@ function G_DrawRooms(/*int32_t*/ snum: number, /*int32_t */smoothratio: number):
 
             todo("G_OROR_DupeSprites();");
 
-            todo("G_DoSpriteAnimations(ud.camerapos.x,ud.camerapos.y,ud.cameraang,smoothratio);");
+            G_DoSpriteAnimations(ud.camerapos.x,ud.camerapos.y,ud.cameraang,smoothratio);
 
             drawing_ror = 0;
             drawmasks();
@@ -7035,964 +7034,964 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
     return i;
 }
 
-//static int32_t G_MaybeTakeOnFloorPal(spritetype *datspr, int32_t sect)
-//{
-//    int32_t dapal = sector[sect].floorpal;
+function /*int32_t */G_MaybeTakeOnFloorPal(datspr:spritetype, /*int32_t */sect:number):number
+{
+    var/*int32_t */dapal = sector[sect].floorpal;
 
-//    if (dapal && !g_noFloorPal[dapal] && dapal < g_numRealPalettes
-//            && !A_CheckSpriteFlags(datspr.owner,SPRITE_NOPAL))
-//    {
-//        datspr.pal = dapal;
-//        return 1;
-//    }
+    if (dapal && !g_noFloorPal[dapal] && dapal < g_numRealPalettes
+            && !A_CheckSpriteFlags(datspr.owner,SPRITE_NOPAL))
+    {
+        datspr.pal = dapal;
+        return 1;
+    }
 
-//    return 0;
-//}
+    return 0;
+}
 
-//static int32_t getofs_viewtype5(const spritetype *s, spritetype *t, int32_t a, uint8_t invertp)
-//{
-//    int32_t angdif = invertp ? a-s.ang : s.ang-a;
-//    int32_t k = (((angdif+3072+128)&2047)>>8)&7;
+function /*int32_t */getofs_viewtype5(s:spritetype, t:spritetype, /*int32_t*/ a:number, /*uint8_t */invertp:number):number
+{
+    var/*int32_t */angdif = invertp ? a-s.ang : s.ang-a;
+    var/*int32_t */k = (((angdif+3072+128)&2047)>>8)&7;
 
-//    if (k>4)
-//    {
-//        k = 8-k;
-//        t.cstat |= 4;
-//    }
-//    else t.cstat &= ~4;
+    if (k>4)
+    {
+        k = 8-k;
+        t.cstat |= 4;
+    }
+    else t.cstat &= ~4;
 
-//    return k;
-//}
+    return k;
+}
 
-//static int32_t getofs_viewtype7(const spritetype *s, spritetype *t, int32_t a, uint8_t invertp)
-//{
-//    int32_t angdif = invertp ? a-s.ang : s.ang-a;
-//    int32_t k = ((angdif+3072+128)&2047)/170;
+function /*int32_t */getofs_viewtype7(s:spritetype, t:spritetype, /*int32_t*/ a:number, /*uint8_t */invertp:number):number
+{
+    var/*int32_t */angdif = invertp ? a-s.ang : s.ang-a;
+    var/*int32_t */k = ((angdif+3072+128)&2047)/170;
 
-//    if (k>6)
-//    {
-//        k = 12-k;
-//        t.cstat |= 4;
-//    }
-//    else t.cstat &= ~4;
+    if (k>6)
+    {
+        k = 12-k;
+        t.cstat |= 4;
+    }
+    else t.cstat &= ~4;
 
-//    return k;
-//}
+    return k;
+}
 
-//static int32_t G_CheckAdultTile(int32_t pic)
-//{
-//    switch (pic)
-//    {
-//    case FEM1__STATIC:
-//    case FEM2__STATIC:
-//    case FEM3__STATIC:
-//    case FEM4__STATIC:
-//    case FEM5__STATIC:
-//    case FEM6__STATIC:
-//    case FEM7__STATIC:
-//    case FEM8__STATIC:
-//    case FEM9__STATIC:
-//    case FEM10__STATIC:
-//    case MAN__STATIC:
-//    case MAN2__STATIC:
-//    case WOMAN__STATIC:
-//    case NAKED1__STATIC:
-//    case PODFEM1__STATIC:
-//    case FEMMAG1__STATIC:
-//    case FEMMAG2__STATIC:
-//    case FEMPIC1__STATIC:
-//    case FEMPIC2__STATIC:
-//    case FEMPIC3__STATIC:
-//    case FEMPIC4__STATIC:
-//    case FEMPIC5__STATIC:
-//    case FEMPIC6__STATIC:
-//    case FEMPIC7__STATIC:
-//    case BLOODYPOLE__STATIC:
-//    case FEM6PAD__STATIC:
-//    case STATUE__STATIC:
-//    case STATUEFLASH__STATIC:
-//    case OOZ__STATIC:
-//    case OOZ2__STATIC:
-//    case WALLBLOOD1__STATIC:
-//    case WALLBLOOD2__STATIC:
-//    case WALLBLOOD3__STATIC:
-//    case WALLBLOOD4__STATIC:
-//    case WALLBLOOD5__STATIC:
-//    case WALLBLOOD7__STATIC:
-//    case WALLBLOOD8__STATIC:
-//    case SUSHIPLATE1__STATIC:
-//    case SUSHIPLATE2__STATIC:
-//    case SUSHIPLATE3__STATIC:
-//    case SUSHIPLATE4__STATIC:
-//    case FETUS__STATIC:
-//    case FETUSJIB__STATIC:
-//    case FETUSBROKE__STATIC:
-//    case HOTMEAT__STATIC:
-//    case FOODOBJECT16__STATIC:
-//    case DOLPHIN1__STATIC:
-//    case DOLPHIN2__STATIC:
-//    case TOUGHGAL__STATIC:
-//    case TAMPON__STATIC:
-//    case XXXSTACY__STATIC:
-//    case 4946:
-//    case 4947:
-//    case 693:
-//    case 2254:
-//    case 4560:
-//    case 4561:
-//    case 4562:
-//    case 4498:
-//    case 4957:
-//        return 1;
-//    }
+function /*int32_t */G_CheckAdultTile(/*int32_t */pic:number):number
+{
+    switch (pic)
+    {
+    case FEM1__STATIC:
+    case FEM2__STATIC:
+    case FEM3__STATIC:
+    case FEM4__STATIC:
+    case FEM5__STATIC:
+    case FEM6__STATIC:
+    case FEM7__STATIC:
+    case FEM8__STATIC:
+    case FEM9__STATIC:
+    case FEM10__STATIC:
+    case MAN__STATIC:
+    case MAN2__STATIC:
+    case WOMAN__STATIC:
+    case NAKED1__STATIC:
+    case PODFEM1__STATIC:
+    case FEMMAG1__STATIC:
+    case FEMMAG2__STATIC:
+    case FEMPIC1__STATIC:
+    case FEMPIC2__STATIC:
+    case FEMPIC3__STATIC:
+    case FEMPIC4__STATIC:
+    case FEMPIC5__STATIC:
+    case FEMPIC6__STATIC:
+    case FEMPIC7__STATIC:
+    case BLOODYPOLE__STATIC:
+    case FEM6PAD__STATIC:
+    case STATUE__STATIC:
+    case STATUEFLASH__STATIC:
+    case OOZ__STATIC:
+    case OOZ2__STATIC:
+    case WALLBLOOD1__STATIC:
+    case WALLBLOOD2__STATIC:
+    case WALLBLOOD3__STATIC:
+    case WALLBLOOD4__STATIC:
+    case WALLBLOOD5__STATIC:
+    case WALLBLOOD7__STATIC:
+    case WALLBLOOD8__STATIC:
+    case SUSHIPLATE1__STATIC:
+    case SUSHIPLATE2__STATIC:
+    case SUSHIPLATE3__STATIC:
+    case SUSHIPLATE4__STATIC:
+    case FETUS__STATIC:
+    case FETUSJIB__STATIC:
+    case FETUSBROKE__STATIC:
+    case HOTMEAT__STATIC:
+    case FOODOBJECT16__STATIC:
+    case DOLPHIN1__STATIC:
+    case DOLPHIN2__STATIC:
+    case TOUGHGAL__STATIC:
+    case TAMPON__STATIC:
+    case XXXSTACY__STATIC:
+    case 4946:
+    case 4947:
+    case 693:
+    case 2254:
+    case 4560:
+    case 4561:
+    case 4562:
+    case 4498:
+    case 4957:
+        return 1;
+    }
 
-//    return 0;
-//}
+    return 0;
+}
 
-//static void G_DoEventAnimSprites(int32_t j)
-//{
-//    const int32_t ow = tsprite[j].owner;
+function G_DoEventAnimSprites(/*int32_t */j:number):void
+{
+    var/*const int32_t */ow = tsprite[j].owner;
 
-//    if (display_mirror)
-//        tsprite[j].statnum = TSPR_MIRROR;
+    if (display_mirror)
+        tsprite[j].statnum = TSPR_MIRROR;
 
-//    if ((unsigned)ow < MAXSPRITES && spriteext[ow].flags & SPREXT_TSPRACCESS)
-//    {
-//        spriteext[ow].tspr = &tsprite[j];
-//        VM_OnEvent(EVENT_ANIMATESPRITES, ow, myconnectindex, -1, 0);
-//        spriteext[ow].tspr = NULL;
-//    }
-//}
+    if (/*(unsigned)*/ow < MAXSPRITES && spriteext[ow].flags & SPREXT_TSPRACCESS)
+    {
+        spriteext[ow].tspr = tsprite[j];
+        VM_OnEvent(EVENT_ANIMATESPRITES, ow, myconnectindex, -1, 0);
+        spriteext[ow].tspr = NULL;
+    }
+}
 
-//void G_DoSpriteAnimations(int32_t ourx, int32_t oury, int32_t oura, int32_t smoothratio)
-//{
-//    int32_t j, k, p, sect;
-//    intptr_t l;
+function G_DoSpriteAnimations(/*int32_t */ourx:number, /*int32_t */oury:number, /*int32_t */oura:number, /*int32_t */smoothratio:number):void
+{
+    var /*int32_t */j:number, k:number, p:number, sect:number;
+    var /*intptr_t */l:number;
 
 //#ifdef DEBUGGINGAIDS
 //    g_spriteStat.numonscreen = spritesortcnt;
 //#endif
-//    if (spritesortcnt == 0)
-//        return;
+    if (spritesortcnt == 0)
+        return;
 
-//    ror_sprite = -1;
+    ror_sprite = -1;
 
-//    for (j=spritesortcnt-1; j>=0; j--)
-//    {
-//        spritetype *const t = &tsprite[j];
-//        const int32_t i = t.owner;
-//        const spritetype *const s = &sprite[i];
+    for (j=spritesortcnt-1; j>=0; j--)
+    {
+        var t = tsprite[j];
+        var /*const int32_t */i = t.owner;
+        var s = sprite[i];
 
-//        switch (DYNAMICTILEMAP(s.picnum))
-//        {
-//        case SECTOREFFECTOR__STATIC:
-//            if (s.lotag == 40 || s.lotag == 41)
-//            {
-//                t.cstat = 32768;
+        switch (DYNAMICTILEMAP(s.picnum))
+        {
+        case SECTOREFFECTOR__STATIC:
+            if (s.lotag == 40 || s.lotag == 41)
+            {
+                t.cstat = 32768;
 
-//                if (ror_sprite == -1) ror_sprite = i;
-//            }
+                if (ror_sprite == -1) ror_sprite = i;
+            }
 
-//            if (t.lotag == SE_27_DEMO_CAM && ud.recstat == 1)
-//            {
-//                t.picnum = 11+((totalclock>>3)&1);
-//                t.cstat |= 128;
-//            }
-//            else
-//                t.xrepeat = t.yrepeat = 0;
-//            break;
-//        }
-//    }
+            if (t.lotag == SE_27_DEMO_CAM && ud.recstat == 1)
+            {
+                t.picnum = 11+((totalclock>>3)&1);
+                t.cstat |= 128;
+            }
+            else
+                t.xrepeat = t.yrepeat = 0;
+            break;
+        }
+    }
 
-//    for (j=spritesortcnt-1; j>=0; j--)
-//    {
-//        spritetype *const t = &tsprite[j];
-//        const int32_t i = t.owner;
-//        const spritetype *const s = &sprite[i];
+    for (j=spritesortcnt-1; j>=0; j--)
+    {
+        var t = tsprite[j];
+        var/*const int32_t */i = t.owner;
+        var s = sprite[i];
 
-///*
-//        if (A_CheckSpriteFlags(i, SPRITE_NULL))
-//        {
-//            t.xrepeat = t.yrepeat = 0;
-//            continue;
-//        }
-//*/
+/*
+        if (A_CheckSpriteFlags(i, SPRITE_NULL))
+        {
+            t.xrepeat = t.yrepeat = 0;
+            continue;
+        }
+*/
 
-//        if (t.picnum < GREENSLIME || t.picnum > GREENSLIME+7)
-//            switch (DYNAMICTILEMAP(t.picnum))
-//            {
-//            case BLOODPOOL__STATIC:
-//            case PUKE__STATIC:
-//            case FOOTPRINTS__STATIC:
-//            case FOOTPRINTS2__STATIC:
-//            case FOOTPRINTS3__STATIC:
-//            case FOOTPRINTS4__STATIC:
-//                if (t.shade == 127) continue;
-//                break;
-//            case RESPAWNMARKERRED__STATIC:
-//            case RESPAWNMARKERYELLOW__STATIC:
-//            case RESPAWNMARKERGREEN__STATIC:
-//                if (ud.marker == 0)
-//                    t.xrepeat = t.yrepeat = 0;
-//                continue;
-//            case CHAIR3__STATIC:
+        if (t.picnum < GREENSLIME || t.picnum > GREENSLIME+7)
+            switch (DYNAMICTILEMAP(t.picnum))
+            {
+            case BLOODPOOL__STATIC:
+            case PUKE__STATIC:
+            case FOOTPRINTS__STATIC:
+            case FOOTPRINTS2__STATIC:
+            case FOOTPRINTS3__STATIC:
+            case FOOTPRINTS4__STATIC:
+                if (t.shade == 127) continue;
+                break;
+            case RESPAWNMARKERRED__STATIC:
+            case RESPAWNMARKERYELLOW__STATIC:
+            case RESPAWNMARKERGREEN__STATIC:
+                if (ud.marker == 0)
+                    t.xrepeat = t.yrepeat = 0;
+                continue;
+            case CHAIR3__STATIC:
 //#ifdef USE_OPENGL
-//                if (getrendermode() >= REND_POLYMOST && usemodels && md_tilehasmodel(t.picnum,t.pal) >= 0 && !(spriteext[i].flags&SPREXT_NOTMD))
-//                {
-//                    t.cstat &= ~4;
-//                    break;
-//                }
+                if (getrendermode() >= REND_POLYMOST && usemodels && md_tilehasmodel(t.picnum,t.pal) >= 0 && !(spriteext[i].flags&SPREXT_NOTMD))
+                {
+                    t.cstat &= ~4;
+                    break;
+                }
 //#endif
-//                k = getofs_viewtype5(t, t, oura, 0);
-//                t.picnum = s.picnum+k;
-//                break;
-//            case BLOODSPLAT1__STATIC:
-//            case BLOODSPLAT2__STATIC:
-//            case BLOODSPLAT3__STATIC:
-//            case BLOODSPLAT4__STATIC:
-//                if (ud.lockout) t.xrepeat = t.yrepeat = 0;
-//                else if (t.pal == 6)
-//                {
-//                    t.shade = -127;
-//                    continue;
-//                }
-//            case BULLETHOLE__STATIC:
-//            case CRACK1__STATIC:
-//            case CRACK2__STATIC:
-//            case CRACK3__STATIC:
-//            case CRACK4__STATIC:
-//                t.shade = 16;
-//                continue;
-//            case NEON1__STATIC:
-//            case NEON2__STATIC:
-//            case NEON3__STATIC:
-//            case NEON4__STATIC:
-//            case NEON5__STATIC:
-//            case NEON6__STATIC:
-//                continue;
-//                //case GREENSLIME:
-//                //case GREENSLIME+1:
-//                //case GREENSLIME+2:
-//                //case GREENSLIME+3:
-//                //case GREENSLIME+4:
-//                //case GREENSLIME+5:
-//                //case GREENSLIME+6:
-//                //case GREENSLIME+7:
-//                //    break;
-//            default:
-//                if (((t.cstat&16)) || (A_CheckEnemySprite(t) && t.extra > 0) || t.statnum == STAT_PLAYER)
-//                    continue;
-//            }
+                k = getofs_viewtype5(t, t, oura, 0);
+                t.picnum = s.picnum+k;
+                break;
+            case BLOODSPLAT1__STATIC:
+            case BLOODSPLAT2__STATIC:
+            case BLOODSPLAT3__STATIC:
+            case BLOODSPLAT4__STATIC:
+                if (ud.lockout) t.xrepeat = t.yrepeat = 0;
+                else if (t.pal == 6)
+                {
+                    t.shade = -127;
+                    continue;
+                }
+            case BULLETHOLE__STATIC:
+            case CRACK1__STATIC:
+            case CRACK2__STATIC:
+            case CRACK3__STATIC:
+            case CRACK4__STATIC:
+                t.shade = 16;
+                continue;
+            case NEON1__STATIC:
+            case NEON2__STATIC:
+            case NEON3__STATIC:
+            case NEON4__STATIC:
+            case NEON5__STATIC:
+            case NEON6__STATIC:
+                continue;
+                //case GREENSLIME:
+                //case GREENSLIME+1:
+                //case GREENSLIME+2:
+                //case GREENSLIME+3:
+                //case GREENSLIME+4:
+                //case GREENSLIME+5:
+                //case GREENSLIME+6:
+                //case GREENSLIME+7:
+                //    break;
+            default:
+                if (((t.cstat&16)) || (A_CheckEnemySprite(t) && t.extra > 0) || t.statnum == STAT_PLAYER)
+                    continue;
+            }
 
-//        if (A_CheckSpriteFlags(t.owner,SPRITE_NOSHADE) || (t.cstat&2048))
-//            l = sprite[t.owner].shade;
-//        else
-//        {
-//            if (sector[t.sectnum].ceilingstat&1)
-//                l = sector[t.sectnum].ceilingshade;
-//            else
-//                l = sector[t.sectnum].floorshade;
-//            if (l < -127) l = -127;
-////            if (l > 128) l =  127;
-//        }
-//        t.shade = l;
-//    }
+        if (A_CheckSpriteFlags(t.owner,SPRITE_NOSHADE) || (t.cstat&2048))
+            l = sprite[t.owner].shade;
+        else
+        {
+            if (sector[t.sectnum].ceilingstat&1)
+                l = sector[t.sectnum].ceilingshade;
+            else
+                l = sector[t.sectnum].floorshade;
+            if (l < -127) l = -127;
+//            if (l > 128) l =  127;
+        }
+        t.shade = l;
+    }
 
-//    for (j=spritesortcnt-1; j>=0; j--) //Between drawrooms() and drawmasks()
-//    {
-//        int32_t switchpic;
-//        int32_t curframe;
+    for (j=spritesortcnt-1; j>=0; j--) //Between drawrooms() and drawmasks()
+    {
+        var/*int32_t */switchpic:number;
+        var/*int32_t */curframe:number;
 //#if !defined LUNATIC
-//        int32_t scrofs_action;
+        var/*int32_t */scrofs_action:number;
 //#else
 //        int32_t startframe, viewtype;
 //#endif
-//        //is the perfect time to animate sprites
-//        spritetype *const t = &tsprite[j];
-//        const int32_t i = t.owner;
-//        // XXX: what's up with the (i < 0) check?
-//        // NOTE: not const spritetype because set at SET_SPRITE_NOT_TSPRITE (see below).
-//        spritetype *const s = (i < 0) ? &tsprite[j] : &sprite[i];
+        //is the perfect time to animate sprites
+        var t = tsprite[j];
+        var /*const int32_t */i = t.owner;
+        // XXX: what's up with the (i < 0) check?
+        // NOTE: not const spritetype because set at SET_SPRITE_NOT_TSPRITE (see below).
+        var s = (i < 0) ? tsprite[j] : sprite[i];
 
-//        if (ud.lockout && G_CheckAdultTile(DYNAMICTILEMAP(s.picnum)))
-//        {
-//            t.xrepeat = t.yrepeat = 0;
-//            continue;
-//        }
+        if (ud.lockout && G_CheckAdultTile(DYNAMICTILEMAP(s.picnum)))
+        {
+            t.xrepeat = t.yrepeat = 0;
+            continue;
+        }
 
-//        if (s.picnum == NATURALLIGHTNING)
-//        {
-//            t.shade = -127;
-//            t.cstat |= 8192;
-//        }
+        if (s.picnum == NATURALLIGHTNING)
+        {
+            t.shade = -127;
+            t.cstat |= 8192;
+        }
 
-//        if (t.statnum == TSPR_TEMP)
-//            continue;
+        if (t.statnum == TSPR_TEMP)
+            continue;
 
-//        if (s.statnum != STAT_ACTOR && s.picnum == APLAYER && g_player[s.yvel].ps.newowner == -1 && s.owner >= 0)
-//        {
-//            t.x -= mulscale16(65536-smoothratio,g_player[s.yvel].ps.pos.x-g_player[s.yvel].ps.opos.x);
-//            t.y -= mulscale16(65536-smoothratio,g_player[s.yvel].ps.pos.y-g_player[s.yvel].ps.opos.y);
-//            // dirty hack
-//            if (g_player[s.yvel].ps.dead_flag) t.z = g_player[s.yvel].ps.opos.z;
-//            t.z += mulscale16(smoothratio,g_player[s.yvel].ps.pos.z-g_player[s.yvel].ps.opos.z) -
-//                    (g_player[s.yvel].ps.dead_flag ? 0 : PHEIGHT) + PHEIGHT;
-//        }
-//        else if ((s.statnum == STAT_DEFAULT && s.picnum != CRANEPOLE) || s.statnum == STAT_PLAYER ||
-//                 s.statnum == STAT_STANDABLE || s.statnum == STAT_PROJECTILE || s.statnum == STAT_MISC || s.statnum == STAT_ACTOR)
-//        {
-//            t.x -= mulscale16(65536-smoothratio,s.x-actor[i].bpos.x);
-//            t.y -= mulscale16(65536-smoothratio,s.y-actor[i].bpos.y);
-//            t.z -= mulscale16(65536-smoothratio,s.z-actor[i].bpos.z);
-//        }
+        if (s.statnum != STAT_ACTOR && s.picnum == APLAYER && g_player[s.yvel].ps.newowner == -1 && s.owner >= 0)
+        {
+            t.x -= mulscale16(65536-smoothratio,g_player[s.yvel].ps.pos.x-g_player[s.yvel].ps.opos.x);
+            t.y -= mulscale16(65536-smoothratio,g_player[s.yvel].ps.pos.y-g_player[s.yvel].ps.opos.y);
+            // dirty hack
+            if (g_player[s.yvel].ps.dead_flag) t.z = g_player[s.yvel].ps.opos.z;
+            t.z += mulscale16(smoothratio,g_player[s.yvel].ps.pos.z-g_player[s.yvel].ps.opos.z) -
+                    (g_player[s.yvel].ps.dead_flag ? 0 : PHEIGHT) + PHEIGHT;
+        }
+        else if ((s.statnum == STAT_DEFAULT && s.picnum != CRANEPOLE) || s.statnum == STAT_PLAYER ||
+                 s.statnum == STAT_STANDABLE || s.statnum == STAT_PROJECTILE || s.statnum == STAT_MISC || s.statnum == STAT_ACTOR)
+        {
+            t.x -= mulscale16(65536-smoothratio,s.x-actor[i].bpos.x);
+            t.y -= mulscale16(65536-smoothratio,s.y-actor[i].bpos.y);
+            t.z -= mulscale16(65536-smoothratio,s.z-actor[i].bpos.z);
+        }
 
-//        sect = s.sectnum;
+        sect = s.sectnum;
 
-//        Bassert(i >= 0);
-//        curframe = AC_CURFRAME(actor[i].t_data);
+        Bassert(i >= 0);
+        curframe = AC_CURFRAME(actor[i].t_data);
 //#if !defined LUNATIC
-//        scrofs_action = AC_ACTION_ID(actor[i].t_data);
+        scrofs_action = AC_ACTION_ID(actor[i].t_data);
 //#else
 //        startframe = actor[i].ac.startframe;
 //        viewtype = actor[i].ac.viewtype;
 //#endif
-//        switchpic = s.picnum;
-//        // Some special cases because dynamictostatic system can't handle
-//        // addition to constants.
-//        if ((s.picnum >= SCRAP6) && (s.picnum<=SCRAP6+7))
-//            switchpic = SCRAP5;
-//        else if ((s.picnum==MONEY+1) || (s.picnum==MAIL+1) || (s.picnum==PAPER+1))
-//            switchpic--;
+        switchpic = s.picnum;
+        // Some special cases because dynamictostatic system can't handle
+        // addition to constants.
+        if ((s.picnum >= SCRAP6) && (s.picnum<=SCRAP6+7))
+            switchpic = SCRAP5;
+        else if ((s.picnum==MONEY+1) || (s.picnum==MAIL+1) || (s.picnum==PAPER+1))
+            switchpic--;
 
-//        switch (DYNAMICTILEMAP(switchpic))
-//        {
-//        case DUKELYINGDEAD__STATIC:
-//            t.z += (24<<8);
-//            break;
-//        case BLOODPOOL__STATIC:
-//        case FOOTPRINTS__STATIC:
-//        case FOOTPRINTS2__STATIC:
-//        case FOOTPRINTS3__STATIC:
-//        case FOOTPRINTS4__STATIC:
-//            if (t.pal == 6)
-//                t.shade = -127;
-//        case PUKE__STATIC:
-//        case MONEY__STATIC:
-//            //case MONEY+1__STATIC:
-//        case MAIL__STATIC:
-//            //case MAIL+1__STATIC:
-//        case PAPER__STATIC:
-//            //case PAPER+1__STATIC:
-//            if (ud.lockout && s.pal == 2)
-//            {
-//                t.xrepeat = t.yrepeat = 0;
-//                continue;
-//            }
-//            break;
-//        case TRIPBOMB__STATIC:
-//            continue;
-//        case FORCESPHERE__STATIC:
-//            if (t.statnum == STAT_MISC)
-//            {
-//                int16_t sqa,sqb;
+        switch (DYNAMICTILEMAP(switchpic))
+        {
+        case DUKELYINGDEAD__STATIC:
+            t.z += (24<<8);
+            break;
+        case BLOODPOOL__STATIC:
+        case FOOTPRINTS__STATIC:
+        case FOOTPRINTS2__STATIC:
+        case FOOTPRINTS3__STATIC:
+        case FOOTPRINTS4__STATIC:
+            if (t.pal == 6)
+                t.shade = -127;
+        case PUKE__STATIC:
+        case MONEY__STATIC:
+            //case MONEY+1__STATIC:
+        case MAIL__STATIC:
+            //case MAIL+1__STATIC:
+        case PAPER__STATIC:
+            //case PAPER+1__STATIC:
+            if (ud.lockout && s.pal == 2)
+            {
+                t.xrepeat = t.yrepeat = 0;
+                continue;
+            }
+            break;
+        case TRIPBOMB__STATIC:
+            continue;
+        case FORCESPHERE__STATIC:
+            if (t.statnum == STAT_MISC)
+            {
+                var/*int16_t */sqa:number,sqb:number;
 
-//                sqa =
-//                    getangle(
-//                        sprite[s.owner].x-g_player[screenpeek].ps.pos.x,
-//                        sprite[s.owner].y-g_player[screenpeek].ps.pos.y);
-//                sqb =
-//                    getangle(
-//                        sprite[s.owner].x-t.x,
-//                        sprite[s.owner].y-t.y);
+                sqa =
+                    getangle(
+                        sprite[s.owner].x-g_player[screenpeek].ps.pos.x,
+                        sprite[s.owner].y-g_player[screenpeek].ps.pos.y);
+                sqb =
+                    getangle(
+                        sprite[s.owner].x-t.x,
+                        sprite[s.owner].y-t.y);
 
-//                if (klabs(G_GetAngleDelta(sqa,sqb)) > 512)
-//                    if (ldist(&sprite[s.owner],t) < ldist(&sprite[g_player[screenpeek].ps.i],&sprite[s.owner]))
-//                        t.xrepeat = t.yrepeat = 0;
-//            }
-//            continue;
-//        case BURNING__STATIC:
-//        case BURNING2__STATIC:
-//            if (sprite[s.owner].statnum == STAT_PLAYER)
-//            {
-//                if (display_mirror == 0 && sprite[s.owner].yvel == screenpeek && g_player[sprite[s.owner].yvel].ps.over_shoulder_on == 0)
-//                    t.xrepeat = 0;
-//                else
-//                {
-//                    t.ang = getangle(ourx-t.x, oury-t.y);
-//                    t.x = sprite[s.owner].x + (sintable[(t.ang+512)&2047]>>10);
-//                    t.y = sprite[s.owner].y + (sintable[t.ang&2047]>>10);
-//                }
-//            }
-//            break;
+                if (klabs(G_GetAngleDelta(sqa,sqb)) > 512)
+                    if (ldist(sprite[s.owner],t) < ldist(sprite[g_player[screenpeek].ps.i],sprite[s.owner]))
+                        t.xrepeat = t.yrepeat = 0;
+            }
+            continue;
+        case BURNING__STATIC:
+        case BURNING2__STATIC:
+            if (sprite[s.owner].statnum == STAT_PLAYER)
+            {
+                if (display_mirror == 0 && sprite[s.owner].yvel == screenpeek && g_player[sprite[s.owner].yvel].ps.over_shoulder_on == 0)
+                    t.xrepeat = 0;
+                else
+                {
+                    t.ang = getangle(ourx-t.x, oury-t.y);
+                    t.x = sprite[s.owner].x + (sintable[(t.ang+512)&2047]>>10);
+                    t.y = sprite[s.owner].y + (sintable[t.ang&2047]>>10);
+                }
+            }
+            break;
 
-//        case ATOMICHEALTH__STATIC:
-//            t.z -= (4<<8);
-//            break;
-//        case CRYSTALAMMO__STATIC:
-//            t.shade = (sintable[(totalclock<<4)&2047]>>10);
-//            continue;
-//        case VIEWSCREEN__STATIC:
-//        case VIEWSCREEN2__STATIC:
-//            if (camsprite >= 0 && actor[sprite[i].owner].t_data[0] == 1)
-//            {
-//                t.picnum = STATIC;
-//                t.cstat |= (rand()&12);
-//                t.xrepeat += 8;
-//                t.yrepeat += 8;
-//            }
-//            else if (camsprite >= 0 && waloff[TILE_VIEWSCR] && walock[TILE_VIEWSCR] > 200)
-//            {
-//                t.picnum = TILE_VIEWSCR;
-//            }
-//            break;
+        case ATOMICHEALTH__STATIC:
+            t.z -= (4<<8);
+            break;
+        case CRYSTALAMMO__STATIC:
+            t.shade = (sintable[(totalclock<<4)&2047]>>10);
+            continue;
+        case VIEWSCREEN__STATIC:
+        case VIEWSCREEN2__STATIC:
+            if (camsprite >= 0 && actor[sprite[i].owner].t_data[0] == 1)
+            {
+                t.picnum = STATIC;
+                t.cstat |= (rand()&12);
+                t.xrepeat += 8;
+                t.yrepeat += 8;
+            }
+            else if (camsprite >= 0 && waloff[TILE_VIEWSCR] && walock[TILE_VIEWSCR] > 200)
+            {
+                t.picnum = TILE_VIEWSCR;
+            }
+            break;
 
-//        case SHRINKSPARK__STATIC:
-//            t.picnum = SHRINKSPARK+((totalclock>>4)&3);
-//            break;
-//        case GROWSPARK__STATIC:
-//            t.picnum = GROWSPARK+((totalclock>>4)&3);
-//            break;
-//        case RPG__STATIC:
+        case SHRINKSPARK__STATIC:
+            t.picnum = SHRINKSPARK+((totalclock>>4)&3);
+            break;
+        case GROWSPARK__STATIC:
+            t.picnum = GROWSPARK+((totalclock>>4)&3);
+            break;
+        case RPG__STATIC:
 //#ifdef USE_OPENGL
-//            if (getrendermode() >= REND_POLYMOST && usemodels && md_tilehasmodel(t.picnum,t.pal) >= 0 &&
-//                    !(spriteext[i].flags & SPREXT_NOTMD))
-//            {
-//                int32_t v = getangle(t.xvel, t.zvel>>4);
+            if (getrendermode() >= REND_POLYMOST && usemodels && md_tilehasmodel(t.picnum,t.pal) >= 0 &&
+                    !(spriteext[i].flags & SPREXT_NOTMD))
+            {
+                var/*int32_t */v = getangle(t.xvel, t.zvel>>4);
 
-//                spriteext[i].pitch = (v > 1023 ? v-2048 : v);
-//                t.cstat &= ~4;
-//                break;
-//            }
+                spriteext[i].pitch = (v > 1023 ? v-2048 : v);
+                t.cstat &= ~4;
+                break;
+            }
 //#endif
-//            k = getofs_viewtype7(s, t, getangle(s.x-ourx, s.y-oury), 0);
-//            t.picnum = RPG+k;
-//            break;
+            k = getofs_viewtype7(s, t, getangle(s.x-ourx, s.y-oury), 0);
+            t.picnum = RPG+k;
+            break;
 
-//        case RECON__STATIC:
+        case RECON__STATIC:
 //#ifdef USE_OPENGL
-//            if (getrendermode() >= REND_POLYMOST && usemodels && md_tilehasmodel(t.picnum,t.pal) >= 0 && !(spriteext[i].flags&SPREXT_NOTMD))
-//            {
-//                t.cstat &= ~4;
-//                break;
-//            }
+            if (getrendermode() >= REND_POLYMOST && usemodels && md_tilehasmodel(t.picnum,t.pal) >= 0 && !(spriteext[i].flags&SPREXT_NOTMD))
+            {
+                t.cstat &= ~4;
+                break;
+            }
 //#endif
-//            k = getofs_viewtype7(s, t, getangle(s.x-ourx, s.y-oury), 0);
+            k = getofs_viewtype7(s, t, getangle(s.x-ourx, s.y-oury), 0);
 
-//            // RECON_T4
-//            if (klabs(curframe) > 64)
-//                k += 7;  // tilted recon car
+            // RECON_T4
+            if (klabs(curframe) > 64)
+                k += 7;  // tilted recon car
 
-//            t.picnum = RECON+k;
+            t.picnum = RECON+k;
 
-//            break;
+            break;
 
-//        case APLAYER__STATIC:
-//            p = s.yvel;
+        case APLAYER__STATIC:
+            p = s.yvel;
 
-//            if (t.pal == 1) t.z -= (18<<8);
+            if (t.pal == 1) t.z -= (18<<8);
 
-//            if (g_player[p].ps.over_shoulder_on > 0 && g_player[p].ps.newowner < 0)
-//            {
-//                t.ang = g_player[p].ps.ang +
-//                    mulscale16((((g_player[p].ps.ang+1024 - g_player[p].ps.oang)&2047)-1024),
-//                               smoothratio);
+            if (g_player[p].ps.over_shoulder_on > 0 && g_player[p].ps.newowner < 0)
+            {
+                t.ang = g_player[p].ps.ang +
+                    mulscale16((((g_player[p].ps.ang+1024 - g_player[p].ps.oang)&2047)-1024),
+                               smoothratio);
 //#ifdef USE_OPENGL
-//                if (bpp > 8 && usemodels && md_tilehasmodel(t.picnum, t.pal) >= 0)
-//                {
-//                    static int32_t targetang = 0;
+                if (bpp > 8 && usemodels && md_tilehasmodel(t.picnum, t.pal) >= 0)
+                {
+                    var/*static int32_t */targetang = 0;
 
-//                    if (g_player[p].sync.extbits&(1<<1))
-//                    {
-//                        if (g_player[p].sync.extbits&(1<<2))targetang += 16;
-//                        else if (g_player[p].sync.extbits&(1<<3)) targetang -= 16;
-//                        else if (targetang > 0) targetang -= targetang>>2;
-//                        else if (targetang < 0) targetang += (-targetang)>>2;
-//                    }
-//                    else
-//                    {
-//                        if (g_player[p].sync.extbits&(1<<2))targetang -= 16;
-//                        else if (g_player[p].sync.extbits&(1<<3)) targetang += 16;
-//                        else if (targetang > 0) targetang -= targetang>>2;
-//                        else if (targetang < 0) targetang += (-targetang)>>2;
-//                    }
+                    if (g_player[p].sync.extbits&(1<<1))
+                    {
+                        if (g_player[p].sync.extbits&(1<<2))targetang += 16;
+                        else if (g_player[p].sync.extbits&(1<<3)) targetang -= 16;
+                        else if (targetang > 0) targetang -= targetang>>2;
+                        else if (targetang < 0) targetang += (-targetang)>>2;
+                    }
+                    else
+                    {
+                        if (g_player[p].sync.extbits&(1<<2))targetang -= 16;
+                        else if (g_player[p].sync.extbits&(1<<3)) targetang += 16;
+                        else if (targetang > 0) targetang -= targetang>>2;
+                        else if (targetang < 0) targetang += (-targetang)>>2;
+                    }
 
-//                    targetang = clamp(targetang, -128, 128);
-//                    t.ang += targetang;
-//                }
-//                else
+                    targetang = clamp(targetang, -128, 128);
+                    t.ang += targetang;
+                }
+                else
 //#endif
-//                    t.cstat |= 2;
-//            }
+                    t.cstat |= 2;
+            }
 
-//            if ((g_netServer || ud.multimode > 1) && (display_mirror || screenpeek != p || s.owner == -1))
-//            {
-//                if (ud.showweapons && sprite[g_player[p].ps.i].extra > 0 && g_player[p].ps.curr_weapon > 0
-//                        && spritesortcnt < MAXSPRITESONSCREEN)
-//                {
-//                    spritetype *const newt = &tsprite[spritesortcnt];
-//                    int32_t curweap = g_player[p].ps.curr_weapon;
+            if ((g_netServer || ud.multimode > 1) && (display_mirror || screenpeek != p || s.owner == -1))
+            {
+                if (ud.showweapons && sprite[g_player[p].ps.i].extra > 0 && g_player[p].ps.curr_weapon > 0
+                        && spritesortcnt < MAXSPRITESONSCREEN)
+                {
+                    var newt = tsprite[spritesortcnt];
+                    var/*int32_t */curweap = g_player[p].ps.curr_weapon;
 
-//                    Bmemcpy(newt, t, sizeof(spritetype));
+                    Bmemcpy(newt, t, sizeof(spritetype));
 
-//                    newt.statnum = TSPR_TEMP;
-//                    /*
-//                    newt.yrepeat = (t.yrepeat>>3);
-//                    if (t.yrepeat < 4) t.yrepeat = 4;
-//                    */
+                    newt.statnum = TSPR_TEMP;
+                    /*
+                    newt.yrepeat = (t.yrepeat>>3);
+                    if (t.yrepeat < 4) t.yrepeat = 4;
+                    */
 
-//                    newt.cstat = newt.pal = 0;
+                    newt.cstat = newt.pal = 0;
 
-//                    newt.picnum = (curweap==GROW_WEAPON ? GROWSPRITEICON : WeaponPickupSprites[curweap]);
+                    newt.picnum = (curweap==GROW_WEAPON ? GROWSPRITEICON : WeaponPickupSprites[curweap]);
 
-//                    if (s.owner >= 0)
-//                        newt.z = g_player[p].ps.pos.z-(12<<8);
-//                    else
-//                        newt.z = s.z-(51<<8);
+                    if (s.owner >= 0)
+                        newt.z = g_player[p].ps.pos.z-(12<<8);
+                    else
+                        newt.z = s.z-(51<<8);
 
-//                    if (newt.picnum == HEAVYHBOMB)
-//                        newt.xrepeat = newt.yrepeat = 10;
-//                    else
-//                        newt.xrepeat = newt.yrepeat = 16;
+                    if (newt.picnum == HEAVYHBOMB)
+                        newt.xrepeat = newt.yrepeat = 10;
+                    else
+                        newt.xrepeat = newt.yrepeat = 16;
 
-//                    spritesortcnt++;
-//                }
+                    spritesortcnt++;
+                }
 
-//                if (g_player[p].sync.extbits & (1<<7) && !ud.pause_on && spritesortcnt<MAXSPRITESONSCREEN)
-//                {
-//                    spritetype *const newt = &tsprite[spritesortcnt];
+                if (g_player[p].sync.extbits & (1<<7) && !ud.pause_on && spritesortcnt<MAXSPRITESONSCREEN)
+                {
+                    var newt = tsprite[spritesortcnt];
 
-//                    Bmemcpy(newt, t, sizeof(spritetype));
+                    Bmemcpy(newt, t, sizeof(spritetype));
 
-//                    newt.statnum = TSPR_TEMP;
+                    newt.statnum = TSPR_TEMP;
 
-//                    newt.yrepeat = (t.yrepeat>>3);
-//                    if (newt.yrepeat < 4) newt.yrepeat = 4;
+                    newt.yrepeat = (t.yrepeat>>3);
+                    if (newt.yrepeat < 4) newt.yrepeat = 4;
 
-//                    newt.cstat = 0;
-//                    newt.picnum = RESPAWNMARKERGREEN;
+                    newt.cstat = 0;
+                    newt.picnum = RESPAWNMARKERGREEN;
 
-//                    if (s.owner >= 0)
-//                        newt.z = g_player[p].ps.pos.z-(20<<8);
-//                    else
-//                        newt.z = s.z-(96<<8);
+                    if (s.owner >= 0)
+                        newt.z = g_player[p].ps.pos.z-(20<<8);
+                    else
+                        newt.z = s.z-(96<<8);
 
-//                    newt.xrepeat = newt.yrepeat = 32;
-//                    newt.pal = 20;
+                    newt.xrepeat = newt.yrepeat = 32;
+                    newt.pal = 20;
 
-//                    spritesortcnt++;
-//                }
-//            }
+                    spritesortcnt++;
+                }
+            }
 
-//            if (s.owner == -1)
-//            {
+            if (s.owner == -1)
+            {
 //#ifdef USE_OPENGL
-//                if (getrendermode() >= REND_POLYMOST && usemodels && md_tilehasmodel(s.picnum,t.pal) >= 0 && !(spriteext[i].flags&SPREXT_NOTMD))
-//                {
-//                    k = 0;
-//                    t.cstat &= ~4;
-//                }
-//                else
+                if (getrendermode() >= REND_POLYMOST && usemodels && md_tilehasmodel(s.picnum,t.pal) >= 0 && !(spriteext[i].flags&SPREXT_NOTMD))
+                {
+                    k = 0;
+                    t.cstat &= ~4;
+                }
+                else
 //#endif
-//                    k = getofs_viewtype5(s, t, oura, 0);
+                    k = getofs_viewtype5(s, t, oura, 0);
 
-//                if (sector[s.sectnum].lotag == ST_2_UNDERWATER) k += 1795-1405;
-//                else if ((actor[i].floorz-s.z) > (64<<8)) k += 60;
+                if (sector[s.sectnum].lotag == ST_2_UNDERWATER) k += 1795-1405;
+                else if ((actor[i].floorz-s.z) > (64<<8)) k += 60;
 
-//                t.picnum += k;
-//                t.pal = g_player[p].ps.palookup;
+                t.picnum += k;
+                t.pal = g_player[p].ps.palookup;
 
-//                goto PALONLY;
-//            }
+                todoThrow("goto PALONLY;");
+            }
 
-//            if (g_player[p].ps.on_crane == -1 && (sector[s.sectnum].lotag&0x7ff) != 1)  // ST_1_ABOVE_WATER ?
-//            {
-//                l = s.z-actor[g_player[p].ps.i].floorz+(3<<8);
-//                // SET_SPRITE_NOT_TSPRITE
-//                if (l > 1024 && s.yrepeat > 32 && s.extra > 0)
-//                    s.yoffset = (int8_t)(l/(s.yrepeat<<2));
-//                else s.yoffset=0;
-//            }
+            if (g_player[p].ps.on_crane == -1 && (sector[s.sectnum].lotag&0x7ff) != 1)  // ST_1_ABOVE_WATER ?
+            {
+                l = s.z-actor[g_player[p].ps.i].floorz+(3<<8);
+                // SET_SPRITE_NOT_TSPRITE
+                if (l > 1024 && s.yrepeat > 32 && s.extra > 0)
+                    s.yoffset = /*(int8_t)*/(l/(s.yrepeat<<2));
+                else s.yoffset=0;
+            }
 
-//            if (g_player[p].ps.newowner > -1)
-//            {
-//                // Display APLAYER sprites with action PSTAND when viewed through
-//                // a camera.  Not implemented for Lunatic.
+            if (g_player[p].ps.newowner > -1)
+            {
+                // Display APLAYER sprites with action PSTAND when viewed through
+                // a camera.  Not implemented for Lunatic.
 //#if !defined LUNATIC
-//                const intptr_t *aplayer_scr = g_tile[APLAYER].execPtr;
-//                // [0]=strength, [1]=actionofs, [2]=moveofs
+                var aplayer_scr = g_tile[APLAYER].execPtr;
+                // [0]=strength, [1]=actionofs, [2]=moveofs
 
-//                scrofs_action = aplayer_scr[1];
+                scrofs_action = aplayer_scr[1];
 //#endif
-//                curframe = 0;
-//            }
+                curframe = 0;
+            }
 
-//            if (ud.camerasprite == -1 && g_player[p].ps.newowner == -1)
-//                if (s.owner >= 0 && display_mirror == 0 && g_player[p].ps.over_shoulder_on == 0)
-//                    if ((!g_netServer && ud.multimode < 2) || ((g_netServer || ud.multimode > 1) && p == screenpeek))
-//                    {
-//                        if (getrendermode() == REND_POLYMER)
-//                            t.cstat |= 16384;
-//                        else
-//                        {
-//                            t.owner = -1;
-//                            t.xrepeat = t.yrepeat = 0;
-//                            continue;
-//                        }
+            if (ud.camerasprite == -1 && g_player[p].ps.newowner == -1)
+                if (s.owner >= 0 && display_mirror == 0 && g_player[p].ps.over_shoulder_on == 0)
+                    if ((!g_netServer && ud.multimode < 2) || ((g_netServer || ud.multimode > 1) && p == screenpeek))
+                    {
+                        if (getrendermode() == REND_POLYMER)
+                            t.cstat |= 16384;
+                        else
+                        {
+                            t.owner = -1;
+                            t.xrepeat = t.yrepeat = 0;
+                            continue;
+                        }
 
 //#ifdef USE_OPENGL
-//                        if (getrendermode() >= REND_POLYMOST && usemodels && md_tilehasmodel(s.picnum,t.pal) >= 0 && !(spriteext[i].flags&SPREXT_NOTMD))
-//                        {
-//                            k = 0;
-//                            t.cstat &= ~4;
-//                        }
-//                        else
+                        if (getrendermode() >= REND_POLYMOST && usemodels && md_tilehasmodel(s.picnum,t.pal) >= 0 && !(spriteext[i].flags&SPREXT_NOTMD))
+                        {
+                            k = 0;
+                            t.cstat &= ~4;
+                        }
+                        else
 //#endif
-//                            k = getofs_viewtype5(s, t, oura, 0);
+                            k = getofs_viewtype5(s, t, oura, 0);
 
-//                        if (sector[t.sectnum].lotag == ST_2_UNDERWATER) k += 1795-1405;
-//                        else if ((actor[i].floorz-s.z) > (64<<8)) k += 60;
+                        if (sector[t.sectnum].lotag == ST_2_UNDERWATER) k += 1795-1405;
+                        else if ((actor[i].floorz-s.z) > (64<<8)) k += 60;
 
-//                        t.picnum += k;
-//                        t.pal = g_player[p].ps.palookup;
-//                    }
+                        t.picnum += k;
+                        t.pal = g_player[p].ps.palookup;
+                    }
 //PALONLY:
-//            G_MaybeTakeOnFloorPal(t, sect);
+            G_MaybeTakeOnFloorPal(t, sect);
 
-//            if (s.owner == -1) continue;
+            if (s.owner == -1) continue;
 
-//            if (t.z > actor[i].floorz && t.xrepeat < 32)
-//                t.z = actor[i].floorz;
+            if (t.z > actor[i].floorz && t.xrepeat < 32)
+                t.z = actor[i].floorz;
 
-//            break;
+            break;
 
-//        case JIBS1__STATIC:
-//        case JIBS2__STATIC:
-//        case JIBS3__STATIC:
-//        case JIBS4__STATIC:
-//        case JIBS5__STATIC:
-//        case JIBS6__STATIC:
-//        case HEADJIB1__STATIC:
-//        case LEGJIB1__STATIC:
-//        case ARMJIB1__STATIC:
-//        case LIZMANHEAD1__STATIC:
-//        case LIZMANARM1__STATIC:
-//        case LIZMANLEG1__STATIC:
-//        case DUKELEG__STATIC:
-//        case DUKEGUN__STATIC:
-//        case DUKETORSO__STATIC:
-//            if (ud.lockout)
-//            {
-//                t.xrepeat = t.yrepeat = 0;
-//                continue;
-//            }
-//            if (t.pal == 6) t.shade = -120;
-//        case SCRAP1__STATIC:
-//        case SCRAP2__STATIC:
-//        case SCRAP3__STATIC:
-//        case SCRAP4__STATIC:
-//        case SCRAP5__STATIC:
-//            if (actor[i].picnum == BLIMP && t.picnum == SCRAP1 && s.yvel >= 0)
-//                t.picnum = s.yvel;
-//            else t.picnum += actor[i].t_data[0];
-//            t.shade -= 6;
+        case JIBS1__STATIC:
+        case JIBS2__STATIC:
+        case JIBS3__STATIC:
+        case JIBS4__STATIC:
+        case JIBS5__STATIC:
+        case JIBS6__STATIC:
+        case HEADJIB1__STATIC:
+        case LEGJIB1__STATIC:
+        case ARMJIB1__STATIC:
+        case LIZMANHEAD1__STATIC:
+        case LIZMANARM1__STATIC:
+        case LIZMANLEG1__STATIC:
+        case DUKELEG__STATIC:
+        case DUKEGUN__STATIC:
+        case DUKETORSO__STATIC:
+            if (ud.lockout)
+            {
+                t.xrepeat = t.yrepeat = 0;
+                continue;
+            }
+            if (t.pal == 6) t.shade = -120;
+        case SCRAP1__STATIC:
+        case SCRAP2__STATIC:
+        case SCRAP3__STATIC:
+        case SCRAP4__STATIC:
+        case SCRAP5__STATIC:
+            if (actor[i].picnum == BLIMP && t.picnum == SCRAP1 && s.yvel >= 0)
+                t.picnum = s.yvel;
+            else t.picnum += actor[i].t_data[0];
+            t.shade -= 6;
 
-//            G_MaybeTakeOnFloorPal(t, sect);
-//            break;
+            G_MaybeTakeOnFloorPal(t, sect);
+            break;
 
-//        case WATERBUBBLE__STATIC:
-//            if (sector[t.sectnum].floorpicnum == FLOORSLIME)
-//            {
-//                t.pal = 7;
-//                break;
-//            }
-//        default:
-//            G_MaybeTakeOnFloorPal(t, sect);
-//            break;
-//        }
+        case WATERBUBBLE__STATIC:
+            if (sector[t.sectnum].floorpicnum == FLOORSLIME)
+            {
+                t.pal = 7;
+                break;
+            }
+        default:
+            G_MaybeTakeOnFloorPal(t, sect);
+            break;
+        }
 
-//        if (G_HaveActor(s.picnum))
-//        {
+        if (G_HaveActor(s.picnum))
+        {
 //#if !defined LUNATIC
-//            if ((unsigned)scrofs_action + 2 >= (unsigned)g_scriptSize)
-//                goto skip;
+            if (/*(unsigned)*/scrofs_action + 2 >= /*(unsigned)*/g_scriptSize)
+                todoThrow("goto skip;");
 
-//            l = script[scrofs_action + 2];
+            l = script[scrofs_action + 2];
 //#else
 //            l = viewtype;
 //#endif
 
 //#ifdef USE_OPENGL
-//            if (getrendermode() >= REND_POLYMOST && usemodels && md_tilehasmodel(s.picnum,t.pal) >= 0 && !(spriteext[i].flags&SPREXT_NOTMD))
-//            {
-//                k = 0;
-//                t.cstat &= ~4;
-//            }
-//            else
+            if (getrendermode() >= REND_POLYMOST && usemodels && md_tilehasmodel(s.picnum,t.pal) >= 0 && !(spriteext[i].flags&SPREXT_NOTMD))
+            {
+                k = 0;
+                t.cstat &= ~4;
+            }
+            else
 //#endif
-//                switch (l)
-//                {
-//                case 2:
-//                    k = (((s.ang+3072+128-oura)&2047)>>8)&1;
-//                    break;
+                switch (l)
+                {
+                case 2:
+                    k = (((s.ang+3072+128-oura)&2047)>>8)&1;
+                    break;
 
-//                case 3:
-//                case 4:
-//                    k = (((s.ang+3072+128-oura)&2047)>>7)&7;
-//                    if (k > 3)
-//                    {
-//                        t.cstat |= 4;
-//                        k = 7-k;
-//                    }
-//                    else t.cstat &= ~4;
-//                    break;
+                case 3:
+                case 4:
+                    k = (((s.ang+3072+128-oura)&2047)>>7)&7;
+                    if (k > 3)
+                    {
+                        t.cstat |= 4;
+                        k = 7-k;
+                    }
+                    else t.cstat &= ~4;
+                    break;
 
-//                case 5:
-//                case -5:
-//                    k = getofs_viewtype5(s, t, getangle(s.x-ourx, s.y-oury), l<0);
-//                    break;
-//                case 7:
-//                case -7:
-//                    k = getofs_viewtype7(s, t, getangle(s.x-ourx, s.y-oury), l<0);
-//                    break;
-//                case 8:
-//                    k = (((s.ang+3072+128-oura)&2047)>>8)&7;
-//                    t.cstat &= ~4;
-//                    break;
-//                default:
-//                    k = 0;
-//                    break;
-//                }
+                case 5:
+                case -5:
+                    k = getofs_viewtype5(s, t, getangle(s.x-ourx, s.y-oury), l<0);
+                    break;
+                case 7:
+                case -7:
+                    k = getofs_viewtype7(s, t, getangle(s.x-ourx, s.y-oury), l<0);
+                    break;
+                case 8:
+                    k = (((s.ang+3072+128-oura)&2047)>>8)&7;
+                    t.cstat &= ~4;
+                    break;
+                default:
+                    k = 0;
+                    break;
+                }
 
-//            l = klabs(l);
+            l = klabs(l);
 
 //#if !defined LUNATIC
-//            t.picnum += k + script[scrofs_action] + l*curframe;
+            t.picnum += k + script[scrofs_action] + l*curframe;
 //#else
 //            t.picnum += k + startframe + l*curframe;
 //#endif
-//            // XXX: t.picnum can be out-of-bounds by bad user code.
+            // XXX: t.picnum can be out-of-bounds by bad user code.
 
-//            if (l > 0)
-//                while (tilesizx[t.picnum] == 0 && t.picnum > 0)
-//                    t.picnum -= l;       //Hack, for actors
+            if (l > 0)
+                while (tilesizx[t.picnum] == 0 && t.picnum > 0)
+                    t.picnum -= l;       //Hack, for actors
 
-//            if (actor[i].dispicnum >= 0)
-//                actor[i].dispicnum = t.picnum;
-//        }
-////        else if (display_mirror == 1)
-////            t.cstat |= 4;
-//        /* completemirror() already reverses the drawn frame, so the above isn't necessary.
-//         * Even Polymost's and Polymer's mirror seems to function correctly this way. */
+            if (actor[i].dispicnum >= 0)
+                actor[i].dispicnum = t.picnum;
+        }
+//        else if (display_mirror == 1)
+//            t.cstat |= 4;
+        /* completemirror() already reverses the drawn frame, so the above isn't necessary.
+         * Even Polymost's and Polymer's mirror seems to function correctly this way. */
 
 //#if !defined LUNATIC
-//skip:
+skip:
 //#endif
-//        // XXX: Currently, for the splitscreen mod, sprites will be pal6-colored iff the first
-//        // player has nightvision on.  We should pass stuff like "from which player is this view
-//        // supposed to be" as parameters ("drawing context") instead of relying on globals.
-//        if (g_player[screenpeek].ps.inv_amount[GET_HEATS] > 0 && g_player[screenpeek].ps.heat_on &&
-//                (A_CheckEnemySprite(s) || A_CheckSpriteFlags(t.owner,SPRITE_NVG) || s.picnum == APLAYER || s.statnum == STAT_DUMMYPLAYER))
-//        {
-//            t.pal = 6;
-//            t.shade = 0;
-//        }
+        // XXX: Currently, for the splitscreen mod, sprites will be pal6-colored iff the first
+        // player has nightvision on.  We should pass stuff like "from which player is this view
+        // supposed to be" as parameters ("drawing context") instead of relying on globals.
+        if (g_player[screenpeek].ps.inv_amount[GET_HEATS] > 0 && g_player[screenpeek].ps.heat_on &&
+                (A_CheckEnemySprite(s) || A_CheckSpriteFlags(t.owner,SPRITE_NVG) || s.picnum == APLAYER || s.statnum == STAT_DUMMYPLAYER))
+        {
+            t.pal = 6;
+            t.shade = 0;
+        }
 
-//        if (s.statnum == STAT_DUMMYPLAYER || A_CheckEnemySprite(s) || A_CheckSpriteFlags(t.owner,SPRITE_SHADOW) || (s.picnum == APLAYER && s.owner >= 0))
-//            if (t.statnum != TSPR_TEMP && s.picnum != EXPLOSION2 && s.picnum != HANGLIGHT && s.picnum != DOMELITE && s.picnum != HOTMEAT)
-//            {
-//                if (actor[i].dispicnum < 0)
-//                {
+        if (s.statnum == STAT_DUMMYPLAYER || A_CheckEnemySprite(s) || A_CheckSpriteFlags(t.owner,SPRITE_SHADOW) || (s.picnum == APLAYER && s.owner >= 0))
+            if (t.statnum != TSPR_TEMP && s.picnum != EXPLOSION2 && s.picnum != HANGLIGHT && s.picnum != DOMELITE && s.picnum != HOTMEAT)
+            {
+                if (actor[i].dispicnum < 0)
+                {
 //#ifdef DEBUGGINGAIDS
 //                    // A negative actor[i].dispicnum used to mean 'no floor shadow please', but
 //                    // that was a bad hack since the value could propagate to sprite[].picnum.
 //                    OSD_Printf(OSD_ERROR "actor[%d].dispicnum = %d\n", i, actor[i].dispicnum);
 //#endif
-//                    actor[i].dispicnum=0;
-//                    continue;
-//                }
+                    actor[i].dispicnum=0;
+                    continue;
+                }
 
-//                if (actor[i].flags & SPRITE_NOFLOORSHADOW)
-//                    continue;
+                if (actor[i].flags & SPRITE_NOFLOORSHADOW)
+                    continue;
 
-//                if (ud.shadows && spritesortcnt < (MAXSPRITESONSCREEN-2) && getrendermode() != REND_POLYMER)
-//                {
-//                    int32_t daz;
+                if (ud.shadows && spritesortcnt < (MAXSPRITESONSCREEN-2) && getrendermode() != REND_POLYMER)
+                {
+                    var/*int32_t */daz:number;
 
-//                    if ((sector[sect].lotag&0xff) > 2 || s.statnum == STAT_PROJECTILE || s.statnum == STAT_MISC
-//                            || s.picnum == DRONE || s.picnum == COMMANDER)
-//                        daz = sector[sect].floorz;
-//                    else
-//                        daz = actor[i].floorz;
+                    if ((sector[sect].lotag&0xff) > 2 || s.statnum == STAT_PROJECTILE || s.statnum == STAT_MISC
+                            || s.picnum == DRONE || s.picnum == COMMANDER)
+                        daz = sector[sect].floorz;
+                    else
+                        daz = actor[i].floorz;
 
-//                    if ((s.z-daz) < (8<<8) && g_player[screenpeek].ps.pos.z < daz)
-//                    {
-//                        spritetype *const newt = &tsprite[spritesortcnt];
+                    if ((s.z-daz) < (8<<8) && g_player[screenpeek].ps.pos.z < daz)
+                    {
+                        var newt = tsprite[spritesortcnt];
 
-//                        Bmemcpy(newt, t, sizeof(spritetype));
+                        todoThrow("newt.copyFrom(t);//Bmemcpy(newt, t, sizeof(spritetype));");
 
-//                        newt.statnum = TSPR_TEMP;
+                        newt.statnum = TSPR_TEMP;
 
-//                        newt.yrepeat = (t.yrepeat>>3);
-//                        if (t.yrepeat < 4) t.yrepeat = 4;
+                        newt.yrepeat = (t.yrepeat>>3);
+                        if (t.yrepeat < 4) t.yrepeat = 4;
 
-//                        newt.shade = 127;
-//                        newt.cstat |= 2;
+                        newt.shade = 127;
+                        newt.cstat |= 2;
 
-//                        newt.z = daz;
-//                        newt.pal = 4;
+                        newt.z = daz;
+                        newt.pal = 4;
 //#ifdef USE_OPENGL
-//                        if (getrendermode() >= REND_POLYMOST)
-//                        {
-//                            if (usemodels && md_tilehasmodel(t.picnum,t.pal) >= 0)
-//                            {
-//                                newt.yrepeat = 0;
-//                                // 512:trans reverse
-//                                //1024:tell MD2SPRITE.C to use Z-buffer hacks to hide overdraw issues
-//                                newt.cstat |= (512+CSTAT_SPRITE_MDHACK);
-//                            }
-//                            else
-//                            {
-//                                int32_t ii;
+                        if (getrendermode() >= REND_POLYMOST)
+                        {
+                            if (usemodels && md_tilehasmodel(t.picnum,t.pal) >= 0)
+                            {
+                                newt.yrepeat = 0;
+                                // 512:trans reverse
+                                //1024:tell MD2SPRITE.C to use Z-buffer hacks to hide overdraw issues
+                                newt.cstat |= (512+CSTAT_SPRITE_MDHACK);
+                            }
+                            else
+                            {
+                                var /*int32_t */ii:number;
 
-//                                ii = getangle(newt.x-g_player[screenpeek].ps.pos.x,
-//                                              newt.y-g_player[screenpeek].ps.pos.y);
+                                ii = getangle(newt.x-g_player[screenpeek].ps.pos.x,
+                                              newt.y-g_player[screenpeek].ps.pos.y);
 
-//                                newt.x += sintable[(ii+2560)&2047]>>9;
-//                                newt.y += sintable[(ii+2048)&2047]>>9;
-//                            }
-//                        }
+                                newt.x += sintable[(ii+2560)&2047]>>9;
+                                newt.y += sintable[(ii+2048)&2047]>>9;
+                            }
+                        }
 //#endif
-//                        spritesortcnt++;
-//                    }
-//                }
-//            }
+                        spritesortcnt++;
+                    }
+                }
+            }
 
-//        switch (DYNAMICTILEMAP(s.picnum))
-//        {
-//        case LASERLINE__STATIC:
-//            if (sector[t.sectnum].lotag == ST_2_UNDERWATER) t.pal = 8;
-//            t.z = sprite[s.owner].z-(3<<8);
-//            if (g_tripbombLaserMode == 2 && g_player[screenpeek].ps.heat_on == 0)
-//                t.yrepeat = 0;
-//        case EXPLOSION2__STATIC:
-//        case EXPLOSION2BOT__STATIC:
-//        case FREEZEBLAST__STATIC:
-//        case ATOMICHEALTH__STATIC:
-//        case FIRELASER__STATIC:
-//        case SHRINKSPARK__STATIC:
-//        case GROWSPARK__STATIC:
-//        case CHAINGUN__STATIC:
-//        case SHRINKEREXPLOSION__STATIC:
-//        case RPG__STATIC:
-//        case FLOORFLAME__STATIC:
-//            if (t.picnum == EXPLOSION2)
-//            {
-//                g_player[screenpeek].ps.visibility = -127;
-//                lastvisinc = totalclock+32;
-//                //g_restorePalette = 1;   // JBF 20040101: why?
-//            }
-//            t.shade = -127;
-//            t.cstat |= 8192;
-//            break;
-//        case FIRE__STATIC:
-//        case FIRE2__STATIC:
-//            t.cstat |= 128;
-//        case BURNING__STATIC:
-//        case BURNING2__STATIC:
-//            if (sprite[s.owner].picnum != TREE1 && sprite[s.owner].picnum != TREE2)
-//                t.z = actor[t.owner].floorz;
-//            t.shade = -127;
-//        case SMALLSMOKE__STATIC:
-//            t.cstat |= 8192;
-//            break;
-//        case COOLEXPLOSION1__STATIC:
-//            t.shade = -127;
-//            t.cstat |= 8192;
-//            t.picnum += (s.shade>>1);
-//            break;
-//        case PLAYERONWATER__STATIC:
+        switch (DYNAMICTILEMAP(s.picnum))
+        {
+        case LASERLINE__STATIC:
+            if (sector[t.sectnum].lotag == ST_2_UNDERWATER) t.pal = 8;
+            t.z = sprite[s.owner].z-(3<<8);
+            if (g_tripbombLaserMode == 2 && g_player[screenpeek].ps.heat_on == 0)
+                t.yrepeat = 0;
+        case EXPLOSION2__STATIC:
+        case EXPLOSION2BOT__STATIC:
+        case FREEZEBLAST__STATIC:
+        case ATOMICHEALTH__STATIC:
+        case FIRELASER__STATIC:
+        case SHRINKSPARK__STATIC:
+        case GROWSPARK__STATIC:
+        case CHAINGUN__STATIC:
+        case SHRINKEREXPLOSION__STATIC:
+        case RPG__STATIC:
+        case FLOORFLAME__STATIC:
+            if (t.picnum == EXPLOSION2)
+            {
+                g_player[screenpeek].ps.visibility = -127;
+                lastvisinc = totalclock+32;
+                //g_restorePalette = 1;   // JBF 20040101: why?
+            }
+            t.shade = -127;
+            t.cstat |= 8192;
+            break;
+        case FIRE__STATIC:
+        case FIRE2__STATIC:
+            t.cstat |= 128;
+        case BURNING__STATIC:
+        case BURNING2__STATIC:
+            if (sprite[s.owner].picnum != TREE1 && sprite[s.owner].picnum != TREE2)
+                t.z = actor[t.owner].floorz;
+            t.shade = -127;
+        case SMALLSMOKE__STATIC:
+            t.cstat |= 8192;
+            break;
+        case COOLEXPLOSION1__STATIC:
+            t.shade = -127;
+            t.cstat |= 8192;
+            t.picnum += (s.shade>>1);
+            break;
+        case PLAYERONWATER__STATIC:
 //#ifdef USE_OPENGL
-//            if (getrendermode() >= REND_POLYMOST && usemodels && md_tilehasmodel(s.picnum,s.pal) >= 0 && !(spriteext[i].flags&SPREXT_NOTMD))
-//            {
-//                k = 0;
-//                t.cstat &= ~4;
-//            }
-//            else
+            if (getrendermode() >= REND_POLYMOST && usemodels && md_tilehasmodel(s.picnum,s.pal) >= 0 && !(spriteext[i].flags&SPREXT_NOTMD))
+            {
+                k = 0;
+                t.cstat &= ~4;
+            }
+            else
 //#endif
-//                k = getofs_viewtype5(t, t, oura, 0);
+                k = getofs_viewtype5(t, t, oura, 0);
 
-//            t.picnum = s.picnum+k+((actor[i].t_data[0]<4)*5);
-//            t.shade = sprite[s.owner].shade;
+            t.picnum = s.picnum+k+((actor[i].t_data[0]<4)*5);
+            t.shade = sprite[s.owner].shade;
 
-//            break;
+            break;
 
-//        case WATERSPLASH2__STATIC:
-//            // WATERSPLASH_T2
-//            t.picnum = WATERSPLASH2+actor[i].t_data[1];
-//            break;
-//        case SHELL__STATIC:
-//            t.picnum = s.picnum+(actor[i].t_data[0]&1);
-//        case SHOTGUNSHELL__STATIC:
-//            t.cstat |= 12;
-//            if (actor[i].t_data[0] > 2) t.cstat &= ~16;
-//            else if (actor[i].t_data[0] > 1) t.cstat &= ~4;
-//            break;
-//        case FRAMEEFFECT1_13__STATIC:
-//            if (PLUTOPAK) break;
-//        case FRAMEEFFECT1__STATIC:
-//            if (s.owner >= 0 && sprite[s.owner].statnum < MAXSTATUS)
-//            {
-//                if (sprite[s.owner].picnum == APLAYER)
-//                    if (ud.camerasprite == -1)
-//                        if (screenpeek == sprite[s.owner].yvel && display_mirror == 0)
-//                        {
-//                            t.owner = -1;
-//                            break;
-//                        }
-//                if ((sprite[s.owner].cstat&32768) == 0)
-//                {
-//                    if (!actor[s.owner].dispicnum)
-//                        t.picnum = actor[i].t_data[1];
-//                    else t.picnum = actor[s.owner].dispicnum;
+        case WATERSPLASH2__STATIC:
+            // WATERSPLASH_T2
+            t.picnum = WATERSPLASH2+actor[i].t_data[1];
+            break;
+        case SHELL__STATIC:
+            t.picnum = s.picnum+(actor[i].t_data[0]&1);
+        case SHOTGUNSHELL__STATIC:
+            t.cstat |= 12;
+            if (actor[i].t_data[0] > 2) t.cstat &= ~16;
+            else if (actor[i].t_data[0] > 1) t.cstat &= ~4;
+            break;
+        case FRAMEEFFECT1_13__STATIC:
+            if (window.PLUTOPAK) break;
+        case FRAMEEFFECT1__STATIC:
+            if (s.owner >= 0 && sprite[s.owner].statnum < MAXSTATUS)
+            {
+                if (sprite[s.owner].picnum == APLAYER)
+                    if (ud.camerasprite == -1)
+                        if (screenpeek == sprite[s.owner].yvel && display_mirror == 0)
+                        {
+                            t.owner = -1;
+                            break;
+                        }
+                if ((sprite[s.owner].cstat&32768) == 0)
+                {
+                    if (!actor[s.owner].dispicnum)
+                        t.picnum = actor[i].t_data[1];
+                    else t.picnum = actor[s.owner].dispicnum;
 
-//                    if (!G_MaybeTakeOnFloorPal(t, sect))
-//                        t.pal = sprite[s.owner].pal;
+                    if (!G_MaybeTakeOnFloorPal(t, sect))
+                        t.pal = sprite[s.owner].pal;
 
-//                    t.shade = sprite[s.owner].shade;
-//                    t.ang = sprite[s.owner].ang;
-//                    t.cstat = 2|sprite[s.owner].cstat;
-//                }
-//            }
-//            break;
+                    t.shade = sprite[s.owner].shade;
+                    t.ang = sprite[s.owner].ang;
+                    t.cstat = 2|sprite[s.owner].cstat;
+                }
+            }
+            break;
 
-//        case CAMERA1__STATIC:
-//        case RAT__STATIC:
+        case CAMERA1__STATIC:
+        case RAT__STATIC:
 //#ifdef USE_OPENGL
-//            if (getrendermode() >= REND_POLYMOST && usemodels && md_tilehasmodel(s.picnum,s.pal) >= 0 && !(spriteext[i].flags&SPREXT_NOTMD))
-//            {
-//                t.cstat &= ~4;
-//                break;
-//            }
+            if (getrendermode() >= REND_POLYMOST && usemodels && md_tilehasmodel(s.picnum,s.pal) >= 0 && !(spriteext[i].flags&SPREXT_NOTMD))
+            {
+                t.cstat &= ~4;
+                break;
+            }
 //#endif
-//            k = getofs_viewtype5(t, t, oura, 0);
-//            t.picnum = s.picnum+k;
-//            break;
-//        }
+            k = getofs_viewtype5(t, t, oura, 0);
+            t.picnum = s.picnum+k;
+            break;
+        }
 
-//        actor[i].dispicnum = t.picnum;
-//        // why?
-//        /*
-//                if (sector[t.sectnum].floorpicnum == MIRROR)
-//                    t.xrepeat = t.yrepeat = 0;
-//        */
-//    }
+        actor[i].dispicnum = t.picnum;
+        // why?
+        /*
+                if (sector[t.sectnum].floorpicnum == MIRROR)
+                    t.xrepeat = t.yrepeat = 0;
+        */
+    }
 
-//    if (G_HaveEvent(EVENT_ANIMATESPRITES))
-//    {
-//        for (j = spritesortcnt-1; j>=0; j--)
-//            G_DoEventAnimSprites(j);
-//    }
-//}
+    if (G_HaveEvent(EVENT_ANIMATESPRITES))
+    {
+        for (j = spritesortcnt-1; j>=0; j--)
+            G_DoEventAnimSprites(j);
+    }
+}
 
 
 //// KEEPINSYNC game.h: enum cheatindex_t
@@ -8094,7 +8093,7 @@ function G_DoCheats(): void
 //                return;
 //            }
 
-//            cheatbuf[cheatbuflen++] = (int8_t)ch;
+//            cheatbuf[cheatbuflen++] = /*(int8_t)*/ch;
 //            cheatbuf[cheatbuflen] = 0;
 ////            KB_ClearKeysDown();
 
@@ -11825,41 +11824,40 @@ var tempWhile = 0;
     
     if (ud.warp_on == 0)
     {
-        todoThrow();
-//        if ((g_netServer || ud.multimode > 1) && boardfilename[0] != 0)
-//        {
-//            ud.m_level_number = 7;
-//            ud.m_volume_number = 0;
+        if ((g_netServer || ud.multimode > 1) && boardfilename[0] != 0)
+        {
+            ud.m_level_number = 7;
+            ud.m_volume_number = 0;
 
-//            if (ud.m_player_skill == 4)
-//                ud.m_respawn_monsters = 1;
-//            else ud.m_respawn_monsters = 0;
+            if (ud.m_player_skill == 4)
+                ud.m_respawn_monsters = 1;
+            else ud.m_respawn_monsters = 0;
 
-//            for (TRAVERSE_CONNECT(i))
-//            {
-//                P_ResetWeapons(i);
-//                P_ResetInventory(i);
-//            }
+            for (i = 0; i != -1; i = connectpoint2[i])
+            {
+                P_ResetWeapons(i);
+                P_ResetInventory(i);
+            }
 
-//            G_NewGame(ud.m_volume_number,ud.m_level_number,ud.m_player_skill);
+            G_NewGame(ud.m_volume_number,ud.m_level_number,ud.m_player_skill);
 
-//            if (G_EnterLevel(MODE_GAME)) G_BackToMenu();
+            if (G_EnterLevel(MODE_GAME)) G_BackToMenu();
 
-//            Net_WaitForServer();
-//        }
-//        else if (g_networkMode != NET_DEDICATED_SERVER)
-//            G_DisplayLogo();
+            Net_WaitForServer();
+        }
+        else if (g_networkMode != NET_DEDICATED_SERVER)
+            todo("G_DisplayLogo();");
 
-//        if (g_networkMode != NET_DEDICATED_SERVER)
-//        {
-//            if (G_PlaybackDemo())
-//            {
-//                FX_StopAllSounds();
-//                S_ClearSoundLocks();
-//                g_noLogoAnim = 1;
-//                goto MAIN_LOOP_RESTART;
-//            }
-//        }
+        if (g_networkMode != NET_DEDICATED_SERVER)
+        {
+            todo("if (G_PlaybackDemo())");
+            //{
+            //    FX_StopAllSounds();
+            //    S_ClearSoundLocks();
+            //    g_noLogoAnim = 1;
+            //    goto MAIN_LOOP_RESTART;
+            //}
+        }
     }
     else if (ud.warp_on == 1)
     {
@@ -12211,8 +12209,8 @@ function /*int32_t */G_DoMoveThings(): number
 
     if ((everyothertime&1) == 0)
     {
-        todo("G_AnimateWalls(); ");
-        todo("A_MoveCyclers();  ");
+        G_AnimateWalls();
+        A_MoveCyclers();
 
         if (g_netServer && (everyothertime % 10) == 0)
 		{

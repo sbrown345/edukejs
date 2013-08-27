@@ -731,6 +731,7 @@ class spriteext_t {
     xpanning: number; ypanning: number;                //    uint8_t 
     filler: number;                            //    uint8_t 
     alpha:number; //    float 
+    tspr: spritetype;
 
     constructor() {
         this.init();
@@ -745,6 +746,7 @@ class spriteext_t {
         this.xpanning = 0, this.ypanning = 0;                //    uint8_t 
         this.filler = 0;                            //    uint8_t 
         this.alpha = 0.0;//    float 
+        this.tspr = null;
     }
 
 //    // NOTE: keep 'tspr' on an 8-byte boundary:
@@ -782,7 +784,7 @@ var SPREXT_AWAY2=8;
 var SPREXT_TSPRACCESS=16;
 var SPREXT_TEMPINVISIBLE=32;
 
-//#define CSTAT_SPRITE_MDHACK 1024
+var CSTAT_SPRITE_MDHACK=1024;
 
 var guniqhudid: number = 0;            //EXTERN int32_t 
 var spritesortcnt: number = 0;         //EXTERN int32_t 

@@ -148,7 +148,7 @@ var bglLoadMatrixf = function(multiDimMatrix: Float32Array[]) {
         multiDimMatrix[1][3],
         multiDimMatrix[2][3],
         multiDimMatrix[3][3]);
-    console.log(mat["m"]);
+    
     gl.loadMatrix.call(gl, mat);//bglLoadMatrixfProcPtr ;
 };
 //bglLoadMatrixdProcPtr bglLoadMatrixd;

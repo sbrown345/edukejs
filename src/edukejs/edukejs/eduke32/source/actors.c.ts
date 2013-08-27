@@ -1135,45 +1135,45 @@ function G_AddGameLight(/*int32_t*/ radius:number, /*int32_t */srcsprite:number,
 //    return dmg.picnum;
 //}
 
-//void A_MoveCyclers(void)
-//{
-//    int32_t i;
+function A_MoveCyclers():void
+{
+    var /*int32_t */i:number;
 
-//    for (i=g_numCyclers-1; i>=0; i--)
-//    {
-//        int16_t *const c = cyclers[i];
-//        const int32_t sect = c[0];
-//        const int32_t t = c[3];
-//        int32_t j = t + (sintable[c[1]&2047]>>10);
-//        int32_t cshade = c[2];
+    for (i=g_numCyclers-1; i>=0; i--)
+    {
+        var c = cyclers[i];
+        var/* int32_t */sect = c[0];
+        var /*int32_t */t = c[3];
+        var /*int32_t */j = t + (sintable[c[1]&2047]>>10);
+        var /*int32_t */cshade = c[2];
 
-//        if (j < cshade)
-//            j = cshade;
-//        else if (j > t)
-//            j = t;
+        if (j < cshade)
+            j = cshade;
+        else if (j > t)
+            j = t;
 
-//        c[1] += sector[sect].extra;
+        c[1] += sector[sect].extra;
 
-//        if (c[5])
-//        {
-//            walltype *wal = &wall[sector[sect].wallptr];
-//            int32_t x;
+        if (c[5])
+        {
+            var wal = wall[sector[sect].wallptr];
+            var/*int32_t */x:number;
 
-//            for (x = sector[sect].wallnum; x>0; x--,wal++)
-//            {
-//                if (wal.hitag != 1)
-//                {
-//                    wal.shade = j;
+            for (x = sector[sect].wallnum; x>0; x--,wal++)
+            {
+                if (wal.hitag != 1)
+                {
+                    wal.shade = j;
 
-//                    if ((wal.cstat&2) && wal.nextwall >= 0)
-//                        wall[wal.nextwall].shade = j;
-//                }
-//            }
+                    if ((wal.cstat&2) && wal.nextwall >= 0)
+                        wall[wal.nextwall].shade = j;
+                }
+            }
 
-//            sector[sect].floorshade = sector[sect].ceilingshade = j;
-//        }
-//    }
-//}
+            sector[sect].floorshade = sector[sect].ceilingshade = j;
+        }
+    }
+}
 
 function A_MoveDummyPlayers(): void
 {

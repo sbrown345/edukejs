@@ -480,95 +480,95 @@ function G_AnimateCamSprite(): void
 //    else actor[i].t_data[0]++;
 }
 
-//void G_AnimateWalls(void)
-//{
-//    int32_t i, j, p = g_numAnimWalls-1, t;
+function G_AnimateWalls():void
+{
+    var /*int32_t */i:number, j:number, p = g_numAnimWalls-1, t:number;
 
-//    for (; p>=0; p--)
-//        //    for(p=g_numAnimWalls-1;p>=0;p--)
-//    {
-//        i = animwall[p].wallnum;
-//        j = wall[i].picnum;
+    for (; p>=0; p--)
+        //    for(p=g_numAnimWalls-1;p>=0;p--)
+    {
+        i = animwall[p].wallnum;
+        j = wall[i].picnum;
 
-//        switch (DYNAMICTILEMAP(j))
-//        {
-//        case SCREENBREAK1__STATIC:
-//        case SCREENBREAK2__STATIC:
-//        case SCREENBREAK3__STATIC:
-//        case SCREENBREAK4__STATIC:
-//        case SCREENBREAK5__STATIC:
+        switch (DYNAMICTILEMAP(j))
+        {
+        case SCREENBREAK1__STATIC:
+        case SCREENBREAK2__STATIC:
+        case SCREENBREAK3__STATIC:
+        case SCREENBREAK4__STATIC:
+        case SCREENBREAK5__STATIC:
 
-//        case SCREENBREAK9__STATIC:
-//        case SCREENBREAK10__STATIC:
-//        case SCREENBREAK11__STATIC:
-//        case SCREENBREAK12__STATIC:
-//        case SCREENBREAK13__STATIC:
-//        case SCREENBREAK14__STATIC:
-//        case SCREENBREAK15__STATIC:
-//        case SCREENBREAK16__STATIC:
-//        case SCREENBREAK17__STATIC:
-//        case SCREENBREAK18__STATIC:
-//        case SCREENBREAK19__STATIC:
+        case SCREENBREAK9__STATIC:
+        case SCREENBREAK10__STATIC:
+        case SCREENBREAK11__STATIC:
+        case SCREENBREAK12__STATIC:
+        case SCREENBREAK13__STATIC:
+        case SCREENBREAK14__STATIC:
+        case SCREENBREAK15__STATIC:
+        case SCREENBREAK16__STATIC:
+        case SCREENBREAK17__STATIC:
+        case SCREENBREAK18__STATIC:
+        case SCREENBREAK19__STATIC:
 
-//            if ((krand()&255) < 16)
-//            {
-//                animwall[p].tag = wall[i].picnum;
-//                wall[i].picnum = SCREENBREAK6;
-//            }
+            if ((krand()&255) < 16)
+            {
+                animwall[p].tag = wall[i].picnum;
+                wall[i].picnum = SCREENBREAK6;
+            }
 
-//            continue;
+            continue;
 
-//        case SCREENBREAK6__STATIC:
-//        case SCREENBREAK7__STATIC:
-//        case SCREENBREAK8__STATIC:
+        case SCREENBREAK6__STATIC:
+        case SCREENBREAK7__STATIC:
+        case SCREENBREAK8__STATIC:
 
-//            if (animwall[p].tag >= 0 && wall[i].extra != FEMPIC2 && wall[i].extra != FEMPIC3)
-//                wall[i].picnum = animwall[p].tag;
-//            else
-//            {
-//                wall[i].picnum++;
-//                if (wall[i].picnum == (SCREENBREAK6+3))
-//                    wall[i].picnum = SCREENBREAK6;
-//            }
-//            continue;
+            if (animwall[p].tag >= 0 && wall[i].extra != FEMPIC2 && wall[i].extra != FEMPIC3)
+                wall[i].picnum = animwall[p].tag;
+            else
+            {
+                wall[i].picnum++;
+                if (wall[i].picnum == (SCREENBREAK6+3))
+                    wall[i].picnum = SCREENBREAK6;
+            }
+            continue;
 
-//        }
+        }
 
-//        if (wall[i].cstat&16)
-//            if (wall[i].overpicnum >= W_FORCEFIELD && wall[i].overpicnum <= W_FORCEFIELD+2)
-//            {
-//                t = animwall[p].tag;
+        if (wall[i].cstat&16)
+            if (wall[i].overpicnum >= W_FORCEFIELD && wall[i].overpicnum <= W_FORCEFIELD+2)
+            {
+                t = animwall[p].tag;
 
-//                if (wall[i].cstat&254)
-//                {
-//                    wall[i].xpanning -= t>>10; // sintable[(t+512)&2047]>>12;
-//                    wall[i].ypanning -= t>>10; // sintable[t&2047]>>12;
+                if (wall[i].cstat&254)
+                {
+                    wall[i].xpanning -= t>>10; // sintable[(t+512)&2047]>>12;
+                    wall[i].ypanning -= t>>10; // sintable[t&2047]>>12;
 
-//                    if (wall[i].extra == 1)
-//                    {
-//                        wall[i].extra = 0;
-//                        animwall[p].tag = 0;
-//                    }
-//                    else
-//                        animwall[p].tag+=128;
+                    if (wall[i].extra == 1)
+                    {
+                        wall[i].extra = 0;
+                        animwall[p].tag = 0;
+                    }
+                    else
+                        animwall[p].tag+=128;
 
-//                    if (animwall[p].tag < (128<<4))
-//                    {
-//                        if (animwall[p].tag&128)
-//                            wall[i].overpicnum = W_FORCEFIELD;
-//                        else wall[i].overpicnum = W_FORCEFIELD+1;
-//                    }
-//                    else
-//                    {
-//                        if ((krand()&255) < 32)
-//                            animwall[p].tag = 128<<(krand()&3);
-//                        else wall[i].overpicnum = W_FORCEFIELD+1;
-//                    }
-//                }
+                    if (animwall[p].tag < (128<<4))
+                    {
+                        if (animwall[p].tag&128)
+                            wall[i].overpicnum = W_FORCEFIELD;
+                        else wall[i].overpicnum = W_FORCEFIELD+1;
+                    }
+                    else
+                    {
+                        if ((krand()&255) < 32)
+                            animwall[p].tag = 128<<(krand()&3);
+                        else wall[i].overpicnum = W_FORCEFIELD+1;
+                    }
+                }
 
-//            }
-//    }
-//}
+            }
+    }
+}
 
 function /*int32_t */G_ActivateWarpElevators(/*int32_t */s:number,/*int32_t */d:number):number //Parm = sectoreffectornum
 {

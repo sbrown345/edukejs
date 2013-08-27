@@ -598,7 +598,7 @@ function polymost_glreset(): void
 //    }
 //    else
 //    {
-//        float combvis = (float)globalvisibility * (uint8_t)(vis+16);
+//        float combvis = (float)globalvisibility *  /*(uint8_t)*/ (vis+16);
 //
 //        bglFogi(GL_FOG_MODE, GL_LINEAR);
 //
@@ -3761,11 +3761,11 @@ function polymost_drawrooms(): void
 //
 //    globalpicnum = wal.overpicnum; if ((uint32_t)globalpicnum >= MAXTILES) globalpicnum = 0;
 //    globvis = globalvisibility;
-//    if (sector[sectnum].visibility != 0) globvis = mulscale4(globvis, (uint8_t)(sector[sectnum].visibility+16));
+//    if (sector[sectnum].visibility != 0) globvis = mulscale4(globvis,  /*(uint8_t)*/ (sector[sectnum].visibility+16));
 //
 //    DO_TILE_ANIM(globalpicnum, (int16_t)thewall[z]+16384);
 //    globalshade = (int32_t)wal.shade;
-//    globalpal = (int32_t)((uint8_t)wal.pal);
+//    globalpal = (int32_t)( /*(uint8_t)*/ wal.pal);
 //    globalorientation = (int32_t)wal.cstat;
 //
 //    sx0 = (float)(wal.x-globalposx); sx1 = (float)(wal2.x-globalposx);
@@ -3928,7 +3928,7 @@ function polymost_drawsprite(/*int32_t*/ snum:number):void
     globalpal         = tspr.pal;
     globalorientation = tspr.cstat;
     globvis = globalvisibility;
-    if (sector[tspr.sectnum].visibility != 0) globvis = mulscale4(globvis, (uint8_t)(sector[tspr.sectnum].visibility+16));
+    if (sector[tspr.sectnum].visibility != 0) globvis = mulscale4(globvis,  /*(uint8_t)*/ (sector[tspr.sectnum].visibility+16));
     if ((globalorientation&48) != 48)  	// only non-voxel sprites should do this
     {
         var /*int32_t */flag;
@@ -4402,7 +4402,7 @@ function polymost_dorotatesprite(sx: number, sy: number, z: number, a: number, p
 //            ogctang = gctang; gctang = (double)sintable[(a+512)&2047]*d;
 //            ogstang = gstang; gstang = (double)sintable[a&2047]*d;
 //            ogshade  = globalshade;  globalshade  = dashade;
-//            ogpal    = globalpal;    globalpal    = (int32_t)((uint8_t)dapalnum);
+//            ogpal    = globalpal;    globalpal    = (int32_t)( /*(uint8_t)*/ dapalnum);
 //            ogxyaspect = gxyaspect; gxyaspect = 1.0;
 //            oldviewingrange = viewingrange; viewingrange = 65536;
 //
