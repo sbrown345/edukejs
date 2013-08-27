@@ -150,7 +150,7 @@ g_loadedMapVersion = -1;  // -1: none (e.g. started new)    //int32_t
 
 ////void loadvoxel(int32_t voxindex) { UNREFERENCED_PARAMATER(voxindex); }
 var tiletovox = new Int16Array(MAXTILES);
-//int32_t usevoxels = 1;
+var /*int32_t */usevoxels = 1;
 ////#define kloadvoxel loadvoxel
 
 //int32_t novoxmips = 1;
@@ -2363,9 +2363,9 @@ var bunchfirst = new Int16Array(MAXWALLSB), bunchlast = new Int16Array(MAXWALLSB
 //static char smostwalltype[MAXWALLSB];
 //static int32_t smostwall[MAXWALLSB], smostwallcnt = -1;
 
-//static int32_t spritesx[MAXSPRITESONSCREEN];
-//static int32_t spritesy[MAXSPRITESONSCREEN+1];
-//static int32_t spritesz[MAXSPRITESONSCREEN];
+var spritesx = new Int32Array(MAXSPRITESONSCREEN);
+var spritesy = new Int32Array(MAXSPRITESONSCREEN+1);
+var spritesz = new Int32Array(MAXSPRITESONSCREEN);
 
 var umost = new Int16Array(MAXXDIM), dmost = new Int16Array(MAXXDIM);
 var bakumost = new Int16Array(MAXXDIM), bakdmost = new Int16Array(MAXXDIM);
@@ -5657,35 +5657,35 @@ function animateoffs(/*int16_t */tilenum: number, /*int16_t */fakevar: number): 
 //    *z2ptr = z2;
 //}
 
-////
-//// drawsprite (internal)
-////
-//static void drawsprite_opengl(int32_t snum)
-//{
-//    //============================================================================= //POLYMOST BEGINS
+//
+// drawsprite (internal)
+//
+function drawsprite_opengl(/*int32_t */snum:number):void
+{
+    //============================================================================= //POLYMOST BEGINS
 //#ifdef USE_OPENGL
-//    if (getrendermode() == REND_POLYMOST)
-//    {
-//        polymost_drawsprite(snum);
-//        bglDisable(GL_POLYGON_OFFSET_FILL);
-//    }
+    if (getrendermode() == REND_POLYMOST)
+    {
+        polymost_drawsprite(snum);
+        todoUnimportant("bglDisable(GL_POLYGON_OFFSET_FILL);");
+    }
 //# ifdef POLYMER
-//    else if (getrendermode() == REND_POLYMER)
-//    {
-//        bglEnable(GL_ALPHA_TEST);
-//        bglEnable(GL_BLEND);
+    else if (getrendermode() == REND_POLYMER)
+    {
+        bglEnable(GL_ALPHA_TEST);
+        bglEnable(GL_BLEND);
 
-//        polymer_drawsprite(snum);
+        todoThrow("polymer_drawsprite(snum);");
 
-//        bglDisable(GL_BLEND);
-//        bglDisable(GL_ALPHA_TEST);
-//    }
+        bglDisable(GL_BLEND);
+        bglDisable(GL_ALPHA_TEST);
+    }
 //# endif
 //#else
 //    UNREFERENCED_PARAMETER(snum);
 //#endif
-//    //============================================================================= //POLYMOST ENDS
-//}
+    //============================================================================= //POLYMOST ENDS
+}
 
 //static void drawsprite_classic(int32_t snum)
 //{
@@ -6671,13 +6671,13 @@ function animateoffs(/*int16_t */tilenum: number, /*int16_t */fakevar: number): 
 //    }
 //}
 
-//static void drawsprite(int32_t snum)
-//{
-//    if (getrendermode() >= REND_POLYMOST)
-//        drawsprite_opengl(snum);
-//    else
-//        drawsprite_classic(snum);
-//}
+function drawsprite(/*int32_t */snum:number):void
+{
+    if (getrendermode() >= REND_POLYMOST)
+        drawsprite_opengl(snum);
+    else
+        todoThrow("drawsprite_classic(snum);");
+}
 
 
 ////
@@ -9194,26 +9194,26 @@ function /*int32_t */drawrooms(/*int32_t*/ daposx: number, /*int32_t*/ daposy: n
 ////
 //// _maskleaf               maskleaves[MAXWALLSB];
 
-//// returns equation of a line given two points
-//static inline _equation       equation(float x1, float y1, float x2, float y2)
-//{
-//    _equation   ret;
+// returns equation of a line given two points
+function       equation(/*float*/ x1:number, /*float */y1:number, /*float */x2:number, /*float */y2:number):_equation
+{
+    var ret = new _equation();
 
-//    if ((x2 - x1) != 0)
-//    {
-//        ret.a = (float)(y2 - y1)/(float)(x2 - x1);
-//        ret.b = -1;
-//        ret.c = (y1 - (ret.a * x1));
-//    }
-//    else // vertical
-//    {
-//        ret.a = 1;
-//        ret.b = 0;
-//        ret.c = -x1;
-//    }
+    if ((x2 - x1) != 0)
+    {
+        ret.a = /*(float)*/ (y2 - y1)/ /*(float)*/ (x2 - x1);
+        ret.b = -1;
+        ret.c = (y1 - (ret.a * x1));
+    }
+    else // vertical
+    {
+        ret.a = 1;
+        ret.b = 0;
+        ret.c = -x1;
+    }
 
-//    return (ret);
-//}
+    return (ret);
+}
 
 //int32_t                 wallvisible(int32_t x, int32_t y, int16_t wallnum)
 //{
@@ -9303,138 +9303,178 @@ function /*int32_t */drawrooms(/*int32_t*/ daposx: number, /*int32_t*/ daposy: n
 //}
 //#endif
 
-//static inline int32_t         sameside(_equation *eq, _point2d *p1, _point2d *p2)
-//{
-//    float   sign1, sign2;
+function /*int32_t         */sameside( eq:_equation, p1:_point2d, p2:_point2d ):number
+{
+    var /*float   */sign1:number, sign2:number;
 
-//    sign1 = eq.a * p1.x + eq.b * p1.y + eq.c;
-//    sign2 = eq.a * p2.x + eq.b * p2.y + eq.c;
+    sign1 = eq.a * p1.x + eq.b * p1.y + eq.c;
+    sign2 = eq.a * p2.x + eq.b * p2.y + eq.c;
 
-//    sign1 = sign1 * sign2;
-//    if (sign1 > 0)
-//    {
-//        //OSD_Printf("SAME SIDE !\n");
-//        return (1);
-//    }
-//    //OSD_Printf("OPPOSITE SIDE !\n");
-//    return (0);
-//}
+    sign1 = sign1 * sign2;
+    if (sign1 > 0)
+    {
+        //OSD_Printf("SAME SIDE !\n");
+        return (1);
+    }
+    //OSD_Printf("OPPOSITE SIDE !\n");
+    return (0);
+}
 
 
-////
-//// drawmasks
-////
-//void drawmasks(void)
-//{
-//    int32_t i, modelp=0;
+//
+// drawmasks
+//
+function drawmasks():void
+{
+    var /*int32_t */i:number, modelp=0;
 
-//    for (i=spritesortcnt-1; i>=0; i--)
-//        tspriteptr[i] = &tsprite[i];
+    for (i=spritesortcnt-1; i>=0; i--)
+        tspriteptr[i] = tsprite[i];
 
-//    for (i=spritesortcnt-1; i>=0; i--)
-//    {
-//        const int32_t xs = tspriteptr[i].x-globalposx, ys = tspriteptr[i].y-globalposy;
-//        const int32_t yp = dmulscale6(xs,cosviewingrangeglobalang,ys,sinviewingrangeglobalang);
+    for (i=spritesortcnt-1; i>=0; i--)
+    {
+        var/* int32_t */xs = tspriteptr[i].x-globalposx, ys = tspriteptr[i].y-globalposy;
+        var /*int32_t */yp = dmulscale6(xs,cosviewingrangeglobalang,ys,sinviewingrangeglobalang);
 //#ifdef USE_OPENGL
-//        modelp = (usemodels && tile2model[tspriteptr[i].picnum].modelid >= 0);
+        modelp = (usemodels && tile2model[tspriteptr[i].picnum].modelid >= 0)?1:0;
 //#endif
-//        if (yp > (4<<8))
-//        {
-//            const int32_t xp = dmulscale6(ys,cosglobalang,-xs,singlobalang);
+        if (yp > (4<<8))
+        {
+            var/* int32_t */xp = dmulscale6(ys,cosglobalang,-xs,singlobalang);
 
-//            if (mulscale24(labs(xp+yp),xdimen) >= yp)
-//                goto killsprite;
+            if (mulscale24(labs(xp+yp),xdimen) >= yp)
+                todoThrow("goto killsprite;");
 
-//            spritesx[i] = scale(xp+yp,xdimen<<7,yp);
-//        }
-//        else if ((tspriteptr[i].cstat&48) == 0)
-//        {
+            spritesx[i] = scale(xp+yp,xdimen<<7,yp);
+        }
+        else if ((tspriteptr[i].cstat&48) == 0)
+        {
 //killsprite:
-//            if (!modelp)
-//            {
-//                spritesortcnt--;  //Delete face sprite if on wrong side!
-//                if (i != spritesortcnt)
-//                {
-//                    tspriteptr[i] = tspriteptr[spritesortcnt];
-//                    spritesx[i] = spritesx[spritesortcnt];
-//                    spritesy[i] = spritesy[spritesortcnt];
-//                }
-//                continue;
-//            }
-//        }
-//        spritesy[i] = yp;
-//    }
+            if (!modelp)
+            {
+                spritesortcnt--;  //Delete face sprite if on wrong side!
+                if (i != spritesortcnt)
+                {
+                    tspriteptr[i] = tspriteptr[spritesortcnt];
+                    spritesx[i] = spritesx[spritesortcnt];
+                    spritesy[i] = spritesy[spritesortcnt];
+                }
+                continue;
+            }
+        }
+        spritesy[i] = yp;
+    }
 
-//    {
-//        int32_t j, l, gap, ys;
+    {
+        var /*int32_t */j:number, l:number, gap:number, ys:number;
 
-//        gap = 1; while (gap < spritesortcnt) gap = (gap<<1)+1;
-//        for (gap>>=1; gap>0; gap>>=1)   //Sort sprite list
-//            for (i=0; i<spritesortcnt-gap; i++)
-//                for (l=i; l>=0; l-=gap)
-//                {
-//                    if (spritesy[l] <= spritesy[l+gap]) break;
-//                    swaplong(&tspriteptr[l],&tspriteptr[l+gap]);
-//                    swaplong(&spritesx[l],&spritesx[l+gap]);
-//                    swaplong(&spritesy[l],&spritesy[l+gap]);
-//                }
+        gap = 1; while (gap < spritesortcnt) gap = (gap<<1)+1;
+        for (gap>>=1; gap>0; gap>>=1)   //Sort sprite list
+            for (i=0; i<spritesortcnt-gap; i++)
+                for (l=i; l>=0; l-=gap)
+                {
+                    if (spritesy[l] <= spritesy[l+gap]) break;
+                    {
+                        var t = tspriteptr[l+gap];
+                        tspriteptr[l+gap] = tspriteptr[l];
+                        tspriteptr[l] = t;
+                    }
+                    {
+                        var t2 = spritesx[l+gap];
+                        spritesx[l+gap] = spritesx[l];
+                        spritesx[l] = t2;
+                    }
+                    {
+                        var t3 = spritesy[l+gap];
+                        spritesy[l+gap] = spritesy[l];
+                        spritesy[l] = t3;
+                    }
+                }
 
-//        if (spritesortcnt > 0)
-//            spritesy[spritesortcnt] = (spritesy[spritesortcnt-1]^1);
+        if (spritesortcnt > 0)
+            spritesy[spritesortcnt] = (spritesy[spritesortcnt-1]^1);
 
-//        ys = spritesy[0]; i = 0;
-//        for (j=1; j<=spritesortcnt; j++)
-//        {
-//            int32_t k;
+        ys = spritesy[0]; i = 0;
+        for (j=1; j<=spritesortcnt; j++)
+        {
+            var/*int32_t */k:number;
 
-//            if (spritesy[j] == ys)
-//                continue;
+            if (spritesy[j] == ys)
+                continue;
 
-//            ys = spritesy[j];
+            ys = spritesy[j];
 
-//            if (j > i+1)
-//            {
-//                for (k=i; k<j; k++)
-//                {
-//                    const spritetype *const s = tspriteptr[k];
+            if (j > i+1)
+            {
+                for (k=i; k<j; k++)
+                {
+                    var s = tspriteptr[k];
 
-//                    spritesz[k] = s.z;
-//                    if ((s.cstat&48) != 32)
-//                    {
-//                        int32_t yoff = picanm[s.picnum].yofs + s.yoffset;
-//                        int32_t yspan = (tilesizy[s.picnum]*s.yrepeat<<2);
+                    spritesz[k] = s.z;
+                    if ((s.cstat&48) != 32)
+                    {
+                        var/*int32_t */yoff = picanm[s.picnum].yofs + s.yoffset;
+                        var /*int32_t */yspan = (tilesizy[s.picnum]*s.yrepeat<<2);
 
-//                        spritesz[k] -= (yoff*s.yrepeat)<<2;
+                        spritesz[k] -= (yoff*s.yrepeat)<<2;
 
-//                        if (!(s.cstat&128))
-//                            spritesz[k] -= (yspan>>1);
-//                        if (klabs(spritesz[k]-globalposz) < (yspan>>1))
-//                            spritesz[k] = globalposz;
-//                    }
-//                }
-//                for (k=i+1; k<j; k++)
-//                    for (l=i; l<k; l++)
-//                        if (klabs(spritesz[k]-globalposz) < klabs(spritesz[l]-globalposz))
-//                        {
-//                            swaplong(&tspriteptr[k],&tspriteptr[l]);
-//                            swaplong(&spritesx[k],&spritesx[l]);
-//                            swaplong(&spritesy[k],&spritesy[l]);
-//                            swaplong(&spritesz[k],&spritesz[l]);
-//                        }
-//                for (k=i+1; k<j; k++)
-//                    for (l=i; l<k; l++)
-//                        if (tspriteptr[k].statnum < tspriteptr[l].statnum)
-//                        {
-//                            swaplong(&tspriteptr[k],&tspriteptr[l]);
-//                            swaplong(&spritesx[k],&spritesx[l]);
-//                            swaplong(&spritesy[k],&spritesy[l]);
-//                        }
-//            }
-//            i = j;
-//        }
-//    }
+                        if (!(s.cstat&128))
+                            spritesz[k] -= (yspan>>1);
+                        if (klabs(spritesz[k]-globalposz) < (yspan>>1))
+                            spritesz[k] = globalposz;
+                    }
+                }
+                for (k=i+1; k<j; k++)
+                    for (l=i; l<k; l++)
+                        if (klabs(spritesz[k]-globalposz) < klabs(spritesz[l]-globalposz))
+                        {
+                            {
+                                var t4 = tspriteptr[l];
+                                tspriteptr[l] = tspriteptr[k];
+                                tspriteptr[k] = t4;
+                            }
+                            {
+                                var t5 = spritesx[l];
+                                spritesx[l] = spritesx[k];
+                                spritesx[k] = t5;
+                            }
+                            {
+                                var t6 = spritesy[l];
+                                spritesy[l] = spritesy[k];
+                                spritesy[k] = t6;
+                            }
+                            {
+                                var t7 = spritesz[l];
+                                spritesz[l] = spritesz[k];
+                                spritesz[k] = t7;
+                            }
+                        }
+                for (k=i+1; k<j; k++)
+                    for (l=i; l<k; l++)
+                        if (tspriteptr[k].statnum < tspriteptr[l].statnum)
+                        {
+                            {
+                                var t4 = tspriteptr[l];
+                                tspriteptr[l] = tspriteptr[k];
+                                tspriteptr[k] = t4;
+                            }
+                            {
+                                var t5 = spritesx[l];
+                                spritesx[l] = spritesx[k];
+                                spritesx[k] = t5;
+                            }
+                            {
+                                var t6 = spritesy[l];
+                                spritesy[l] = spritesy[k];
+                                spritesy[k] = t6;
+                            }
+                        }
+            }
+            i = j;
+        }
+    }
 
-//    begindrawing(); //{{{
+    begindrawing(); //{{{
 //#if 0
 //    for (i=spritesortcnt-1; i>=0; i--)
 //    {
@@ -9456,87 +9496,86 @@ function /*int32_t */drawrooms(/*int32_t*/ daposx: number, /*int32_t*/ daposy: n
 //        }
 //    }
 //#endif
-//    {
-//        _point2d pos;
+    {
+        var pos=new _point2d();
 
 //#ifdef USE_OPENGL
-//        curpolygonoffset = 0;
+        curpolygonoffset = 0;
 //#endif
-//        pos.x = (float)globalposx;
-//        pos.y = (float)globalposy;
+        pos.x =  /*(float)*/ globalposx;
+        pos.y =  /*(float)*/ globalposy;
 
-//        // CAUTION: maskwallcnt and spritesortcnt may be zero!
-//        // Writing e.g. "while (maskwallcnt--)" is wrong!
-//        while (maskwallcnt)
-//        {
-//            _point2d dot, dot2, middle;
-//            // PLAG: sorting stuff
-//            _equation maskeq, p1eq, p2eq;
+        // CAUTION: maskwallcnt and spritesortcnt may be zero!
+        // Writing e.g. "while (maskwallcnt--)" is wrong!
+        while (maskwallcnt)
+        {
+            var dot = new _point2d(), dot2 = new _point2d(), middle = new _point2d();
+            // PLAG: sorting stuff
+            var maskeq:_equation, p1eq:_equation, p2eq:_equation;
 
-//            const int32_t w = (getrendermode()==REND_POLYMER) ?
-//                maskwall[maskwallcnt-1] : thewall[maskwall[maskwallcnt-1]];
+            var /*int32_t */w = (getrendermode()==REND_POLYMER) ?
+                maskwall[maskwallcnt-1] : thewall[maskwall[maskwallcnt-1]];
 
-//            const int32_t otherside_spr_first = (getrendermode() == REND_CLASSIC);
+            var/* int32_t */otherside_spr_first = (getrendermode() == REND_CLASSIC);
 
-//            maskwallcnt--;
+            maskwallcnt--;
 
-//            dot.x = (float)wall[w].x;
-//            dot.y = (float)wall[w].y;
-//            dot2.x = (float)wall[wall[w].point2].x;
-//            dot2.y = (float)wall[wall[w].point2].y;
+            dot.x =  /*(float)*/ wall[w].x;
+            dot.y =  /*(float)*/ wall[w].y;
+            dot2.x =  /*(float)*/ wall[wall[w].point2].x;
+            dot2.y =  /*(float)*/ wall[wall[w].point2].y;
 
-//            maskeq = equation(dot.x, dot.y, dot2.x, dot2.y);
+            maskeq = equation(dot.x, dot.y, dot2.x, dot2.y);
 
-//            if (!otherside_spr_first)
-//            {
-//                p1eq = equation(pos.x, pos.y, dot.x, dot.y);
-//                p2eq = equation(pos.x, pos.y, dot2.x, dot2.y);
+            if (!otherside_spr_first)
+            {
+                p1eq = equation(pos.x, pos.y, dot.x, dot.y);
+                p2eq = equation(pos.x, pos.y, dot2.x, dot2.y);
 
-//                middle.x = (dot.x + dot2.x) / 2;
-//                middle.y = (dot.y + dot2.y) / 2;
-//            }
+                middle.x = (dot.x + dot2.x) / 2;
+                middle.y = (dot.y + dot2.y) / 2;
+            }
 
-//            i = spritesortcnt;
-//            while (i)
-//            {
-//                i--;
-//                if (tspriteptr[i] != NULL)
-//                {
-//                    _point2d spr;
+            i = spritesortcnt;
+            while (i)
+            {
+                i--;
+                if (tspriteptr[i] != NULL)
+                {
+                    var spr = new _point2d();
 
-//                    spr.x = (float)tspriteptr[i].x;
-//                    spr.y = (float)tspriteptr[i].y;
+                    spr.x =  /*(float)*/ tspriteptr[i].x;
+                    spr.y =  /*(float)*/ tspriteptr[i].y;
+                    if (!sameside(maskeq, spr, pos) &&
+                        (otherside_spr_first ||
+                         (sameside(p1eq, middle, spr) &&
+                          sameside(p2eq, middle, spr))))
+                    {
+                        drawsprite(i);
+                        tspriteptr[i] = NULL;
+                    }
+                }
+            }
 
-//                    if (!sameside(&maskeq, &spr, &pos) &&
-//                        (otherside_spr_first ||
-//                         (sameside(&p1eq, &middle, &spr) &&
-//                          sameside(&p2eq, &middle, &spr))))
-//                    {
-//                        drawsprite(i);
-//                        tspriteptr[i] = NULL;
-//                    }
-//                }
-//            }
+            drawmaskwall(maskwallcnt);
+        }
 
-//            drawmaskwall(maskwallcnt);
-//        }
-
-//        while (spritesortcnt)
-//        {
-//            spritesortcnt--;
-//            if (tspriteptr[spritesortcnt] != NULL)
-//                drawsprite(spritesortcnt);
-//        }
-//    }
+        while (spritesortcnt)
+        {
+            spritesortcnt--;
+            if (tspriteptr[spritesortcnt] != NULL)
+                drawsprite(spritesortcnt);
+        }
+    }
 
 //#ifdef POLYMER
-//    if (getrendermode() == REND_POLYMER)
-//        polymer_drawmasks();
+    if (getrendermode() == REND_POLYMER)
+        polymer_drawmasks();
 //#endif
 
-//    indrawroomsandmasks = 0;
-//    enddrawing();   //}}}
-//}
+    indrawroomsandmasks = 0;
+    enddrawing();   //}}}
+}
 
 //static void get_floorspr_points(const spritetype *spr, int32_t px, int32_t py,
 //                               int32_t *x1, int32_t *x2, int32_t *x3, int32_t *x4,

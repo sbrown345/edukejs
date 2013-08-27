@@ -71,6 +71,7 @@ var GL_MAX_TEXTURE_SIZE = gl.MAX_TEXTURE_SIZE;
 var GL_ALWAYS = gl.ALWAYS;
 var GL_FRONT_AND_BACK = gl.FRONT_AND_BACK;
 var GL_LEQUAL = gl.LEQUAL;
+var GL_POLYGON_OFFSET_FILL = gl.POLYGON_OFFSET_FILL;
 //var GL_FILL = gl.FILL;
 //var GL_LINE = gl.LINE;
 //var GL_POINT = gl.POINT;
@@ -95,7 +96,7 @@ var bglAlphaFunc = function (arg1:any,arg2:any) {todo("alphaFunc");}//gl.alphaFu
 //bglBlendEquationProcPtr bglBlendEquation;
 //bglCullFaceProcPtr bglCullFace;
 //bglFrontFaceProcPtr bglFrontFace;
-//bglPolygonOffsetProcPtr bglPolygonOffset;
+var bglPolygonOffset = gl.polygonOffset.bind(gl); //bglPolygonOffsetProcPtr 
 //bglPolygonModeProcPtr bglPolygonMode;
 var bglEnable = gl.enable.bind(gl);//bglEnableProcPtr bglEnable;
 var bglDisable = gl.disable.bind(gl);//bglDisableProcPtr ;

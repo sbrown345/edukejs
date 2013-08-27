@@ -3366,44 +3366,44 @@ mdmodel_t *mdload(const char *filnam)
 
 int32_t mddraw(const spritetype *tspr)
 {
-    mdmodel_t *vm;
-    int32_t i;
+    //mdmodel_t *vm;
+    //int32_t i;
 
-    if (r_vbos && (r_vbocount > allocvbos))
-    {
-        indexvbos = (GLuint *)Brealloc(indexvbos, sizeof(GLuint) * r_vbocount);
-        vertvbos = (GLuint *)Brealloc(vertvbos, sizeof(GLuint) * r_vbocount);
+    //if (r_vbos && (r_vbocount > allocvbos))
+    //{
+    //    indexvbos = (GLuint *)Brealloc(indexvbos, sizeof(GLuint) * r_vbocount);
+    //    vertvbos = (GLuint *)Brealloc(vertvbos, sizeof(GLuint) * r_vbocount);
 
-        bglGenBuffersARB(r_vbocount - allocvbos, &(indexvbos[allocvbos]));
-        bglGenBuffersARB(r_vbocount - allocvbos, &(vertvbos[allocvbos]));
+    //    bglGenBuffersARB(r_vbocount - allocvbos, &(indexvbos[allocvbos]));
+    //    bglGenBuffersARB(r_vbocount - allocvbos, &(vertvbos[allocvbos]));
 
-        i = allocvbos;
-        while (i < r_vbocount)
-        {
-            bglBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, indexvbos[i]);
-            bglBufferDataARB(GL_ELEMENT_ARRAY_BUFFER_ARB, maxmodeltris * 3 * sizeof(uint16_t), NULL, GL_STREAM_DRAW_ARB);
-            bglBindBufferARB(GL_ARRAY_BUFFER_ARB, vertvbos[i]);
-            bglBufferDataARB(GL_ARRAY_BUFFER_ARB, maxmodelverts * sizeof(point3d), NULL, GL_STREAM_DRAW_ARB);
-            i++;
-        }
+    //    i = allocvbos;
+    //    while (i < r_vbocount)
+    //    {
+    //        bglBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, indexvbos[i]);
+    //        bglBufferDataARB(GL_ELEMENT_ARRAY_BUFFER_ARB, maxmodeltris * 3 * sizeof(uint16_t), NULL, GL_STREAM_DRAW_ARB);
+    //        bglBindBufferARB(GL_ARRAY_BUFFER_ARB, vertvbos[i]);
+    //        bglBufferDataARB(GL_ARRAY_BUFFER_ARB, maxmodelverts * sizeof(point3d), NULL, GL_STREAM_DRAW_ARB);
+    //        i++;
+    //    }
 
-        bglBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB,0);
-        bglBindBufferARB(GL_ARRAY_BUFFER_ARB, 0);
+    //    bglBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB,0);
+    //    bglBindBufferARB(GL_ARRAY_BUFFER_ARB, 0);
 
-        allocvbos = r_vbocount;
-    }
+    //    allocvbos = r_vbocount;
+    //}
 
-    if (maxmodelverts > allocmodelverts)
-    {
-        point3d *vl = (point3d *)Brealloc(vertlist,sizeof(point3d)*maxmodelverts);
-        if (!vl) { OSD_Printf("ERROR: Not enough memory to allocate %d vertices!\n",maxmodelverts); return 0; }
-        vertlist = vl;
-        allocmodelverts = maxmodelverts;
-    }
+    //if (maxmodelverts > allocmodelverts)
+    //{
+    //    point3d *vl = (point3d *)Brealloc(vertlist,sizeof(point3d)*maxmodelverts);
+    //    if (!vl) { OSD_Printf("ERROR: Not enough memory to allocate %d vertices!\n",maxmodelverts); return 0; }
+    //    vertlist = vl;
+    //    allocmodelverts = maxmodelverts;
+    //}
 
-    vm = models[tile2model[Ptile2tile(tspr->picnum,(tspr->owner >= MAXSPRITES) ? tspr->pal : sprite[tspr->owner].pal)].modelid];
-    if (vm->mdnum == 1) { return voxdraw((voxmodel_t *)vm,tspr); }
-    if (vm->mdnum == 3) { return md3draw((md3model_t *)vm,tspr); }
+    //vm = models[tile2model[Ptile2tile(tspr->picnum,(tspr->owner >= MAXSPRITES) ? tspr->pal : sprite[tspr->owner].pal)].modelid];
+    //if (vm->mdnum == 1) { return voxdraw((voxmodel_t *)vm,tspr); }
+    //if (vm->mdnum == 3) { return md3draw((md3model_t *)vm,tspr); }
     return 0;
 }
 

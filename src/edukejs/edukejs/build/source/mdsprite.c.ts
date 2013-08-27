@@ -92,14 +92,14 @@ function Ptile2tile(tile: number, pallet: number): number
     return t;
 }
 
-//#define MODELALLOCGROUP 256
-//static int32_t nummodelsalloced = 0;
+var MODELALLOCGROUP=256;
+var /*int32_t */nummodelsalloced = 0;
 
-//static int32_t maxmodelverts = 0, allocmodelverts = 0;
-//static int32_t maxmodeltris = 0, allocmodeltris = 0;
+var /*int32_t*/ maxmodelverts = 0, allocmodelverts = 0;
+var /*int32_t*/ maxmodeltris = 0, allocmodeltris = 0;
 //static point3d *vertlist = NULL; //temp array to store interpolated vertices for drawing
 
-//static int32_t allocvbos = 0, curvbo = 0;
+var /*int32_t */allocvbos = 0, curvbo = 0;
 //static GLuint *vertvbos = NULL;
 //static GLuint *indexvbos = NULL;
 
@@ -178,19 +178,19 @@ function freevbos(): void
 //    {
 //        mdmodel_t *m = models[i];
 
-//        if (m->mdnum == 2 || m->mdnum == 3)
+//        if (m.mdnum == 2 || m.mdnum == 3)
 //        {
 //            mdskinmap_t *sk;
 //            md2model_t *m2 = (md2model_t *)m;
 
-//            for (j=0; j<m2->numskins*(HICEFFECTMASK+1); j++)
-//                if (m2->texid[j] == texid)
-//                    m2->texid[j] = 0;
+//            for (j=0; j<m2.numskins*(HICEFFECTMASK+1); j++)
+//                if (m2.texid[j] == texid)
+//                    m2.texid[j] = 0;
 
-//            for (sk=m2->skinmap; sk; sk=sk->next)
+//            for (sk=m2.skinmap; sk; sk=sk.next)
 //                for (j=0; j<(HICEFFECTMASK+1); j++)
-//                    if (sk->texid[j] == texid)
-//                        sk->texid[j] = 0;
+//                    if (sk.texid[j] == texid)
+//                        sk.texid[j] = 0;
 //        }
 //    }
 //}
@@ -296,11 +296,11 @@ function mdinit(): void
 
 //    if ((uint32_t)modelid >= (uint32_t)nextmodelid) return -1;
 //    m = models[modelid];
-//    m->bscale = scale;
-//    m->shadeoff = shadeoff;
-//    m->zadd = zadd;
-//    m->yoffset = yoffset;
-//    m->flags = flags;
+//    m.bscale = scale;
+//    m.shadeoff = shadeoff;
+//    m.zadd = zadd;
+//    m.yoffset = yoffset;
+//    m.flags = flags;
 
 //    return 0;
 //}
@@ -309,24 +309,24 @@ function mdinit(): void
 //{
 //    int32_t i = 0;
 
-//    switch (vm->mdnum)
+//    switch (vm.mdnum)
 //    {
 //    case 2:
 //    {
 //        md2model_t *m = (md2model_t *)vm;
 //        md2frame_t *fr;
-//        for (i=0; i<m->numframes; i++)
+//        for (i=0; i<m.numframes; i++)
 //        {
-//            fr = (md2frame_t *)&m->frames[i*m->framebytes];
-//            if (!Bstrcmp(fr->name, nam)) break;
+//            fr = (md2frame_t *)&m.frames[i*m.framebytes];
+//            if (!Bstrcmp(fr.name, nam)) break;
 //        }
 //    }
 //    break;
 //    case 3:
 //    {
 //        md3model_t *m = (md3model_t *)vm;
-//        for (i=0; i<m->numframes; i++)
-//            if (!Bstrcmp(m->head.frames[i].nam,nam)) break;
+//        for (i=0; i<m.numframes; i++)
+//            if (!Bstrcmp(m.head.frames[i].nam,nam)) break;
 //    }
 //    break;
 //    }
@@ -346,7 +346,7 @@ function mdinit(): void
 
 //    tilenume=addtileP(modelid,tilenume,pal);
 //    m = (md2model_t *)models[modelid];
-//    if (m->mdnum == 1)
+//    if (m.mdnum == 1)
 //    {
 //        tile2model[tilenume].modelid = modelid;
 //        tile2model[tilenume].framenum = tile2model[tilenume].skinnum = 0;
@@ -354,7 +354,7 @@ function mdinit(): void
 //    }
 
 //    i = framename2index((mdmodel_t *)m,framename);
-//    if (i == m->numframes) return(-3);   // frame name invalid
+//    if (i == m.numframes) return(-3);   // frame name invalid
 
 //    tile2model[tilenume].modelid = modelid;
 //    tile2model[tilenume].framenum = i;
@@ -376,16 +376,16 @@ function mdinit(): void
 
 //    memset(&ma, 0, sizeof(ma));
 //    m = (md2model_t *)models[modelid];
-//    if (m->mdnum < 2) return 0;
+//    if (m.mdnum < 2) return 0;
 
 //    //find index of start frame
 //    i = framename2index((mdmodel_t *)m,framestart);
-//    if (i == m->numframes) return -2;
+//    if (i == m.numframes) return -2;
 //    ma.startframe = i;
 
 //    //find index of finish frame which must trail start frame
 //    i = framename2index((mdmodel_t *)m,frameend);
-//    if (i == m->numframes) return -3;
+//    if (i == m.numframes) return -3;
 //    ma.endframe = i;
 
 //    ma.fpssc = fpssc;
@@ -395,8 +395,8 @@ function mdinit(): void
 //    if (!map) return(-4);
 //    Bmemcpy(map, &ma, sizeof(ma));
 
-//    map->next = m->animations;
-//    m->animations = map;
+//    map.next = m.animations;
+//    m.animations = map;
 
 //    return(0);
 //}
@@ -413,22 +413,22 @@ function mdinit(): void
 
 //    if ((uint32_t)modelid >= (uint32_t)nextmodelid) return -1;
 //    m = (md3model_t *)models[modelid];
-//    if (m->mdnum != 3) return -2;
+//    if (m.mdnum != 3) return -2;
 
-//    for (anm=m->animations; anm; anm=anm->next)
+//    for (anm=m.animations; anm; anm=anm.next)
 //    {
-//        if (anm->endframe <= anm->startframe)
+//        if (anm.endframe <= anm.startframe)
 //        {
-////            initprintf("backward anim %d-%d\n", anm->startframe, anm->endframe);
+////            initprintf("backward anim %d-%d\n", anm.startframe, anm.endframe);
 //            return -3;
 //        }
 
-//        for (i=anm->startframe; i<anm->endframe; i++)
+//        for (i=anm.startframe; i<anm.endframe; i++)
 //            usedframebitmap[i>>3] |= (1<<(i&7));
 //    }
 
 //    sub = 0;
-//    for (i=0; i<m->numframes; i++)
+//    for (i=0; i<m.numframes; i++)
 //    {
 //        if (!(usedframebitmap[i>>3]&(1<<(i&7))))
 //        {
@@ -440,40 +440,40 @@ function mdinit(): void
 //        otonframe[i] = i-sub;
 //    }
 
-//    usedframes = m->numframes - sub;
-//    if (usedframes==0 || usedframes==m->numframes)
+//    usedframes = m.numframes - sub;
+//    if (usedframes==0 || usedframes==m.numframes)
 //        return usedframes;
 
 //    //// THIN OUT! ////
 
-//    for (i=0; i<m->numframes; i++)
+//    for (i=0; i<m.numframes; i++)
 //    {
 //        if (otonframe[i]>=0 && otonframe[i] != i)
 //        {
-//            if (m->muladdframes)
-//                Bmemcpy(&m->muladdframes[2*otonframe[i]], &m->muladdframes[2*i], 2*sizeof(point3d));
-//            Bmemcpy(&m->head.frames[otonframe[i]], &m->head.frames[i], sizeof(md3frame_t));
+//            if (m.muladdframes)
+//                Bmemcpy(&m.muladdframes[2*otonframe[i]], &m.muladdframes[2*i], 2*sizeof(point3d));
+//            Bmemcpy(&m.head.frames[otonframe[i]], &m.head.frames[i], sizeof(md3frame_t));
 //        }
 //    }
 
-//    for (surfi=0; surfi < m->head.numsurfs; surfi++)
+//    for (surfi=0; surfi < m.head.numsurfs; surfi++)
 //    {
-//        s = &m->head.surfs[surfi];
+//        s = &m.head.surfs[surfi];
 
-//        for (i=0; i<m->numframes; i++)
+//        for (i=0; i<m.numframes; i++)
 //            if (otonframe[i]>=0 && otonframe[i] != i)
-//                Bmemcpy(&s->xyzn[otonframe[i]*s->numverts], &s->xyzn[i*s->numverts], s->numverts*sizeof(md3xyzn_t));
+//                Bmemcpy(&s.xyzn[otonframe[i]*s.numverts], &s.xyzn[i*s.numverts], s.numverts*sizeof(md3xyzn_t));
 //    }
 
 //    ////// tweak frame indices in various places
 
-//    for (anm=m->animations; anm; anm=anm->next)
+//    for (anm=m.animations; anm; anm=anm.next)
 //    {
-//        if (otonframe[anm->startframe]==-1 || otonframe[anm->endframe-1]==-1)
-//            initprintf("md %d WTF: anm %d %d\n", modelid, anm->startframe, anm->endframe);
+//        if (otonframe[anm.startframe]==-1 || otonframe[anm.endframe-1]==-1)
+//            initprintf("md %d WTF: anm %d %d\n", modelid, anm.startframe, anm.endframe);
 
-//        anm->startframe = otonframe[anm->startframe];
-//        anm->endframe = otonframe[anm->endframe-1];
+//        anm.startframe = otonframe[anm.startframe];
+//        anm.endframe = otonframe[anm.endframe-1];
 //    }
 
 //    for (i=0; i<MAXTILES+EXTRATILES; i++)
@@ -487,19 +487,19 @@ function mdinit(): void
 //    ////// realloc & change "numframes" everywhere
 //    // TODO: check if NULL
 
-//    if (m->muladdframes)
-//        m->muladdframes = Brealloc(m->muladdframes, 2*sizeof(point3d)*usedframes);
-//    m->head.frames = Brealloc(m->head.frames, sizeof(md3frame_t)*usedframes);
+//    if (m.muladdframes)
+//        m.muladdframes = Brealloc(m.muladdframes, 2*sizeof(point3d)*usedframes);
+//    m.head.frames = Brealloc(m.head.frames, sizeof(md3frame_t)*usedframes);
 
-//    for (surfi=0; surfi < m->head.numsurfs; surfi++)
+//    for (surfi=0; surfi < m.head.numsurfs; surfi++)
 //    {
-//        m->head.surfs[surfi].numframes = usedframes;
+//        m.head.surfs[surfi].numframes = usedframes;
 //        // CAN'T do that because xyzn is offset from a larger block when loaded from md3:
-////        m->head.surfs[surfi].xyzn = Brealloc(m->head.surfs[surfi].xyzn, s->numverts*usedframes*sizeof(md3xyzn_t));
+////        m.head.surfs[surfi].xyzn = Brealloc(m.head.surfs[surfi].xyzn, s.numverts*usedframes*sizeof(md3xyzn_t));
 //    }
 
-//    m->head.numframes = usedframes;
-//    m->numframes = usedframes;
+//    m.head.numframes = usedframes;
+//    m.numframes = usedframes;
 
 //    ////////////
 //    return usedframes;
@@ -518,31 +518,31 @@ function mdinit(): void
 //    if ((unsigned)palnum >= (unsigned)MAXPALOOKUPS) return -3;
 
 //    m = (md2model_t *)models[modelid];
-//    if (m->mdnum < 2) return 0;
-//    if (m->mdnum == 2) surfnum = 0;
+//    if (m.mdnum < 2) return 0;
+//    if (m.mdnum == 2) surfnum = 0;
 
 //    skl = NULL;
-//    for (sk = m->skinmap; sk; skl = sk, sk = sk->next)
-//        if (sk->palette == (uint8_t)palnum && skinnum == sk->skinnum && surfnum == sk->surfnum)
+//    for (sk = m.skinmap; sk; skl = sk, sk = sk.next)
+//        if (sk.palette == (uint8_t)palnum && skinnum == sk.skinnum && surfnum == sk.surfnum)
 //            break;
 //    if (!sk)
 //    {
 //        sk = (mdskinmap_t *)Bcalloc(1,sizeof(mdskinmap_t));
 //        if (!sk) return -4;
 
-//        if (!skl) m->skinmap = sk;
-//        else skl->next = sk;
+//        if (!skl) m.skinmap = sk;
+//        else skl.next = sk;
 //    }
-//    else if (sk->fn) Bfree(sk->fn);
+//    else if (sk.fn) Bfree(sk.fn);
 
-//    sk->palette = (uint8_t)palnum;
-//    sk->skinnum = skinnum;
-//    sk->surfnum = surfnum;
-//    sk->param = param;
-//    sk->specpower = specpower;
-//    sk->specfactor = specfactor;
-//    sk->fn = Bstrdup(skinfn);
-//    if (!sk->fn) return(-4);
+//    sk.palette = (uint8_t)palnum;
+//    sk.skinnum = skinnum;
+//    sk.surfnum = surfnum;
+//    sk.param = param;
+//    sk.specpower = specpower;
+//    sk.specfactor = specfactor;
+//    sk.fn = Bstrdup(skinfn);
+//    if (!sk.fn) return(-4);
 
 //    return 0;
 //}
@@ -708,30 +708,30 @@ function mdinit(): void
 
 //    int32_t startticks, willprint=0;
 
-//    if (m->mdnum == 2)
+//    if (m.mdnum == 2)
 //        surf = 0;
 
 //    if ((unsigned)pal >= (unsigned)MAXPALOOKUPS)
 //        return 0;
 
 //    i = -1;
-//    for (sk = m->skinmap; sk; sk = sk->next)
+//    for (sk = m.skinmap; sk; sk = sk.next)
 //    {
-//        if (sk->palette == pal && sk->skinnum == number && sk->surfnum == surf)
+//        if (sk.palette == pal && sk.skinnum == number && sk.surfnum == surf)
 //        {
-//            skinfile = sk->fn;
-//            texidx = &sk->texid[hicfxmask(pal)];
+//            skinfile = sk.fn;
+//            texidx = &sk.texid[hicfxmask(pal)];
 //            Bstrncpyz(fn, skinfile, BMAX_PATH);
 //            //OSD_Printf("Using exact match skin (pal=%d,skinnum=%d,surfnum=%d) %s\n",pal,number,surf,skinfile);
 //            break;
 //        }
 //        //If no match, give highest priority to number, then pal.. (Parkar's request, 02/27/2005)
-//        else if ((sk->palette ==   0) && (sk->skinnum == number) && (sk->surfnum == surf) && (i < 5)) { i = 5; skzero = sk; }
-//        else if ((sk->palette == pal) && (sk->skinnum ==      0) && (sk->surfnum == surf) && (i < 4)) { i = 4; skzero = sk; }
-//        else if ((sk->palette ==   0) && (sk->skinnum ==      0) && (sk->surfnum == surf) && (i < 3)) { i = 3; skzero = sk; }
-//        else if ((sk->palette ==   0) && (sk->skinnum == number) && (i < 2)) { i = 2; skzero = sk; }
-//        else if ((sk->palette == pal) && (sk->skinnum ==      0) && (i < 1)) { i = 1; skzero = sk; }
-//        else if ((sk->palette ==   0) && (sk->skinnum ==      0) && (i < 0)) { i = 0; skzero = sk; }
+//        else if ((sk.palette ==   0) && (sk.skinnum == number) && (sk.surfnum == surf) && (i < 5)) { i = 5; skzero = sk; }
+//        else if ((sk.palette == pal) && (sk.skinnum ==      0) && (sk.surfnum == surf) && (i < 4)) { i = 4; skzero = sk; }
+//        else if ((sk.palette ==   0) && (sk.skinnum ==      0) && (sk.surfnum == surf) && (i < 3)) { i = 3; skzero = sk; }
+//        else if ((sk.palette ==   0) && (sk.skinnum == number) && (i < 2)) { i = 2; skzero = sk; }
+//        else if ((sk.palette == pal) && (sk.skinnum ==      0) && (i < 1)) { i = 1; skzero = sk; }
+//        else if ((sk.palette ==   0) && (sk.skinnum ==      0) && (i < 0)) { i = 0; skzero = sk; }
 //    }
 
 //    if (!sk)
@@ -741,8 +741,8 @@ function mdinit(): void
 
 //        if (skzero)
 //        {
-//            skinfile = skzero->fn;
-//            texidx = &skzero->texid[hicfxmask(pal)];
+//            skinfile = skzero.fn;
+//            texidx = &skzero.texid[hicfxmask(pal)];
 //            Bstrncpyz(fn, skinfile, BMAX_PATH);
 //            //OSD_Printf("Using def skin 0,0 as fallback, pal=%d\n", pal);
 //        }
@@ -751,13 +751,13 @@ function mdinit(): void
 //#if 0
 //        {
 //            // fall back to the model-defined texture
-//            if ((unsigned)number >= (unsigned)m->numskins)
+//            if ((unsigned)number >= (unsigned)m.numskins)
 //                number = 0;
 
-//            // m->skinfn is undefined when md3model_t is cast to md2model_t --> crash
-//            skinfile = m->skinfn + number*64;
-//            texidx = &m->texid[number*(HICEFFECTMASK+1) + hicfxmask(pal)];
-//            Bstrncpyz(fn, m->basepath, BMAX_PATH);
+//            // m.skinfn is undefined when md3model_t is cast to md2model_t -. crash
+//            skinfile = m.skinfn + number*64;
+//            texidx = &m.texid[number*(HICEFFECTMASK+1) + hicfxmask(pal)];
+//            Bstrncpyz(fn, m.basepath, BMAX_PATH);
 //            if ((Bstrlen(fn) + Bstrlen(skinfile)) < BMAX_PATH)
 //                Bstrcat(fn,skinfile);
 //            //OSD_Printf("Using MD2/MD3 skin (%d) %s, pal=%d\n",number,skinfile,pal);
@@ -774,13 +774,13 @@ function mdinit(): void
 //    // possibly fetch an already loaded multitexture :_)
 //    if (pal >= (MAXPALOOKUPS - RESERVEDPALS))
 //        for (i=0; i<nextmodelid; i++)
-//            for (skzero = ((md2model_t *)models[i])->skinmap; skzero; skzero = skzero->next)
-//                if (!Bstrcasecmp(skzero->fn, sk->fn) && skzero->texid[hicfxmask(pal)])
+//            for (skzero = ((md2model_t *)models[i]).skinmap; skzero; skzero = skzero.next)
+//                if (!Bstrcasecmp(skzero.fn, sk.fn) && skzero.texid[hicfxmask(pal)])
 //                {
 //                    int32_t f = hicfxmask(pal);
 
-//                    sk->texid[f] = skzero->texid[f];
-//                    return sk->texid[f];
+//                    sk.texid[f] = skzero.texid[f];
+//                    return sk.texid[f];
 //                }
 
 //    *texidx = 0;
@@ -806,7 +806,7 @@ function mdinit(): void
 //        osizy = cachead.ydim;
 //        hasalpha = (cachead.flags & 2) ? 1 : 0;
 //        if (pal < (MAXPALOOKUPS - RESERVEDPALS))
-//            m->usesalpha = hasalpha;
+//            m.usesalpha = hasalpha;
 //        //kclose(filh);	// FIXME: uncomment when cache1d.c is fixed
 //    }
 //    else
@@ -836,7 +836,7 @@ function mdinit(): void
 //        willprint = 1;
 
 //        if (pal < (MAXPALOOKUPS - RESERVEDPALS))
-//            m->usesalpha = hasalpha;
+//            m.usesalpha = hasalpha;
 //        if ((doalloc&3)==1)
 //            bglGenTextures(1, texidx);
 
@@ -855,40 +855,40 @@ function mdinit(): void
 //        Bfree((void *)fptr);
 //    }
 
-//    if (!m->skinloaded)
+//    if (!m.skinloaded)
 //    {
 //        if (xsiz != osizx || ysiz != osizy)
 //        {
 //            float fx, fy;
 //            fx = ((float)osizx)/((float)xsiz);
 //            fy = ((float)osizy)/((float)ysiz);
-//            if (m->mdnum == 2)
+//            if (m.mdnum == 2)
 //            {
 //                int32_t *lptr;
-//                for (lptr=m->glcmds; (i=*lptr++);)
+//                for (lptr=m.glcmds; (i=*lptr++);)
 //                    for (i=labs(i); i>0; i--,lptr+=3)
 //                    {
 //                        ((float *)lptr)[0] *= fx;
 //                        ((float *)lptr)[1] *= fy;
 //                    }
 //            }
-//            else if (m->mdnum == 3)
+//            else if (m.mdnum == 3)
 //            {
 //                md3model_t *m3 = (md3model_t *)m;
 //                md3surf_t *s;
 //                int32_t surfi;
-//                for (surfi=0; surfi<m3->head.numsurfs; surfi++)
+//                for (surfi=0; surfi<m3.head.numsurfs; surfi++)
 //                {
-//                    s = &m3->head.surfs[surfi];
-//                    for (i=s->numverts-1; i>=0; i--)
+//                    s = &m3.head.surfs[surfi];
+//                    for (i=s.numverts-1; i>=0; i--)
 //                    {
-//                        s->uv[i].u *= fx;
-//                        s->uv[i].v *= fy;
+//                        s.uv[i].u *= fx;
+//                        s.uv[i].v *= fy;
 //                    }
 //                }
 //            }
 //        }
-//        m->skinloaded = 1+number;
+//        m.skinloaded = 1+number;
 //    }
 
 //    bglTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,glfiltermodes[gltexfiltermode].mag);
@@ -948,159 +948,159 @@ function mdinit(): void
 //    spritesmooth_t *smooth;
 //    spriteext_t *sprext;
 
-//    if (m->numframes < 2)
+//    if (m.numframes < 2)
 //    {
-//        m->interpol = 0;
+//        m.interpol = 0;
 //        return;
 //    }
 
-//    tile = Ptile2tile(tspr->picnum,lpal);
-//    m->cframe = m->nframe = tile2model[tile].framenum;
+//    tile = Ptile2tile(tspr.picnum,lpal);
+//    m.cframe = m.nframe = tile2model[tile].framenum;
 //#ifdef DEBUGGINGAIDS
-//    if (m->cframe >= m->numframes)
+//    if (m.cframe >= m.numframes)
 //        OSD_Printf("1: c > n\n");
 //#endif
 
 //    smoothdurationp = (r_animsmoothing && (tile2model[tile].smoothduration != 0));
 
-//    smooth = ((unsigned)tspr->owner < MAXSPRITES+MAXUNIQHUDID) ? &spritesmooth[tspr->owner] : NULL;
-//    sprext = ((unsigned)tspr->owner < MAXSPRITES+MAXUNIQHUDID) ? &spriteext[tspr->owner] : NULL;
+//    smooth = ((unsigned)tspr.owner < MAXSPRITES+MAXUNIQHUDID) ? &spritesmooth[tspr.owner] : NULL;
+//    sprext = ((unsigned)tspr.owner < MAXSPRITES+MAXUNIQHUDID) ? &spriteext[tspr.owner] : NULL;
 
-//    for (anim = m->animations; anim && anim->startframe != m->cframe; anim = anim->next)
+//    for (anim = m.animations; anim && anim.startframe != m.cframe; anim = anim.next)
 //    {
 //        /* do nothing */;
 //    }
 
 //    if (!anim)
 //    {
-//        if (!smoothdurationp || ((smooth->mdoldframe == m->cframe) && (smooth->mdcurframe == m->cframe)))
+//        if (!smoothdurationp || ((smooth.mdoldframe == m.cframe) && (smooth.mdcurframe == m.cframe)))
 //        {
-//            m->interpol = 0;
+//            m.interpol = 0;
 //            return;
 //        }
 
-//        // assert(smoothdurationp && ((smooth->mdoldframe != m->cframe) || (smooth->mdcurframe != m->cframe)))
+//        // assert(smoothdurationp && ((smooth.mdoldframe != m.cframe) || (smooth.mdcurframe != m.cframe)))
 
-//        if (smooth->mdoldframe != m->cframe)
+//        if (smooth.mdoldframe != m.cframe)
 //        {
-//            if (smooth->mdsmooth == 0)
+//            if (smooth.mdsmooth == 0)
 //            {
-//                sprext->mdanimtims = mdtims;
-//                m->interpol = 0;
-//                smooth->mdsmooth = 1;
-//                smooth->mdcurframe = m->cframe;
+//                sprext.mdanimtims = mdtims;
+//                m.interpol = 0;
+//                smooth.mdsmooth = 1;
+//                smooth.mdcurframe = m.cframe;
 //            }
 
-//            if (smooth->mdcurframe != m->cframe)
+//            if (smooth.mdcurframe != m.cframe)
 //            {
-//                sprext->mdanimtims = mdtims;
-//                m->interpol = 0;
-//                smooth->mdsmooth = 1;
-//                smooth->mdoldframe = smooth->mdcurframe;
-//                smooth->mdcurframe = m->cframe;
+//                sprext.mdanimtims = mdtims;
+//                m.interpol = 0;
+//                smooth.mdsmooth = 1;
+//                smooth.mdoldframe = smooth.mdcurframe;
+//                smooth.mdcurframe = m.cframe;
 //            }
 //        }
-//        else  // if (smooth->mdcurframe != m->cframe)
+//        else  // if (smooth.mdcurframe != m.cframe)
 //        {
-//            sprext->mdanimtims = mdtims;
-//            m->interpol = 0;
-//            smooth->mdsmooth = 1;
-//            smooth->mdoldframe = smooth->mdcurframe;
-//            smooth->mdcurframe = m->cframe;
+//            sprext.mdanimtims = mdtims;
+//            m.interpol = 0;
+//            smooth.mdsmooth = 1;
+//            smooth.mdoldframe = smooth.mdcurframe;
+//            smooth.mdcurframe = m.cframe;
 //        }
 //    }
-//    else if (/* anim && */ sprext->mdanimcur != anim->startframe)
+//    else if (/* anim && */ sprext.mdanimcur != anim.startframe)
 //    {
-//        //if (sprext->flags & SPREXT_NOMDANIM) OSD_Printf("SPREXT_NOMDANIM\n");
-//        //OSD_Printf("smooth launched ! oldanim %i new anim %i\n", sprext->mdanimcur, anim->startframe);
-//        sprext->mdanimcur = (int16_t)anim->startframe;
-//        sprext->mdanimtims = mdtims;
-//        m->interpol = 0;
+//        //if (sprext.flags & SPREXT_NOMDANIM) OSD_Printf("SPREXT_NOMDANIM\n");
+//        //OSD_Printf("smooth launched ! oldanim %i new anim %i\n", sprext.mdanimcur, anim.startframe);
+//        sprext.mdanimcur = (int16_t)anim.startframe;
+//        sprext.mdanimtims = mdtims;
+//        m.interpol = 0;
 
 //        if (!smoothdurationp)
 //        {
-//            m->cframe = m->nframe = anim->startframe;
+//            m.cframe = m.nframe = anim.startframe;
 //#ifdef DEBUGGINGAIDS
-//            if (m->cframe >= m->numframes)
+//            if (m.cframe >= m.numframes)
 //                OSD_Printf("2: c > n\n");
 //#endif
 //            return;
 //        }
 
-//        m->nframe = anim->startframe;
-//        m->cframe = smooth->mdoldframe;
+//        m.nframe = anim.startframe;
+//        m.cframe = smooth.mdoldframe;
 //#ifdef DEBUGGINGAIDS
-//        if (m->cframe >= m->numframes)
+//        if (m.cframe >= m.numframes)
 //            OSD_Printf("3: c > n\n");
 //#endif
-//        smooth->mdsmooth = 1;
+//        smooth.mdsmooth = 1;
 //        return;
 //    }
 
-//    if (smooth->mdsmooth)  // VERIFY: (smooth->mdsmooth) implies (tile2model[tile].smoothduration!=0) ?
+//    if (smooth.mdsmooth)  // VERIFY: (smooth.mdsmooth) implies (tile2model[tile].smoothduration!=0) ?
 //        ftol((1.0f / (float)(tile2model[tile].smoothduration)) * 66.f, &fps);
 //    else
-//        fps = anim->fpssc;
+//        fps = anim.fpssc;
 
-//    i = (mdtims - sprext->mdanimtims)*((fps*timerticspersec)/120);
+//    i = (mdtims - sprext.mdanimtims)*((fps*timerticspersec)/120);
 
-//    if (smooth->mdsmooth)
+//    if (smooth.mdsmooth)
 //        j = 65536;
 //    else
-//        j = ((anim->endframe+1-anim->startframe)<<16);
+//        j = ((anim.endframe+1-anim.startframe)<<16);
 //    // XXX: Just in case you play the game for a VERY long time...
-//    if (i < 0) { i = 0; sprext->mdanimtims = mdtims; }
+//    if (i < 0) { i = 0; sprext.mdanimtims = mdtims; }
 //    //compare with j*2 instead of j to ensure i stays > j-65536 for MDANIM_ONESHOT
 //    if (anim && (i >= j+j) && (fps) && !mdpause) //Keep mdanimtims close to mdtims to avoid the use of MOD
-//        sprext->mdanimtims += j/((fps*timerticspersec)/120);
+//        sprext.mdanimtims += j/((fps*timerticspersec)/120);
 
 //    k = i;
 
-//    if (anim && (anim->flags&MDANIM_ONESHOT))
+//    if (anim && (anim.flags&MDANIM_ONESHOT))
 //        { if (i > j-65536) i = j-65536; }
 //    else { if (i >= j) { i -= j; if (i >= j) i %= j; } }
 
-//    if (r_animsmoothing && smooth->mdsmooth)
+//    if (r_animsmoothing && smooth.mdsmooth)
 //    {
-//        m->nframe = anim ? anim->startframe : smooth->mdcurframe;
-//        m->cframe = smooth->mdoldframe;
+//        m.nframe = anim ? anim.startframe : smooth.mdcurframe;
+//        m.cframe = smooth.mdoldframe;
 //#ifdef DEBUGGINGAIDS
-//        if (m->cframe >= m->numframes)
+//        if (m.cframe >= m.numframes)
 //            OSD_Printf("4: c > n\n");
 //#endif
-//        //OSD_Printf("smoothing... cframe %i nframe %i\n", m->cframe, m->nframe);
+//        //OSD_Printf("smoothing... cframe %i nframe %i\n", m.cframe, m.nframe);
 //        if (k > 65535)
 //        {
-//            sprext->mdanimtims = mdtims;
-//            m->interpol = 0;
-//            smooth->mdsmooth = 0;
-//            m->cframe = m->nframe; // = anim ? anim->startframe : smooth->mdcurframe;
+//            sprext.mdanimtims = mdtims;
+//            m.interpol = 0;
+//            smooth.mdsmooth = 0;
+//            m.cframe = m.nframe; // = anim ? anim.startframe : smooth.mdcurframe;
 //#ifdef DEBUGGINGAIDS
-//            if (m->cframe >= m->numframes)
+//            if (m.cframe >= m.numframes)
 //                OSD_Printf("5: c > n\n");
 //#endif
-//            smooth->mdoldframe = m->cframe;
+//            smooth.mdoldframe = m.cframe;
 //            //OSD_Printf("smooth stopped !\n");
 //            return;
 //        }
 //    }
 //    else
 //    {
-//        m->cframe = (i>>16)+anim->startframe;
+//        m.cframe = (i>>16)+anim.startframe;
 //#ifdef DEBUGGINGAIDS
-//        if (m->cframe >= m->numframes)
+//        if (m.cframe >= m.numframes)
 //            OSD_Printf("6: c > n\n");
 //#endif
-//        m->nframe = m->cframe+1;
-//        if (m->nframe > anim->endframe)  // VERIFY: (!(r_animsmoothing && smooth->mdsmooth)) implies (anim!=NULL) ?
-//            m->nframe = anim->startframe;
+//        m.nframe = m.cframe+1;
+//        if (m.nframe > anim.endframe)  // VERIFY: (!(r_animsmoothing && smooth.mdsmooth)) implies (anim!=NULL) ?
+//            m.nframe = anim.startframe;
 
-//        smooth->mdoldframe = m->cframe;
-//        //OSD_Printf("not smoothing... cframe %i nframe %i\n", m->cframe, m->nframe);
+//        smooth.mdoldframe = m.cframe;
+//        //OSD_Printf("not smoothing... cframe %i nframe %i\n", m.cframe, m.nframe);
 //    }
 
-//    m->interpol = ((float)(i&65535))/65536.f;
-//    //OSD_Printf("interpol %f\n", m->interpol);
+//    m.interpol = ((float)(i&65535))/65536.f;
+//    //OSD_Printf("interpol %f\n", m.interpol);
 //}
 
 //// VBO generation and allocation
@@ -1108,14 +1108,14 @@ function mdinit(): void
 //{
 //    int32_t     i;
 
-//    m->vbos = (GLuint *)Bmalloc(m->head.numsurfs * sizeof(GLuint));
-//    bglGenBuffersARB(m->head.numsurfs, m->vbos);
+//    m.vbos = (GLuint *)Bmalloc(m.head.numsurfs * sizeof(GLuint));
+//    bglGenBuffersARB(m.head.numsurfs, m.vbos);
 
 //    i = 0;
-//    while (i < m->head.numsurfs)
+//    while (i < m.head.numsurfs)
 //    {
-//        bglBindBufferARB(GL_ARRAY_BUFFER_ARB, m->vbos[i]);
-//        bglBufferDataARB(GL_ARRAY_BUFFER_ARB, m->head.surfs[i].numverts * sizeof(md3uv_t), m->head.surfs[i].uv, GL_STATIC_DRAW_ARB);
+//        bglBindBufferARB(GL_ARRAY_BUFFER_ARB, m.vbos[i]);
+//        bglBufferDataARB(GL_ARRAY_BUFFER_ARB, m.head.surfs[i].numverts * sizeof(md3uv_t), m.head.surfs[i].uv, GL_STATIC_DRAW_ARB);
 //        i++;
 //    }
 //    bglBindBufferARB(GL_ARRAY_BUFFER_ARB, 0);
@@ -1135,7 +1135,7 @@ function mdinit(): void
 //    int32_t ournumskins, ournumglcmds;
 
 //    m = (md2model_t *)Bcalloc(1,sizeof(md2model_t)); if (!m) return(0);
-//    m->mdnum = 2; m->scale = .01f;
+//    m.mdnum = 2; m.scale = .01f;
 
 //    kread(fil,(char *)&head,sizeof(md2head_t));
 //    head.id = B_LITTLE32(head.id);                 head.vers = B_LITTLE32(head.vers);
@@ -1153,67 +1153,67 @@ function mdinit(): void
 //    ournumskins = head.numskins ? head.numskins : 1;
 //    ournumglcmds = head.numglcmds ? head.numglcmds : 1;
 
-//    m->numskins = head.numskins;
-//    m->numframes = head.numframes;
-//    m->numverts = head.numverts;
-//    m->numglcmds = head.numglcmds;
-//    m->framebytes = head.framebytes;
+//    m.numskins = head.numskins;
+//    m.numframes = head.numframes;
+//    m.numverts = head.numverts;
+//    m.numglcmds = head.numglcmds;
+//    m.framebytes = head.framebytes;
 
-//    m->frames = (char *)Bmalloc(m->numframes*m->framebytes); if (!m->frames) { Bfree(m); return(0); }
-//    m->glcmds = (int32_t *)Bmalloc(ournumglcmds*sizeof(int32_t)); if (!m->glcmds) { Bfree(m->frames); Bfree(m); return(0); }
-//    m->tris = (md2tri_t *)Bmalloc(head.numtris*sizeof(md2tri_t)); if (!m->tris) { Bfree(m->glcmds); Bfree(m->frames); Bfree(m); return(0); }
-//    m->uv = (md2uv_t *)Bmalloc(head.numuv*sizeof(md2uv_t)); if (!m->uv) { Bfree(m->tris); Bfree(m->glcmds); Bfree(m->frames); Bfree(m); return(0); }
+//    m.frames = (char *)Bmalloc(m.numframes*m.framebytes); if (!m.frames) { Bfree(m); return(0); }
+//    m.glcmds = (int32_t *)Bmalloc(ournumglcmds*sizeof(int32_t)); if (!m.glcmds) { Bfree(m.frames); Bfree(m); return(0); }
+//    m.tris = (md2tri_t *)Bmalloc(head.numtris*sizeof(md2tri_t)); if (!m.tris) { Bfree(m.glcmds); Bfree(m.frames); Bfree(m); return(0); }
+//    m.uv = (md2uv_t *)Bmalloc(head.numuv*sizeof(md2uv_t)); if (!m.uv) { Bfree(m.tris); Bfree(m.glcmds); Bfree(m.frames); Bfree(m); return(0); }
 
 //    klseek(fil,head.ofsframes,SEEK_SET);
-//    if (kread(fil,(char *)m->frames,m->numframes*m->framebytes) != m->numframes*m->framebytes)
-//        { Bfree(m->uv); Bfree(m->tris); Bfree(m->glcmds); Bfree(m->frames); Bfree(m); return(0); }
+//    if (kread(fil,(char *)m.frames,m.numframes*m.framebytes) != m.numframes*m.framebytes)
+//        { Bfree(m.uv); Bfree(m.tris); Bfree(m.glcmds); Bfree(m.frames); Bfree(m); return(0); }
 
-//    if (m->numglcmds > 0)
+//    if (m.numglcmds > 0)
 //    {
 //        klseek(fil,head.ofsglcmds,SEEK_SET);
-//        if (kread(fil,(char *)m->glcmds,m->numglcmds*sizeof(int32_t)) != (int32_t)(m->numglcmds*sizeof(int32_t)))
-//            { Bfree(m->uv); Bfree(m->tris); Bfree(m->glcmds); Bfree(m->frames); Bfree(m); return(0); }
+//        if (kread(fil,(char *)m.glcmds,m.numglcmds*sizeof(int32_t)) != (int32_t)(m.numglcmds*sizeof(int32_t)))
+//            { Bfree(m.uv); Bfree(m.tris); Bfree(m.glcmds); Bfree(m.frames); Bfree(m); return(0); }
 //    }
 
 //    klseek(fil,head.ofstris,SEEK_SET);
-//    if (kread(fil,(char *)m->tris,head.numtris*sizeof(md2tri_t)) != (int32_t)(head.numtris*sizeof(md2tri_t)))
-//        { Bfree(m->uv); Bfree(m->tris); Bfree(m->glcmds); Bfree(m->frames); Bfree(m); return(0); }
+//    if (kread(fil,(char *)m.tris,head.numtris*sizeof(md2tri_t)) != (int32_t)(head.numtris*sizeof(md2tri_t)))
+//        { Bfree(m.uv); Bfree(m.tris); Bfree(m.glcmds); Bfree(m.frames); Bfree(m); return(0); }
 
 //    klseek(fil,head.ofsuv,SEEK_SET);
-//    if (kread(fil,(char *)m->uv,head.numuv*sizeof(md2uv_t)) != (int32_t)(head.numuv*sizeof(md2uv_t)))
-//        { Bfree(m->uv); Bfree(m->tris); Bfree(m->glcmds); Bfree(m->frames); Bfree(m); return(0); }
+//    if (kread(fil,(char *)m.uv,head.numuv*sizeof(md2uv_t)) != (int32_t)(head.numuv*sizeof(md2uv_t)))
+//        { Bfree(m.uv); Bfree(m.tris); Bfree(m.glcmds); Bfree(m.frames); Bfree(m); return(0); }
 
 //#if B_BIG_ENDIAN != 0
 //    {
-//        char *f = (char *)m->frames;
+//        char *f = (char *)m.frames;
 //        int32_t *l,j;
 //        md2frame_t *fr;
 
-//        for (i = m->numframes-1; i>=0; i--)
+//        for (i = m.numframes-1; i>=0; i--)
 //        {
 //            fr = (md2frame_t *)f;
-//            l = (int32_t *)&fr->mul;
+//            l = (int32_t *)&fr.mul;
 //            for (j=5; j>=0; j--) l[j] = B_LITTLE32(l[j]);
-//            f += m->framebytes;
+//            f += m.framebytes;
 //        }
 
-//        for (i = m->numglcmds-1; i>=0; i--)
+//        for (i = m.numglcmds-1; i>=0; i--)
 //        {
-//            m->glcmds[i] = B_LITTLE32(m->glcmds[i]);
+//            m.glcmds[i] = B_LITTLE32(m.glcmds[i]);
 //        }
 //        for (i = head.numtris-1; i>=0; i--)
 //        {
-//            m->tris[i].v[0] = B_LITTLE16(m->tris[i].v[0]);
-//            m->tris[i].v[1] = B_LITTLE16(m->tris[i].v[1]);
-//            m->tris[i].v[2] = B_LITTLE16(m->tris[i].v[2]);
-//            m->tris[i].u[0] = B_LITTLE16(m->tris[i].u[0]);
-//            m->tris[i].u[1] = B_LITTLE16(m->tris[i].u[1]);
-//            m->tris[i].u[2] = B_LITTLE16(m->tris[i].u[2]);
+//            m.tris[i].v[0] = B_LITTLE16(m.tris[i].v[0]);
+//            m.tris[i].v[1] = B_LITTLE16(m.tris[i].v[1]);
+//            m.tris[i].v[2] = B_LITTLE16(m.tris[i].v[2]);
+//            m.tris[i].u[0] = B_LITTLE16(m.tris[i].u[0]);
+//            m.tris[i].u[1] = B_LITTLE16(m.tris[i].u[1]);
+//            m.tris[i].u[2] = B_LITTLE16(m.tris[i].u[2]);
 //        }
 //        for (i = head.numuv-1; i>=0; i--)
 //        {
-//            m->uv[i].u = B_LITTLE16(m->uv[i].u);
-//            m->uv[i].v = B_LITTLE16(m->uv[i].v);
+//            m.uv[i].u = B_LITTLE16(m.uv[i].u);
+//            m.uv[i].v = B_LITTLE16(m.uv[i].v);
 //        }
 //    }
 //#endif
@@ -1223,33 +1223,33 @@ function mdinit(): void
 //        if ((st[i] == '/') || (st[i] == '\\')) { i++; break; }
 //    if (i<0) i=0;
 //    st[i] = 0;
-//    m->basepath = (char *)Bmalloc(i+1); if (!m->basepath) { Bfree(m->uv); Bfree(m->tris); Bfree(m->glcmds); Bfree(m->frames); Bfree(m); return(0); }
-//    Bstrcpy(m->basepath, st);
+//    m.basepath = (char *)Bmalloc(i+1); if (!m.basepath) { Bfree(m.uv); Bfree(m.tris); Bfree(m.glcmds); Bfree(m.frames); Bfree(m); return(0); }
+//    Bstrcpy(m.basepath, st);
 
-//    m->skinfn = (char *)Bmalloc(ournumskins*64); if (!m->skinfn) { Bfree(m->basepath); Bfree(m->uv); Bfree(m->tris); Bfree(m->glcmds); Bfree(m->frames); Bfree(m); return(0); }
-//    if (m->numskins > 0)
+//    m.skinfn = (char *)Bmalloc(ournumskins*64); if (!m.skinfn) { Bfree(m.basepath); Bfree(m.uv); Bfree(m.tris); Bfree(m.glcmds); Bfree(m.frames); Bfree(m); return(0); }
+//    if (m.numskins > 0)
 //    {
 //        klseek(fil,head.ofsskins,SEEK_SET);
-//        if (kread(fil,m->skinfn,64*m->numskins) != 64*m->numskins)
-//            { Bfree(m->glcmds); Bfree(m->frames); Bfree(m); return(0); }
+//        if (kread(fil,m.skinfn,64*m.numskins) != 64*m.numskins)
+//            { Bfree(m.glcmds); Bfree(m.frames); Bfree(m); return(0); }
 //    }
 
-//    m->texid = (GLuint *)Bcalloc(ournumskins, sizeof(GLuint) * (HICEFFECTMASK+1));
-//    if (!m->texid) { Bfree(m->skinfn); Bfree(m->basepath); Bfree(m->uv); Bfree(m->tris); Bfree(m->glcmds); Bfree(m->frames); Bfree(m); return(0); }
+//    m.texid = (GLuint *)Bcalloc(ournumskins, sizeof(GLuint) * (HICEFFECTMASK+1));
+//    if (!m.texid) { Bfree(m.skinfn); Bfree(m.basepath); Bfree(m.uv); Bfree(m.tris); Bfree(m.glcmds); Bfree(m.frames); Bfree(m); return(0); }
 
-//    maxmodelverts = max(maxmodelverts, m->numverts);
+//    maxmodelverts = max(maxmodelverts, m.numverts);
 //    maxmodeltris = max(maxmodeltris, head.numtris);
 
 //    //return(m);
 
 //    // the MD2 is now loaded internally - let's begin the MD3 conversion process
 //    //OSD_Printf("Beginning md3 conversion.\n");
-//    m3 = (md3model_t *)Bcalloc(1, sizeof(md3model_t)); if (!m3) { Bfree(m->skinfn); Bfree(m->basepath); Bfree(m->uv); Bfree(m->tris); Bfree(m->glcmds); Bfree(m->frames); Bfree(m); return(0); }
-//    m3->mdnum = 3; m3->texid = 0; m3->scale = m->scale;
-//    m3->head.id = 0x33504449; m3->head.vers = 15;
+//    m3 = (md3model_t *)Bcalloc(1, sizeof(md3model_t)); if (!m3) { Bfree(m.skinfn); Bfree(m.basepath); Bfree(m.uv); Bfree(m.tris); Bfree(m.glcmds); Bfree(m.frames); Bfree(m); return(0); }
+//    m3.mdnum = 3; m3.texid = 0; m3.scale = m.scale;
+//    m3.head.id = 0x33504449; m3.head.vers = 15;
 
 //// DO_MD2_MD3_CONV:
-////  1: use the conversion code to do real MD2->MD3 conversion,
+////  1: use the conversion code to do real MD2.MD3 conversion,
 ////     breaking HRP MD2 oozfilter
 ////  0: use flags 1337 (reverting to the old, working code)
 //#define DO_MD2_MD3_CONV 1
@@ -1257,63 +1257,63 @@ function mdinit(): void
 //#if DO_MD2_MD3_CONV
 //# define MFLAGS_NOCONV(m) (0)
 //#else
-//# define MFLAGS_NOCONV(m) ((m)->head.flags == 1337)
+//# define MFLAGS_NOCONV(m) ((m).head.flags == 1337)
 //#endif
-//    m3->head.flags = DO_MD2_MD3_CONV ? 0 : 1337;
+//    m3.head.flags = DO_MD2_MD3_CONV ? 0 : 1337;
 
-//    m3->head.numframes = m->numframes;
-//    m3->head.numtags = 0; m3->head.numsurfs = 1;
-//    m3->head.numskins = 0;
+//    m3.head.numframes = m.numframes;
+//    m3.head.numtags = 0; m3.head.numsurfs = 1;
+//    m3.head.numskins = 0;
 
-//    m3->numskins = m3->head.numskins;
-//    m3->numframes = m3->head.numframes;
+//    m3.numskins = m3.head.numskins;
+//    m3.numframes = m3.head.numframes;
 
-//    m3->head.frames = (md3frame_t *)Bcalloc(m3->head.numframes, sizeof(md3frame_t)); if (!m3->head.frames) { Bfree(m3); Bfree(m->skinfn); Bfree(m->basepath); Bfree(m->uv); Bfree(m->tris); Bfree(m->glcmds); Bfree(m->frames); Bfree(m); return(0); }
-//    m3->muladdframes = (point3d *)Bcalloc(m->numframes * 2, sizeof(point3d));
+//    m3.head.frames = (md3frame_t *)Bcalloc(m3.head.numframes, sizeof(md3frame_t)); if (!m3.head.frames) { Bfree(m3); Bfree(m.skinfn); Bfree(m.basepath); Bfree(m.uv); Bfree(m.tris); Bfree(m.glcmds); Bfree(m.frames); Bfree(m); return(0); }
+//    m3.muladdframes = (point3d *)Bcalloc(m.numframes * 2, sizeof(point3d));
 
-//    f = (md2frame_t *)(m->frames);
+//    f = (md2frame_t *)(m.frames);
 
 //    // frames converting
 //    i = 0;
-//    while (i < m->numframes)
+//    while (i < m.numframes)
 //    {
-//        f = (md2frame_t *)&m->frames[i*m->framebytes];
-//        Bstrcpy(m3->head.frames[i].nam, f->name);
-//        //OSD_Printf("Copied frame %s.\n", m3->head.frames[i].nam);
-//        m3->muladdframes[i*2] = f->mul;
-//        m3->muladdframes[i*2+1] = f->add;
+//        f = (md2frame_t *)&m.frames[i*m.framebytes];
+//        Bstrcpy(m3.head.frames[i].nam, f.name);
+//        //OSD_Printf("Copied frame %s.\n", m3.head.frames[i].nam);
+//        m3.muladdframes[i*2] = f.mul;
+//        m3.muladdframes[i*2+1] = f.add;
 //        i++;
 //    }
 
-//    m3->head.tags = NULL;
+//    m3.head.tags = NULL;
 
-//    m3->head.surfs = (md3surf_t *)Bcalloc(1, sizeof(md3surf_t)); if (!m3->head.surfs) { Bfree(m3->head.frames); Bfree(m3); Bfree(m->skinfn); Bfree(m->basepath); Bfree(m->uv); Bfree(m->tris); Bfree(m->glcmds); Bfree(m->frames); Bfree(m); return(0); }
-//    s = m3->head.surfs;
+//    m3.head.surfs = (md3surf_t *)Bcalloc(1, sizeof(md3surf_t)); if (!m3.head.surfs) { Bfree(m3.head.frames); Bfree(m3); Bfree(m.skinfn); Bfree(m.basepath); Bfree(m.uv); Bfree(m.tris); Bfree(m.glcmds); Bfree(m.frames); Bfree(m); return(0); }
+//    s = m3.head.surfs;
 
 //    // model converting
-//    s->id = 0x33504449; s->flags = 0;
-//    s->numframes = m->numframes; s->numshaders = 0;
-//    s->numtris = head.numtris;
-//    s->numverts = head.numtris * 3; // oh man talk about memory effectiveness :((((
+//    s.id = 0x33504449; s.flags = 0;
+//    s.numframes = m.numframes; s.numshaders = 0;
+//    s.numtris = head.numtris;
+//    s.numverts = head.numtris * 3; // oh man talk about memory effectiveness :((((
 //    // MD2 is actually more accurate than MD3 in term of uv-mapping, because each triangle has a triangle counterpart on the UV-map.
 //    // In MD3, each vertex unique UV coordinates, meaning that you have to duplicate vertices if you need non-seamless UV-mapping.
 
-//    maxmodelverts = max(maxmodelverts, s->numverts);
+//    maxmodelverts = max(maxmodelverts, s.numverts);
 
-//    Bstrcpy(s->nam, "Dummy surface from MD2");
+//    Bstrcpy(s.nam, "Dummy surface from MD2");
 
-//    s->shaders = NULL;
+//    s.shaders = NULL;
 
-//    s->tris = (md3tri_t *)Bcalloc(head.numtris, sizeof(md3tri_t)); if (!s->tris) { Bfree(s); Bfree(m3->head.frames); Bfree(m3); Bfree(m->skinfn); Bfree(m->basepath); Bfree(m->uv); Bfree(m->tris); Bfree(m->glcmds); Bfree(m->frames); Bfree(m); return(0); }
-//    s->uv = (md3uv_t *)Bcalloc(s->numverts, sizeof(md3uv_t)); if (!s->uv) { Bfree(s->tris); Bfree(s); Bfree(m3->head.frames); Bfree(m3); Bfree(m->skinfn); Bfree(m->basepath); Bfree(m->uv); Bfree(m->tris); Bfree(m->glcmds); Bfree(m->frames); Bfree(m); return(0); }
-//    s->xyzn = (md3xyzn_t *)Bcalloc(s->numverts * m->numframes, sizeof(md3xyzn_t)); if (!s->xyzn) { Bfree(s->uv); Bfree(s->tris); Bfree(s); Bfree(m3->head.frames); Bfree(m3); Bfree(m->skinfn); Bfree(m->basepath); Bfree(m->uv); Bfree(m->tris); Bfree(m->glcmds); Bfree(m->frames); Bfree(m); return(0); }
+//    s.tris = (md3tri_t *)Bcalloc(head.numtris, sizeof(md3tri_t)); if (!s.tris) { Bfree(s); Bfree(m3.head.frames); Bfree(m3); Bfree(m.skinfn); Bfree(m.basepath); Bfree(m.uv); Bfree(m.tris); Bfree(m.glcmds); Bfree(m.frames); Bfree(m); return(0); }
+//    s.uv = (md3uv_t *)Bcalloc(s.numverts, sizeof(md3uv_t)); if (!s.uv) { Bfree(s.tris); Bfree(s); Bfree(m3.head.frames); Bfree(m3); Bfree(m.skinfn); Bfree(m.basepath); Bfree(m.uv); Bfree(m.tris); Bfree(m.glcmds); Bfree(m.frames); Bfree(m); return(0); }
+//    s.xyzn = (md3xyzn_t *)Bcalloc(s.numverts * m.numframes, sizeof(md3xyzn_t)); if (!s.xyzn) { Bfree(s.uv); Bfree(s.tris); Bfree(s); Bfree(m3.head.frames); Bfree(m3); Bfree(m.skinfn); Bfree(m.basepath); Bfree(m.uv); Bfree(m.tris); Bfree(m.glcmds); Bfree(m.frames); Bfree(m); return(0); }
 
-//    //memoryusage += (s->numverts * m->numframes * sizeof(md3xyzn_t));
+//    //memoryusage += (s.numverts * m.numframes * sizeof(md3xyzn_t));
 //    //OSD_Printf("Current model geometry memory usage : %i.\n", memoryusage);
 
-//    //OSD_Printf("Number of frames : %i\n", m->numframes);
+//    //OSD_Printf("Number of frames : %i\n", m.numframes);
 //    //OSD_Printf("Number of triangles : %i\n", head.numtris);
-//    //OSD_Printf("Number of vertices : %i\n", s->numverts);
+//    //OSD_Printf("Number of vertices : %i\n", s.numverts);
 
 //    // triangle converting
 //    i = 0;
@@ -1324,28 +1324,28 @@ function mdinit(): void
 //        while (j < 3)
 //        {
 //            // triangle vertex indexes
-//            s->tris[i].i[j] = i*3 + j;
+//            s.tris[i].i[j] = i*3 + j;
 
 //            // uv coords
-//            s->uv[i*3+j].u = (float)(m->uv[m->tris[i].u[j]].u) / (float)(head.skinxsiz);
-//            s->uv[i*3+j].v = (float)(m->uv[m->tris[i].u[j]].v) / (float)(head.skinysiz);
+//            s.uv[i*3+j].u = (float)(m.uv[m.tris[i].u[j]].u) / (float)(head.skinxsiz);
+//            s.uv[i*3+j].v = (float)(m.uv[m.tris[i].u[j]].v) / (float)(head.skinysiz);
 
 //            // vertices for each frame
 //            k = 0;
-//            while (k < m->numframes)
+//            while (k < m.numframes)
 //            {
-//                f = (md2frame_t *)&m->frames[k*m->framebytes];
+//                f = (md2frame_t *)&m.frames[k*m.framebytes];
 //                if (MFLAGS_NOCONV(m3))
 //                {
-//                    s->xyzn[(k*s->numverts) + (i*3) + j].x = f->verts[m->tris[i].v[j]].v[0];
-//                    s->xyzn[(k*s->numverts) + (i*3) + j].y = f->verts[m->tris[i].v[j]].v[1];
-//                    s->xyzn[(k*s->numverts) + (i*3) + j].z = f->verts[m->tris[i].v[j]].v[2];
+//                    s.xyzn[(k*s.numverts) + (i*3) + j].x = f.verts[m.tris[i].v[j]].v[0];
+//                    s.xyzn[(k*s.numverts) + (i*3) + j].y = f.verts[m.tris[i].v[j]].v[1];
+//                    s.xyzn[(k*s.numverts) + (i*3) + j].z = f.verts[m.tris[i].v[j]].v[2];
 //                }
 //                else
 //                {
-//                    s->xyzn[(k*s->numverts) + (i*3) + j].x = (int16_t)(((f->verts[m->tris[i].v[j]].v[0] * f->mul.x) + f->add.x) * 64.f);
-//                    s->xyzn[(k*s->numverts) + (i*3) + j].y = (int16_t)(((f->verts[m->tris[i].v[j]].v[1] * f->mul.y) + f->add.y) * 64.f);
-//                    s->xyzn[(k*s->numverts) + (i*3) + j].z = (int16_t)(((f->verts[m->tris[i].v[j]].v[2] * f->mul.z) + f->add.z) * 64.f);
+//                    s.xyzn[(k*s.numverts) + (i*3) + j].x = (int16_t)(((f.verts[m.tris[i].v[j]].v[0] * f.mul.x) + f.add.x) * 64.f);
+//                    s.xyzn[(k*s.numverts) + (i*3) + j].y = (int16_t)(((f.verts[m.tris[i].v[j]].v[1] * f.mul.y) + f.add.y) * 64.f);
+//                    s.xyzn[(k*s.numverts) + (i*3) + j].z = (int16_t)(((f.verts[m.tris[i].v[j]].v[2] * f.mul.z) + f.add.z) * 64.f);
 //                }
 
 //                k++;
@@ -1361,30 +1361,30 @@ function mdinit(): void
 //        mdskinmap_t *sk;
 
 //        sk = (mdskinmap_t *)Bcalloc(1,sizeof(mdskinmap_t));
-//        sk->palette = 0;
-//        sk->skinnum = 0;
-//        sk->surfnum = 0;
+//        sk.palette = 0;
+//        sk.skinnum = 0;
+//        sk.surfnum = 0;
 
-//        if (m->numskins > 0)
+//        if (m.numskins > 0)
 //        {
-//            sk->fn = (char *)Bmalloc(strlen(m->basepath)+strlen(m->skinfn)+1);
-//            Bstrcpy(sk->fn, m->basepath);
-//            Bstrcat(sk->fn, m->skinfn);
+//            sk.fn = (char *)Bmalloc(strlen(m.basepath)+strlen(m.skinfn)+1);
+//            Bstrcpy(sk.fn, m.basepath);
+//            Bstrcat(sk.fn, m.skinfn);
 //        }
-//        m3->skinmap = sk;
+//        m3.skinmap = sk;
 //    }
 
-//    m3->indexes = (uint16_t *)Bmalloc(sizeof(uint16_t) * s->numtris);
-//    m3->vindexes = (uint16_t *)Bmalloc(sizeof(uint16_t) * s->numtris * 3);
-//    m3->maxdepths = (float *)Bmalloc(sizeof(float) * s->numtris);
+//    m3.indexes = (uint16_t *)Bmalloc(sizeof(uint16_t) * s.numtris);
+//    m3.vindexes = (uint16_t *)Bmalloc(sizeof(uint16_t) * s.numtris * 3);
+//    m3.maxdepths = (float *)Bmalloc(sizeof(float) * s.numtris);
 
-//    if (!m3->indexes || !m3->vindexes || !m3->maxdepths)
+//    if (!m3.indexes || !m3.vindexes || !m3.maxdepths)
 //        QuitOnFatalError("OUT OF MEMORY in md2load!");
 
-//    m3->vbos = NULL;
+//    m3.vbos = NULL;
 
 //    // die MD2 ! DIE !
-//    Bfree(m->texid); Bfree(m->skinfn); Bfree(m->basepath); Bfree(m->uv); Bfree(m->tris); Bfree(m->glcmds); Bfree(m->frames); Bfree(m);
+//    Bfree(m.texid); Bfree(m.skinfn); Bfree(m.basepath); Bfree(m.uv); Bfree(m.tris); Bfree(m.glcmds); Bfree(m.frames); Bfree(m);
 
 //    return((md2model_t *)m3);
 //}
@@ -1446,54 +1446,54 @@ function mdinit(): void
 //    md3surf_t *s;
 
 //    m = (md3model_t *)Bcalloc(1,sizeof(md3model_t)); if (!m) return(0);
-//    m->mdnum = 3; m->texid = 0; m->scale = .01f;
+//    m.mdnum = 3; m.texid = 0; m.scale = .01f;
 
-//    m->muladdframes = NULL;
+//    m.muladdframes = NULL;
 
-//    kread(fil,&m->head,SIZEOF_MD3HEAD_T);
-//    m->head.id = B_LITTLE32(m->head.id);             m->head.vers = B_LITTLE32(m->head.vers);
-//    m->head.flags = B_LITTLE32(m->head.flags);       m->head.numframes = B_LITTLE32(m->head.numframes);
-//    m->head.numtags = B_LITTLE32(m->head.numtags);   m->head.numsurfs = B_LITTLE32(m->head.numsurfs);
-//    m->head.numskins = B_LITTLE32(m->head.numskins); m->head.ofsframes = B_LITTLE32(m->head.ofsframes);
-//    m->head.ofstags = B_LITTLE32(m->head.ofstags); m->head.ofssurfs = B_LITTLE32(m->head.ofssurfs);
-//    m->head.eof = B_LITTLE32(m->head.eof);
+//    kread(fil,&m.head,SIZEOF_MD3HEAD_T);
+//    m.head.id = B_LITTLE32(m.head.id);             m.head.vers = B_LITTLE32(m.head.vers);
+//    m.head.flags = B_LITTLE32(m.head.flags);       m.head.numframes = B_LITTLE32(m.head.numframes);
+//    m.head.numtags = B_LITTLE32(m.head.numtags);   m.head.numsurfs = B_LITTLE32(m.head.numsurfs);
+//    m.head.numskins = B_LITTLE32(m.head.numskins); m.head.ofsframes = B_LITTLE32(m.head.ofsframes);
+//    m.head.ofstags = B_LITTLE32(m.head.ofstags); m.head.ofssurfs = B_LITTLE32(m.head.ofssurfs);
+//    m.head.eof = B_LITTLE32(m.head.eof);
 
-//    if ((m->head.id != 0x33504449) && (m->head.vers != 15)) { Bfree(m); return(0); } //"IDP3"
+//    if ((m.head.id != 0x33504449) && (m.head.vers != 15)) { Bfree(m); return(0); } //"IDP3"
 
-//    m->numskins = m->head.numskins; //<- dead code?
-//    m->numframes = m->head.numframes;
+//    m.numskins = m.head.numskins; //<- dead code?
+//    m.numframes = m.head.numframes;
 
-//    ofsurf = m->head.ofssurfs;
+//    ofsurf = m.head.ofssurfs;
 
-//    klseek(fil,m->head.ofsframes,SEEK_SET); i = m->head.numframes*sizeof(md3frame_t);
-//    m->head.frames = (md3frame_t *)Bmalloc(i); if (!m->head.frames) { Bfree(m); return(0); }
-//    kread(fil,m->head.frames,i);
+//    klseek(fil,m.head.ofsframes,SEEK_SET); i = m.head.numframes*sizeof(md3frame_t);
+//    m.head.frames = (md3frame_t *)Bmalloc(i); if (!m.head.frames) { Bfree(m); return(0); }
+//    kread(fil,m.head.frames,i);
 
-//    if (m->head.numtags == 0) m->head.tags = NULL;
+//    if (m.head.numtags == 0) m.head.tags = NULL;
 //    else
 //    {
-//        klseek(fil,m->head.ofstags,SEEK_SET); i = m->head.numtags*sizeof(md3tag_t);
-//        m->head.tags = (md3tag_t *)Bmalloc(i); if (!m->head.tags) { Bfree(m->head.frames); Bfree(m); return(0); }
-//        kread(fil,m->head.tags,i);
+//        klseek(fil,m.head.ofstags,SEEK_SET); i = m.head.numtags*sizeof(md3tag_t);
+//        m.head.tags = (md3tag_t *)Bmalloc(i); if (!m.head.tags) { Bfree(m.head.frames); Bfree(m); return(0); }
+//        kread(fil,m.head.tags,i);
 //    }
 
-//    klseek(fil,m->head.ofssurfs,SEEK_SET); i = m->head.numsurfs*sizeof(md3surf_t);
-//    m->head.surfs = (md3surf_t *)Bmalloc(i); if (!m->head.surfs) { if (m->head.tags) Bfree(m->head.tags); Bfree(m->head.frames); Bfree(m); return(0); }
-//    m->head.surfs[0].geometry = NULL;  // for deferred polymer model postprocessing (else: crashes)
+//    klseek(fil,m.head.ofssurfs,SEEK_SET); i = m.head.numsurfs*sizeof(md3surf_t);
+//    m.head.surfs = (md3surf_t *)Bmalloc(i); if (!m.head.surfs) { if (m.head.tags) Bfree(m.head.tags); Bfree(m.head.frames); Bfree(m); return(0); }
+//    m.head.surfs[0].geometry = NULL;  // for deferred polymer model postprocessing (else: crashes)
 
 //#if B_BIG_ENDIAN != 0
 //    {
 //        int32_t j, *l;
 
-//        for (i = m->head.numframes-1; i>=0; i--)
+//        for (i = m.head.numframes-1; i>=0; i--)
 //        {
-//            l = (int32_t *)&m->head.frames[i].min;
+//            l = (int32_t *)&m.head.frames[i].min;
 //            for (j=3+3+3+1-1; j>=0; j--) l[j] = B_LITTLE32(l[j]);
 //        }
 
-//        for (i = m->head.numtags-1; i>=0; i--)
+//        for (i = m.head.numtags-1; i>=0; i--)
 //        {
-//            l = (int32_t *)&m->head.tags[i].p;
+//            l = (int32_t *)&m.head.tags[i].p;
 //            for (j=3+3+3+3-1; j>=0; j--) l[j] = B_LITTLE32(l[j]);
 //        }
 //    }
@@ -1501,73 +1501,73 @@ function mdinit(): void
 
 //    maxtrispersurf = 0;
 
-//    for (surfi=0; surfi<m->head.numsurfs; surfi++)
+//    for (surfi=0; surfi<m.head.numsurfs; surfi++)
 //    {
-//        s = &m->head.surfs[surfi];
+//        s = &m.head.surfs[surfi];
 //        klseek(fil,ofsurf,SEEK_SET); kread(fil,s,SIZEOF_MD3SURF_T);
 
 //#if B_BIG_ENDIAN != 0
 //        {
 //            int32_t j, *l;
-//            s->id = B_LITTLE32(s->id);
-//            l =	(int32_t *)&s->flags;
+//            s.id = B_LITTLE32(s.id);
+//            l =	(int32_t *)&s.flags;
 //            for	(j=1+1+1+1+1+1+1+1+1+1-1; j>=0; j--) l[j] = B_LITTLE32(l[j]);
 //        }
 //#endif
 
-//        offs[0] = ofsurf+s->ofstris; leng[0] = s->numtris*sizeof(md3tri_t);
-//        offs[1] = ofsurf+s->ofsshaders; leng[1] = s->numshaders*sizeof(md3shader_t);
-//        offs[2] = ofsurf+s->ofsuv; leng[2] = s->numverts*sizeof(md3uv_t);
-//        offs[3] = ofsurf+s->ofsxyzn; leng[3] = s->numframes*s->numverts*sizeof(md3xyzn_t);
-//        //memoryusage += (s->numverts * s->numframes * sizeof(md3xyzn_t));
+//        offs[0] = ofsurf+s.ofstris; leng[0] = s.numtris*sizeof(md3tri_t);
+//        offs[1] = ofsurf+s.ofsshaders; leng[1] = s.numshaders*sizeof(md3shader_t);
+//        offs[2] = ofsurf+s.ofsuv; leng[2] = s.numverts*sizeof(md3uv_t);
+//        offs[3] = ofsurf+s.ofsxyzn; leng[3] = s.numframes*s.numverts*sizeof(md3xyzn_t);
+//        //memoryusage += (s.numverts * s.numframes * sizeof(md3xyzn_t));
 //        //OSD_Printf("Current model geometry memory usage : %i.\n", memoryusage);
 
 
-//        s->tris = (md3tri_t *)Bmalloc(leng[0]+leng[1]+leng[2]+leng[3]);
-//        if (!s->tris)
+//        s.tris = (md3tri_t *)Bmalloc(leng[0]+leng[1]+leng[2]+leng[3]);
+//        if (!s.tris)
 //        {
-//            for (surfi--; surfi>=0; surfi--) Bfree(m->head.surfs[surfi].tris);
-//            if (m->head.tags) Bfree(m->head.tags); Bfree(m->head.frames); Bfree(m); return(0);
+//            for (surfi--; surfi>=0; surfi--) Bfree(m.head.surfs[surfi].tris);
+//            if (m.head.tags) Bfree(m.head.tags); Bfree(m.head.frames); Bfree(m); return(0);
 //        }
-//        s->shaders = (md3shader_t *)(((intptr_t)s->tris)+leng[0]);
-//        s->uv      = (md3uv_t *)(((intptr_t)s->shaders)+leng[1]);
-//        s->xyzn    = (md3xyzn_t *)(((intptr_t)s->uv)+leng[2]);
+//        s.shaders = (md3shader_t *)(((intptr_t)s.tris)+leng[0]);
+//        s.uv      = (md3uv_t *)(((intptr_t)s.shaders)+leng[1]);
+//        s.xyzn    = (md3xyzn_t *)(((intptr_t)s.uv)+leng[2]);
 
-//        klseek(fil,offs[0],SEEK_SET); kread(fil,s->tris   ,leng[0]);
-//        klseek(fil,offs[1],SEEK_SET); kread(fil,s->shaders,leng[1]);
-//        klseek(fil,offs[2],SEEK_SET); kread(fil,s->uv     ,leng[2]);
-//        klseek(fil,offs[3],SEEK_SET); kread(fil,s->xyzn   ,leng[3]);
+//        klseek(fil,offs[0],SEEK_SET); kread(fil,s.tris   ,leng[0]);
+//        klseek(fil,offs[1],SEEK_SET); kread(fil,s.shaders,leng[1]);
+//        klseek(fil,offs[2],SEEK_SET); kread(fil,s.uv     ,leng[2]);
+//        klseek(fil,offs[3],SEEK_SET); kread(fil,s.xyzn   ,leng[3]);
 
 //#if B_BIG_ENDIAN != 0
 //        {
 //            int32_t j, *l;
 
-//            for (i=s->numtris-1; i>=0; i--)
+//            for (i=s.numtris-1; i>=0; i--)
 //            {
-//                for (j=2; j>=0; j--) s->tris[i].i[j] = B_LITTLE32(s->tris[i].i[j]);
+//                for (j=2; j>=0; j--) s.tris[i].i[j] = B_LITTLE32(s.tris[i].i[j]);
 //            }
-//            for (i=s->numshaders-1; i>=0; i--)
+//            for (i=s.numshaders-1; i>=0; i--)
 //            {
-//                s->shaders[i].i = B_LITTLE32(s->shaders[i].i);
+//                s.shaders[i].i = B_LITTLE32(s.shaders[i].i);
 //            }
-//            for (i=s->numverts-1; i>=0; i--)
+//            for (i=s.numverts-1; i>=0; i--)
 //            {
-//                l = (int32_t *)&s->uv[i].u;
+//                l = (int32_t *)&s.uv[i].u;
 //                l[0] = B_LITTLE32(l[0]);
 //                l[1] = B_LITTLE32(l[1]);
 //            }
-//            for (i=s->numframes*s->numverts-1; i>=0; i--)
+//            for (i=s.numframes*s.numverts-1; i>=0; i--)
 //            {
-//                s->xyzn[i].x = (int16_t)B_LITTLE16((uint16_t)s->xyzn[i].x);
-//                s->xyzn[i].y = (int16_t)B_LITTLE16((uint16_t)s->xyzn[i].y);
-//                s->xyzn[i].z = (int16_t)B_LITTLE16((uint16_t)s->xyzn[i].z);
+//                s.xyzn[i].x = (int16_t)B_LITTLE16((uint16_t)s.xyzn[i].x);
+//                s.xyzn[i].y = (int16_t)B_LITTLE16((uint16_t)s.xyzn[i].y);
+//                s.xyzn[i].z = (int16_t)B_LITTLE16((uint16_t)s.xyzn[i].z);
 //            }
 //        }
 //#endif
-//        maxmodelverts = max(maxmodelverts, s->numverts);
-//        maxmodeltris = max(maxmodeltris, s->numtris);
-//        maxtrispersurf = max(maxtrispersurf, s->numtris);
-//        ofsurf += s->ofsend;
+//        maxmodelverts = max(maxmodelverts, s.numverts);
+//        maxmodeltris = max(maxmodeltris, s.numtris);
+//        maxtrispersurf = max(maxtrispersurf, s.numtris);
+//        ofsurf += s.ofsend;
 //    }
 
 //#if 0
@@ -1592,18 +1592,18 @@ function mdinit(): void
 //                if (i > bsc) { bsc = i; Bstrcpy(bst,st); }
 //            }
 //        }
-//        if (!mdloadskin(&m->texid,&m->usesalpha,bst)) ;//bad!
+//        if (!mdloadskin(&m.texid,&m.usesalpha,bst)) ;//bad!
 //    }
 //#endif
 
-//    m->indexes = (uint16_t *)Bmalloc(sizeof(uint16_t) * maxtrispersurf);
-//    m->vindexes = (uint16_t *)Bmalloc(sizeof(uint16_t) * maxtrispersurf * 3);
-//    m->maxdepths = (float *)Bmalloc(sizeof(float) * maxtrispersurf);
+//    m.indexes = (uint16_t *)Bmalloc(sizeof(uint16_t) * maxtrispersurf);
+//    m.vindexes = (uint16_t *)Bmalloc(sizeof(uint16_t) * maxtrispersurf * 3);
+//    m.maxdepths = (float *)Bmalloc(sizeof(float) * maxtrispersurf);
 
-//    if (!m->indexes || !m->vindexes || !m->maxdepths)
+//    if (!m.indexes || !m.vindexes || !m.maxdepths)
 //        QuitOnFatalError("OUT OF MEMORY in md3load!");
 
-//    m->vbos = NULL;
+//    m.vbos = NULL;
 
 //    return(m);
 //}
@@ -1668,54 +1668,54 @@ function mdinit(): void
 
 //    framei = 0;
 
-//    while (framei < m->head.numframes)
+//    while (framei < m.head.numframes)
 //    {
-//        frame = &m->head.frames[framei];
+//        frame = &m.head.frames[framei];
 
-//        frame->min.x    = 0.0f;
-//        frame->min.y    = 0.0f;
-//        frame->min.z    = 0.0f;
+//        frame.min.x    = 0.0f;
+//        frame.min.y    = 0.0f;
+//        frame.min.z    = 0.0f;
 
-//        frame->max.x    = 0.0f;
-//        frame->max.y    = 0.0f;
-//        frame->max.z    = 0.0f;
+//        frame.max.x    = 0.0f;
+//        frame.max.y    = 0.0f;
+//        frame.max.z    = 0.0f;
 
-//        frame->r        = 0.0f;
+//        frame.r        = 0.0f;
 
 //        surfi = 0;
-//        while (surfi < m->head.numsurfs)
+//        while (surfi < m.head.numsurfs)
 //        {
-//            frameverts = &m->head.surfs[surfi].xyzn[framei * m->head.surfs[surfi].numverts];
+//            frameverts = &m.head.surfs[surfi].xyzn[framei * m.head.surfs[surfi].numverts];
 
 //            verti = 0;
-//            while (verti < m->head.surfs[surfi].numverts)
+//            while (verti < m.head.surfs[surfi].numverts)
 //            {
 //                if (!verti && !surfi)
 //                {
-//                    frame->min.x    = frameverts[verti].x;
-//                    frame->min.y    = frameverts[verti].y;
-//                    frame->min.z    = frameverts[verti].z;
+//                    frame.min.x    = frameverts[verti].x;
+//                    frame.min.y    = frameverts[verti].y;
+//                    frame.min.z    = frameverts[verti].z;
 
-//                    frame->max.x    = frameverts[verti].x;
-//                    frame->max.y    = frameverts[verti].y;
-//                    frame->max.z    = frameverts[verti].z;
+//                    frame.max.x    = frameverts[verti].x;
+//                    frame.max.y    = frameverts[verti].y;
+//                    frame.max.z    = frameverts[verti].z;
 //                }
 //                else
 //                {
-//                    if (frame->min.x > frameverts[verti].x)
-//                        frame->min.x = frameverts[verti].x;
-//                    if (frame->max.x < frameverts[verti].x)
-//                        frame->max.x = frameverts[verti].x;
+//                    if (frame.min.x > frameverts[verti].x)
+//                        frame.min.x = frameverts[verti].x;
+//                    if (frame.max.x < frameverts[verti].x)
+//                        frame.max.x = frameverts[verti].x;
 
-//                    if (frame->min.y > frameverts[verti].y)
-//                        frame->min.y = frameverts[verti].y;
-//                    if (frame->max.y < frameverts[verti].y)
-//                        frame->max.y = frameverts[verti].y;
+//                    if (frame.min.y > frameverts[verti].y)
+//                        frame.min.y = frameverts[verti].y;
+//                    if (frame.max.y < frameverts[verti].y)
+//                        frame.max.y = frameverts[verti].y;
 
-//                    if (frame->min.z > frameverts[verti].z)
-//                        frame->min.z = frameverts[verti].z;
-//                    if (frame->max.z < frameverts[verti].z)
-//                        frame->max.z = frameverts[verti].z;
+//                    if (frame.min.z > frameverts[verti].z)
+//                        frame.min.z = frameverts[verti].z;
+//                    if (frame.max.z < frameverts[verti].z)
+//                        frame.max.z = frameverts[verti].z;
 //                }
 
 //                verti++;
@@ -1723,33 +1723,33 @@ function mdinit(): void
 //            surfi++;
 //        }
 
-//        frame->cen.x = (frame->min.x + frame->max.x) / 2.0f;
-//        frame->cen.y = (frame->min.y + frame->max.y) / 2.0f;
-//        frame->cen.z = (frame->min.z + frame->max.z) / 2.0f;
+//        frame.cen.x = (frame.min.x + frame.max.x) / 2.0f;
+//        frame.cen.y = (frame.min.y + frame.max.y) / 2.0f;
+//        frame.cen.z = (frame.min.z + frame.max.z) / 2.0f;
 
 //        surfi = 0;
-//        while (surfi < m->head.numsurfs)
+//        while (surfi < m.head.numsurfs)
 //        {
-//            frameverts = &m->head.surfs[surfi].xyzn[framei * m->head.surfs[surfi].numverts];
+//            frameverts = &m.head.surfs[surfi].xyzn[framei * m.head.surfs[surfi].numverts];
 
 //            verti = 0;
-//            while (verti < m->head.surfs[surfi].numverts)
+//            while (verti < m.head.surfs[surfi].numverts)
 //            {
-//                vec1[0] = frameverts[verti].x - frame->cen.x;
-//                vec1[1] = frameverts[verti].y - frame->cen.y;
-//                vec1[2] = frameverts[verti].z - frame->cen.z;
+//                vec1[0] = frameverts[verti].x - frame.cen.x;
+//                vec1[1] = frameverts[verti].y - frame.cen.y;
+//                vec1[2] = frameverts[verti].z - frame.cen.z;
 
 //                dist = vec1[0] * vec1[0] + vec1[1] * vec1[1] + vec1[2] * vec1[2];
 
-//                if (dist > frame->r)
-//                    frame->r = dist;
+//                if (dist > frame.r)
+//                    frame.r = dist;
 
 //                verti++;
 //            }
 //            surfi++;
 //        }
 
-//        frame->r = sqrt(frame->r);
+//        frame.r = sqrt(frame.r);
 
 //        framei++;
 //    }
@@ -1764,20 +1764,20 @@ function mdinit(): void
 //    md3surf_t   *s;
 
 //    surfi = 0;
-//    while (surfi < m->head.numsurfs)
+//    while (surfi < m.head.numsurfs)
 //    {
-//        s = &m->head.surfs[surfi];
+//        s = &m.head.surfs[surfi];
 
 //        trii = 0;
-//        while (trii < s->numtris)
+//        while (trii < s.numtris)
 //        {
 //            // let the vertices know they're being referenced by a triangle
-//            if (s->tris[trii].i[0] >= s->numverts || s->tris[trii].i[0] < 0 ||
-//                    s->tris[trii].i[1] >= s->numverts || s->tris[trii].i[1] < 0 ||
-//                    s->tris[trii].i[2] >= s->numverts || s->tris[trii].i[2] < 0)
+//            if (s.tris[trii].i[0] >= s.numverts || s.tris[trii].i[0] < 0 ||
+//                    s.tris[trii].i[1] >= s.numverts || s.tris[trii].i[1] < 0 ||
+//                    s.tris[trii].i[2] >= s.numverts || s.tris[trii].i[2] < 0)
 //            {
 //                // corrupt model
-//                OSD_Printf("%s: Triangle index out of bounds!\n", m->head.nam);
+//                OSD_Printf("%s: Triangle index out of bounds!\n", m.head.nam);
 //                return 0;
 //            }
 
@@ -1799,84 +1799,84 @@ function mdinit(): void
 //    int         *numtris;
 //    float       lat, lng, vec1[5], vec2[5], mat[9], r;
 
-//    if (m->head.surfs[0].geometry)
+//    if (m.head.surfs[0].geometry)
 //        return -1;  // already postprocessed
 
 //    // let's also repack the geometry to more usable formats
 
 //    surfi = 0;
-//    while (surfi < m->head.numsurfs)
+//    while (surfi < m.head.numsurfs)
 //    {
-//        s = &m->head.surfs[surfi];
+//        s = &m.head.surfs[surfi];
 //#ifdef DEBUG_MODEL_MEM
-//        i = (m->head.numframes * s->numverts * sizeof(float) * 15);
+//        i = (m.head.numframes * s.numverts * sizeof(float) * 15);
 //        if (i > 1<<20)
-//            initprintf("size %d (%d fr, %d v): md %s surf %d/%d\n", i, m->head.numframes, s->numverts,
-//                       m->head.nam, surfi, m->head.numsurfs);
+//            initprintf("size %d (%d fr, %d v): md %s surf %d/%d\n", i, m.head.numframes, s.numverts,
+//                       m.head.nam, surfi, m.head.numsurfs);
 //#endif
-//        s->geometry = (float *)Bcalloc(m->head.numframes * s->numverts * sizeof(float), 15);
+//        s.geometry = (float *)Bcalloc(m.head.numframes * s.numverts * sizeof(float), 15);
 
-//        numtris = (int *)Bcalloc(s->numverts, sizeof(int));
+//        numtris = (int *)Bcalloc(s.numverts, sizeof(int));
 
-//        if (!s->geometry || !numtris)
+//        if (!s.geometry || !numtris)
 //            QuitOnFatalError("OUT OF MEMORY in md3postload_polymer!");
 
 //        verti = 0;
-//        while (verti < (m->head.numframes * s->numverts))
+//        while (verti < (m.head.numframes * s.numverts))
 //        {
-//            s->geometry[(verti * 15) + 0] = s->xyzn[verti].x;
-//            s->geometry[(verti * 15) + 1] = s->xyzn[verti].y;
-//            s->geometry[(verti * 15) + 2] = s->xyzn[verti].z;
+//            s.geometry[(verti * 15) + 0] = s.xyzn[verti].x;
+//            s.geometry[(verti * 15) + 1] = s.xyzn[verti].y;
+//            s.geometry[(verti * 15) + 2] = s.xyzn[verti].z;
 
 //            // normal extraction from packed spherical coordinates
 //            // FIXME: swapping lat and lng because of npherno's compiler
-//            lat = s->xyzn[verti].nlng * (2 * PI) / 255.0f;
-//            lng = s->xyzn[verti].nlat * (2 * PI) / 255.0f;
+//            lat = s.xyzn[verti].nlng * (2 * PI) / 255.0f;
+//            lng = s.xyzn[verti].nlat * (2 * PI) / 255.0f;
 
-//            s->geometry[(verti * 15) + 3] = cos(lat) * sin(lng);
-//            s->geometry[(verti * 15) + 4] = sin(lat) * sin(lng);
-//            s->geometry[(verti * 15) + 5] = cos(lng);
+//            s.geometry[(verti * 15) + 3] = cos(lat) * sin(lng);
+//            s.geometry[(verti * 15) + 4] = sin(lat) * sin(lng);
+//            s.geometry[(verti * 15) + 5] = cos(lng);
 
 //            verti++;
 //        }
 
 //        trii = 0;
-//        while (trii < s->numtris)
+//        while (trii < s.numtris)
 //        {
 //            // let the vertices know they're being referenced by a triangle
-//            if (s->tris[trii].i[0] >= s->numverts || s->tris[trii].i[0] < 0 ||
-//                    s->tris[trii].i[1] >= s->numverts || s->tris[trii].i[1] < 0 ||
-//                    s->tris[trii].i[2] >= s->numverts || s->tris[trii].i[2] < 0)
+//            if (s.tris[trii].i[0] >= s.numverts || s.tris[trii].i[0] < 0 ||
+//                    s.tris[trii].i[1] >= s.numverts || s.tris[trii].i[1] < 0 ||
+//                    s.tris[trii].i[2] >= s.numverts || s.tris[trii].i[2] < 0)
 //            {
 //                // corrupt model
 //                Bfree(numtris);
 ////                OSD_Printf("Triangle index out of bounds!\n");
 //                return 0;
 //            }
-//            numtris[s->tris[trii].i[0]]++;
-//            numtris[s->tris[trii].i[1]]++;
-//            numtris[s->tris[trii].i[2]]++;
+//            numtris[s.tris[trii].i[0]]++;
+//            numtris[s.tris[trii].i[1]]++;
+//            numtris[s.tris[trii].i[2]]++;
 
 //            framei = 0;
-//            while (framei < m->head.numframes)
+//            while (framei < m.head.numframes)
 //            {
-//                vec1[0] = s->geometry[(framei * s->numverts * 15) + (s->tris[trii].i[1] * 15) + 0] -
-//                          s->geometry[(framei * s->numverts * 15) + (s->tris[trii].i[0] * 15) + 0];
-//                vec1[1] = s->geometry[(framei * s->numverts * 15) + (s->tris[trii].i[1] * 15) + 1] -
-//                          s->geometry[(framei * s->numverts * 15) + (s->tris[trii].i[0] * 15) + 1];
-//                vec1[2] = s->geometry[(framei * s->numverts * 15) + (s->tris[trii].i[1] * 15) + 2] -
-//                          s->geometry[(framei * s->numverts * 15) + (s->tris[trii].i[0] * 15) + 2];
-//                vec1[3] = s->uv[s->tris[trii].i[1]].u - s->uv[s->tris[trii].i[0]].u;
-//                vec1[4] = s->uv[s->tris[trii].i[1]].v - s->uv[s->tris[trii].i[0]].v;
+//                vec1[0] = s.geometry[(framei * s.numverts * 15) + (s.tris[trii].i[1] * 15) + 0] -
+//                          s.geometry[(framei * s.numverts * 15) + (s.tris[trii].i[0] * 15) + 0];
+//                vec1[1] = s.geometry[(framei * s.numverts * 15) + (s.tris[trii].i[1] * 15) + 1] -
+//                          s.geometry[(framei * s.numverts * 15) + (s.tris[trii].i[0] * 15) + 1];
+//                vec1[2] = s.geometry[(framei * s.numverts * 15) + (s.tris[trii].i[1] * 15) + 2] -
+//                          s.geometry[(framei * s.numverts * 15) + (s.tris[trii].i[0] * 15) + 2];
+//                vec1[3] = s.uv[s.tris[trii].i[1]].u - s.uv[s.tris[trii].i[0]].u;
+//                vec1[4] = s.uv[s.tris[trii].i[1]].v - s.uv[s.tris[trii].i[0]].v;
 
-//                vec2[0] = s->geometry[(framei * s->numverts * 15) + (s->tris[trii].i[2] * 15) + 0] -
-//                          s->geometry[(framei * s->numverts * 15) + (s->tris[trii].i[1] * 15) + 0];
-//                vec2[1] = s->geometry[(framei * s->numverts * 15) + (s->tris[trii].i[2] * 15) + 1] -
-//                          s->geometry[(framei * s->numverts * 15) + (s->tris[trii].i[1] * 15) + 1];
-//                vec2[2] = s->geometry[(framei * s->numverts * 15) + (s->tris[trii].i[2] * 15) + 2] -
-//                          s->geometry[(framei * s->numverts * 15) + (s->tris[trii].i[1] * 15) + 2];
-//                vec2[3] = s->uv[s->tris[trii].i[2]].u - s->uv[s->tris[trii].i[1]].u;
-//                vec2[4] = s->uv[s->tris[trii].i[2]].v - s->uv[s->tris[trii].i[1]].v;
+//                vec2[0] = s.geometry[(framei * s.numverts * 15) + (s.tris[trii].i[2] * 15) + 0] -
+//                          s.geometry[(framei * s.numverts * 15) + (s.tris[trii].i[1] * 15) + 0];
+//                vec2[1] = s.geometry[(framei * s.numverts * 15) + (s.tris[trii].i[2] * 15) + 1] -
+//                          s.geometry[(framei * s.numverts * 15) + (s.tris[trii].i[1] * 15) + 1];
+//                vec2[2] = s.geometry[(framei * s.numverts * 15) + (s.tris[trii].i[2] * 15) + 2] -
+//                          s.geometry[(framei * s.numverts * 15) + (s.tris[trii].i[1] * 15) + 2];
+//                vec2[3] = s.uv[s.tris[trii].i[2]].u - s.uv[s.tris[trii].i[1]].u;
+//                vec2[4] = s.uv[s.tris[trii].i[2]].v - s.uv[s.tris[trii].i[1]].v;
 
 //                r = (vec1[3] * vec2[4] - vec2[3] * vec1[4]);
 //                if (r != 0.0f)
@@ -1907,9 +1907,9 @@ function mdinit(): void
 //                i = 0;
 //                while (i < 6)
 //                {
-//                    s->geometry[(framei * s->numverts * 15) + (s->tris[trii].i[0] * 15) + 6 + i] += mat[i];
-//                    s->geometry[(framei * s->numverts * 15) + (s->tris[trii].i[1] * 15) + 6 + i] += mat[i];
-//                    s->geometry[(framei * s->numverts * 15) + (s->tris[trii].i[2] * 15) + 6 + i] += mat[i];
+//                    s.geometry[(framei * s.numverts * 15) + (s.tris[trii].i[0] * 15) + 6 + i] += mat[i];
+//                    s.geometry[(framei * s.numverts * 15) + (s.tris[trii].i[1] * 15) + 6 + i] += mat[i];
+//                    s.geometry[(framei * s.numverts * 15) + (s.tris[trii].i[2] * 15) + 6 + i] += mat[i];
 //                    i++;
 //                }
 
@@ -1921,32 +1921,32 @@ function mdinit(): void
 
 //        // now that we accumulated the TBNs, average and invert them for each vertex
 //        verti = 0;
-//        while (verti < (m->head.numframes * s->numverts))
+//        while (verti < (m.head.numframes * s.numverts))
 //        {
-//            int32_t curnumtris = numtris[verti % s->numverts];
+//            int32_t curnumtris = numtris[verti % s.numverts];
 
 //            if (curnumtris > 0)
 //            {
 //                i = 6;
 //                while (i < 12)
 //                {
-//                    s->geometry[(verti * 15) + i] /= curnumtris;
+//                    s.geometry[(verti * 15) + i] /= curnumtris;
 //                    i++;
 //                }
 //            }
 //#ifdef DEBUG_MODEL_MEM
-//            else if (verti == verti%s->numverts)
+//            else if (verti == verti%s.numverts)
 //            {
-//                OSD_Printf("%s: vert %d is unused\n", m->head.nam, verti);
+//                OSD_Printf("%s: vert %d is unused\n", m.head.nam, verti);
 //            }
 //#endif
 //            // copy N over
-//            s->geometry[(verti * 15) + 12] = s->geometry[(verti * 15) + 3];
-//            s->geometry[(verti * 15) + 13] = s->geometry[(verti * 15) + 4];
-//            s->geometry[(verti * 15) + 14] = s->geometry[(verti * 15) + 5];
+//            s.geometry[(verti * 15) + 12] = s.geometry[(verti * 15) + 3];
+//            s.geometry[(verti * 15) + 13] = s.geometry[(verti * 15) + 4];
+//            s.geometry[(verti * 15) + 14] = s.geometry[(verti * 15) + 5];
 
-//            invertmatrix(&s->geometry[(verti * 15) + 6], mat);
-//            memcpy(&s->geometry[(verti * 15) + 6], mat, sizeof(float) * 9);
+//            invertmatrix(&s.geometry[(verti * 15) + 6], mat);
+//            memcpy(&s.geometry[(verti * 15) + 6], mat, sizeof(float) * 9);
 
 //            verti++;
 //        }
@@ -1969,12 +1969,12 @@ function mdinit(): void
 //    float g;
 //    float k0, k1, k2, k3, k4, k5, k6, k7;
 
-//    k0 = ((float)(tspr->x-globalposx))*f/1024.0;
-//    k1 = ((float)(tspr->y-globalposy))*f/1024.0;
+//    k0 = ((float)(tspr.x-globalposx))*f/1024.0;
+//    k1 = ((float)(tspr.y-globalposy))*f/1024.0;
 //    f = gcosang2*gshang;
 //    g = gsinang2*gshang;
-//    k4 = (float)sintable[(tspr->ang+spriteext[tspr->owner].angoff+1024)&2047] / 16384.0;
-//    k5 = (float)sintable[(tspr->ang+spriteext[tspr->owner].angoff+ 512)&2047] / 16384.0;
+//    k4 = (float)sintable[(tspr.ang+spriteext[tspr.owner].angoff+1024)&2047] / 16384.0;
+//    k5 = (float)sintable[(tspr.ang+spriteext[tspr.owner].angoff+ 512)&2047] / 16384.0;
 //    k2 = k0*(1-k4)+k1*k5;
 //    k3 = k1*(1-k4)-k0*k5;
 //    k6 = f*gstang - gsinang*gctang; k7 = g*gstang + gcosang*gctang;
@@ -1984,9 +1984,9 @@ function mdinit(): void
 //    k6 =           gcosang2*gchang; k7 =           gsinang2*gchang;
 //    mat[2] = k4*k6 + k5*k7; mat[6] =-gshang;        mat[10] = k4*k7 - k5*k6; mat[14] = k2*k6 + k3*k7;
 
-//    mat[12] += a0->y*mat[0] + a0->z*mat[4] + a0->x*mat[ 8];
-//    mat[13] += a0->y*mat[1] + a0->z*mat[5] + a0->x*mat[ 9];
-//    mat[14] += a0->y*mat[2] + a0->z*mat[6] + a0->x*mat[10];
+//    mat[12] += a0.y*mat[0] + a0.z*mat[4] + a0.x*mat[ 8];
+//    mat[13] += a0.y*mat[1] + a0.z*mat[5] + a0.x*mat[ 9];
+//    mat[14] += a0.y*mat[2] + a0.z*mat[6] + a0.x*mat[10];
 //}
 
 //static inline void md3draw_handle_triangles(const md3surf_t *s, uint16_t *indexhandle,
@@ -1997,33 +1997,33 @@ function mdinit(): void
 //    if (r_vertexarrays)
 //    {
 //        int32_t k = 0;
-//        for (i=s->numtris-1; i>=0; i--)
+//        for (i=s.numtris-1; i>=0; i--)
 //        {
-//            uint16_t tri = M ? M->indexes[i] : i;
+//            uint16_t tri = M ? M.indexes[i] : i;
 
 //            for (j=0; j<3; j++)
-//                indexhandle[k++] = s->tris[tri].i[j];
+//                indexhandle[k++] = s.tris[tri].i[j];
 //        }
 //    }
 //    else
 //    {
 //        bglBegin(GL_TRIANGLES);
-//        for (i=s->numtris-1; i>=0; i--)
+//        for (i=s.numtris-1; i>=0; i--)
 //        {
-//            uint16_t tri = M ? M->indexes[i] : i;
+//            uint16_t tri = M ? M.indexes[i] : i;
 
 //            for (j=0; j<3; j++)
 //            {
-//                int32_t k = s->tris[tri].i[j];
+//                int32_t k = s.tris[tri].i[j];
 
 //                if (texunits > GL_TEXTURE0_ARB)
 //                {
 //                    int32_t l = GL_TEXTURE0_ARB;
 //                    while (l <= texunits)
-//                        bglMultiTexCoord2fARB(l++, s->uv[k].u,s->uv[k].v);
+//                        bglMultiTexCoord2fARB(l++, s.uv[k].u,s.uv[k].v);
 //                }
 //                else
-//                    bglTexCoord2f(s->uv[k].u,s->uv[k].v);
+//                    bglTexCoord2f(s.uv[k].u,s.uv[k].v);
 
 //                bglVertex3fv((float *)&vertlist[k]);
 //            }
@@ -2041,95 +2041,95 @@ function mdinit(): void
 //    GLfloat pc[4];
 //    int32_t                 texunits = GL_TEXTURE0_ARB;
 
-//    const int32_t owner = tspr->owner;
+//    const int32_t owner = tspr.owner;
 //    // PK: XXX: These owner bound checks are redundant because sext is
 //    // dereferenced unconditionally below anyway.
 //    const spriteext_t *const sext = ((unsigned)owner < MAXSPRITES+MAXUNIQHUDID) ? &spriteext[owner] : NULL;
-//    const uint8_t lpal = ((unsigned)owner < MAXSPRITES) ? sprite[tspr->owner].pal : tspr->pal;
+//    const uint8_t lpal = ((unsigned)owner < MAXSPRITES) ? sprite[tspr.owner].pal : tspr.pal;
 
-//    if (r_vbos && (m->vbos == NULL))
+//    if (r_vbos && (m.vbos == NULL))
 //        mdloadvbos(m);
 
-//    //    if ((tspr->cstat&48) == 32) return 0;
+//    //    if ((tspr.cstat&48) == 32) return 0;
 
 //    updateanimation((md2model_t *)m, tspr, lpal);
 
 //    //create current&next frame's vertex list from whole list
 
-//    f = m->interpol; g = 1-f;
+//    f = m.interpol; g = 1-f;
 
-//    if (m->interpol < 0 || m->interpol > 1 ||
-//            m->cframe < 0 || m->cframe >= m->numframes ||
-//            m->nframe < 0 || m->nframe >= m->numframes)
+//    if (m.interpol < 0 || m.interpol > 1 ||
+//            m.cframe < 0 || m.cframe >= m.numframes ||
+//            m.nframe < 0 || m.nframe >= m.numframes)
 //    {
 //#ifdef DEBUGGINGAIDS
 //        OSD_Printf("%s: mdframe oob: c:%d n:%d total:%d interpol:%.02f\n",
-//                   m->head.nam, m->cframe, m->nframe, m->numframes, m->interpol);
+//                   m.head.nam, m.cframe, m.nframe, m.numframes, m.interpol);
 //#endif
-//        if (m->interpol < 0)
-//            m->interpol = 0;
-//        if (m->interpol > 1)
-//            m->interpol = 1;
-//        if (m->cframe < 0)
-//            m->cframe = 0;
-//        if (m->cframe >= m->numframes)
-//            m->cframe = m->numframes - 1;
-//        if (m->nframe < 0)
-//            m->nframe = 0;
-//        if (m->nframe >= m->numframes)
-//            m->nframe = m->numframes - 1;
+//        if (m.interpol < 0)
+//            m.interpol = 0;
+//        if (m.interpol > 1)
+//            m.interpol = 1;
+//        if (m.cframe < 0)
+//            m.cframe = 0;
+//        if (m.cframe >= m.numframes)
+//            m.cframe = m.numframes - 1;
+//        if (m.nframe < 0)
+//            m.nframe = 0;
+//        if (m.nframe >= m.numframes)
+//            m.nframe = m.numframes - 1;
 //    }
 
 //    if (MFLAGS_NOCONV(m))
 //    {
 //        // md2
-//        m0.x = m->scale * g; m1.x = m->scale *f;
-//        m0.y = m->scale * g; m1.y = m->scale *f;
-//        m0.z = m->scale * g; m1.z = m->scale *f;
+//        m0.x = m.scale * g; m1.x = m.scale *f;
+//        m0.y = m.scale * g; m1.y = m.scale *f;
+//        m0.z = m.scale * g; m1.z = m.scale *f;
 //    }
 //    else
 //    {
-//        m0.x = (1.0/64.0) * m->scale * g; m1.x = (1.0/64.0) * m->scale *f;
-//        m0.y = (1.0/64.0) * m->scale * g; m1.y = (1.0/64.0) * m->scale *f;
-//        m0.z = (1.0/64.0) * m->scale * g; m1.z = (1.0/64.0) * m->scale *f;
+//        m0.x = (1.0/64.0) * m.scale * g; m1.x = (1.0/64.0) * m.scale *f;
+//        m0.y = (1.0/64.0) * m.scale * g; m1.y = (1.0/64.0) * m.scale *f;
+//        m0.z = (1.0/64.0) * m.scale * g; m1.z = (1.0/64.0) * m.scale *f;
 //    }
 
-//    a0.x = a0.y = 0; a0.z = m->zadd*m->scale;
+//    a0.x = a0.y = 0; a0.z = m.zadd*m.scale;
 
 //    // Parkar: Moved up to be able to use k0 for the y-flipping code
-//    k0 = (float)tspr->z;
-//    if ((globalorientation&128) && !((globalorientation&48)==32)) k0 += (float)((tilesizy[tspr->picnum]*tspr->yrepeat)<<1);
+//    k0 = (float)tspr.z;
+//    if ((globalorientation&128) && !((globalorientation&48)==32)) k0 += (float)((tilesizy[tspr.picnum]*tspr.yrepeat)<<1);
 
 //    // Parkar: Changed to use the same method as centeroriented sprites
 //    if (globalorientation&8) //y-flipping
 //    {
 //        m0.z = -m0.z; m1.z = -m1.z; a0.z = -a0.z;
-//        k0 -= (float)((tilesizy[tspr->picnum]*tspr->yrepeat)<<2);
+//        k0 -= (float)((tilesizy[tspr.picnum]*tspr.yrepeat)<<2);
 //    }
 //    if (globalorientation&4) { m0.y = -m0.y; m1.y = -m1.y; a0.y = -a0.y; } //x-flipping
 
 //    // yoffset differs from zadd in that it does not follow cstat&8 y-flipping
-//    a0.z += m->yoffset*m->scale;
+//    a0.z += m.yoffset*m.scale;
 
-//    f = ((float)tspr->xrepeat)/64*m->bscale;
+//    f = ((float)tspr.xrepeat)/64*m.bscale;
 //    m0.x *= f; m1.x *= f; a0.x *= f; f = -f;   // 20040610: backwards models aren't cool
 //    m0.y *= f; m1.y *= f; a0.y *= f;
-//    f = ((float)tspr->yrepeat)/64*m->bscale;
+//    f = ((float)tspr.yrepeat)/64*m.bscale;
 //    m0.z *= f; m1.z *= f; a0.z *= f;
 
 //    // floor aligned
-//    k1 = (float)tspr->y;
+//    k1 = (float)tspr.y;
 //    if ((globalorientation&48)==32)
 //    {
 //        m0.z = -m0.z; m1.z = -m1.z; a0.z = -a0.z;
 //        m0.y = -m0.y; m1.y = -m1.y; a0.y = -a0.y;
 //        f = a0.x; a0.x = a0.z; a0.z = f;
-//        k1 += (float)((tilesizy[tspr->picnum]*tspr->yrepeat)>>3);
+//        k1 += (float)((tilesizy[tspr.picnum]*tspr.yrepeat)>>3);
 //    }
 
 //    f = (65536.0*512.0)/((float)xdimen*viewingrange);
 //    g = 32.0/((float)xdimen*gxyaspect);
-//    m0.y *= f; m1.y *= f; a0.y = (((float)(tspr->x-globalposx))/  1024.0 + a0.y)*f;
+//    m0.y *= f; m1.y *= f; a0.y = (((float)(tspr.x-globalposx))/  1024.0 + a0.y)*f;
 //    m0.x *=-f; m1.x *=-f; a0.x = (((float)(k1     -globalposy))/ -1024.0 + a0.x)*-f;
 //    m0.z *= g; m1.z *= g; a0.z = (((float)(k0     -globalposz))/-16384.0 + a0.z)*g;
 
@@ -2150,7 +2150,7 @@ function mdinit(): void
 //    // Bit 10 is an ugly hack in game.c:G_DoSpriteAnimations() telling md2sprite
 //    // to use Z-buffer hacks to hide overdraw problems with the
 //    // flat-tsprite-on-floor shadows.
-//    if (tspr->cstat&CSTAT_SPRITE_MDHACK)
+//    if (tspr.cstat&CSTAT_SPRITE_MDHACK)
 //    {
 //        bglDepthFunc(GL_LESS); //NEVER,LESS,(,L)EQUAL,GREATER,(NOT,G)EQUAL,ALWAYS
 //        bglDepthRange(0.0,0.9999);
@@ -2162,10 +2162,10 @@ function mdinit(): void
 
 //    bglEnable(GL_TEXTURE_2D);
 
-//    pc[0] = pc[1] = pc[2] = ((float)(numshades-min(max((globalshade * shadescale)+m->shadeoff,0),numshades)))/((float)numshades);
+//    pc[0] = pc[1] = pc[2] = ((float)(numshades-min(max((globalshade * shadescale)+m.shadeoff,0),numshades)))/((float)numshades);
 //    if (!(hictinting[globalpal].f&4))
 //    {
-//        if (!(m->flags&1) || (((unsigned)owner < MAXSPRITES) && sector[sprite[owner].sectnum].floorpal!=0))
+//        if (!(m.flags&1) || (((unsigned)owner < MAXSPRITES) && sector[sprite[owner].sectnum].floorpal!=0))
 //        {
 //            pc[0] *= (float)hictinting[globalpal].r / 255.0;
 //            pc[1] *= (float)hictinting[globalpal].g / 255.0;
@@ -2180,10 +2180,10 @@ function mdinit(): void
 //        else globalnoeffect=1;
 //    }
 
-//    if (tspr->cstat&2) { if (!(tspr->cstat&512)) pc[3] = 0.66f; else pc[3] = 0.33f; }
+//    if (tspr.cstat&2) { if (!(tspr.cstat&512)) pc[3] = 0.66f; else pc[3] = 0.33f; }
 //    else pc[3] = 1.0f;
-//    pc[3] *= 1.0f - sext->alpha;
-//    if (m->usesalpha) //Sprites with alpha in texture
+//    pc[3] *= 1.0f - sext.alpha;
+//    if (m.usesalpha) //Sprites with alpha in texture
 //    {
 //        //      bglEnable(GL_BLEND);// bglBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 //        //      bglEnable(GL_ALPHA_TEST); bglAlphaFunc(GL_GREATER,0.32);
@@ -2198,7 +2198,7 @@ function mdinit(): void
 //    }
 //    else
 //    {
-//        if ((tspr->cstat&2) || sext->alpha > 0.f || pc[3] < 1.0f) bglEnable(GL_BLEND); //else bglDisable(GL_BLEND);
+//        if ((tspr.cstat&2) || sext.alpha > 0.f || pc[3] < 1.0f) bglEnable(GL_BLEND); //else bglDisable(GL_BLEND);
 //    }
 //    bglColor4f(pc[0],pc[1],pc[2],pc[3]);
 //    //if (MFLAGS_NOCONV(m))
@@ -2206,37 +2206,37 @@ function mdinit(): void
 //    //------------
 
 //    // PLAG: Cleaner model rotation code
-//    if (sext->pitch || sext->roll || MFLAGS_NOCONV(m))
+//    if (sext.pitch || sext.roll || MFLAGS_NOCONV(m))
 //    {
-//        if (sext->xoff)
-//            a0.x = (float)(sext->xoff / (2560 * (m0.x+m1.x)));
+//        if (sext.xoff)
+//            a0.x = (float)(sext.xoff / (2560 * (m0.x+m1.x)));
 //        else
 //            a0.x = 0;
-//        if (sext->yoff)
-//            a0.y = (float)(sext->yoff / (2560 * (m0.x+m1.x)));
+//        if (sext.yoff)
+//            a0.y = (float)(sext.yoff / (2560 * (m0.x+m1.x)));
 //        else
 //            a0.y = 0;
-//        if ((sext->zoff) && !(tspr->cstat&CSTAT_SPRITE_MDHACK))
-//            a0.z = (float)(sext->zoff / (655360 * (m0.z+m1.z)));
+//        if ((sext.zoff) && !(tspr.cstat&CSTAT_SPRITE_MDHACK))
+//            a0.z = (float)(sext.zoff / (655360 * (m0.z+m1.z)));
 //        else
 //            a0.z = 0;
-//        k0 = (float)sintable[(sext->pitch+512)&2047] / 16384.0;
-//        k1 = (float)sintable[sext->pitch&2047] / 16384.0;
-//        k2 = (float)sintable[(sext->roll+512)&2047] / 16384.0;
-//        k3 = (float)sintable[sext->roll&2047] / 16384.0;
+//        k0 = (float)sintable[(sext.pitch+512)&2047] / 16384.0;
+//        k1 = (float)sintable[sext.pitch&2047] / 16384.0;
+//        k2 = (float)sintable[(sext.roll+512)&2047] / 16384.0;
+//        k3 = (float)sintable[sext.roll&2047] / 16384.0;
 //    }
 
-//    for (surfi=0; surfi<m->head.numsurfs; surfi++)
+//    for (surfi=0; surfi<m.head.numsurfs; surfi++)
 //    {
 //        //PLAG : sorting stuff
 //        void               *vbotemp;
 //        point3d            *vertexhandle = NULL;
 //        uint16_t     *indexhandle;
 
-//        const md3surf_t *const s = &m->head.surfs[surfi];
+//        const md3surf_t *const s = &m.head.surfs[surfi];
 
-//        v0 = &s->xyzn[m->cframe*s->numverts];
-//        v1 = &s->xyzn[m->nframe*s->numverts];
+//        v0 = &s.xyzn[m.cframe*s.numverts];
+//        v1 = &s.xyzn[m.nframe*s.numverts];
 
 //        if (r_vertexarrays && r_vbos)
 //        {
@@ -2248,23 +2248,23 @@ function mdinit(): void
 //            vertexhandle = (point3d *)vbotemp;
 //        }
 
-//        for (i=s->numverts-1; i>=0; i--)
+//        for (i=s.numverts-1; i>=0; i--)
 //        {
 //            point3d fp;
 
-//            if (sext->pitch || sext->roll || MFLAGS_NOCONV(m))
+//            if (sext.pitch || sext.roll || MFLAGS_NOCONV(m))
 //            {
 //                point3d fp1, fp2;
 
-//                fp.z = ((MFLAGS_NOCONV(m)) ? (v0[i].x * m->muladdframes[m->cframe*2].x) + m->muladdframes[m->cframe*2+1].x : v0[i].x) + a0.x;
-//                fp.x = ((MFLAGS_NOCONV(m)) ? (v0[i].y * m->muladdframes[m->cframe*2].y) + m->muladdframes[m->cframe*2+1].y : v0[i].y) + a0.y;
-//                fp.y = ((MFLAGS_NOCONV(m)) ? (v0[i].z * m->muladdframes[m->cframe*2].z) + m->muladdframes[m->cframe*2+1].z : v0[i].z) + a0.z;
+//                fp.z = ((MFLAGS_NOCONV(m)) ? (v0[i].x * m.muladdframes[m.cframe*2].x) + m.muladdframes[m.cframe*2+1].x : v0[i].x) + a0.x;
+//                fp.x = ((MFLAGS_NOCONV(m)) ? (v0[i].y * m.muladdframes[m.cframe*2].y) + m.muladdframes[m.cframe*2+1].y : v0[i].y) + a0.y;
+//                fp.y = ((MFLAGS_NOCONV(m)) ? (v0[i].z * m.muladdframes[m.cframe*2].z) + m.muladdframes[m.cframe*2+1].z : v0[i].z) + a0.z;
 //                fp1.x = fp.x*k2 +       fp.y*k3;
 //                fp1.y = fp.x*k0*(-k3) + fp.y*k0*k2 + fp.z*(-k1);
 //                fp1.z = fp.x*k1*(-k3) + fp.y*k1*k2 + fp.z*k0;
-//                fp.z = ((MFLAGS_NOCONV(m)) ? (v1[i].x * m->muladdframes[m->nframe*2].x) + m->muladdframes[m->nframe*2+1].x : v1[i].x) + a0.x;
-//                fp.x = ((MFLAGS_NOCONV(m)) ? (v1[i].y * m->muladdframes[m->nframe*2].y) + m->muladdframes[m->nframe*2+1].y : v1[i].y) + a0.y;
-//                fp.y = ((MFLAGS_NOCONV(m)) ? (v1[i].z * m->muladdframes[m->nframe*2].z) + m->muladdframes[m->nframe*2+1].z : v1[i].z) + a0.z;
+//                fp.z = ((MFLAGS_NOCONV(m)) ? (v1[i].x * m.muladdframes[m.nframe*2].x) + m.muladdframes[m.nframe*2+1].x : v1[i].x) + a0.x;
+//                fp.x = ((MFLAGS_NOCONV(m)) ? (v1[i].y * m.muladdframes[m.nframe*2].y) + m.muladdframes[m.nframe*2+1].y : v1[i].y) + a0.y;
+//                fp.y = ((MFLAGS_NOCONV(m)) ? (v1[i].z * m.muladdframes[m.nframe*2].z) + m.muladdframes[m.nframe*2+1].z : v1[i].z) + a0.z;
 //                fp2.x = fp.x*k2 +       fp.y*k3;
 //                fp2.y = fp.x*k0*(-k3) + fp.y*k0*k2 + fp.z*(-k1);
 //                fp2.z = fp.x*k1*(-k3) + fp.y*k1*k2 + fp.z*k0;
@@ -2300,14 +2300,14 @@ function mdinit(): void
 //        mat[3] = mat[7] = mat[11] = 0.f; mat[15] = 1.f; bglLoadMatrixf(mat);
 //        // PLAG: End
 
-//        i = mdloadskin((md2model_t *)m,tile2model[Ptile2tile(tspr->picnum,lpal)].skinnum,globalpal,surfi);
+//        i = mdloadskin((md2model_t *)m,tile2model[Ptile2tile(tspr.picnum,lpal)].skinnum,globalpal,surfi);
 //        if (!i)
 //            continue;
-//        //i = mdloadskin((md2model *)m,tile2model[Ptile2tile(tspr->picnum,lpal)].skinnum,surfi); //hack for testing multiple surfaces per MD3
+//        //i = mdloadskin((md2model *)m,tile2model[Ptile2tile(tspr.picnum,lpal)].skinnum,surfi); //hack for testing multiple surfaces per MD3
 //        bglBindTexture(GL_TEXTURE_2D, i);
 
-//        if (r_detailmapping && !(tspr->cstat&CSTAT_SPRITE_MDHACK))
-//            i = mdloadskin((md2model_t *)m,tile2model[Ptile2tile(tspr->picnum,lpal)].skinnum,DETAILPAL,surfi);
+//        if (r_detailmapping && !(tspr.cstat&CSTAT_SPRITE_MDHACK))
+//            i = mdloadskin((md2model_t *)m,tile2model[Ptile2tile(tspr.picnum,lpal)].skinnum,DETAILPAL,surfi);
 //        else
 //            i = 0;
 
@@ -2317,9 +2317,9 @@ function mdinit(): void
 
 //            polymost_setupdetailtexture(&texunits, i);
 
-//            for (sk = m->skinmap; sk; sk = sk->next)
-//                if ((int32_t)sk->palette == DETAILPAL && sk->skinnum == tile2model[Ptile2tile(tspr->picnum,lpal)].skinnum && sk->surfnum == surfi)
-//                    f = sk->param;
+//            for (sk = m.skinmap; sk; sk = sk.next)
+//                if ((int32_t)sk.palette == DETAILPAL && sk.skinnum == tile2model[Ptile2tile(tspr.picnum,lpal)].skinnum && sk.surfnum == surfi)
+//                    f = sk.param;
 
 //            bglMatrixMode(GL_TEXTURE);
 //            bglLoadIdentity();
@@ -2327,8 +2327,8 @@ function mdinit(): void
 //            bglMatrixMode(GL_MODELVIEW);
 //        }
 
-//        if (r_glowmapping && !(tspr->cstat&CSTAT_SPRITE_MDHACK))
-//            i = mdloadskin((md2model_t *)m,tile2model[Ptile2tile(tspr->picnum,lpal)].skinnum,GLOWPAL,surfi);
+//        if (r_glowmapping && !(tspr.cstat&CSTAT_SPRITE_MDHACK))
+//            i = mdloadskin((md2model_t *)m,tile2model[Ptile2tile(tspr.picnum,lpal)].skinnum,GLOWPAL,surfi);
 //        else
 //            i = 0;
 
@@ -2342,27 +2342,27 @@ function mdinit(): void
 //            indexhandle = (uint16_t *)vbotemp;
 //        }
 //        else
-//            indexhandle = m->vindexes;
+//            indexhandle = m.vindexes;
 
 //        //PLAG: delayed polygon-level sorted rendering
-//        if (m->usesalpha && !(tspr->cstat & 1024))
+//        if (m.usesalpha && !(tspr.cstat & 1024))
 //        {
-//            for (i=s->numtris-1; i>=0; i--)
+//            for (i=s.numtris-1; i>=0; i--)
 //            {
 //                point3d fp, fp1, fp2;
 
 //                // Matrix multiplication - ugly but clear
-//                fp.x = (vertlist[s->tris[i].i[0]].x * mat[0]) + (vertlist[s->tris[i].i[0]].y * mat[4]) + (vertlist[s->tris[i].i[0]].z * mat[8]) + mat[12];
-//                fp.y = (vertlist[s->tris[i].i[0]].x * mat[1]) + (vertlist[s->tris[i].i[0]].y * mat[5]) + (vertlist[s->tris[i].i[0]].z * mat[9]) + mat[13];
-//                fp.z = (vertlist[s->tris[i].i[0]].x * mat[2]) + (vertlist[s->tris[i].i[0]].y * mat[6]) + (vertlist[s->tris[i].i[0]].z * mat[10]) + mat[14];
+//                fp.x = (vertlist[s.tris[i].i[0]].x * mat[0]) + (vertlist[s.tris[i].i[0]].y * mat[4]) + (vertlist[s.tris[i].i[0]].z * mat[8]) + mat[12];
+//                fp.y = (vertlist[s.tris[i].i[0]].x * mat[1]) + (vertlist[s.tris[i].i[0]].y * mat[5]) + (vertlist[s.tris[i].i[0]].z * mat[9]) + mat[13];
+//                fp.z = (vertlist[s.tris[i].i[0]].x * mat[2]) + (vertlist[s.tris[i].i[0]].y * mat[6]) + (vertlist[s.tris[i].i[0]].z * mat[10]) + mat[14];
 
-//                fp1.x = (vertlist[s->tris[i].i[1]].x * mat[0]) + (vertlist[s->tris[i].i[1]].y * mat[4]) + (vertlist[s->tris[i].i[1]].z * mat[8]) + mat[12];
-//                fp1.y = (vertlist[s->tris[i].i[1]].x * mat[1]) + (vertlist[s->tris[i].i[1]].y * mat[5]) + (vertlist[s->tris[i].i[1]].z * mat[9]) + mat[13];
-//                fp1.z = (vertlist[s->tris[i].i[1]].x * mat[2]) + (vertlist[s->tris[i].i[1]].y * mat[6]) + (vertlist[s->tris[i].i[1]].z * mat[10]) + mat[14];
+//                fp1.x = (vertlist[s.tris[i].i[1]].x * mat[0]) + (vertlist[s.tris[i].i[1]].y * mat[4]) + (vertlist[s.tris[i].i[1]].z * mat[8]) + mat[12];
+//                fp1.y = (vertlist[s.tris[i].i[1]].x * mat[1]) + (vertlist[s.tris[i].i[1]].y * mat[5]) + (vertlist[s.tris[i].i[1]].z * mat[9]) + mat[13];
+//                fp1.z = (vertlist[s.tris[i].i[1]].x * mat[2]) + (vertlist[s.tris[i].i[1]].y * mat[6]) + (vertlist[s.tris[i].i[1]].z * mat[10]) + mat[14];
 
-//                fp2.x = (vertlist[s->tris[i].i[2]].x * mat[0]) + (vertlist[s->tris[i].i[2]].y * mat[4]) + (vertlist[s->tris[i].i[2]].z * mat[8]) + mat[12];
-//                fp2.y = (vertlist[s->tris[i].i[2]].x * mat[1]) + (vertlist[s->tris[i].i[2]].y * mat[5]) + (vertlist[s->tris[i].i[2]].z * mat[9]) + mat[13];
-//                fp2.z = (vertlist[s->tris[i].i[2]].x * mat[2]) + (vertlist[s->tris[i].i[2]].y * mat[6]) + (vertlist[s->tris[i].i[2]].z * mat[10]) + mat[14];
+//                fp2.x = (vertlist[s.tris[i].i[2]].x * mat[0]) + (vertlist[s.tris[i].i[2]].y * mat[4]) + (vertlist[s.tris[i].i[2]].z * mat[8]) + mat[12];
+//                fp2.y = (vertlist[s.tris[i].i[2]].x * mat[1]) + (vertlist[s.tris[i].i[2]].y * mat[5]) + (vertlist[s.tris[i].i[2]].z * mat[9]) + mat[13];
+//                fp2.z = (vertlist[s.tris[i].i[2]].x * mat[2]) + (vertlist[s.tris[i].i[2]].y * mat[6]) + (vertlist[s.tris[i].i[2]].z * mat[10]) + mat[14];
 
 //                f = (fp.x * fp.x) + (fp.y * fp.y) + (fp.z * fp.z);
 
@@ -2373,12 +2373,12 @@ function mdinit(): void
 //                if (f > g)
 //                    f = g;
 
-//                m->maxdepths[i] = f;
-//                m->indexes[i] = i;
+//                m.maxdepths[i] = f;
+//                m.indexes[i] = i;
 //            }
 
 //            // dichotomic recursive sorting - about 100x less iterations than bubblesort
-//            quicksort(m->indexes, m->maxdepths, 0, s->numtris - 1);
+//            quicksort(m.indexes, m.maxdepths, 0, s.numtris - 1);
 
 //            md3draw_handle_triangles(s, indexhandle, texunits, m);
 //        }
@@ -2397,7 +2397,7 @@ function mdinit(): void
 //        {
 //            int32_t l;
 //            if (r_vbos)
-//                bglBindBufferARB(GL_ARRAY_BUFFER_ARB, m->vbos[surfi]);
+//                bglBindBufferARB(GL_ARRAY_BUFFER_ARB, m.vbos[surfi]);
 //            l = GL_TEXTURE0_ARB;
 //            while (l <= texunits)
 //            {
@@ -2406,7 +2406,7 @@ function mdinit(): void
 //                if (r_vbos)
 //                    bglTexCoordPointer(2, GL_FLOAT, 0, 0);
 //                else
-//                    bglTexCoordPointer(2, GL_FLOAT, 0, &(s->uv[0].u));
+//                    bglTexCoordPointer(2, GL_FLOAT, 0, &(s.uv[0].u));
 //            }
 
 //            if (r_vbos)
@@ -2420,10 +2420,10 @@ function mdinit(): void
 //            if (r_vbos)
 //            {
 //                bglBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, indexvbos[curvbo]);
-//                bglDrawElements(GL_TRIANGLES, s->numtris * 3, GL_UNSIGNED_SHORT, 0);
+//                bglDrawElements(GL_TRIANGLES, s.numtris * 3, GL_UNSIGNED_SHORT, 0);
 //            }
 //            else
-//                bglDrawElements(GL_TRIANGLES, s->numtris * 3, GL_UNSIGNED_SHORT, m->vindexes);
+//                bglDrawElements(GL_TRIANGLES, s.numtris * 3, GL_UNSIGNED_SHORT, m.vindexes);
 
 //            if (r_vbos)
 //            {
@@ -2449,10 +2449,10 @@ function mdinit(): void
 //    }
 //    //------------
 
-//    if (m->usesalpha) bglDisable(GL_ALPHA_TEST);
+//    if (m.usesalpha) bglDisable(GL_ALPHA_TEST);
 //    bglDisable(GL_CULL_FACE);
 //    bglPopAttrib();
-//    if (tspr->cstat&CSTAT_SPRITE_MDHACK)
+//    if (tspr.cstat&CSTAT_SPRITE_MDHACK)
 //    {
 //        bglDepthFunc(GL_LESS); //NEVER,LESS,(,L)EQUAL,GREATER,(NOT,G)EQUAL,ALWAYS
 //        bglDepthRange(0.0,0.99999);
@@ -2472,52 +2472,52 @@ function mdinit(): void
 
 //    if (!m) return;
 
-//    for (anim=m->animations; anim; anim=nanim)
+//    for (anim=m.animations; anim; anim=nanim)
 //    {
-//        nanim = anim->next;
+//        nanim = anim.next;
 //        Bfree(anim);
 //    }
-//    for (sk=m->skinmap; sk; sk=nsk)
+//    for (sk=m.skinmap; sk; sk=nsk)
 //    {
-//        nsk = sk->next;
-//        Bfree(sk->fn);
+//        nsk = sk.next;
+//        Bfree(sk.fn);
 //        Bfree(sk);
 //    }
 
-//    if (m->head.surfs)
+//    if (m.head.surfs)
 //    {
-//        for (surfi=m->head.numsurfs-1; surfi>=0; surfi--)
+//        for (surfi=m.head.numsurfs-1; surfi>=0; surfi--)
 //        {
-//            s = &m->head.surfs[surfi];
-//            if (s->tris) Bfree(s->tris);
+//            s = &m.head.surfs[surfi];
+//            if (s.tris) Bfree(s.tris);
 //            if (MFLAGS_NOCONV(m))
 //            {
-//                if (s->shaders) Bfree(s->shaders);
-//                if (s->uv) Bfree(s->uv);
-//                if (s->xyzn) Bfree(s->xyzn);
-//                if (s->geometry) Bfree(s->geometry);
+//                if (s.shaders) Bfree(s.shaders);
+//                if (s.uv) Bfree(s.uv);
+//                if (s.xyzn) Bfree(s.xyzn);
+//                if (s.geometry) Bfree(s.geometry);
 //            }
 ////            else
-////                if (s->geometry) Bfree(s->geometry);  // this is wrong!
+////                if (s.geometry) Bfree(s.geometry);  // this is wrong!
 //        }
-//        Bfree(m->head.surfs);
+//        Bfree(m.head.surfs);
 //    }
-//    if (m->head.tags) Bfree(m->head.tags);
-//    if (m->head.frames) Bfree(m->head.frames);
+//    if (m.head.tags) Bfree(m.head.tags);
+//    if (m.head.frames) Bfree(m.head.frames);
 
-//    if (m->texid) Bfree(m->texid);
+//    if (m.texid) Bfree(m.texid);
 
-//    if (m->muladdframes) Bfree(m->muladdframes);
+//    if (m.muladdframes) Bfree(m.muladdframes);
 
-//    if (m->indexes) Bfree(m->indexes);
-//    if (m->vindexes) Bfree(m->vindexes);
-//    if (m->maxdepths) Bfree(m->maxdepths);
+//    if (m.indexes) Bfree(m.indexes);
+//    if (m.vindexes) Bfree(m.vindexes);
+//    if (m.maxdepths) Bfree(m.maxdepths);
 
-//    if (m->vbos)
+//    if (m.vbos)
 //    {
-//        bglDeleteBuffersARB(m->head.numsurfs, m->vbos);
-//        Bfree(m->vbos);
-//        m->vbos = NULL;
+//        bglDeleteBuffersARB(m.head.numsurfs, m.vbos);
+//        Bfree(m.vbos);
+//        m.vbos = NULL;
 //    }
 
 //    Bfree(m);
@@ -2623,8 +2623,8 @@ function mdinit(): void
 //{
 //#if 0
 //    int32_t i, j, x;
-//    i = y0*gvox->mytexx + x0;
-//    for (dy=0; dy; dy--,i+=gvox->mytexx)
+//    i = y0*gvox.mytexx + x0;
+//    for (dy=0; dy; dy--,i+=gvox.mytexx)
 //        for (x=0; x<dx; x++) { j = i+x; if (zbit[j>>5]&(1<<SHIFTMOD32(j))) return(0); }
 //#else
 //    int32_t i, c, m, m1, x;
@@ -2649,8 +2649,8 @@ function mdinit(): void
 //{
 //#if 0
 //    int32_t i, j, y;
-//    i = y0*gvox->mytexx + x0;
-//    for (y=0; y<dy; y++,i+=gvox->mytexx)
+//    i = y0*gvox.mytexx + x0;
+//    for (y=0; y<dy; y++,i+=gvox.mytexx)
 //        for (x=0; x<dx; x++) { j = i+x; zbit[j>>5] |= (1<<SHIFTMOD32(j)); }
 //#else
 //    int32_t i, c, m, m1, x;
@@ -2686,7 +2686,7 @@ function mdinit(): void
 //    if (x > gmaxx) gmaxx = x;
 //    if (y > gmaxy) gmaxy = y;
 //    garea += (x+(VOXBORDWIDTH<<1))*(y+(VOXBORDWIDTH<<1));
-//    gvox->qcnt++;
+//    gvox.qcnt++;
 //}
 
 //static void addquad(int32_t x0, int32_t y0, int32_t z0, int32_t x1, int32_t y1, int32_t z1, int32_t x2, int32_t y2, int32_t z2, int32_t face)
@@ -2700,7 +2700,7 @@ function mdinit(): void
 //    else i = 2;
 //    if (x < y) { z = x; x = y; y = z; i += 3; }
 //    z = shcnt[y*shcntp+x]++;
-//    lptr = &gvox->mytex[(shp[z].y+VOXBORDWIDTH)*gvox->mytexx+(shp[z].x+VOXBORDWIDTH)];
+//    lptr = &gvox.mytex[(shp[z].y+VOXBORDWIDTH)*gvox.mytexx+(shp[z].x+VOXBORDWIDTH)];
 //    switch (face)
 //    {
 //    case 0:
@@ -2716,7 +2716,7 @@ function mdinit(): void
 //    case 5:
 //        nx = x0; break;
 //    }
-//    for (yy=0; yy<y; yy++,lptr+=gvox->mytexx)
+//    for (yy=0; yy<y; yy++,lptr+=gvox.mytexx)
 //        for (xx=0; xx<x; xx++)
 //        {
 //            switch (face)
@@ -2753,35 +2753,35 @@ function mdinit(): void
 //    for (yy=VOXBORDWIDTH; yy<y+VOXBORDWIDTH; yy++)
 //        for (xx=0; xx<VOXBORDWIDTH; xx++)
 //        {
-//            lptr = &gvox->mytex[(shp[z].y+yy)*gvox->mytexx+shp[z].x];
+//            lptr = &gvox.mytex[(shp[z].y+yy)*gvox.mytexx+shp[z].x];
 //            lptr[xx] = lptr[VOXBORDWIDTH]; lptr[xx+x+VOXBORDWIDTH] = lptr[x-1+VOXBORDWIDTH];
 //        }
 //    //Extend borders vertically
 //    for (yy=0; yy<VOXBORDWIDTH; yy++)
 //    {
-//        Bmemcpy(&gvox->mytex[(shp[z].y+yy)*gvox->mytexx+shp[z].x],
-//                &gvox->mytex[(shp[z].y+VOXBORDWIDTH)*gvox->mytexx+shp[z].x],
+//        Bmemcpy(&gvox.mytex[(shp[z].y+yy)*gvox.mytexx+shp[z].x],
+//                &gvox.mytex[(shp[z].y+VOXBORDWIDTH)*gvox.mytexx+shp[z].x],
 //                (x+(VOXBORDWIDTH<<1))<<2);
-//        Bmemcpy(&gvox->mytex[(shp[z].y+y+yy+VOXBORDWIDTH)*gvox->mytexx+shp[z].x],
-//                &gvox->mytex[(shp[z].y+y-1+VOXBORDWIDTH)*gvox->mytexx+shp[z].x],
+//        Bmemcpy(&gvox.mytex[(shp[z].y+y+yy+VOXBORDWIDTH)*gvox.mytexx+shp[z].x],
+//                &gvox.mytex[(shp[z].y+y-1+VOXBORDWIDTH)*gvox.mytexx+shp[z].x],
 //                (x+(VOXBORDWIDTH<<1))<<2);
 //    }
 
-//    qptr = &gvox->quad[gvox->qcnt];
-//    qptr->v[0].x = x0; qptr->v[0].y = y0; qptr->v[0].z = z0;
-//    qptr->v[1].x = x1; qptr->v[1].y = y1; qptr->v[1].z = z1;
-//    qptr->v[2].x = x2; qptr->v[2].y = y2; qptr->v[2].z = z2;
-//    for (j=0; j<3; j++) { qptr->v[j].u = shp[z].x+VOXBORDWIDTH; qptr->v[j].v = shp[z].y+VOXBORDWIDTH; }
-//    if (i < 3) qptr->v[1].u += x; else qptr->v[1].v += y;
-//    qptr->v[2].u += x; qptr->v[2].v += y;
+//    qptr = &gvox.quad[gvox.qcnt];
+//    qptr.v[0].x = x0; qptr.v[0].y = y0; qptr.v[0].z = z0;
+//    qptr.v[1].x = x1; qptr.v[1].y = y1; qptr.v[1].z = z1;
+//    qptr.v[2].x = x2; qptr.v[2].y = y2; qptr.v[2].z = z2;
+//    for (j=0; j<3; j++) { qptr.v[j].u = shp[z].x+VOXBORDWIDTH; qptr.v[j].v = shp[z].y+VOXBORDWIDTH; }
+//    if (i < 3) qptr.v[1].u += x; else qptr.v[1].v += y;
+//    qptr.v[2].u += x; qptr.v[2].v += y;
 
-//    qptr->v[3].u = qptr->v[0].u - qptr->v[1].u + qptr->v[2].u;
-//    qptr->v[3].v = qptr->v[0].v - qptr->v[1].v + qptr->v[2].v;
-//    qptr->v[3].x = qptr->v[0].x - qptr->v[1].x + qptr->v[2].x;
-//    qptr->v[3].y = qptr->v[0].y - qptr->v[1].y + qptr->v[2].y;
-//    qptr->v[3].z = qptr->v[0].z - qptr->v[1].z + qptr->v[2].z;
-//    if (gvox->qfacind[face] < 0) gvox->qfacind[face] = gvox->qcnt;
-//    gvox->qcnt++;
+//    qptr.v[3].u = qptr.v[0].u - qptr.v[1].u + qptr.v[2].u;
+//    qptr.v[3].v = qptr.v[0].v - qptr.v[1].v + qptr.v[2].v;
+//    qptr.v[3].x = qptr.v[0].x - qptr.v[1].x + qptr.v[2].x;
+//    qptr.v[3].y = qptr.v[0].y - qptr.v[1].y + qptr.v[2].y;
+//    qptr.v[3].z = qptr.v[0].z - qptr.v[1].z + qptr.v[2].z;
+//    if (gvox.qfacind[face] < 0) gvox.qfacind[face] = gvox.qcnt;
+//    gvox.qcnt++;
 
 //}
 
@@ -2811,7 +2811,7 @@ function mdinit(): void
 //    gmaxx = gmaxy = garea = 0;
 
 //    if (pow2m1[32] != -1) { for (i=0; i<32; i++) pow2m1[i] = (1u<<i)-1; pow2m1[32] = -1; }
-//    for (i=0; i<7; i++) gvox->qfacind[i] = -1;
+//    for (i=0; i<7; i++) gvox.qfacind[i] = -1;
 
 //    i = ((max(ysiz,zsiz)+1)<<2);
 //    bx0 = (int32_t *)Bmalloc(i<<1); if (!bx0) { Bfree(gvox); return(0); }
@@ -2821,7 +2821,7 @@ function mdinit(): void
 //    {
 //        if (!cnt) daquad = cntquad;
 //        else daquad = addquad;
-//        gvox->qcnt = 0;
+//        gvox.qcnt = 0;
 
 //        memset(by0,-1,(max(ysiz,zsiz)+1)<<2); v = 0;
 
@@ -2860,7 +2860,7 @@ function mdinit(): void
 
 //        if (!cnt)
 //        {
-//            shp = (spoint2d *)Bmalloc(gvox->qcnt*sizeof(spoint2d));
+//            shp = (spoint2d *)Bmalloc(gvox.qcnt*sizeof(spoint2d));
 //            if (!shp) { Bfree(bx0); Bfree(gvox); return(0); }
 
 //            sc = 0;
@@ -2871,32 +2871,32 @@ function mdinit(): void
 //                    for (; i>0; i--) { shp[sc].x = x; shp[sc].y = y; sc++; }
 //                }
 
-//            for (gvox->mytexx=32; gvox->mytexx<(gmaxx+(VOXBORDWIDTH<<1)); gvox->mytexx<<=1);
-//            for (gvox->mytexy=32; gvox->mytexy<(gmaxy+(VOXBORDWIDTH<<1)); gvox->mytexy<<=1);
-//            while (gvox->mytexx*gvox->mytexy*8 < garea*9) //This should be sufficient to fit most skins...
+//            for (gvox.mytexx=32; gvox.mytexx<(gmaxx+(VOXBORDWIDTH<<1)); gvox.mytexx<<=1);
+//            for (gvox.mytexy=32; gvox.mytexy<(gmaxy+(VOXBORDWIDTH<<1)); gvox.mytexy<<=1);
+//            while (gvox.mytexx*gvox.mytexy*8 < garea*9) //This should be sufficient to fit most skins...
 //            {
 //skindidntfit:
 //                ;
-//                if (gvox->mytexx <= gvox->mytexy) gvox->mytexx <<= 1; else gvox->mytexy <<= 1;
+//                if (gvox.mytexx <= gvox.mytexy) gvox.mytexx <<= 1; else gvox.mytexy <<= 1;
 //            }
-//            mytexo5 = (gvox->mytexx>>5);
+//            mytexo5 = (gvox.mytexx>>5);
 
-//            i = (((gvox->mytexx*gvox->mytexy+31)>>5)<<2);
+//            i = (((gvox.mytexx*gvox.mytexy+31)>>5)<<2);
 //            zbit = (int32_t *)Bmalloc(i); if (!zbit) { Bfree(bx0); Bfree(gvox); Bfree(shp); return(0); }
 //            memset(zbit,0,i);
 
-//            v = gvox->mytexx*gvox->mytexy;
+//            v = gvox.mytexx*gvox.mytexy;
 //            for (z=0; z<sc; z++)
 //            {
 //                dx = shp[z].x+(VOXBORDWIDTH<<1); dy = shp[z].y+(VOXBORDWIDTH<<1); i = v;
 //                do
 //                {
 //#if (VOXUSECHAR != 0)
-//                    x0 = (((rand()&32767)*(min(gvox->mytexx,255)-dx))>>15);
-//                    y0 = (((rand()&32767)*(min(gvox->mytexy,255)-dy))>>15);
+//                    x0 = (((rand()&32767)*(min(gvox.mytexx,255)-dx))>>15);
+//                    y0 = (((rand()&32767)*(min(gvox.mytexy,255)-dy))>>15);
 //#else
-//                    x0 = (((rand()&32767)*(gvox->mytexx+1-dx))>>15);
-//                    y0 = (((rand()&32767)*(gvox->mytexy+1-dy))>>15);
+//                    x0 = (((rand()&32767)*(gvox.mytexx+1-dx))>>15);
+//                    y0 = (((rand()&32767)*(gvox.mytexy+1-dy))>>15);
 //#endif
 //                    i--;
 //                    if (i < 0) //Time-out! Very slow if this happens... but at least it still works :P
@@ -2924,11 +2924,11 @@ function mdinit(): void
 //                shp[z].x = x0; shp[z].y = y0; //Overwrite size with top-left location
 //            }
 
-//            gvox->quad = (voxrect_t *)Bmalloc(gvox->qcnt*sizeof(voxrect_t));
-//            if (!gvox->quad) { Bfree(zbit); Bfree(shp); Bfree(bx0); Bfree(gvox); return(0); }
+//            gvox.quad = (voxrect_t *)Bmalloc(gvox.qcnt*sizeof(voxrect_t));
+//            if (!gvox.quad) { Bfree(zbit); Bfree(shp); Bfree(bx0); Bfree(gvox); return(0); }
 
-//            gvox->mytex = (int32_t *)Bmalloc(gvox->mytexx*gvox->mytexy*sizeof(int32_t));
-//            if (!gvox->mytex) { Bfree(gvox->quad); Bfree(zbit); Bfree(shp); Bfree(bx0); Bfree(gvox); return(0); }
+//            gvox.mytex = (int32_t *)Bmalloc(gvox.mytexx*gvox.mytexy*sizeof(int32_t));
+//            if (!gvox.mytex) { Bfree(gvox.quad); Bfree(zbit); Bfree(shp); Bfree(bx0); Bfree(gvox); return(0); }
 //        }
 //    }
 //    Bfree(shp); Bfree(zbit); Bfree(bx0);
@@ -3163,9 +3163,9 @@ function mdinit(): void
 //void voxfree(voxmodel_t *m)
 //{
 //    if (!m) return;
-//    if (m->mytex) Bfree(m->mytex);
-//    if (m->quad) Bfree(m->quad);
-//    if (m->texid) Bfree(m->texid);
+//    if (m.mytex) Bfree(m.mytex);
+//    if (m.quad) Bfree(m.quad);
+//    if (m.texid) Bfree(m.texid);
 //    Bfree(m);
 //}
 
@@ -3183,14 +3183,14 @@ function mdinit(): void
 //    if (ret >= 0) vm = vox2poly(); else vm = 0;
 //    if (vm)
 //    {
-//        vm->mdnum = 1; //VOXel model id
-//        vm->scale = vm->bscale = 1.0;
-//        vm->xsiz = xsiz; vm->ysiz = ysiz; vm->zsiz = zsiz;
-//        vm->xpiv = xpiv; vm->ypiv = ypiv; vm->zpiv = zpiv;
-//        vm->is8bit = is8bit;
+//        vm.mdnum = 1; //VOXel model id
+//        vm.scale = vm.bscale = 1.0;
+//        vm.xsiz = xsiz; vm.ysiz = ysiz; vm.zsiz = zsiz;
+//        vm.xpiv = xpiv; vm.ypiv = ypiv; vm.zpiv = zpiv;
+//        vm.is8bit = is8bit;
 
-//        vm->texid = (uint32_t *)Bcalloc(MAXPALOOKUPS,sizeof(uint32_t));
-//        if (!vm->texid) { voxfree(vm); vm = 0; }
+//        vm.texid = (uint32_t *)Bcalloc(MAXPALOOKUPS,sizeof(uint32_t));
+//        if (!vm.texid) { voxfree(vm); vm = 0; }
 //    }
 //    if (shcntmal) { Bfree(shcntmal); shcntmal = 0; }
 //    if (vbit) { Bfree(vbit); vbit = 0; }
@@ -3210,39 +3210,39 @@ function mdinit(): void
 
 //    if ((intptr_t)m == (intptr_t)(-1)) // hackhackhack
 //        return 0;
-//    if ((tspr->cstat&48)==32) return 0;
+//    if ((tspr.cstat&48)==32) return 0;
 
 //    //updateanimation((md2model *)m,tspr);
 
-//    m0.x = m->scale;
-//    m0.y = m->scale;
-//    m0.z = m->scale;
-//    a0.x = a0.y = 0; a0.z = ((globalorientation&8)?-m->zadd:m->zadd)*m->scale;
+//    m0.x = m.scale;
+//    m0.y = m.scale;
+//    m0.z = m.scale;
+//    a0.x = a0.y = 0; a0.z = ((globalorientation&8)?-m.zadd:m.zadd)*m.scale;
 
 //    //if (globalorientation&8) //y-flipping
 //    //{
 //    //   m0.z = -m0.z; a0.z = -a0.z;
 //    //      //Add height of 1st frame (use same frame to prevent animation bounce)
-//    //   a0.z += m->zsiz*m->scale;
+//    //   a0.z += m.zsiz*m.scale;
 //    //}
 //    //if (globalorientation&4) { m0.y = -m0.y; a0.y = -a0.y; } //x-flipping
 
-//    f = ((float)tspr->xrepeat)*(256.0/320.0)/64.0*m->bscale;
-//    if ((sprite[tspr->owner].cstat&48)==16)
+//    f = ((float)tspr.xrepeat)*(256.0/320.0)/64.0*m.bscale;
+//    if ((sprite[tspr.owner].cstat&48)==16)
 //        f *= 1.25f;
 
 //    m0.x *= f; a0.x *= f; f = -f;
 //    m0.y *= f; a0.y *= f;
-//    f = ((float)tspr->yrepeat)/64.0*m->bscale;
+//    f = ((float)tspr.yrepeat)/64.0*m.bscale;
 //    m0.z *= f; a0.z *= f;
 
-//    k0 = (float)tspr->z;
-//    if (globalorientation&128) k0 += (float)((tilesizy[tspr->picnum]*tspr->yrepeat)<<1);
+//    k0 = (float)tspr.z;
+//    if (globalorientation&128) k0 += (float)((tilesizy[tspr.picnum]*tspr.yrepeat)<<1);
 
 //    f = (65536.0*512.0)/((float)xdimen*viewingrange);
 //    g = 32.0/((float)xdimen*gxyaspect);
-//    m0.y *= f; a0.y = (((float)(tspr->x-globalposx))/  1024.0 + a0.y)*f;
-//    m0.x *=-f; a0.x = (((float)(tspr->y-globalposy))/ -1024.0 + a0.x)*-f;
+//    m0.y *= f; a0.y = (((float)(tspr.x-globalposx))/  1024.0 + a0.y)*f;
+//    m0.x *=-f; a0.x = (((float)(tspr.y-globalposy))/ -1024.0 + a0.x)*-f;
 //    m0.z *= g; a0.z = (((float)(k0     -globalposz))/-16384.0 + a0.z)*g;
 
 //    md3_vox_calcmat_common(tspr, &a0, f, mat);
@@ -3250,7 +3250,7 @@ function mdinit(): void
 //    //Mirrors
 //    if (grhalfxdown10x < 0) { mat[0] = -mat[0]; mat[4] = -mat[4]; mat[8] = -mat[8]; mat[12] = -mat[12]; }
 
-//    if (tspr->cstat&CSTAT_SPRITE_MDHACK)
+//    if (tspr.cstat&CSTAT_SPRITE_MDHACK)
 //    {
 //        bglDepthFunc(GL_LESS); //NEVER,LESS,(,L)EQUAL,GREATER,(NOT,G)EQUAL,ALWAYS
 //        bglDepthRange(0.0,0.9999);
@@ -3262,14 +3262,14 @@ function mdinit(): void
 
 //    bglEnable(GL_TEXTURE_2D);
 
-//    pc[0] = pc[1] = pc[2] = ((float)(numshades-min(max((globalshade * shadescale)+m->shadeoff,0),numshades)))/((float)numshades);
+//    pc[0] = pc[1] = pc[2] = ((float)(numshades-min(max((globalshade * shadescale)+m.shadeoff,0),numshades)))/((float)numshades);
 //    pc[0] *= (float)hictinting[globalpal].r / 255.0;
 //    pc[1] *= (float)hictinting[globalpal].g / 255.0;
 //    pc[2] *= (float)hictinting[globalpal].b / 255.0;
-//    if (tspr->cstat&2) { if (!(tspr->cstat&512)) pc[3] = 0.66f; else pc[3] = 0.33f; }
+//    if (tspr.cstat&2) { if (!(tspr.cstat&512)) pc[3] = 0.66f; else pc[3] = 0.33f; }
 //    else pc[3] = 1.0f;
-//    pc[3] *= 1.0f - spriteext[tspr->owner].alpha;
-//    if ((tspr->cstat&2) || spriteext[tspr->owner].alpha > 0.f || pc[3] < 1.0f) bglEnable(GL_BLEND); //else bglDisable(GL_BLEND);
+//    pc[3] *= 1.0f - spriteext[tspr.owner].alpha;
+//    if ((tspr.cstat&2) || spriteext[tspr.owner].alpha > 0.f || pc[3] < 1.0f) bglEnable(GL_BLEND); //else bglDisable(GL_BLEND);
 //    //------------
 
 //    //transform to Build coords
@@ -3278,29 +3278,29 @@ function mdinit(): void
 //    g = m0.x*f; mat[0] *= g; mat[1] *= g; mat[2] *= g;
 //    g = m0.y*f; mat[4] = omat[8]*g; mat[5] = omat[9]*g; mat[6] = omat[10]*g;
 //    g =-m0.z*f; mat[8] = omat[4]*g; mat[9] = omat[5]*g; mat[10] = omat[6]*g;
-//    mat[12] -= (m->xpiv*mat[0] + m->ypiv*mat[4] + (m->zpiv+m->zsiz*.5)*mat[ 8]);
-//    mat[13] -= (m->xpiv*mat[1] + m->ypiv*mat[5] + (m->zpiv+m->zsiz*.5)*mat[ 9]);
-//    mat[14] -= (m->xpiv*mat[2] + m->ypiv*mat[6] + (m->zpiv+m->zsiz*.5)*mat[10]);
+//    mat[12] -= (m.xpiv*mat[0] + m.ypiv*mat[4] + (m.zpiv+m.zsiz*.5)*mat[ 8]);
+//    mat[13] -= (m.xpiv*mat[1] + m.ypiv*mat[5] + (m.zpiv+m.zsiz*.5)*mat[ 9]);
+//    mat[14] -= (m.xpiv*mat[2] + m.ypiv*mat[6] + (m.zpiv+m.zsiz*.5)*mat[10]);
 //    bglMatrixMode(GL_MODELVIEW); //Let OpenGL (and perhaps hardware :) handle the matrix rotation
 //    mat[3] = mat[7] = mat[11] = 0.f; mat[15] = 1.f;
 
 //    bglLoadMatrixf(mat);
 
-//    ru = 1.f/((float)m->mytexx);
-//    rv = 1.f/((float)m->mytexy);
+//    ru = 1.f/((float)m.mytexx);
+//    rv = 1.f/((float)m.mytexy);
 //#if (VOXBORDWIDTH == 0)
 //    uhack[0] = ru*.125; uhack[1] = -uhack[0];
 //    vhack[0] = rv*.125; vhack[1] = -vhack[0];
 //#endif
 //    phack[0] = 0; phack[1] = 1.f/256.f;
 
-//    if (!m->texid[globalpal]) m->texid[globalpal] = gloadtex(m->mytex,m->mytexx,m->mytexy,m->is8bit,globalpal);
-//    else bglBindTexture(GL_TEXTURE_2D,m->texid[globalpal]);
+//    if (!m.texid[globalpal]) m.texid[globalpal] = gloadtex(m.mytex,m.mytexx,m.mytexy,m.is8bit,globalpal);
+//    else bglBindTexture(GL_TEXTURE_2D,m.texid[globalpal]);
 //    bglBegin(GL_QUADS);
-//    for (i=0,fi=0; i<m->qcnt; i++)
+//    for (i=0,fi=0; i<m.qcnt; i++)
 //    {
-//        if (i == m->qfacind[fi]) { f = 1 /*clut[fi++]*/; bglColor4f(pc[0]*f,pc[1]*f,pc[2]*f,pc[3]*f); }
-//        vptr = &m->quad[i].v[0];
+//        if (i == m.qfacind[fi]) { f = 1 /*clut[fi++]*/; bglColor4f(pc[0]*f,pc[1]*f,pc[2]*f,pc[3]*f); }
+//        vptr = &m.quad[i].v[0];
 
 //        xx = vptr[0].x+vptr[2].x;
 //        yy = vptr[0].y+vptr[2].y;
@@ -3326,7 +3326,7 @@ function mdinit(): void
 //    //------------
 //    bglDisable(GL_CULL_FACE);
 //    bglPopAttrib();
-//    if (tspr->cstat&CSTAT_SPRITE_MDHACK)
+//    if (tspr.cstat&CSTAT_SPRITE_MDHACK)
 //    {
 //        bglDepthFunc(GL_LESS); //NEVER,LESS,(,L)EQUAL,GREATER,(NOT,G)EQUAL,ALWAYS
 //        bglDepthRange(0.0,0.99999);
@@ -3369,7 +3369,7 @@ function mdinit(): void
 
 //        // smuggle the file name into the model struct.
 //        // head.nam is unused as far as I can tell
-//        Bstrncpyz(vm3->head.nam, filnam, sizeof(vm3->head.nam));
+//        Bstrncpyz(vm3.head.nam, filnam, sizeof(vm3.head.nam));
 
 //        md3postload_common(vm3);
 
@@ -3386,53 +3386,53 @@ function mdinit(): void
 //    return(vm);
 //}
 
-//int32_t mddraw(const spritetype *tspr)
-//{
-//    mdmodel_t *vm;
-//    int32_t i;
+function /*int32_t */mddraw(tspr:spritetype):number
+{
+    var vm:mdmodel_t;
+    var /*int32_t */i:number;
+   
+    if (r_vbos && (r_vbocount > allocvbos))
+    { todoThrow();
+        //indexvbos = (GLuint *)Brealloc(indexvbos, sizeof(GLuint) * r_vbocount);
+        //vertvbos = (GLuint *)Brealloc(vertvbos, sizeof(GLuint) * r_vbocount);
 
-//    if (r_vbos && (r_vbocount > allocvbos))
-//    {
-//        indexvbos = (GLuint *)Brealloc(indexvbos, sizeof(GLuint) * r_vbocount);
-//        vertvbos = (GLuint *)Brealloc(vertvbos, sizeof(GLuint) * r_vbocount);
+        //bglGenBuffersARB(r_vbocount - allocvbos, &(indexvbos[allocvbos]));
+        //bglGenBuffersARB(r_vbocount - allocvbos, &(vertvbos[allocvbos]));
 
-//        bglGenBuffersARB(r_vbocount - allocvbos, &(indexvbos[allocvbos]));
-//        bglGenBuffersARB(r_vbocount - allocvbos, &(vertvbos[allocvbos]));
+        //i = allocvbos;
+        //while (i < r_vbocount)
+        //{
+        //    bglBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, indexvbos[i]);
+        //    bglBufferDataARB(GL_ELEMENT_ARRAY_BUFFER_ARB, maxmodeltris * 3 * sizeof(uint16_t), NULL, GL_STREAM_DRAW_ARB);
+        //    bglBindBufferARB(GL_ARRAY_BUFFER_ARB, vertvbos[i]);
+        //    bglBufferDataARB(GL_ARRAY_BUFFER_ARB, maxmodelverts * sizeof(point3d), NULL, GL_STREAM_DRAW_ARB);
+        //    i++;
+        //}
 
-//        i = allocvbos;
-//        while (i < r_vbocount)
-//        {
-//            bglBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, indexvbos[i]);
-//            bglBufferDataARB(GL_ELEMENT_ARRAY_BUFFER_ARB, maxmodeltris * 3 * sizeof(uint16_t), NULL, GL_STREAM_DRAW_ARB);
-//            bglBindBufferARB(GL_ARRAY_BUFFER_ARB, vertvbos[i]);
-//            bglBufferDataARB(GL_ARRAY_BUFFER_ARB, maxmodelverts * sizeof(point3d), NULL, GL_STREAM_DRAW_ARB);
-//            i++;
-//        }
+        //bglBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB,0);
+        //bglBindBufferARB(GL_ARRAY_BUFFER_ARB, 0);
 
-//        bglBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB,0);
-//        bglBindBufferARB(GL_ARRAY_BUFFER_ARB, 0);
+        //allocvbos = r_vbocount;
+    }
 
-//        allocvbos = r_vbocount;
-//    }
-
-//    if (maxmodelverts > allocmodelverts)
-//    {
-//        point3d *vl = (point3d *)Brealloc(vertlist,sizeof(point3d)*maxmodelverts);
-//        if (!vl) { OSD_Printf("ERROR: Not enough memory to allocate %d vertices!\n",maxmodelverts); return 0; }
-//        vertlist = vl;
-//        allocmodelverts = maxmodelverts;
-//    }
-
-//    vm = models[tile2model[Ptile2tile(tspr->picnum,(tspr->owner >= MAXSPRITES) ? tspr->pal : sprite[tspr->owner].pal)].modelid];
-//    if (vm->mdnum == 1) { return voxdraw((voxmodel_t *)vm,tspr); }
-//    if (vm->mdnum == 3) { return md3draw((md3model_t *)vm,tspr); }
-//    return 0;
-//}
+    if (maxmodelverts > allocmodelverts)
+    { todoThrow();
+    //    point3d *vl = (point3d *)Brealloc(vertlist,sizeof(point3d)*maxmodelverts);
+    //    if (!vl) { OSD_Printf("ERROR: Not enough memory to allocate %d vertices!\n",maxmodelverts); return 0; }
+    //    vertlist = vl;
+    //    allocmodelverts = maxmodelverts;
+    }
+    todoUnimportant("mddraw");
+    //vm = models[tile2model[Ptile2tile(tspr.picnum,(tspr.owner >= MAXSPRITES) ? tspr.pal : sprite[tspr.owner].pal)].modelid];
+    //if (vm.mdnum == 1) {  todoThrow();/*return voxdraw((voxmodel_t *)vm,tspr);*/ }
+    //if (vm.mdnum == 3) {  todoThrow();/*return md3draw((md3model_t *)vm,tspr);*/ }
+    return 0;
+}
 
 //void mdfree(mdmodel_t *vm)
 //{
-//    if (vm->mdnum == 1) { voxfree((voxmodel_t *)vm); return; }
-//    if (vm->mdnum == 2 || vm->mdnum == 3) { md3free((md3model_t *)vm); return; }
+//    if (vm.mdnum == 1) { voxfree((voxmodel_t *)vm); return; }
+//    if (vm.mdnum == 2 || vm.mdnum == 3) { md3free((md3model_t *)vm); return; }
 //}
 
 //#endif

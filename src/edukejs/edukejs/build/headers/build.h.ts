@@ -775,12 +775,12 @@ class spritesmooth_t {
     }
 } //spritesmooth_t;
 
-//#define SPREXT_NOTMD 1
+var SPREXT_NOTMD=1;
 var SPREXT_NOMDANIM=2;
-//#define SPREXT_AWAY1 4
-//#define SPREXT_AWAY2 8
-//#define SPREXT_TSPRACCESS 16
-//#define SPREXT_TEMPINVISIBLE 32
+var SPREXT_AWAY1=4;
+var SPREXT_AWAY2=8;
+var SPREXT_TSPRACCESS=16;
+var SPREXT_TEMPINVISIBLE=32;
 
 //#define CSTAT_SPRITE_MDHACK 1024
 
@@ -867,7 +867,7 @@ var spritesmooth: spritesmooth_t[];//EXTERN spritesmooth_t spritesmooth[MAXSPRIT
 
 //EXTERN int16_t maskwall[MAXWALLSB], maskwallcnt;
 var thewall = new Int16Array(MAXWALLSB);
-//EXTERN spritetype *tspriteptr[MAXSPRITESONSCREEN + 1];
+var tspriteptr = new Array<spritetype>(MAXSPRITESONSCREEN + 1);
 
 var xdim = 0, ydim = 0, numpages = 0;       //EXTERN int32_t 
 var yxaspect = 0, viewingrange = 0;     //EXTERN int32_t 
@@ -1084,8 +1084,8 @@ class palette_t {
 //extern int32_t usemodels, usehightile;
 //extern int32_t rendmode;
 //#endif
-//EXTERN int32_t h_xsize[MAXTILES], h_ysize[MAXTILES];
-//EXTERN int8_t h_xoffs[MAXTILES], h_yoffs[MAXTILES];
+var h_xsize = new Int32Array(MAXTILES), h_ysize = new Int32Array(MAXTILES);
+var h_xoffs = new Int8Array(MAXTILES), h_yoffs = new Int8Array(MAXTILES);
 
 //extern const char *engineerrstr;
 
@@ -1451,13 +1451,24 @@ function /*int32_t */spriteheightofs(/*int16_t */i: number, /*int32_t **/height:
 
 //int32_t   getclosestcol(int32_t r, int32_t g, int32_t b);
 
-//// PLAG: line utility functions
-//typedef struct  s_equation {
-//    float       a, b, c;
-//}               _equation;
-//typedef struct  s_point2d {
-//    float       x, y;
-//}               _point2d;
+// PLAG: line utility functions
+class /*s_equation */ _equation{
+    a:number; b:number; c:number;//float    
+       
+    constructor() {
+        this.a = 0.0;
+        this.b = 0.0;
+        this.c = 0.0;
+    }
+}
+class /*s_point2d */ _point2d{
+    x:number; y:number;//float    
+       
+    constructor() {
+        this.x = 0.0;
+        this.y = 0.0;
+    }
+}
 //int32_t             wallvisible(int32_t x, int32_t y, int16_t wallnum);
 
 //#define STATUS2DSIZ 144
@@ -1512,19 +1523,19 @@ function /*int32_t */spriteheightofs(/*int16_t */i: number, /*int32_t **/height:
 //void gltexapplyprops (void);
 //void texcache_invalidate(void);
 
-//extern int32_t r_detailmapping;
-//extern int32_t r_glowmapping;
-//extern int32_t r_vertexarrays;
-//extern int32_t r_vbos;
-//extern int32_t r_vbocount;
-//extern int32_t r_animsmoothing;
-//extern int32_t r_parallaxskyclamping;
-//extern int32_t r_parallaxskypanning;
-//extern int32_t r_fullbrights;
-//extern int32_t r_downsize;
-//extern int32_t r_downsizevar;
-//extern int32_t mdtims, omdtims;
-//extern int32_t glrendmode;
+var/* int32_t*/ r_detailmapping=0;
+var/* int32_t*/ r_glowmapping=0;
+var/* int32_t*/ r_vertexarrays=0;
+var/* int32_t*/ r_vbos=0;
+var/* int32_t*/ r_vbocount=0;
+var/* int32_t*/ r_animsmoothing=0;
+var/* int32_t*/ r_parallaxskyclamping=0;
+var/* int32_t*/ r_parallaxskypanning=0;
+var/* int32_t*/ r_fullbrights=0;
+var/* int32_t*/ r_downsize=0;
+var/* int32_t*/ r_downsizevar=0;
+var/* int32_t*/ mdtims=0, omdtims=0;
+var/* int32_t*/ glrendmode=0;
 //#endif
 
 //void hicinit(void);

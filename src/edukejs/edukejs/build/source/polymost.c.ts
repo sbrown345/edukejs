@@ -214,7 +214,7 @@ var glrendmode = REND_POLYMOST;
 // fullbright tiles.  Also see 'fullbrightloadingpass'.
 var fullbrightdrawingpass = 0;//static int32_t 
 
-//float curpolygonoffset;    // internal polygon offset stack for drawing flat sprites to avoid depth fighting
+var /*float */curpolygonoffset=0.0;    // internal polygon offset stack for drawing flat sprites to avoid depth fighting
 //
 // Detail mapping cvar
 var r_detailmapping = 1;//int32_t 
@@ -301,20 +301,20 @@ var mdtims=0, omdtims=0;//int32_t
 var alphahackarray = new Float32Array(MAXTILES);//float 
 var drawingskybox = 0;      //int32_t 
 var hicprecaching = 0;      //int32_t 
-//
-//
-//static inline int32_t gltexmayhavealpha(int32_t dapicnum, int32_t dapalnum)
-//{
-//    const int32_t j = (dapicnum&(GLTEXCACHEADSIZ-1));
-//    pthtyp *pth;
-//
-//    for (pth=texcache.list[j]; pth; pth=pth.next)
-//        if (pth.picnum == dapicnum && pth.palnum == dapalnum)
-//            return ((pth.flags&8) != 0);
-//
-//    return 1;
-//}
-//
+
+
+function /*int32_t */gltexmayhavealpha(/*int32_t */dapicnum:number, /*int32_t */dapalnum:number):number
+{
+    var /*int32_t */j = (dapicnum&(GLTEXCACHEADSIZ-1));
+    var pth:pthtyp;
+
+    for (pth=texcache.list[j]; pth; pth=pth.next)
+        if (pth.picnum == dapicnum && pth.palnum == dapalnum)
+            return ((pth.flags&8) != 0)?1:0;
+
+    return 1;
+}
+
 //void gltexinvalidate(int32_t dapicnum, int32_t dapalnum, int32_t dameth)
 //{
 //    const int32_t j = (dapicnum&(GLTEXCACHEADSIZ-1));
@@ -2663,7 +2663,7 @@ function polymost_drawalls(/*int32_t */bunch: number): void
 ////                        _nx0 = (skywalx[(i+1)&3]-skywalx[i&3])*_t0+skywalx[i&3];
 ////                        _ny0 = (skywaly[(i+1)&3]-skywaly[i&3])*_t0+skywaly[i&3];
 //                    }
-//                    else { _t0 = 0.f; /*_nx0 = skywalx[i&3]; _ny0 = skywaly[i&3];*/ }
+//                    else { _t0 = 0.0; /*_nx0 = skywalx[i&3]; _ny0 = skywaly[i&3];*/ }
 //                    if (_yp1 < SCISDIST)
 //                    {
 //                        _t1 = (SCISDIST-_oyp0)/(_yp1-_oyp0); _xp1 = (_xp1-_oxp0)*_t1+_oxp0; _yp1 = SCISDIST;
@@ -2945,7 +2945,7 @@ function polymost_drawalls(/*int32_t */bunch: number): void
 ////                        _nx0 = (skywalx[(i+1)&3]-skywalx[i&3])*_t0+skywalx[i&3];
 ////                        _ny0 = (skywaly[(i+1)&3]-skywaly[i&3])*_t0+skywaly[i&3];
 //                    }
-//                    else { _t0 = 0.f; /*_nx0 = skywalx[i&3]; _ny0 = skywaly[i&3];*/ }
+//                    else { _t0 = 0.0; /*_nx0 = skywalx[i&3]; _ny0 = skywaly[i&3];*/ }
 //                    if (_yp1 < SCISDIST)
 //                    {
 //                        _t1 = (SCISDIST-_oyp0)/(_yp1-_oyp0); _xp1 = (_xp1-_oxp0)*_t1+_oxp0; _yp1 = SCISDIST;
@@ -3779,7 +3779,7 @@ function polymost_drawrooms(): void
 //    //Clip to close parallel-screen plane
 //    oxp0 = xp0; oyp0 = yp0;
 //    if (yp0 < SCISDIST) { t0 = (SCISDIST-yp0)/(yp1-yp0); xp0 = (xp1-xp0)*t0+xp0; yp0 = SCISDIST; }
-//    else t0 = 0.f;
+//    else t0 = 0.0;
 //    if (yp1 < SCISDIST) { t1 = (SCISDIST-oyp0)/(yp1-oyp0); xp1 = (xp1-oxp0)*t1+oxp0; yp1 = SCISDIST; }
 //    else { t1 = 1.0; }
 //
@@ -3898,451 +3898,454 @@ function polymost_drawrooms(): void
 //
 //    pow2xsplit = 0;
 //    skyclamphack = 0;
-//    alpha = 0.f;
+//    alpha = 0.0;
 //    drawpoly(dpx,dpy,n,method);
 //}
-//
-//void polymost_drawsprite(int32_t snum)
-//{
-//    double px[6], py[6];
-//    float f, c, s, fx, fy, sx0, sy0, sx1, xp0, yp0, xp1, yp1, oxp0, oyp0, ryp0, ryp1, ft[4];
-//    float x0, y0, x1, y1, sc0, sf0, sc1, sf1, px2[6], py2[6], xv, yv, t0, t1;
-//    int32_t i, j, spritenum, xoff=0, yoff=0, method, npoints;
-//    int32_t posx,posy;
-//    int32_t oldsizx, oldsizy;
-//    int32_t tsizx, tsizy;
-//
-//    spritetype *const tspr = tspriteptr[snum];
-//    if (bad_tspr(tspr))
-//        return;
-//
-//    spritenum         = tspr.owner;
-//
-//    DO_TILE_ANIM(tspr.picnum, spritenum+32768);
-//
-//    globalpicnum      = tspr.picnum;
-//    globalshade       = tspr.shade;
-//    globalpal         = tspr.pal;
-//    globalorientation = tspr.cstat;
-//    globvis = globalvisibility;
-//    if (sector[tspr.sectnum].visibility != 0) globvis = mulscale4(globvis, (uint8_t)(sector[tspr.sectnum].visibility+16));
-//    if ((globalorientation&48) != 48)  	// only non-voxel sprites should do this
-//    {
-//        int32_t flag;
-//        flag = usehightile && h_xsize[globalpicnum];
-//        xoff = (int32_t)tspr.xoffset;
-//        yoff = (int32_t)tspr.yoffset;
-//        xoff += flag ? h_xoffs[globalpicnum] : picanm[globalpicnum].xofs;
-//        yoff += flag ? h_yoffs[globalpicnum] : picanm[globalpicnum].yofs;
-//    }
-//
-//    method = 1+4;
-//    if (tspr.cstat&2) { if (!(tspr.cstat&512)) method = 2+4; else method = 3+4; }
-//
-//    alpha = spriteext[spritenum].alpha;
-//
+
+var polymost_drawsprite_px = new Float64Array(6), polymost_drawsprite_py = new Float64Array(6);
+var polymost_drawsprite_ft = new Float32Array(4);
+var polymost_drawsprite_px2 = new Float32Array(6), polymost_drawsprite_py2 = new Float32Array(6);
+function polymost_drawsprite(/*int32_t*/ snum:number):void
+{
+    var px = polymost_drawsprite_px, py = polymost_drawsprite_py;
+    var /*float*/ f=0.0, c=0.0, s=0.0, fx=0.0, fy=0.0, sx0=0.0, sy0=0.0, sx1=0.0, xp0=0.0, yp0=0.0, xp1=0.0, yp1=0.0, oxp0=0.0, oyp0=0.0, ryp0=0.0, ryp1=0.0, ft = polymost_drawsprite_ft;
+    var /*float*/ x0=0.0, y0=0.0, x1=0.0, y1=0.0, sc0=0.0, sf0=0.0, sc1=0.0, sf1=0.0, px2 = polymost_drawsprite_px2, py2 = polymost_drawsprite_py2, xv=0.0, yv=0.0, t0=0.0, t1;
+    var /*int32_t*/ i=0, j=0, spritenum=0, xoff=0, yoff=0, method=0, npoints=0;
+    var /*int32_t*/ posx=0,posy=0;
+    var /*int32_t*/ oldsizx=0, oldsizy=0;
+    var /*int32_t*/ tsizx=0, tsizy=0;
+
+    var tspr = tspriteptr[snum];
+    if (bad_tspr(tspr))
+        return;
+
+    spritenum         = tspr.owner;
+
+    if (picanm[tspr.picnum].sf & PICANM_ANIMTYPE_MASK) tspr.picnum += animateoffs(tspr.picnum, spritenum+32768); //DO_TILE_ANIM(tspr.picnum, spritenum+32768);
+
+    globalpicnum      = tspr.picnum;
+    globalshade       = tspr.shade;
+    globalpal         = tspr.pal;
+    globalorientation = tspr.cstat;
+    globvis = globalvisibility;
+    if (sector[tspr.sectnum].visibility != 0) globvis = mulscale4(globvis, (uint8_t)(sector[tspr.sectnum].visibility+16));
+    if ((globalorientation&48) != 48)  	// only non-voxel sprites should do this
+    {
+        var /*int32_t */flag;
+        flag = usehightile && h_xsize[globalpicnum];
+        xoff = /*(int32_t)*/tspr.xoffset;
+        yoff = /*(int32_t)*/tspr.yoffset;
+        xoff += flag ? h_xoffs[globalpicnum] : picanm[globalpicnum].xofs;
+        yoff += flag ? h_yoffs[globalpicnum] : picanm[globalpicnum].yofs;
+    }
+
+    method = 1+4;
+    if (tspr.cstat&2) { if (!(tspr.cstat&512)) method = 2+4; else method = 3+4; }
+
+    alpha = spriteext[spritenum].alpha;
+
 //#ifdef USE_OPENGL
-//    calc_and_apply_fog(tspr.picnum, globalshade, sector[tspr.sectnum].visibility, sector[tspr.sectnum].floorpal);
-//
-//    while (getrendermode() >= REND_POLYMOST && !(spriteext[spritenum].flags&SPREXT_NOTMD))
-//    {
-//        if (usemodels && tile2model[Ptile2tile(tspr.picnum,tspr.pal)].modelid >= 0 && tile2model[Ptile2tile(tspr.picnum,tspr.pal)].framenum >= 0)
-//        {
-//            if (spritenum >= MAXSPRITES || tspr.statnum == TSPR_MIRROR)
-//            {
-//                if (mddraw(tspr)) return;
-//                break;	// else, render as flat sprite
-//            }
-//
-//            if (mddraw(tspr))
-//                return;
-//
-//            break;	// else, render as flat sprite
-//        }
-//
-//        if (usevoxels && (tspr.cstat&48)!=48 && tiletovox[tspr.picnum] >= 0 && voxmodels[tiletovox[tspr.picnum]])
-//        {
-//            if (voxdraw(voxmodels[tiletovox[tspr.picnum]], tspr))
-//                return;
-//            break;	// else, render as flat sprite
-//        }
-//
-//        if ((tspr.cstat&48)==48 && voxmodels[tspr.picnum])
-//        {
-//            voxdraw(voxmodels[tspr.picnum], tspr);
-//            return;
-//        }
-//        break;
-//    }
-//
-//    if (((tspr.cstat&2) || (gltexmayhavealpha(tspr.picnum,tspr.pal))))
-//    {
-//        curpolygonoffset += 0.01f;
-//        bglEnable(GL_POLYGON_OFFSET_FILL);
-//        bglPolygonOffset(-curpolygonoffset, -curpolygonoffset);
-//    }
+    calc_and_apply_fog(tspr.picnum, globalshade, sector[tspr.sectnum].visibility, sector[tspr.sectnum].floorpal);
+
+    while (getrendermode() >= REND_POLYMOST && !(spriteext[spritenum].flags&SPREXT_NOTMD))
+    {
+        if (usemodels && tile2model[Ptile2tile(tspr.picnum,tspr.pal)].modelid >= 0 && tile2model[Ptile2tile(tspr.picnum,tspr.pal)].framenum >= 0)
+        {
+            if (spritenum >= MAXSPRITES || tspr.statnum == TSPR_MIRROR)
+            {
+                if (mddraw(tspr)) return;
+                break;	// else, render as flat sprite
+            }
+
+            if (mddraw(tspr))
+                return;
+
+            break;	// else, render as flat sprite
+        }
+
+        if (usevoxels && (tspr.cstat&48)!=48 && tiletovox[tspr.picnum] >= 0 && voxmodels[tiletovox[tspr.picnum]])
+        {
+            if (voxdraw(voxmodels[tiletovox[tspr.picnum]], tspr))
+                return;
+            break;	// else, render as flat sprite
+        }
+
+        if ((tspr.cstat&48)==48 && voxmodels[tspr.picnum])
+        {
+            voxdraw(voxmodels[tspr.picnum], tspr);
+            return;
+        }
+        break;
+    }
+
+    if (((tspr.cstat&2) || (gltexmayhavealpha(tspr.picnum,tspr.pal))))
+    {
+        curpolygonoffset += 0.01;
+        bglEnable(GL_POLYGON_OFFSET_FILL);
+        bglPolygonOffset(-curpolygonoffset, -curpolygonoffset);
+    }
 //#endif
-//
-//    posx=tspr.x;
-//    posy=tspr.y;
-//    if (spriteext[spritenum].flags&SPREXT_AWAY1)
-//    {
-//        posx+=(sintable[(tspr.ang+512)&2047]>>13);
-//        posy+=(sintable[(tspr.ang)&2047]>>13);
-//    }
-//    else if (spriteext[spritenum].flags&SPREXT_AWAY2)
-//    {
-//        posx-=(sintable[(tspr.ang+512)&2047]>>13);
-//        posy-=(sintable[(tspr.ang)&2047]>>13);
-//    }
-//
-//    oldsizx=tsizx=tilesizx[globalpicnum];
-//    oldsizy=tsizy=tilesizy[globalpicnum];
-//    if (usehightile && h_xsize[globalpicnum])
-//    {
-//        tsizx = h_xsize[globalpicnum];
-//        tsizy = h_ysize[globalpicnum];
-//    }
-//
-//    if (tsizx<=0 || tsizy<=0)
-//        return;
-//
-//    switch ((globalorientation>>4)&3)
-//    {
-//    case 0: //Face sprite
-//        //Project 3D to 2D
-//        if (globalorientation&4) xoff = -xoff;
-//        // NOTE: yoff not negated not for y flipping, unlike wall and floor
-//        // aligned sprites.
-//
-//        sx0 = (float)(tspr.x-globalposx);
-//        sy0 = (float)(tspr.y-globalposy);
-//        xp0 = sy0*gcosang  - sx0*gsinang;
-//        yp0 = sx0*gcosang2 + sy0*gsinang2;
-//        if (yp0 <= SCISDIST) return;
-//        ryp0 = 1/yp0;
-//        sx0 = ghalfx*xp0*ryp0 + ghalfx;
-//        sy0 = ((float)(tspr.z-globalposz))*gyxscale*ryp0 + ghoriz;
-//
-//        f = ryp0*(float)xdimen/160.0;
-//        fx = ((float)tspr.xrepeat)*f;
-//        fy = ((float)tspr.yrepeat)*f*((float)yxaspect/65536.0);
-//        sx0 -= fx*(float)xoff; if (tsizx&1) sx0 += fx*.5;
-//        sy0 -= fy*(float)yoff;
-//        fx *= ((float)tsizx);
-//        fy *= ((float)tsizy);
-//
-//        px[0] = px[3] = sx0-fx*.5; px[1] = px[2] = sx0+fx*.5;
-//        if (!(globalorientation&128)) { py[0] = py[1] = sy0-fy; py[2] = py[3] = sy0; }
-//        else { py[0] = py[1] = sy0-fy*.5; py[2] = py[3] = sy0+fy*.5; }
-//
-//        gdx = gdy = guy = gvx = 0; gdo = ryp0*gviewxrange;
-//        if (!(globalorientation&4))
-//            { gux = (float)tsizx*gdo/(px[1]-px[0]+.002); guo = -gux*(px[0]-.001); }
-//        else { gux = (float)tsizx*gdo/(px[0]-px[1]-.002); guo = -gux*(px[1]+.001); }
-//        if (!(globalorientation&8))
-//            { gvy = (float)tsizy*gdo/(py[3]-py[0]+.002); gvo = -gvy*(py[0]-.001); }
-//        else { gvy = (float)tsizy*gdo/(py[0]-py[3]-.002); gvo = -gvy*(py[3]+.001); }
-//
-//        // sprite panning
-//        guy -= gdy*((float)(spriteext[spritenum].xpanning)/255.f)*tsizx;
-//        guo -= gdo*((float)(spriteext[spritenum].xpanning)/255.f)*tsizx;
-//        gvy -= gdy*((float)(spriteext[spritenum].ypanning)/255.f)*tsizy;
-//        gvo -= gdo*((float)(spriteext[spritenum].ypanning)/255.f)*tsizy;
-//
-//        //Clip sprites to ceilings/floors when no parallaxing and not sloped
-//        if (!(sector[tspr.sectnum].ceilingstat&3))
-//        {
-//            sy0 = ((float)(sector[tspr.sectnum].ceilingz-globalposz))*gyxscale*ryp0 + ghoriz;
-//            if (py[0] < sy0) py[0] = py[1] = sy0;
-//        }
-//        if (!(sector[tspr.sectnum].floorstat&3))
-//        {
-//            sy0 = ((float)(sector[tspr.sectnum].floorz-globalposz))*gyxscale*ryp0 + ghoriz;
-//            if (py[2] > sy0) py[2] = py[3] = sy0;
-//        }
-//
+
+    posx=tspr.x;
+    posy=tspr.y;
+    if (spriteext[spritenum].flags&SPREXT_AWAY1)
+    {
+        posx+=(sintable[(tspr.ang+512)&2047]>>13);
+        posy+=(sintable[(tspr.ang)&2047]>>13);
+    }
+    else if (spriteext[spritenum].flags&SPREXT_AWAY2)
+    {
+        posx-=(sintable[(tspr.ang+512)&2047]>>13);
+        posy-=(sintable[(tspr.ang)&2047]>>13);
+    }
+
+    oldsizx=tsizx=tilesizx[globalpicnum];
+    oldsizy=tsizy=tilesizy[globalpicnum];
+    if (usehightile && h_xsize[globalpicnum])
+    {
+        tsizx = h_xsize[globalpicnum];
+        tsizy = h_ysize[globalpicnum];
+    }
+
+    if (tsizx<=0 || tsizy<=0)
+        return;
+
+    switch ((globalorientation>>4)&3)
+    {
+    case 0: //Face sprite
+        //Project 3D to 2D
+        if (globalorientation&4) xoff = -xoff;
+        // NOTE: yoff not negated not for y flipping, unlike wall and floor
+        // aligned sprites.
+
+        sx0 = /*(float)*/(tspr.x-globalposx);
+        sy0 = /*(float)*/(tspr.y-globalposy);
+        xp0 = sy0*gcosang  - sx0*gsinang;
+        yp0 = sx0*gcosang2 + sy0*gsinang2;
+        if (yp0 <= SCISDIST) return;
+        ryp0 = 1/yp0;
+        sx0 = ghalfx*xp0*ryp0 + ghalfx;
+        sy0 = (/*(float)*/(tspr.z-globalposz))*gyxscale*ryp0 + ghoriz;
+
+        f = ryp0*/*(float)*/xdimen/160.0;
+        fx = (/*(float)*/tspr.xrepeat)*f;
+        fy = (/*(float)*/tspr.yrepeat)*f*(/*(float)*/yxaspect/65536.0);
+        sx0 -= fx*/*(float)*/xoff; if (tsizx&1) sx0 += fx*.5;
+        sy0 -= fy*/*(float)*/yoff;
+        fx *= (/*(float)*/tsizx);
+        fy *= (/*(float)*/tsizy);
+
+        px[0] = px[3] = sx0-fx*.5; px[1] = px[2] = sx0+fx*.5;
+        if (!(globalorientation&128)) { py[0] = py[1] = sy0-fy; py[2] = py[3] = sy0; }
+        else { py[0] = py[1] = sy0-fy*.5; py[2] = py[3] = sy0+fy*.5; }
+
+        gdx = gdy = guy = gvx = 0; gdo = ryp0*gviewxrange;
+        if (!(globalorientation&4))
+            { gux = /*(float)*/tsizx*gdo/(px[1]-px[0]+.002); guo = -gux*(px[0]-.001); }
+        else { gux = /*(float)*/tsizx*gdo/(px[0]-px[1]-.002); guo = -gux*(px[1]+.001); }
+        if (!(globalorientation&8))
+            { gvy = /*(float)*/tsizy*gdo/(py[3]-py[0]+.002); gvo = -gvy*(py[0]-.001); }
+        else { gvy = /*(float)*/tsizy*gdo/(py[0]-py[3]-.002); gvo = -gvy*(py[3]+.001); }
+
+        // sprite panning
+        guy -= gdy*(/*(float)*/(spriteext[spritenum].xpanning)/255.0)*tsizx;
+        guo -= gdo*(/*(float)*/(spriteext[spritenum].xpanning)/255.0)*tsizx;
+        gvy -= gdy*(/*(float)*/(spriteext[spritenum].ypanning)/255.0)*tsizy;
+        gvo -= gdo*(/*(float)*/(spriteext[spritenum].ypanning)/255.0)*tsizy;
+
+        //Clip sprites to ceilings/floors when no parallaxing and not sloped
+        if (!(sector[tspr.sectnum].ceilingstat&3))
+        {
+            sy0 = (/*(float)*/(sector[tspr.sectnum].ceilingz-globalposz))*gyxscale*ryp0 + ghoriz;
+            if (py[0] < sy0) py[0] = py[1] = sy0;
+        }
+        if (!(sector[tspr.sectnum].floorstat&3))
+        {
+            sy0 = (/*(float)*/(sector[tspr.sectnum].floorz-globalposz))*gyxscale*ryp0 + ghoriz;
+            if (py[2] > sy0) py[2] = py[3] = sy0;
+        }
+
 //#ifdef USE_OPENGL
-//        if (spriteext[spritenum].xpanning)
-//            srepeat = 1;
-//        if (spriteext[spritenum].ypanning)
-//            trepeat = 1;
+        if (spriteext[spritenum].xpanning)
+            srepeat = 1;
+        if (spriteext[spritenum].ypanning)
+            trepeat = 1;
 //#endif
-//        tilesizx[globalpicnum] = tsizx;
-//        tilesizy[globalpicnum] = tsizy;
-//        pow2xsplit = 0; drawpoly(px,py,4,method);
-//
+        tilesizx[globalpicnum] = tsizx;
+        tilesizy[globalpicnum] = tsizy;
+        pow2xsplit = 0; drawpoly(px,py,4,method);
+
 //#ifdef USE_OPENGL
-//        if (spriteext[spritenum].xpanning)
-//            srepeat = 0;
-//        if (spriteext[spritenum].ypanning)
-//            trepeat = 0;
+        if (spriteext[spritenum].xpanning)
+            srepeat = 0;
+        if (spriteext[spritenum].ypanning)
+            trepeat = 0;
 //#endif
-//
-//        break;
-//    case 1: //Wall sprite
-//
-//        //Project 3D to 2D
-//        if (globalorientation&4) xoff = -xoff;
-//        if (globalorientation&8) yoff = -yoff;
-//
-//        xv = (float)tspr.xrepeat * (float)sintable[(tspr.ang)&2047] / 65536.0;
-//        yv = (float)tspr.xrepeat * (float)sintable[(tspr.ang+1536)&2047] / 65536.0;
-//        f = (float)(tsizx>>1) + (float)xoff;
-//        x0 = (float)(posx-globalposx) - xv*f; x1 = xv*(float)tsizx + x0;
-//        y0 = (float)(posy-globalposy) - yv*f; y1 = yv*(float)tsizx + y0;
-//
-//        yp0 = x0*gcosang2 + y0*gsinang2;
-//        yp1 = x1*gcosang2 + y1*gsinang2;
-//        if ((yp0 <= SCISDIST) && (yp1 <= SCISDIST)) return;
-//        xp0 = y0*gcosang - x0*gsinang;
-//        xp1 = y1*gcosang - x1*gsinang;
-//
-//        //Clip to close parallel-screen plane
-//        oxp0 = xp0; oyp0 = yp0;
-//        if (yp0 < SCISDIST) { t0 = (SCISDIST-yp0)/(yp1-yp0); xp0 = (xp1-xp0)*t0+xp0; yp0 = SCISDIST; }
-//        else { t0 = 0.f; }
-//        if (yp1 < SCISDIST) { t1 = (SCISDIST-oyp0)/(yp1-oyp0); xp1 = (xp1-oxp0)*t1+oxp0; yp1 = SCISDIST; }
-//        else { t1 = 1.0; }
-//
-//        f = ((float)tspr.yrepeat) * (float)tsizy * 4;
-//
-//        ryp0 = 1.0/yp0;
-//        ryp1 = 1.0/yp1;
-//        sx0 = ghalfx*xp0*ryp0 + ghalfx;
-//        sx1 = ghalfx*xp1*ryp1 + ghalfx;
-//        ryp0 *= gyxscale;
-//        ryp1 *= gyxscale;
-//
-//        tspr.z -= ((yoff*tspr.yrepeat)<<2);
-//        if (globalorientation&128)
-//        {
-//            tspr.z += ((tsizy*tspr.yrepeat)<<1);
-//            if (tsizy&1) tspr.z += (tspr.yrepeat<<1); //Odd yspans
-//        }
-//
-//        sc0 = ((float)(tspr.z-globalposz-f))*ryp0 + ghoriz;
-//        sc1 = ((float)(tspr.z-globalposz-f))*ryp1 + ghoriz;
-//        sf0 = ((float)(tspr.z-globalposz))*ryp0 + ghoriz;
-//        sf1 = ((float)(tspr.z-globalposz))*ryp1 + ghoriz;
-//
-//        gdx = (ryp0-ryp1)*gxyaspect / (sx0-sx1);
-//        gdy = 0;
-//        gdo = ryp0*gxyaspect - gdx*sx0;
-//
-//        //Original equations:
-//        //(gux*sx0 + guo)/(gdx*sx1 + gdo) = tsizx*t0
-//        //(gux*sx1 + guo)/(gdx*sx1 + gdo) = tsizx*t1
-//        //
-//        // gvx*sx0 + gvy*sc0 + gvo = 0
-//        // gvy*sx1 + gvy*sc1 + gvo = 0
-//        //(gvx*sx0 + gvy*sf0 + gvo)/(gdx*sx0 + gdo) = tsizy
-//        //(gvx*sx1 + gvy*sf1 + gvo)/(gdx*sx1 + gdo) = tsizy
-//
-//        //gux*sx0 + guo = t0*tsizx*yp0
-//        //gux*sx1 + guo = t1*tsizx*yp1
-//        if (globalorientation&4) { t0 = 1.0-t0; t1 = 1.0-t1; }
-//
-//        //sprite panning
-//        t0 -= ((float)(spriteext[spritenum].xpanning)/255.f);
-//        t1 -= ((float)(spriteext[spritenum].xpanning)/255.f);
-//        gux = (t0*ryp0 - t1*ryp1)*gxyaspect*(float)tsizx / (sx0-sx1);
-//        guy = 0;
-//        guo = t0*ryp0*gxyaspect*(float)tsizx - gux*sx0;
-//
-//        //gvx*sx0 + gvy*sc0 + gvo = 0
-//        //gvx*sx1 + gvy*sc1 + gvo = 0
-//        //gvx*sx0 + gvy*sf0 + gvo = tsizy*(gdx*sx0 + gdo)
-//        f = ((float)tsizy)*(gdx*sx0 + gdo) / ((sx0-sx1)*(sc0-sf0));
-//        if (!(globalorientation&8))
-//        {
-//            gvx = (sc0-sc1)*f;
-//            gvy = (sx1-sx0)*f;
-//            gvo = -gvx*sx0 - gvy*sc0;
-//        }
-//        else
-//        {
-//            gvx = (sf1-sf0)*f;
-//            gvy = (sx0-sx1)*f;
-//            gvo = -gvx*sx0 - gvy*sf0;
-//        }
-//
-//        // sprite panning
-//        gvx -= gdx*((float)(spriteext[spritenum].ypanning)/255.f)*tsizy;
-//        gvy -= gdy*((float)(spriteext[spritenum].ypanning)/255.f)*tsizy;
-//        gvo -= gdo*((float)(spriteext[spritenum].ypanning)/255.f)*tsizy;
-//
-//        //Clip sprites to ceilings/floors when no parallaxing
-//        if (!(sector[tspr.sectnum].ceilingstat&1))
-//        {
-//            f = ((float)tspr.yrepeat) * (float)tsizy * 4;
-//            if (sector[tspr.sectnum].ceilingz > tspr.z-f)
-//            {
-//                sc0 = ((float)(sector[tspr.sectnum].ceilingz-globalposz))*ryp0 + ghoriz;
-//                sc1 = ((float)(sector[tspr.sectnum].ceilingz-globalposz))*ryp1 + ghoriz;
-//            }
-//        }
-//        if (!(sector[tspr.sectnum].floorstat&1))
-//        {
-//            if (sector[tspr.sectnum].floorz < tspr.z)
-//            {
-//                sf0 = ((float)(sector[tspr.sectnum].floorz-globalposz))*ryp0 + ghoriz;
-//                sf1 = ((float)(sector[tspr.sectnum].floorz-globalposz))*ryp1 + ghoriz;
-//            }
-//        }
-//
-//        if (sx0 > sx1)
-//        {
-//            if (globalorientation&64) return; //1-sided sprite
-//            f = sx0; sx0 = sx1; sx1 = f;
-//            f = sc0; sc0 = sc1; sc1 = f;
-//            f = sf0; sf0 = sf1; sf1 = f;
-//        }
-//
-//        px[0] = sx0; py[0] = sc0;
-//        px[1] = sx1; py[1] = sc1;
-//        px[2] = sx1; py[2] = sf1;
-//        px[3] = sx0; py[3] = sf0;
-//
+
+        break;
+    case 1: //Wall sprite
+
+        //Project 3D to 2D
+        if (globalorientation&4) xoff = -xoff;
+        if (globalorientation&8) yoff = -yoff;
+
+        xv = /*(float)*/tspr.xrepeat * /*(float)*/sintable[(tspr.ang)&2047] / 65536.0;
+        yv = /*(float)*/tspr.xrepeat * /*(float)*/sintable[(tspr.ang+1536)&2047] / 65536.0;
+        f = /*(float)*/(tsizx>>1) + /*(float)*/xoff;
+        x0 = /*(float)*/(posx-globalposx) - xv*f; x1 = xv*/*(float)*/tsizx + x0;
+        y0 = /*(float)*/(posy-globalposy) - yv*f; y1 = yv*/*(float)*/tsizx + y0;
+
+        yp0 = x0*gcosang2 + y0*gsinang2;
+        yp1 = x1*gcosang2 + y1*gsinang2;
+        if ((yp0 <= SCISDIST) && (yp1 <= SCISDIST)) return;
+        xp0 = y0*gcosang - x0*gsinang;
+        xp1 = y1*gcosang - x1*gsinang;
+
+        //Clip to close parallel-screen plane
+        oxp0 = xp0; oyp0 = yp0;
+        if (yp0 < SCISDIST) { t0 = (SCISDIST-yp0)/(yp1-yp0); xp0 = (xp1-xp0)*t0+xp0; yp0 = SCISDIST; }
+        else { t0 = 0.0; }
+        if (yp1 < SCISDIST) { t1 = (SCISDIST-oyp0)/(yp1-oyp0); xp1 = (xp1-oxp0)*t1+oxp0; yp1 = SCISDIST; }
+        else { t1 = 1.0; }
+
+        f = (/*(float)*/tspr.yrepeat) * /*(float)*/tsizy * 4;
+
+        ryp0 = 1.0/yp0;
+        ryp1 = 1.0/yp1;
+        sx0 = ghalfx*xp0*ryp0 + ghalfx;
+        sx1 = ghalfx*xp1*ryp1 + ghalfx;
+        ryp0 *= gyxscale;
+        ryp1 *= gyxscale;
+
+        tspr.z -= ((yoff*tspr.yrepeat)<<2);
+        if (globalorientation&128)
+        {
+            tspr.z += ((tsizy*tspr.yrepeat)<<1);
+            if (tsizy&1) tspr.z += (tspr.yrepeat<<1); //Odd yspans
+        }
+
+        sc0 = (/*(float)*/(tspr.z-globalposz-f))*ryp0 + ghoriz;
+        sc1 = (/*(float)*/(tspr.z-globalposz-f))*ryp1 + ghoriz;
+        sf0 = (/*(float)*/(tspr.z-globalposz))*ryp0 + ghoriz;
+        sf1 = (/*(float)*/(tspr.z-globalposz))*ryp1 + ghoriz;
+
+        gdx = (ryp0-ryp1)*gxyaspect / (sx0-sx1);
+        gdy = 0;
+        gdo = ryp0*gxyaspect - gdx*sx0;
+
+        //Original equations:
+        //(gux*sx0 + guo)/(gdx*sx1 + gdo) = tsizx*t0
+        //(gux*sx1 + guo)/(gdx*sx1 + gdo) = tsizx*t1
+        //
+        // gvx*sx0 + gvy*sc0 + gvo = 0
+        // gvy*sx1 + gvy*sc1 + gvo = 0
+        //(gvx*sx0 + gvy*sf0 + gvo)/(gdx*sx0 + gdo) = tsizy
+        //(gvx*sx1 + gvy*sf1 + gvo)/(gdx*sx1 + gdo) = tsizy
+
+        //gux*sx0 + guo = t0*tsizx*yp0
+        //gux*sx1 + guo = t1*tsizx*yp1
+        if (globalorientation&4) { t0 = 1.0-t0; t1 = 1.0-t1; }
+
+        //sprite panning
+        t0 -= (/*(float)*/(spriteext[spritenum].xpanning)/255.0);
+        t1 -= (/*(float)*/(spriteext[spritenum].xpanning)/255.0);
+        gux = (t0*ryp0 - t1*ryp1)*gxyaspect*/*(float)*/tsizx / (sx0-sx1);
+        guy = 0;
+        guo = t0*ryp0*gxyaspect*/*(float)*/tsizx - gux*sx0;
+
+        //gvx*sx0 + gvy*sc0 + gvo = 0
+        //gvx*sx1 + gvy*sc1 + gvo = 0
+        //gvx*sx0 + gvy*sf0 + gvo = tsizy*(gdx*sx0 + gdo)
+        f = (/*(float)*/tsizy)*(gdx*sx0 + gdo) / ((sx0-sx1)*(sc0-sf0));
+        if (!(globalorientation&8))
+        {
+            gvx = (sc0-sc1)*f;
+            gvy = (sx1-sx0)*f;
+            gvo = -gvx*sx0 - gvy*sc0;
+        }
+        else
+        {
+            gvx = (sf1-sf0)*f;
+            gvy = (sx0-sx1)*f;
+            gvo = -gvx*sx0 - gvy*sf0;
+        }
+
+        // sprite panning
+        gvx -= gdx*(/*(float)*/(spriteext[spritenum].ypanning)/255.0)*tsizy;
+        gvy -= gdy*(/*(float)*/(spriteext[spritenum].ypanning)/255.0)*tsizy;
+        gvo -= gdo*(/*(float)*/(spriteext[spritenum].ypanning)/255.0)*tsizy;
+
+        //Clip sprites to ceilings/floors when no parallaxing
+        if (!(sector[tspr.sectnum].ceilingstat&1))
+        {
+            f = (/*(float)*/tspr.yrepeat) * /*(float)*/tsizy * 4;
+            if (sector[tspr.sectnum].ceilingz > tspr.z-f)
+            {
+                sc0 = (/*(float)*/(sector[tspr.sectnum].ceilingz-globalposz))*ryp0 + ghoriz;
+                sc1 = (/*(float)*/(sector[tspr.sectnum].ceilingz-globalposz))*ryp1 + ghoriz;
+            }
+        }
+        if (!(sector[tspr.sectnum].floorstat&1))
+        {
+            if (sector[tspr.sectnum].floorz < tspr.z)
+            {
+                sf0 = (/*(float)*/(sector[tspr.sectnum].floorz-globalposz))*ryp0 + ghoriz;
+                sf1 = (/*(float)*/(sector[tspr.sectnum].floorz-globalposz))*ryp1 + ghoriz;
+            }
+        }
+
+        if (sx0 > sx1)
+        {
+            if (globalorientation&64) return; //1-sided sprite
+            f = sx0; sx0 = sx1; sx1 = f;
+            f = sc0; sc0 = sc1; sc1 = f;
+            f = sf0; sf0 = sf1; sf1 = f;
+        }
+
+        px[0] = sx0; py[0] = sc0;
+        px[1] = sx1; py[1] = sc1;
+        px[2] = sx1; py[2] = sf1;
+        px[3] = sx0; py[3] = sf0;
+
 //#ifdef USE_OPENGL
-//        if (spriteext[spritenum].xpanning)
-//            srepeat = 1;
-//        if (spriteext[spritenum].ypanning)
-//            trepeat = 1;
+        if (spriteext[spritenum].xpanning)
+            srepeat = 1;
+        if (spriteext[spritenum].ypanning)
+            trepeat = 1;
 //#endif
-//
-//        tilesizx[globalpicnum] = tsizx;
-//        tilesizy[globalpicnum] = tsizy;
-//        pow2xsplit = 0; drawpoly(px,py,4,method);
-//
+
+        tilesizx[globalpicnum] = tsizx;
+        tilesizy[globalpicnum] = tsizy;
+        pow2xsplit = 0; drawpoly(px,py,4,method);
+
 //#ifdef USE_OPENGL
-//        if (spriteext[spritenum].xpanning)
-//            srepeat = 0;
-//        if (spriteext[spritenum].ypanning)
-//            trepeat = 0;
+        if (spriteext[spritenum].xpanning)
+            srepeat = 0;
+        if (spriteext[spritenum].ypanning)
+            trepeat = 0;
 //#endif
-//
-//        break;
-//    case 2: //Floor sprite
-//
-//        if ((globalorientation&64) != 0)
-//            if ((globalposz > tspr.z) == (!(globalorientation&8)))
-//                return;
-//        if ((globalorientation&4) > 0) xoff = -xoff;
-//        if ((globalorientation&8) > 0) yoff = -yoff;
-//
-//        i = (tspr.ang&2047);
-//        c = sintable[(i+512)&2047]/65536.0;
-//        s = sintable[i]/65536.0;
-//        x0 = (float)((tsizx>>1)-xoff)*tspr.xrepeat;
-//        y0 = (float)((tsizy>>1)-yoff)*tspr.yrepeat;
-//        x1 = (float)((tsizx>>1)+xoff)*tspr.xrepeat;
-//        y1 = (float)((tsizy>>1)+yoff)*tspr.yrepeat;
-//
-//        //Project 3D to 2D
-//        for (j=0; j<4; j++)
-//        {
-//            sx0 = (float)(tspr.x-globalposx);
-//            sy0 = (float)(tspr.y-globalposy);
-//            if ((j+0)&2) { sy0 -= s*y0; sx0 -= c*y0; }
-//            else { sy0 += s*y1; sx0 += c*y1; }
-//            if ((j+1)&2) { sx0 -= s*x0; sy0 += c*x0; }
-//            else { sx0 += s*x1; sy0 -= c*x1; }
-//            px[j] = sy0*gcosang  - sx0*gsinang;
-//            py[j] = sx0*gcosang2 + sy0*gsinang2;
-//        }
-//
-//        if (tspr.z < globalposz) //if floor sprite is above you, reverse order of points
-//        {
-//            f = px[0]; px[0] = px[1]; px[1] = f;
-//            f = py[0]; py[0] = py[1]; py[1] = f;
-//            f = px[2]; px[2] = px[3]; px[3] = f;
-//            f = py[2]; py[2] = py[3]; py[3] = f;
-//        }
-//
-//        //Clip to SCISDIST plane
-//        npoints = 0;
-//        for (i=0; i<4; i++)
-//        {
-//            j = ((i+1)&3);
-//            if (py[i] >= SCISDIST) { px2[npoints] = px[i]; py2[npoints] = py[i]; npoints++; }
-//            if ((py[i] >= SCISDIST) != (py[j] >= SCISDIST))
-//            {
-//                f = (SCISDIST-py[i])/(py[j]-py[i]);
-//                px2[npoints] = (px[j]-px[i])*f + px[i];
-//                py2[npoints] = (py[j]-py[i])*f + py[i]; npoints++;
-//            }
-//        }
-//        if (npoints < 3) return;
-//
-//        //Project rotated 3D points to screen
-//        f = ((float)(tspr.z-globalposz))*gyxscale;
-//        for (j=0; j<npoints; j++)
-//        {
-//            ryp0 = 1/py2[j];
-//            px[j] = ghalfx*px2[j]*ryp0 + ghalfx;
-//            py[j] = f*ryp0 + ghoriz;
-//        }
-//
-//        //gd? Copied from floor rendering code
-//        gdx = 0;
-//        gdy = gxyaspect / (double)(tspr.z-globalposz);
-//        gdo = -ghoriz*gdy;
-//        //copied&modified from relative alignment
-//        xv = (float)tspr.x + s*x1 + c*y1; fx = (double)-(x0+x1)*s;
-//        yv = (float)tspr.y + s*y1 - c*x1; fy = (double)+(x0+x1)*c;
-//        f = 1.0/sqrt(fx*fx+fy*fy); fx *= f; fy *= f;
-//        ft[2] = singlobalang*fy + cosglobalang*fx;
-//        ft[3] = singlobalang*fx - cosglobalang*fy;
-//        ft[0] = ((double)(globalposy-yv))*fy + ((double)(globalposx-xv))*fx;
-//        ft[1] = ((double)(globalposx-xv))*fy - ((double)(globalposy-yv))*fx;
-//        gux = (double)ft[3]*((double)viewingrange)/(-65536.0*262144.0);
-//        gvx = (double)ft[2]*((double)viewingrange)/(-65536.0*262144.0);
-//        guy = (double)ft[0]*gdy; gvy = (double)ft[1]*gdy;
-//        guo = (double)ft[0]*gdo; gvo = (double)ft[1]*gdo;
-//        guo += (double)(ft[2]/262144.0-gux)*ghalfx;
-//        gvo -= (double)(ft[3]/262144.0+gvx)*ghalfx;
-//        f = 4.0/(float)tspr.xrepeat; gux *= f; guy *= f; guo *= f;
-//        f =-4.0/(float)tspr.yrepeat; gvx *= f; gvy *= f; gvo *= f;
-//        if (globalorientation&4)
-//        {
-//            gux = ((float)tsizx)*gdx - gux;
-//            guy = ((float)tsizx)*gdy - guy;
-//            guo = ((float)tsizx)*gdo - guo;
-//        }
-//
-//        // sprite panning
-//        guy -= gdy*((float)(spriteext[spritenum].xpanning)/255.f)*tsizx;
-//        guo -= gdo*((float)(spriteext[spritenum].xpanning)/255.f)*tsizx;
-//        gvy -= gdy*((float)(spriteext[spritenum].ypanning)/255.f)*tsizy;
-//        gvo -= gdo*((float)(spriteext[spritenum].ypanning)/255.f)*tsizy;
-//
+
+        break;
+    case 2: //Floor sprite
+
+        if ((globalorientation&64) != 0)
+            if ((globalposz > tspr.z) == (!(globalorientation&8)))
+                return;
+        if ((globalorientation&4) > 0) xoff = -xoff;
+        if ((globalorientation&8) > 0) yoff = -yoff;
+
+        i = (tspr.ang&2047);
+        c = sintable[(i+512)&2047]/65536.0;
+        s = sintable[i]/65536.0;
+        x0 = /*(float)*/((tsizx>>1)-xoff)*tspr.xrepeat;
+        y0 = /*(float)*/((tsizy>>1)-yoff)*tspr.yrepeat;
+        x1 = /*(float)*/((tsizx>>1)+xoff)*tspr.xrepeat;
+        y1 = /*(float)*/((tsizy>>1)+yoff)*tspr.yrepeat;
+
+        //Project 3D to 2D
+        for (j=0; j<4; j++)
+        {
+            sx0 = /*(float)*/(tspr.x-globalposx);
+            sy0 = /*(float)*/(tspr.y-globalposy);
+            if ((j+0)&2) { sy0 -= s*y0; sx0 -= c*y0; }
+            else { sy0 += s*y1; sx0 += c*y1; }
+            if ((j+1)&2) { sx0 -= s*x0; sy0 += c*x0; }
+            else { sx0 += s*x1; sy0 -= c*x1; }
+            px[j] = sy0*gcosang  - sx0*gsinang;
+            py[j] = sx0*gcosang2 + sy0*gsinang2;
+        }
+
+        if (tspr.z < globalposz) //if floor sprite is above you, reverse order of points
+        {
+            f = px[0]; px[0] = px[1]; px[1] = f;
+            f = py[0]; py[0] = py[1]; py[1] = f;
+            f = px[2]; px[2] = px[3]; px[3] = f;
+            f = py[2]; py[2] = py[3]; py[3] = f;
+        }
+
+        //Clip to SCISDIST plane
+        npoints = 0;
+        for (i=0; i<4; i++)
+        {
+            j = ((i+1)&3);
+            if (py[i] >= SCISDIST) { px2[npoints] = px[i]; py2[npoints] = py[i]; npoints++; }
+            if ((py[i] >= SCISDIST) != (py[j] >= SCISDIST))
+            {
+                f = (SCISDIST-py[i])/(py[j]-py[i]);
+                px2[npoints] = (px[j]-px[i])*f + px[i];
+                py2[npoints] = (py[j]-py[i])*f + py[i]; npoints++;
+            }
+        }
+        if (npoints < 3) return;
+
+        //Project rotated 3D points to screen
+        f = (/*(float)*/(tspr.z-globalposz))*gyxscale;
+        for (j=0; j<npoints; j++)
+        {
+            ryp0 = 1/py2[j];
+            px[j] = ghalfx*px2[j]*ryp0 + ghalfx;
+            py[j] = f*ryp0 + ghoriz;
+        }
+
+        //gd? Copied from floor rendering code
+        gdx = 0;
+        gdy = gxyaspect /  /*(double)*/ (tspr.z-globalposz);
+        gdo = -ghoriz*gdy;
+        //copied&modified from relative alignment
+        xv = /*(float)*/tspr.x + s*x1 + c*y1; fx =  /*(double)*/ -(x0+x1)*s;
+        yv = /*(float)*/tspr.y + s*y1 - c*x1; fy =  /*(double)*/ +(x0+x1)*c;
+        f = 1.0/sqrt(fx*fx+fy*fy); fx *= f; fy *= f;
+        ft[2] = singlobalang*fy + cosglobalang*fx;
+        ft[3] = singlobalang*fx - cosglobalang*fy;
+        ft[0] = ( /*(double)*/ (globalposy-yv))*fy + ( /*(double)*/ (globalposx-xv))*fx;
+        ft[1] = ( /*(double)*/ (globalposx-xv))*fy - ( /*(double)*/ (globalposy-yv))*fx;
+        gux =  /*(double)*/ ft[3]*( /*(double)*/ viewingrange)/(-65536.0*262144.0);
+        gvx =  /*(double)*/ ft[2]*( /*(double)*/ viewingrange)/(-65536.0*262144.0);
+        guy =  /*(double)*/ ft[0]*gdy; gvy =  /*(double)*/ ft[1]*gdy;
+        guo =  /*(double)*/ ft[0]*gdo; gvo =  /*(double)*/ ft[1]*gdo;
+        guo +=  /*(double)*/ (ft[2]/262144.0-gux)*ghalfx;
+        gvo -=  /*(double)*/ (ft[3]/262144.0+gvx)*ghalfx;
+        f = 4.0//*(float)*/tspr.xrepeat; gux *= f; guy *= f; guo *= f;
+        f =-4.0//*(float)*/tspr.yrepeat; gvx *= f; gvy *= f; gvo *= f;
+        if (globalorientation&4)
+        {
+            gux = (/*(float)*/tsizx)*gdx - gux;
+            guy = (/*(float)*/tsizx)*gdy - guy;
+            guo = (/*(float)*/tsizx)*gdo - guo;
+        }
+
+        // sprite panning
+        guy -= gdy*(/*(float)*/(spriteext[spritenum].xpanning)/255.0)*tsizx;
+        guo -= gdo*(/*(float)*/(spriteext[spritenum].xpanning)/255.0)*tsizx;
+        gvy -= gdy*(/*(float)*/(spriteext[spritenum].ypanning)/255.0)*tsizy;
+        gvo -= gdo*(/*(float)*/(spriteext[spritenum].ypanning)/255.0)*tsizy;
+
 //#ifdef USE_OPENGL
-//        if (spriteext[spritenum].xpanning)
-//            srepeat = 1;
-//        if (spriteext[spritenum].ypanning)
-//            trepeat = 1;
+        if (spriteext[spritenum].xpanning)
+            srepeat = 1;
+        if (spriteext[spritenum].ypanning)
+            trepeat = 1;
 //#endif
-//
-//        tilesizx[globalpicnum] = tsizx;
-//        tilesizy[globalpicnum] = tsizy;
-//        pow2xsplit = 0; drawpoly(px,py,npoints,method);
-//
+
+        tilesizx[globalpicnum] = tsizx;
+        tilesizy[globalpicnum] = tsizy;
+        pow2xsplit = 0; drawpoly(px,py,npoints,method);
+
 //#ifdef USE_OPENGL
-//        if (spriteext[spritenum].xpanning)
-//            srepeat = 0;
-//        if (spriteext[spritenum].ypanning)
-//            trepeat = 0;
+        if (spriteext[spritenum].xpanning)
+            srepeat = 0;
+        if (spriteext[spritenum].ypanning)
+            trepeat = 0;
 //#endif
-//
-//        break;
-//
-//    case 3: //Voxel sprite
-//        break;
-//    }
-//    tilesizx[globalpicnum]=oldsizx;
-//    tilesizy[globalpicnum]=oldsizy;
-//}
+
+        break;
+
+    case 3: //Voxel sprite
+        break;
+    }
+    tilesizx[globalpicnum]=oldsizx;
+    tilesizy[globalpicnum]=oldsizy;
+}
 
 //sx,sy       center of sprite; screen coords*65536
 //z           zoom*65536. > is zoomed in
@@ -4570,7 +4573,7 @@ function polymost_dorotatesprite(sx: number, sy: number, z: number, a: number, p
 //#else
 //            mddraw(&tspr);
 //
-//            spriteext[tspr.owner].alpha = 0.f;
+//            spriteext[tspr.owner].alpha = 0.0;
 //#endif
 //            viewingrange = oldviewingrange;
 //            gxyaspect = ogxyaspect;

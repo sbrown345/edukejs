@@ -17,11 +17,15 @@
 
 class mdmodel_t
 {
-//    int32_t mdnum; //VOX=1, MD2=2, MD3=3. NOTE: must be first in structure!
+    /*int32_t */mdnum:number; //VOX=1, MD2=2, MD3=3. NOTE: must be first in structure!
 //    int32_t shadeoff;
 //    float scale, bscale, zadd, yoffset;
 //    GLuint *texid;	// skins
 //    int32_t flags;
+    constructor() {
+        this.mdnum = 0;
+    }
+
 }// mdmodel_t;
 
 //typedef struct _mdanim_t

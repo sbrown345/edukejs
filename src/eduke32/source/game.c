@@ -4641,9 +4641,7 @@ void G_DrawRooms(int32_t snum, int32_t smoothratio)
 			#endif
 
             drawing_ror = 0;
-			#if DEBUG_TODO
             drawmasks();
-			#endif
 #endif
         }
 

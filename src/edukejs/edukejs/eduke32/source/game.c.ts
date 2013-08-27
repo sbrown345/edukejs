@@ -518,7 +518,7 @@ function NUMHACKACTIVE(t:string, f:number):boolean { return (f & TEXT_GAMETEXTNU
 // qstrdim
 function G_ScreenTextSize( /*int32_t*/  font:number,
                         /*int32_t*/  x:number, /*int32_t*/  y:number,  /*int32_t*/  z:number,  /*int32_t*/  blockangle:number,
-                         /*char **/str:string,  /*int32_t*/  o,
+                         /*char **/str:string,  /*int32_t*/  o:number,
                         /*int32_t*/  xspace:number, /*int32_t*/  yline:number, /*int32_t*/  xbetween:number, /*int32_t*/  ybetween:number,
                          /*int32_t*/  f:number,
                         /*int32_t*/  x1:number, /*int32_t*/  y1:number, /*int32_t*/  x2:number, /*int32_t*/  y2:number): vec2_t 
@@ -3501,7 +3501,7 @@ function palaccum_add(pa:palaccum_t , pal:palette_t, /*int32_t */f:number):void
 ////////// DISPLAYREST //////////
 
 function G_DisplayRest(/*int32_t */smoothratio: number): void
-{todo("G_DisplayRest");
+{
     var /*int32_t */i:number, j:number;
     var tint = new palaccum_t();//var /*palaccum_t */tint = PALACCUM_INITIALIZER;
 
@@ -4731,7 +4731,7 @@ function G_DrawRooms(/*int32_t*/ snum: number, /*int32_t */smoothratio: number):
             todo("G_DoSpriteAnimations(ud.camerapos.x,ud.camerapos.y,ud.cameraang,smoothratio);");
 
             drawing_ror = 0;
-            todo("drawmasks();");
+            drawmasks();
 //#endif
         }
    

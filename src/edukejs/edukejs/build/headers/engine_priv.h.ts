@@ -91,12 +91,12 @@ function DO_TILE_ANIM(Picnum: number, Fakevar: any):void {// do {
    // } while (0); 
 }
 
-//static inline int32_t bad_tspr(const spritetype *tspr)
-//{
-//    // NOTE: tspr->owner >= MAXSPRITES (could be model) has to be handled by
-//    // caller.
-//    return (tspr->owner < 0 || (unsigned)tspr->picnum >= MAXTILES);
-//}
+function /*int32_t */bad_tspr(tspr:spritetype):number
+{
+    // NOTE: tspr.owner >= MAXSPRITES (could be model) has to be handled by
+    // caller.
+    return (tspr.owner < 0 || /*(unsigned) */tspr.picnum >= MAXTILES)?1:0;
+}
 
 //
 // getpalookup (internal)
