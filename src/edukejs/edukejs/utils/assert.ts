@@ -98,7 +98,7 @@
                 return assert.test.isTypedArrayValue(Uint16Array, v);
             },
             isInt8: function (v: number): boolean {
-                return assert.test.isTypedArrayValue(Uint8Array, v);
+                return assert.test.isTypedArrayValue(Int8Array, v);
             },
             isUint8: function (v: number): boolean {
                 return assert.test.isTypedArrayValue(Uint8Array, v);
@@ -106,8 +106,10 @@
             isType: function (type, v): boolean {
                 return v instanceof type;
             },
+            isTypedArrayValueTypedArrayCache: {},
             isTypedArrayValue: function (typedArrayType, v: number): boolean {
-                var array = new typedArrayType(1); // todo: cache of types
+                var array = assert.test.isTypedArrayValueTypedArrayCache[typedArrayType.name]
+                 || (assert.test.isTypedArrayValueTypedArrayCache[typedArrayType.name] = new typedArrayType(1));
                 array[0] = v;
                 return array[0] === v;
             },
