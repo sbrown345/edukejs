@@ -8285,9 +8285,9 @@ void G_MoveWorld(void)
         }
     }
     while (k--);
-#ifdef DEBUG_TODO
     G_MoveZombieActors();     //ST 2
     G_MoveWeapons();          //ST 4
+#ifdef DEBUG_TODO
     G_MoveTransports();       //ST 9
 
     G_MovePlayers();          //ST 10

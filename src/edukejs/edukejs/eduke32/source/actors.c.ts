@@ -173,8 +173,8 @@ function G_DoInterpolations(/*int32_t*/ smoothratio: number): void       //Stick
 //            sprite[k].yvel = 0;
 //}
 
-//void A_RadiusDamage(int32_t i, int32_t r, int32_t hp1, int32_t hp2, int32_t hp3, int32_t hp4)
-//{
+function A_RadiusDamage(/*int32_t*/ i:number, /*int32_t */r:number, /*int32_t */hp1:number, /*int32_t */hp2:number, /*int32_t */hp3:number, /*int32_t */hp4:number):void
+{todoThrow();
 //    int32_t d, q, stati;
 //    const spritetype *const s = &sprite[i];
 
@@ -364,7 +364,7 @@ function G_DoInterpolations(/*int32_t*/ smoothratio: number): void       //Stick
 //            j = nextj;
 //        }
 //    }
-//}
+}
 
 //// Maybe do a projectile transport via an SE7.
 //// <spritenum>: the projectile
@@ -937,112 +937,118 @@ function G_AddGameLight(/*int32_t*/ radius:number, /*int32_t */srcsprite:number,
 //#endif
 }
 
-//// sleeping monsters, etc
-//ACTOR_STATIC void G_MoveZombieActors(void)
-//{
-//    int32_t i = headspritestat[STAT_ZOMBIEACTOR], j;
+// sleeping monsters, etc
+function G_MoveZombieActors(): void
+{
+    var/*int32_t */i = headspritestat[STAT_ZOMBIEACTOR], j;
 
-//    while (i >= 0)
-//    {
-//        const int32_t nexti = nextspritestat[i];
+    while (i >= 0)
+    {
+        var /*const int32_t */nexti = nextspritestat[i];
 
-//        int32_t x;
-//        spritetype *const s = &sprite[i];
-//        const int32_t p = A_FindPlayer(s,&x);
+        var /*int32_t */x:number;
+        var s = sprite[i];
+        var $x = new R(x);
+        var /*const int32_t */p = A_FindPlayer(s,$x);
+        x = $x.$;
 
-//        int16_t ssect = s.sectnum;
-//        int16_t psect = s.sectnum;
+        var /*int16_t*/ ssect = s.sectnum;
+        var /*int16_t*/ psect = s.sectnum;
 
-//        if (sprite[g_player[p].ps.i].extra > 0)
-//        {
-//            if (x < 30000)
-//            {
-//                actor[i].timetosleep++;
-//                if (actor[i].timetosleep >= (x>>8))
-//                {
-//                    if (A_CheckEnemySprite(s))
-//                    {
-//                        const int32_t px = g_player[p].ps.opos.x+64-(krand()&127);
-//                        const int32_t py = g_player[p].ps.opos.y+64-(krand()&127);
-//                        int32_t sx, sy;
+        if (sprite[g_player[p].ps.i].extra > 0)
+        {
+            if (x < 30000)
+            {
+                actor[i].timetosleep++;
+                if (actor[i].timetosleep >= (x>>8))
+                {
+                    if (A_CheckEnemySprite(s))
+                    {
+                        var /*const int32_t*/ px = g_player[p].ps.opos.x+64-(krand()&127);
+                        var /*const int32_t*/ py = g_player[p].ps.opos.y+64-(krand()&127);
+                        var /*int32_t*/ sx:number, sy:number;
 
-//                        updatesector(px,py,&psect);
-//                        if (psect == -1)
-//                        {
-//                            i = nexti;
-//                            continue;
-//                        }
+                        var $psect = new R(psect);
+                        updatesector(px,py,$psect);
+                        psect = $psect.$;
+                        if (psect == -1)
+                        {
+                            i = nexti;
+                            continue;
+                        }
 
-//                        sx = s.x+64-(krand()&127);
-//                        sy = s.y+64-(krand()&127);
-//                        updatesector(px,py,&ssect);
-//                        if (ssect == -1)
-//                        {
-//                            i = nexti;
-//                            continue;
-//                        }
+                        sx = s.x+64-(krand()&127);
+                        sy = s.y+64-(krand()&127);
+                        var $ssect = new R(ssect);
+                        updatesector(px,py,$ssect);
+                        ssect = $ssect.$;
+                        if (ssect == -1)
+                        {
+                            i = nexti;
+                            continue;
+                        }
 
-//                        j = cansee(sx,sy,s.z-(krand()%(52<<8)),s.sectnum, px,py,
-//                                   g_player[p].ps.opos.z-(krand()%(32<<8)),g_player[p].ps.cursectnum);
-//                    }
-//                    else
-//                        j = cansee(s.x,s.y,s.z-((krand()&31)<<8),s.sectnum, g_player[p].ps.opos.x,g_player[p].ps.opos.y,
-//                                   g_player[p].ps.opos.z-((krand()&31)<<8), g_player[p].ps.cursectnum);
+                        j = cansee(sx,sy,s.z-(krand()%(52<<8)),s.sectnum, px,py,
+                                   g_player[p].ps.opos.z-(krand()%(32<<8)),g_player[p].ps.cursectnum);
+                    }
+                    else
+                        j = cansee(s.x,s.y,s.z-((krand()&31)<<8),s.sectnum, g_player[p].ps.opos.x,g_player[p].ps.opos.y,
+                                   g_player[p].ps.opos.z-((krand()&31)<<8), g_player[p].ps.cursectnum);
 
-//                    if (j)
-//                    {
-//                        switch (DYNAMICTILEMAP(s.picnum))
-//                        {
-//                        case RUBBERCAN__STATIC:
-//                        case EXPLODINGBARREL__STATIC:
-//                        case WOODENHORSE__STATIC:
-//                        case HORSEONSIDE__STATIC:
-//                        case CANWITHSOMETHING__STATIC:
-//                        case CANWITHSOMETHING2__STATIC:
-//                        case CANWITHSOMETHING3__STATIC:
-//                        case CANWITHSOMETHING4__STATIC:
-//                        case FIREBARREL__STATIC:
-//                        case FIREVASE__STATIC:
-//                        case NUKEBARREL__STATIC:
-//                        case NUKEBARRELDENTED__STATIC:
-//                        case NUKEBARRELLEAKED__STATIC:
-//                        case TRIPBOMB__STATIC:
-//                            // XXX: j is result of cansee() call.
-//                            if (sector[s.sectnum].ceilingstat&1 && A_CheckSpriteFlags(j,SPRITE_NOSHADE) == 0)
-//                                s.shade = sector[s.sectnum].ceilingshade;
-//                            else s.shade = sector[s.sectnum].floorshade;
+                    if (j)
+                    {
+                        switch (DYNAMICTILEMAP(s.picnum))
+                        {
+                        case RUBBERCAN__STATIC:
+                        case EXPLODINGBARREL__STATIC:
+                        case WOODENHORSE__STATIC:
+                        case HORSEONSIDE__STATIC:
+                        case CANWITHSOMETHING__STATIC:
+                        case CANWITHSOMETHING2__STATIC:
+                        case CANWITHSOMETHING3__STATIC:
+                        case CANWITHSOMETHING4__STATIC:
+                        case FIREBARREL__STATIC:
+                        case FIREVASE__STATIC:
+                        case NUKEBARREL__STATIC:
+                        case NUKEBARRELDENTED__STATIC:
+                        case NUKEBARRELLEAKED__STATIC:
+                        case TRIPBOMB__STATIC:
+                            // XXX: j is result of cansee() call.
+                            if (sector[s.sectnum].ceilingstat&1 && A_CheckSpriteFlags(j,SPRITE_NOSHADE) == 0)
+                                s.shade = sector[s.sectnum].ceilingshade;
+                            else s.shade = sector[s.sectnum].floorshade;
 
-//                            actor[i].timetosleep = 0;
-//                            changespritestat(i, STAT_STANDABLE);
-//                            break;
+                            actor[i].timetosleep = 0;
+                            changespritestat(i, STAT_STANDABLE);
+                            break;
 
-//                        case RECON__STATIC:
-//                            sprite[i].cstat |= 257;
-//                            // fall-through
-//                        default:
-//                            if (A_CheckSpriteFlags(i, SPRITE_USEACTIVATOR) && sector[sprite[i].sectnum].lotag & 16384)
-//                                break;
-//                            actor[i].timetosleep = 0;
-//                            A_PlayAlertSound(i);
-//                            changespritestat(i, STAT_ACTOR);
-//                            break;
-//                        }
-//                    }
-//                    else actor[i].timetosleep = 0;
-//                }
-//            }
+                        case RECON__STATIC:
+                            sprite[i].cstat |= 257;
+                            // fall-through
+                        default:
+                            if (A_CheckSpriteFlags(i, SPRITE_USEACTIVATOR) && sector[sprite[i].sectnum].lotag & 16384)
+                                break;
+                            actor[i].timetosleep = 0;
+                            A_PlayAlertSound(i);
+                            changespritestat(i, STAT_ACTOR);
+                            break;
+                        }
+                    }
+                    else actor[i].timetosleep = 0;
+                }
+            }
 
-//            if (A_CheckEnemySprite(s) && A_CheckSpriteFlags(i,SPRITE_NOSHADE) == 0)
-//            {
-//                if (sector[s.sectnum].ceilingstat&1)
-//                    s.shade = sector[s.sectnum].ceilingshade;
-//                else s.shade = sector[s.sectnum].floorshade;
-//            }
-//        }
+            if (A_CheckEnemySprite(s) && A_CheckSpriteFlags(i,SPRITE_NOSHADE) == 0)
+            {
+                if (sector[s.sectnum].ceilingstat&1)
+                    s.shade = sector[s.sectnum].ceilingshade;
+                else s.shade = sector[s.sectnum].floorshade;
+            }
+        }
 
-//        i = nexti;
-//    }
-//}
+        i = nexti;
+    }
+}
 
 //// stupid name, but it's what the function does.
 //static inline int32_t G_FindExplosionInSector(int32_t sectnum)
@@ -2715,580 +2721,584 @@ function G_MoveFX(): void
 //    s.ang = ((k<<1) - s.ang)&2047;
 //}
 
-//ACTOR_STATIC void G_MoveWeapons(void)
-//{
-//    int32_t i = headspritestat[STAT_PROJECTILE], j=0, k, q;
-//    int32_t x, ll;
+function G_MoveWeapons():void 
+{
+    var/*int32_t */i = headspritestat[STAT_PROJECTILE], j=0, k:number, q:number;
+    var/*int32_t */x:number, ll:number;
+    BOLT:
+    while (i >= 0)
+    {
+        var/*const int32_t */nexti = nextspritestat[i];
+        var s = sprite[i];
+        var davect = new vec3_t();
 
-//    while (i >= 0)
-//    {
-//        const int32_t nexti = nextspritestat[i];
-//        spritetype *const s = &sprite[i];
-//        vec3_t davect;
+        if (s.sectnum < 0)
+            {A_DeleteSprite(i); i = nexti; continue BOLT;}
+
+        actor[i].bpos.copyFrom(s);//Bmemcpy(&actor[i].bpos.x, s, sizeof(vec3_t));
 
-//        if (s.sectnum < 0)
-//            KILLIT(i);
+        /* Custom projectiles */
+        if (A_CheckSpriteFlags(i,SPRITE_PROJECTILE))
+        {todoThrow();
+            //var /*const projectile_t *const */proj = SpriteProjectile[i];
 
-//        Bmemcpy(&actor[i].bpos.x, s, sizeof(vec3_t));
+            //if (proj.pal >= 0)
+            //    s.pal = proj.pal;
 
-//        /* Custom projectiles */
-//        if (A_CheckSpriteFlags(i,SPRITE_PROJECTILE))
-//        {
-//            const projectile_t *const proj = &SpriteProjectile[i];
+            //if (proj.workslike & PROJECTILE_KNEE)
+            //    {A_DeleteSprite(i); i = nexti; continue BOLT;}
 
-//            if (proj.pal >= 0)
-//                s.pal = proj.pal;
+            //if (proj.workslike & PROJECTILE_RPG)
+            //{
+            //    //  if (proj.workslike & COOLEXPLOSION1)
+            //    //                if( g_sounds[WIERDSHOT_FLY].num == 0 )
+            //    //                    A_PlaySound(WIERDSHOT_FLY,i);
+
+            //    Bmemcpy(&davect,s,sizeof(vec3_t));
+
+            //    if (proj.flashcolor)
+            //        G_AddGameLight(0, i, ((s.yrepeat*tilesizy[s.picnum])<<1), 2048, proj.flashcolor, PR_LIGHT_PRIO_LOW_GAME);
+
+            //    if (proj.workslike & PROJECTILE_BOUNCESOFFWALLS && s.yvel < 1)
+            //    {
+            //        A_DoProjectileEffects(i, NULL, 1);
+            //        {A_DeleteSprite(i); i = nexti; continue BOLT;}
+            //    }
+
+            //    if (proj.workslike & PROJECTILE_COOLEXPLOSION1 && ++s.shade >= 40)
+            //        {A_DeleteSprite(i); i = nexti; continue BOLT;}
+
+            //    s.zvel -= proj.drop;
 
-//            if (proj.workslike & PROJECTILE_KNEE)
-//                KILLIT(i);
+            //    if (proj.workslike & PROJECTILE_SPIT && s.zvel < 6144)
+            //        s.zvel += g_spriteGravity-112;
+
+            //    A_GetZLimits(i);
+
+            //    if (proj.trail >= 0)
+            //    {
+            //        int32_t cnt;
+
+            //        for (cnt=0; cnt<=proj.tnum; cnt++)
+            //        {
+            //            j = A_Spawn(i,proj.trail);
+
+            //            sprite[j].z += (proj.toffset<<8);
 
-//            if (proj.workslike & PROJECTILE_RPG)
-//            {
-//                //  if (proj.workslike & COOLEXPLOSION1)
-//                //                if( g_sounds[WIERDSHOT_FLY].num == 0 )
-//                //                    A_PlaySound(WIERDSHOT_FLY,i);
+            //            if (proj.txrepeat >= 0)
+            //                sprite[j].xrepeat=proj.txrepeat;
 
-//                Bmemcpy(&davect,s,sizeof(vec3_t));
+            //            if (proj.tyrepeat >= 0)
+            //                sprite[j].yrepeat=proj.tyrepeat;
+            //        }
+            //    }
 
-//                if (proj.flashcolor)
-//                    G_AddGameLight(0, i, ((s.yrepeat*tilesizy[s.picnum])<<1), 2048, proj.flashcolor, PR_LIGHT_PRIO_LOW_GAME);
+            //    {
+            //        int32_t cnt = proj.movecnt;
 
-//                if (proj.workslike & PROJECTILE_BOUNCESOFFWALLS && s.yvel < 1)
-//                {
-//                    A_DoProjectileEffects(i, NULL, 1);
-//                    KILLIT(i);
-//                }
+            //        k = s.xvel;
+            //        ll = s.zvel;
 
-//                if (proj.workslike & PROJECTILE_COOLEXPLOSION1 && ++s.shade >= 40)
-//                    KILLIT(i);
+            //        if (sector[s.sectnum].lotag == ST_2_UNDERWATER)
+            //        {
+            //            k >>= 1;
+            //            ll >>= 1;
+            //        }
 
-//                s.zvel -= proj.drop;
+            //        do
+            //        {
+            //            vec3_t tmpvect;
+            //            Bmemcpy(&davect, s, sizeof(vec3_t));
 
-//                if (proj.workslike & PROJECTILE_SPIT && s.zvel < 6144)
-//                    s.zvel += g_spriteGravity-112;
+            //            tmpvect.x = (k*(sintable[(s.ang+512)&2047]))>>14;
+            //            tmpvect.y = (k*(sintable[s.ang&2047]))>>14;
+            //            tmpvect.z = ll;
 
-//                A_GetZLimits(i);
-
-//                if (proj.trail >= 0)
-//                {
-//                    int32_t cnt;
-
-//                    for (cnt=0; cnt<=proj.tnum; cnt++)
-//                    {
-//                        j = A_Spawn(i,proj.trail);
-
-//                        sprite[j].z += (proj.toffset<<8);
-
-//                        if (proj.txrepeat >= 0)
-//                            sprite[j].xrepeat=proj.txrepeat;
-
-//                        if (proj.tyrepeat >= 0)
-//                            sprite[j].yrepeat=proj.tyrepeat;
-//                    }
-//                }
-
-//                {
-//                    int32_t cnt = proj.movecnt;
-
-//                    k = s.xvel;
-//                    ll = s.zvel;
-
-//                    if (sector[s.sectnum].lotag == ST_2_UNDERWATER)
-//                    {
-//                        k >>= 1;
-//                        ll >>= 1;
-//                    }
-
-//                    do
-//                    {
-//                        vec3_t tmpvect;
-//                        Bmemcpy(&davect, s, sizeof(vec3_t));
-
-//                        tmpvect.x = (k*(sintable[(s.ang+512)&2047]))>>14;
-//                        tmpvect.y = (k*(sintable[s.ang&2047]))>>14;
-//                        tmpvect.z = ll;
-
-//                        j = A_MoveSprite(i, &tmpvect, CLIPMASK1);
-//                    }
-//                    while (!j && --cnt > 0);
-//                }
-
-//                if (!(proj.workslike & PROJECTILE_BOUNCESOFFWALLS) &&
-//                    s.yvel >= 0 && sprite[s.yvel].sectnum != MAXSECTORS)
-//                    if (FindDistance2D(s.x-sprite[s.yvel].x,s.y-sprite[s.yvel].y) < 256)
-//                        j = 49152|s.yvel;
-
-//                actor[i].movflag = j;
-
-//                if (s.sectnum < 0)
-//                    KILLIT(i);
-
-//                if (proj.workslike & PROJECTILE_TIMED && proj.range > 0)
-//                {
-//                    if (++actor[i].t_data[8] > proj.range)
-//                    {
-//                        if (proj.workslike & PROJECTILE_EXPLODEONTIMER)
-//                            A_DoProjectileEffects(i, &davect, 1);
-
-//                        KILLIT(i);
-//                    }
-//                }
-
-//                if ((j&49152) != 49152 && !(proj.workslike & PROJECTILE_BOUNCESOFFWALLS))
-//                    G_WeaponHitCeilingOrFloor(i, s, &j);
-
-//                if (proj.workslike & PROJECTILE_WATERBUBBLES && sector[s.sectnum].lotag == ST_2_UNDERWATER && rnd(140))
-//                    A_Spawn(i,WATERBUBBLE);
-
-//                if (j != 0)
-//                {
-//                    if (proj.workslike & PROJECTILE_COOLEXPLOSION1)
-//                    {
-//                        s.xvel = 0;
-//                        s.zvel = 0;
-//                    }
-
-//                    if ((j&49152) == 49152)
-//                    {
-//                        j &= (MAXSPRITES-1);
-
-//                        if (proj.workslike & PROJECTILE_BOUNCESOFFSPRITES)
-//                        {
-//                            s.yvel--;
-
-//                            k = getangle(sprite[j].x-s.x,sprite[j].y-s.y)+(sprite[j].cstat&16?0:512);
-//                            s.ang = ((k<<1) - s.ang)&2047;
-
-//                            if (proj.bsound >= 0)
-//                                A_PlaySound(proj.bsound,i);
-
-//                            if (proj.workslike & PROJECTILE_LOSESVELOCITY)
-//                            {
-//                                s.xvel >>= 1;
-//                                s.zvel >>= 1;
-//                            }
-
-//                            if (!(proj.workslike & PROJECTILE_FORCEIMPACT))
-//                                goto BOLT;
-//                        }
-
-//                        A_DamageObject(j,i);
-
-//                        if (sprite[j].picnum == APLAYER)
-//                        {
-//                            int32_t p = sprite[j].yvel;
-
-//                            A_PlaySound(PISTOL_BODYHIT,j);
-
-//                            if (proj.workslike & PROJECTILE_SPIT)
-//                                P_HandleBeingSpitOn(g_player[p].ps);
-//                        }
-
-//                        if (proj.workslike & PROJECTILE_RPG_IMPACT)
-//                        {
-
-//                            actor[j].owner = s.owner;
-//                            actor[j].picnum = s.picnum;
-//                            actor[j].extra += proj.extra;
-
-//                            A_DoProjectileEffects(i, &davect, 0);
-
-//                            if (!(proj.workslike & PROJECTILE_FORCEIMPACT))
-//                                KILLIT(i);
-//                        }
-
-//                        if (proj.workslike & PROJECTILE_FORCEIMPACT)
-//                            goto BOLT;
-//                    }
-//                    else if ((j&49152) == 32768)
-//                    {
-//                        j &= (MAXWALLS-1);
-
-//                        if (proj.workslike & PROJECTILE_BOUNCESOFFMIRRORS &&
-//                            (wall[j].overpicnum == MIRROR || wall[j].picnum == MIRROR))
-//                        {
-//                            Proj_BounceOffWall(s, j);
-//                            s.owner = i;
-//                            A_Spawn(i,TRANSPORTERSTAR);
-//                            goto BOLT;
-//                        }
-//                        else
-//                        {
-//                            setsprite(i,&davect);
-//                            A_DamageWall(i,j,(vec3_t *)s,s.picnum);
-
-//                            if (proj.workslike & PROJECTILE_BOUNCESOFFWALLS)
-//                            {
-//                                if (wall[j].overpicnum != MIRROR && wall[j].picnum != MIRROR)
-//                                    s.yvel--;
-
-//                                Proj_BounceOffWall(s, j);
-
-//                                if (proj.bsound >= 0)
-//                                    A_PlaySound(proj.bsound,i);
-
-//                                if (proj.workslike & PROJECTILE_LOSESVELOCITY)
-//                                {
-//                                    s.xvel >>= 1;
-//                                    s.zvel >>= 1;
-//                                }
-//                                goto BOLT;
-//                            }
-//                        }
-//                    }
-//                    else if ((j&49152) == 16384)
-//                    {
-//                        setsprite(i, &davect);
-
-//                        if (s.zvel < 0)
-//                        {
-//                            if (sector[s.sectnum].ceilingstat&1 && sector[s.sectnum].ceilingpal == 0)
-//                                KILLIT(i);
-
-//                            Sect_DamageCeiling(s.sectnum);
-//                        }
-
-//                        if (proj.workslike & PROJECTILE_BOUNCESOFFWALLS)
-//                        {
-//                            A_DoProjectileBounce(i);
-//                            A_SetSprite(i, CLIPMASK1);
-
-//                            s.yvel--;
-
-//                            if (proj.bsound >= 0)
-//                                A_PlaySound(proj.bsound,i);
-
-//                            if (proj.workslike & PROJECTILE_LOSESVELOCITY)
-//                            {
-//                                s.xvel >>= 1;
-//                                s.zvel >>= 1;
-//                            }
-
-//                            goto BOLT;
-//                        }
-//                    }
-
-//                    if (proj.workslike & PROJECTILE_HITSCAN)
-//                    {
-//                        if (!G_HaveActor(sprite[i].picnum))
-//                            goto BOLT;
-//                        {
-//                            int32_t p = A_FindPlayer(s,&x);
-//                            A_Execute(i,p,x);
-//                        }
-//                        goto BOLT;
-//                    }
-
-//                    if (proj.workslike & PROJECTILE_RPG)
-//                    {
-//                        A_DoProjectileEffects(i, &davect, 1);
-//                        KILLIT(i);
-//                    }
-//                }
-//            }
-
-//            goto BOLT;
-//        }
-
-//        // hard coded projectiles
-//        switch (DYNAMICTILEMAP(s.picnum))
-//        {
-//        case RADIUSEXPLOSION__STATIC:
-//        case KNEE__STATIC:
-//            KILLIT(i);
-//        case TONGUE__STATIC:
-//            actor[i].t_data[0] = sintable[(actor[i].t_data[1])&2047]>>9;
-//            actor[i].t_data[1] += 32;
-//            if (actor[i].t_data[1] > 2047)
-//                KILLIT(i);
-
-//            if (sprite[s.owner].statnum == MAXSTATUS)
-//                if (A_CheckEnemySprite(&sprite[s.owner]) == 0)
-//                    KILLIT(i);
-
-//            s.ang = sprite[s.owner].ang;
-//            s.x = sprite[s.owner].x;
-//            s.y = sprite[s.owner].y;
-//            if (sprite[s.owner].picnum == APLAYER)
-//                s.z = sprite[s.owner].z-(34<<8);
-//            for (k=0; k<actor[i].t_data[0]; k++)
-//            {
-//                q = A_InsertSprite(s.sectnum,
-//                    s.x+((k*sintable[(s.ang+512)&2047])>>9),
-//                    s.y+((k*sintable[s.ang&2047])>>9),
-//                    s.z+((k*ksgn(s.zvel))*klabs(s.zvel/12)),TONGUE,-40+(k<<1),
-//                    8,8,0,0,0,i,5);
-//                sprite[q].cstat = 128;
-//                sprite[q].pal = 8;
-//            }
-//            q = A_InsertSprite(s.sectnum,
-//                s.x+((k*sintable[(s.ang+512)&2047])>>9),
-//                s.y+((k*sintable[s.ang&2047])>>9),
-//                s.z+((k*ksgn(s.zvel))*klabs(s.zvel/12)),INNERJAW,-40,
-//                32,32,0,0,0,i,5);
-//            sprite[q].cstat = 128;
-//            if (actor[i].t_data[1] > 512 && actor[i].t_data[1] < (1024))
-//                sprite[q].picnum = INNERJAW+1;
-
-//            goto BOLT;
-
-//        case FREEZEBLAST__STATIC:
-//            if (s.yvel < 1 || s.extra < 2 || (s.xvel|s.zvel) == 0)
-//            {
-//                j = A_Spawn(i,TRANSPORTERSTAR);
-//                sprite[j].pal = 1;
-//                sprite[j].xrepeat = 32;
-//                sprite[j].yrepeat = 32;
-//                KILLIT(i);
-//            }
-//        case SHRINKSPARK__STATIC:
-//        case RPG__STATIC:
-//        case FIRELASER__STATIC:
-//        case SPIT__STATIC:
-//        case COOLEXPLOSION1__STATIC:
-
-//            if (s.picnum == COOLEXPLOSION1)
-//                if (!S_CheckSoundPlaying(i,WIERDSHOT_FLY))
-//                    A_PlaySound(WIERDSHOT_FLY,i);
-
-//            k = s.xvel;
-//            ll = s.zvel;
-
-//            if (s.picnum == RPG && sector[s.sectnum].lotag == ST_2_UNDERWATER)
-//            {
-//                k >>= 1;
-//                ll >>= 1;
-//            }
-
-//            Bmemcpy(&davect,s,sizeof(vec3_t));
-
-//            A_GetZLimits(i);
-
-//            if (s.picnum == RPG && actor[i].picnum != BOSS2 && s.xrepeat >= 10 &&
-//                    sector[s.sectnum].lotag != ST_2_UNDERWATER && g_scriptVersion >= 13)
-//            {
-//                j = A_Spawn(i,SMALLSMOKE);
-//                sprite[j].z += (1<<8);
-//            }
-
-//            {
-//                vec3_t tmpvect;
-
-//                tmpvect.x = (k*(sintable[(s.ang+512)&2047]))>>14;
-//                tmpvect.y = (k*(sintable[s.ang&2047]))>>14;
-//                tmpvect.z = ll;
-//                j = A_MoveSprite(i,&tmpvect, CLIPMASK1);
-//            }
-
-
-//            if (s.picnum == RPG && s.yvel >= 0)
-//                if (FindDistance2D(s.x-sprite[s.yvel].x,s.y-sprite[s.yvel].y) < 256)
-//                    j = 49152|s.yvel;
-
-//            actor[i].movflag = j;
-
-//            if (s.sectnum < 0)
-//                KILLIT(i);
-
-//            if ((j&49152) != 49152 && s.picnum != FREEZEBLAST)
-//                G_WeaponHitCeilingOrFloor(i, s, &j);
-
-//            if (s.picnum == FIRELASER)
-//            {
-//                for (k=-3; k<2; k++)
-//                {
-//                    x = A_InsertSprite(s.sectnum,
-//                                       s.x+((k*sintable[(s.ang+512)&2047])>>9),
-//                                       s.y+((k*sintable[s.ang&2047])>>9),
-//                                       s.z+((k*ksgn(s.zvel))*klabs(s.zvel/24)),FIRELASER,-40+(k<<2),
-//                                       s.xrepeat,s.yrepeat,0,0,0,s.owner,5);
-
-//                    sprite[x].cstat = 128;
-//                    sprite[x].pal = s.pal;
-//                }
-//            }
-//            else if (s.picnum == SPIT)
-//                if (s.zvel < 6144)
-//                    s.zvel += g_spriteGravity-112;
-
-//            if (j != 0)
-//            {
-//                if (s.picnum == COOLEXPLOSION1)
-//                {
-//                    if ((j&49152) == 49152 && sprite[j&(MAXSPRITES-1)].picnum != APLAYER)
-//                        goto COOLEXPLOSION;
-//                    s.xvel = 0;
-//                    s.zvel = 0;
-//                }
-
-//                if ((j&49152) == 49152)
-//                {
-//                    j &= (MAXSPRITES-1);
-
-//                    if (s.picnum == FREEZEBLAST && sprite[j].pal == 1)
-//                        if (A_CheckEnemySprite(&sprite[j]) || sprite[j].picnum == APLAYER)
-//                        {
-//                            j = A_Spawn(i,TRANSPORTERSTAR);
-//                            sprite[j].pal = 1;
-//                            sprite[j].xrepeat = 32;
-//                            sprite[j].yrepeat = 32;
-
-//                            KILLIT(i);
-//                        }
-
-//                    A_DamageObject(j,i);
-
-//                    if (sprite[j].picnum == APLAYER)
-//                    {
-//                        int32_t p = sprite[j].yvel;
-//                        A_PlaySound(PISTOL_BODYHIT,j);
-
-//                        if (s.picnum == SPIT)
-//                            P_HandleBeingSpitOn(g_player[p].ps);
-//                    }
-//                }
-//                else if ((j&49152) == 32768)
-//                {
-//                    j &= (MAXWALLS-1);
-
-//                    if (s.picnum != RPG && s.picnum != FREEZEBLAST && s.picnum != SPIT &&
-//                            (wall[j].overpicnum == MIRROR || wall[j].picnum == MIRROR))
-//                    {
-//                        Proj_BounceOffWall(s, j);
-//                        s.owner = i;
-//                        A_Spawn(i,TRANSPORTERSTAR);
-//                        goto BOLT;
-//                    }
-//                    else
-//                    {
-//                        setsprite(i,&davect);
-//                        A_DamageWall(i,j,(vec3_t *)s,s.picnum);
-
-//                        if (s.picnum == FREEZEBLAST)
-//                        {
-//                            if (wall[j].overpicnum != MIRROR && wall[j].picnum != MIRROR)
-//                            {
-//                                s.extra >>= 1;
-//                                s.yvel--;
-//                            }
-
-//                            Proj_BounceOffWall(s, j);
-//                            goto BOLT;
-//                        }
-//                    }
-//                }
-//                else if ((j&49152) == 16384)
-//                {
-//                    setsprite(i,&davect);
-
-//                    if (s.zvel < 0)
-//                    {
-//                        if (sector[s.sectnum].ceilingstat&1)
-//                            if (sector[s.sectnum].ceilingpal == 0)
-//                                KILLIT(i);
-
-//                        Sect_DamageCeiling(s.sectnum);
-//                    }
-
-//                    if (s.picnum == FREEZEBLAST)
-//                    {
-//                        A_DoProjectileBounce(i);
-//                        A_SetSprite(i, CLIPMASK1);
-//                        s.extra >>= 1;
-//                        if (s.xrepeat > 8)
-//                            s.xrepeat -= 2;
-//                        if (s.yrepeat > 8)
-//                            s.yrepeat -= 2;
-//                        s.yvel--;
-//                        goto BOLT;
-//                    }
-//                }
-
-//                if (s.picnum != SPIT)
-//                {
-//                    if (s.picnum == RPG)
-//                    {
-//                        k = A_Spawn(i,EXPLOSION2);
-//                        A_PlaySound(RPG_EXPLODE,k);
-//                        Bmemcpy(&sprite[k],&davect,sizeof(vec3_t));
-
-//                        if (s.xrepeat < 10)
-//                        {
-//                            sprite[k].xrepeat = 6;
-//                            sprite[k].yrepeat = 6;
-//                        }
-//                        else if ((j&49152) == 16384)
-//                        {
-//                            if (s.zvel > 0)
-//                                A_Spawn(i,EXPLOSION2BOT);
-//                            else
-//                            {
-//                                sprite[k].cstat |= 8;
-//                                sprite[k].z += (48<<8);
-//                            }
-//                        }
-
-//                        if (s.xrepeat >= 10)
-//                        {
-//                            x = s.extra;
-//                            A_RadiusDamage(i,g_rpgBlastRadius, x>>2,x>>1,x-(x>>2),x);
-//                        }
-//                        else
-//                        {
-//                            x = s.extra+(g_globalRandom&3);
-//                            A_RadiusDamage(i,(g_rpgBlastRadius>>1),x>>2,x>>1,x-(x>>2),x);
-//                        }
-//                    }
-//                    else if (s.picnum == SHRINKSPARK)
-//                    {
-//                        A_Spawn(i,SHRINKEREXPLOSION);
-//                        A_PlaySound(SHRINKER_HIT,i);
-//                        A_RadiusDamage(i,g_shrinkerBlastRadius,0,0,0,0);
-//                    }
-//                    else if (s.picnum != COOLEXPLOSION1 && s.picnum != FREEZEBLAST && s.picnum != FIRELASER)
-//                    {
-//                        k = A_Spawn(i,EXPLOSION2);
-//                        sprite[k].xrepeat = sprite[k].yrepeat = s.xrepeat>>1;
-//                        if ((j&49152) == 16384)
-//                        {
-//                            if (s.zvel < 0)
-//                            {
-//                                sprite[k].cstat |= 8;
-//                                sprite[k].z += (72<<8);
-//                            }
-//                        }
-//                    }
-//                }
-
-//                if (s.picnum != COOLEXPLOSION1)
-//                    KILLIT(i);
-//            }
-
-//            if (s.picnum == COOLEXPLOSION1)
-//            {
+            //            j = A_MoveSprite(i, &tmpvect, CLIPMASK1);
+            //        }
+            //        while (!j && --cnt > 0);
+            //    }
+
+            //    if (!(proj.workslike & PROJECTILE_BOUNCESOFFWALLS) &&
+            //        s.yvel >= 0 && sprite[s.yvel].sectnum != MAXSECTORS)
+            //        if (FindDistance2D(s.x-sprite[s.yvel].x,s.y-sprite[s.yvel].y) < 256)
+            //            j = 49152|s.yvel;
+
+            //    actor[i].movflag = j;
+
+            //    if (s.sectnum < 0)
+            //        {A_DeleteSprite(i); i = nexti; continue BOLT;}
+
+            //    if (proj.workslike & PROJECTILE_TIMED && proj.range > 0)
+            //    {
+            //        if (++actor[i].t_data[8] > proj.range)
+            //        {
+            //            if (proj.workslike & PROJECTILE_EXPLODEONTIMER)
+            //                A_DoProjectileEffects(i, &davect, 1);
+
+            //            {A_DeleteSprite(i); i = nexti; continue BOLT;}
+            //        }
+            //    }
+
+            //    if ((j&49152) != 49152 && !(proj.workslike & PROJECTILE_BOUNCESOFFWALLS))
+            //        G_WeaponHitCeilingOrFloor(i, s, &j);
+
+            //    if (proj.workslike & PROJECTILE_WATERBUBBLES && sector[s.sectnum].lotag == ST_2_UNDERWATER && rnd(140))
+            //        A_Spawn(i,WATERBUBBLE);
+
+            //    if (j != 0)
+            //    {
+            //        if (proj.workslike & PROJECTILE_COOLEXPLOSION1)
+            //        {
+            //            s.xvel = 0;
+            //            s.zvel = 0;
+            //        }
+
+            //        if ((j&49152) == 49152)
+            //        {
+            //            j &= (MAXSPRITES-1);
+
+            //            if (proj.workslike & PROJECTILE_BOUNCESOFFSPRITES)
+            //            {
+            //                s.yvel--;
+
+            //                k = getangle(sprite[j].x-s.x,sprite[j].y-s.y)+(sprite[j].cstat&16?0:512);
+            //                s.ang = ((k<<1) - s.ang)&2047;
+
+            //                if (proj.bsound >= 0)
+            //                    A_PlaySound(proj.bsound,i);
+
+            //                if (proj.workslike & PROJECTILE_LOSESVELOCITY)
+            //                {
+            //                    s.xvel >>= 1;
+            //                    s.zvel >>= 1;
+            //                }
+
+            //                if (!(proj.workslike & PROJECTILE_FORCEIMPACT))
+            //                    {i = nexti; continue BOLT;}
+            //            }
+
+            //            A_DamageObject(j,i);
+
+            //            if (sprite[j].picnum == APLAYER)
+            //            {
+            //                int32_t p = sprite[j].yvel;
+
+            //                A_PlaySound(PISTOL_BODYHIT,j);
+
+            //                if (proj.workslike & PROJECTILE_SPIT)
+            //                    P_HandleBeingSpitOn(g_player[p].ps);
+            //            }
+
+            //            if (proj.workslike & PROJECTILE_RPG_IMPACT)
+            //            {
+
+            //                actor[j].owner = s.owner;
+            //                actor[j].picnum = s.picnum;
+            //                actor[j].extra += proj.extra;
+
+            //                A_DoProjectileEffects(i, &davect, 0);
+
+            //                if (!(proj.workslike & PROJECTILE_FORCEIMPACT))
+            //                    {A_DeleteSprite(i); i = nexti; continue BOLT;}
+            //            }
+
+            //            if (proj.workslike & PROJECTILE_FORCEIMPACT)
+            //                {i = nexti; continue BOLT;}
+            //        }
+            //        else if ((j&49152) == 32768)
+            //        {
+            //            j &= (MAXWALLS-1);
+
+            //            if (proj.workslike & PROJECTILE_BOUNCESOFFMIRRORS &&
+            //                (wall[j].overpicnum == MIRROR || wall[j].picnum == MIRROR))
+            //            {
+            //                Proj_BounceOffWall(s, j);
+            //                s.owner = i;
+            //                A_Spawn(i,TRANSPORTERSTAR);
+            //                {i = nexti; continue BOLT;}
+            //            }
+            //            else
+            //            {
+            //                setsprite(i,&davect);
+            //                A_DamageWall(i,j,(vec3_t *)s,s.picnum);
+
+            //                if (proj.workslike & PROJECTILE_BOUNCESOFFWALLS)
+            //                {
+            //                    if (wall[j].overpicnum != MIRROR && wall[j].picnum != MIRROR)
+            //                        s.yvel--;
+
+            //                    Proj_BounceOffWall(s, j);
+
+            //                    if (proj.bsound >= 0)
+            //                        A_PlaySound(proj.bsound,i);
+
+            //                    if (proj.workslike & PROJECTILE_LOSESVELOCITY)
+            //                    {
+            //                        s.xvel >>= 1;
+            //                        s.zvel >>= 1;
+            //                    }
+            //                    {i = nexti; continue BOLT;}
+            //                }
+            //            }
+            //        }
+            //        else if ((j&49152) == 16384)
+            //        {
+            //            setsprite(i, &davect);
+
+            //            if (s.zvel < 0)
+            //            {
+            //                if (sector[s.sectnum].ceilingstat&1 && sector[s.sectnum].ceilingpal == 0)
+            //                    {A_DeleteSprite(i); i = nexti; continue BOLT;}
+
+            //                Sect_DamageCeiling(s.sectnum);
+            //            }
+
+            //            if (proj.workslike & PROJECTILE_BOUNCESOFFWALLS)
+            //            {
+            //                A_DoProjectileBounce(i);
+            //                A_SetSprite(i, CLIPMASK1);
+
+            //                s.yvel--;
+
+            //                if (proj.bsound >= 0)
+            //                    A_PlaySound(proj.bsound,i);
+
+            //                if (proj.workslike & PROJECTILE_LOSESVELOCITY)
+            //                {
+            //                    s.xvel >>= 1;
+            //                    s.zvel >>= 1;
+            //                }
+
+            //                {i = nexti; continue BOLT;}
+            //            }
+            //        }
+
+            //        if (proj.workslike & PROJECTILE_HITSCAN)
+            //        {
+            //            if (!G_HaveActor(sprite[i].picnum))
+            //                {i = nexti; continue BOLT;}
+            //            {
+            //                int32_t p = A_FindPlayer(s,&x);
+            //                A_Execute(i,p,x);
+            //            }
+            //            {i = nexti; continue BOLT;}
+            //        }
+
+            //        if (proj.workslike & PROJECTILE_RPG)
+            //        {
+            //            A_DoProjectileEffects(i, &davect, 1);
+            //            {A_DeleteSprite(i); i = nexti; continue BOLT;}
+            //        }
+            //    }
+            //}
+
+            //{i = nexti; continue BOLT;}
+        }
+
+        // hard coded projectiles
+        switch (DYNAMICTILEMAP(s.picnum))
+        {
+        case RADIUSEXPLOSION__STATIC:
+        case KNEE__STATIC:
+            {A_DeleteSprite(i); i = nexti; continue BOLT;}
+        case TONGUE__STATIC:
+            actor[i].t_data[0] = sintable[(actor[i].t_data[1])&2047]>>9;
+            actor[i].t_data[1] += 32;
+            if (actor[i].t_data[1] > 2047)
+                {A_DeleteSprite(i); i = nexti; continue BOLT;}
+
+            if (sprite[s.owner].statnum == MAXSTATUS)
+                if (A_CheckEnemySprite(sprite[s.owner]) == 0)
+                    {A_DeleteSprite(i); i = nexti; continue BOLT;}
+
+            s.ang = sprite[s.owner].ang;
+            s.x = sprite[s.owner].x;
+            s.y = sprite[s.owner].y;
+            if (sprite[s.owner].picnum == APLAYER)
+                s.z = sprite[s.owner].z-(34<<8);
+            for (k=0; k<actor[i].t_data[0]; k++)
+            {
+                q = A_InsertSprite(s.sectnum,
+                    s.x+((k*sintable[(s.ang+512)&2047])>>9),
+                    s.y+((k*sintable[s.ang&2047])>>9),
+                    s.z+((k*ksgn(s.zvel))*klabs(s.zvel/12)),TONGUE,-40+(k<<1),
+                    8,8,0,0,0,i,5);
+                sprite[q].cstat = 128;
+                sprite[q].pal = 8;
+            }
+            q = A_InsertSprite(s.sectnum,
+                s.x+((k*sintable[(s.ang+512)&2047])>>9),
+                s.y+((k*sintable[s.ang&2047])>>9),
+                s.z+((k*ksgn(s.zvel))*klabs(s.zvel/12)),INNERJAW,-40,
+                32,32,0,0,0,i,5);
+            sprite[q].cstat = 128;
+            if (actor[i].t_data[1] > 512 && actor[i].t_data[1] < (1024))
+                sprite[q].picnum = INNERJAW+1;
+
+            {i = nexti; continue BOLT;}
+
+        case FREEZEBLAST__STATIC:
+            if (s.yvel < 1 || s.extra < 2 || (s.xvel|s.zvel) == 0)
+            {
+                j = A_Spawn(i,TRANSPORTERSTAR);
+                sprite[j].pal = 1;
+                sprite[j].xrepeat = 32;
+                sprite[j].yrepeat = 32;
+                {A_DeleteSprite(i); i = nexti; continue BOLT;}
+            }
+        case SHRINKSPARK__STATIC:
+        case RPG__STATIC:
+        case FIRELASER__STATIC:
+        case SPIT__STATIC:
+        case COOLEXPLOSION1__STATIC:
+
+            if (s.picnum == COOLEXPLOSION1)
+                if (!S_CheckSoundPlaying(i,WIERDSHOT_FLY))
+                    A_PlaySound(WIERDSHOT_FLY,i);
+
+            k = s.xvel;
+            ll = s.zvel;
+
+            if (s.picnum == RPG && sector[s.sectnum].lotag == ST_2_UNDERWATER)
+            {
+                k >>= 1;
+                ll >>= 1;
+            }
+
+            davect.copyFrom(s);//Bmemcpy(&davect,s,sizeof(vec3_t));
+
+            A_GetZLimits(i);
+
+            if (s.picnum == RPG && actor[i].picnum != BOSS2 && s.xrepeat >= 10 &&
+                    sector[s.sectnum].lotag != ST_2_UNDERWATER && g_scriptVersion >= 13)
+            {
+                j = A_Spawn(i,SMALLSMOKE);
+                sprite[j].z += (1<<8);
+            }
+
+            {
+                var tmpvect = new vec3_t();
+
+                tmpvect.x = (k*(sintable[(s.ang+512)&2047]))>>14;
+                tmpvect.y = (k*(sintable[s.ang&2047]))>>14;
+                tmpvect.z = ll;
+                j = A_MoveSprite(i,tmpvect, CLIPMASK1);
+            }
+
+
+            if (s.picnum == RPG && s.yvel >= 0)
+                if (FindDistance2D(s.x-sprite[s.yvel].x,s.y-sprite[s.yvel].y) < 256)
+                    j = 49152|s.yvel;
+
+            actor[i].movflag = j;
+
+            if (s.sectnum < 0)
+                {A_DeleteSprite(i); i = nexti; continue BOLT;}
+
+            if ((j&49152) != 49152 && s.picnum != FREEZEBLAST)
+                todoThrow("G_WeaponHitCeilingOrFloor(i, s, &j);");
+
+            if (s.picnum == FIRELASER)
+            {
+                for (k=-3; k<2; k++)
+                {
+                    x = A_InsertSprite(s.sectnum,
+                                       s.x+((k*sintable[(s.ang+512)&2047])>>9),
+                                       s.y+((k*sintable[s.ang&2047])>>9),
+                                       s.z+((k*ksgn(s.zvel))*klabs(s.zvel/24)),FIRELASER,-40+(k<<2),
+                                       s.xrepeat,s.yrepeat,0,0,0,s.owner,5);
+
+                    sprite[x].cstat = 128;
+                    sprite[x].pal = s.pal;
+                }
+            }
+            else if (s.picnum == SPIT)
+                if (s.zvel < 6144)
+                    s.zvel += g_spriteGravity-112;
+
+            if (j != 0)
+            {
+                if (s.picnum == COOLEXPLOSION1)
+                {
+                    if ((j&49152) == 49152 && sprite[j&(MAXSPRITES-1)].picnum != APLAYER)
+                        todoThrow("goto COOLEXPLOSION;");
+                    s.xvel = 0;
+                    s.zvel = 0;
+                }
+
+                if ((j&49152) == 49152)
+                {
+                    j &= (MAXSPRITES-1);
+
+                    if (s.picnum == FREEZEBLAST && sprite[j].pal == 1)
+                        if (A_CheckEnemySprite(sprite[j]) || sprite[j].picnum == APLAYER)
+                        {
+                            j = A_Spawn(i,TRANSPORTERSTAR);
+                            sprite[j].pal = 1;
+                            sprite[j].xrepeat = 32;
+                            sprite[j].yrepeat = 32;
+
+                            {A_DeleteSprite(i); i = nexti; continue BOLT;}
+                        }
+
+                    A_DamageObject(j,i);
+
+                    if (sprite[j].picnum == APLAYER)
+                    {
+                        var/*int32_t */p = sprite[j].yvel;
+                        A_PlaySound(PISTOL_BODYHIT,j);
+
+                        if (s.picnum == SPIT)
+                            P_HandleBeingSpitOn(g_player[p].ps);
+                    }
+                }
+                else if ((j&49152) == 32768)
+                {
+                    j &= (MAXWALLS-1);
+
+                    if (s.picnum != RPG && s.picnum != FREEZEBLAST && s.picnum != SPIT &&
+                            (wall[j].overpicnum == MIRROR || wall[j].picnum == MIRROR))
+                    {
+                        Proj_BounceOffWall(s, j);
+                        s.owner = i;
+                        A_Spawn(i,TRANSPORTERSTAR);
+                        {i = nexti; continue BOLT;}
+                    }
+                    else
+                    {
+                        setsprite(i,davect);
+                        A_DamageWall(i,j,/*(vec3_t *)*/s,s.picnum);
+
+                        if (s.picnum == FREEZEBLAST)
+                        {
+                            if (wall[j].overpicnum != MIRROR && wall[j].picnum != MIRROR)
+                            {
+                                s.extra >>= 1;
+                                s.yvel--;
+                            }
+
+                            Proj_BounceOffWall(s, j);
+                            {i = nexti; continue BOLT;}
+                        }
+                    }
+                }
+                else if ((j&49152) == 16384)
+                {
+                    setsprite(i,davect);
+
+                    if (s.zvel < 0)
+                    {
+                        if (sector[s.sectnum].ceilingstat&1)
+                            if (sector[s.sectnum].ceilingpal == 0)
+                                {A_DeleteSprite(i); i = nexti; continue BOLT;}
+
+                        Sect_DamageCeiling(s.sectnum);
+                    }
+
+                    if (s.picnum == FREEZEBLAST)
+                    {
+                        A_DoProjectileBounce(i);
+                        A_SetSprite(i, CLIPMASK1);
+                        s.extra >>= 1;
+                        if (s.xrepeat > 8)
+                            s.xrepeat -= 2;
+                        if (s.yrepeat > 8)
+                            s.yrepeat -= 2;
+                        s.yvel--;
+                        {i = nexti; continue BOLT;}
+                    }
+                }
+
+                if (s.picnum != SPIT)
+                {
+                    if (s.picnum == RPG)
+                    {
+                        k = A_Spawn(i,EXPLOSION2);
+                        A_PlaySound(RPG_EXPLODE,k);
+                        sprite[k].x = davect.x;// Bmemcpy(&sprite[k],&davect,sizeof(vec3_t));
+                        sprite[k].y = davect.y;
+                        sprite[k].z = davect.z;
+
+                        if (s.xrepeat < 10)
+                        {
+                            sprite[k].xrepeat = 6;
+                            sprite[k].yrepeat = 6;
+                        }
+                        else if ((j&49152) == 16384)
+                        {
+                            if (s.zvel > 0)
+                                A_Spawn(i,EXPLOSION2BOT);
+                            else
+                            {
+                                sprite[k].cstat |= 8;
+                                sprite[k].z += (48<<8);
+                            }
+                        }
+
+                        if (s.xrepeat >= 10)
+                        {
+                            x = s.extra;
+                            A_RadiusDamage(i,g_rpgBlastRadius, x>>2,x>>1,x-(x>>2),x);
+                        }
+                        else
+                        {
+                            x = s.extra+(g_globalRandom&3);
+                            A_RadiusDamage(i,(g_rpgBlastRadius>>1),x>>2,x>>1,x-(x>>2),x);
+                        }
+                    }
+                    else if (s.picnum == SHRINKSPARK)
+                    {
+                        A_Spawn(i,SHRINKEREXPLOSION);
+                        A_PlaySound(SHRINKER_HIT,i);
+                        A_RadiusDamage(i,g_shrinkerBlastRadius,0,0,0,0);
+                    }
+                    else if (s.picnum != COOLEXPLOSION1 && s.picnum != FREEZEBLAST && s.picnum != FIRELASER)
+                    {
+                        k = A_Spawn(i,EXPLOSION2);
+                        sprite[k].xrepeat = sprite[k].yrepeat = s.xrepeat>>1;
+                        if ((j&49152) == 16384)
+                        {
+                            if (s.zvel < 0)
+                            {
+                                sprite[k].cstat |= 8;
+                                sprite[k].z += (72<<8);
+                            }
+                        }
+                    }
+                }
+
+                if (s.picnum != COOLEXPLOSION1)
+                    {A_DeleteSprite(i); i = nexti; continue BOLT;}
+            }
+
+            if (s.picnum == COOLEXPLOSION1)
+            {
 //COOLEXPLOSION:
-//                s.shade++;
-//                if (s.shade >= 40)
-//                    KILLIT(i);
-//            }
-//            else if (s.picnum == RPG && sector[s.sectnum].lotag == ST_2_UNDERWATER && s.xrepeat >= 10 && rnd(140))
-//                A_Spawn(i,WATERBUBBLE);
+                s.shade++;
+                if (s.shade >= 40)
+                    {A_DeleteSprite(i); i = nexti; continue BOLT;}
+            }
+            else if (s.picnum == RPG && sector[s.sectnum].lotag == ST_2_UNDERWATER && s.xrepeat >= 10 && rnd(140))
+                A_Spawn(i,WATERBUBBLE);
 
-//            goto BOLT;
+            {i = nexti; continue BOLT;}
 
-//        case SHOTSPARK1__STATIC:
-//            if (!G_HaveActor(sprite[i].picnum))
-//                goto BOLT;
-//            {
-//                int32_t p = A_FindPlayer(s,&x);
-//                A_Execute(i,p,x);
-//            }
-//            goto BOLT;
-//        }
+        case SHOTSPARK1__STATIC:
+            if (!G_HaveActor(sprite[i].picnum))
+                {i = nexti; continue BOLT;}
+            {
+                var $x = new R(x);
+                var /*int32_t */p = A_FindPlayer(s,$x);
+                x = $x.$;
+                A_Execute(i,p,x);
+            }
+            {i = nexti; continue BOLT;}
+        }
 //BOLT:
-//        i = nexti;
-//    }
-//}
+        i = nexti;
+    }
+}
 
 
 //static int32_t P_Submerge(int32_t j, int32_t p, DukePlayer_t *ps, int32_t sect, int32_t othersect)
@@ -3393,289 +3403,291 @@ function G_MoveFX(): void
 //                || (pic >= GREENSLIME && pic <= GREENSLIME+7));
 //}
 
-//ACTOR_STATIC void G_MoveTransports(void)
-//{
-//    int32_t i = headspritestat[STAT_TRANSPORT];
+function G_MoveTransports():void
+{
+    var/*int32_t */i = headspritestat[STAT_TRANSPORT];
 
-//    while (i >= 0)
-//    {
-//        const int32_t sect = sprite[i].sectnum;
-//        const int32_t sectlotag = sector[sect].lotag;
+    BOLT:
+    while (i >= 0)
+    {
+        var /*const int32_t */sect = sprite[i].sectnum;
+        var /*const int32_t */sectlotag = sector[sect].lotag;
 
-//        const int32_t nexti = nextspritestat[i];
-//        int32_t j, k;
+        var/*const int32_t */nexti = nextspritestat[i];
+        var /*int32_t */j:number, k:number;
 
-//        const int32_t onfloorz = actor[i].t_data[4];  // ONFLOORZ
+        var/*const int32_t */onfloorz = actor[i].t_data[4];  // ONFLOORZ
 
-//        if (sprite[i].owner == i)
-//        {
-//            i = nexti;
-//            continue;
-//        }
+        if (sprite[i].owner == i)
+        {
+            i = nexti;
+            continue;
+        }
 
-//        if (actor[i].t_data[0] > 0) actor[i].t_data[0]--;
+        if (actor[i].t_data[0] > 0) actor[i].t_data[0]--;
 
-//        j = headspritesect[sect];
-//        while (j >= 0)
-//        {
-//            const int32_t nextj = nextspritesect[j];
+        j = headspritesect[sect];
+        JBOLT:
+        while (j >= 0)
+        {
+            var/*const int32_t */nextj = nextspritesect[j];
 
-//            switch (sprite[j].statnum)
-//            {
-//            case STAT_PLAYER:
-//                if (sprite[j].owner != -1)
-//                {
-//                    const int32_t p = sprite[j].yvel;
-//                    DukePlayer_t *const ps = g_player[p].ps;
+            switch (sprite[j].statnum)
+            {
+            case STAT_PLAYER:
+                if (sprite[j].owner != -1)
+                {
+                    var /*const int32_t */p = sprite[j].yvel;
+                    var ps = g_player[p].ps;
 
-//                    ps.on_warping_sector = 1;
+                    ps.on_warping_sector = 1;
 
-//                    if (ps.transporter_hold == 0 && ps.jumping_counter == 0)
-//                    {
-//                        if (ps.on_ground && sectlotag == 0 && onfloorz && ps.jetpack_on == 0)
-//                        {
-//                            if (sprite[i].pal == 0)
-//                            {
-//                                A_Spawn(i,TRANSPORTERBEAM);
-//                                A_PlaySound(TELEPORTER,i);
-//                            }
+                    if (ps.transporter_hold == 0 && ps.jumping_counter == 0)
+                    {
+                        if (ps.on_ground && sectlotag == 0 && onfloorz && ps.jetpack_on == 0)
+                        {
+                            if (sprite[i].pal == 0)
+                            {
+                                A_Spawn(i,TRANSPORTERBEAM);
+                                A_PlaySound(TELEPORTER,i);
+                            }
 
-//                            for (TRAVERSE_CONNECT(k))
-//                                if (g_player[k].ps.cursectnum == sprite[sprite[i].owner].sectnum)
-//                                {
-//                                    g_player[k].ps.frag_ps = p;
-//                                    sprite[g_player[k].ps.i].extra = 0;
-//                                }
+                            for (k = 0; k != -1; k = connectpoint2[k])
+                                if (g_player[k].ps.cursectnum == sprite[sprite[i].owner].sectnum)
+                                {
+                                    g_player[k].ps.frag_ps = p;
+                                    sprite[g_player[k].ps.i].extra = 0;
+                                }
 
-//                            ps.ang = sprite[sprite[i].owner].ang;
+                            ps.ang = sprite[sprite[i].owner].ang;
 
-//                            if (sprite[sprite[i].owner].owner != sprite[i].owner)
-//                            {
-//                                actor[i].t_data[0] = 13;
-//                                actor[sprite[i].owner].t_data[0] = 13;
-//                                ps.transporter_hold = 13;
-//                            }
+                            if (sprite[sprite[i].owner].owner != sprite[i].owner)
+                            {
+                                actor[i].t_data[0] = 13;
+                                actor[sprite[i].owner].t_data[0] = 13;
+                                ps.transporter_hold = 13;
+                            }
 
-//                            ps.bobposx = ps.opos.x = ps.pos.x = sprite[sprite[i].owner].x;
-//                            ps.bobposy = ps.opos.y = ps.pos.y = sprite[sprite[i].owner].y;
-//                            ps.opos.z = ps.pos.z = sprite[sprite[i].owner].z-PHEIGHT;
+                            ps.bobposx = ps.opos.x = ps.pos.x = sprite[sprite[i].owner].x;
+                            ps.bobposy = ps.opos.y = ps.pos.y = sprite[sprite[i].owner].y;
+                            ps.opos.z = ps.pos.z = sprite[sprite[i].owner].z-PHEIGHT;
 
-//                            changespritesect(j,sprite[sprite[i].owner].sectnum);
-//                            ps.cursectnum = sprite[j].sectnum;
+                            changespritesect(j,sprite[sprite[i].owner].sectnum);
+                            ps.cursectnum = sprite[j].sectnum;
 
-//                            if (sprite[i].pal == 0)
-//                            {
-//                                k = A_Spawn(sprite[i].owner,TRANSPORTERBEAM);
-//                                A_PlaySound(TELEPORTER,k);
-//                            }
+                            if (sprite[i].pal == 0)
+                            {
+                                k = A_Spawn(sprite[i].owner,TRANSPORTERBEAM);
+                                A_PlaySound(TELEPORTER,k);
+                            }
 
-//                            break;
-//                        }
-//                    }
-//                    else if (!(sectlotag == ST_1_ABOVE_WATER && ps.on_ground == 1)) break;
+                            break;
+                        }
+                    }
+                    else if (!(sectlotag == ST_1_ABOVE_WATER && ps.on_ground == 1)) break;
 
-//                    if (onfloorz == 0 && klabs(sprite[i].z-ps.pos.z) < 6144)
-//                        if (!ps.jetpack_on || TEST_SYNC_KEY(g_player[p].sync.bits, SK_JUMP) ||
-//                                TEST_SYNC_KEY(g_player[p].sync.bits, SK_CROUCH))
-//                        {
-//                            ps.bobposx = ps.opos.x = ps.pos.x += sprite[sprite[i].owner].x-sprite[i].x;
-//                            ps.bobposy = ps.opos.y = ps.pos.y += sprite[sprite[i].owner].y-sprite[i].y;
+                    if (onfloorz == 0 && klabs(sprite[i].z-ps.pos.z) < 6144)
+                        if (!ps.jetpack_on || TEST_SYNC_KEY(g_player[p].sync.bits, SK_JUMP) ||
+                                TEST_SYNC_KEY(g_player[p].sync.bits, SK_CROUCH))
+                        {
+                            ps.bobposx = ps.opos.x = ps.pos.x += sprite[sprite[i].owner].x-sprite[i].x;
+                            ps.bobposy = ps.opos.y = ps.pos.y += sprite[sprite[i].owner].y-sprite[i].y;
 
-//                            if (ps.jetpack_on && (TEST_SYNC_KEY(g_player[p].sync.bits, SK_JUMP) || ps.jetpack_on < 11))
-//                                ps.pos.z = sprite[sprite[i].owner].z-6144;
-//                            else ps.pos.z = sprite[sprite[i].owner].z+6144;
-//                            ps.opos.z = ps.pos.z;
+                            if (ps.jetpack_on && (TEST_SYNC_KEY(g_player[p].sync.bits, SK_JUMP) || ps.jetpack_on < 11))
+                                ps.pos.z = sprite[sprite[i].owner].z-6144;
+                            else ps.pos.z = sprite[sprite[i].owner].z+6144;
+                            ps.opos.z = ps.pos.z;
 
-//                            actor[ps.i].bpos.x = ps.pos.x;
-//                            actor[ps.i].bpos.y = ps.pos.y;
-//                            actor[ps.i].bpos.z = ps.pos.z;
+                            actor[ps.i].bpos.x = ps.pos.x;
+                            actor[ps.i].bpos.y = ps.pos.y;
+                            actor[ps.i].bpos.z = ps.pos.z;
 
-//                            changespritesect(j,sprite[sprite[i].owner].sectnum);
-//                            ps.cursectnum = sprite[sprite[i].owner].sectnum;
+                            changespritesect(j,sprite[sprite[i].owner].sectnum);
+                            ps.cursectnum = sprite[sprite[i].owner].sectnum;
 
-//                            break;
-//                        }
+                            break;
+                        }
 
-//                    k = 0;
-//                    if (onfloorz)
-//                    {
-//                        if (sectlotag==ST_1_ABOVE_WATER)
-//                            k = P_Submerge(j, p, ps, sect, sprite[sprite[i].owner].sectnum);
-//                        else if (sectlotag==ST_2_UNDERWATER)
-//                            k = P_Emerge(j, p, ps, sect, sprite[sprite[i].owner].sectnum);
-//                    }
+                    k = 0;
+                    if (onfloorz)
+                    {
+                        if (sectlotag==ST_1_ABOVE_WATER)
+                            k = P_Submerge(j, p, ps, sect, sprite[sprite[i].owner].sectnum);
+                        else if (sectlotag==ST_2_UNDERWATER)
+                            k = P_Emerge(j, p, ps, sect, sprite[sprite[i].owner].sectnum);
+                    }
 
-//                    if (k == 1)
-//                    {
-//                        ps.pos.x += sprite[sprite[i].owner].x-sprite[i].x;
-//                        ps.pos.y += sprite[sprite[i].owner].y-sprite[i].y;
+                    if (k == 1)
+                    {
+                        ps.pos.x += sprite[sprite[i].owner].x-sprite[i].x;
+                        ps.pos.y += sprite[sprite[i].owner].y-sprite[i].y;
 
-//                        P_FinishWaterChange(j, ps, sectlotag, sprite[i].owner, sprite[sprite[i].owner].sectnum);
-//                    }
-//                }
-//                break;
+                        P_FinishWaterChange(j, ps, sectlotag, sprite[i].owner, sprite[sprite[i].owner].sectnum);
+                    }
+                }
+                break;
 
 
-//            ////////// Non-player teleportation //////////
+            ////////// Non-player teleportation //////////
 
-//            case STAT_PROJECTILE:
-//                // SE7_PROJECTILE, PROJECTILE_CHSECT.
-//                // comment out to make RPGs pass through water: (r1450 breaks this)
-////                if (sectlotag != 0) goto JBOLT;
-//            case STAT_ACTOR:
-//                if (sprite[j].extra > 0 && A_CheckNonTeleporting(j))
-//                    goto JBOLT;
-//            case STAT_MISC:
-//            case STAT_FALLER:
-//            case STAT_DUMMYPLAYER:
-//            {
-//                if (totalclock > actor[j].lasttransport)
-//                {
-//                    const int32_t ll = klabs(sprite[j].zvel);
-//                    int32_t warpspriteto = 0;
+            case STAT_PROJECTILE:
+                // SE7_PROJECTILE, PROJECTILE_CHSECT.
+                // comment out to make RPGs pass through water: (r1450 breaks this)
+//                if (sectlotag != 0) {j = nextj; continue JBOLT;}
+            case STAT_ACTOR:
+                if (sprite[j].extra > 0 && A_CheckNonTeleporting(j))
+                    {j = nextj; continue JBOLT;}
+            case STAT_MISC:
+            case STAT_FALLER:
+            case STAT_DUMMYPLAYER:
+            {
+                if (totalclock > actor[j].lasttransport)
+                {
+                    var/*const int32_t */ll = klabs(sprite[j].zvel);
+                    var /*int32_t */warpspriteto = 0;
 
-//                    if (ll != 0)
-//                    {
-//                        if (sectlotag == ST_2_UNDERWATER && sprite[j].z < (sector[sect].ceilingz+ll))
-//                            warpspriteto = 1;
-//                        if (sectlotag == ST_1_ABOVE_WATER && sprite[j].z > (sector[sect].floorz-ll))
-//                            warpspriteto = 1;
-//                    }
+                    if (ll != 0)
+                    {
+                        if (sectlotag == ST_2_UNDERWATER && sprite[j].z < (sector[sect].ceilingz+ll))
+                            warpspriteto = 1;
+                        if (sectlotag == ST_1_ABOVE_WATER && sprite[j].z > (sector[sect].floorz-ll))
+                            warpspriteto = 1;
+                    }
 
-//                    if (sectlotag == 0 && (onfloorz || klabs(sprite[j].z-sprite[i].z) < 4096))
-//                    {
-//                        if (sprite[sprite[i].owner].owner != sprite[i].owner && onfloorz && actor[i].t_data[0] > 0 && sprite[j].statnum != STAT_MISC)
-//                        {
-//                            actor[i].t_data[0]++;
-//                            goto BOLT;
-//                        }
-//                        warpspriteto = 1;
-//                    }
+                    if (sectlotag == 0 && (onfloorz || klabs(sprite[j].z-sprite[i].z) < 4096))
+                    {
+                        if (sprite[sprite[i].owner].owner != sprite[i].owner && onfloorz && actor[i].t_data[0] > 0 && sprite[j].statnum != STAT_MISC)
+                        {
+                            actor[i].t_data[0]++;
+                            { i = nexti; continue BOLT; }
+                        }
+                        warpspriteto = 1;
+                    }
 
-//                    if (warpspriteto)
-//                    {
-//                        if (A_CheckSpriteFlags(j,SPRITE_DECAL))
-//                            goto JBOLT;
+                    if (warpspriteto)
+                    {
+                        if (A_CheckSpriteFlags(j,SPRITE_DECAL))
+                            {j = nextj; continue JBOLT;}
 
-//                        switch (DYNAMICTILEMAP(sprite[j].picnum))
-//                        {
-//                        case TRANSPORTERSTAR__STATIC:
-//                        case TRANSPORTERBEAM__STATIC:
-//                        case TRIPBOMB__STATIC:
-//                        case BULLETHOLE__STATIC:
-//                        case WATERSPLASH2__STATIC:
-//                        case BURNING__STATIC:
-//                        case BURNING2__STATIC:
-//                        case FIRE__STATIC:
-//                        case FIRE2__STATIC:
-//                        case TOILETWATER__STATIC:
-//                        case LASERLINE__STATIC:
-//                            goto JBOLT;
+                        switch (DYNAMICTILEMAP(sprite[j].picnum))
+                        {
+                        case TRANSPORTERSTAR__STATIC:
+                        case TRANSPORTERBEAM__STATIC:
+                        case TRIPBOMB__STATIC:
+                        case BULLETHOLE__STATIC:
+                        case WATERSPLASH2__STATIC:
+                        case BURNING__STATIC:
+                        case BURNING2__STATIC:
+                        case FIRE__STATIC:
+                        case FIRE2__STATIC:
+                        case TOILETWATER__STATIC:
+                        case LASERLINE__STATIC:
+                            {j = nextj; continue JBOLT;}
 
-//                        case PLAYERONWATER__STATIC:
-//                            if (sectlotag == ST_2_UNDERWATER)
-//                            {
-//                                sprite[j].cstat &= 32768;
+                        case PLAYERONWATER__STATIC:
+                            if (sectlotag == ST_2_UNDERWATER)
+                            {
+                                sprite[j].cstat &= 32768;
+                                break;
+                            }
+                            // fall-through
+                        default:
+                            if (sprite[j].statnum == STAT_MISC && !(sectlotag == ST_1_ABOVE_WATER || sectlotag == ST_2_UNDERWATER))
+                                break;
+                            // fall-through
+                        case WATERBUBBLE__STATIC:
+//                            if( rnd(192) && sprite[j].picnum == WATERBUBBLE)
 //                                break;
-//                            }
-//                            // fall-through
-//                        default:
-//                            if (sprite[j].statnum == STAT_MISC && !(sectlotag == ST_1_ABOVE_WATER || sectlotag == ST_2_UNDERWATER))
-//                                break;
-//                            // fall-through
-//                        case WATERBUBBLE__STATIC:
-////                            if( rnd(192) && sprite[j].picnum == WATERBUBBLE)
-////                                break;
 
-//                            if (sectlotag > 0)
-//                            {
-//                                // Water SE7 teleportation.
-//                                const int32_t osect = sprite[sprite[i].owner].sectnum;
+                            if (sectlotag > 0)
+                            {
+                                // Water SE7 teleportation.
+                                var/*const int32_t */osect = sprite[sprite[i].owner].sectnum;
 
-//                                Bassert(sectlotag==ST_1_ABOVE_WATER || sectlotag==ST_2_UNDERWATER);
+                                Bassert(sectlotag==ST_1_ABOVE_WATER || sectlotag==ST_2_UNDERWATER);
 
-//                                k = A_Spawn(j,WATERSPLASH2);
-//                                if (sectlotag == ST_1_ABOVE_WATER && sprite[j].statnum == STAT_PROJECTILE)
-//                                {
-//                                    sprite[k].xvel = sprite[j].xvel>>1;
-//                                    sprite[k].ang = sprite[j].ang;
-//                                    A_SetSprite(k,CLIPMASK0);
-//                                }
+                                k = A_Spawn(j,WATERSPLASH2);
+                                if (sectlotag == ST_1_ABOVE_WATER && sprite[j].statnum == STAT_PROJECTILE)
+                                {
+                                    sprite[k].xvel = sprite[j].xvel>>1;
+                                    sprite[k].ang = sprite[j].ang;
+                                    A_SetSprite(k,CLIPMASK0);
+                                }
 
-//                                //
-//                                actor[j].lasttransport = totalclock + (TICSPERFRAME<<2);
+                                //
+                                actor[j].lasttransport = totalclock + (TICSPERFRAME<<2);
 
-//                                sprite[j].x += (sprite[sprite[i].owner].x-sprite[i].x);
-//                                sprite[j].y += (sprite[sprite[i].owner].y-sprite[i].y);
-//                                sprite[j].z = sectlotag==ST_1_ABOVE_WATER ?
-//                                    sector[osect].ceilingz : sector[osect].floorz;
+                                sprite[j].x += (sprite[sprite[i].owner].x-sprite[i].x);
+                                sprite[j].y += (sprite[sprite[i].owner].y-sprite[i].y);
+                                sprite[j].z = sectlotag==ST_1_ABOVE_WATER ?
+                                    sector[osect].ceilingz : sector[osect].floorz;
 
-//                                Bmemcpy(&actor[j].bpos.x, &sprite[j], sizeof(vec3_t));
+                                actor[j].bpos.copyFrom(sprite[j]);//Bmemcpy(&actor[j].bpos.x, &sprite[j], sizeof(vec3_t));
 
-//                                changespritesect(j, sprite[sprite[i].owner].sectnum);
-//                            }
-//                            else if (Bassert(sectlotag==0), 1)
-//                            {
-//                                // Non-water SE7 teleportation.
+                                changespritesect(j, sprite[sprite[i].owner].sectnum);
+                            }
+                            else if (Bassert(sectlotag==0), 1)
+                            {
+                                // Non-water SE7 teleportation.
 
-//                                if (onfloorz)
-//                                {
-//                                    if (sprite[j].statnum == STAT_PROJECTILE ||
-//                                            (G_CheckPlayerInSector(sect) == -1 && G_CheckPlayerInSector(sprite[sprite[i].owner].sectnum) == -1))
-//                                    {
-//                                        sprite[j].x += (sprite[sprite[i].owner].x-sprite[i].x);
-//                                        sprite[j].y += (sprite[sprite[i].owner].y-sprite[i].y);
-//                                        sprite[j].z -= sprite[i].z - sector[sprite[sprite[i].owner].sectnum].floorz;
-//                                        sprite[j].ang = sprite[sprite[i].owner].ang;
+                                if (onfloorz)
+                                {
+                                    if (sprite[j].statnum == STAT_PROJECTILE ||
+                                            (G_CheckPlayerInSector(sect) == -1 && G_CheckPlayerInSector(sprite[sprite[i].owner].sectnum) == -1))
+                                    {
+                                        sprite[j].x += (sprite[sprite[i].owner].x-sprite[i].x);
+                                        sprite[j].y += (sprite[sprite[i].owner].y-sprite[i].y);
+                                        sprite[j].z -= sprite[i].z - sector[sprite[sprite[i].owner].sectnum].floorz;
+                                        sprite[j].ang = sprite[sprite[i].owner].ang;
 
-//                                        Bmemcpy(&actor[j].bpos.x, &sprite[j], sizeof(vec3_t));
+                                         actor[j].bpos.copyFrom(sprite[j]);//Bmemcpy(&actor[j].bpos.x, &sprite[j], sizeof(vec3_t));
 
-//                                        if (sprite[i].pal == 0)
-//                                        {
-//                                            k = A_Spawn(i,TRANSPORTERBEAM);
-//                                            A_PlaySound(TELEPORTER,k);
+                                        if (sprite[i].pal == 0)
+                                        {
+                                            k = A_Spawn(i,TRANSPORTERBEAM);
+                                            A_PlaySound(TELEPORTER,k);
 
-//                                            k = A_Spawn(sprite[i].owner,TRANSPORTERBEAM);
-//                                            A_PlaySound(TELEPORTER,k);
-//                                        }
+                                            k = A_Spawn(sprite[i].owner,TRANSPORTERBEAM);
+                                            A_PlaySound(TELEPORTER,k);
+                                        }
 
-//                                        if (sprite[sprite[i].owner].owner != sprite[i].owner)
-//                                        {
-//                                            actor[i].t_data[0] = 13;
-//                                            actor[sprite[i].owner].t_data[0] = 13;
-//                                        }
+                                        if (sprite[sprite[i].owner].owner != sprite[i].owner)
+                                        {
+                                            actor[i].t_data[0] = 13;
+                                            actor[sprite[i].owner].t_data[0] = 13;
+                                        }
 
-//                                        changespritesect(j,sprite[sprite[i].owner].sectnum);
-//                                    }
-//                                }
-//                                else
-//                                {
-//                                    sprite[j].x += (sprite[sprite[i].owner].x-sprite[i].x);
-//                                    sprite[j].y += (sprite[sprite[i].owner].y-sprite[i].y);
-//                                    sprite[j].z = sprite[sprite[i].owner].z+4096;
+                                        changespritesect(j,sprite[sprite[i].owner].sectnum);
+                                    }
+                                }
+                                else
+                                {
+                                    sprite[j].x += (sprite[sprite[i].owner].x-sprite[i].x);
+                                    sprite[j].y += (sprite[sprite[i].owner].y-sprite[i].y);
+                                    sprite[j].z = sprite[sprite[i].owner].z+4096;
 
-//                                    Bmemcpy(&actor[j].bpos.x, &sprite[j], sizeof(vec3_t));
+                                     actor[j].bpos.copyFrom(sprite[j]);//Bmemcpy(&actor[j].bpos.x, &sprite[j], sizeof(vec3_t));
 
-//                                    changespritesect(j,sprite[sprite[i].owner].sectnum);
-//                                }
-//                            }
+                                    changespritesect(j,sprite[sprite[i].owner].sectnum);
+                                }
+                            }
 
-//                            break;
-//                        }  // switch (DYNAMICTILEMAP(sprite[j].picnum))
-//                    }  // if (warpspriteto)
-//                }  // if (totalclock > actor[j].lasttransport)
+                            break;
+                        }  // switch (DYNAMICTILEMAP(sprite[j].picnum))
+                    }  // if (warpspriteto)
+                }  // if (totalclock > actor[j].lasttransport)
 
-//                break;
-//            }  // five cases
+                break;
+            }  // five cases
 
-//            }  // switch (sprite[j].statnum)
+            }  // switch (sprite[j].statnum)
 //JBOLT:
-//            j = nextj;
-//        }
+            j = nextj;
+        }
 //BOLT:
-//        i = nexti;
-//    }
-//}
+        i = nexti;
+    }
+}
 
 //static int16_t A_FindLocator(int32_t n, int32_t sn)
 //{
@@ -8348,11 +8360,11 @@ function G_MoveWorld(): void
     }
     while (k--);
     todo("MOVE STUFF");todo("MOVE STUFF");todo("MOVE STUFF");
-    //G_MoveZombieActors();     //ST 2
-    //G_MoveWeapons();          //ST 4
-    //G_MoveTransports();       //ST 9
+    G_MoveZombieActors();     //ST 2
+    G_MoveWeapons();          //ST 4
+    G_MoveTransports();       //ST 9
 
-    //G_MovePlayers();          //ST 10
+    G_MovePlayers();          //ST 10
     //G_MoveFallers();          //ST 12
     //G_MoveMisc();             //ST 5
 

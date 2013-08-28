@@ -91,7 +91,7 @@ var GL_POLYGON_OFFSET_FILL = gl.POLYGON_OFFSET_FILL;
 var bglClearColor = gl.clearColor.bind(gl);//bglClearColorProcPtr;
 var bglClear = gl.clear.bind(gl);//bglClearProcPtr;
 var bglColorMask = gl.colorMask.bind(gl); //bglColorMaskProcPtr 
-var bglAlphaFunc = function (arg1:any,arg2:any) {todo("alphaFunc");}//gl.alphaFunc.bind(gl); //bglAlphaFuncProcPtr  //http://stackoverflow.com/questions/7277047/alphafunctions-in-webgl
+var bglAlphaFunc = function (arg1:any,arg2:any) {todoUnimportant("alphaFunc");}//gl.alphaFunc.bind(gl); //bglAlphaFuncProcPtr  //http://stackoverflow.com/questions/7277047/alphafunctions-in-webgl
 //bglBlendFuncProcPtr bglBlendFunc;
 //bglBlendEquationProcPtr bglBlendEquation;
 //bglCullFaceProcPtr bglCullFace;
