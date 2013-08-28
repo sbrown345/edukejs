@@ -40,7 +40,6 @@ int32_t otherp;
 
 int32_t G_SetInterpolation(int32_t *posptr)
 {
-#ifdef DEBUG_TODO
     int32_t i=g_numInterpolations-1;
 
     if (g_numInterpolations >= MAXINTERPOLATIONS)
@@ -53,7 +52,6 @@ int32_t G_SetInterpolation(int32_t *posptr)
     curipos[g_numInterpolations] = posptr;
     oldipos[g_numInterpolations] = *posptr;
     g_numInterpolations++;
-#endif
     return 0;
 }
 
@@ -79,7 +77,6 @@ void G_DoInterpolations(int32_t smoothratio)       //Stick at beginning of draws
     {
         return;
     }
-#ifdef DEBUG_TODO
     for (; i>=0; i--)
     {
         bakipos[i] = *curipos[i];
@@ -88,7 +85,6 @@ void G_DoInterpolations(int32_t smoothratio)       //Stick at beginning of draws
         if (odelta != ndelta) j = mulscale16(ndelta,smoothratio);
         *curipos[i] = oldipos[i]+j;
     }
-#endif
 }
 
 void G_ClearCameraView(DukePlayer_t *ps)
@@ -8287,10 +8283,11 @@ void G_MoveWorld(void)
     while (k--);
     G_MoveZombieActors();     //ST 2
     G_MoveWeapons();          //ST 4
-#ifdef DEBUG_TODO
+
     G_MoveTransports();       //ST 9
 
     G_MovePlayers();          //ST 10
+#ifdef DEBUG_TODO
     G_MoveFallers();          //ST 12
     G_MoveMisc();             //ST 5
 

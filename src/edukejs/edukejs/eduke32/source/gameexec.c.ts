@@ -5349,14 +5349,14 @@ function A_LoadActor(iActor: number):void
 }
 //#endif
 
-//// NORECURSE
-//void A_Execute(int32_t iActor,int32_t iPlayer,int32_t lDist)
-//{
-//#ifdef LUNATIC
-//    int32_t killit=0;
-//#else
+// NORECURSE
+function A_Execute(/*int32_t */iActor:number,/*int32_t */iPlayer:number,/*int32_t */lDist:number):void
+{todo("A_Execute!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+////#ifdef LUNATIC
+////    int32_t killit=0;
+////#else
 //    intptr_t actionofs, *actionptr;
-//#endif
+////#endif
 //    vmstate_t tempvm = { iActor, iPlayer, lDist, &actor[iActor].t_data[0],
 //                         &sprite[iActor], 0
 //                       };
@@ -5374,7 +5374,7 @@ function A_LoadActor(iActor: number):void
 
 //    Bmemcpy(&vm, &tempvm, sizeof(vmstate_t));
 
-//    if ((unsigned)vm.g_sp.sectnum >= MAXSECTORS)
+//    if (/*(unsigned)*/vm.g_sp.sectnum >= MAXSECTORS)
 //    {
 //        if (A_CheckEnemySprite(vm.g_sp))
 //            g_player[vm.g_p].ps.actors_killed++;
@@ -5386,23 +5386,23 @@ function A_LoadActor(iActor: number):void
 //     * (whether it is int32_t vs intptr_t), Although it is specifically cast to intptr_t*
 //     * which might be corrected if the code is converted to use offsets */
 //    /* Helixhorned: let's do away with intptr_t's... */
-//#if !defined LUNATIC
+////#if !defined LUNATIC
 //    actionofs = AC_ACTION_ID(vm.g_t);
 //    actionptr = (actionofs!=0 && actionofs+4u < (unsigned)g_scriptSize) ?
 //        &script[actionofs] : NULL;
 
 //    if (actionptr != NULL)
-//#endif
+////#endif
 //    {
-//#if !defined LUNATIC
+////#if !defined LUNATIC
 //        const int32_t action_frames = actionptr[1];
 //        const int32_t action_incval = actionptr[3];
 //        const int32_t action_delay = actionptr[4];
-//#else
-//        const int32_t action_frames = actor[vm.g_i].ac.numframes;
-//        const int32_t action_incval = actor[vm.g_i].ac.incval;
-//        const int32_t action_delay = actor[vm.g_i].ac.delay;
-//#endif
+////#else
+////        const int32_t action_frames = actor[vm.g_i].ac.numframes;
+////        const int32_t action_incval = actor[vm.g_i].ac.incval;
+////        const int32_t action_delay = actor[vm.g_i].ac.delay;
+////#endif
 //        uint16_t *actionticsptr = &AC_ACTIONTICS(vm.g_sp, &actor[vm.g_i]);
 //        *actionticsptr += TICSPERFRAME;
 
@@ -5418,30 +5418,30 @@ function A_LoadActor(iActor: number):void
 //            AC_CURFRAME(vm.g_t) = 0;
 //    }
 
-//#ifdef LUNATIC
-//    {
-//        double t = gethitickms();
-//        const int32_t picnum = vm.g_sp.picnum;
+////#ifdef LUNATIC
+////    {
+////        double t = gethitickms();
+////        const int32_t picnum = vm.g_sp.picnum;
 
-//        if (L_IsInitialized(&g_ElState) && El_HaveActor(picnum))
-//            killit = (El_CallActor(&g_ElState, picnum, iActor, iPlayer, lDist)==1);
+////        if (L_IsInitialized(&g_ElState) && El_HaveActor(picnum))
+////            killit = (El_CallActor(&g_ElState, picnum, iActor, iPlayer, lDist)==1);
 
-//        t = gethitickms()-t;
-//        g_actorTotalMs[picnum] += t;
-//        g_actorMinMs[picnum] = min(g_actorMinMs[picnum], t);
-//        g_actorMaxMs[picnum] = max(g_actorMaxMs[picnum], t);
-//        g_actorCalls[picnum]++;
-//    }
-//#else
+////        t = gethitickms()-t;
+////        g_actorTotalMs[picnum] += t;
+////        g_actorMinMs[picnum] = min(g_actorMinMs[picnum], t);
+////        g_actorMaxMs[picnum] = max(g_actorMaxMs[picnum], t);
+////        g_actorCalls[picnum]++;
+////    }
+////#else
 //    insptr = 4 + (g_tile[vm.g_sp.picnum].execPtr);
 //    VM_Execute(1);
 //    insptr = NULL;
-//#endif
+////#endif
 
 //    if ((vm.g_flags & VM_KILL)
-//#ifdef LUNATIC
-//        || killit
-//#endif
+////#ifdef LUNATIC
+////        || killit
+////#endif
 //        )
 //    {
 //        VM_KillIt(iActor, iPlayer);
@@ -5488,7 +5488,7 @@ function A_LoadActor(iActor: number):void
 //        actor[vm.g_i].timetosleep--;
 //    else if (actor[vm.g_i].timetosleep == 1)
 //        changespritestat(vm.g_i, STAT_ZOMBIEACTOR);
-//}
+}
 
 //void G_SaveMapState(void)
 //{

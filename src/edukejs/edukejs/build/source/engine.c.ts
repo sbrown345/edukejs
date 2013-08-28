@@ -11820,7 +11820,7 @@ restart_grand:
 
 //#endif
     if (x1 == x2 && y1 == y2)
-        return (sect1 == sect2);
+        return (sect1 == sect2)?1:0;
 
 //#ifdef YAX_ENABLE
     pendingsectnum = -1;

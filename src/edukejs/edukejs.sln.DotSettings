@@ -29,6 +29,22 @@
 	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=4A579A137F72FE48BE7F3029836B18DC/Shortcut/@EntryValue">ref</s:String>
 	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=4A579A137F72FE48BE7F3029836B18DC/ShortenQualifiedReferences/@EntryValue">True</s:Boolean>
 	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=4A579A137F72FE48BE7F3029836B18DC/Text/@EntryValue">var $$VAR_NAME$ = new R($VAR_NAME$);</s:String>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=4C525D898524154BA202395703EE824D/@KeyIndexDefined">True</s:Boolean>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=4C525D898524154BA202395703EE824D/Applicability/=Live/@EntryIndexedValue">True</s:Boolean>
+	
+	
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=4C525D898524154BA202395703EE824D/Field/=j/@KeyIndexDefined">True</s:Boolean>
+	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=4C525D898524154BA202395703EE824D/Field/=j/Order/@EntryValue">1</s:Int64>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=4C525D898524154BA202395703EE824D/Field/=STAT/@KeyIndexDefined">True</s:Boolean>
+	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=4C525D898524154BA202395703EE824D/Field/=STAT/Order/@EntryValue">0</s:Int64>
+	
+	
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=4C525D898524154BA202395703EE824D/Reformat/@EntryValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=4C525D898524154BA202395703EE824D/Scope/=139FF4CE89E7094686FDA7BF5FFBBE92/@KeyIndexDefined">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=4C525D898524154BA202395703EE824D/Scope/=139FF4CE89E7094686FDA7BF5FFBBE92/Type/@EntryValue">Everywhere</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=4C525D898524154BA202395703EE824D/Shortcut/@EntryValue">SPRITESOF</s:String>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=4C525D898524154BA202395703EE824D/ShortenQualifiedReferences/@EntryValue">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=4C525D898524154BA202395703EE824D/Text/@EntryValue">$j$=headspritestat[$STAT$]; $j$&gt;=0; $j$=nextspritestat[$j$]</s:String>
 	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=A2CEDAE8E785FD469A7B4891E8BA03C2/@KeyIndexDefined">True</s:Boolean>
 	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=A2CEDAE8E785FD469A7B4891E8BA03C2/Applicability/=Live/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=A2CEDAE8E785FD469A7B4891E8BA03C2/Field/=VAR_005FNAME/@KeyIndexDefined">True</s:Boolean>
