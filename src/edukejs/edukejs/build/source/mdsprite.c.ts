@@ -3199,9 +3199,9 @@ function mdinit(): void
 //    return(vm);
 //}
 
-////Draw voxel model as perfect cubes
-//int32_t voxdraw(voxmodel_t *m, const spritetype *tspr)
-//{
+//Draw voxel model as perfect cubes
+function /*int32_t */voxdraw(m: voxmodel_t,  tspr: spritetype):number
+{todoThrow();
 //    point3d m0, a0;
 //    int32_t i, j, fi, xx, yy, zz;
 //    float ru, rv, phack[2]; //, clut[6] = {1.02,1.02,0.94,1.06,0.98,0.98};
@@ -3332,8 +3332,8 @@ function mdinit(): void
 //        bglDepthRange(0.0,0.99999);
 //    }
 //    bglLoadIdentity();
-//    return 1;
-//}
+    return 1;
+}
 
 ////---------------------------------------- VOX LIBRARY ENDS ----------------------------------------
 ////--------------------------------------- MD LIBRARY BEGINS  ---------------------------------------

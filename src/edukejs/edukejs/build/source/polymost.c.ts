@@ -3909,7 +3909,7 @@ function polymost_drawsprite(/*int32_t*/ snum:number):void
 {
     var px = polymost_drawsprite_px, py = polymost_drawsprite_py;
     var /*float*/ f=0.0, c=0.0, s=0.0, fx=0.0, fy=0.0, sx0=0.0, sy0=0.0, sx1=0.0, xp0=0.0, yp0=0.0, xp1=0.0, yp1=0.0, oxp0=0.0, oyp0=0.0, ryp0=0.0, ryp1=0.0, ft = polymost_drawsprite_ft;
-    var /*float*/ x0=0.0, y0=0.0, x1=0.0, y1=0.0, sc0=0.0, sf0=0.0, sc1=0.0, sf1=0.0, px2 = polymost_drawsprite_px2, py2 = polymost_drawsprite_py2, xv=0.0, yv=0.0, t0=0.0, t1;
+    var /*float*/ x0=0.0, y0=0.0, x1=0.0, y1=0.0, sc0=0.0, sf0=0.0, sc1=0.0, sf1=0.0, px2 = polymost_drawsprite_px2, py2 = polymost_drawsprite_py2, xv=0.0, yv=0.0, t0=0.0, t1=0.0;
     var /*int32_t*/ i=0, j=0, spritenum=0, xoff=0, yoff=0, method=0, npoints=0;
     var /*int32_t*/ posx=0,posy=0;
     var /*int32_t*/ oldsizx=0, oldsizy=0;
@@ -3931,7 +3931,7 @@ function polymost_drawsprite(/*int32_t*/ snum:number):void
     if (sector[tspr.sectnum].visibility != 0) globvis = mulscale4(globvis,  /*(uint8_t)*/ (sector[tspr.sectnum].visibility+16));
     if ((globalorientation&48) != 48)  	// only non-voxel sprites should do this
     {
-        var /*int32_t */flag;
+        var /*int32_t */flag:number;
         flag = usehightile && h_xsize[globalpicnum];
         xoff = /*(int32_t)*/tspr.xoffset;
         yoff = /*(int32_t)*/tspr.yoffset;

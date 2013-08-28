@@ -827,7 +827,7 @@ function G_ScreenTextSize( /*int32_t*/  font:number,
     //    size.y >>= 16;
     //}
 
-    return size;
+    //return size;
 }
 
 //void G_AddCoordsFromRotation(vec2_t *coords, const vec2_t *unitDirection, const int32_t magnitude)
@@ -1981,7 +1981,7 @@ function G_DrawFrags():void
         var ps = g_player[i].ps;
         minitext(21+(73*(i&3)), 2+((i&28)<<1), g_player[i].user_name, ps.palookup, 2+8+16);
         Bsprintf(tempbuf, "%d", ps.frag-ps.fraggedself);
-        minitext(17+50+(73*(i&3)), 2+((i&28)<<1), tempbuf, ps.palookup, 2+8+16);
+        minitext(17+50+(73*(i&3)), 2+((i&28)<<1), tempbuf.toString(), ps.palookup, 2+8+16);
     }
 }
 
@@ -2415,6 +2415,7 @@ function G_DrawStatusBar(/*int32_t */snum:number):void
         if (u&32768)
         {
             if (u != -1) G_PatchStatusBar(276,SBY+17,299,SBY+17+10);
+            todoThrow("-16? - should be string '-16' ??");
             G_DrawDigiNum(287,SBY+17,max(p.frag-p.fraggedself,0),-16,10+16);
         }
     }
@@ -2434,6 +2435,7 @@ function G_DrawStatusBar(/*int32_t */snum:number):void
 
     if (u&1)
     {
+            todoThrow("-16? - should be string '-16' ??");
         if (u != -1) G_PatchStatusBar(20,SBY+17,43,SBY+17+11);
         if (sprite[p.i].pal == 1 && p.last_extra < 2)
             G_DrawDigiNum(32,SBY+17,1,-16,10+16);
@@ -2441,6 +2443,7 @@ function G_DrawStatusBar(/*int32_t */snum:number):void
     }
     if (u&2)
     {
+            todoThrow("-16? - should be string '-16' ??");
         var /*int32_t */lAmount = G_GetMorale(p.i, snum);
 
         if (u != -1)
@@ -2454,6 +2457,7 @@ function G_DrawStatusBar(/*int32_t */snum:number):void
 
     if (u&1024)
     {
+            todoThrow("-16? - should be string '-16' ??");
         if (u != -1) G_PatchStatusBar(196,SBY+17,219,SBY+17+11);
         if (p.curr_weapon != KNEE_WEAPON)
         {
@@ -3714,7 +3718,7 @@ function G_DisplayRest(/*int32_t */smoothratio: number): void
         if (MapInfo[(ud.volume_number*MAXLEVELS) + ud.level_number].name != NULL)
         {
             if (currentboardfilename[0] != 0 && ud.volume_number == 0 && ud.level_number == 7)
-                menutext_(160,75,-g_levelTextTime+22/*quotepulseshade*/,0,currentboardfilename,bits);
+                menutext_(160,75,-g_levelTextTime+22/*quotepulseshade*/,0,currentboardfilename.toString(),bits);
             else menutext_(160,75,-g_levelTextTime+22/*quotepulseshade*/,0,MapInfo[(ud.volume_number*MAXLEVELS) + ud.level_number].name,bits);
         }
     }
@@ -4126,9 +4130,9 @@ var /*static int32_t */ror_sprite = -1;
 var ror_protectedsectors = new Uint8Array(MAXSECTORS);
 var /*static int32_t */drawing_ror = 0;
 
-//static void G_SE40(int32_t smoothratio)
-//{
-//    if (ror_sprite != -1)
+function G_SE40(/*int32_t */smoothratio:number):void
+{
+    if (ror_sprite != -1) todoThrow();
 //    {
 //        int32_t x, y, z;
 //        int16_t sect;
@@ -4200,10 +4204,10 @@ var /*static int32_t */drawing_ror = 0;
 //                }
 //            }
 
-//#ifdef POLYMER
+////#ifdef POLYMER
 //            if (getrendermode() == REND_POLYMER)
 //                polymer_setanimatesprites(G_DoSpriteAnimations, ud.camerapos.x, ud.camerapos.y, ud.cameraang, smoothratio);
-//#endif
+////#endif
 
 //            drawrooms(sprite[sprite2].x + x, sprite[sprite2].y + y,
 //                      z + renderz, ud.cameraang, ud.camerahoriz, sect);
@@ -4258,29 +4262,29 @@ var /*static int32_t */drawing_ror = 0;
 //            }
 //        }
 //    }
-//}
+}
 
-//void G_HandleMirror(int32_t x, int32_t y, int32_t z, int32_t a, int32_t horiz, int32_t smoothratio)
-//{
-//    if ((gotpic[MIRROR>>3]&(1<<(MIRROR&7)))
+function G_HandleMirror(/*int32_t*/ x:number, /*int32_t */y:number, /*int32_t */z:number, /*int32_t */a:number, /*int32_t */horiz:number, /*int32_t */smoothratio:number):void
+{
+    if ((gotpic[MIRROR>>3]&(1<<(MIRROR&7)))
 //#ifdef POLYMER
-//        && (getrendermode() != REND_POLYMER)
+        && (getrendermode() != REND_POLYMER)
 //#endif
-//        )
-//    {
-//        int32_t j, i = 0, k, dst = INT32_MAX;
+        )
+    {
+        var/*int32_t */j:number, i = 0, k:number, dst = INT32_MAX;
 
-//        if (g_mirrorCount==0)
-//        {
-//            // NOTE: We can have g_mirrorCount==0 but gotpic'd MIRROR,
-//            // for example in LNGA2.
-//            gotpic[MIRROR>>3] &= ~(1<<(MIRROR&7));
+        if (g_mirrorCount==0)
+        {
+            // NOTE: We can have g_mirrorCount==0 but gotpic'd MIRROR,
+            // for example in LNGA2.
+            gotpic[MIRROR>>3] &= ~(1<<(MIRROR&7));
 //#ifdef DEBUGGINGAIDS
 //            initprintf("Called G_HandleMirror() with g_mirrorCount==0!\n");
 //#endif
-//            return;
-//        }
-
+            return;
+        }
+        todoThrow();
 //        for (k=g_mirrorCount-1; k>=0; k--)
 //        {
 //            j = klabs(wall[g_mirrorWall[k]].x - x);
@@ -4348,41 +4352,41 @@ var /*static int32_t */drawing_ror = 0;
 //            // the bit gets set and drawn subsequently.
 //            gotpic[MIRROR>>3] &= ~(1<<(MIRROR&7));
 //        }
-//    }
-//}
+    }
+}
 
-//static void G_OROR_DupeSprites(void)
-//{
-//    // dupe the sprites touching the portal to the other sector
+function G_OROR_DupeSprites(): void
+{
+    // dupe the sprites touching the portal to the other sector
 
-//    if (ror_sprite != -1)
-//    {
-//        spritetype *sp = &sprite[ror_sprite];
+    if (ror_sprite != -1)
+    {
+        var sp = sprite[ror_sprite];
 
-//        // viewing from bottom
-//        if (drawing_ror == 1)
-//        {
-//            int32_t k;
+        // viewing from bottom
+        if (drawing_ror == 1)
+        {
+            var /*int32_t */k:number;
 
-//            for (k=headspritesect[sp.sectnum]; k != -1; k=nextspritesect[k])
-//            {
-//                if (sprite[k].picnum != SECTOREFFECTOR && (sprite[k].z >= sp.z))
-//                {
-//                    Bmemcpy(&tsprite[spritesortcnt], &sprite[k], sizeof(spritetype));
+            for (k=headspritesect[sp.sectnum]; k != -1; k=nextspritesect[k])
+            {
+                if (sprite[k].picnum != SECTOREFFECTOR && (sprite[k].z >= sp.z))
+                {
+                    ITypeInfoCopier(tsprite[spritesortcnt], sprite[k], spritetype.typeInfo);// Bmemcpy(&tsprite[spritesortcnt], &sprite[k], sizeof(spritetype));
 
-//                    tsprite[spritesortcnt].x += (sprite[sp.yvel].x-sp.x);
-//                    tsprite[spritesortcnt].y += (sprite[sp.yvel].y-sp.y);
-//                    tsprite[spritesortcnt].z = tsprite[spritesortcnt].z - sp.z + actor[sp.yvel].ceilingz;
-//                    tsprite[spritesortcnt].sectnum = sprite[sp.yvel].sectnum;
-//                    tsprite[spritesortcnt].owner = k;
+                    tsprite[spritesortcnt].x += (sprite[sp.yvel].x-sp.x);
+                    tsprite[spritesortcnt].y += (sprite[sp.yvel].y-sp.y);
+                    tsprite[spritesortcnt].z = tsprite[spritesortcnt].z - sp.z + actor[sp.yvel].ceilingz;
+                    tsprite[spritesortcnt].sectnum = sprite[sp.yvel].sectnum;
+                    tsprite[spritesortcnt].owner = k;
 
-//                    //OSD_Printf("duped sprite of pic %d at %d %d %d\n",tsprite[spritesortcnt].picnum,tsprite[spritesortcnt].x,tsprite[spritesortcnt].y,tsprite[spritesortcnt].z);
-//                    spritesortcnt++;
-//                }
-//            }
-//        }
-//    }
-//}
+                    //OSD_Printf("duped sprite of pic %d at %d %d %d\n",tsprite[spritesortcnt].picnum,tsprite[spritesortcnt].x,tsprite[spritesortcnt].y,tsprite[spritesortcnt].z);
+                    spritesortcnt++;
+                }
+            }
+        }
+    }
+}
 
 //#ifdef USE_OPENGL
 //static void G_ReadGLFrame(void)
@@ -4707,13 +4711,13 @@ function G_DrawRooms(/*int32_t*/ snum: number, /*int32_t */smoothratio: number):
                 OSD_Printf(OSD_ERROR + "ERROR: EVENT_DISPLAYROOMS return value must be 0 or 1, " +
                            "other values are reserved.\n");
 
-            todo("G_HandleMirror(ud.camerapos.x, ud.camerapos.y, ud.camerapos.z, ud.cameraang, ud.camerahoriz, smoothratio);");
+            G_HandleMirror(ud.camerapos.x, ud.camerapos.y, ud.camerapos.z, ud.cameraang, ud.camerahoriz, smoothratio);
 
-            todo("G_SE40(smoothratio);");
+            G_SE40(smoothratio);
 
 //#ifdef POLYMER
             if (getrendermode() == REND_POLYMER)
-                todo("polymer_setanimatesprites(G_DoSpriteAnimations, ud.camerapos.x,ud.camerapos.y,ud.cameraang,smoothratio);");
+                todoThrow("polymer_setanimatesprites(G_DoSpriteAnimations, ud.camerapos.x,ud.camerapos.y,ud.cameraang,smoothratio);");
 //#endif
             // for G_PrintCoords
             dr_viewingrange = viewingrange;
@@ -4721,11 +4725,11 @@ function G_DrawRooms(/*int32_t*/ snum: number, /*int32_t */smoothratio: number):
 //#ifdef DEBUG_MIRRORS_ONLY
 //            gotpic[MIRROR>>3] |= (1<<(MIRROR&7));
 //#else
-            todo("yax_preparedrawrooms();");
+            yax_preparedrawrooms();
             drawrooms(ud.camerapos.x,ud.camerapos.y,ud.camerapos.z,ud.cameraang,ud.camerahoriz,ud.camerasect);
-            todo("yax_drawrooms(G_DoSpriteAnimations, ud.camerasect, 0, smoothratio);");
+            yax_drawrooms(G_DoSpriteAnimations, ud.camerasect, 0, smoothratio);
 
-            todo("G_OROR_DupeSprites();");
+            G_OROR_DupeSprites();
 
             G_DoSpriteAnimations(ud.camerapos.x,ud.camerapos.y,ud.cameraang,smoothratio);
 
@@ -7531,7 +7535,7 @@ function G_DoSpriteAnimations(/*int32_t */ourx:number, /*int32_t */oury:number, 
                     var newt = tsprite[spritesortcnt];
                     var/*int32_t */curweap = g_player[p].ps.curr_weapon;
 
-                    Bmemcpy(newt, t, sizeof(spritetype));
+                    ITypeInfoCopier(newt, t, spritetype.typeInfo);//Bmemcpy(newt, t, sizeof(spritetype));
 
                     newt.statnum = TSPR_TEMP;
                     /*
@@ -7560,7 +7564,7 @@ function G_DoSpriteAnimations(/*int32_t */ourx:number, /*int32_t */oury:number, 
                 {
                     var newt = tsprite[spritesortcnt];
 
-                    Bmemcpy(newt, t, sizeof(spritetype));
+                    ITypeInfoCopier(newt, t, spritetype.typeInfo);//Bmemcpy(newt, t, sizeof(spritetype));
 
                     newt.statnum = TSPR_TEMP;
 
@@ -7747,11 +7751,11 @@ function G_DoSpriteAnimations(/*int32_t */ourx:number, /*int32_t */oury:number, 
 
                 case 5:
                 case -5:
-                    k = getofs_viewtype5(s, t, getangle(s.x-ourx, s.y-oury), l<0);
+                    k = getofs_viewtype5(s, t, getangle(s.x-ourx, s.y-oury), l<0?1:0);
                     break;
                 case 7:
                 case -7:
-                    k = getofs_viewtype7(s, t, getangle(s.x-ourx, s.y-oury), l<0);
+                    k = getofs_viewtype7(s, t, getangle(s.x-ourx, s.y-oury), l<0?1:0);
                     break;
                 case 8:
                     k = (((s.ang+3072+128-oura)&2047)>>8)&7;
@@ -7920,7 +7924,7 @@ skip:
 //#endif
                 k = getofs_viewtype5(t, t, oura, 0);
 
-            t.picnum = s.picnum+k+((actor[i].t_data[0]<4)*5);
+            t.picnum = s.picnum+k+(((actor[i].t_data[0]<4)?1:0)*5);
             t.shade = sprite[s.owner].shade;
 
             break;

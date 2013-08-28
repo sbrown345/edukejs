@@ -4613,11 +4613,11 @@ void G_DrawRooms(int32_t snum, int32_t smoothratio)
             if (dont_draw != 0)
                 OSD_Printf(OSD_ERROR "ERROR: EVENT_DISPLAYROOMS return value must be 0 or 1, "
                            "other values are reserved.\n");
-			#if DEBUG_TODO
+			
             G_HandleMirror(CAMERA(pos.x), CAMERA(pos.y), CAMERA(pos.z), CAMERA(ang), CAMERA(horiz), smoothratio);
 
             G_SE40(smoothratio);
-			#endif
+			
 #ifdef POLYMER
             if (getrendermode() == REND_POLYMER)
                 polymer_setanimatesprites(G_DoSpriteAnimations, CAMERA(pos.x),CAMERA(pos.y),CAMERA(ang),smoothratio);
@@ -4628,17 +4628,17 @@ void G_DrawRooms(int32_t snum, int32_t smoothratio)
 #ifdef DEBUG_MIRRORS_ONLY
             gotpic[MIRROR>>3] |= (1<<(MIRROR&7));
 #else
-			#if DEBUG_TODO
+			
             yax_preparedrawrooms();
-			#endif
+			
             drawrooms(CAMERA(pos.x),CAMERA(pos.y),CAMERA(pos.z),CAMERA(ang),CAMERA(horiz),CAMERA(sect));
-			#if DEBUG_TODO
+			
             yax_drawrooms(G_DoSpriteAnimations, CAMERA(sect), 0, smoothratio);
 
             G_OROR_DupeSprites();
 
             G_DoSpriteAnimations(CAMERA(pos.x),CAMERA(pos.y),CAMERA(ang),smoothratio);
-			#endif
+			
 
             drawing_ror = 0;
             drawmasks();

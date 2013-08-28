@@ -723,13 +723,13 @@ function yax_getneighborsect(/*int32_t */x: number, /*int32_t */y: number, /*int
 }
 
 //// indexed as a list:
-//static int16_t bunches[2][YAX_MAXBUNCHES];
+var bunches = multiDimArray<Int16Array>(Int16Array, 2, YAX_MAXBUNCHES);
 //// indexed with bunchnums directly:
-//static int16_t bunchsec[YAX_MAXBUNCHES], bunchdist[YAX_MAXBUNCHES];
+var bunchsec = new Int16Array(YAX_MAXBUNCHES), bunchdist = new Int16Array(YAX_MAXBUNCHES);
 
 //static int32_t ymostallocsize = 0;  // numyaxbunches*xdimen (no sizeof(int16_t) here!)
 //static int16_t *yumost=NULL, *ydmost=NULL;  // used as if [numyaxbunches][xdimen]
-//uint8_t haveymost[YAX_MAXBUNCHES>>3];
+var haveymost = new Uint8Array(YAX_MAXBUNCHES>>3);
 
 //// adapted from build.c
 //static void yax_getclosestpointonwall(int32_t dawall, int32_t *closestx, int32_t *closesty)
@@ -841,8 +841,8 @@ function yax_getneighborsect(/*int32_t */x: number, /*int32_t */y: number, /*int
 //}
 
 
-//void yax_tweakpicnums(int32_t bunchnum, int32_t cf, int32_t restore)
-//{
+function yax_tweakpicnums(/*int32_t*/ bunchnum:number, /*int32_t */cf:number, /*int32_t */restore:number):void 
+{todoThrow();
 //    // for polymer, this is called before polymer_drawrooms() with restore==0
 //    // and after polymer_drawmasks() with restore==1
 
@@ -894,10 +894,10 @@ function yax_getneighborsect(/*int32_t */x: number, /*int32_t */y: number, /*int
 //#endif
 //        }
 //    }
-//}
+}
 
-//static void yax_copytsprites()
-//{
+function yax_copytsprites(): void
+{todoThrow();
 //    int32_t i, spritenum, gotthrough, sectnum;
 //    int32_t sortcnt = yax_spritesortcnt[yax_globallev];
 //    const spritetype *spr;
@@ -947,118 +947,124 @@ function yax_getneighborsect(/*int32_t */x: number, /*int32_t */y: number, /*int
 //        tsprite[spritesortcnt].sectnum = sectnum;  // potentially tweak sectnum!
 //        spritesortcnt++;
 //    }
-//}
+}
 
 
-//void yax_preparedrawrooms(void)
-//{
-//    if (getrendermode() == REND_POLYMER || numyaxbunches==0)
-//        return;
+function yax_preparedrawrooms(): void
+{
+    if (getrendermode() == REND_POLYMER || numyaxbunches==0)
+        return;
+    todoThrow();
+    //g_nodraw = 1;
+    //Bmemset(yax_spritesortcnt, 0, sizeof(yax_spritesortcnt));
+    //Bmemset(haveymost, 0, (numyaxbunches+7)>>3);
 
-//    g_nodraw = 1;
-//    Bmemset(yax_spritesortcnt, 0, sizeof(yax_spritesortcnt));
-//    Bmemset(haveymost, 0, (numyaxbunches+7)>>3);
+    //if (getrendermode() == REND_CLASSIC && ymostallocsize < xdimen*numyaxbunches)
+    //{
+    //    ymostallocsize = xdimen*numyaxbunches;
+    //    yumost = (int16_t *)Brealloc(yumost, ymostallocsize*sizeof(int16_t));
+    //    ydmost = (int16_t *)Brealloc(ydmost, ymostallocsize*sizeof(int16_t));
 
-//    if (getrendermode() == REND_CLASSIC && ymostallocsize < xdimen*numyaxbunches)
-//    {
-//        ymostallocsize = xdimen*numyaxbunches;
-//        yumost = (int16_t *)Brealloc(yumost, ymostallocsize*sizeof(int16_t));
-//        ydmost = (int16_t *)Brealloc(ydmost, ymostallocsize*sizeof(int16_t));
+    //    if (!yumost || !ydmost)
+    //    {
+    //        initprintf("OUT OF MEMORY in yax_preparedrawrooms!\n");
+    //        uninitengine();
+    //        exit(10);
+    //    }
+    //}
+}
 
-//        if (!yumost || !ydmost)
-//        {
-//            initprintf("OUT OF MEMORY in yax_preparedrawrooms!\n");
-//            uninitengine();
-//            exit(10);
-//        }
-//    }
-//}
+function yax_drawrooms(SpriteAnimFunc /*void (*SpriteAnimFunc)(int32_t,int32_t,int32_t,int32_t)*/,
+                   /*int16_t*/ sectnum:number, /*int32_t */didmirror:number, /*int32_t */smoothr:number): void
+{
+    var havebunch = new Uint8Array(YAX_MAXBUNCHES>>3);
 
-//void yax_drawrooms(void (*SpriteAnimFunc)(int32_t,int32_t,int32_t,int32_t),
-//                   int16_t sectnum, int32_t didmirror, int32_t smoothr)
-//{
-//    static uint8_t havebunch[YAX_MAXBUNCHES>>3];
+    var/*const int32_t */horiz = global100horiz;
 
-//    const int32_t horiz = global100horiz;
+    var/*int32_t */i:number, j:number, k:number, lev:number, cf:number, nmp:number;
+    var/*int32_t */bnchcnt:number, bnchnum = new Int32Array(2), maxlev = new Int32Array(2);
+    var/*int16_t */ourbunch = new Int16Array([-1,-1]), osectnum=sectnum;
+    var bnchbeg = multiDimArray<Int32Array>(Int32Array, YAX_MAXDRAWS, 2), bnchend = multiDimArray<Int32Array>(Int32Array, YAX_MAXDRAWS, 2);
+    var/*int32_t */bbeg:number, numhere:number;
 
-//    int32_t i, j, k, lev, cf, nmp;
-//    int32_t bnchcnt, bnchnum[2] = {0,0}, maxlev[2];
-//    int16_t ourbunch[2] = {-1,-1}, osectnum=sectnum;
-//    int32_t bnchbeg[YAX_MAXDRAWS][2], bnchend[YAX_MAXDRAWS][2];
-//    int32_t bbeg, numhere;
-
-//    // original (1st-draw) and accumulated ('per-level') gotsector bitmaps
-//    static uint8_t ogotsector[MAXSECTORS>>3], lgotsector[MAXSECTORS>>3];
+    // original (1st-draw) and accumulated ('per-level') gotsector bitmaps
+    var ogotsector = new Uint8Array(MAXSECTORS>>3), lgotsector = new Uint8Array(MAXSECTORS>>3);
 //#ifdef YAX_DEBUG
-//    uint64_t t;
+    var /*uint64_t */t:number;
 //#endif
 
-//    if (getrendermode() == REND_POLYMER || numyaxbunches==0)
-//    {
+    if (getrendermode() == REND_POLYMER || numyaxbunches==0)
+    {
 //#ifdef ENGINE_SCREENSHOT_DEBUG
 //        engine_screenshot = 0;
 //#endif
-//        return;
-//    }
+        return;
+    }
 
-//    // if we're here, there was just a drawrooms() call with g_nodraw=1
+    // if we're here, there was just a drawrooms() call with g_nodraw=1
 
-//    Bmemcpy(ogotsector, gotsector, (numsectors+7)>>3);
+    Bmemcpy(new P(ogotsector), new P(gotsector), (numsectors+7)>>3);
 
-//    if (sectnum >= 0)
-//        yax_getbunches(sectnum, &ourbunch[0], &ourbunch[1]);
-//    Bmemset(&havebunch, 0, (numyaxbunches+7)>>3);
+    if (sectnum >= 0) {
+        var $ourbunch0 = new R(ourbunch[0]);
+        var $ourbunch1 = new R(ourbunch[1]);
+        yax_getbunches(sectnum, $ourbunch0, $ourbunch1);
+        ourbunch[0] = $ourbunch0.$;
+        ourbunch[1] = $ourbunch1.$;
+    }
+    Bmemset(new P(havebunch), 0, (numyaxbunches+7)>>3);
 
-//    // first scan all bunches above, then all below...
-//    for (cf=0; cf<2; cf++)
-//    {
-//        yax_globalcf = cf;
+    // first scan all bunches above, then all below...
+    for (cf=0; cf<2; cf++)
+    {
+        yax_globalcf = cf;
 
-//        if (cf==1)
-//        {
-//            sectnum = osectnum;
-//            Bmemcpy(gotsector, ogotsector, (numsectors+7)>>3);
-//        }
+        if (cf==1)
+        {
+            sectnum = osectnum;
+            Bmemcpy(new P(gotsector), new P(ogotsector), (numsectors+7)>>3);
+        }
 
-//        for (lev=0; /*lev<YAX_MAXDRAWS*/; lev++)
-//        {
-//            yax_globallev = YAX_MAXDRAWS + (-1 + 2*cf)*(lev+1);
+        for (lev=0; /*lev<YAX_MAXDRAWS*/; lev++)
+        {
+            yax_globallev = YAX_MAXDRAWS + (-1 + 2*cf)*(lev+1);
 
-//            bbeg = bnchbeg[lev][cf] = bnchend[lev][cf] = bnchnum[cf];
-//            numhere = 0;
+            bbeg = bnchbeg[lev][cf] = bnchend[lev][cf] = bnchnum[cf];
+            numhere = 0;
 
-//            for (i=0; i<numsectors; i++)
-//            {
-//                if (!(gotsector[i>>3]&(1<<(i&7))))
-//                    continue;
+            for (i=0; i<numsectors; i++)
+            {
+                if (!(gotsector[i>>3]&(1<<(i&7))))
+                    continue;
 
-//                j = yax_getbunch(i, cf);
-//                if (j >= 0 && !(havebunch[j>>3]&(1<<(j&7))))
-//                {
-//                    if (getrendermode() == REND_CLASSIC && (haveymost[j>>3]&(1<<(j&7)))==0)
-//                    {
-//                        yaxdebug("%s, l %d: skipped bunch %d (no *most)", cf?"v":"^", lev, j);
-//                        continue;
-//                    }
+                j = yax_getbunch(i, cf);
+                if (j >= 0 && !(havebunch[j>>3]&(1<<(j&7))))
+                {
+                    if (getrendermode() == REND_CLASSIC && (haveymost[j>>3]&(1<<(j&7)))==0)
+                    {
+                        todoThrow();
+                        //yaxdebug("%s, l %d: skipped bunch %d (no *most)", cf?"v":"^", lev, j);
+                        //continue;
+                    }
 
-//                    if ((SECTORFLD(i,stat, cf)&2) ||
-//                            (cf==0 && globalposz > sector[i].ceilingz) ||
-//                            (cf==1 && globalposz < sector[i].floorz))
-//                    {
-//                        havebunch[j>>3] |= (1<<(j&7));
-//                        bunches[cf][bnchnum[cf]++] = j;
-//                        bnchend[lev][cf]++;
-//                        numhere++;
-//                    }
-//                }
-//            }
+                    if ((SECTORFLD(i,"stat", cf)&2) ||
+                            (cf==0 && globalposz > sector[i].ceilingz) ||
+                            (cf==1 && globalposz < sector[i].floorz))
+                    {
+                        havebunch[j>>3] |= (1<<(j&7));
+                        bunches[cf][bnchnum[cf]++] = j;
+                        bnchend[lev][cf]++;
+                        numhere++;
+                    }
+                }
+            }
 
-//            if (numhere > 0)
-//            {
-//                // found bunches -- need to fake-draw
-
+            if (numhere > 0)
+            {
+                // found bunches -- need to fake-draw
+todoThrow();
 //                yax_scanbunches(bbeg, numhere, (uint8_t *)gotsector);
-
+                
 //                qsort(&bunches[cf][bbeg], numhere, sizeof(int16_t),
 //                      (int(*)(const void *, const void *))&yax_cmpbunches);
 
@@ -1069,9 +1075,9 @@ function yax_getneighborsect(/*int32_t */x: number, /*int32_t */y: number, /*int
 //                {
 //                    j = bunches[cf][bnchcnt];  // the actual bunchnum...
 //                    yax_globalbunch = j;
-//#ifdef YAX_DEBUG
-//                    t=gethiticks();
-//#endif
+////#ifdef YAX_DEBUG
+////                    t=gethiticks();
+////#endif
 //                    k = bunchsec[j];
 
 //                    if (k < 0)
@@ -1082,9 +1088,9 @@ function yax_getneighborsect(/*int32_t */x: number, /*int32_t */y: number, /*int
 
 //                    if (lev != YAX_MAXDRAWS-1)
 //                    {
-//#ifdef YAX_DEBUG
-//                        int32_t odsprcnt = yax_spritesortcnt[yax_globallev];
-//#endif
+////#ifdef YAX_DEBUG
+////                        int32_t odsprcnt = yax_spritesortcnt[yax_globallev];
+////#endif
 //                        // +MAXSECTORS: force
 //                        drawrooms(globalposx,globalposy,globalposz,globalang,horiz,k+MAXSECTORS);
 //                        if (numhere > 1)
@@ -1106,120 +1112,123 @@ function yax_getneighborsect(/*int32_t */x: number, /*int32_t */y: number, /*int
 
 //                if (numhere > 1 && lev != YAX_MAXDRAWS-1)
 //                    Bmemcpy(gotsector, lgotsector, (numsectors+7)>>3);
-//            }
+            }
 
-//            if (numhere==0 || lev==YAX_MAXDRAWS-1)
-//            {
-//                // no new bunches or max level reached
-//                maxlev[cf] = lev - (numhere==0);
-//                break;
-//            }
-//        }
-//    }
+            if (numhere==0 || lev==YAX_MAXDRAWS-1)
+            {
+                // no new bunches or max level reached
+                maxlev[cf] = lev - (numhere==0?1:0);
+                break;
+            }
+        }
+    }
 
-////    yax_globalcf = -1;
+//    yax_globalcf = -1;
 
-//    // now comes the real drawing!
-//    g_nodraw = 0;
-//    scansector_collectsprites = 0;
+    // now comes the real drawing!
+    g_nodraw = 0;
+    scansector_collectsprites = 0;
 
-//    if (editstatus==1)
-//    {
+    if (editstatus==1)
+    {
+        todoThrow();
 //        if (getrendermode() == REND_CLASSIC)
 //        {
 //            begindrawing();
 //            draw_rainbow_background();
 //            enddrawing();
 //        }
-//#ifdef USE_OPENGL
+////#ifdef USE_OPENGL
 //        else
 //        {
 //            bglClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 //        }
-//#endif
-//    }
+////#endif
+    }
 
-//    for (cf=0; cf<2; cf++)
-//    {
-//        yax_globalcf = cf;
+    for (cf=0; cf<2; cf++)
+    {
+        yax_globalcf = cf;
 
-//        for (lev=maxlev[cf]; lev>=0; lev--)
-//        {
-//            yax_globallev = YAX_MAXDRAWS + (-1 + 2*cf)*(lev+1);
-//            scansector_collectsprites = (lev == YAX_MAXDRAWS-1);
+        for (lev=maxlev[cf]; lev>=0; lev--)
+        {
+            yax_globallev = YAX_MAXDRAWS + (-1 + 2*cf)*(lev+1);
+            scansector_collectsprites = (lev == YAX_MAXDRAWS-1)?1:0;
 
-//            for (bnchcnt=bnchbeg[lev][cf]; bnchcnt<bnchend[lev][cf]; bnchcnt++)
-//            {
-//                j = bunches[cf][bnchcnt];  // the actual bunchnum...
-//                k = bunchsec[j];  // best start-drawing sector
-//                yax_globalbunch = j;
+            for (bnchcnt=bnchbeg[lev][cf]; bnchcnt<bnchend[lev][cf]; bnchcnt++)
+            {
+                j = bunches[cf][bnchcnt];  // the actual bunchnum...
+                k = bunchsec[j];  // best start-drawing sector
+                yax_globalbunch = j;
 //#ifdef YAX_DEBUG
 //                t=gethiticks();
 //#endif
-//                yax_tweakpicnums(j, cf, 0);
-//                if (k < 0)
-//                    continue;
+                yax_tweakpicnums(j, cf, 0);
+                if (k < 0)
+                    continue;
 
-//                yax_nomaskdidit = 0;
-//                for (nmp=r_tror_nomaskpass; nmp>=0; nmp--)
-//                {
-//                    yax_nomaskpass = nmp;
-//                    drawrooms(globalposx,globalposy,globalposz,globalang,horiz,k+MAXSECTORS);  // +MAXSECTORS: force
+                yax_nomaskdidit = 0;
+                for (nmp=r_tror_nomaskpass; nmp>=0; nmp--)
+                {
+                    yax_nomaskpass = nmp;
+                    drawrooms(globalposx,globalposy,globalposz,globalang,horiz,k+MAXSECTORS);  // +MAXSECTORS: force
 
-//                    if (nmp==1)
-//                    {
-//                        yaxdebug("nm1 l%d: DRAWN (bn %2d) sec %4d,          %.3f ms",
-//                                 yax_globallev-YAX_MAXDRAWS, j, k,
-//                                 (double)(1000*(gethiticks()-t))/hitickspersec);
+                    if (nmp==1)
+                    {
+                        todoThrow();
+                        //yaxdebug("nm1 l%d: DRAWN (bn %2d) sec %4d,          %.3f ms",
+                        //         yax_globallev-YAX_MAXDRAWS, j, k,
+                        //         (double)(1000*(gethiticks()-t))/hitickspersec);
 
-//                        if (!yax_nomaskdidit)
-//                        {
-//                            yax_nomaskpass = 0;
-//                            break;  // no need to draw the same stuff twice
-//                        }
-//                        Bmemcpy(yax_gotsector, gotsector, (numsectors+7)>>3);
-//                    }
-//                }
+                        //if (!yax_nomaskdidit)
+                        //{
+                        //    yax_nomaskpass = 0;
+                        //    break;  // no need to draw the same stuff twice
+                        //}
+                        //Bmemcpy(yax_gotsector, gotsector, (numsectors+7)>>3);
+                    }
+                }
 
-//                if (!scansector_collectsprites)
-//                    spritesortcnt = 0;
-//                yax_copytsprites();
-//                yaxdebug("nm0 l%d: DRAWN (bn %2d) sec %4d,%3d tspr, %.3f ms",
-//                         yax_globallev-YAX_MAXDRAWS, j, k, spritesortcnt,
-//                         (double)(1000*(gethiticks()-t))/hitickspersec);
+                if (!scansector_collectsprites)
+                    spritesortcnt = 0;
+                todoThrow();
+                //yax_copytsprites();
+                //yaxdebug("nm0 l%d: DRAWN (bn %2d) sec %4d,%3d tspr, %.3f ms",
+                //         yax_globallev-YAX_MAXDRAWS, j, k, spritesortcnt,
+                //         (double)(1000*(gethiticks()-t))/hitickspersec);
 
-//                SpriteAnimFunc(globalposx, globalposy, globalang, smoothr);
-//                drawmasks();
-//            }
+                SpriteAnimFunc(globalposx, globalposy, globalang, smoothr);
+                drawmasks();
+            }
 
-//            if (lev < maxlev[cf])
-//                for (bnchcnt=bnchbeg[lev+1][cf]; bnchcnt<bnchend[lev+1][cf]; bnchcnt++)
-//                    yax_tweakpicnums(bunches[cf][bnchcnt], cf, 1);  // restore picnums
-//        }
-//    }
+            if (lev < maxlev[cf])
+                for (bnchcnt=bnchbeg[lev+1][cf]; bnchcnt<bnchend[lev+1][cf]; bnchcnt++)
+                    yax_tweakpicnums(bunches[cf][bnchcnt], cf, 1);  // restore picnums
+        }
+    }
 
 //#ifdef YAX_DEBUG
 //    t=gethiticks();
 //#endif
-//    yax_globalcf = -1;
-//    yax_globalbunch = -1;
-//    yax_globallev = YAX_MAXDRAWS;
-//    scansector_collectsprites = 0;
+    yax_globalcf = -1;
+    yax_globalbunch = -1;
+    yax_globallev = YAX_MAXDRAWS;
+    scansector_collectsprites = 0;
 
-//    // draw base level
-//    drawrooms(globalposx,globalposy,globalposz,globalang,horiz,
-//              osectnum + MAXSECTORS*didmirror);
-////    if (scansector_collectsprites)
-////        spritesortcnt = 0;
-//    yax_copytsprites();
-//    yaxdebug("DRAWN base level sec %d,%3d tspr, %.3f ms", osectnum,
-//             spritesortcnt, (double)(1000*(gethiticks()-t))/hitickspersec);
-//    scansector_collectsprites = 1;
+    // draw base level
+    drawrooms(globalposx,globalposy,globalposz,globalang,horiz,
+              osectnum + MAXSECTORS*didmirror);
+//    if (scansector_collectsprites)
+//        spritesortcnt = 0;
+    yax_copytsprites();
+    //yaxdebug("DRAWN base level sec %d,%3d tspr, %.3f ms", osectnum,
+    //         spritesortcnt, /*(double)*/(1000*(gethiticks()-t))/hitickspersec);
+    scansector_collectsprites = 1;
 
-//    for (cf=0; cf<2; cf++)
-//        if (maxlev[cf] >= 0)
-//            for (bnchcnt=bnchbeg[0][cf]; bnchcnt<bnchend[0][cf]; bnchcnt++)
-//                yax_tweakpicnums(bunches[cf][bnchcnt], cf, 1);  // restore picnums
+    for (cf=0; cf<2; cf++)
+        if (maxlev[cf] >= 0)
+            for (bnchcnt=bnchbeg[0][cf]; bnchcnt<bnchend[0][cf]; bnchcnt++)
+                yax_tweakpicnums(bunches[cf][bnchcnt], cf, 1);  // restore picnums
 
 //#ifdef ENGINE_SCREENSHOT_DEBUG
 //    engine_screenshot = 0;
@@ -1253,7 +1262,7 @@ function yax_getneighborsect(/*int32_t */x: number, /*int32_t */y: number, /*int
 //        enddrawing();
 //    }
 //#endif
-//}
+}
 
 //#endif  // defined YAX_ENABLE
 
@@ -9420,7 +9429,7 @@ function drawmasks():void
 
                         if (!(s.cstat&128))
                             spritesz[k] -= (yspan>>1);
-                        if (klabs(spritesz[k]-globalposz) < (yspan>>1))
+                        if (klabs(spritesz[k]-globalposz) < (yspan>>1?1:0))
                             spritesz[k] = globalposz;
                     }
                 }
@@ -9557,7 +9566,7 @@ function drawmasks():void
                 }
             }
 
-            drawmaskwall(maskwallcnt);
+            todoThrow("drawmaskwall(maskwallcnt);");
         }
 
         while (spritesortcnt)
@@ -9570,7 +9579,7 @@ function drawmasks():void
 
 //#ifdef POLYMER
     if (getrendermode() == REND_POLYMER)
-        polymer_drawmasks();
+        todoThrow("polymer_drawmasks();");
 //#endif
 
     indrawroomsandmasks = 0;

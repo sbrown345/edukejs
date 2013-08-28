@@ -139,7 +139,7 @@ function /*static inline int32_t */yax_isislandwall(/*int32_t */line: number, /*
 //# define yaxdebug(fmt, ...)  do { if (m32_numdebuglines<64) Bsnprintf(m32_debugstr[m32_numdebuglines++], 128, fmt, ##__VA_ARGS__); } while (0)
 //# define yaxprintf(fmt, ...) do { initprintf(fmt, ##__VA_ARGS__); } while (0)
 //#else
-//# define yaxdebug(fmt, ...)
+var yaxdebug = console.log.bind(console);
 //# define yaxprintf(fmt, ...)
 //#endif
 

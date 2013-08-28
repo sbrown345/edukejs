@@ -1156,10 +1156,10 @@ function A_MoveCyclers():void
 
         if (c[5])
         {
-            var wal = wall[sector[sect].wallptr];
+            var walIdx = sector[sect].wallptr, wal = wall[walIdx];
             var/*int32_t */x:number;
 
-            for (x = sector[sect].wallnum; x>0; x--,wal++)
+            for (x = sector[sect].wallnum; x>0; x--,wal = wall[++walIdx])
             {
                 if (wal.hitag != 1)
                 {
