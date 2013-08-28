@@ -1922,7 +1922,7 @@ function G_MoveFallers():void
 
 //                if (actor[i].t_data[2] == 8)
 //                {
-//                    for (j=0; j<5; j++) RANDOMSCRAP;
+//                    for (j=0; j<5; j++) RANDOMSCRAP(s, i);
 //                    x = s.extra;
 //                    A_RadiusDamage(i, g_tripbombBlastRadius, x>>2,x>>1,x-(x>>2),x);
 
@@ -2237,7 +2237,7 @@ function G_MoveFallers():void
 //                    s.z -= (32<<8);
 
 //                    if (s.xrepeat)
-//                        for (x=0; x<8; x++) RANDOMSCRAP;
+//                        for (x=0; x<8; x++) RANDOMSCRAP(s, i);
 
 //                    if ((t[3] == 1 && s.xrepeat) || (int16_t)s.lotag == -99)
 //                    {
@@ -2567,7 +2567,7 @@ function G_MoveFallers():void
 //                A_PlaySound(VENT_BUST,i);
 
 //                for (j=9; j>=0; j--)
-//                    RANDOMSCRAP;
+//                    RANDOMSCRAP(s, i);
 
 //                if (s.lotag) A_Spawn(i,s.lotag);
 
@@ -3709,268 +3709,274 @@ function G_MoveTransports():void
 //    return -1;
 //}
 
-//ACTOR_STATIC void G_MoveActors(void)
-//{
-//    int32_t x, m, l;
+function G_MoveActors():void
+{
+    var /*int32_t */x:number, m:number, l:number;
 
-//    int32_t j;
-//    int32_t i = headspritestat[STAT_ACTOR];
+    var/*int32_t */j:number;
+    var/*int32_t */i = headspritestat[STAT_ACTOR];
 
-//    while (i >= 0)
-//    {
-//        const int32_t nexti = nextspritestat[i];
+    while (i >= 0)
+    {
+        var/*const int32_t */nexti = nextspritestat[i];
 
-//        spritetype *const s = &sprite[i];
-//        const int32_t sect = s.sectnum;
+        var s = sprite[i];
+        var /*const int32_t */sect = s.sectnum;
 
-//        int32_t switchpicnum;
-//        int32_t *const t = actor[i].t_data;
+        var /*int32_t */switchpicnum:number;
+        var t = actor[i].t_data;
 
-//        if (s.xrepeat == 0 || sect < 0 || sect >= MAXSECTORS)
-//            KILLIT(i);
+        if (s.xrepeat == 0 || sect < 0 || sect >= MAXSECTORS)
+            { A_DeleteSprite(i); {i = nexti; continue BOLT;} }
 
-//        Bmemcpy(&actor[i].bpos.x, s, sizeof(vec3_t));
+        actor[i].bpos.copyFrom(s);//Bmemcpy(&actor[i].bpos.x, s, sizeof(vec3_t));
 
-//        switchpicnum = s.picnum;
+        switchpicnum = s.picnum;
 
-//        if (s.picnum > GREENSLIME && s.picnum <= GREENSLIME+7)
-//            switchpicnum = GREENSLIME;
+        if (s.picnum > GREENSLIME && s.picnum <= GREENSLIME+7)
+            switchpicnum = GREENSLIME;
 
-//        switch (DYNAMICTILEMAP(switchpicnum))
-//        {
-//        case DUCK__STATIC:
-//        case TARGET__STATIC:
-//            if (s.cstat&32)
-//            {
-//                t[0]++;
-//                if (t[0] > 60)
-//                {
-//                    t[0] = 0;
-//                    s.cstat = 128+257+16;
-//                    s.extra = 1;
-//                }
-//            }
-//            else
-//            {
-//                if (A_IncurDamage(i) >= 0)
-//                {
-//                    int32_t k = 1;
+        switch (DYNAMICTILEMAP(switchpicnum))
+        {
+        case DUCK__STATIC:
+        case TARGET__STATIC:
+            if (s.cstat&32)
+            {
+                t[0]++;
+                if (t[0] > 60)
+                {
+                    t[0] = 0;
+                    s.cstat = 128+257+16;
+                    s.extra = 1;
+                }
+            }
+            else
+            {
+                if (A_IncurDamage(i) >= 0)
+                {
+                    var /*int32_t */k = 1;
 
-//                    s.cstat = 32+128;
+                    s.cstat = 32+128;
 
-//                    for (SPRITES_OF(STAT_ACTOR, j))
-//                    {
-//                        if (sprite[j].lotag == s.lotag && sprite[j].picnum == s.picnum)
-//                        {
-//                            if ((sprite[j].hitag!=0) ^ ((sprite[j].cstat&32)!=0))
-//                            {
-//                                k = 0;
-//                                break;
-//                            }
-//                        }
-//                    }
+                    for (j = headspritestat[STAT_ACTOR]; j >= 0; j = nextspritestat[j]/*SPRITES_OF(STAT_ACTOR, j)*/)
+                    {
+                        if (sprite[j].lotag == s.lotag && sprite[j].picnum == s.picnum)
+                        {
+                            if ((sprite[j].hitag!=0) ^ ((sprite[j].cstat&32)!=0))
+                            {
+                                k = 0;
+                                break;
+                            }
+                        }
+                    }
 
-//                    if (k == 1)
-//                    {
-//                        G_OperateActivators(s.lotag,-1);
-//                        G_OperateForceFields(i,s.lotag);
-//                        G_OperateMasterSwitches(s.lotag);
-//                    }
-//                }
-//            }
-//            goto BOLT;
+                    if (k == 1)
+                    {
+                        G_OperateActivators(s.lotag,-1);
+                        G_OperateForceFields(i,s.lotag);
+                        G_OperateMasterSwitches(s.lotag);
+                    }
+                }
+            }
+            {i = nexti; continue BOLT;}
 
-//        case RESPAWNMARKERRED__STATIC:
-//        case RESPAWNMARKERYELLOW__STATIC:
-//        case RESPAWNMARKERGREEN__STATIC:
-//            if (++actor[i].t_data[0] > g_itemRespawnTime)
-//                KILLIT(i);
+        case RESPAWNMARKERRED__STATIC:
+        case RESPAWNMARKERYELLOW__STATIC:
+        case RESPAWNMARKERGREEN__STATIC:
+            if (++actor[i].t_data[0] > g_itemRespawnTime)
+                { A_DeleteSprite(i); {i = nexti; continue BOLT;} }
 
-//            if (actor[i].t_data[0] >= (g_itemRespawnTime>>1) && actor[i].t_data[0] < ((g_itemRespawnTime>>1)+(g_itemRespawnTime>>2)))
-//                sprite[i].picnum = RESPAWNMARKERYELLOW;
-//            else if (actor[i].t_data[0] > ((g_itemRespawnTime>>1)+(g_itemRespawnTime>>2)))
-//                sprite[i].picnum = RESPAWNMARKERGREEN;
+            if (actor[i].t_data[0] >= (g_itemRespawnTime>>1) && actor[i].t_data[0] < ((g_itemRespawnTime>>1)+(g_itemRespawnTime>>2)))
+                sprite[i].picnum = RESPAWNMARKERYELLOW;
+            else if (actor[i].t_data[0] > ((g_itemRespawnTime>>1)+(g_itemRespawnTime>>2)))
+                sprite[i].picnum = RESPAWNMARKERGREEN;
 
-//            A_Fall(i);
-//            break;
+            A_Fall(i);
+            break;
 
-//        case HELECOPT__STATIC:
-//        case DUKECAR__STATIC:
-//            s.z += s.zvel;
-//            t[0]++;
+        case HELECOPT__STATIC:
+        case DUKECAR__STATIC:
+            s.z += s.zvel;
+            t[0]++;
 
-//            if (t[0] == 4) A_PlaySound(WAR_AMBIENCE2,i);
+            if (t[0] == 4) A_PlaySound(WAR_AMBIENCE2,i);
 
-//            if (t[0] > (GAMETICSPERSEC*8))
-//            {
-//                S_PlaySound(RPG_EXPLODE);
-//                for (j=0; j<32; j++) RANDOMSCRAP;
-//                g_earthquakeTime = 16;
-//                KILLIT(i);
-//            }
-//            else if ((t[0]&3) == 0)
-//                A_Spawn(i,EXPLOSION2);
-//            A_SetSprite(i,CLIPMASK0);
-//            break;
+            if (t[0] > (GAMETICSPERSEC*8))
+            {
+                S_PlaySound(RPG_EXPLODE);
+                for (j=0; j<32; j++) RANDOMSCRAP(s, i);
+                g_earthquakeTime = 16;
+                { A_DeleteSprite(i); {i = nexti; continue BOLT;} }
+            }
+            else if ((t[0]&3) == 0)
+                A_Spawn(i,EXPLOSION2);
+            A_SetSprite(i,CLIPMASK0);
+            break;
 
-//        case RAT__STATIC:
-//            A_Fall(i);
-//            if (A_SetSprite(i, CLIPMASK0))
-//            {
-//                if ((krand()&255) < 3) A_PlaySound(RATTY,i);
-//                s.ang += (krand()&31)-15+(sintable[(t[0]<<8)&2047]>>11);
-//            }
-//            else
-//            {
-//                actor[i].t_data[0]++;
-//                if (actor[i].t_data[0] > 1)
-//                {
-//                    KILLIT(i);
-//                }
-//                else s.ang = (krand()&2047);
-//            }
-//            if (s.xvel < 128)
-//                s.xvel+=2;
-//            s.ang += (krand()&3)-6;
-//            break;
+        case RAT__STATIC:
+            A_Fall(i);
+            if (A_SetSprite(i, CLIPMASK0))
+            {
+                if ((krand()&255) < 3) A_PlaySound(RATTY,i);
+                s.ang += (krand()&31)-15+(sintable[(t[0]<<8)&2047]>>11);
+            }
+            else
+            {
+                actor[i].t_data[0]++;
+                if (actor[i].t_data[0] > 1)
+                {
+                    { A_DeleteSprite(i); {i = nexti; continue BOLT;} }
+                }
+                else s.ang = (krand()&2047);
+            }
+            if (s.xvel < 128)
+                s.xvel+=2;
+            s.ang += (krand()&3)-6;
+            break;
 
-//        case QUEBALL__STATIC:
-//        case STRIPEBALL__STATIC:
-//            if (s.xvel)
-//            {
-//                for (SPRITES_OF(STAT_DEFAULT, j))
-//                    if (sprite[j].picnum == POCKET && ldist(&sprite[j],s) < 52)
-//                        KILLIT(i);
+        case QUEBALL__STATIC:
+        case STRIPEBALL__STATIC:
+            if (s.xvel)
+            {
+                for (j = headspritestat[STAT_DEFAULT]; j >= 0; j = nextspritestat[j])
+                    if (sprite[j].picnum == POCKET && ldist(sprite[j],s) < 52)
+                        { A_DeleteSprite(i); {i = nexti; continue BOLT;} }
 
-//                j = clipmove((vec3_t *)s,&s.sectnum,
-//                             (((s.xvel*(sintable[(s.ang+512)&2047]))>>14)*TICSPERFRAME)<<11,
-//                             (((s.xvel*(sintable[s.ang&2047]))>>14)*TICSPERFRAME)<<11,
-//                             24L,(4<<8),(4<<8),CLIPMASK1);
+                var $sectnum = new R(s.sectnum);
+                j = clipmove(/*(vec3_t *)*/s,$sectnum,
+                             (((s.xvel*(sintable[(s.ang+512)&2047]))>>14)*TICSPERFRAME)<<11,
+                             (((s.xvel*(sintable[s.ang&2047]))>>14)*TICSPERFRAME)<<11,
+                             24,(4<<8),(4<<8),CLIPMASK1);
+                s.sectnum = $sectnum.$;
 
-//                if (j&49152)
-//                {
-//                    if ((j&49152) == 32768)
-//                    {
-//                        j &= (MAXWALLS-1);
-//                        Proj_BounceOffWall(s, j);
-//                    }
-//                    else if ((j&49152) == 49152)
-//                    {
-//                        j &= (MAXSPRITES-1);
-//                        A_DamageObject(i,j);
-//                    }
-//                }
+                if (j&49152)
+                {
+                    if ((j&49152) == 32768)
+                    {
+                        j &= (MAXWALLS-1);
+                        Proj_BounceOffWall(s, j);
+                    }
+                    else if ((j&49152) == 49152)
+                    {
+                        j &= (MAXSPRITES-1);
+                        A_DamageObject(i,j);
+                    }
+                }
 
-//                s.xvel--;
-//                if (s.xvel < 0) s.xvel = 0;
+                s.xvel--;
+                if (s.xvel < 0) s.xvel = 0;
 
-//                if (s.picnum == STRIPEBALL)
-//                {
-//                    s.cstat = 257;
-//                    s.cstat |= (4 & s.xvel) | (8 & s.xvel);
-//                }
-//            }
-//            else
-//            {
-//                const int32_t p = A_FindPlayer(s,&x);
-//                DukePlayer_t *const ps = g_player[p].ps;
+                if (s.picnum == STRIPEBALL)
+                {
+                    s.cstat = 257;
+                    s.cstat |= (4 & s.xvel) | (8 & s.xvel);
+                }
+            }
+            else
+            {
+                var $x = new R(x);
+                var/*const int32_t */p = A_FindPlayer(s,$x);
+                x = $x.$;
+                var ps = g_player[p].ps;
 
-//                if (x < 1596)
-////                    if (s.pal == 12)
-//                {
-//                    j = G_GetAngleDelta(ps.ang,getangle(s.x-ps.pos.x,s.y-ps.pos.y));
+                if (x < 1596)
+//                    if (s.pal == 12)
+                {
+                    j = G_GetAngleDelta(ps.ang,getangle(s.x-ps.pos.x,s.y-ps.pos.y));
 
-//                    if (j > -64 && j < 64 && TEST_SYNC_KEY(g_player[p].sync.bits, SK_OPEN))
-//                        if (ps.toggle_key_flag == 1)
-//                        {
-//                            int32_t a;
+                    if (j > -64 && j < 64 && TEST_SYNC_KEY(g_player[p].sync.bits, SK_OPEN))
+                        if (ps.toggle_key_flag == 1)
+                        {
+                            var/*int32_t */a:number;
 
-//                            for (SPRITES_OF(STAT_ACTOR, a))
-//                            {
-//                                if (sprite[a].picnum == QUEBALL || sprite[a].picnum == STRIPEBALL)
-//                                {
-//                                    j = G_GetAngleDelta(ps.ang,getangle(sprite[a].x-ps.pos.x,sprite[a].y-ps.pos.y));
-//                                    if (j > -64 && j < 64)
-//                                    {
-//                                        A_FindPlayer(&sprite[a],&l);
-//                                        if (x > l) break;
-//                                    }
-//                                }
-//                            }
+                            for (a = headspritestat[STAT_ACTOR]; a >= 0; a = nextspritestat[a]/*SPRITES_OF(STAT_ACTOR, a)*/)
+                            {
+                                if (sprite[a].picnum == QUEBALL || sprite[a].picnum == STRIPEBALL)
+                                {
+                                    j = G_GetAngleDelta(ps.ang,getangle(sprite[a].x-ps.pos.x,sprite[a].y-ps.pos.y));
+                                    if (j > -64 && j < 64)
+                                    {
+                                        var $l = new R(l);
+                                        A_FindPlayer(sprite[a],$l);
+                                        l = $l.$;
+                                        if (x > l) break;
+                                    }
+                                }
+                            }
 
-//                            if (a == -1)
-//                            {
-//                                if (s.pal == 12)
-//                                    s.xvel = 164;
-//                                else s.xvel = 140;
-//                                s.ang = ps.ang;
-//                                ps.toggle_key_flag = 2;
-//                            }
-//                        }
-//                }
+                            if (a == -1)
+                            {
+                                if (s.pal == 12)
+                                    s.xvel = 164;
+                                else s.xvel = 140;
+                                s.ang = ps.ang;
+                                ps.toggle_key_flag = 2;
+                            }
+                        }
+                }
 
-//                if (x < 512 && s.sectnum == ps.cursectnum)
-//                {
-//                    s.ang = getangle(s.x-ps.pos.x,s.y-ps.pos.y);
-//                    s.xvel = 48;
-//                }
-//            }
+                if (x < 512 && s.sectnum == ps.cursectnum)
+                {
+                    s.ang = getangle(s.x-ps.pos.x,s.y-ps.pos.y);
+                    s.xvel = 48;
+                }
+            }
 
-//            break;
+            break;
 
-//        case FORCESPHERE__STATIC:
-//            if (s.yvel == 0)
-//            {
-//                s.yvel = 1;
+        case FORCESPHERE__STATIC:
+            if (s.yvel == 0)
+            {
+                s.yvel = 1;
 
-//                for (l=512; l<(2048-512); l+= 128)
-//                    for (j=0; j<2048; j += 128)
-//                    {
-//                        int32_t k = A_Spawn(i,FORCESPHERE);
-//                        sprite[k].cstat = 257+128;
-//                        sprite[k].clipdist = 64;
-//                        sprite[k].ang = j;
-//                        sprite[k].zvel = sintable[l&2047]>>5;
-//                        sprite[k].xvel = sintable[(l+512)&2047]>>9;
-//                        sprite[k].owner = i;
-//                    }
-//            }
+                for (l=512; l<(2048-512); l+= 128)
+                    for (j=0; j<2048; j += 128)
+                    {
+                        var/*int32_t */k = A_Spawn(i,FORCESPHERE);
+                        sprite[k].cstat = 257+128;
+                        sprite[k].clipdist = 64;
+                        sprite[k].ang = j;
+                        sprite[k].zvel = sintable[l&2047]>>5;
+                        sprite[k].xvel = sintable[(l+512)&2047]>>9;
+                        sprite[k].owner = i;
+                    }
+            }
 
-//            if (t[3] > 0)
-//            {
-//                if (s.zvel < 6144)
-//                    s.zvel += 192;
-//                s.z += s.zvel;
-//                if (s.z > sector[sect].floorz)
-//                    s.z = sector[sect].floorz;
-//                t[3]--;
-//                if (t[3] == 0)
-//                    KILLIT(i);
-//            }
-//            else if (t[2] > 10)
-//            {
-//                for (SPRITES_OF(STAT_MISC, j))
-//                    if (sprite[j].owner == i && sprite[j].picnum == FORCESPHERE)
-//                        actor[j].t_data[1] = 1+(krand()&63);
+            if (t[3] > 0)
+            {
+                if (s.zvel < 6144)
+                    s.zvel += 192;
+                s.z += s.zvel;
+                if (s.z > sector[sect].floorz)
+                    s.z = sector[sect].floorz;
+                t[3]--;
+                if (t[3] == 0)
+                    { A_DeleteSprite(i); {i = nexti; continue BOLT;} }
+            }
+            else if (t[2] > 10)
+            {
+                for (j = headspritestat[STAT_MISC]; j >= 0; j = nextspritestat[j])
+                    if (sprite[j].owner == i && sprite[j].picnum == FORCESPHERE)
+                        actor[j].t_data[1] = 1+(krand()&63);
 
-//                t[3] = 64;
-//            }
+                t[3] = 64;
+            }
 
-//            goto BOLT;
+            {i = nexti; continue BOLT;}
 
-//        case RECON__STATIC:
-//        {
-//            int32_t p;
-//            DukePlayer_t *ps;
+        case RECON__STATIC:
+        {
+            var /*int32_t */p:number;
+            var ps:DukePlayer_t;
 
-//            A_GetZLimits(i);
+            A_GetZLimits(i);
 
-//            if (sector[s.sectnum].ceilingstat&1)
-//                s.shade += (sector[s.sectnum].ceilingshade-s.shade)>>1;
-//            else s.shade += (sector[s.sectnum].floorshade-s.shade)>>1;
+            if (sector[s.sectnum].ceilingstat&1)
+                s.shade += (sector[s.sectnum].ceilingshade-s.shade)>>1;
+            else s.shade += (sector[s.sectnum].floorshade-s.shade)>>1;
 
-//            if (s.z < sector[sect].ceilingz+(32<<8))
-//                s.z = sector[sect].ceilingz+(32<<8);
+            if (s.z < sector[sect].ceilingz+(32<<8))
+                s.z = sector[sect].ceilingz+(32<<8);
 
 //#if 0 //def POLYMER
 //            gamelights[gamelightcount&(PR_MAXLIGHTS-1)].sector = s.sectnum;
@@ -3994,608 +4000,613 @@ function G_MoveTransports():void
 //                gamelightcount++;
 //#endif
 
-//            if (!g_netServer && ud.multimode < 2)
-//            {
-//                if (g_noEnemies == 1)
-//                {
-//                    s.cstat = 32768;
-//                    goto BOLT;
-//                }
-//                else if (g_noEnemies == 2) s.cstat = 257;
-//            }
-//            if (A_IncurDamage(i) >= 0)
-//            {
-//                if (s.extra < 0 && t[0] != -1)
-//                {
-//                    t[0] = -1;
-//                    s.extra = 0;
-//                }
-
-//                A_PlaySound(RECO_PAIN,i);
-//                RANDOMSCRAP;
-//            }
-
-//            if (t[0] == -1)
-//            {
-//                s.z += 1024;
-//                t[2]++;
-
-//                if ((t[2]&3) == 0)
-//                    A_Spawn(i,EXPLOSION2);
-
-//                A_GetZLimits(i);
-//                s.ang += 96;
-//                s.xvel = 128;
-//                j = A_SetSprite(i,CLIPMASK0);
-
-//                if (!j || s.z > actor[i].floorz)
-//                {
-//                    for (l=0; l<16; l++)
-//                        RANDOMSCRAP;
-//                    j = A_Spawn(i,EXPLOSION2);
-//                    A_PlaySound(LASERTRIP_EXPLODE,j);
-//                    A_Spawn(i,PIGCOP);
-//                    g_player[myconnectindex].ps.actors_killed++;
-//                    KILLIT(i);
-//                }
-//                goto BOLT;
-//            }
-//            else
-//            {
-//                if (s.z > actor[i].floorz-(48<<8))
-//                    s.z = actor[i].floorz-(48<<8);
-//            }
-
-//            p = A_FindPlayer(s,&x);
-//            ps = g_player[p].ps;
-
-//            j = s.owner;
-
-//            // 3 = findplayerz, 4 = shoot
-
-//            if (t[0] >= 4)
-//            {
-//                t[2]++;
-//                if ((t[2]&15) == 0)
-//                {
-//                    int32_t a = s.ang;
-//                    s.ang = actor[i].tempang;
-//                    A_PlaySound(RECO_ATTACK,i);
-//                    A_Shoot(i,FIRELASER);
-//                    s.ang = a;
-//                }
-//                if (t[2] > (GAMETICSPERSEC*3) || !cansee(s.x,s.y,s.z-(16<<8),s.sectnum, ps.pos.x,ps.pos.y,ps.pos.z,ps.cursectnum))
-//                {
-//                    t[0] = 0;
-//                    t[2] = 0;
-//                }
-//                else actor[i].tempang +=
-//                        G_GetAngleDelta(actor[i].tempang,getangle(ps.pos.x-s.x,ps.pos.y-s.y))/3;
-//            }
-//            else if (t[0] == 2 || t[0] == 3)
-//            {
-//                t[3] = 0;
-//                if (s.xvel > 0) s.xvel -= 16;
-//                else s.xvel = 0;
-
-//                if (t[0] == 2)
-//                {
-//                    l = ps.pos.z-s.z;
-//                    if (klabs(l) < (48<<8)) t[0] = 3;
-//                    else s.z += ksgn(ps.pos.z-s.z)<<10;
-//                }
-//                else
-//                {
-//                    t[2]++;
-//                    if (t[2] > (GAMETICSPERSEC*3) || !cansee(s.x,s.y,s.z-(16<<8),s.sectnum, ps.pos.x,ps.pos.y,ps.pos.z,ps.cursectnum))
-//                    {
-//                        t[0] = 1;
-//                        t[2] = 0;
-//                    }
-//                    else if ((t[2]&15) == 0)
-//                    {
-//                        A_PlaySound(RECO_ATTACK,i);
-//                        A_Shoot(i,FIRELASER);
-//                    }
-//                }
-//                s.ang += G_GetAngleDelta(s.ang,getangle(ps.pos.x-s.x,ps.pos.y-s.y))>>2;
-//            }
-
-//            if (t[0] != 2 && t[0] != 3)
-//            {
-//                int32_t a;
-//                l = ldist(&sprite[j],s);
-//                if (l <= 1524)
-//                {
-//                    a = s.ang;
-//                    s.xvel >>= 1;
-//                }
-//                else a = getangle(sprite[j].x-s.x,sprite[j].y-s.y);
-
-//                if (t[0] == 1 || t[0] == 4) // Found a locator and going with it
-//                {
-//                    l = dist(&sprite[j],s);
-
-//                    if (l <= 1524)
-//                    {
-//                        if (t[0] == 1) t[0] = 0;
-//                        else t[0] = 5;
-//                    }
-//                    else
-//                    {
-//                        // Control speed here
-//                        if (l > 1524)
-//                        {
-//                            if (s.xvel < 256) s.xvel += 32;
-//                        }
-//                        else
-//                        {
-//                            if (s.xvel > 0) s.xvel -= 16;
-//                            else s.xvel = 0;
-//                        }
-//                    }
-
-//                    if (t[0] < 2) t[2]++;
-
-//                    if (x < 6144 && t[0] < 2 && t[2] > (GAMETICSPERSEC*4))
-//                    {
-//                        t[0] = 2+(krand()&2);
-//                        t[2] = 0;
-//                        actor[i].tempang = s.ang;
-//                    }
-//                }
-
-//                if (t[0] == 0 || t[0] == 5)
-//                {
-//                    if (t[0] == 0)
-//                        t[0] = 1;
-//                    else t[0] = 4;
-
-//                    j = s.owner = A_FindLocator(s.hitag,-1);
-//                    if (j == -1)
-//                    {
-//                        s.hitag = j = actor[i].t_data[5];
-//                        s.owner = A_FindLocator(j,-1);
-//                        j = s.owner;
-//                        if (j == -1)
-//                            KILLIT(i);
-//                    }
-//                    else s.hitag++;
-//                }
-
-//                // RECON_T4
-//                t[3] = G_GetAngleDelta(s.ang,a);
-//                s.ang += t[3]>>3;
-
-//                if (s.z < sprite[j].z-512)
-//                    s.z += 512;
-//                else if (s.z > sprite[j].z+512)
-//                    s.z -= 512;
-//                else s.z = sprite[j].z;
-//            }
-
-//            if (!A_CheckSoundPlaying(i,RECO_ROAM))
-//                A_PlaySound(RECO_ROAM,i);
-
-//            A_SetSprite(i,CLIPMASK0);
-
-//            goto BOLT;
-//        }
-
-//        case OOZ__STATIC:
-//        case OOZ2__STATIC:
-//            A_GetZLimits(i);
-
-//            j = (actor[i].floorz-actor[i].ceilingz)>>9;
-//            if (j > 255) j = 255;
-
-//            x = 25-(j>>1);
-//            if (x < 8) x = 8;
-//            else if (x > 48) x = 48;
-
-//            s.yrepeat = j;
-//            s.xrepeat = x;
-//            s.z = actor[i].floorz;
-
-//            goto BOLT;
-
-//        case GREENSLIME__STATIC:
-//        {
-//            int32_t p;
-//            DukePlayer_t *ps;
-
-//            //        case GREENSLIME+1:
-//            //        case GREENSLIME+2:
-//            //        case GREENSLIME+3:
-//            //        case GREENSLIME+4:
-//            //        case GREENSLIME+5:
-//            //        case GREENSLIME+6:
-//            //        case GREENSLIME+7:
-
-//            // #ifndef VOLUMEONE
-//            if (!g_netServer && ud.multimode < 2)
-//            {
-//                if (g_noEnemies == 1)
-//                {
-//                    s.cstat = 32768;
-//                    goto BOLT;
-//                }
-//                else if (g_noEnemies == 2) s.cstat = 257;
-//            }
-//            // #endif
-
-//            t[1]+=128;
-
-//            if (sector[sect].floorstat&1)
-//                KILLIT(i);
-
-//            p = A_FindPlayer(s,&x);
-//            ps = g_player[p].ps;
-
-//            if (x > 20480)
-//            {
-//                actor[i].timetosleep++;
-//                if (actor[i].timetosleep > SLEEPTIME)
-//                {
-//                    actor[i].timetosleep = 0;
-//                    changespritestat(i, STAT_ZOMBIEACTOR);
-//                    goto BOLT;
-//                }
-//            }
-
-//            if (t[0] == -5) // FROZEN
-//            {
-//                t[3]++;
-//                if (t[3] > 280)
-//                {
-//                    s.pal = 0;
-//                    t[0] = 0;
-//                    goto BOLT;
-//                }
-//                A_Fall(i);
-//                s.cstat = 257;
-//                s.picnum = GREENSLIME+2;
-//                s.extra = 1;
-//                s.pal = 1;
-//                if ((j = A_IncurDamage(i)) >= 0)
-//                {
-//                    if (j == FREEZEBLAST) goto BOLT;
-//                    for (j=16; j >= 0 ; j--)
-//                    {
-//                        int32_t k = A_InsertSprite(sprite[i].sectnum,sprite[i].x,sprite[i].y,sprite[i].z,GLASSPIECES+(j%3),-32,36,36,krand()&2047,32+(krand()&63),1024-(krand()&1023),i,5);
-//                        sprite[k].pal = 1;
-//                    }
-//                    A_PlaySound(GLASS_BREAKING,i);
-//                    KILLIT(i);
-//                }
-//                else if (x < 1024 && ps.quick_kick == 0)
-//                {
-//                    j = G_GetAngleDelta(ps.ang,getangle(sprite[i].x-ps.pos.x,sprite[i].y-ps.pos.y));
-//                    if (j > -128 && j < 128)
-//                        ps.quick_kick = 14;
-//                }
-
-//                goto BOLT;
-//            }
-
-//            if (x < 1596)
-//                s.cstat = 0;
-//            else s.cstat = 257;
-
-//            if (t[0] == -4) //On the player
-//            {
-//                if (sprite[ps.i].extra < 1)
-//                {
-//                    t[0] = 0;
-//                    goto BOLT;
-//                }
-
-//                setsprite(i,(vec3_t *)s);
-
-//                s.ang = ps.ang;
-
-//                if ((TEST_SYNC_KEY(g_player[p].sync.bits, SK_FIRE) || (ps.quick_kick > 0)) && sprite[ps.i].extra > 0)
-//                    if (ps.quick_kick > 0 || (ps.curr_weapon != HANDREMOTE_WEAPON && ps.curr_weapon != HANDBOMB_WEAPON && ps.curr_weapon != TRIPBOMB_WEAPON && ps.ammo_amount[ps.curr_weapon] >= 0))
-//                    {
-//                        for (x=0; x<8; x++)
-//                        {
-//                            j = A_InsertSprite(sect,s.x,s.y,s.z-(8<<8),SCRAP3+(krand()&3),-8,48,48,krand()&2047,(krand()&63)+64,-(krand()&4095)-(s.zvel>>2),i,5);
-//                            sprite[j].pal = 6;
-//                        }
-
-//                        A_PlaySound(SLIM_DYING,i);
-//                        A_PlaySound(SQUISHED,i);
-//                        if ((krand()&255) < 32)
-//                        {
-//                            j = A_Spawn(i,BLOODPOOL);
-//                            sprite[j].pal = 0;
-//                        }
-//                        ps.actors_killed ++;
-//                        t[0] = -3;
-//                        if (ps.somethingonplayer == i)
-//                            ps.somethingonplayer = -1;
-//                        KILLIT(i);
-//                    }
-
-//                s.z = ps.pos.z+ps.pyoff-t[2]+(8<<8);
-
-//                s.z += (100-ps.horiz)<<4;
-
-//                if (t[2] > 512)
-//                    t[2] -= 128;
-
-//                if (t[2] < 348)
-//                    t[2] += 128;
-
-//                if (ps.newowner >= 0)
-//                    G_ClearCameraView(ps);
-
-//                if (t[3]>0)
-//                {
-//                    static const char frames[] = {5,5,6,6,7,7,6,5};
-
-//                    s.picnum = GREENSLIME+frames[t[3]];
-
-//                    if (t[3] == 5)
-//                    {
-//                        sprite[ps.i].extra += -(5+(krand()&3));
-//                        A_PlaySound(SLIM_ATTACK,i);
-//                    }
-
-//                    if (t[3] < 7) t[3]++;
-//                    else t[3] = 0;
-
-//                }
-//                else
-//                {
-//                    s.picnum = GREENSLIME+5;
-//                    if (rnd(32))
-//                        t[3] = 1;
-//                }
-
-//                s.xrepeat = 20+(sintable[t[1]&2047]>>13);
-//                s.yrepeat = 15+(sintable[t[1]&2047]>>13);
-
-//                s.x = ps.pos.x + (sintable[(ps.ang+512)&2047]>>7);
-//                s.y = ps.pos.y + (sintable[ps.ang&2047]>>7);
-
-//                goto BOLT;
-//            }
-
-//            else if (s.xvel < 64 && x < 768)
-//            {
-//                if (ps.somethingonplayer == -1)
-//                {
-//                    ps.somethingonplayer = i;
-//                    if (t[0] == 3 || t[0] == 2) //Falling downward
-//                        t[2] = (12<<8);
-//                    else t[2] = -(13<<8); //Climbing up duke
-//                    t[0] = -4;
-//                }
-//            }
-
-//            if ((j = A_IncurDamage(i)) >= 0)
-//            {
-//                A_PlaySound(SLIM_DYING,i);
-
-//                ps.actors_killed ++;
-//                if (ps.somethingonplayer == i)
-//                    ps.somethingonplayer = -1;
-
-//                if (j == FREEZEBLAST)
-//                {
-//                    A_PlaySound(SOMETHINGFROZE,i);
-//                    t[0] = -5 ;
-//                    t[3] = 0 ;
-//                    goto BOLT;
-//                }
-
-//                if ((krand()&255) < 32)
-//                {
-//                    j = A_Spawn(i,BLOODPOOL);
-//                    sprite[j].pal = 0;
-//                }
-
-//                for (x=0; x<8; x++)
-//                {
-//                    j = A_InsertSprite(sect,s.x,s.y,s.z-(8<<8),SCRAP3+(krand()&3),-8,48,48,krand()&2047,(krand()&63)+64,-(krand()&4095)-(s.zvel>>2),i,5);
-//                    sprite[j].pal = 6;
-//                }
-//                t[0] = -3;
-//                KILLIT(i);
-//            }
-//            // All weap
-//            if (t[0] == -1) //Shrinking down
-//            {
-//                A_Fall(i);
-
-//                s.cstat &= 65535-8;
-//                s.picnum = GREENSLIME+4;
-
-//                //                    if(s.yrepeat > 62)
-//                //                      A_DoGuts(s,JIBS6,5,myconnectindex);
-
-//                if (s.xrepeat > 32) s.xrepeat -= krand()&7;
-//                if (s.yrepeat > 16) s.yrepeat -= krand()&7;
-//                else
-//                {
-//                    s.xrepeat = 40;
-//                    s.yrepeat = 16;
-//                    t[5] = -1;
-//                    t[0] = 0;
-//                }
-
-//                goto BOLT;
-//            }
-//            else if (t[0] != -2) A_GetZLimits(i);
-
-//            if (t[0] == -2) //On top of somebody
-//            {
-//                A_Fall(i);
-//                sprite[t[5]].xvel = 0;
-
-//                l = sprite[t[5]].ang;
-
-//                s.z = sprite[t[5]].z;
-//                s.x = sprite[t[5]].x+(sintable[(l+512)&2047]>>11);
-//                s.y = sprite[t[5]].y+(sintable[l&2047]>>11);
-
-//                s.picnum =  GREENSLIME+2+(g_globalRandom&1);
-
-//                if (s.yrepeat < 64) s.yrepeat+=2;
-//                else
-//                {
-//                    if (s.xrepeat < 32) s.xrepeat += 4;
-//                    else
-//                    {
-//                        t[0] = -1;
-//                        x = ldist(s,&sprite[t[5]]);
-//                        if (x < 768)
-//                        {
-//                            sprite[t[5]].xrepeat = 0;
-
-//                            // JBF 20041129: a slimer eating another enemy really ought
-//                            // to decrease the maximum kill count by one.
-//                            if (sprite[t[5]].extra > 0)
-//                                g_player[myconnectindex].ps.max_actors_killed--;
-//                        }
-//                    }
-//                }
-
-//                goto BOLT;
-//            }
-
-//            //Check randomly to see of there is an actor near
-//            if (rnd(32))
-//            {
-//                for (SPRITES_OF_SECT(sect, j))
-//                {
-//                    switch (DYNAMICTILEMAP(sprite[j].picnum))
-//                    {
-//                    case LIZTROOP__STATIC:
-//                    case LIZMAN__STATIC:
-//                    case PIGCOP__STATIC:
-//                    case NEWBEAST__STATIC:
-//                        if (ldist(s,&sprite[j]) < 768 && (klabs(s.z-sprite[j].z)<8192))   //Gulp them
-//                        {
-//                            t[5] = j;
-//                            t[0] = -2;
-//                            t[1] = 0;
-//                            goto BOLT;
-//                        }
-//                    }
-//                }
-//            }
-
-//            //Moving on the ground or ceiling
-
-//            if (t[0] == 0 || t[0] == 2)
-//            {
-//                s.picnum = GREENSLIME;
-
-//                if ((krand()&511) == 0)
-//                    A_PlaySound(SLIM_ROAM,i);
-
-//                if (t[0]==2)
-//                {
-//                    s.zvel = 0;
-//                    s.cstat &= (65535-8);
-
-//                    if ((sector[sect].ceilingstat&1) || (actor[i].ceilingz+6144) < s.z)
-//                    {
-//                        s.z += 2048;
-//                        t[0] = 3;
-//                        goto BOLT;
-//                    }
-//                }
-//                else
-//                {
-//                    s.cstat |= 8;
-//                    A_Fall(i);
-//                }
-
-//                if (everyothertime&1) A_SetSprite(i,CLIPMASK0);
-
-//                if (s.xvel > 96)
-//                {
-//                    s.xvel -= 2;
-//                    goto BOLT;
-//                }
-//                else
-//                {
-//                    if (s.xvel < 32) s.xvel += 4;
-//                    s.xvel = 64 - (sintable[(t[1]+512)&2047]>>9);
-
-//                    s.ang += G_GetAngleDelta(s.ang,
-//                                              getangle(ps.pos.x-s.x,ps.pos.y-s.y))>>3;
-//                    // TJR
-//                }
-
-//                s.xrepeat = 36 + (sintable[(t[1]+512)&2047]>>11);
-//                s.yrepeat = 16 + (sintable[t[1]&2047]>>13);
-
-//                if (rnd(4) && (sector[sect].ceilingstat&1) == 0 &&
-//                        klabs(actor[i].floorz-actor[i].ceilingz)
-//                        < (192<<8))
-//                {
-//                    s.zvel = 0;
-//                    t[0]++;
-//                }
-
-//            }
-
-//            if (t[0]==1)
-//            {
-//                s.picnum = GREENSLIME;
-//                if (s.yrepeat < 40) s.yrepeat+=8;
-//                if (s.xrepeat > 8) s.xrepeat-=4;
-//                if (s.zvel > -(2048+1024))
-//                    s.zvel -= 348;
-//                s.z += s.zvel;
-//                if (s.z < actor[i].ceilingz+4096)
-//                {
-//                    s.z = actor[i].ceilingz+4096;
-//                    s.xvel = 0;
-//                    t[0] = 2;
-//                }
-//            }
-
-//            if (t[0]==3)
-//            {
-//                s.picnum = GREENSLIME+1;
-
-//                A_Fall(i);
-
-//                if (s.z > actor[i].floorz-(8<<8))
-//                {
-//                    s.yrepeat-=4;
-//                    s.xrepeat+=2;
-//                }
-//                else
-//                {
-//                    if (s.yrepeat < (40-4)) s.yrepeat+=8;
-//                    if (s.xrepeat > 8) s.xrepeat-=4;
-//                }
-
-//                if (s.z > actor[i].floorz-2048)
-//                {
-//                    s.z = actor[i].floorz-2048;
-//                    t[0] = 0;
-//                    s.xvel = 0;
-//                }
-//            }
-//            goto BOLT;
-//        }
-
-//        case BOUNCEMINE__STATIC:
-//        case MORTER__STATIC:
-//            j = A_Spawn(i,(PLUTOPAK?FRAMEEFFECT1:FRAMEEFFECT1_13));
-//            actor[j].t_data[0] = 3;
-
-//        case HEAVYHBOMB__STATIC:
-//        {
-//            int32_t p;
-//            DukePlayer_t *ps;
+            if (!g_netServer && ud.multimode < 2)
+            {
+                if (g_noEnemies == 1)
+                {
+                    s.cstat = 32768;
+                    {i = nexti; continue BOLT;}
+                }
+                else if (g_noEnemies == 2) s.cstat = 257;
+            }
+            if (A_IncurDamage(i) >= 0)
+            {
+                if (s.extra < 0 && t[0] != -1)
+                {
+                    t[0] = -1;
+                    s.extra = 0;
+                }
+
+                A_PlaySound(RECO_PAIN,i);
+                RANDOMSCRAP(s, i);
+            }
+
+            if (t[0] == -1)
+            {
+                s.z += 1024;
+                t[2]++;
+
+                if ((t[2]&3) == 0)
+                    A_Spawn(i,EXPLOSION2);
+
+                A_GetZLimits(i);
+                s.ang += 96;
+                s.xvel = 128;
+                j = A_SetSprite(i,CLIPMASK0);
+
+                if (!j || s.z > actor[i].floorz)
+                {
+                    for (l=0; l<16; l++)
+                        RANDOMSCRAP(s, i);
+                    j = A_Spawn(i,EXPLOSION2);
+                    A_PlaySound(LASERTRIP_EXPLODE,j);
+                    A_Spawn(i,PIGCOP);
+                    g_player[myconnectindex].ps.actors_killed++;
+                    { A_DeleteSprite(i); {i = nexti; continue BOLT;} }
+                }
+                {i = nexti; continue BOLT;}
+            }
+            else
+            {
+                if (s.z > actor[i].floorz-(48<<8))
+                    s.z = actor[i].floorz-(48<<8);
+            }
+
+            var $x = new R(x);
+            p = A_FindPlayer(s,$x);
+            x = $x.$;
+            
+            ps = g_player[p].ps;
+
+            j = s.owner;
+
+            // 3 = findplayerz, 4 = shoot
+
+            if (t[0] >= 4)
+            {
+                t[2]++;
+                if ((t[2]&15) == 0)
+                {
+                    var/*int32_t */a = s.ang;
+                    s.ang = actor[i].tempang;
+                    A_PlaySound(RECO_ATTACK,i);
+                    A_Shoot(i,FIRELASER);
+                    s.ang = a;
+                }
+                if (t[2] > (GAMETICSPERSEC*3) || !cansee(s.x,s.y,s.z-(16<<8),s.sectnum, ps.pos.x,ps.pos.y,ps.pos.z,ps.cursectnum))
+                {
+                    t[0] = 0;
+                    t[2] = 0;
+                }
+                else actor[i].tempang +=
+                        G_GetAngleDelta(actor[i].tempang,getangle(ps.pos.x-s.x,ps.pos.y-s.y))/3;
+            }
+            else if (t[0] == 2 || t[0] == 3)
+            {
+                t[3] = 0;
+                if (s.xvel > 0) s.xvel -= 16;
+                else s.xvel = 0;
+
+                if (t[0] == 2)
+                {
+                    l = ps.pos.z-s.z;
+                    if (klabs(l) < (48<<8)) t[0] = 3;
+                    else s.z += ksgn(ps.pos.z-s.z)<<10;
+                }
+                else
+                {
+                    t[2]++;
+                    if (t[2] > (GAMETICSPERSEC*3) || !cansee(s.x,s.y,s.z-(16<<8),s.sectnum, ps.pos.x,ps.pos.y,ps.pos.z,ps.cursectnum))
+                    {
+                        t[0] = 1;
+                        t[2] = 0;
+                    }
+                    else if ((t[2]&15) == 0)
+                    {
+                        A_PlaySound(RECO_ATTACK,i);
+                        A_Shoot(i,FIRELASER);
+                    }
+                }
+                s.ang += G_GetAngleDelta(s.ang,getangle(ps.pos.x-s.x,ps.pos.y-s.y))>>2;
+            }
+
+            if (t[0] != 2 && t[0] != 3)
+            {
+                var/*int32_t */a:number;
+                l = ldist(sprite[j],s);
+                if (l <= 1524)
+                {
+                    a = s.ang;
+                    s.xvel >>= 1;
+                }
+                else a = getangle(sprite[j].x-s.x,sprite[j].y-s.y);
+
+                if (t[0] == 1 || t[0] == 4) // Found a locator and going with it
+                {
+                    l = dist(sprite[j],s);
+
+                    if (l <= 1524)
+                    {
+                        if (t[0] == 1) t[0] = 0;
+                        else t[0] = 5;
+                    }
+                    else
+                    {
+                        // Control speed here
+                        if (l > 1524)
+                        {
+                            if (s.xvel < 256) s.xvel += 32;
+                        }
+                        else
+                        {
+                            if (s.xvel > 0) s.xvel -= 16;
+                            else s.xvel = 0;
+                        }
+                    }
+
+                    if (t[0] < 2) t[2]++;
+
+                    if (x < 6144 && t[0] < 2 && t[2] > (GAMETICSPERSEC*4))
+                    {
+                        t[0] = 2+(krand()&2);
+                        t[2] = 0;
+                        actor[i].tempang = s.ang;
+                    }
+                }
+
+                if (t[0] == 0 || t[0] == 5)
+                {
+                    if (t[0] == 0)
+                        t[0] = 1;
+                    else t[0] = 4;
+
+                    j = s.owner = A_FindLocator(s.hitag,-1);
+                    if (j == -1)
+                    {
+                        s.hitag = j = actor[i].t_data[5];
+                        s.owner = A_FindLocator(j,-1);
+                        j = s.owner;
+                        if (j == -1)
+                            { A_DeleteSprite(i); {i = nexti; continue BOLT;} }
+                    }
+                    else s.hitag++;
+                }
+
+                // RECON_T4
+                t[3] = G_GetAngleDelta(s.ang,a);
+                s.ang += t[3]>>3;
+
+                if (s.z < sprite[j].z-512)
+                    s.z += 512;
+                else if (s.z > sprite[j].z+512)
+                    s.z -= 512;
+                else s.z = sprite[j].z;
+            }
+
+            if (!A_CheckSoundPlaying(i,RECO_ROAM))
+                A_PlaySound(RECO_ROAM,i);
+
+            A_SetSprite(i,CLIPMASK0);
+
+            {i = nexti; continue BOLT;}
+        }
+
+        case OOZ__STATIC:
+        case OOZ2__STATIC:
+            A_GetZLimits(i);
+
+            j = (actor[i].floorz-actor[i].ceilingz)>>9;
+            if (j > 255) j = 255;
+
+            x = 25-(j>>1);
+            if (x < 8) x = 8;
+            else if (x > 48) x = 48;
+
+            s.yrepeat = j;
+            s.xrepeat = x;
+            s.z = actor[i].floorz;
+
+            {i = nexti; continue BOLT;}
+
+        case GREENSLIME__STATIC:
+        {
+            var /*int32_t */p:number;
+            var ps:DukePlayer_t ;
+
+            //        case GREENSLIME+1:
+            //        case GREENSLIME+2:
+            //        case GREENSLIME+3:
+            //        case GREENSLIME+4:
+            //        case GREENSLIME+5:
+            //        case GREENSLIME+6:
+            //        case GREENSLIME+7:
+
+            // #ifndef VOLUMEONE
+            if (!g_netServer && ud.multimode < 2)
+            {
+                if (g_noEnemies == 1)
+                {
+                    s.cstat = 32768;
+                    {i = nexti; continue BOLT;}
+                }
+                else if (g_noEnemies == 2) s.cstat = 257;
+            }
+            // #endif
+
+            t[1]+=128;
+
+            if (sector[sect].floorstat&1)
+                { A_DeleteSprite(i); {i = nexti; continue BOLT;} }
+            var $x = new R(x);
+            p = A_FindPlayer(s,$x);
+            x = $x.$;
+            ps = g_player[p].ps;
+
+            if (x > 20480)
+            {
+                actor[i].timetosleep++;
+                if (actor[i].timetosleep > SLEEPTIME)
+                {
+                    actor[i].timetosleep = 0;
+                    changespritestat(i, STAT_ZOMBIEACTOR);
+                    {i = nexti; continue BOLT;}
+                }
+            }
+
+            if (t[0] == -5) // FROZEN
+            {
+                t[3]++;
+                if (t[3] > 280)
+                {
+                    s.pal = 0;
+                    t[0] = 0;
+                    {i = nexti; continue BOLT;}
+                }
+                A_Fall(i);
+                s.cstat = 257;
+                s.picnum = GREENSLIME+2;
+                s.extra = 1;
+                s.pal = 1;
+                if ((j = A_IncurDamage(i)) >= 0)
+                {
+                    if (j == FREEZEBLAST) {i = nexti; continue BOLT;}
+                    for (j=16; j >= 0 ; j--)
+                    {
+                        var/*int32_t */k = A_InsertSprite(sprite[i].sectnum,sprite[i].x,sprite[i].y,sprite[i].z,GLASSPIECES+(j%3),-32,36,36,krand()&2047,32+(krand()&63),1024-(krand()&1023),i,5);
+                        sprite[k].pal = 1;
+                    }
+                    A_PlaySound(GLASS_BREAKING,i);
+                    { A_DeleteSprite(i); {i = nexti; continue BOLT;} }
+                }
+                else if (x < 1024 && ps.quick_kick == 0)
+                {
+                    j = G_GetAngleDelta(ps.ang,getangle(sprite[i].x-ps.pos.x,sprite[i].y-ps.pos.y));
+                    if (j > -128 && j < 128)
+                        ps.quick_kick = 14;
+                }
+
+                {i = nexti; continue BOLT;}
+            }
+
+            if (x < 1596)
+                s.cstat = 0;
+            else s.cstat = 257;
+
+            if (t[0] == -4) //On the player
+            {
+                if (sprite[ps.i].extra < 1)
+                {
+                    t[0] = 0;
+                    {i = nexti; continue BOLT;}
+                }
+
+                setsprite(i,/*(vec3_t *)*/s);
+
+                s.ang = ps.ang;
+
+                if ((TEST_SYNC_KEY(g_player[p].sync.bits, SK_FIRE) || (ps.quick_kick > 0)) && sprite[ps.i].extra > 0)
+                    if (ps.quick_kick > 0 || (ps.curr_weapon != HANDREMOTE_WEAPON && ps.curr_weapon != HANDBOMB_WEAPON && ps.curr_weapon != TRIPBOMB_WEAPON && ps.ammo_amount[ps.curr_weapon] >= 0))
+                    {
+                        for (x=0; x<8; x++)
+                        {
+                            j = A_InsertSprite(sect,s.x,s.y,s.z-(8<<8),SCRAP3+(krand()&3),-8,48,48,krand()&2047,(krand()&63)+64,-(krand()&4095)-(s.zvel>>2),i,5);
+                            sprite[j].pal = 6;
+                        }
+
+                        A_PlaySound(SLIM_DYING,i);
+                        A_PlaySound(SQUISHED,i);
+                        if ((krand()&255) < 32)
+                        {
+                            j = A_Spawn(i,BLOODPOOL);
+                            sprite[j].pal = 0;
+                        }
+                        ps.actors_killed ++;
+                        t[0] = -3;
+                        if (ps.somethingonplayer == i)
+                            ps.somethingonplayer = -1;
+                        { A_DeleteSprite(i); {i = nexti; continue BOLT;} }
+                    }
+
+                s.z = ps.pos.z+ps.pyoff-t[2]+(8<<8);
+
+                s.z += (100-ps.horiz)<<4;
+
+                if (t[2] > 512)
+                    t[2] -= 128;
+
+                if (t[2] < 348)
+                    t[2] += 128;
+
+                if (ps.newowner >= 0)
+                    G_ClearCameraView(ps);
+
+                if (t[3]>0)
+                {
+                    var /*static const char */frames = [5,5,6,6,7,7,6,5];
+
+                    s.picnum = GREENSLIME+frames[t[3]];
+
+                    if (t[3] == 5)
+                    {
+                        sprite[ps.i].extra += -(5+(krand()&3));
+                        A_PlaySound(SLIM_ATTACK,i);
+                    }
+
+                    if (t[3] < 7) t[3]++;
+                    else t[3] = 0;
+
+                }
+                else
+                {
+                    s.picnum = GREENSLIME+5;
+                    if (rnd(32))
+                        t[3] = 1;
+                }
+
+                s.xrepeat = 20+(sintable[t[1]&2047]>>13);
+                s.yrepeat = 15+(sintable[t[1]&2047]>>13);
+
+                s.x = ps.pos.x + (sintable[(ps.ang+512)&2047]>>7);
+                s.y = ps.pos.y + (sintable[ps.ang&2047]>>7);
+
+                {i = nexti; continue BOLT;}
+            }
+
+            else if (s.xvel < 64 && x < 768)
+            {
+                if (ps.somethingonplayer == -1)
+                {
+                    ps.somethingonplayer = i;
+                    if (t[0] == 3 || t[0] == 2) //Falling downward
+                        t[2] = (12<<8);
+                    else t[2] = -(13<<8); //Climbing up duke
+                    t[0] = -4;
+                }
+            }
+
+            if ((j = A_IncurDamage(i)) >= 0)
+            {
+                A_PlaySound(SLIM_DYING,i);
+
+                ps.actors_killed ++;
+                if (ps.somethingonplayer == i)
+                    ps.somethingonplayer = -1;
+
+                if (j == FREEZEBLAST)
+                {
+                    A_PlaySound(SOMETHINGFROZE,i);
+                    t[0] = -5 ;
+                    t[3] = 0 ;
+                    {i = nexti; continue BOLT;}
+                }
+
+                if ((krand()&255) < 32)
+                {
+                    j = A_Spawn(i,BLOODPOOL);
+                    sprite[j].pal = 0;
+                }
+
+                for (x=0; x<8; x++)
+                {
+                    j = A_InsertSprite(sect,s.x,s.y,s.z-(8<<8),SCRAP3+(krand()&3),-8,48,48,krand()&2047,(krand()&63)+64,-(krand()&4095)-(s.zvel>>2),i,5);
+                    sprite[j].pal = 6;
+                }
+                t[0] = -3;
+                { A_DeleteSprite(i); {i = nexti; continue BOLT;} }
+            }
+            // All weap
+            if (t[0] == -1) //Shrinking down
+            {
+                A_Fall(i);
+
+                s.cstat &= 65535-8;
+                s.picnum = GREENSLIME+4;
+
+                //                    if(s.yrepeat > 62)
+                //                      A_DoGuts(s,JIBS6,5,myconnectindex);
+
+                if (s.xrepeat > 32) s.xrepeat -= krand()&7;
+                if (s.yrepeat > 16) s.yrepeat -= krand()&7;
+                else
+                {
+                    s.xrepeat = 40;
+                    s.yrepeat = 16;
+                    t[5] = -1;
+                    t[0] = 0;
+                }
+
+                {i = nexti; continue BOLT;}
+            }
+            else if (t[0] != -2) A_GetZLimits(i);
+
+            if (t[0] == -2) //On top of somebody
+            {
+                A_Fall(i);
+                sprite[t[5]].xvel = 0;
+
+                l = sprite[t[5]].ang;
+
+                s.z = sprite[t[5]].z;
+                s.x = sprite[t[5]].x+(sintable[(l+512)&2047]>>11);
+                s.y = sprite[t[5]].y+(sintable[l&2047]>>11);
+
+                s.picnum =  GREENSLIME+2+(g_globalRandom&1);
+
+                if (s.yrepeat < 64) s.yrepeat+=2;
+                else
+                {
+                    if (s.xrepeat < 32) s.xrepeat += 4;
+                    else
+                    {
+                        t[0] = -1;
+                        x = ldist(s,sprite[t[5]]);
+                        if (x < 768)
+                        {
+                            sprite[t[5]].xrepeat = 0;
+
+                            // JBF 20041129: a slimer eating another enemy really ought
+                            // to decrease the maximum kill count by one.
+                            if (sprite[t[5]].extra > 0)
+                                g_player[myconnectindex].ps.max_actors_killed--;
+                        }
+                    }
+                }
+
+                {i = nexti; continue BOLT;}
+            }
+
+            //Check randomly to see of there is an actor near
+            if (rnd(32))
+            {
+                for (s = headspritesect[sect]; s >= 0; s = nextspritesect[s])
+                {
+                    switch (DYNAMICTILEMAP(sprite[j].picnum))
+                    {
+                    case LIZTROOP__STATIC:
+                    case LIZMAN__STATIC:
+                    case PIGCOP__STATIC:
+                    case NEWBEAST__STATIC:
+                        if (ldist(s,sprite[j]) < 768 && (klabs(s.z-sprite[j].z)<8192))   //Gulp them
+                        {
+                            t[5] = j;
+                            t[0] = -2;
+                            t[1] = 0;
+                            {i = nexti; continue BOLT;}
+                        }
+                    }
+                }
+            }
+
+            //Moving on the ground or ceiling
+
+            if (t[0] == 0 || t[0] == 2)
+            {
+                s.picnum = GREENSLIME;
+
+                if ((krand()&511) == 0)
+                    A_PlaySound(SLIM_ROAM,i);
+
+                if (t[0]==2)
+                {
+                    s.zvel = 0;
+                    s.cstat &= (65535-8);
+
+                    if ((sector[sect].ceilingstat&1) || (actor[i].ceilingz+6144) < s.z)
+                    {
+                        s.z += 2048;
+                        t[0] = 3;
+                        {i = nexti; continue BOLT;}
+                    }
+                }
+                else
+                {
+                    s.cstat |= 8;
+                    A_Fall(i);
+                }
+
+                if (everyothertime&1) A_SetSprite(i,CLIPMASK0);
+
+                if (s.xvel > 96)
+                {
+                    s.xvel -= 2;
+                    {i = nexti; continue BOLT;}
+                }
+                else
+                {
+                    if (s.xvel < 32) s.xvel += 4;
+                    s.xvel = 64 - (sintable[(t[1]+512)&2047]>>9);
+
+                    s.ang += G_GetAngleDelta(s.ang,
+                                              getangle(ps.pos.x-s.x,ps.pos.y-s.y))>>3;
+                    // TJR
+                }
+
+                s.xrepeat = 36 + (sintable[(t[1]+512)&2047]>>11);
+                s.yrepeat = 16 + (sintable[t[1]&2047]>>13);
+
+                if (rnd(4) && (sector[sect].ceilingstat&1) == 0 &&
+                        klabs(actor[i].floorz-actor[i].ceilingz)
+                        < (192<<8))
+                {
+                    s.zvel = 0;
+                    t[0]++;
+                }
+
+            }
+
+            if (t[0]==1)
+            {
+                s.picnum = GREENSLIME;
+                if (s.yrepeat < 40) s.yrepeat+=8;
+                if (s.xrepeat > 8) s.xrepeat-=4;
+                if (s.zvel > -(2048+1024))
+                    s.zvel -= 348;
+                s.z += s.zvel;
+                if (s.z < actor[i].ceilingz+4096)
+                {
+                    s.z = actor[i].ceilingz+4096;
+                    s.xvel = 0;
+                    t[0] = 2;
+                }
+            }
+
+            if (t[0]==3)
+            {
+                s.picnum = GREENSLIME+1;
+
+                A_Fall(i);
+
+                if (s.z > actor[i].floorz-(8<<8))
+                {
+                    s.yrepeat-=4;
+                    s.xrepeat+=2;
+                }
+                else
+                {
+                    if (s.yrepeat < (40-4)) s.yrepeat+=8;
+                    if (s.xrepeat > 8) s.xrepeat-=4;
+                }
+
+                if (s.z > actor[i].floorz-2048)
+                {
+                    s.z = actor[i].floorz-2048;
+                    t[0] = 0;
+                    s.xvel = 0;
+                }
+            }
+            {i = nexti; continue BOLT;}
+        }
+
+        case BOUNCEMINE__STATIC:
+        case MORTER__STATIC:
+            j = A_Spawn(i,(window.PLUTOPAK?FRAMEEFFECT1:FRAMEEFFECT1_13));
+            actor[j].t_data[0] = 3;
+
+        case HEAVYHBOMB__STATIC:
+        {
+            todoThrow();
+//            var/*int32_t */p:number;
+//            var ps:DukePlayer_t;
 
 //            if ((s.cstat&32768))
 //            {
@@ -4606,10 +4617,12 @@ function G_MoveTransports():void
 //                    A_Spawn(i,TRANSPORTERSTAR);
 //                    s.cstat = 257;
 //                }
-//                goto BOLT;
+//                {i = nexti; continue BOLT;}
 //            }
 
-//            p = A_FindPlayer(s,&x);
+//            var $x = new R(x);
+//            p = A_FindPlayer(s,$x);
+//            x = $x.$;
 //            ps = g_player[p].ps;
 
 //            if (x < 1220) s.cstat &= ~257;
@@ -4758,20 +4771,20 @@ function G_MoveTransports():void
 //                    if (s.zvel == 0)
 //                        A_Spawn(i,EXPLOSION2BOT);
 //                    for (x=0; x<8; x++)
-//                        RANDOMSCRAP;
+//                        RANDOMSCRAP(s, i);
 //                }
 
 //                if (s.yrepeat)
 //                {
 //                    s.yrepeat = 0;
-//                    goto BOLT;
+//                    {i = nexti; continue BOLT;}
 //                }
 
 //                if (t[2] > 20)
 //                {
 //                    if (s.owner != i || ud.respawn_items == 0)
 //                    {
-//                        KILLIT(i);
+//                        { A_DeleteSprite(i); {i = nexti; continue BOLT;} }
 //                    }
 //                    else
 //                    {
@@ -4779,7 +4792,7 @@ function G_MoveTransports():void
 //                        A_Spawn(i,RESPAWNMARKERRED);
 //                        s.cstat = 32768;
 //                        s.yrepeat = 9;
-//                        goto BOLT;
+//                        {i = nexti; continue BOLT;}
 //                    }
 //                }
 //            }
@@ -4791,7 +4804,7 @@ function G_MoveTransports():void
 //                        {
 //                            for (j=0; j<ps.weapreccnt; j++)
 //                                if (ps.weaprecs[j] == s.picnum)
-//                                    goto BOLT;
+//                                    {i = nexti; continue BOLT;}
 
 //                            if (ps.weapreccnt < MAX_WEAPONS)
 //                                ps.weaprecs[ps.weapreccnt++] = s.picnum;
@@ -4814,8 +4827,8 @@ function G_MoveTransports():void
 //                        if (s.owner != i || ud.respawn_items == 0)
 //                        {
 //                            if (s.owner == i && (GametypeFlags[ud.coop] & GAMETYPE_WEAPSTAY))
-//                                goto BOLT;
-//                            KILLIT(i);
+//                                {i = nexti; continue BOLT;}
+//                            { A_DeleteSprite(i); {i = nexti; continue BOLT;} }
 //                        }
 //                        else
 //                        {
@@ -4826,212 +4839,216 @@ function G_MoveTransports():void
 //                    }
 
 //            if (t[0] < 8) t[0]++;
-//            goto BOLT;
-//        }
+//            {i = nexti; continue BOLT;}
+        }
 
-//        case REACTORBURNT__STATIC:
-//        case REACTOR2BURNT__STATIC:
-//            goto BOLT;
+        case REACTORBURNT__STATIC:
+        case REACTOR2BURNT__STATIC:
+            {i = nexti; continue BOLT;}
 
-//        case REACTOR__STATIC:
-//        case REACTOR2__STATIC:
-//        {
-//            int32_t p;
-//            DukePlayer_t *ps;
+        case REACTOR__STATIC:
+        case REACTOR2__STATIC:
+        {
+            var /*int32_t */p:number;
+            var ps:DukePlayer_t ;
 
-//            if (t[4] == 1)
-//            {
-//                for (SPRITES_OF_SECT(sect, j))
-//                {
-//                    switch (DYNAMICTILEMAP(sprite[j].picnum))
-//                    {
-//                    case SECTOREFFECTOR__STATIC:
-//                        if (sprite[j].lotag == 1)
-//                        {
-//                            sprite[j].lotag = 65535;
-//                            sprite[j].hitag = 65535;
-//                        }
-//                        break;
-//                    case REACTOR__STATIC:
-//                        sprite[j].picnum = REACTORBURNT;
-//                        break;
-//                    case REACTOR2__STATIC:
-//                        sprite[j].picnum = REACTOR2BURNT;
-//                        break;
-//                    case REACTORSPARK__STATIC:
-//                    case REACTOR2SPARK__STATIC:
-//                        sprite[j].cstat = 32768;
-//                        break;
-//                    }
-//                }
+            if (t[4] == 1)
+            {
+                for (j = headspritesect[sect]; j >= 0; j = nextspritesect[j])
+                {
+                    switch (DYNAMICTILEMAP(sprite[j].picnum))
+                    {
+                    case SECTOREFFECTOR__STATIC:
+                        if (sprite[j].lotag == 1)
+                        {
+                            sprite[j].lotag = 65535;
+                            sprite[j].hitag = 65535;
+                        }
+                        break;
+                    case REACTOR__STATIC:
+                        sprite[j].picnum = REACTORBURNT;
+                        break;
+                    case REACTOR2__STATIC:
+                        sprite[j].picnum = REACTOR2BURNT;
+                        break;
+                    case REACTORSPARK__STATIC:
+                    case REACTOR2SPARK__STATIC:
+                        sprite[j].cstat = 32768;
+                        break;
+                    }
+                }
 
-//                goto BOLT;
-//            }
+                {i = nexti; continue BOLT;}
+            }
 
-//            if (t[1] >= 20)
-//            {
-//                t[4] = 1;
-//                goto BOLT;
-//            }
+            if (t[1] >= 20)
+            {
+                t[4] = 1;
+                {i = nexti; continue BOLT;}
+            }
 
-//            p = A_FindPlayer(s,&x);
-//            ps = g_player[p].ps;
+            var $x = new R(x);
+            p = A_FindPlayer(s,$x);
+            x = $x.$;
+            ps = g_player[p].ps;
 
-//            t[2]++;
-//            if (t[2] == 4) t[2]=0;
+            t[2]++;
+            if (t[2] == 4) t[2]=0;
 
-//            if (x < 4096)
-//            {
-//                if ((krand()&255) < 16)
-//                {
-//                    if (!A_CheckSoundPlaying(ps.i, DUKE_LONGTERM_PAIN))
-//                        A_PlaySound(DUKE_LONGTERM_PAIN,ps.i);
+            if (x < 4096)
+            {
+                if ((krand()&255) < 16)
+                {
+                    if (!A_CheckSoundPlaying(ps.i, DUKE_LONGTERM_PAIN))
+                        A_PlaySound(DUKE_LONGTERM_PAIN,ps.i);
 
-//                    A_PlaySound(SHORT_CIRCUIT,i);
+                    A_PlaySound(SHORT_CIRCUIT,i);
 
-//                    sprite[ps.i].extra --;
+                    sprite[ps.i].extra --;
 
-//                    P_PalFrom(ps, 32, 32,0,0);
-//                }
-//                t[0] += 128;
-//                if (t[3] == 0)
-//                    t[3] = 1;
-//            }
-//            else t[3] = 0;
+                    P_PalFrom(ps, 32, 32,0,0);
+                }
+                t[0] += 128;
+                if (t[3] == 0)
+                    t[3] = 1;
+            }
+            else t[3] = 0;
 
-//            if (t[1])
-//            {
-//                t[1]++;
+            if (t[1])
+            {
+                t[1]++;
 
-//                t[4] = s.z;
-//                s.z = sector[sect].floorz-(krand()%(sector[sect].floorz-sector[sect].ceilingz));
+                t[4] = s.z;
+                s.z = sector[sect].floorz-(krand()%(sector[sect].floorz-sector[sect].ceilingz));
 
-//                switch (t[1])
-//                {
-//                case 3:
-//                    //Turn on all of those flashing sectoreffector.
-//                    A_RadiusDamage(i, 4096,
-//                                   g_impactDamage<<2,
-//                                   g_impactDamage<<2,
-//                                   g_impactDamage<<2,
-//                                   g_impactDamage<<2);
-//                    /*
-//                                                j = headspritestat[STAT_EFFECTOR];
-//                                                while(j>=0)
-//                                                {
-//                                                    if( sprite[j].lotag  == 3 )
-//                                                        Actor[j].t_data[4]=1;
-//                                                    else if(sprite[j].lotag == SE_12_LIGHT_SWITCH)
-//                                                    {
-//                                                        Actor[j].t_data[4] = 1;
-//                                                        sprite[j].lotag = 3;
-//                                                        sprite[j].owner = 0;
-//                                                        Actor[j].t_data[0] = s.shade;
-//                                                    }
-//                                                    j = nextspritestat[j];
-//                                                }
-//                    */
+                switch (t[1])
+                {
+                case 3:
+                    //Turn on all of those flashing sectoreffector.
+                    A_RadiusDamage(i, 4096,
+                                   g_impactDamage<<2,
+                                   g_impactDamage<<2,
+                                   g_impactDamage<<2,
+                                   g_impactDamage<<2);
+                    /*
+                                                j = headspritestat[STAT_EFFECTOR];
+                                                while(j>=0)
+                                                {
+                                                    if( sprite[j].lotag  == 3 )
+                                                        Actor[j].t_data[4]=1;
+                                                    else if(sprite[j].lotag == SE_12_LIGHT_SWITCH)
+                                                    {
+                                                        Actor[j].t_data[4] = 1;
+                                                        sprite[j].lotag = 3;
+                                                        sprite[j].owner = 0;
+                                                        Actor[j].t_data[0] = s.shade;
+                                                    }
+                                                    j = nextspritestat[j];
+                                                }
+                    */
 
-//                    for (SPRITES_OF(STAT_STANDABLE, j))
-//                    {
-//                        if (sprite[j].picnum == MASTERSWITCH)
-//                            if (sprite[j].hitag == s.hitag)
-//                                if (sprite[j].yvel == 0)
-//                                    sprite[j].yvel = 1;
-//                    }
-//                    break;
+                    for (j = headspritestat[STAT_STANDABLE]; j >= 0; j = nextspritestat[j])
+                    {
+                        if (sprite[j].picnum == MASTERSWITCH)
+                            if (sprite[j].hitag == s.hitag)
+                                if (sprite[j].yvel == 0)
+                                    sprite[j].yvel = 1;
+                    }
+                    break;
 
-//                case 4:
-//                case 7:
-//                case 10:
-//                case 15:
-//                    for (SPRITES_OF_SECT(sect, j))
-//                        if (j != i)
-//                        {
-//                            A_DeleteSprite(j);
-//                            break;
-//                        }
+                case 4:
+                case 7:
+                case 10:
+                case 15:
+                    for (j = headspritesect[sect]; j >= 0; j = nextspritesect[j])
+                        if (j != i)
+                        {
+                            A_DeleteSprite(j);
+                            break;
+                        }
 
-//                    break;
-//                }
+                    break;
+                }
 
-//                for (x=0; x<16; x++)
-//                    RANDOMSCRAP;
+                for (x=0; x<16; x++)
+                    RANDOMSCRAP(s, i);
 
-//                s.z = t[4];
-//                t[4] = 0;
-//            }
-//            else
-//            {
-//                if (A_IncurDamage(i) >= 0)
-//                {
-//                    for (x=0; x<32; x++)
-//                        RANDOMSCRAP;
-//                    if (s.extra < 0)
-//                        t[1] = 1;
-//                }
-//            }
-//            goto BOLT;
-//        }
+                s.z = t[4];
+                t[4] = 0;
+            }
+            else
+            {
+                if (A_IncurDamage(i) >= 0)
+                {
+                    for (x=0; x<32; x++)
+                        RANDOMSCRAP(s, i);
+                    if (s.extra < 0)
+                        t[1] = 1;
+                }
+            }
+            {i = nexti; continue BOLT;}
+        }
 
-//        case CAMERA1__STATIC:
+        case CAMERA1__STATIC:
 
-//            if (t[0] == 0)
-//            {
-//                t[1]+=8;
-//                if (g_damageCameras)
-//                {
-//                    if (A_IncurDamage(i) >= 0)
-//                    {
-//                        t[0] = 1; // static
-//                        s.cstat = 32768;
-//                        for (x=0; x<5; x++) RANDOMSCRAP;
-//                        goto BOLT;
-//                    }
-//                }
+            if (t[0] == 0)
+            {
+                t[1]+=8;
+                if (g_damageCameras)
+                {
+                    if (A_IncurDamage(i) >= 0)
+                    {
+                        t[0] = 1; // static
+                        s.cstat = 32768;
+                        for (x=0; x<5; x++) RANDOMSCRAP(s, i);
+                        {i = nexti; continue BOLT;}
+                    }
+                }
 
-//                if (s.hitag > 0)
-//                {
-//                    if (t[1] < s.hitag)
-//                        s.ang+=8;
-//                    else if (t[1] < s.hitag*3)
-//                        s.ang-=8;
-//                    else if (t[1] < (s.hitag<<2))
-//                        s.ang+=8;
-//                    else
-//                    {
-//                        t[1]=8;
-//                        s.ang+=16;
-//                    }
-//                }
-//            }
-//            goto BOLT;
-//        }
+                if (s.hitag > 0)
+                {
+                    if (t[1] < s.hitag)
+                        s.ang+=8;
+                    else if (t[1] < s.hitag*3)
+                        s.ang-=8;
+                    else if (t[1] < (s.hitag<<2))
+                        s.ang+=8;
+                    else
+                    {
+                        t[1]=8;
+                        s.ang+=16;
+                    }
+                }
+            }
+            {i = nexti; continue BOLT;}
+        }
 
-//        if (!g_netServer && ud.multimode < 2 && A_CheckEnemySprite(s))
-//        {
-//            if (g_noEnemies == 1)
-//            {
-//                s.cstat = 32768;
-//                goto BOLT;
-//            }
-//            else if (g_noEnemies == 2)
-//            {
-//                s.cstat = 0;
-//                if (s.extra)
-//                    s.cstat = 257;
-//            }
-//        }
+        if (!g_netServer && ud.multimode < 2 && A_CheckEnemySprite(s))
+        {
+            if (g_noEnemies == 1)
+            {
+                s.cstat = 32768;
+                {i = nexti; continue BOLT;}
+            }
+            else if (g_noEnemies == 2)
+            {
+                s.cstat = 0;
+                if (s.extra)
+                    s.cstat = 257;
+            }
+        }
 
-//        if (G_HaveActor(sprite[i].picnum))
-//        {
-//            int32_t p = A_FindPlayer(s,&x);
-//            A_Execute(i,p,x);
-//        }
+        if (G_HaveActor(sprite[i].picnum))
+        {
+            var $x = new R(x);
+            var /*int32_t */p = A_FindPlayer(s,$x);
+            x = $x.$;
+            A_Execute(i,p,x);
+        }
 //BOLT:
-//        i = nexti;
-//    }
-//}
+        i = nexti;
+    }
+}
 
 function G_MoveMisc():void  // STATNUM 5
 {
@@ -7847,25 +7864,25 @@ function G_MoveMisc():void  // STATNUM 5
 //    }
 //}
 
-//static void G_DoEffectorLights(void)  // STATNUM 14
-//{
-//    int32_t i;
+function G_DoEffectorLights():void  // STATNUM 14
+{
+    var/*int32_t */i:number;
 
-//    for (SPRITES_OF(STAT_LIGHT, i))
-//    {
-//        switch (sprite[i].lotag)
-//        {
+    for (i = headspritestat[STAT_LIGHT]; i >= 0; i = nextspritestat[i])
+    {
+        switch (sprite[i].lotag)
+        {
 //#ifdef POLYMER
-//        case SE_49_POINT_LIGHT:
-//        {
-//            if (!A_CheckSpriteFlags(i, SPRITE_NOLIGHT) && getrendermode() == REND_POLYMER &&
-//                    !(A_CheckSpriteFlags(i, SPRITE_USEACTIVATOR) && sector[sprite[i].sectnum].lotag & 16384))
-//            {
+        case SE_49_POINT_LIGHT:
+        {
+            if (!A_CheckSpriteFlags(i, SPRITE_NOLIGHT) && getrendermode() == REND_POLYMER &&
+                    !(A_CheckSpriteFlags(i, SPRITE_USEACTIVATOR) && sector[sprite[i].sectnum].lotag & 16384))
+            {todoThrow();
 //                if (actor[i].lightptr == NULL)
 //                {
-//#pragma pack(push,1)
-//                    _prlight mylight;
-//#pragma pack(pop)
+////#pragma pack(push,1)
+//                    var mylight:_prlight;
+////#pragma pack(pop)
 //                    mylight.sector = sprite[i].sectnum;
 //                    Bmemcpy(&mylight, &sprite[i], sizeof(int32_t) * 3);
 //                    mylight.range = sprite[i].hitag;
@@ -7891,9 +7908,9 @@ function G_MoveMisc():void  // STATNUM 5
 //                    else
 //                        mylight.priority = PR_LIGHT_PRIO_MAX;
 
-//                    actor[i].lightId = polymer_addlight(&mylight);
+//                    actor[i].lightId = polymer_addlight(mylight);
 //                    if (actor[i].lightId >= 0)
-//                        actor[i].lightptr = &prlights[actor[i].lightId];
+//                        actor[i].lightptr = prlights[actor[i].lightId];
 //                    break;
 //                }
 
@@ -7916,22 +7933,22 @@ function G_MoveMisc():void  // STATNUM 5
 //                    actor[i].lightptr.color[1] = sprite[i].yvel;
 //                    actor[i].lightptr.color[2] = sprite[i].zvel;
 //                }
-//                if ((int)!!(sprite[i].cstat & 128) != actor[i].lightptr.publicflags.negative) {
+//                if (/*(int)*/!!(sprite[i].cstat & 128) != actor[i].lightptr.publicflags.negative) {
 //                    actor[i].lightptr.publicflags.negative = !!(sprite[i].cstat & 128);
 //                }
-//            }
-//            break;
-//        }
-//        case SE_50_SPOT_LIGHT:
-//        {
-//            if (!A_CheckSpriteFlags(i, SPRITE_NOLIGHT) && getrendermode() == REND_POLYMER &&
-//                    !(A_CheckSpriteFlags(i, SPRITE_USEACTIVATOR) && sector[sprite[i].sectnum].lotag & 16384))
-//            {
+            }
+            break;
+        }
+        case SE_50_SPOT_LIGHT:
+        {
+            if (!A_CheckSpriteFlags(i, SPRITE_NOLIGHT) && getrendermode() == REND_POLYMER &&
+                    !(A_CheckSpriteFlags(i, SPRITE_USEACTIVATOR) && sector[sprite[i].sectnum].lotag & 16384))
+            {todoThrow();
 //                if (actor[i].lightptr == NULL)
 //                {
-//#pragma pack(push,1)
-//                    _prlight mylight;
-//#pragma pack(pop)
+////#pragma pack(push,1)
+//                    var mylight:_prlight = new _prlight();
+////#pragma pack(pop)
 
 //                    mylight.sector = sprite[i].sectnum;
 //                    Bmemcpy(&mylight, &sprite[i], sizeof(int32_t) * 3);
@@ -7940,7 +7957,7 @@ function G_MoveMisc():void  // STATNUM 5
 //                    mylight.color[1] = sprite[i].yvel;
 //                    mylight.color[2] = sprite[i].zvel;
 //                    mylight.radius = (256-(sprite[i].shade+128))<<1;
-//                    mylight.faderadius = (int16_t)(mylight.radius * 0.75f);
+//                    mylight.faderadius = (int16_t)(mylight.radius * 0.75);
 //                    mylight.angle = sprite[i].ang;
 //                    mylight.horiz = sprite[i].extra;
 //                    mylight.minshade = sprite[i].xoffset;
@@ -7959,10 +7976,10 @@ function G_MoveMisc():void  // STATNUM 5
 //                    else
 //                        mylight.priority = PR_LIGHT_PRIO_MAX;
 
-//                    actor[i].lightId = polymer_addlight(&mylight);
+//                    actor[i].lightId = polymer_addlight(mylight);
 //                    if (actor[i].lightId >= 0)
 //                    {
-//                        actor[i].lightptr = &prlights[actor[i].lightId];
+//                        actor[i].lightptr = prlights[actor[i].lightId];
 
 //                        // Hack in case polymer_addlight tweaked the horiz value
 //                        if (actor[i].lightptr.horiz != sprite[i].extra)
@@ -7993,7 +8010,7 @@ function G_MoveMisc():void  // STATNUM 5
 //                if (((256-(sprite[i].shade+128))<<1) != actor[i].lightptr.radius)
 //                {
 //                    actor[i].lightptr.radius = (256-(sprite[i].shade+128))<<1;
-//                    actor[i].lightptr.faderadius = (int16_t)(actor[i].lightptr.radius * 0.75f);
+//                    actor[i].lightptr.faderadius = (int16_t)(actor[i].lightptr.radius * 0.75);
 //                    actor[i].lightptr.flags.invalidate = 1;
 //                }
 //                if (sprite[i].ang != actor[i].lightptr.angle)
@@ -8006,21 +8023,21 @@ function G_MoveMisc():void  // STATNUM 5
 //                    actor[i].lightptr.horiz = sprite[i].extra;
 //                    actor[i].lightptr.flags.invalidate = 1;
 //                }
-//                if ((int)!(sprite[i].cstat & 64) != actor[i].lightptr.publicflags.emitshadow) {
+//                if (/*(int)*/!(sprite[i].cstat & 64) != actor[i].lightptr.publicflags.emitshadow) {
 //                    actor[i].lightptr.publicflags.emitshadow = !(sprite[i].cstat & 64);
 //                }
-//                if ((int)!!(sprite[i].cstat & 128) != actor[i].lightptr.publicflags.negative) {
+//                if (/*(int)*/!!(sprite[i].cstat & 128) != actor[i].lightptr.publicflags.negative) {
 //                    actor[i].lightptr.publicflags.negative = !!(sprite[i].cstat & 128);
 //                }
 //                actor[i].lightptr.tilenum = actor[i].picnum;
 //            }
 
-//            break;
-//        }
+            break;
+        }
 //#endif // POLYMER
-//        }
-//    }
-//}
+        }
+    }
+}
 
 //#ifdef POLYMER
 //static void A_DoLight(int32_t i)
@@ -8387,13 +8404,13 @@ function G_MoveWorld(): void
 
     G_MoveActors();           //ST 1
 
-    //// XXX: Has to be before effectors, in particular movers?
-    //// TODO: lights in moving sectors ought to be interpolated
-    //G_DoEffectorLights();
+    // XXX: Has to be before effectors, in particular movers?
+    // TODO: lights in moving sectors ought to be interpolated
+    G_DoEffectorLights();
 
-    //G_MoveEffectors();        //ST 3
+    G_MoveEffectors();        //ST 3
 
-    //G_MoveStandables();       //ST 6
+    G_MoveStandables();       //ST 6
 
     k = MAXSTATUS-1;
 

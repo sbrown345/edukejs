@@ -44,7 +44,7 @@
 	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=4C525D898524154BA202395703EE824D/Scope/=139FF4CE89E7094686FDA7BF5FFBBE92/Type/@EntryValue">Everywhere</s:String>
 	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=4C525D898524154BA202395703EE824D/Shortcut/@EntryValue">SPRITESOF</s:String>
 	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=4C525D898524154BA202395703EE824D/ShortenQualifiedReferences/@EntryValue">True</s:Boolean>
-	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=4C525D898524154BA202395703EE824D/Text/@EntryValue">$j$=headspritestat[$STAT$]; $j$&gt;=0; $j$=nextspritestat[$j$]</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=4C525D898524154BA202395703EE824D/Text/@EntryValue">$j$=headspritestat[STAT_$STAT$]; $j$&gt;=0; $j$=nextspritestat[$j$]</s:String>
 	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=A2CEDAE8E785FD469A7B4891E8BA03C2/@KeyIndexDefined">True</s:Boolean>
 	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=A2CEDAE8E785FD469A7B4891E8BA03C2/Applicability/=Live/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=A2CEDAE8E785FD469A7B4891E8BA03C2/Field/=VAR_005FNAME/@KeyIndexDefined">True</s:Boolean>
@@ -101,6 +101,18 @@
 	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=C5348376C2BD3247B026846EF00F1FAF/Shortcut/@EntryValue">DO_TILE_ANIM</s:String>
 	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=C5348376C2BD3247B026846EF00F1FAF/ShortenQualifiedReferences/@EntryValue">True</s:Boolean>
 	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=C5348376C2BD3247B026846EF00F1FAF/Text/@EntryValue">if (picanm[$globalpicnum$].sf&amp;PICANM_ANIMTYPE_MASK) $globalpicnum$ += animateoffs($globalpicnum$, $sectnum$);</s:String>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=E31901B5CB7CE447AF4B29C15F6F95A9/@KeyIndexDefined">True</s:Boolean>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=E31901B5CB7CE447AF4B29C15F6F95A9/Applicability/=Live/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=E31901B5CB7CE447AF4B29C15F6F95A9/Field/=j/@KeyIndexDefined">True</s:Boolean>
+	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=E31901B5CB7CE447AF4B29C15F6F95A9/Field/=j/Order/@EntryValue">0</s:Int64>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=E31901B5CB7CE447AF4B29C15F6F95A9/Field/=Sectnum/@KeyIndexDefined">True</s:Boolean>
+	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=E31901B5CB7CE447AF4B29C15F6F95A9/Field/=Sectnum/Order/@EntryValue">1</s:Int64>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=E31901B5CB7CE447AF4B29C15F6F95A9/Reformat/@EntryValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=E31901B5CB7CE447AF4B29C15F6F95A9/Scope/=139FF4CE89E7094686FDA7BF5FFBBE92/@KeyIndexDefined">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=E31901B5CB7CE447AF4B29C15F6F95A9/Scope/=139FF4CE89E7094686FDA7BF5FFBBE92/Type/@EntryValue">Everywhere</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=E31901B5CB7CE447AF4B29C15F6F95A9/Shortcut/@EntryValue">SPRITES_OF_SECT</s:String>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=E31901B5CB7CE447AF4B29C15F6F95A9/ShortenQualifiedReferences/@EntryValue">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=E31901B5CB7CE447AF4B29C15F6F95A9/Text/@EntryValue">$j$=headspritesect[$Sectnum$]; $j$&gt;=0; $j$=nextspritesect[$j$]</s:String>
 	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=FDA3FD59FDDC5B4BBC4AB56C448E1D4C/@KeyIndexDefined">True</s:Boolean>
 	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=FDA3FD59FDDC5B4BBC4AB56C448E1D4C/Applicability/=Live/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=FDA3FD59FDDC5B4BBC4AB56C448E1D4C/Field/=potentialValue/@KeyIndexDefined">True</s:Boolean>
