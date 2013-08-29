@@ -5753,7 +5753,7 @@ function G_MoveEffectors():void   //STATNUM 3
         var/*const int32_t */st = s.lotag;
         var/*const int32_t */sh = s.hitag;
 
-        var/*int32_t *const */t = actor[i].t_data[0];
+        var/*int32_t *const */t = actor[i].t_data;
 
         switch (st)
         {

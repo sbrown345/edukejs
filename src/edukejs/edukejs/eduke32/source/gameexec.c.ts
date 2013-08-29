@@ -5351,49 +5351,50 @@ function A_LoadActor(iActor: number):void
 
 // NORECURSE
 function A_Execute(/*int32_t */iActor:number,/*int32_t */iPlayer:number,/*int32_t */lDist:number):void
-{todo("A_Execute!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-////#ifdef LUNATIC
-////    int32_t killit=0;
-////#else
-//    intptr_t actionofs, *actionptr;
-////#endif
-//    vmstate_t tempvm = { iActor, iPlayer, lDist, &actor[iActor].t_data[0],
-//                         &sprite[iActor], 0
-//                       };
+{
+    debugger;
+//#ifdef LUNATIC
+//    int32_t killit=0;
+//#else
+    var /*intptr_t */actionofs:number, /***/actionptr:number;
+//#endif
+    var tempvm = new vmstate_t( iActor, iPlayer, lDist, actor[iActor].t_data[0],
+                         sprite[iActor], 0
+                       );
 
-///*
-//    if (g_netClient && A_CheckSpriteFlags(iActor, SPRITE_NULL))
-//    {
-//        A_DeleteSprite(iActor);
-//        return;
-//    }
-//*/
+/*
+    if (g_netClient && A_CheckSpriteFlags(iActor, SPRITE_NULL))
+    {
+        A_DeleteSprite(iActor);
+        return;
+    }
+*/
 
-//    if (g_netServer || g_netClient)
-//        randomseed = ticrandomseed;
+    if (g_netServer || g_netClient)
+        randomseed = ticrandomseed;
 
-//    Bmemcpy(&vm, &tempvm, sizeof(vmstate_t));
+    vm.copyFrom(tempvm);// Bmemcpy(&vm, &tempvm, sizeof(vmstate_t));
 
-//    if (/*(unsigned)*/vm.g_sp.sectnum >= MAXSECTORS)
-//    {
-//        if (A_CheckEnemySprite(vm.g_sp))
-//            g_player[vm.g_p].ps.actors_killed++;
-//        A_DeleteSprite(vm.g_i);
-//        return;
-//    }
+    if (/*(unsigned)*/vm.g_sp.sectnum >= MAXSECTORS)
+    {
+        if (A_CheckEnemySprite(vm.g_sp))
+            g_player[vm.g_p].ps.actors_killed++;
+        A_DeleteSprite(vm.g_i);
+        return;
+    }
 
-//    /* Qbix: Changed variables to be aware of the sizeof *insptr
-//     * (whether it is int32_t vs intptr_t), Although it is specifically cast to intptr_t*
-//     * which might be corrected if the code is converted to use offsets */
-//    /* Helixhorned: let's do away with intptr_t's... */
-////#if !defined LUNATIC
-//    actionofs = AC_ACTION_ID(vm.g_t);
-//    actionptr = (actionofs!=0 && actionofs+4u < (unsigned)g_scriptSize) ?
-//        &script[actionofs] : NULL;
+    /* Qbix: Changed variables to be aware of the sizeof *insptr
+     * (whether it is int32_t vs intptr_t), Although it is specifically cast to intptr_t*
+     * which might be corrected if the code is converted to use offsets */
+    /* Helixhorned: let's do away with intptr_t's... */
+//#if !defined LUNATIC
+    actionofs = AC_ACTION_ID(vm.g_t);
+    actionptr = (actionofs!=0 && actionofs+4 < /*(unsigned)*/g_scriptSize) ?
+        script[actionofs] : NULL;
 
-//    if (actionptr != NULL)
-////#endif
-//    {
+    if (actionptr != NULL)
+//#endif
+    {todoThrow();
 ////#if !defined LUNATIC
 //        const int32_t action_frames = actionptr[1];
 //        const int32_t action_incval = actionptr[3];
@@ -5416,78 +5417,78 @@ function A_Execute(/*int32_t */iActor:number,/*int32_t */iPlayer:number,/*int32_
 
 //        if (klabs(AC_CURFRAME(vm.g_t)) >= klabs(action_frames * action_incval))
 //            AC_CURFRAME(vm.g_t) = 0;
-//    }
+    }
 
-////#ifdef LUNATIC
-////    {
-////        double t = gethitickms();
-////        const int32_t picnum = vm.g_sp.picnum;
-
-////        if (L_IsInitialized(&g_ElState) && El_HaveActor(picnum))
-////            killit = (El_CallActor(&g_ElState, picnum, iActor, iPlayer, lDist)==1);
-
-////        t = gethitickms()-t;
-////        g_actorTotalMs[picnum] += t;
-////        g_actorMinMs[picnum] = min(g_actorMinMs[picnum], t);
-////        g_actorMaxMs[picnum] = max(g_actorMaxMs[picnum], t);
-////        g_actorCalls[picnum]++;
-////    }
-////#else
-//    insptr = 4 + (g_tile[vm.g_sp.picnum].execPtr);
-//    VM_Execute(1);
-//    insptr = NULL;
-////#endif
-
-//    if ((vm.g_flags & VM_KILL)
-////#ifdef LUNATIC
-////        || killit
-////#endif
-//        )
+//#ifdef LUNATIC
 //    {
-//        VM_KillIt(iActor, iPlayer);
-//        return;
+//        double t = gethitickms();
+//        const int32_t picnum = vm.g_sp.picnum;
+
+//        if (L_IsInitialized(&g_ElState) && El_HaveActor(picnum))
+//            killit = (El_CallActor(&g_ElState, picnum, iActor, iPlayer, lDist)==1);
+
+//        t = gethitickms()-t;
+//        g_actorTotalMs[picnum] += t;
+//        g_actorMinMs[picnum] = min(g_actorMinMs[picnum], t);
+//        g_actorMaxMs[picnum] = max(g_actorMaxMs[picnum], t);
+//        g_actorCalls[picnum]++;
 //    }
+//#else
+    insptr = 4 + (g_tile[vm.g_sp.picnum].execPtr);
+    VM_Execute(1);
+    insptr = NULL;
+//#endif
 
-//    VM_Move();
+    if ((vm.g_flags & VM_KILL)
+//#ifdef LUNATIC
+//        || killit
+//#endif
+        )
+    {
+        VM_KillIt(iActor, iPlayer);
+        return;
+    }
 
-//    if (vm.g_sp.statnum == STAT_STANDABLE)
-//        switch (DYNAMICTILEMAP(vm.g_sp.picnum))
-//        {
-//        case RUBBERCAN__STATIC:
-//        case EXPLODINGBARREL__STATIC:
-//        case WOODENHORSE__STATIC:
-//        case HORSEONSIDE__STATIC:
-//        case CANWITHSOMETHING__STATIC:
-//        case FIREBARREL__STATIC:
-//        case NUKEBARREL__STATIC:
-//        case NUKEBARRELDENTED__STATIC:
-//        case NUKEBARRELLEAKED__STATIC:
-//        case TRIPBOMB__STATIC:
-//        case EGG__STATIC:
-//            if (actor[vm.g_i].timetosleep > 1)
-//                actor[vm.g_i].timetosleep--;
-//            else if (actor[vm.g_i].timetosleep == 1)
-//                changespritestat(vm.g_i,STAT_ZOMBIEACTOR);
-//        default:
-//            return;
-//        }
+    VM_Move();
 
-//    if (vm.g_sp.statnum != STAT_ACTOR)
-//        return;
+    if (vm.g_sp.statnum == STAT_STANDABLE)
+        switch (DYNAMICTILEMAP(vm.g_sp.picnum))
+        {
+        case RUBBERCAN__STATIC:
+        case EXPLODINGBARREL__STATIC:
+        case WOODENHORSE__STATIC:
+        case HORSEONSIDE__STATIC:
+        case CANWITHSOMETHING__STATIC:
+        case FIREBARREL__STATIC:
+        case NUKEBARREL__STATIC:
+        case NUKEBARRELDENTED__STATIC:
+        case NUKEBARRELLEAKED__STATIC:
+        case TRIPBOMB__STATIC:
+        case EGG__STATIC:
+            if (actor[vm.g_i].timetosleep > 1)
+                actor[vm.g_i].timetosleep--;
+            else if (actor[vm.g_i].timetosleep == 1)
+                changespritestat(vm.g_i,STAT_ZOMBIEACTOR);
+        default:
+            return;
+        }
 
-//    if (A_CheckEnemySprite(vm.g_sp))
-//    {
-//        if (vm.g_sp.xrepeat > 60) return;
-//        if (ud.respawn_monsters == 1 && vm.g_sp.extra <= 0) return;
-//    }
-//    else if (ud.respawn_items == 1 && (vm.g_sp.cstat&32768)) return;
+    if (vm.g_sp.statnum != STAT_ACTOR)
+        return;
 
-//    if (A_CheckSpriteFlags(vm.g_i, SPRITE_USEACTIVATOR) && sector[vm.g_sp.sectnum].lotag & 16384)
-//        changespritestat(vm.g_i, STAT_ZOMBIEACTOR);
-//    else if (actor[vm.g_i].timetosleep > 1)
-//        actor[vm.g_i].timetosleep--;
-//    else if (actor[vm.g_i].timetosleep == 1)
-//        changespritestat(vm.g_i, STAT_ZOMBIEACTOR);
+    if (A_CheckEnemySprite(vm.g_sp))
+    {
+        if (vm.g_sp.xrepeat > 60) return;
+        if (ud.respawn_monsters == 1 && vm.g_sp.extra <= 0) return;
+    }
+    else if (ud.respawn_items == 1 && (vm.g_sp.cstat&32768)) return;
+
+    if (A_CheckSpriteFlags(vm.g_i, SPRITE_USEACTIVATOR) && sector[vm.g_sp.sectnum].lotag & 16384)
+        changespritestat(vm.g_i, STAT_ZOMBIEACTOR);
+    else if (actor[vm.g_i].timetosleep > 1)
+        actor[vm.g_i].timetosleep--;
+    else if (actor[vm.g_i].timetosleep == 1)
+        changespritestat(vm.g_i, STAT_ZOMBIEACTOR);
 }
 
 //void G_SaveMapState(void)
