@@ -11651,13 +11651,13 @@ function inside(/*int32_t*/ x: number, /*int32_t*/ y: number, /*int16_t*/ sectnu
 function /*int32_t */getangle(/*int32_t */xvect:number, /*int32_t */yvect:number)
 {
     if ((xvect|yvect) == 0) return(0);
-    if (xvect == 0) return 512+((yvect<0)<<10);
-    if (yvect == 0) return ((xvect<0)<<10);
-    if (xvect == yvect) return 256+((xvect<0)<<10);
-    if (xvect == -yvect) return 768+((xvect>0)<<10);
+    if (xvect == 0) return 512+((yvect<0?1:0)<<10);
+    if (yvect == 0) return ((xvect<0?1:0)<<10);
+    if (xvect == yvect) return 256+((xvect<0?1:0)<<10);
+    if (xvect == -yvect) return 768+((xvect>0?1:0)<<10);
     if (klabs(xvect) > klabs(yvect))
-        return ((radarang[640+scale(160,yvect,xvect)]>>6)+((xvect<0)<<10))&2047;
-    return ((radarang[640-scale(160,xvect,yvect)]>>6)+512+((yvect<0)<<10))&2047;
+        return ((radarang[640+scale(160,yvect,xvect)]>>6)+((xvect<0?1:0)<<10))&2047;
+    return ((radarang[640-scale(160,xvect,yvect)]>>6)+512+((yvect<0?1:0)<<10))&2047;
 }
 
 //

@@ -65,18 +65,18 @@ var STAT_NETALLOC      = MAXSTATUS-1;
 
 //// Defines the motion characteristics of an actor
 //enum amoveflags_t {
-//    face_player         = 1,
-//    geth                = 2,
-//    getv                = 4,
-//    random_angle        = 8,
-//    face_player_slow    = 16,
-//    spin                = 32,
-//    face_player_smart   = 64,
-//    fleeenemy           = 128,
-//    jumptoplayer        = 257,
-//    seekplayer          = 512,
-//    furthestdir         = 1024,
-//    dodgebullet         = 4096
+var face_player         = 1,
+    geth                = 2,
+    getv                = 4,
+    random_angle        = 8,
+    face_player_slow    = 16,
+    spin                = 32,
+    face_player_smart   = 64,
+    fleeenemy           = 128,
+    jumptoplayer        = 257,
+    seekplayer          = 512,
+    furthestdir         = 1024,
+    dodgebullet         = 4096;
 //};
 
 //// Defines for 'useractor' keyword
@@ -175,11 +175,11 @@ class projectile_t {
 //// <spr>: sprite pointer
 //// <a>: actor_t pointer
 //#ifdef LUNATIC
-//# define AC_ACTIONTICS(spr, a) ((a)->actiontics)
-//# define AC_MOVFLAGS(spr, a) ((a)->movflags)
+//# define AC_ACTIONTICS(spr, a) ((a).actiontics)
+//# define AC_MOVFLAGS(spr, a) ((a).movflags)
 //#else
-//# define AC_ACTIONTICS(spr, a) ((spr)->lotag)
-//# define AC_MOVFLAGS(spr, a) ((spr)->hitag)
+function AC_ACTIONTICS(spr: spritetype, a:actor_t) {return (spr).lotag;}
+function AC_MOVFLAGS(spr: spritetype, a:actor_t) {return (spr).hitag;}
 //#endif
 
 //#pragma pack(push,1)
@@ -408,7 +408,7 @@ var g_parsingActorPtr: number; //extern intptr_t         *
 //int32_t             G_SetInterpolation(int32_t *posptr);
 //void                G_StopInterpolation(int32_t *posptr);
 
-//// PK 20110701: changed input argument: int32_t i (== sprite, whose sectnum...) --> sectnum directly
+//// PK 20110701: changed input argument: int32_t i (== sprite, whose sectnum...) -. sectnum directly
 //void                Sect_ClearInterpolation(int32_t sectnum);
 //void                Sect_SetInterpolation(int32_t sectnum);
 

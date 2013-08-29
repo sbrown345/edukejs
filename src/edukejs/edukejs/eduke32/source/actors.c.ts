@@ -6201,7 +6201,7 @@ function G_MoveEffectors():void   //STATNUM 3
         case SE_30_TWO_WAY_TRAIN:
             if (s.owner == -1)
             {
-                t[3] = !t[3];
+                t[3] = !t[3]?1:0;
                 s.owner = A_FindLocator(t[3],t[0]);
             }
             else
@@ -7288,7 +7288,7 @@ function G_MoveEffectors():void   //STATNUM 3
                         ps.opos.y = ps.pos.y;
 
                         ps.pos.z += PHEIGHT;
-                        setsprite(ps.i,/*(vec3_t *)*/ps);
+                        setsprite(ps.i,/*(vec3_t *)*/ps.pos);
                         ps.pos.z -= PHEIGHT;
                     }
                 }
@@ -7711,8 +7711,8 @@ function G_MoveEffectors():void   //STATNUM 3
                         HandleSE31(i, 1, s.z, 0, s.z-sc.floorz);
                     else
                         HandleSE31(i, 1, t[1], 0, t[1]-sc.floorz);
-
-                    Yax_SetBunchZs(sc-sector, YAX_FLOOR, sc.floorz);
+                    debugger; //sc-sector???
+                    todoThrow("Yax_SetBunchZs(sc-sector, YAX_FLOOR, sc.floorz);"); //sc-sector???
 
                     break;
                 }

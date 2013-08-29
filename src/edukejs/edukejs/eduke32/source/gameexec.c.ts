@@ -102,17 +102,17 @@ function VM_ScriptInfo (): void
 //#endif
 }
 
-//static void VM_KillIt(int32_t iActor, int32_t iPlayer)
-//{
-//    if (iActor >= 0)
-//    {
-//        // if player was set to squish, first stop that...
-//        if (iPlayer >= 0 && g_player[iPlayer].ps.actorsqu == iActor)
-//            g_player[iPlayer].ps.actorsqu = -1;
+function VM_KillIt(/*int32_t */iActor:number, /*int32_t */iPlayer:number):void 
+{
+    if (iActor >= 0)
+    {
+        // if player was set to squish, first stop that...
+        if (iPlayer >= 0 && g_player[iPlayer].ps.actorsqu == iActor)
+            g_player[iPlayer].ps.actorsqu = -1;
 
-//        A_DeleteSprite(iActor);
-//    }
-//}
+        A_DeleteSprite(iActor);
+    }
+}
 
 // May recurse, e.g. through EVENT_XXX . ... . EVENT_KILLIT
 function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: number, iReturn: number): number
@@ -216,37 +216,37 @@ function VM_OnEvent(iEventID: number, iActor: number, iPlayer: number, lDist: nu
 //    p.look_ang = p.rotscrnang = n>>1;
 //}
 
-//int32_t A_Dodge(spritetype *s)
-//{
-//    int32_t bx,by,bxvect,byvect,i;
-//    int32_t mx = s.x, my = s.y;
-//    int32_t mxvect = sintable[(s.ang+512)&2047];
-//    int32_t myvect = sintable[s.ang&2047];
+function /*int32_t */A_Dodge(s:spritetype):number
+{
+    var /*int32_t*/ bx:number,by:number,bxvect:number,byvect:number,i:number;
+    var /*int32_t*/ mx = s.x, my = s.y;
+    var /*int32_t*/ mxvect = sintable[(s.ang+512)&2047];
+    var /*int32_t*/ myvect = sintable[s.ang&2047];
 
-//    if (A_CheckEnemySprite(s) && s.extra <= 0) // hack
-//        return 0;
+    if (A_CheckEnemySprite(s) && s.extra <= 0) // hack
+        return 0;
 
-//    for (i=headspritestat[STAT_PROJECTILE]; i>=0; i=nextspritestat[i]) //weapons list
-//    {
-//        if (sprite[i].owner == i)
-//            continue;
+    for (i=headspritestat[STAT_PROJECTILE]; i>=0; i=nextspritestat[i]) //weapons list
+    {
+        if (sprite[i].owner == i)
+            continue;
 
-//        bx = sprite[i].x-mx;
-//        by = sprite[i].y-my;
-//        bxvect = sintable[(sprite[i].ang+512)&2047];
-//        byvect = sintable[sprite[i].ang&2047];
+        bx = sprite[i].x-mx;
+        by = sprite[i].y-my;
+        bxvect = sintable[(sprite[i].ang+512)&2047];
+        byvect = sintable[sprite[i].ang&2047];
 
-//        if ((mxvect * bx) + (myvect * by) >= 0 && (bxvect * bx) + (byvect * by) < 0)
-//        {
-//            if (klabs((bxvect * by) - (byvect * bx)) < 65536<<6)
-//            {
-//                s.ang -= 512+(krand()&1024);
-//                return 1;
-//            }
-//        }
-//    }
-//    return 0;
-//}
+        if ((mxvect * bx) + (myvect * by) >= 0 && (bxvect * bx) + (byvect * by) < 0)
+        {
+            if (klabs((bxvect * by) - (byvect * bx)) < 65536<<6)
+            {
+                s.ang -= 512+(krand()&1024);
+                return 1;
+            }
+        }
+    }
+    return 0;
+}
 
 function /*int32_t */A_GetFurthestAngle(/*int32_t */iActor:number, /*int32_t */angs:number)
 {
@@ -471,11 +471,11 @@ function /*int32_t */G_GetAngleDelta(/*int32_t */a:number,/*int32_t */na:number)
     return (na-a);
 }
 
-//GAMEEXEC_STATIC void VM_AlterAng(int32_t movflags)
-//{
+function VM_AlterAng(/*int32_t */movflags:number):void
+{todoThrow();
 //    const int32_t ticselapsed = (AC_COUNT(vm.g_t))&31;
 
-//#if !defined LUNATIC
+////#if !defined LUNATIC
 //    const intptr_t *moveptr;
 //    if ((unsigned)AC_MOVE_ID(vm.g_t) >= (unsigned)g_scriptSize-1)
 
@@ -489,12 +489,12 @@ function /*int32_t */G_GetAngleDelta(/*int32_t */a:number,/*int32_t */na:number)
 
 //    vm.g_sp.xvel += (*moveptr - vm.g_sp.xvel)/5;
 //    if (vm.g_sp.zvel < 648)
-//        vm.g_sp.zvel += ((*(moveptr+1)<<4) - vm.g_sp.zvel)/5;
-//#else
-//    vm.g_sp.xvel += (actor[vm.g_i].mv.hvel - vm.g_sp.xvel)/5;
-//    if (vm.g_sp.zvel < 648)
-//        vm.g_sp.zvel += ((actor[vm.g_i].mv.vvel<<4) - vm.g_sp.zvel)/5;
-//#endif
+//        vm.g_sp.zvel += int32(((*(moveptr+1)<<4) - vm.g_sp.zvel)/5);
+////#else
+////    vm.g_sp.xvel += int32((actor[vm.g_i].mv.hvel - vm.g_sp.xvel)/5);
+////    if (vm.g_sp.zvel < 648)
+////        vm.g_sp.zvel += int32(((actor[vm.g_i].mv.vvel<<4) - vm.g_sp.zvel)/5);
+////#endif
 
 //    if (A_CheckEnemySprite(vm.g_sp) && vm.g_sp.extra <= 0) // hack
 //        return;
@@ -549,17 +549,17 @@ function /*int32_t */G_GetAngleDelta(/*int32_t */a:number,/*int32_t */na:number)
 //        if (movflags&fleeenemy)
 //            vm.g_sp.ang = A_GetFurthestAngle(vm.g_i, 2);
 //    }
-//}
+}
 
-//static void VM_AddAngle(int32_t shr, int32_t goalang)
-//{
-//    int32_t angdif = G_GetAngleDelta(vm.g_sp.ang,goalang)>>shr;
+function VM_AddAngle(/*int32_t */shr:number, /*int32_t */goalang:number):void
+{
+    var/*int32_t */angdif = G_GetAngleDelta(vm.g_sp.ang,goalang)>>shr;
 
-//    if ((angdif > -8 && angdif < 0) || (angdif < 8 && angdif > 0))
-//        angdif *= 2;
+    if ((angdif > -8 && angdif < 0) || (angdif < 8 && angdif > 0))
+        angdif *= 2;
 
-//    vm.g_sp.ang += angdif;
-//}
+    vm.g_sp.ang += angdif;
+}
 
 //static void VM_FacePlayer(int32_t shr)
 //{
@@ -603,216 +603,216 @@ function /*int32_t */G_GetAngleDelta(/*int32_t */a:number,/*int32_t */na:number)
 //    return getflorzofslope(sectnum, dax, day);
 //}
 
-//////////////////////
+////////////////////
 
-//GAMEEXEC_STATIC void VM_Move(void)
-//{
+function VM_Move():void
+{
 //#if !defined LUNATIC
-//    const intptr_t *moveptr;
+    var /*const intptr_t **/moveptr:Int32Array;
 //#endif
-//    // NOTE: commented out condition is dead since r3159 (making hi/lotag unsigned).
-//    // XXX: Does it break anything? Where are movflags with all bits set created?
-//    const uint16_t *movflagsptr = &AC_MOVFLAGS(vm.g_sp, &actor[vm.g_i]);
-//    const int32_t movflags = /*(*movflagsptr==-1) ? 0 :*/ *movflagsptr;
-//    const int32_t deadflag = (A_CheckEnemySprite(vm.g_sp) && vm.g_sp.extra <= 0);
-//    int32_t badguyp, angdif;
+    // NOTE: commented out condition is dead since r3159 (making hi/lotag unsigned).
+    // XXX: Does it break anything? Where are movflags with all bits set created?
+    var /*const uint16_t **/movflagsptr = AC_MOVFLAGS(vm.g_sp, actor[vm.g_i]);
+    var/*const int32_t */movflags = /*(*movflagsptr==-1) ? 0 : **/ movflagsptr;
+    var /*const int32_t */deadflag = (A_CheckEnemySprite(vm.g_sp) && vm.g_sp.extra <= 0)?1:0;
+    var/*int32_t */badguyp:number, angdif:number;
 
-//    AC_COUNT(vm.g_t)++;
+    vm.g_t[0]++;//AC_COUNT(vm.g_t)++;
 
-//    // If the move ID is zero, or the movflags are 0
-//    if (AC_MOVE_ID(vm.g_t) == 0 || movflags == 0)
-//    {
-//        if (deadflag || (actor[vm.g_i].bpos.x != vm.g_sp.x) || (actor[vm.g_i].bpos.y != vm.g_sp.y))
-//        {
-//            actor[vm.g_i].bpos.x = vm.g_sp.x;
-//            actor[vm.g_i].bpos.y = vm.g_sp.y;
-//            setsprite(vm.g_i, (vec3_t *)vm.g_sp);
-//        }
-//        return;
-//    }
+    // If the move ID is zero, or the movflags are 0
+    if (AC_MOVE_ID(vm.g_t) == 0 || movflags == 0)
+    {
+        if (deadflag || (actor[vm.g_i].bpos.x != vm.g_sp.x) || (actor[vm.g_i].bpos.y != vm.g_sp.y))
+        {
+            actor[vm.g_i].bpos.x = vm.g_sp.x;
+            actor[vm.g_i].bpos.y = vm.g_sp.y;
+            setsprite(vm.g_i, /*(vec3_t *)*/vm.g_sp);
+        }
+        return;
+    }
 
-//    if (deadflag)
-//        goto dead;
+    if (!deadflag) {
+        //goto dead;
 
-//    if (movflags&face_player)
-//        VM_FacePlayer(2);
+        if (movflags&face_player)
+            VM_FacePlayer(2);
 
-//    if (movflags&spin)
-//        vm.g_sp.ang += sintable[((AC_COUNT(vm.g_t)<<3)&2047)]>>6;
+        if (movflags&spin)
+            vm.g_sp.ang += sintable[((AC_COUNT(vm.g_t)<<3)&2047)]>>6;
 
-//    if (movflags&face_player_slow)
-//        VM_FacePlayer(4);
+        if (movflags&face_player_slow)
+            VM_FacePlayer(4);
 
-//    if ((movflags&jumptoplayer) == jumptoplayer)
-//    {
-//        if (AC_COUNT(vm.g_t) < 16)
-//            vm.g_sp.zvel -= (sintable[(512+(AC_COUNT(vm.g_t)<<4))&2047]>>5);
-//    }
+        if ((movflags&jumptoplayer) == jumptoplayer)
+        {
+            if (AC_COUNT(vm.g_t) < 16)
+                vm.g_sp.zvel -= (sintable[(512+(AC_COUNT(vm.g_t)<<4))&2047]>>5);
+        }
 
-//    if (movflags&face_player_smart)
-//    {
-//        DukePlayer_t *const ps = g_player[vm.g_p].ps;
-//        int32_t newx = ps.pos.x + (ps.vel.x/768);
-//        int32_t newy = ps.pos.y + (ps.vel.y/768);
+        if (movflags&face_player_smart)
+        {
+            var /*DukePlayer_t *const */ps = g_player[vm.g_p].ps;
+            var /*int32_t */newx = ps.pos.x + (ps.vel.x/768);
+            var /*int32_t */newy = ps.pos.y + (ps.vel.y/768);
 
-//        int32_t goalang = getangle(newx-vm.g_sp.x,newy-vm.g_sp.y);
-//        VM_AddAngle(2, goalang);
-//    }
-
+            var/*int32_t */goalang = getangle(newx-vm.g_sp.x,newy-vm.g_sp.y);
+            VM_AddAngle(2, goalang);
+        }
+    }
 //dead:
 //#if !defined LUNATIC
-//    if ((unsigned)AC_MOVE_ID(vm.g_t) >= (unsigned)g_scriptSize-1)
-//    {
-//        AC_MOVE_ID(vm.g_t) = 0;
-//        OSD_Printf_nowarn(OSD_ERROR "clearing bad moveptr for actor %d (%d)\n", vm.g_i, TrackerCast(vm.g_sp.picnum));
-//        return;
-//    }
+    if (/*(unsigned)*/AC_MOVE_ID(vm.g_t) >= /*(unsigned)*/g_scriptSize-1)
+    {
+        vm.g_t[1] = 0;// AC_MOVE_ID(vm.g_t) = 0;
+        OSD_Printf_nowarn(OSD_ERROR + "clearing bad moveptr for actor %d (%d)\n", vm.g_i, TrackerCast(vm.g_sp.picnum));
+        return;
+    }
 
-//    moveptr = script + AC_MOVE_ID(vm.g_t);
+    moveptr = script.subarray(vm.g_t[1]);/*AC_MOVE_ID(vm.g_t);*/
 
-//    if (movflags&geth) vm.g_sp.xvel += ((*moveptr)-vm.g_sp.xvel)>>1;
-//    if (movflags&getv) vm.g_sp.zvel += ((*(moveptr+1)<<4)-vm.g_sp.zvel)>>1;
+    if (movflags&geth) vm.g_sp.xvel += ((moveptr[0])-vm.g_sp.xvel)>>1;
+    if (movflags&getv) vm.g_sp.zvel += (((moveptr[1])<<4)-vm.g_sp.zvel)>>1;
 //#else
 //    if (movflags&geth) vm.g_sp.xvel += (actor[vm.g_i].mv.hvel - vm.g_sp.xvel)>>1;
 //    if (movflags&getv) vm.g_sp.zvel += (16*actor[vm.g_i].mv.vvel - vm.g_sp.zvel)>>1;
 //#endif
 
-//    if (movflags&dodgebullet && !deadflag)
-//        A_Dodge(vm.g_sp);
+    if (movflags&dodgebullet && !deadflag)
+        A_Dodge(vm.g_sp);
 
-//    if (vm.g_sp.picnum != APLAYER)
-//        VM_AlterAng(movflags);
+    if (vm.g_sp.picnum != APLAYER)
+        VM_AlterAng(movflags);
 
-//    if (vm.g_sp.xvel > -6 && vm.g_sp.xvel < 6)
-//        vm.g_sp.xvel = 0;
+    if (vm.g_sp.xvel > -6 && vm.g_sp.xvel < 6)
+        vm.g_sp.xvel = 0;
 
-//    badguyp = A_CheckEnemySprite(vm.g_sp);
+    badguyp = A_CheckEnemySprite(vm.g_sp);
 
-//    if (vm.g_sp.xvel || vm.g_sp.zvel)
-//    {
-//        int32_t daxvel;
+    if (vm.g_sp.xvel || vm.g_sp.zvel)
+    {
+        var /*int32_t */daxvel:number;
 
-//        if (badguyp && vm.g_sp.picnum != ROTATEGUN)
-//        {
-//            if ((vm.g_sp.picnum == DRONE || vm.g_sp.picnum == COMMANDER) && vm.g_sp.extra > 0)
-//            {
-//                if (vm.g_sp.picnum == COMMANDER)
-//                {
-//                    int32_t l;
-//                    // NOTE: COMMANDER updates both actor[].floorz and
-//                    // .ceilingz regardless of its zvel.
-//                    actor[vm.g_i].floorz = l = yax_getflorzofslope(vm.g_sp.sectnum,vm.g_sp.x,vm.g_sp.y);
-//                    if (vm.g_sp.z > l-(8<<8))
-//                    {
-//                        vm.g_sp.z = l-(8<<8);
-//                        vm.g_sp.zvel = 0;
-//                    }
+        if (badguyp && vm.g_sp.picnum != ROTATEGUN)
+        {
+            if ((vm.g_sp.picnum == DRONE || vm.g_sp.picnum == COMMANDER) && vm.g_sp.extra > 0)
+            {
+                if (vm.g_sp.picnum == COMMANDER)
+                {
+                    var /*int32_t */l:number;
+                    // NOTE: COMMANDER updates both actor[].floorz and
+                    // .ceilingz regardless of its zvel.
+                    actor[vm.g_i].floorz = l = yax_getflorzofslope(vm.g_sp.sectnum,vm.g_sp.x,vm.g_sp.y);
+                    if (vm.g_sp.z > l-(8<<8))
+                    {
+                        vm.g_sp.z = l-(8<<8);
+                        vm.g_sp.zvel = 0;
+                    }
 
-//                    actor[vm.g_i].ceilingz = l = yax_getceilzofslope(vm.g_sp.sectnum,vm.g_sp.x,vm.g_sp.y);
-//                    if (vm.g_sp.z < l+(80<<8))
-//                    {
-//                        vm.g_sp.z = l+(80<<8);
-//                        vm.g_sp.zvel = 0;
-//                    }
-//                }
-//                else
-//                {
-//                    int32_t l;
-//                    // The DRONE updates either .floorz or .ceilingz, not both.
-//                    if (vm.g_sp.zvel > 0)
-//                    {
-//                        actor[vm.g_i].floorz = l = yax_getflorzofslope(vm.g_sp.sectnum,vm.g_sp.x,vm.g_sp.y);
-//                        if (vm.g_sp.z > l-(30<<8))
-//                            vm.g_sp.z = l-(30<<8);
-//                    }
-//                    else
-//                    {
-//                        actor[vm.g_i].ceilingz = l = yax_getceilzofslope(vm.g_sp.sectnum,vm.g_sp.x,vm.g_sp.y);
-//                        if (vm.g_sp.z < l+(50<<8))
-//                        {
-//                            vm.g_sp.z = l+(50<<8);
-//                            vm.g_sp.zvel = 0;
-//                        }
-//                    }
-//                }
-//            }
-//            else if (vm.g_sp.picnum != ORGANTIC)
-//            {
-//                // All other actors besides ORGANTIC don't update .floorz or
-//                // .ceilingz here.
-//                if (vm.g_sp.zvel > 0 && actor[vm.g_i].floorz < vm.g_sp.z)
-//                    vm.g_sp.z = actor[vm.g_i].floorz;
-//                if (vm.g_sp.zvel < 0)
-//                {
-//                    const int32_t l = yax_getceilzofslope(vm.g_sp.sectnum,vm.g_sp.x,vm.g_sp.y);
+                    actor[vm.g_i].ceilingz = l = yax_getceilzofslope(vm.g_sp.sectnum,vm.g_sp.x,vm.g_sp.y);
+                    if (vm.g_sp.z < l+(80<<8))
+                    {
+                        vm.g_sp.z = l+(80<<8);
+                        vm.g_sp.zvel = 0;
+                    }
+                }
+                else
+                {
+                    var /*int32_t */l:number;
+                    // The DRONE updates either .floorz or .ceilingz, not both.
+                    if (vm.g_sp.zvel > 0)
+                    {
+                        actor[vm.g_i].floorz = l = yax_getflorzofslope(vm.g_sp.sectnum,vm.g_sp.x,vm.g_sp.y);
+                        if (vm.g_sp.z > l-(30<<8))
+                            vm.g_sp.z = l-(30<<8);
+                    }
+                    else
+                    {
+                        actor[vm.g_i].ceilingz = l = yax_getceilzofslope(vm.g_sp.sectnum,vm.g_sp.x,vm.g_sp.y);
+                        if (vm.g_sp.z < l+(50<<8))
+                        {
+                            vm.g_sp.z = l+(50<<8);
+                            vm.g_sp.zvel = 0;
+                        }
+                    }
+                }
+            }
+            else if (vm.g_sp.picnum != ORGANTIC)
+            {
+                // All other actors besides ORGANTIC don't update .floorz or
+                // .ceilingz here.
+                if (vm.g_sp.zvel > 0 && actor[vm.g_i].floorz < vm.g_sp.z)
+                    vm.g_sp.z = actor[vm.g_i].floorz;
+                if (vm.g_sp.zvel < 0)
+                {
+                    var/*const int32_t */l = yax_getceilzofslope(vm.g_sp.sectnum,vm.g_sp.x,vm.g_sp.y);
 
-//                    if (vm.g_sp.z < l+(66<<8))
-//                    {
-//                        vm.g_sp.z = l+(66<<8);
-//                        vm.g_sp.zvel >>= 1;
-//                    }
-//                }
-//            }
-//        }
-//        else if (vm.g_sp.picnum == APLAYER)
-//            if (vm.g_sp.z < actor[vm.g_i].ceilingz+(32<<8))
-//                vm.g_sp.z = actor[vm.g_i].ceilingz+(32<<8);
+                    if (vm.g_sp.z < l+(66<<8))
+                    {
+                        vm.g_sp.z = l+(66<<8);
+                        vm.g_sp.zvel >>= 1;
+                    }
+                }
+            }
+        }
+        else if (vm.g_sp.picnum == APLAYER)
+            if (vm.g_sp.z < actor[vm.g_i].ceilingz+(32<<8))
+                vm.g_sp.z = actor[vm.g_i].ceilingz+(32<<8);
 
-//        daxvel = vm.g_sp.xvel;
-//        angdif = vm.g_sp.ang;
+        daxvel = vm.g_sp.xvel;
+        angdif = vm.g_sp.ang;
 
-//        if (badguyp && vm.g_sp.picnum != ROTATEGUN)
-//        {
-//            DukePlayer_t *const ps = g_player[vm.g_p].ps;
+        if (badguyp && vm.g_sp.picnum != ROTATEGUN)
+        {
+            var ps = g_player[vm.g_p].ps;
 
-//            if (vm.g_x < 960 && vm.g_sp.xrepeat > 16)
-//            {
-//                daxvel = -(1024-vm.g_x);
-//                angdif = getangle(ps.pos.x-vm.g_sp.x, ps.pos.y-vm.g_sp.y);
+            if (vm.g_x < 960 && vm.g_sp.xrepeat > 16)
+            {
+                daxvel = -(1024-vm.g_x);
+                angdif = getangle(ps.pos.x-vm.g_sp.x, ps.pos.y-vm.g_sp.y);
 
-//                if (vm.g_x < 512)
-//                {
-//                    ps.vel.x = 0;
-//                    ps.vel.y = 0;
-//                }
-//                else
-//                {
-//                    ps.vel.x = mulscale16(ps.vel.x, ps.runspeed-0x2000);
-//                    ps.vel.y = mulscale16(ps.vel.y, ps.runspeed-0x2000);
-//                }
-//            }
-//            else if (vm.g_sp.picnum != DRONE && vm.g_sp.picnum != SHARK && vm.g_sp.picnum != COMMANDER)
-//            {
-//                if (ps.actorsqu == vm.g_i)
-//                    return;
+                if (vm.g_x < 512)
+                {
+                    ps.vel.x = 0;
+                    ps.vel.y = 0;
+                }
+                else
+                {
+                    ps.vel.x = mulscale16(ps.vel.x, ps.runspeed-0x2000);
+                    ps.vel.y = mulscale16(ps.vel.y, ps.runspeed-0x2000);
+                }
+            }
+            else if (vm.g_sp.picnum != DRONE && vm.g_sp.picnum != SHARK && vm.g_sp.picnum != COMMANDER)
+            {
+                if (ps.actorsqu == vm.g_i)
+                    return;
 
-//                if (!A_CheckSpriteFlags(vm.g_i, SPRITE_SMOOTHMOVE))
-//                {
-//                    if (AC_COUNT(vm.g_t)&1)
-//                        return;
-//                    daxvel <<= 1;
-//                }
-//            }
-//        }
+                if (!A_CheckSpriteFlags(vm.g_i, SPRITE_SMOOTHMOVE))
+                {
+                    if (AC_COUNT(vm.g_t)&1)
+                        return;
+                    daxvel <<= 1;
+                }
+            }
+        }
 
-//        {
-//            vec3_t tmpvect = { (daxvel*(sintable[(angdif+512)&2047]))>>14,
-//                               (daxvel*(sintable[angdif&2047]))>>14,
-//                               vm.g_sp.zvel
-//                             };
+        {
+            var tmpvect = new vec3_t( (daxvel*(sintable[(angdif+512)&2047]))>>14,
+                               (daxvel*(sintable[angdif&2047]))>>14,
+                               vm.g_sp.zvel
+                             );
 
-//            actor[vm.g_i].movflag = A_MoveSprite(
-//                vm.g_i,&tmpvect, (A_CheckSpriteFlags(vm.g_i, SPRITE_NOCLIP) ? 0 : CLIPMASK0));
-//        }
-//    }
+            actor[vm.g_i].movflag = A_MoveSprite(
+                vm.g_i,tmpvect, (A_CheckSpriteFlags(vm.g_i, SPRITE_NOCLIP) ? 0 : CLIPMASK0));
+        }
+    }
 
-//    if (!badguyp)
-//        return;
+    if (!badguyp)
+        return;
 
-//    if (sector[vm.g_sp.sectnum].ceilingstat&1)
-//        vm.g_sp.shade += (sector[vm.g_sp.sectnum].ceilingshade-vm.g_sp.shade)>>1;
-//    else vm.g_sp.shade += (sector[vm.g_sp.sectnum].floorshade-vm.g_sp.shade)>>1;
-//}
+    if (sector[vm.g_sp.sectnum].ceilingstat&1)
+        vm.g_sp.shade += (sector[vm.g_sp.sectnum].ceilingshade-vm.g_sp.shade)>>1;
+    else vm.g_sp.shade += (sector[vm.g_sp.sectnum].floorshade-vm.g_sp.shade)>>1;
+}
 
 //static void P_AddWeaponMaybeSwitch(DukePlayer_t *ps, int32_t weap)
 //{
@@ -3212,10 +3212,10 @@ function VM_Execute(/*int32_t */loop: number): void
 //            VM_CONDITIONAL(AC_AI_ID(vm.g_t) == *insptr);
 //            continue;
 
-//        case CON_IFACTION:
-//            insptr++;
-//            VM_CONDITIONAL(AC_ACTION_ID(vm.g_t) == *insptr);
-//            continue;
+        case CON_IFACTION:
+            insptr++;
+            VM_CONDITIONAL(AC_ACTION_ID(vm.g_t) == *insptr);
+            continue;
 
 //        case CON_IFACTIONCOUNT:
 //            insptr++;
@@ -5305,7 +5305,7 @@ function VM_Execute(/*int32_t */loop: number): void
         default:
             VM_ScriptInfo();
 
-            todoThrow();
+            todoThrow(tw + " missing");
             G_GameExit("An error has occurred in the EDuke32 virtual machine.\n\n"+
                        "If you are an end user, please e-mail the file eduke32.log\n"+
                        "along with links to any mods you're using to terminx@gmail.com.\n\n"+
@@ -5356,9 +5356,9 @@ function A_Execute(/*int32_t */iActor:number,/*int32_t */iPlayer:number,/*int32_
 //#ifdef LUNATIC
 //    int32_t killit=0;
 //#else
-    var /*intptr_t */actionofs:number, /***/actionptr:number;
+    var /*intptr_t */actionofs:number, /***/actionptr:Uint32Array;
 //#endif
-    var tempvm = new vmstate_t( iActor, iPlayer, lDist, actor[iActor].t_data[0],
+    var tempvm = new vmstate_t( iActor, iPlayer, lDist, actor[iActor].t_data,
                          sprite[iActor], 0
                        );
 
@@ -5389,34 +5389,34 @@ function A_Execute(/*int32_t */iActor:number,/*int32_t */iPlayer:number,/*int32_
     /* Helixhorned: let's do away with intptr_t's... */
 //#if !defined LUNATIC
     actionofs = AC_ACTION_ID(vm.g_t);
-    actionptr = (actionofs!=0 && actionofs+4 < /*(unsigned)*/g_scriptSize) ?
-        script[actionofs] : NULL;
+    actionptr = (((actionofs!=0 && actionofs+4)?1:0) < /*(unsigned)*/g_scriptSize) ?
+        script.subarray(actionofs) : NULL;
 
     if (actionptr != NULL)
 //#endif
-    {todoThrow();
+    {
 ////#if !defined LUNATIC
-//        const int32_t action_frames = actionptr[1];
-//        const int32_t action_incval = actionptr[3];
-//        const int32_t action_delay = actionptr[4];
+        var /*const int32_t*/ action_frames = actionptr[1];
+        var /*const int32_t*/ action_incval = actionptr[3];
+        var /*const int32_t*/ action_delay = actionptr[4];
 ////#else
 ////        const int32_t action_frames = actor[vm.g_i].ac.numframes;
 ////        const int32_t action_incval = actor[vm.g_i].ac.incval;
 ////        const int32_t action_delay = actor[vm.g_i].ac.delay;
 ////#endif
-//        uint16_t *actionticsptr = &AC_ACTIONTICS(vm.g_sp, &actor[vm.g_i]);
-//        *actionticsptr += TICSPERFRAME;
+        //uint16_t *actionticsptr = &AC_ACTIONTICS(vm.g_sp, &actor[vm.g_i]);
+        vm.g_sp.lotag /**actionticsptr */+= TICSPERFRAME;
 
-//        if (*actionticsptr > action_delay)
-//        {
-//            AC_ACTION_COUNT(vm.g_t)++;
-//            *actionticsptr = 0;
+        if (vm.g_sp.lotag > action_delay)
+        {
+            vm.g_t[2]++;//AC_ACTION_COUNT(vm.g_t)++;
+            vm.g_sp.lotag/**actionticsptr*/ = 0;
 
-//            AC_CURFRAME(vm.g_t) += action_incval;
-//        }
+            vm.g_t[3] += action_incval//AC_CURFRAME(vm.g_t) += action_incval;
+        }
 
-//        if (klabs(AC_CURFRAME(vm.g_t)) >= klabs(action_frames * action_incval))
-//            AC_CURFRAME(vm.g_t) = 0;
+        if (klabs(AC_CURFRAME(vm.g_t)) >= klabs(action_frames * action_incval))
+            vm.g_t[3] = 0;//AC_CURFRAME(vm.g_t) = 0;
     }
 
 //#ifdef LUNATIC
