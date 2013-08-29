@@ -586,12 +586,12 @@ function /*int32_t */A_MoveSprite(/*int32_t*/ spritenum: number, /*const vec3_t 
             changespritesect(spritenum, -dozupdate-1);
             return 0;
         }
-        todoThrow();
-        //if (yax_getbunch(dasectnum, (change.z>0))>=0
-        //        && (SECTORFLD(dasectnum,"stat", (change.z>0))&yax_waltosecmask(cliptype))==0)
-        //{
-        //    setspritez(spritenum, pr);
-        //}
+        
+        if (yax_getbunch(dasectnum, (change.z>0)?1:0)>=0
+                && (SECTORFLD(dasectnum,"stat", (change.z>0)?1:0)&yax_waltosecmask(cliptype))==0)
+        {
+            setspritez(spritenum, spr);
+        }
 //#endif
     }
     else if (change.z != 0 && retval == 0)
@@ -812,45 +812,49 @@ function Sect_ClearInterpolation(/*int32_t*/ sectnum: number): void
     Sect_ToggleInterpolation(sectnum, 0);
 }
 
-//static int32_t move_rotfixed_sprite(int32_t j, int32_t pivotspr, int32_t daang)
-//{
-//    if ((ROTFIXSPR_STATNUMP(sprite[j].statnum) ||
-//         ((sprite[j].statnum==STAT_ACTOR || sprite[j].statnum==STAT_ZOMBIEACTOR) &&
-//          A_CheckSpriteTileFlags(sprite[j].picnum, SPRITE_ROTFIXED)))
-//        && actor[j].t_data[7]==(ROTFIXSPR_MAGIC|pivotspr))
-//    {
-//        rotatepoint(0,0, actor[j].t_data[8],actor[j].t_data[9], daang&2047, &sprite[j].x,&sprite[j].y);
-//        sprite[j].x += sprite[pivotspr].x;
-//        sprite[j].y += sprite[pivotspr].y;
-//        return 0;
-//    }
+function/*int32_t */move_rotfixed_sprite(/*int32_t */j:number, /*int32_t */pivotspr:number, /*int32_t */daang:number):number
+{
+    if ((ROTFIXSPR_STATNUMP(sprite[j].statnum) ||
+         ((sprite[j].statnum==STAT_ACTOR || sprite[j].statnum==STAT_ZOMBIEACTOR) &&
+          A_CheckSpriteTileFlags(sprite[j].picnum, SPRITE_ROTFIXED)))
+        && actor[j].t_data[7]==(ROTFIXSPR_MAGIC|pivotspr))
+    {
+        var $x = new R(sprite[j].x);
+        var $y = new R(sprite[j].y);
+        rotatepoint(0,0, actor[j].t_data[8],actor[j].t_data[9], daang&2047, $x,$y);
+        sprite[j].x = $x.$;
+        sprite[j].y = $y.$;
+        sprite[j].x += sprite[pivotspr].x;
+        sprite[j].y += sprite[pivotspr].y;
+        return 0;
+    }
 
-//    return 1;
-//}
+    return 1;
+}
 
-//static void A_MoveSector(int32_t i)
-//{
-//    //actor[i].t_data[0],actor[i].t_data[1] and actor[i].t_data[2] are used for all the sector moving stuff!!!
+function A_MoveSector(/*int32_t */i:number):void
+{
+    //actor[i].t_data[0],actor[i].t_data[1] and actor[i].t_data[2] are used for all the sector moving stuff!!!
 
-//    int32_t tx,ty;
-//    spritetype *s = &sprite[i];
-//    int32_t j = actor[i].t_data[1], k = actor[i].t_data[2];
+    var/*int32_t */tx=new R(0),ty=new R(0);
+    var s = sprite[i];
+    var/*int32_t */j = actor[i].t_data[1], k = actor[i].t_data[2];
 
-//    s.x += (s.xvel*(sintable[(s.ang+512)&2047]))>>14;
-//    s.y += (s.xvel*(sintable[s.ang&2047]))>>14;
+    s.x += (s.xvel*(sintable[(s.ang+512)&2047]))>>14;
+    s.y += (s.xvel*(sintable[s.ang&2047]))>>14;
 
-//    {
-//        int32_t x = sector[s.sectnum].wallptr, endwall = x+sector[s.sectnum].wallnum;
+    {
+        var/*int32_t */x = sector[s.sectnum].wallptr, endwall = x+sector[s.sectnum].wallnum;
 
-//        for (; x<endwall; x++)
-//        {
-//            rotatepoint(0,0,msx[j],msy[j],k&2047,&tx,&ty);
-//            dragpoint(x,s.x+tx,s.y+ty,0);
+        for (; x<endwall; x++)
+        {
+            rotatepoint(0,0,msx[j],msy[j],k&2047,tx,ty);
+            dragpoint(x,s.x+tx.$,s.y+ty.$,0);
 
-//            j++;
-//        }
-//    }
-//}
+            j++;
+        }
+    }
+}
 
 //#if !defined LUNATIC
 //// NOTE: actor[i].t_data[4] is AC_ACTION_ID
@@ -1977,7 +1981,7 @@ function G_MoveFallers():void
 //                s.y += sintable[(actor[i].t_data[5])&2047]>>9;
 //                s.z -= (3<<8);
 
-//                setsprite(i,(vec3_t *)s);
+//                setsprite(i,s);
 
 //                x = A_CheckHitSprite(i, &m);
 
@@ -1994,7 +1998,7 @@ function G_MoveFallers():void
 //                    while (x > 0)
 //                    {
 //                        j = A_Spawn(i,LASERLINE);
-//                        setsprite(j,(vec3_t *)&sprite[j]);
+//                        setsprite(j,sprite[j]);
 //                        sprite[j].hitag = s.hitag;
 //                        actor[j].t_data[1] = sprite[j].z;
 
@@ -2021,7 +2025,7 @@ function G_MoveFallers():void
 //                s.y = actor[i].t_data[4];
 //                s.z += (3<<8);
 
-//                setsprite(i,(vec3_t *)s);
+//                setsprite(i,s);
 //                actor[i].t_data[3] = actor[i].t_data[2] = 0;
 
 //                if (m >= 0 && actor[i].t_data[6] != 1)
@@ -2043,14 +2047,14 @@ function G_MoveFallers():void
 //                s.y += sintable[(actor[i].t_data[5])&2047]>>9;
 //                s.z -= (3<<8);
 
-//                setsprite(i,(vec3_t *)s);
+//                setsprite(i,s);
 
 //                x = A_CheckHitSprite(i, NULL);
 
 //                s.x = actor[i].t_data[3];
 //                s.y = actor[i].t_data[4];
 //                s.z += (3<<8);
-//                setsprite(i,(vec3_t *)s);
+//                setsprite(i,s);
 
 ////                if( Actor[i].lastvx != x && lTripBombControl & TRIPBOMB_TRIPWIRE)
 //                if (actor[i].lastvx != x && actor[i].t_data[6] != 1)
@@ -2213,7 +2217,7 @@ function G_MoveFallers():void
 //DETONATE:
 //                    g_earthquakeTime = 16;
 
-//                    for (SPRITES_OF(STAT_EFFECTOR, j))
+//                    for (j = headspritestat[STAT_EFFECTOR]; j >= 0; j = nextspritestat[j])
 //                    {
 //                        if (s.hitag == sprite[j].hitag)
 //                        {
@@ -2494,7 +2498,7 @@ function G_MoveFallers():void
 //                    }
 //                    else
 //                    {
-//                        int32_t p;
+//                        var/*int32_t*/ p:number;
 //                        sector[sect].floorz += sector[sect].extra;
 //                        p = G_CheckPlayerInSector(sect);
 //                        if (p >= 0) g_player[p].ps.pos.z += sector[sect].extra;
@@ -2509,7 +2513,7 @@ function G_MoveFallers():void
 //                    }
 //                    else
 //                    {
-//                        int32_t p;
+//                        var/*int32_t*/ p:number;
 //                        sector[sect].floorz -= sector[sect].extra;
 //                        p = G_CheckPlayerInSector(sect);
 //                        if (p >= 0)
@@ -3175,7 +3179,7 @@ function G_MoveWeapons():void
                     else
                     {
                         setsprite(i,davect);
-                        A_DamageWall(i,j,/*(vec3_t *)*/s,s.picnum);
+                        A_DamageWall(i,j,new vec3_t(s.x, s.y, s.z),s.picnum);
 
                         if (s.picnum == FREEZEBLAST)
                         {
@@ -3716,6 +3720,7 @@ function G_MoveActors():void
     var/*int32_t */j:number;
     var/*int32_t */i = headspritestat[STAT_ACTOR];
 
+    BOLT:
     while (i >= 0)
     {
         var/*const int32_t */nexti = nextspritestat[i];
@@ -3762,7 +3767,7 @@ function G_MoveActors():void
                     {
                         if (sprite[j].lotag == s.lotag && sprite[j].picnum == s.picnum)
                         {
-                            if ((sprite[j].hitag!=0) ^ ((sprite[j].cstat&32)!=0))
+                            if ((sprite[j].hitag!=0?1:0) ^ ((sprite[j].cstat&32)!=0?1:0))
                             {
                                 k = 0;
                                 break;
@@ -4478,7 +4483,7 @@ function G_MoveActors():void
             //Check randomly to see of there is an actor near
             if (rnd(32))
             {
-                for (s = headspritesect[sect]; s >= 0; s = nextspritesect[s])
+                for (sect = headspritesect[j]; sect >= 0; sect = nextspritesect[sect])
                 {
                     switch (DYNAMICTILEMAP(sprite[j].picnum))
                     {
@@ -5655,7 +5660,7 @@ function G_MoveMisc():void  // STATNUM 5
 
 //        sc.floorz += l;
 
-//        for (SPRITES_OF_SECT(s.sectnum, j))
+//        for (j = headspritesect[s.sectnum]; j >= 0; j = nextspritesect[j])
 //        {
 //            if (sprite[j].picnum == APLAYER && sprite[j].owner >= 0)
 //                if (g_player[sprite[j].yvel].ps.on_ground == 1)
@@ -5673,9 +5678,9 @@ function G_MoveMisc():void  // STATNUM 5
 //// s: SE sprite
 //static void MaybeTrainKillPlayer(const spritetype *s, int32_t dosetopos)
 //{
-//    int32_t p;
+//    var/*int32_t*/ p:number;
 
-//    for (TRAVERSE_CONNECT(p))
+//    for (p = 0; p != -1; p = connectpoint2[p])
 //    {
 //        DukePlayer_t *const ps = g_player[p].ps;
 
@@ -5730,2139 +5735,2170 @@ function G_MoveMisc():void  // STATNUM 5
 //    }
 //}
 
-//ACTOR_STATIC void G_MoveEffectors(void)   //STATNUM 3
-//{
-//    walltype *wal;
-//    int32_t q=0, j, k, l, m, x;
-//    int32_t i = headspritestat[STAT_EFFECTOR];
+function G_MoveEffectors():void   //STATNUM 3
+{
+    var wal: walltype, walIdx:number;
+    var /*int32_t */q=0, j:number, k:number, l:number, m:number, x:number;
+    var /*int32_t */i = headspritestat[STAT_EFFECTOR];
 
-//    fricxv = fricyv = 0;
+    fricxv = fricyv = 0;
 
-//    while (i >= 0)
-//    {
-//        const int32_t nexti = nextspritestat[i];
-//        spritetype *const s = &sprite[i];
+    BOLT:
+    while (i >= 0)
+    {
+        var /*const int32_t */nexti = nextspritestat[i];
+        var s = sprite[i];
 
-//        sectortype *const sc = &sector[s.sectnum];
-//        const int32_t st = s.lotag;
-//        const int32_t sh = s.hitag;
+        var sc = sector[s.sectnum];
+        var/*const int32_t */st = s.lotag;
+        var/*const int32_t */sh = s.hitag;
 
-//        int32_t *const t = &actor[i].t_data[0];
+        var/*int32_t *const */t = actor[i].t_data[0];
 
-//        switch (st)
-//        {
-//        case SE_0_ROTATING_SECTOR:
-//        {
-//            int32_t zchange = 0;
+        switch (st)
+        {
+        case SE_0_ROTATING_SECTOR:
+        {
+            var/*int32_t */zchange = 0;
 
-//            j = s.owner;
+            j = s.owner;
 
-//            if (sprite[j].lotag == UINT16_MAX)
-//                KILLIT(i);
+            if (sprite[j].lotag == UINT16_MAX)
+                {A_DeleteSprite(i); {i = nexti; continue BOLT;}}
 
-//            q = sc.extra>>3;
-//            l = 0;
+            q = sc.extra>>3;
+            l = 0;
 
-//            if (sc.lotag == ST_30_ROTATE_RISE_BRIDGE)
-//            {
-//                q >>= 2;
+            if (sc.lotag == ST_30_ROTATE_RISE_BRIDGE)
+            {
+                q >>= 2;
 
-//                if (sprite[i].extra == 1)
-//                {
-//                    if (actor[i].tempang < 256)
-//                    {
-//                        actor[i].tempang += 4;
-//                        if (actor[i].tempang >= 256)
-//                            A_CallSound(s.sectnum,i);
-//                        if (s.clipdist) l = 1;
-//                        else l = -1;
-//                    }
-//                    else actor[i].tempang = 256;
+                if (sprite[i].extra == 1)
+                {
+                    if (actor[i].tempang < 256)
+                    {
+                        actor[i].tempang += 4;
+                        if (actor[i].tempang >= 256)
+                            A_CallSound(s.sectnum,i);
+                        if (s.clipdist) l = 1;
+                        else l = -1;
+                    }
+                    else actor[i].tempang = 256;
 
-//                    if (sc.floorz > s.z)   //z's are touching
-//                    {
-//                        sc.floorz -= 512;
-//                        zchange = -512;
-//                        if (sc.floorz < s.z)
-//                            sc.floorz = s.z;
-//                    }
-//                    else if (sc.floorz < s.z)   //z's are touching
-//                    {
-//                        sc.floorz += 512;
-//                        zchange = 512;
-//                        if (sc.floorz > s.z)
-//                            sc.floorz = s.z;
-//                    }
-//                }
-//                else if (sprite[i].extra == 3)
-//                {
-//                    if (actor[i].tempang > 0)
-//                    {
-//                        actor[i].tempang -= 4;
-//                        if (actor[i].tempang <= 0)
-//                            A_CallSound(s.sectnum,i);
-//                        if (s.clipdist) l = -1;
-//                        else l = 1;
-//                    }
-//                    else actor[i].tempang = 0;
+                    if (sc.floorz > s.z)   //z's are touching
+                    {
+                        sc.floorz -= 512;
+                        zchange = -512;
+                        if (sc.floorz < s.z)
+                            sc.floorz = s.z;
+                    }
+                    else if (sc.floorz < s.z)   //z's are touching
+                    {
+                        sc.floorz += 512;
+                        zchange = 512;
+                        if (sc.floorz > s.z)
+                            sc.floorz = s.z;
+                    }
+                }
+                else if (sprite[i].extra == 3)
+                {
+                    if (actor[i].tempang > 0)
+                    {
+                        actor[i].tempang -= 4;
+                        if (actor[i].tempang <= 0)
+                            A_CallSound(s.sectnum,i);
+                        if (s.clipdist) l = -1;
+                        else l = 1;
+                    }
+                    else actor[i].tempang = 0;
 
-//                    if (sc.floorz > actor[i].t_data[3])   //z's are touching
-//                    {
-//                        sc.floorz -= 512;
-//                        zchange = -512;
-//                        if (sc.floorz < actor[i].t_data[3])
-//                            sc.floorz = actor[i].t_data[3];
-//                    }
-//                    else if (sc.floorz < actor[i].t_data[3])   //z's are touching
-//                    {
-//                        sc.floorz += 512;
-//                        zchange = 512;
-//                        if (sc.floorz > actor[i].t_data[3])
-//                            sc.floorz = actor[i].t_data[3];
-//                    }
-//                }
-//            }
-//            else
-//            {
-//                if (actor[j].t_data[0] == 0) break;
-//                if (actor[j].t_data[0] == 2) KILLIT(i);
+                    if (sc.floorz > actor[i].t_data[3])   //z's are touching
+                    {
+                        sc.floorz -= 512;
+                        zchange = -512;
+                        if (sc.floorz < actor[i].t_data[3])
+                            sc.floorz = actor[i].t_data[3];
+                    }
+                    else if (sc.floorz < actor[i].t_data[3])   //z's are touching
+                    {
+                        sc.floorz += 512;
+                        zchange = 512;
+                        if (sc.floorz > actor[i].t_data[3])
+                            sc.floorz = actor[i].t_data[3];
+                    }
+                }
+            }
+            else
+            {
+                if (actor[j].t_data[0] == 0) break;
+                if (actor[j].t_data[0] == 2) {A_DeleteSprite(i); {i = nexti; continue BOLT;}}
 
-//                if (sprite[j].ang > 1024)
-//                    l = -1;
-//                else l = 1;
-//                if (t[3] == 0)
-//                    t[3] = ldist(s,&sprite[j]);
-//                s.xvel = t[3];
-//                s.x = sprite[j].x;
-//                s.y = sprite[j].y;
-//            }
+                if (sprite[j].ang > 1024)
+                    l = -1;
+                else l = 1;
+                if (t[3] == 0)
+                    t[3] = ldist(s,sprite[j]);
+                s.xvel = t[3];
+                s.x = sprite[j].x;
+                s.y = sprite[j].y;
+            }
 
-//            s.ang += (l*q);
-//            t[2] += (l*q);
+            s.ang += (l*q);
+            t[2] += (l*q);
 
-//            if (l && (sc.floorstat&64))
-//            {
-//                int32_t p;
+            if (l && (sc.floorstat&64))
+            {
+                var/*int32_t */p:number;
 
-//                for (TRAVERSE_CONNECT(p))
-//                {
-//                    DukePlayer_t *const ps = g_player[p].ps;
+                for (p = 0; p != -1; p = connectpoint2[p])
+                {
+                    var ps = g_player[p].ps;
 
-//                    if (ps.cursectnum == s.sectnum && ps.on_ground == 1)
-//                    {
+                    if (ps.cursectnum == s.sectnum && ps.on_ground == 1)
+                    {
 
-//                        ps.ang += (l*q);
-//                        ps.ang &= 2047;
+                        ps.ang += (l*q);
+                        ps.ang &= 2047;
 
-//                        ps.pos.z += zchange;
+                        ps.pos.z += zchange;
 
-//                        rotatepoint(sprite[j].x,sprite[j].y,ps.pos.x,ps.pos.y,(q*l),&m,&x);
+                        var $m = new R(m);
+                        var $x = new R(x);
+                        rotatepoint(sprite[j].x,sprite[j].y,ps.pos.x,ps.pos.y,(q*l),$m,$x);
+                        m = $m.$;
+                        x = $x.$;
 
-//                        ps.bobposx += m-ps.pos.x;
-//                        ps.bobposy += x-ps.pos.y;
+                        ps.bobposx += m-ps.pos.x;
+                        ps.bobposy += x-ps.pos.y;
 
-//                        ps.pos.x = m;
-//                        ps.pos.y = x;
+                        ps.pos.x = m;
+                        ps.pos.y = x;
 
-//                        if (sprite[ps.i].extra <= 0)
-//                        {
-//                            sprite[ps.i].x = m;
-//                            sprite[ps.i].y = x;
-//                        }
-//                    }
-//                }
+                        if (sprite[ps.i].extra <= 0)
+                        {
+                            sprite[ps.i].x = m;
+                            sprite[ps.i].y = x;
+                        }
+                    }
+                }
 
-//                for (SPRITES_OF_SECT(s.sectnum, p))
-//                {
-//                    // KEEPINSYNC1
-//                    if (sprite[p].statnum != STAT_EFFECTOR && sprite[p].statnum != STAT_PROJECTILE)
-//                        if (sprite[p].picnum != LASERLINE)
-//                        {
-//                            if (sprite[p].picnum == APLAYER && sprite[p].owner >= 0)
-//                                continue;
+                for (p = headspritesect[s.sectnum]; p >= 0; p = nextspritesect[p] /*p = headspritesect[s.sectnum]; p >= 0; p = nextspritesect[p]*/)
+                {
+                    // KEEPINSYNC1
+                    if (sprite[p].statnum != STAT_EFFECTOR && sprite[p].statnum != STAT_PROJECTILE)
+                        if (sprite[p].picnum != LASERLINE)
+                        {
+                            if (sprite[p].picnum == APLAYER && sprite[p].owner >= 0)
+                                continue;
 
-//                            sprite[p].ang += (l*q);
-//                            sprite[p].ang &= 2047;
+                            sprite[p].ang += (l*q);
+                            sprite[p].ang &= 2047;
 
-//                            sprite[p].z += zchange;
+                            sprite[p].z += zchange;
 
-//                            // interpolation fix
-//                            actor[p].bpos.x = sprite[p].x;
-//                            actor[p].bpos.y = sprite[p].y;
+                            // interpolation fix
+                            actor[p].bpos.x = sprite[p].x;
+                            actor[p].bpos.y = sprite[p].y;
 
-//                            if (move_rotfixed_sprite(p, j, t[2]))
-//                                rotatepoint(sprite[j].x,sprite[j].y,sprite[p].x,sprite[p].y,(q*l),&sprite[p].x,&sprite[p].y);
-//                        }
-//                }
+                            if (move_rotfixed_sprite(p, j, t[2])) {
+                                var $x = new R(sprite[p].x);
+                                var $y = new R(sprite[p].y);
+                                rotatepoint(sprite[j].x,sprite[j].y,sprite[p].x,sprite[p].y,(q*l),$x,$y);
+                                sprite[p].x = $x.$;
+                                sprite[p].y = $y.$;
+                            }
+                        }
+                }
 
-//            }
-//            else if (l==0 && (sc.floorstat&64))
-//            {
-//                int32_t p;
+            }
+            else if (l==0 && (sc.floorstat&64))
+            {
+                var/*int32_t */p:number;
 
-//                // fix for jittering of sprites in halted rotating sectors
-//                for (SPRITES_OF_SECT(s.sectnum, p))
-//                {
-//                    // KEEPINSYNC1
-//                    if (sprite[p].statnum != STAT_EFFECTOR && sprite[p].statnum != STAT_PROJECTILE)
-//                        if (sprite[p].picnum != LASERLINE)
-//                        {
-//                            if (sprite[p].picnum == APLAYER && sprite[p].owner >= 0)
-//                                continue;
+                // fix for jittering of sprites in halted rotating sectors
+                for (p = headspritesect[s.sectnum]; p >= 0; p = nextspritesect[p])
+                {
+                    // KEEPINSYNC1
+                    if (sprite[p].statnum != STAT_EFFECTOR && sprite[p].statnum != STAT_PROJECTILE)
+                        if (sprite[p].picnum != LASERLINE)
+                        {
+                            if (sprite[p].picnum == APLAYER && sprite[p].owner >= 0)
+                                continue;
 
-//                            actor[p].bpos.x = sprite[p].x;
-//                            actor[p].bpos.y = sprite[p].y;
-//                        }
-//                }
-//            }
+                            actor[p].bpos.x = sprite[p].x;
+                            actor[p].bpos.y = sprite[p].y;
+                        }
+                }
+            }
 
-//            A_MoveSector(i);
-//        }
-//        break;
+            A_MoveSector(i);
+        }
+        break;
 
-//        case SE_1_PIVOT: //Nothing for now used as the pivot
-//            if (s.owner == -1) //Init
-//            {
-//                s.owner = i;
+        case SE_1_PIVOT: //Nothing for now used as the pivot
+            if (s.owner == -1) //Init
+            {
+                s.owner = i;
 
-//                for (SPRITES_OF(STAT_EFFECTOR, j))
-//                {
-//                    if (sprite[j].lotag == SE_19_EXPLOSION_LOWERS_CEILING && sprite[j].hitag == sh)
-//                    {
-//                        t[0] = 0;
-//                        break;
-//                    }
-//                }
-//            }
-//            break;
+                for (j = headspritestat[STAT_EFFECTOR]; j >= 0; j = nextspritestat[j])
+                {
+                    if (sprite[j].lotag == SE_19_EXPLOSION_LOWERS_CEILING && sprite[j].hitag == sh)
+                    {
+                        t[0] = 0;
+                        break;
+                    }
+                }
+            }
+            break;
 
-//        case 6:
-//            k = sc.extra;
+        case 6:
+            k = sc.extra;
 
-//            if (t[4] > 0)
-//            {
-//                t[4]--;
-//                if (t[4] >= (k-(k>>3)))
-//                    s.xvel -= (k>>5);
-//                if (t[4] > ((k>>1)-1) && t[4] < (k-(k>>3)))
-//                    s.xvel = 0;
-//                if (t[4] < (k>>1))
-//                    s.xvel += (k>>5);
-//                if (t[4] < ((k>>1)-(k>>3)))
-//                {
-//                    t[4] = 0;
-//                    s.xvel = k;
-//                }
-//            }
-//            else s.xvel = k;
+            if (t[4] > 0)
+            {
+                t[4]--;
+                if (t[4] >= (k-(k>>3)))
+                    s.xvel -= (k>>5);
+                if (t[4] > ((k>>1)-1) && t[4] < (k-(k>>3)))
+                    s.xvel = 0;
+                if (t[4] < (k>>1))
+                    s.xvel += (k>>5);
+                if (t[4] < ((k>>1)-(k>>3)))
+                {
+                    t[4] = 0;
+                    s.xvel = k;
+                }
+            }
+            else s.xvel = k;
 
-//            for (SPRITES_OF(STAT_EFFECTOR, j))
-//            {
-//                if (sprite[j].lotag == SE_14_SUBWAY_CAR && sh == sprite[j].hitag && actor[j].t_data[0] == t[0])
-//                {
-//                    sprite[j].xvel = s.xvel;
-//                    //                        if( t[4] == 1 )
-//                    {
-//                        if (actor[j].t_data[5] == 0)
-//                            actor[j].t_data[5] = dist(&sprite[j],s);
-//                        x = ksgn(dist(&sprite[j],s)-actor[j].t_data[5]);
-//                        if (sprite[j].extra)
-//                            x = -x;
-//                        s.xvel += x;
-//                    }
-//                    actor[j].t_data[4] = t[4];
-//                }
-//            }
-//            x = 0;  // XXX: This assignment is dead?
+            for (j = headspritestat[STAT_EFFECTOR]; j >= 0; j = nextspritestat[j])
+            {
+                if (sprite[j].lotag == SE_14_SUBWAY_CAR && sh == sprite[j].hitag && actor[j].t_data[0] == t[0])
+                {
+                    sprite[j].xvel = s.xvel;
+                    //                        if( t[4] == 1 )
+                    {
+                        if (actor[j].t_data[5] == 0)
+                            actor[j].t_data[5] = dist(sprite[j],s);
+                        x = ksgn(dist(sprite[j],s)-actor[j].t_data[5]);
+                        if (sprite[j].extra)
+                            x = -x;
+                        s.xvel += x;
+                    }
+                    actor[j].t_data[4] = t[4];
+                }
+            }
+            x = 0;  // XXX: This assignment is dead?
 
 
-//        case SE_14_SUBWAY_CAR:
-//            if (s.owner==-1)
-//                s.owner = A_FindLocator((int16_t)t[3],(int16_t)t[0]);
+        case SE_14_SUBWAY_CAR:
+            if (s.owner==-1)
+                s.owner = A_FindLocator(int16(t[3]),int16(t[0]));
 
-//            if (s.owner == -1)
-//            {
-//                // debugging subway cars (mapping-wise) is freakin annoying
-//                // let's at least have a helpful message...
-//                Bsprintf(tempbuf,"Could not find any locators in sector %d"
-//                         " for SE# 6 or 14 with hitag %d.\n", (int)t[0], (int)t[3]);
-//                G_GameExit(tempbuf);
-//            }
+            if (s.owner == -1)
+            {
+                // debugging subway cars (mapping-wise) is freakin annoying
+                // let's at least have a helpful message...
+                Bsprintf(tempbuf,"Could not find any locators in sector %d"+
+                         " for SE# 6 or 14 with hitag %d.\n", /*(int)*/t[0], /*(int)*/t[3]);
+                G_GameExit(tempbuf);
+            }
 
-//            j = ldist(&sprite[s.owner],s);
+            j = ldist(sprite[s.owner],s);
 
-//            if (j < 1024L)
-//            {
-//                if (st==6)
-//                    if (sprite[s.owner].hitag&1)
-//                        t[4]=sc.extra; //Slow it down
-//                t[3]++;
-//                s.owner = A_FindLocator(t[3],t[0]);
-//                if (s.owner==-1)
-//                {
-//                    t[3]=0;
-//                    s.owner = A_FindLocator(0,t[0]);
-//                }
-//            }
+            if (j < 1024)
+            {
+                if (st==6)
+                    if (sprite[s.owner].hitag&1)
+                        t[4]=sc.extra; //Slow it down
+                t[3]++;
+                s.owner = A_FindLocator(t[3],t[0]);
+                if (s.owner==-1)
+                {
+                    t[3]=0;
+                    s.owner = A_FindLocator(0,t[0]);
+                }
+            }
 
-//            if (s.xvel)
-//            {
-//                int32_t p;
+            if (s.xvel)
+            {
+                var/*int32_t */p:number;
 //#ifdef YAX_ENABLE
-//                int32_t firstrun = 1;
+                var/*int32_t */firstrun = 1;
 //#endif
-//                x = getangle(sprite[s.owner].x-s.x,sprite[s.owner].y-s.y);
-//                q = G_GetAngleDelta(s.ang,x)>>3;
+                x = getangle(sprite[s.owner].x-s.x,sprite[s.owner].y-s.y);
+                q = G_GetAngleDelta(s.ang,x)>>3;
 
-//                t[2] += q;
-//                s.ang += q;
+                t[2] += q;
+                s.ang += q;
 
-//                if (s.xvel == sc.extra)
-//                {
-//                    if ((sc.floorstat&1) == 0 && (sc.ceilingstat&1) == 0)
-//                    {
-//                        if (!S_CheckSoundPlaying(i,actor[i].lastvx))
-//                            A_PlaySound(actor[i].lastvx,i);
-//                    }
-//                    else if (ud.monsters_off == 0 && sc.floorpal == 0 && (sc.floorstat&1) && rnd(8))
-//                    {
-//                        p = A_FindPlayer(s,&x);
-//                        if (x < 20480)
-//                        {
-//                            j = s.ang;
-//                            s.ang = getangle(s.x-g_player[p].ps.pos.x,s.y-g_player[p].ps.pos.y);
-//                            A_Shoot(i,RPG);
-//                            s.ang = j;
-//                        }
-//                    }
-//                }
+                if (s.xvel == sc.extra)
+                {
+                    if ((sc.floorstat&1) == 0 && (sc.ceilingstat&1) == 0)
+                    {
+                        if (!S_CheckSoundPlaying(i,actor[i].lastvx))
+                            A_PlaySound(actor[i].lastvx,i);
+                    }
+                    else if (ud.monsters_off == 0 && sc.floorpal == 0 && (sc.floorstat&1) && rnd(8))
+                    {
+                        var $x = new R(x);
+                        p = A_FindPlayer(s,$x);
+                        x = $x.$;
+                        if (x < 20480)
+                        {
+                            j = s.ang;
+                            s.ang = getangle(s.x-g_player[p].ps.pos.x,s.y-g_player[p].ps.pos.y);
+                            A_Shoot(i,RPG);
+                            s.ang = j;
+                        }
+                    }
+                }
 
-//                if (s.xvel <= 64 && (sc.floorstat&1) == 0 && (sc.ceilingstat&1) == 0)
-//                    S_StopEnvSound(actor[i].lastvx,i);
+                if (s.xvel <= 64 && (sc.floorstat&1) == 0 && (sc.ceilingstat&1) == 0)
+                    S_StopEnvSound(actor[i].lastvx,i);
 
-//                if ((sc.floorz-sc.ceilingz) < (108<<8))
-//                {
-//                    if (ud.noclip == 0 && s.xvel >= 192)
-//                        MaybeTrainKillPlayer(s, 0);
-//                }
+                if ((sc.floorz-sc.ceilingz) < (108<<8))
+                {
+                    if (ud.noclip == 0 && s.xvel >= 192)
+                        MaybeTrainKillPlayer(s, 0);
+                }
 
-//                m = (s.xvel*sintable[(s.ang+512)&2047])>>14;
-//                x = (s.xvel*sintable[s.ang&2047])>>14;
+                m = (s.xvel*sintable[(s.ang+512)&2047])>>14;
+                x = (s.xvel*sintable[s.ang&2047])>>14;
 
-//                for (TRAVERSE_CONNECT(p))
-//                {
-//                    DukePlayer_t *const ps = g_player[p].ps;
+                for (p = 0; p != -1; p = connectpoint2[p])
+                {
+                    var ps = g_player[p].ps;
 
-//                    if (ps.cursectnum < 0)
-//                    {
-//                        // might happen when squished into void space
-////                        initprintf("cursectnum < 0!\n");
-//                        break;
-//                    }
+                    if (ps.cursectnum < 0)
+                    {
+                        // might happen when squished into void space
+//                        initprintf("cursectnum < 0!\n");
+                        break;
+                    }
 
-//                    if (sector[ps.cursectnum].lotag != ST_2_UNDERWATER)
-//                    {
-//                        if (g_playerSpawnPoints[p].os == s.sectnum)
-//                        {
-//                            g_playerSpawnPoints[p].ox += m;
-//                            g_playerSpawnPoints[p].oy += x;
-//                        }
+                    if (sector[ps.cursectnum].lotag != ST_2_UNDERWATER)
+                    {
+                        if (g_playerSpawnPoints[p].os == s.sectnum)
+                        {
+                            g_playerSpawnPoints[p].ox += m;
+                            g_playerSpawnPoints[p].oy += x;
+                        }
 
-//                        if (s.sectnum == sprite[ps.i].sectnum
+                        if (s.sectnum == sprite[ps.i].sectnum
 //#ifdef YAX_ENABLE
-//                                || (t[9]>=0 && t[9] == sprite[ps.i].sectnum)
+                                || (t[9]>=0 && t[9] == sprite[ps.i].sectnum)
 //#endif
-//                            )
-//                        {
-//                            rotatepoint(s.x,s.y,ps.pos.x,ps.pos.y,q,&ps.pos.x,&ps.pos.y);
+                            )
+                        {
+                            var $x = new R(ps.pos.x);
+                            var $y = new R(ps.pos.y);
+                            rotatepoint(s.x,s.y,ps.pos.x,ps.pos.y,q,$x,$y);
+                            ps.pos.x = $x.$;
+                            ps.pos.y = $y.$;
 
-//                            ps.pos.x += m;
-//                            ps.pos.y += x;
+                            ps.pos.x += m;
+                            ps.pos.y += x;
 
-//                            ps.bobposx += m;
-//                            ps.bobposy += x;
+                            ps.bobposx += m;
+                            ps.bobposy += x;
 
-//                            ps.ang += q;
-//                            ps.ang &= 2047;
+                            ps.ang += q;
+                            ps.ang &= 2047;
 
-//                            if (g_netServer || numplayers > 1)
-//                            {
-//                                ps.opos.x = ps.pos.x;
-//                                ps.opos.y = ps.pos.y;
-//                            }
-//                            if (sprite[ps.i].extra <= 0)
-//                            {
-//                                sprite[ps.i].x = ps.pos.x;
-//                                sprite[ps.i].y = ps.pos.y;
-//                            }
-//                        }
-//                    }
-//                }
+                            if (g_netServer || numplayers > 1)
+                            {
+                                ps.opos.x = ps.pos.x;
+                                ps.opos.y = ps.pos.y;
+                            }
+                            if (sprite[ps.i].extra <= 0)
+                            {
+                                sprite[ps.i].x = ps.pos.x;
+                                sprite[ps.i].y = ps.pos.y;
+                            }
+                        }
+                    }
+                }
 
-//                // NOTE: special loop handling
-//                j = headspritesect[s.sectnum];
-//                while (j >= 0)
-//                {
-//                    // KEEPINSYNC2
-//                    // XXX: underwater check?
-//                    if (sprite[j].statnum != STAT_PLAYER && sector[sprite[j].sectnum].lotag != ST_2_UNDERWATER &&
-//                            (sprite[j].picnum != SECTOREFFECTOR || (sprite[j].lotag == SE_49_POINT_LIGHT||sprite[j].lotag == SE_50_SPOT_LIGHT))
-//                            && sprite[j].picnum != LOCATORS)
-//                    {
-//                        // fix interpolation
-//                        if (numplayers < 2 && !g_netServer)
-//                        {
-//                            actor[j].bpos.x = sprite[j].x;
-//                            actor[j].bpos.y = sprite[j].y;
-//                        }
+                // NOTE: special loop handling
+                j = headspritesect[s.sectnum];
+                while (j >= 0)
+                {
+                    // KEEPINSYNC2
+                    // XXX: underwater check?
+                    if (sprite[j].statnum != STAT_PLAYER && sector[sprite[j].sectnum].lotag != ST_2_UNDERWATER &&
+                            (sprite[j].picnum != SECTOREFFECTOR || (sprite[j].lotag == SE_49_POINT_LIGHT||sprite[j].lotag == SE_50_SPOT_LIGHT))
+                            && sprite[j].picnum != LOCATORS)
+                    {
+                        // fix interpolation
+                        if (numplayers < 2 && !g_netServer)
+                        {
+                            actor[j].bpos.x = sprite[j].x;
+                            actor[j].bpos.y = sprite[j].y;
+                        }
 
-//                        if (move_rotfixed_sprite(j, s-sprite, t[2]))
-//                            rotatepoint(s.x,s.y,sprite[j].x,sprite[j].y,q,&sprite[j].x,&sprite[j].y);
+                        if (move_rotfixed_sprite(j, s-sprite, t[2])) {
+                            var $x = new R(sprite[j].x);
+                            var $y = new R(sprite[j].y);
+                            rotatepoint(s.x,s.y,sprite[j].x,sprite[j].y,q,$x,$y);
+                            sprite[j].x = $x.$;
+                            sprite[j].y = $y.$;
+                        }
 
-//                        sprite[j].x+= m;
-//                        sprite[j].y+= x;
+                        sprite[j].x+= m;
+                        sprite[j].y+= x;
 
-//                        sprite[j].ang+=q;
+                        sprite[j].ang+=q;
 
-//                        if (g_netServer || numplayers > 1)
-//                        {
-//                            actor[j].bpos.x = sprite[j].x;
-//                            actor[j].bpos.y = sprite[j].y;
-//                        }
-//                    }
-//                    j = nextspritesect[j];
+                        if (g_netServer || numplayers > 1)
+                        {
+                            actor[j].bpos.x = sprite[j].x;
+                            actor[j].bpos.y = sprite[j].y;
+                        }
+                    }
+                    j = nextspritesect[j];
 //#ifdef YAX_ENABLE
-//                    if (j < 0)
-//                    {
-//                        if (t[9]>=0 && firstrun)
-//                        {
-//                            firstrun = 0;
-//                            j = headspritesect[t[9]];
-//                        }
-//                    }
+                    if (j < 0)
+                    {
+                        if (t[9]>=0 && firstrun)
+                        {
+                            firstrun = 0;
+                            j = headspritesect[t[9]];
+                        }
+                    }
 //#endif
-//                }
-
-//                A_MoveSector(i);
-//                setsprite(i,(vec3_t *)s);
-
-//                if ((sc.floorz-sc.ceilingz) < (108<<8))
-//                {
-//                    if (ud.noclip == 0 && s.xvel >= 192)
-//                        MaybeTrainKillPlayer(s, 1);
-
-//                    MaybeTrainKillEnemies(i, 72);
-//                }
-//            }
-//            else
-//            {
-//                // fix for jittering of sprites in halted subways
-//                for (SPRITES_OF_SECT(s.sectnum, j))
-//                {
-//                    // KEEPINSYNC2
-//                    if (sprite[j].statnum != STAT_PLAYER && sector[sprite[j].sectnum].lotag != ST_2_UNDERWATER &&
-//                            (sprite[j].picnum != SECTOREFFECTOR || (sprite[j].lotag == SE_49_POINT_LIGHT||sprite[j].lotag == SE_50_SPOT_LIGHT))
-//                            && sprite[j].picnum != LOCATORS)
-//                    {
-//                        actor[j].bpos.x = sprite[j].x;
-//                        actor[j].bpos.y = sprite[j].y;
-//                    }
-//                }
-//            }
-
-//            break;
-
-//        case SE_30_TWO_WAY_TRAIN:
-//            if (s.owner == -1)
-//            {
-//                t[3] = !t[3];
-//                s.owner = A_FindLocator(t[3],t[0]);
-//            }
-//            else
-//            {
-
-//                if (t[4] == 1) // Starting to go
-//                {
-//                    if (ldist(&sprite[s.owner],s) < (2048-128))
-//                        t[4] = 2;
-//                    else
-//                    {
-//                        if (s.xvel == 0)
-//                            G_OperateActivators(s.hitag+(!t[3]),-1);
-//                        if (s.xvel < 256)
-//                            s.xvel += 16;
-//                    }
-//                }
-//                if (t[4] == 2)
-//                {
-//                    l = FindDistance2D(sprite[s.owner].x-s.x,sprite[s.owner].y-s.y);
-
-//                    if (l <= 128)
-//                        s.xvel = 0;
-
-//                    if (s.xvel > 0)
-//                        s.xvel -= 16;
-//                    else
-//                    {
-//                        s.xvel = 0;
-//                        G_OperateActivators(s.hitag+(int16_t)t[3],-1);
-//                        s.owner = -1;
-//                        s.ang += 1024;
-//                        t[4] = 0;
-//                        G_OperateForceFields(i,s.hitag);
-
-//                        for (SPRITES_OF_SECT(s.sectnum, j))
-//                        {
-//                            if (sprite[j].picnum != SECTOREFFECTOR && sprite[j].picnum != LOCATORS)
-//                            {
-//                                actor[j].bpos.x = sprite[j].x;
-//                                actor[j].bpos.y = sprite[j].y;
-//                            }
-//                        }
-
-//                    }
-//                }
-//            }
-
-//            if (s.xvel)
-//            {
-//                int32_t p;
-
-//                l = (s.xvel*sintable[(s.ang+512)&2047])>>14;
-//                x = (s.xvel*sintable[s.ang&2047])>>14;
-
-//                if ((sc.floorz-sc.ceilingz) < (108<<8))
-//                    if (ud.noclip == 0)
-//                        MaybeTrainKillPlayer(s, 0);
-
-//                for (TRAVERSE_CONNECT(p))
-//                {
-//                    DukePlayer_t *const ps = g_player[p].ps;
-
-//                    if (sprite[ps.i].sectnum == s.sectnum)
-//                    {
-//                        ps.pos.x += l;
-//                        ps.pos.y += x;
-
-//                        if (g_netServer || numplayers > 1)
-//                        {
-//                            ps.opos.x = ps.pos.x;
-//                            ps.opos.y = ps.pos.y;
-//                        }
-
-//                        ps.bobposx += l;
-//                        ps.bobposy += x;
-//                    }
-
-//                    if (g_playerSpawnPoints[p].os == s.sectnum)
-//                    {
-//                        g_playerSpawnPoints[p].ox += l;
-//                        g_playerSpawnPoints[p].oy += x;
-//                    }
-//                }
-
-//                for (SPRITES_OF_SECT(s.sectnum, j))
-//                {
-//                    // TODO: replace some checks for SE 49/50 with statnum LIGHT instead?
-//                    if ((sprite[j].picnum != SECTOREFFECTOR || sprite[j].lotag==SE_49_POINT_LIGHT || sprite[j].lotag==SE_50_SPOT_LIGHT)
-//                            && sprite[j].picnum != LOCATORS)
-//                    {
-//                        if (numplayers < 2 && !g_netServer)
-//                        {
-//                            actor[j].bpos.x = sprite[j].x;
-//                            actor[j].bpos.y = sprite[j].y;
-//                        }
-
-//                        sprite[j].x += l;
-//                        sprite[j].y += x;
-
-//                        if (g_netServer || numplayers > 1)
-//                        {
-//                            actor[j].bpos.x = sprite[j].x;
-//                            actor[j].bpos.y = sprite[j].y;
-//                        }
-//                    }
-//                }
-
-//                A_MoveSector(i);
-//                setsprite(i,(vec3_t *)s);
-
-//                if (sc.floorz-sc.ceilingz < (108<<8))
-//                {
-//                    if (ud.noclip == 0)
-//                        MaybeTrainKillPlayer(s, 1);
-
-//                    MaybeTrainKillEnemies(i, 24);
-//                }
-//            }
-
-//            break;
-
-
-//        case SE_2_EARTHQUAKE://Quakes
-//            if (t[4] > 0 && t[0] == 0)
-//            {
-//                if (t[4] < sh)
-//                    t[4]++;
-//                else t[0] = 1;
-//            }
-
-//            if (t[0] > 0)
-//            {
-//                int32_t p, nextj;
-
-//                t[0]++;
-
-//                s.xvel = 3;
-
-//                if (t[0] > 96)
-//                {
-//                    t[0] = -1; //Stop the quake
-//                    t[4] = -1;
-//                    KILLIT(i);
-//                }
-//                else
-//                {
-//                    if ((t[0]&31) ==  8)
-//                    {
-//                        g_earthquakeTime = 48;
-//                        A_PlaySound(EARTHQUAKE,g_player[screenpeek].ps.i);
-//                    }
-
-//                    if (klabs(sc.floorheinum-t[5]) < 8)
-//                        sc.floorheinum = t[5];
-//                    else sc.floorheinum += (ksgn(t[5]-sc.floorheinum)<<4);
-//                }
-
-//                m = (s.xvel*sintable[(s.ang+512)&2047])>>14;
-//                x = (s.xvel*sintable[s.ang&2047])>>14;
-
-
-//                for (TRAVERSE_CONNECT(p))
-//                {
-//                    DukePlayer_t *const ps = g_player[p].ps;
-
-//                    if (ps.cursectnum == s.sectnum && ps.on_ground)
-//                    {
-//                        ps.pos.x += m;
-//                        ps.pos.y += x;
-
-//                        ps.bobposx += m;
-//                        ps.bobposy += x;
-//                    }
-//                }
-
-//                for (SPRITES_OF_SECT_SAFE(s.sectnum, j, nextj))
-//                {
-//                    if (sprite[j].picnum != SECTOREFFECTOR)
-//                    {
-//                        sprite[j].x+=m;
-//                        sprite[j].y+=x;
-//                        setsprite(j,(vec3_t *)&sprite[j]);
-//                    }
-//                }
-
-//                A_MoveSector(i);
-//                setsprite(i,(vec3_t *)s);
-//            }
-//            break;
-
-//            //Flashing sector lights after reactor EXPLOSION2
-
-//        case SE_3_RANDOM_LIGHTS_AFTER_SHOT_OUT:
-//        {
-//            if (t[4] == 0) break;
-
-//            //    if(t[5] > 0) { t[5]--; break; }
-
-//            if ((g_globalRandom/(sh+1)&31) < 4 && !t[2])
-//            {
-//                //       t[5] = 4+(g_globalRandom&7);
-//                sc.ceilingpal = s.owner>>8;
-//                sc.floorpal = s.owner&0xff;
-//                t[0] = s.shade + (g_globalRandom&15);
-//            }
-//            else
-//            {
-//                //       t[5] = 4+(g_globalRandom&3);
-//                sc.ceilingpal = s.pal;
-//                sc.floorpal = s.pal;
-//                t[0] = t[3];
-//            }
-
-//            sc.ceilingshade = t[0];
-//            sc.floorshade = t[0];
-
-//            wal = &wall[sc.wallptr];
-
-//            for (x=sc.wallnum; x > 0; x--,wal++)
-//            {
-//                if (wal.hitag != 1)
-//                {
-//                    wal.shade = t[0];
-//                    if ((wal.cstat&2) && wal.nextwall >= 0)
-//                    {
-//                        wall[wal.nextwall].shade = wal.shade;
-//                    }
-//                }
-//            }
-
-//            break;
-//        }
-
-//        case SE_4_RANDOM_LIGHTS:
-
-//            if ((g_globalRandom/(sh+1)&31) < 4)
-//            {
-//                t[1] = s.shade + (g_globalRandom&15);//Got really bright
-//                t[0] = s.shade + (g_globalRandom&15);
-//                sc.ceilingpal = s.owner>>8;
-//                sc.floorpal = s.owner&0xff;
-//                j = 1;
-//            }
-//            else
-//            {
-//                t[1] = t[2];
-//                t[0] = t[3];
-
-//                sc.ceilingpal = s.pal;
-//                sc.floorpal = s.pal;
-
-//                j = 0;
-//            }
-
-//            sc.floorshade = t[1];
-//            sc.ceilingshade = t[1];
-
-//            wal = &wall[sc.wallptr];
-
-//            for (x=sc.wallnum; x > 0; x--,wal++)
-//            {
-//                if (j) wal.pal = (s.owner&0xff);
-//                else wal.pal = s.pal;
-
-//                if (wal.hitag != 1)
-//                {
-//                    wal.shade = t[0];
-//                    if ((wal.cstat&2) && wal.nextwall >= 0)
-//                        wall[wal.nextwall].shade = wal.shade;
-//                }
-//            }
-
-//            for (SPRITES_OF_SECT(sprite[i].sectnum, j))
-//            {
-//                if (sprite[j].cstat&16 && A_CheckSpriteFlags(j,SPRITE_NOSHADE) == 0)
-//                {
-//                    if (sc.ceilingstat&1)
-//                        sprite[j].shade = sc.ceilingshade;
-//                    else sprite[j].shade = sc.floorshade;
-//                }
-//            }
-
-//            if (t[4])
-//                KILLIT(i);
-
-//            break;
-
-//            //BOSS
-//        case SE_5:
-//        {
-//            const int32_t p = A_FindPlayer(s,&x);
-//            DukePlayer_t *const ps = g_player[p].ps;
-
-//            if (x < 8192)
-//            {
-//                j = s.ang;
-//                s.ang = getangle(s.x-ps.pos.x,s.y-ps.pos.y);
-//                A_Shoot(i,FIRELASER);
-//                s.ang = j;
-//            }
-
-//            if (s.owner==-1) //Start search
-//            {
-//                t[4]=0;
-//                l = INT32_MAX;
-//                while (1) //Find the shortest dist
-//                {
-//                    s.owner = A_FindLocator((int16_t)t[4],-1); //t[0] hold sectnum
-
-//                    if (s.owner==-1) break;
-
-//                    m = ldist(&sprite[ps.i],&sprite[s.owner]);
-
-//                    if (l > m)
-//                    {
-//                        q = s.owner;
-//                        l = m;
-//                    }
-
-//                    t[4]++;
-//                }
-
-//                s.owner = q;
-//                s.zvel = ksgn(sprite[q].z-s.z)<<4;
-//            }
-
-//            if (ldist(&sprite[s.owner],s) < 1024)
-//            {
-//                int16_t ta;
-//                ta = s.ang;
-//                s.ang = getangle(ps.pos.x-s.x,ps.pos.y-s.y);
-//                s.ang = ta;
-//                s.owner = -1;
-//                goto BOLT;
-
-//            }
-//            else s.xvel=256;
-
-//            x = getangle(sprite[s.owner].x-s.x,sprite[s.owner].y-s.y);
-//            q = G_GetAngleDelta(s.ang,x)>>3;
-//            s.ang += q;
-
-//            if (rnd(32))
-//            {
-//                t[2]+=q;
-//                sc.ceilingshade = 127;
-//            }
-//            else
-//            {
-//                t[2] += G_GetAngleDelta(t[2]+512,getangle(ps.pos.x-s.x,ps.pos.y-s.y))>>2;
-//                sc.ceilingshade = 0;
-//            }
-
-//            if (A_IncurDamage(i) >= 0)
-//            {
-//                if (++t[3] == 5)
-//                {
-//                    s.zvel += 1024;
-//                    P_DoQuote(QUOTE_WASTED, g_player[myconnectindex].ps);
-//                }
-//            }
-
-//            s.z += s.zvel;
-//            sc.ceilingz += s.zvel;
-//            sector[t[0]].ceilingz += s.zvel;
-//            A_MoveSector(i);
-//            setsprite(i,(vec3_t *)s);
-//            break;
-//        }
-
-//        case SE_8_UP_OPEN_DOOR_LIGHTS:
-//        case SE_9_DOWN_OPEN_DOOR_LIGHTS:
-
-//            // work only if its moving
-
-//            j = -1;
-
-//            if (actor[i].t_data[4])
-//            {
-//                actor[i].t_data[4]++;
-//                if (actor[i].t_data[4] > 8)
-//                    KILLIT(i);
-//                j = 1;
-//            }
-//            else j = GetAnimationGoal(&sc.ceilingz);
-
-//            if (j >= 0)
-//            {
-//                int16_t sn;
-
-//                if ((sc.lotag&0x8000) || actor[i].t_data[4])
-//                    x = -t[3];
-//                else
-//                    x = t[3];
-
-//                if (st == 9) x = -x;
-
-//                for (SPRITES_OF(STAT_EFFECTOR, j))
-//                {
-//                    if (sprite[j].lotag == st && sprite[j].hitag == sh)
-//                    {
-//                        sn = sprite[j].sectnum;
-//                        m = sprite[j].shade;
-
-//                        wal = &wall[sector[sn].wallptr];
-
-//                        for (l=sector[sn].wallnum; l>0; l--,wal++)
-//                        {
-//                            if (wal.hitag != 1)
-//                            {
-//                                wal.shade+=x;
-
-//                                if (wal.shade < m)
-//                                    wal.shade = m;
-//                                else if (wal.shade > actor[j].t_data[2])
-//                                    wal.shade = actor[j].t_data[2];
-
-//                                if (wal.nextwall >= 0)
-//                                    if (wall[wal.nextwall].hitag != 1)
-//                                        wall[wal.nextwall].shade = wal.shade;
-//                            }
-//                        }
-
-//                        sector[sn].floorshade   += x;
-//                        sector[sn].ceilingshade += x;
-
-//                        if (sector[sn].floorshade < m)
-//                            sector[sn].floorshade = m;
-//                        else if (sector[sn].floorshade > actor[j].t_data[0])
-//                            sector[sn].floorshade = actor[j].t_data[0];
-
-//                        if (sector[sn].ceilingshade < m)
-//                            sector[sn].ceilingshade = m;
-//                        else if (sector[sn].ceilingshade > actor[j].t_data[1])
-//                            sector[sn].ceilingshade = actor[j].t_data[1];
-
-//                    }
-//                }
-//            }
-//            break;
-
-//        case SE_10_DOOR_AUTO_CLOSE:
-//            // XXX: 32791, what the hell?
-//            if ((sc.lotag&0xff) == ST_27_STRETCH_BRIDGE || (sc.floorz > sc.ceilingz && (sc.lotag&0xff) != ST_23_SWINGING_DOOR) || sc.lotag == 32791)
-//            {
-//                int32_t p;
-
-//                j = 1;
-
-//                if ((sc.lotag&0xff) != ST_27_STRETCH_BRIDGE)
-//                    for (TRAVERSE_CONNECT(p))
-//                        if (sc.lotag != ST_30_ROTATE_RISE_BRIDGE && sc.lotag != ST_31_TWO_WAY_TRAIN && sc.lotag != 0)
-//                            if (s.sectnum == sprite[g_player[p].ps.i].sectnum)
-//                                j = 0;
-
-//                if (j == 1)
-//                {
-//                    if (t[0] > sh)
-//                        switch (sector[s.sectnum].lotag)
-//                        {
-//                        case ST_20_CEILING_DOOR:
-//                        case ST_21_FLOOR_DOOR:
-//                        case ST_22_SPLITTING_DOOR:
-//                        case ST_26_SPLITTING_ST_DOOR:
-//                            if (GetAnimationGoal(&sector[s.sectnum].ceilingz) >= 0)
-//                                break;
-//                        default:
-//                            G_ActivateBySector(s.sectnum,i);
-//                            t[0] = 0;
-//                            break;
-//                        }
-//                    else t[0]++;
-//                }
-//            }
-//            else t[0]=0;
-//            break;
-
-//        case SE_11_SWINGING_DOOR: //Swingdoor
-
-//            if (t[5] > 0)
-//            {
-//                t[5]--;
-//                break;
-//            }
-
-//            if (t[4])
-//            {
-//                int32_t endwall = sc.wallptr+sc.wallnum;
-
-//                for (j=sc.wallptr; j<endwall; j++)
-//                {
-//                    for (SPRITES_OF(STAT_ACTOR, k))
-//                    {
-//                        if (sprite[k].extra > 0 && A_CheckEnemySprite(&sprite[k])
-//                                && clipinsidebox(sprite[k].x, sprite[k].y, j, 256) == 1)
-//                            goto BOLT;
-//                    }
-
-//                    for (SPRITES_OF(STAT_PLAYER, k))
-//                    {
-//                        if (sprite[k].owner >= 0 && clipinsidebox(sprite[k].x, sprite[k].y, j, 144) == 1)
-//                        {
-//                            t[5] = 8; // Delay
-//                            k = (sprite[i].yvel>>3)*t[3];
-//                            t[2] -= k;
-//                            t[4] -= k;
-//                            A_MoveSector(i);
-//                            setsprite(i,(vec3_t *)s);
-//                            goto BOLT;
-//                        }
-//                    }
-//                }
-
-//                k = (sprite[i].yvel>>3)*t[3];
-//                t[2]+=k;
-//                t[4]+=k;
-//                A_MoveSector(i);
-//                setsprite(i,(vec3_t *)s);
-
-//                if (t[4] <= -511 || t[4] >= 512)
-//                {
-//                    t[4] = 0;
-//                    t[2] &= 0xffffff00;
-//                    A_MoveSector(i);
-//                    setsprite(i,(vec3_t *)s);
-//                    break;
-//                }
-//            }
-//            break;
-
-//        case SE_12_LIGHT_SWITCH:
-//            if (t[0] == 3 || t[3] == 1)   //Lights going off
-//            {
-//                sc.floorpal = 0;
-//                sc.ceilingpal = 0;
-
-//                wal = &wall[sc.wallptr];
-//                for (j = sc.wallnum; j > 0; j--, wal++)
-//                    if (wal.hitag != 1)
-//                    {
-//                        wal.shade = t[1];
-//                        wal.pal = 0;
-//                    }
-
-//                sc.floorshade = t[1];
-//                sc.ceilingshade = t[2];
-//                t[0]=0;
-
-//                for (SPRITES_OF_SECT(sprite[i].sectnum, j))
-//                {
-//                    if (sprite[j].cstat&16 && A_CheckSpriteFlags(j,SPRITE_NOSHADE) == 0)
-//                    {
-//                        if (sc.ceilingstat&1)
-//                            sprite[j].shade = sc.ceilingshade;
-//                        else sprite[j].shade = sc.floorshade;
-//                    }
-//                }
-
-//                if (t[3] == 1)
-//                    KILLIT(i);
-//            }
-//            if (t[0] == 1)   //Lights flickering on
-//            {
-//                if (sc.floorshade > s.shade)
-//                {
-//                    sc.floorpal = s.pal;
-//                    sc.ceilingpal = s.pal;
-
-//                    sc.floorshade -= 2;
-//                    sc.ceilingshade -= 2;
-
-//                    wal = &wall[sc.wallptr];
-//                    for (j=sc.wallnum; j>0; j--,wal++)
-//                        if (wal.hitag != 1)
-//                        {
-//                            wal.pal = s.pal;
-//                            wal.shade -= 2;
-//                        }
-//                }
-//                else t[0] = 2;
-
-//                for (SPRITES_OF_SECT(sprite[i].sectnum, j))
-//                {
-//                    if (sprite[j].cstat&16)
-//                    {
-//                        if (sc.ceilingstat&1 && A_CheckSpriteFlags(j,SPRITE_NOSHADE) == 0)
-//                            sprite[j].shade = sc.ceilingshade;
-//                        else sprite[j].shade = sc.floorshade;
-//                    }
-//                }
-//            }
-//            break;
-
-
-//        case SE_13_EXPLOSIVE:
-//            if (t[2])
-//            {
-//                // t[0]: ceiling z
-//                // t[1]: floor z
-//                // s.owner: 1 if affect ceiling, 0 if affect floor
-//                // t[3]: 1 if ceiling was parallaxed at premap, 0 else
-
-//                j = (sprite[i].yvel<<5)|1;
-
-//                if (s.ang == 512)
-//                {
-//                    if (s.owner)
-//                    {
-//                        if (klabs(t[0]-sc.ceilingz) >= j)
-//                            sc.ceilingz += ksgn(t[0]-sc.ceilingz)*j;
-//                        else sc.ceilingz = t[0];
-//                    }
-//                    else
-//                    {
-//                        if (klabs(t[1]-sc.floorz) >= j)
-//                            sc.floorz += ksgn(t[1]-sc.floorz)*j;
-//                        else sc.floorz = t[1];
-//                    }
-//                }
-//                else
-//                {
-//                    if (klabs(t[1]-sc.floorz) >= j)
-//                        sc.floorz += ksgn(t[1]-sc.floorz)*j;
-//                    else sc.floorz = t[1];
-//                    if (klabs(t[0]-sc.ceilingz) >= j)
-//                        sc.ceilingz += ksgn(t[0]-sc.ceilingz)*j;
-//                    sc.ceilingz = t[0];
-//                }
+                }
+
+                A_MoveSector(i);
+                setsprite(i,/*(vec3_t *)*/s);
+
+                if ((sc.floorz-sc.ceilingz) < (108<<8))
+                {
+                    if (ud.noclip == 0 && s.xvel >= 192)
+                        MaybeTrainKillPlayer(s, 1);
+
+                    MaybeTrainKillEnemies(i, 72);
+                }
+            }
+            else
+            {
+                // fix for jittering of sprites in halted subways
+                for (j = headspritesect[s.sectnum]; j >= 0; j = nextspritesect[j])
+                {
+                    // KEEPINSYNC2
+                    if (sprite[j].statnum != STAT_PLAYER && sector[sprite[j].sectnum].lotag != ST_2_UNDERWATER &&
+                            (sprite[j].picnum != SECTOREFFECTOR || (sprite[j].lotag == SE_49_POINT_LIGHT||sprite[j].lotag == SE_50_SPOT_LIGHT))
+                            && sprite[j].picnum != LOCATORS)
+                    {
+                        actor[j].bpos.x = sprite[j].x;
+                        actor[j].bpos.y = sprite[j].y;
+                    }
+                }
+            }
+
+            break;
+
+        case SE_30_TWO_WAY_TRAIN:
+            if (s.owner == -1)
+            {
+                t[3] = !t[3];
+                s.owner = A_FindLocator(t[3],t[0]);
+            }
+            else
+            {
+
+                if (t[4] == 1) // Starting to go
+                {
+                    if (ldist(sprite[s.owner],s) < (2048-128))
+                        t[4] = 2;
+                    else
+                    {
+                        if (s.xvel == 0)
+                            G_OperateActivators(s.hitag+(!t[3]?1:0),-1);
+                        if (s.xvel < 256)
+                            s.xvel += 16;
+                    }
+                }
+                if (t[4] == 2)
+                {
+                    l = FindDistance2D(sprite[s.owner].x-s.x,sprite[s.owner].y-s.y);
+
+                    if (l <= 128)
+                        s.xvel = 0;
+
+                    if (s.xvel > 0)
+                        s.xvel -= 16;
+                    else
+                    {
+                        s.xvel = 0;
+                        G_OperateActivators(s.hitag+int16(t[3]),-1);
+                        s.owner = -1;
+                        s.ang += 1024;
+                        t[4] = 0;
+                        G_OperateForceFields(i,s.hitag);
+
+                        for (j = headspritesect[s.sectnum]; j >= 0; j = nextspritesect[j])
+                        {
+                            if (sprite[j].picnum != SECTOREFFECTOR && sprite[j].picnum != LOCATORS)
+                            {
+                                actor[j].bpos.x = sprite[j].x;
+                                actor[j].bpos.y = sprite[j].y;
+                            }
+                        }
+
+                    }
+                }
+            }
+
+            if (s.xvel)
+            {
+                var/*int32_t*/ p:number;
+
+                l = (s.xvel*sintable[(s.ang+512)&2047])>>14;
+                x = (s.xvel*sintable[s.ang&2047])>>14;
+
+                if ((sc.floorz-sc.ceilingz) < (108<<8))
+                    if (ud.noclip == 0)
+                        MaybeTrainKillPlayer(s, 0);
+
+                for (p = 0; p != -1; p = connectpoint2[p])
+                {
+                    var ps = g_player[p].ps;
+
+                    if (sprite[ps.i].sectnum == s.sectnum)
+                    {
+                        ps.pos.x += l;
+                        ps.pos.y += x;
+
+                        if (g_netServer || numplayers > 1)
+                        {
+                            ps.opos.x = ps.pos.x;
+                            ps.opos.y = ps.pos.y;
+                        }
+
+                        ps.bobposx += l;
+                        ps.bobposy += x;
+                    }
+
+                    if (g_playerSpawnPoints[p].os == s.sectnum)
+                    {
+                        g_playerSpawnPoints[p].ox += l;
+                        g_playerSpawnPoints[p].oy += x;
+                    }
+                }
+
+                for (j = headspritesect[s.sectnum]; j >= 0; j = nextspritesect[j])
+                {
+                    // TODO: replace some checks for SE 49/50 with statnum LIGHT instead?
+                    if ((sprite[j].picnum != SECTOREFFECTOR || sprite[j].lotag==SE_49_POINT_LIGHT || sprite[j].lotag==SE_50_SPOT_LIGHT)
+                            && sprite[j].picnum != LOCATORS)
+                    {
+                        if (numplayers < 2 && !g_netServer)
+                        {
+                            actor[j].bpos.x = sprite[j].x;
+                            actor[j].bpos.y = sprite[j].y;
+                        }
+
+                        sprite[j].x += l;
+                        sprite[j].y += x;
+
+                        if (g_netServer || numplayers > 1)
+                        {
+                            actor[j].bpos.x = sprite[j].x;
+                            actor[j].bpos.y = sprite[j].y;
+                        }
+                    }
+                }
+
+                A_MoveSector(i);
+                setsprite(i,s);
+
+                if (sc.floorz-sc.ceilingz < (108<<8))
+                {
+                    if (ud.noclip == 0)
+                        MaybeTrainKillPlayer(s, 1);
+
+                    MaybeTrainKillEnemies(i, 24);
+                }
+            }
+
+            break;
+
+
+        case SE_2_EARTHQUAKE://Quakes
+            if (t[4] > 0 && t[0] == 0)
+            {
+                if (t[4] < sh)
+                    t[4]++;
+                else t[0] = 1;
+            }
+
+            if (t[0] > 0)
+            {
+                var/*int32_t */p:number, nextj:number;
+
+                t[0]++;
+
+                s.xvel = 3;
+
+                if (t[0] > 96)
+                {
+                    t[0] = -1; //Stop the quake
+                    t[4] = -1;
+                    {A_DeleteSprite(i); {i = nexti; continue BOLT;}}
+                }
+                else
+                {
+                    if ((t[0]&31) ==  8)
+                    {
+                        g_earthquakeTime = 48;
+                        A_PlaySound(EARTHQUAKE,g_player[screenpeek].ps.i);
+                    }
+
+                    if (klabs(sc.floorheinum-t[5]) < 8)
+                        sc.floorheinum = t[5];
+                    else sc.floorheinum += (ksgn(t[5]-sc.floorheinum)<<4);
+                }
+
+                m = (s.xvel*sintable[(s.ang+512)&2047])>>14;
+                x = (s.xvel*sintable[s.ang&2047])>>14;
+
+
+                for (p = 0; p != -1; p = connectpoint2[p])
+                {
+                    var ps = g_player[p].ps;
+
+                    if (ps.cursectnum == s.sectnum && ps.on_ground)
+                    {
+                        ps.pos.x += m;
+                        ps.pos.y += x;
+
+                        ps.bobposx += m;
+                        ps.bobposy += x;
+                    }
+                }
+
+                for (j = headspritesect[s.sectnum];j >= 0 && (nextj = nextspritesect[j], 1); j = nextj)
+                {
+                    if (sprite[j].picnum != SECTOREFFECTOR)
+                    {
+                        sprite[j].x+=m;
+                        sprite[j].y+=x;
+                        setsprite(j,sprite[j]);
+                    }
+                }
+
+                A_MoveSector(i);
+                setsprite(i,s);
+            }
+            break;
+
+            //Flashing sector lights after reactor EXPLOSION2
+
+        case SE_3_RANDOM_LIGHTS_AFTER_SHOT_OUT:
+        {
+            if (t[4] == 0) break;
+
+            //    if(t[5] > 0) { t[5]--; break; }
+
+            if ((g_globalRandom/(sh+1)&31) < 4 && !t[2])
+            {
+                //       t[5] = 4+(g_globalRandom&7);
+                sc.ceilingpal = s.owner>>8;
+                sc.floorpal = s.owner&0xff;
+                t[0] = s.shade + (g_globalRandom&15);
+            }
+            else
+            {
+                //       t[5] = 4+(g_globalRandom&3);
+                sc.ceilingpal = s.pal;
+                sc.floorpal = s.pal;
+                t[0] = t[3];
+            }
+
+            sc.ceilingshade = t[0];
+            sc.floorshade = t[0];
+
+            walIdx = sc.wallptr, wal = wall[walIdx];
+
+            for (x=sc.wallnum; x > 0; x--,wal = wall[++walIdx])
+            {
+                if (wal.hitag != 1)
+                {
+                    wal.shade = t[0];
+                    if ((wal.cstat&2) && wal.nextwall >= 0)
+                    {
+                        wall[wal.nextwall].shade = wal.shade;
+                    }
+                }
+            }
+
+            break;
+        }
+
+        case SE_4_RANDOM_LIGHTS:
+
+            if ((g_globalRandom/(sh+1)&31) < 4)
+            {
+                t[1] = s.shade + (g_globalRandom&15);//Got really bright
+                t[0] = s.shade + (g_globalRandom&15);
+                sc.ceilingpal = s.owner>>8;
+                sc.floorpal = s.owner&0xff;
+                j = 1;
+            }
+            else
+            {
+                t[1] = t[2];
+                t[0] = t[3];
+
+                sc.ceilingpal = s.pal;
+                sc.floorpal = s.pal;
+
+                j = 0;
+            }
+
+            sc.floorshade = t[1];
+            sc.ceilingshade = t[1];
+
+            walIdx = sc.wallptr, wal = wall[walIdx];
+
+            for (x=sc.wallnum; x > 0; x--,wal = wall[++walIdx])
+            {
+                if (j) wal.pal = (s.owner&0xff);
+                else wal.pal = s.pal;
+
+                if (wal.hitag != 1)
+                {
+                    wal.shade = t[0];
+                    if ((wal.cstat&2) && wal.nextwall >= 0)
+                        wall[wal.nextwall].shade = wal.shade;
+                }
+            }
+
+            for (j = headspritesect[sprite[i].sectnum]; j >= 0; j = nextspritesect[j])
+            {
+                if (sprite[j].cstat&16 && A_CheckSpriteFlags(j,SPRITE_NOSHADE) == 0)
+                {
+                    if (sc.ceilingstat&1)
+                        sprite[j].shade = sc.ceilingshade;
+                    else sprite[j].shade = sc.floorshade;
+                }
+            }
+
+            if (t[4])
+                {A_DeleteSprite(i); {i = nexti; continue BOLT;}}
+
+            break;
+
+            //BOSS
+        case SE_5:
+        {
+            var $x = new R(x);
+            var p = A_FindPlayer(s,$x);
+            x = $x.$;
+            var ps = g_player[p].ps;
+
+            if (x < 8192)
+            {
+                j = s.ang;
+                s.ang = getangle(s.x-ps.pos.x,s.y-ps.pos.y);
+                A_Shoot(i,FIRELASER);
+                s.ang = j;
+            }
+
+            if (s.owner==-1) //Start search
+            {
+                t[4]=0;
+                l = INT32_MAX;
+                while (1) //Find the shortest dist
+                {
+                    s.owner = A_FindLocator(int16(t[4]),-1); //t[0] hold sectnum
+
+                    if (s.owner==-1) break;
+
+                    m = ldist(sprite[ps.i],sprite[s.owner]);
+
+                    if (l > m)
+                    {
+                        q = s.owner;
+                        l = m;
+                    }
+
+                    t[4]++;
+                }
+
+                s.owner = q;
+                s.zvel = ksgn(sprite[q].z-s.z)<<4;
+            }
+
+            if (ldist(sprite[s.owner],s) < 1024)
+            {
+                var/*int16_t */ta:number;
+                ta = s.ang;
+                s.ang = getangle(ps.pos.x-s.x,ps.pos.y-s.y);
+                s.ang = ta;
+                s.owner = -1;
+                {i = nexti; continue BOLT;}
+
+            }
+            else s.xvel=256;
+
+            x = getangle(sprite[s.owner].x-s.x,sprite[s.owner].y-s.y);
+            q = G_GetAngleDelta(s.ang,x)>>3;
+            s.ang += q;
+
+            if (rnd(32))
+            {
+                t[2]+=q;
+                sc.ceilingshade = 127;
+            }
+            else
+            {
+                t[2] += G_GetAngleDelta(t[2]+512,getangle(ps.pos.x-s.x,ps.pos.y-s.y))>>2;
+                sc.ceilingshade = 0;
+            }
+
+            if (A_IncurDamage(i) >= 0)
+            {
+                if (++t[3] == 5)
+                {
+                    s.zvel += 1024;
+                    P_DoQuote(QUOTE_WASTED, g_player[myconnectindex].ps);
+                }
+            }
+
+            s.z += s.zvel;
+            sc.ceilingz += s.zvel;
+            sector[t[0]].ceilingz += s.zvel;
+            A_MoveSector(i);
+            setsprite(i,s);
+            break;
+        }
+
+        case SE_8_UP_OPEN_DOOR_LIGHTS:
+        case SE_9_DOWN_OPEN_DOOR_LIGHTS:
+
+            // work only if its moving
+
+            j = -1;
+
+            if (actor[i].t_data[4])
+            {
+                actor[i].t_data[4]++;
+                if (actor[i].t_data[4] > 8)
+                    {A_DeleteSprite(i); {i = nexti; continue BOLT;}}
+                j = 1;
+            }
+            else j = GetAnimationGoal(new AnimatePtr(sector, s.sectnum, "ceilingz"));
+
+            if (j >= 0)
+            {
+                var/*int16_t */sn:number;
+
+                if ((sc.lotag&0x8000) || actor[i].t_data[4])
+                    x = -t[3];
+                else
+                    x = t[3];
+
+                if (st == 9) x = -x;
+
+                for (j = headspritestat[STAT_EFFECTOR]; j >= 0; j = nextspritestat[j])
+                {
+                    if (sprite[j].lotag == st && sprite[j].hitag == sh)
+                    {
+                        sn = sprite[j].sectnum;
+                        m = sprite[j].shade;
+
+                        walIdx = sector[sn].wallptr; wal = wall[walIdx];
+
+                        for (l=sector[sn].wallnum; l>0; l--,wal = wall[++walIdx])
+                        {
+                            if (wal.hitag != 1)
+                            {
+                                wal.shade+=x;
+
+                                if (wal.shade < m)
+                                    wal.shade = m;
+                                else if (wal.shade > actor[j].t_data[2])
+                                    wal.shade = actor[j].t_data[2];
+
+                                if (wal.nextwall >= 0)
+                                    if (wall[wal.nextwall].hitag != 1)
+                                        wall[wal.nextwall].shade = wal.shade;
+                            }
+                        }
+
+                        sector[sn].floorshade   += x;
+                        sector[sn].ceilingshade += x;
+
+                        if (sector[sn].floorshade < m)
+                            sector[sn].floorshade = m;
+                        else if (sector[sn].floorshade > actor[j].t_data[0])
+                            sector[sn].floorshade = actor[j].t_data[0];
+
+                        if (sector[sn].ceilingshade < m)
+                            sector[sn].ceilingshade = m;
+                        else if (sector[sn].ceilingshade > actor[j].t_data[1])
+                            sector[sn].ceilingshade = actor[j].t_data[1];
+
+                    }
+                }
+            }
+            break;
+
+        case SE_10_DOOR_AUTO_CLOSE:
+            // XXX: 32791, what the hell?
+            if ((sc.lotag&0xff) == ST_27_STRETCH_BRIDGE || (sc.floorz > sc.ceilingz && (sc.lotag&0xff) != ST_23_SWINGING_DOOR) || sc.lotag == 32791)
+            {
+                var/*int32_t */p:number;
+
+                j = 1;
+
+                if ((sc.lotag&0xff) != ST_27_STRETCH_BRIDGE)
+                    for (p = 0; p != -1; p = connectpoint2[p])
+                        if (sc.lotag != ST_30_ROTATE_RISE_BRIDGE && sc.lotag != ST_31_TWO_WAY_TRAIN && sc.lotag != 0)
+                            if (s.sectnum == sprite[g_player[p].ps.i].sectnum)
+                                j = 0;
+
+                if (j == 1)
+                {
+                    if (t[0] > sh)
+                        switch (sector[s.sectnum].lotag)
+                        {
+                        case ST_20_CEILING_DOOR:
+                        case ST_21_FLOOR_DOOR:
+                        case ST_22_SPLITTING_DOOR:
+                        case ST_26_SPLITTING_ST_DOOR:
+                            if (GetAnimationGoal(new AnimatePtr(sector, s.sectnum, "ceilingz") /*&sector[s.sectnum].ceilingz*/) >= 0)
+                                break;
+                        default:
+                            G_ActivateBySector(s.sectnum,i);
+                            t[0] = 0;
+                            break;
+                        }
+                    else t[0]++;
+                }
+            }
+            else t[0]=0;
+            break;
+
+        case SE_11_SWINGING_DOOR: //Swingdoor
+
+            if (t[5] > 0)
+            {
+                t[5]--;
+                break;
+            }
+
+            if (t[4])
+            {
+                var/*int32_t */endwall = sc.wallptr+sc.wallnum;
+
+                for (j=sc.wallptr; j<endwall; j++)
+                {
+                    for (k = headspritestat[STAT_ACTOR]; k >= 0; k = nextspritestat[k])
+                    {
+                        if (sprite[k].extra > 0 && A_CheckEnemySprite(sprite[k])
+                                && clipinsidebox(sprite[k].x, sprite[k].y, j, 256) == 1)
+                            {i = nexti; continue BOLT;}
+                    }
+
+                    for (k = headspritestat[STAT_PLAYER]; k >= 0; k = nextspritestat[k])
+                    {
+                        if (sprite[k].owner >= 0 && clipinsidebox(sprite[k].x, sprite[k].y, j, 144) == 1)
+                        {
+                            t[5] = 8; // Delay
+                            k = (sprite[i].yvel>>3)*t[3];
+                            t[2] -= k;
+                            t[4] -= k;
+                            A_MoveSector(i);
+                            setsprite(i,/*(vec3_t *)*/s);
+                            {i = nexti; continue BOLT;}
+                        }
+                    }
+                }
+
+                k = (sprite[i].yvel>>3)*t[3];
+                t[2]+=k;
+                t[4]+=k;
+                A_MoveSector(i);
+                setsprite(i,/*(vec3_t *)*/s);
+
+                if (t[4] <= -511 || t[4] >= 512)
+                {
+                    t[4] = 0;
+                    t[2] &= 0xffffff00;
+                    A_MoveSector(i);
+                    setsprite(i,/*(vec3_t *)*/s);
+                    break;
+                }
+            }
+            break;
+
+        case SE_12_LIGHT_SWITCH:
+            if (t[0] == 3 || t[3] == 1)   //Lights going off
+            {
+                sc.floorpal = 0;
+                sc.ceilingpal = 0;
+
+                walIdx = sc.wallptr, wal = wall[walIdx];
+                for (j = sc.wallnum; j > 0; j--, wal = wall[++walIdx])
+                    if (wal.hitag != 1)
+                    {
+                        wal.shade = t[1];
+                        wal.pal = 0;
+                    }
+
+                sc.floorshade = t[1];
+                sc.ceilingshade = t[2];
+                t[0]=0;
+
+                for (j = headspritesect[sprite[i].sectnum]; j >= 0; j = nextspritesect[j])
+                {
+                    if (sprite[j].cstat&16 && A_CheckSpriteFlags(j,SPRITE_NOSHADE) == 0)
+                    {
+                        if (sc.ceilingstat&1)
+                            sprite[j].shade = sc.ceilingshade;
+                        else sprite[j].shade = sc.floorshade;
+                    }
+                }
+
+                if (t[3] == 1)
+                    {A_DeleteSprite(i); {i = nexti; continue BOLT;}}
+            }
+            if (t[0] == 1)   //Lights flickering on
+            {
+                if (sc.floorshade > s.shade)
+                {
+                    sc.floorpal = s.pal;
+                    sc.ceilingpal = s.pal;
+
+                    sc.floorshade -= 2;
+                    sc.ceilingshade -= 2;
+
+                    walIdx = sc.wallptr, wal = wall[walIdx];
+                    for (j=sc.wallnum; j>0; j--,wal = wall[++walIdx])
+                        if (wal.hitag != 1)
+                        {
+                            wal.pal = s.pal;
+                            wal.shade -= 2;
+                        }
+                }
+                else t[0] = 2;
+
+                for (j = headspritesect[sprite[i].sectnum]; j >= 0; j = nextspritesect[j])
+                {
+                    if (sprite[j].cstat&16)
+                    {
+                        if (sc.ceilingstat&1 && A_CheckSpriteFlags(j,SPRITE_NOSHADE) == 0)
+                            sprite[j].shade = sc.ceilingshade;
+                        else sprite[j].shade = sc.floorshade;
+                    }
+                }
+            }
+            break;
+
+
+        case SE_13_EXPLOSIVE:
+            if (t[2])
+            {
+                // t[0]: ceiling z
+                // t[1]: floor z
+                // s.owner: 1 if affect ceiling, 0 if affect floor
+                // t[3]: 1 if ceiling was parallaxed at premap, 0 else
+
+                j = (sprite[i].yvel<<5)|1;
+
+                if (s.ang == 512)
+                {
+                    if (s.owner)
+                    {
+                        if (klabs(t[0]-sc.ceilingz) >= j)
+                            sc.ceilingz += ksgn(t[0]-sc.ceilingz)*j;
+                        else sc.ceilingz = t[0];
+                    }
+                    else
+                    {
+                        if (klabs(t[1]-sc.floorz) >= j)
+                            sc.floorz += ksgn(t[1]-sc.floorz)*j;
+                        else sc.floorz = t[1];
+                    }
+                }
+                else
+                {
+                    if (klabs(t[1]-sc.floorz) >= j)
+                        sc.floorz += ksgn(t[1]-sc.floorz)*j;
+                    else sc.floorz = t[1];
+                    if (klabs(t[0]-sc.ceilingz) >= j)
+                        sc.ceilingz += ksgn(t[0]-sc.ceilingz)*j;
+                    sc.ceilingz = t[0];
+                }
 //#ifdef YAX_ENABLE
-//                if (s.ang == 512)
-//                {
-//                    int16_t cf=!s.owner, bn=yax_getbunch(sc-sector, cf);
-//                    int32_t jj, daz=SECTORFLD(sc-sector,z, cf);
+                if (s.ang == 512)
+                {
+                    var/*int16_t */cf=!s.owner?1:0, bn=yax_getbunch(sc-sector, cf);
+                    var/*int32_t */jj:number, daz=SECTORFLD(sc-sector,z, cf);
 
-//                    if (bn >= 0)
-//                    {
-//                        for (SECTORS_OF_BUNCH(bn, cf, jj))
-//                        {
-//                            SECTORFLD(jj,z, cf) = daz;
-//                            SECTORFLD(jj,stat, cf) &= ~(128+256 + 512+2048);
-//                        }
-//                        for (SECTORS_OF_BUNCH(bn, !cf, jj))
-//                        {
-//                            SECTORFLD(jj,z, !cf) = daz;
-//                            SECTORFLD(jj,stat, !cf) &= ~(128+256 + 512+2048);
-//                        }
-//                    }
-//                }
+                    if (bn >= 0)
+                    {todoThrow();
+                        //for (jj = headsectbunch[cf][bn]; jj != -1; jj = nextsectbunch[cf][jj]/*(bn, cf, jj)*/)
+                        //{
+                        //    SECTORFLD(jj,z, cf) = daz;
+                        //    SECTORFLD(jj,stat, cf) &= ~(128+256 + 512+2048);
+                        //}
+                        //for (jj = headsectbunch[(!cf)?1:0][bn]; jj != -1; jj = nextsectbunch[!cf][jj](bn, !cf?1:0, jj))
+                        //{
+                        //    SECTORFLD(jj,z, !cf?1:0) = daz;
+                        //    SECTORFLD(jj,stat, !cf?1:0) &= ~(128+256 + 512+2048);
+                        //}
+                    }
+                }
 //#endif
-//                if (t[3] == 1)
-//                {
-//                    //Change the shades
-
-//                    t[3]++;
-//                    sc.ceilingstat ^= 1;
-
-//                    if (s.ang == 512)
-//                    {
-//                        wal = &wall[sc.wallptr];
-//                        for (j=sc.wallnum; j>0; j--,wal++)
-//                            wal.shade = s.shade;
-
-//                        sc.floorshade = s.shade;
-
-//                        if (g_player[0].ps.one_parallax_sectnum >= 0)
-//                        {
-//                            sc.ceilingpicnum =
-//                                sector[g_player[0].ps.one_parallax_sectnum].ceilingpicnum;
-//                            sc.ceilingshade  =
-//                                sector[g_player[0].ps.one_parallax_sectnum].ceilingshade;
-//                        }
-//                    }
-//                }
-//                t[2]++;
-//                if (t[2] > 256)
-//                    KILLIT(i);
-//            }
-
-
-//            if (t[2] == 4 && s.ang != 512)
-//                for (x=0; x<7; x++) RANDOMSCRAP;
-//            break;
-
-
-//        case SE_15_SLIDING_DOOR:
-
-//            if (t[4])
-//            {
-//                s.xvel = 16;
-
-//                if (t[4] == 1) //Opening
-//                {
-//                    if (t[3] >= (sprite[i].yvel>>3))
-//                    {
-//                        t[4] = 0; //Turn off the sliders
-//                        A_CallSound(s.sectnum,i);
-//                        break;
-//                    }
-//                    t[3]++;
-//                }
-//                else if (t[4] == 2)
-//                {
-//                    if (t[3]<1)
-//                    {
-//                        t[4] = 0;
-//                        A_CallSound(s.sectnum,i);
-//                        break;
-//                    }
-//                    t[3]--;
-//                }
-
-//                A_MoveSector(i);
-//                setsprite(i,(vec3_t *)s);
-//            }
-//            break;
-
-//        case SE_16_REACTOR: //Reactor
-
-//            t[2]+=32;
-//            if (sc.floorz<sc.ceilingz) s.shade=0;
-
-//            else if (sc.ceilingz < t[3])
-//            {
-
-//                //The following code check to see if
-//                //there is any other sprites in the sector.
-//                //If there isn't, then kill this sectoreffector
-//                //itself.....
-
-//                for (SPRITES_OF_SECT(s.sectnum, j))
-//                {
-//                    if (sprite[j].picnum == REACTOR || sprite[j].picnum == REACTOR2)
-//                        break;
-//                }
-
-//                if (j == -1)
-//                    KILLIT(i);
-
-//                s.shade = 1;
-//            }
-
-//            if (s.shade) sc.ceilingz+=1024;
-//            else sc.ceilingz-=512;
-
-//            A_MoveSector(i);
-//            setsprite(i,(vec3_t *)s);
-
-//            break;
-
-//        case SE_17_WARP_ELEVATOR:
-//        {
-//            int32_t nextk;
-
-//            q = t[0]*(sprite[i].yvel<<2);
-
-//            sc.ceilingz += q;
-//            sc.floorz += q;
-
-//            for (SPRITES_OF_SECT(s.sectnum, j))
-//            {
-//                if (sprite[j].statnum == STAT_PLAYER && sprite[j].owner >= 0)
-//                {
-//                    const int32_t p = sprite[j].yvel;
-//                    DukePlayer_t *const ps = g_player[p].ps;
-
-//                    if (numplayers < 2 && !g_netServer)
-//                        ps.opos.z = ps.pos.z;
-//                    ps.pos.z += q;
-//                    ps.truefz += q;
-//                    ps.truecz += q;
-//                    if (g_netServer || numplayers > 1)
-//                        ps.opos.z = ps.pos.z;
-//                }
-//                if (sprite[j].statnum != STAT_EFFECTOR)
-//                {
-//                    actor[j].bpos.z = sprite[j].z;
-//                    sprite[j].z += q;
-//                }
-
-//                actor[j].floorz = sc.floorz;
-//                actor[j].ceilingz = sc.ceilingz;
-//            }
-
-//            if (t[0]) //If in motion
-//            {
-//                if (klabs(sc.floorz-t[2]) <= sprite[i].yvel)
-//                {
-//                    G_ActivateWarpElevators(i,0);
-//                    break;
-//                }
-
-//                // If we still see the opening, we can't yet teleport.
-//                if (t[0]==-1)
-//                {
-//                    if (sc.floorz > t[3])
-//                        break;
-//                }
-//                else if (sc.ceilingz < t[4]) break;
-
-//                if (t[1] == 0) break;
-//                t[1] = 0;
-
-//                for (SPRITES_OF(STAT_EFFECTOR, j))
-//                {
-//                    if (i != j && sprite[j].lotag == SE_17_WARP_ELEVATOR)
-//                        if (sc.hitag-t[0] == sector[sprite[j].sectnum].hitag
-//                                && sh == sprite[j].hitag)
-//                            break;
-//                }
-
-//                if (j == -1) break;
-
-//                for (SPRITES_OF_SECT_SAFE(s.sectnum, k, nextk))
-//                {
-//                    if (sprite[k].statnum == STAT_PLAYER && sprite[k].owner >= 0)
-//                    {
-//                        const int32_t p = sprite[k].yvel;
-//                        DukePlayer_t *const ps = g_player[p].ps;
-
-//                        ps.pos.x += sprite[j].x-s.x;
-//                        ps.pos.y += sprite[j].y-s.y;
-//                        ps.pos.z = sector[sprite[j].sectnum].floorz-(sc.floorz-ps.pos.z);
-
-//                        actor[k].floorz = sector[sprite[j].sectnum].floorz;
-//                        actor[k].ceilingz = sector[sprite[j].sectnum].ceilingz;
-
-//                        ps.bobposx = ps.opos.x = ps.pos.x;
-//                        ps.bobposy = ps.opos.y = ps.pos.y;
-//                        ps.opos.z = ps.pos.z;
-
-//                        ps.truefz = actor[k].floorz;
-//                        ps.truecz = actor[k].ceilingz;
-//                        ps.bobcounter = 0;
-
-//                        changespritesect(k,sprite[j].sectnum);
-//                        ps.cursectnum = sprite[j].sectnum;
-//                    }
-//                    else if (sprite[k].statnum != STAT_EFFECTOR)
-//                    {
-//                        sprite[k].x += sprite[j].x-s.x;
-//                        sprite[k].y += sprite[j].y-s.y;
-//                        sprite[k].z = sector[sprite[j].sectnum].floorz-
-//                                      (sc.floorz-sprite[k].z);
-
-//                        Bmemcpy(&actor[k].bpos.x, &sprite[k], sizeof(vec3_t));
-
-//                        changespritesect(k,sprite[j].sectnum);
-//                        setsprite(k,(vec3_t *)&sprite[k]);
-
-//                        actor[k].floorz = sector[sprite[j].sectnum].floorz;
-//                        actor[k].ceilingz = sector[sprite[j].sectnum].ceilingz;
-//                    }
-//                }
-//            }
-//            break;
-//        }
-
-//        case SE_18_INCREMENTAL_SECTOR_RISE_FALL:
-//            if (t[0])
-//            {
-//                if (s.pal)
-//                {
-//                    if (s.ang == 512)
-//                    {
-//                        sc.ceilingz -= sc.extra;
-//                        if (sc.ceilingz <= t[1])
-//                        {
-//                            sc.ceilingz = t[1];
-//                            KILLIT(i);
-//                        }
-//                    }
-//                    else
-//                    {
-//                        sc.floorz += sc.extra;
-
-//                        for (SPRITES_OF_SECT(s.sectnum, j))
-//                        {
-//                            if (sprite[j].picnum == APLAYER && sprite[j].owner >= 0)
-//                                if (g_player[sprite[j].yvel].ps.on_ground == 1)
-//                                    g_player[sprite[j].yvel].ps.pos.z += sc.extra;
-
-//                            if (sprite[j].zvel == 0 && sprite[j].statnum != STAT_EFFECTOR && sprite[j].statnum != STAT_PROJECTILE)
-//                            {
-//                                actor[j].bpos.z = sprite[j].z += sc.extra;
-//                                actor[j].floorz = sc.floorz;
-//                            }
-//                        }
-
-//                        if (sc.floorz >= t[1])
-//                        {
-//                            sc.floorz = t[1];
-//                            KILLIT(i);
-//                        }
-//                    }
-//                }
-//                else
-//                {
-//                    if (s.ang == 512)
-//                    {
-//                        sc.ceilingz += sc.extra;
-//                        if (sc.ceilingz >= s.z)
-//                        {
-//                            sc.ceilingz = s.z;
-//                            KILLIT(i);
-//                        }
-//                    }
-//                    else
-//                    {
-//                        sc.floorz -= sc.extra;
-
-//                        for (SPRITES_OF_SECT(s.sectnum, j))
-//                        {
-//                            if (sprite[j].picnum == APLAYER && sprite[j].owner >= 0)
-//                                if (g_player[sprite[j].yvel].ps.on_ground == 1)
-//                                    g_player[sprite[j].yvel].ps.pos.z -= sc.extra;
-
-//                            if (sprite[j].zvel == 0 && sprite[j].statnum != STAT_EFFECTOR && sprite[j].statnum != STAT_PROJECTILE)
-//                            {
-//                                actor[j].bpos.z = sprite[j].z -= sc.extra;
-//                                actor[j].floorz = sc.floorz;
-//                            }
-//                        }
-
-//                        if (sc.floorz <= s.z)
-//                        {
-//                            sc.floorz = s.z;
-//                            KILLIT(i);
-//                        }
-//                    }
-//                }
-
-//                t[2]++;
-//                if (t[2] >= s.hitag)
-//                {
-//                    t[2] = 0;
-//                    t[0] = 0;
-//                }
-//            }
-//            break;
-
-//        case SE_19_EXPLOSION_LOWERS_CEILING: //Battlestar galactia shields
-
-//            if (t[0])
-//            {
-//                if (t[0] == 1)
-//                {
-//                    t[0]++;
-//                    x = sc.wallptr;
-//                    q = x+sc.wallnum;
-//                    for (j=x; j<q; j++)
-//                        if (wall[j].overpicnum == BIGFORCE)
-//                        {
-//                            wall[j].cstat &= (128+32+8+4+2);
-//                            wall[j].overpicnum = 0;
-//                            if (wall[j].nextwall >= 0)
-//                            {
-//                                wall[wall[j].nextwall].overpicnum = 0;
-//                                wall[wall[j].nextwall].cstat &= (128+32+8+4+2);
-//                            }
-//                        }
-//                }
-
-//                if (sc.ceilingz < sc.floorz)
-//                    sc.ceilingz += sprite[i].yvel;
-//                else
-//                {
-//                    sc.ceilingz = sc.floorz;
-
-//                    for (SPRITES_OF(STAT_EFFECTOR, j))
-//                    {
-//                        if (sprite[j].lotag == SE_0_ROTATING_SECTOR && sprite[j].hitag==sh)
-//                        {
-//                            sectortype *const sec = &sector[sprite[j].sectnum];
-
-//                            q = sprite[sprite[j].owner].sectnum;
-//                            sec.floorpal = sec.ceilingpal = sector[q].floorpal;
-//                            sec.floorshade = sec.ceilingshade = sector[q].floorshade;
-
-//                            actor[sprite[j].owner].t_data[0] = 2;
-//                        }
-//                    }
-
-//                    KILLIT(i);
-//                }
-//            }
-//            else //Not hit yet
-//            {
-//                if (G_FindExplosionInSector(s.sectnum) >= 0)
-//                {
-//                    P_DoQuote(QUOTE_UNLOCKED, g_player[myconnectindex].ps);
-
-//                    for (SPRITES_OF(STAT_EFFECTOR, l))
-//                    {
-//                        x = sprite[l].lotag&0x7fff;
-//                        switch (x)
-//                        {
-//                        case SE_0_ROTATING_SECTOR:
-//                            if (sprite[l].hitag == sh)
-//                            {
-//                                int32_t ow = sprite[l].owner;
-//                                q = sprite[l].sectnum;
-//                                sector[q].floorshade = sector[q].ceilingshade = sprite[ow].shade;
-//                                sector[q].floorpal = sector[q].ceilingpal = sprite[ow].pal;
-//                            }
-//                            break;
-
-//                        case SE_1_PIVOT:
-//                        case SE_12_LIGHT_SWITCH:
-////                        case SE_18_INCREMENTAL_SECTOR_RISE_FALL:
-//                        case SE_19_EXPLOSION_LOWERS_CEILING:
-//                            if (sh == sprite[l].hitag)
-//                                if (actor[l].t_data[0] == 0)
-//                                {
-//                                    actor[l].t_data[0] = 1; //Shut them all on
-//                                    sprite[l].owner = i;
-//                                }
-
-//                            break;
-//                        }
-//                    }
-//                }
-//            }
-
-//            break;
-
-//        case SE_20_STRETCH_BRIDGE: //Extend-o-bridge
-//            if (t[0] == 0) break;
-//            if (t[0] == 1) s.xvel = 8;
-//            else s.xvel = -8;
-
-//            if (s.xvel)   //Moving
-//            {
-//                int32_t p, nextj;
-
-//                x = (s.xvel*sintable[(s.ang+512)&2047])>>14;
-//                l = (s.xvel*sintable[s.ang&2047])>>14;
-
-//                t[3] += s.xvel;
-
-//                s.x += x;
-//                s.y += l;
-
-//                if (t[3] <= 0 || (t[3]>>6) >= (sprite[i].yvel>>6))
-//                {
-//                    s.x -= x;
-//                    s.y -= l;
-//                    t[0] = 0;
-//                    A_CallSound(s.sectnum,i);
-//                    break;
-//                }
-
-//                for (SPRITES_OF_SECT_SAFE(s.sectnum, j, nextj))
-//                {
-//                    if (sprite[j].statnum != STAT_EFFECTOR && sprite[j].zvel == 0)
-//                    {
-//                        sprite[j].x += x;
-//                        sprite[j].y += l;
-//                        setsprite(j,(vec3_t *)&sprite[j]);
-//                        if (sector[sprite[j].sectnum].floorstat&2)
-//                            if (sprite[j].statnum == STAT_ZOMBIEACTOR)
-//                                A_Fall(j);
-//                    }
-//                }
-
-//                dragpoint((int16_t)t[1],wall[t[1]].x+x,wall[t[1]].y+l,0);
-//                dragpoint((int16_t)t[2],wall[t[2]].x+x,wall[t[2]].y+l,0);
-
-//                for (TRAVERSE_CONNECT(p))
-//                {
-//                    DukePlayer_t *const ps = g_player[p].ps;
-
-//                    if (ps.cursectnum == s.sectnum && ps.on_ground)
-//                    {
-//                        ps.pos.x += x;
-//                        ps.pos.y += l;
-
-//                        ps.opos.x = ps.pos.x;
-//                        ps.opos.y = ps.pos.y;
-
-//                        ps.pos.z += PHEIGHT;
-//                        setsprite(ps.i,(vec3_t *)ps);
-//                        ps.pos.z -= PHEIGHT;
-//                    }
-//                }
-
-//                sc.floorxpanning-=x>>3;
-//                sc.floorypanning-=l>>3;
-
-//                sc.ceilingxpanning-=x>>3;
-//                sc.ceilingypanning-=l>>3;
-//            }
-
-//            break;
-
-//        case SE_21_DROP_FLOOR: // Cascading effect
-//        {
-//            int32_t *zptr;
-
-//            if (t[0] == 0) break;
-
-//            if (s.ang == 1536)
-//                zptr = &sc.ceilingz;
-//            else
-//                zptr = &sc.floorz;
-
-//            if (t[0] == 1)   //Decide if the s.sectnum should go up or down
-//            {
-//                s.zvel = ksgn(s.z-*zptr) * (sprite[i].yvel<<4);
-//                t[0]++;
-//            }
-
-//            if (sc.extra == 0)
-//            {
-//                *zptr += s.zvel;
-
-//                if (klabs(*zptr-s.z) < 1024)
-//                {
-//                    *zptr = s.z;
-//                    KILLIT(i); //All done   // SE_21_KILLIT, see sector.c
-//                }
-//            }
-//            else sc.extra--;
-//            break;
-//        }
-
-//        case SE_22_TEETH_DOOR:
-//            if (t[1])
-//            {
-//                if (GetAnimationGoal(&sector[t[0]].ceilingz) >= 0)
-//                    sc.ceilingz += sc.extra*9;
-//                else t[1] = 0;
-//            }
-//            break;
-
-//        case SE_24_CONVEYOR:
-//        case SE_34:
-//        {
-//            int32_t p, nextj;
-
-//            if (t[4])
-//                break;
-
-//            x = (sprite[i].yvel*sintable[(s.ang+512)&2047])>>18;
-//            l = (sprite[i].yvel*sintable[s.ang&2047])>>18;
-
-//            k = 0;
-
-//            for (SPRITES_OF_SECT_SAFE(s.sectnum, j, nextj))
-//            {
-//                if (sprite[j].zvel >= 0)
-//                    switch (sprite[j].statnum)
-//                    {
-//                    case STAT_MISC:
-//                        switch (DYNAMICTILEMAP(sprite[j].picnum))
-//                        {
-//                        case BLOODPOOL__STATIC:
-//                        case PUKE__STATIC:
-//                        case FOOTPRINTS__STATIC:
-//                        case FOOTPRINTS2__STATIC:
-//                        case FOOTPRINTS3__STATIC:
-//                        case FOOTPRINTS4__STATIC:
-//                        case BULLETHOLE__STATIC:
-//                        case BLOODSPLAT1__STATIC:
-//                        case BLOODSPLAT2__STATIC:
-//                        case BLOODSPLAT3__STATIC:
-//                        case BLOODSPLAT4__STATIC:
-//                            sprite[j].xrepeat = sprite[j].yrepeat = 0;
-//                            continue;
-
-//                        case LASERLINE__STATIC:
-//                            continue;
-//                        }
-//                        // fall-through
-//                    case STAT_STANDABLE:
-//                        if (sprite[j].picnum == TRIPBOMB)
-//                            break;
-//                        // else, fall-through
-//                    case STAT_ACTOR:
-//                    case STAT_DEFAULT:
-//                        if (
-//                            sprite[j].picnum == BOLT1 ||
-//                            sprite[j].picnum == BOLT1+1 ||
-//                            sprite[j].picnum == BOLT1+2 ||
-//                            sprite[j].picnum == BOLT1+3 ||
-//                            sprite[j].picnum == SIDEBOLT1 ||
-//                            sprite[j].picnum == SIDEBOLT1+1 ||
-//                            sprite[j].picnum == SIDEBOLT1+2 ||
-//                            sprite[j].picnum == SIDEBOLT1+3 ||
-//                            A_CheckSwitchTile(j)
-//                        )
-//                            break;
-
-//                        if (!(sprite[j].picnum >= CRANE && sprite[j].picnum <= CRANE+3))
-//                        {
-//                            if (sprite[j].z > actor[j].floorz-(16<<8))
-//                            {
-//                                actor[j].bpos.x = sprite[j].x;
-//                                actor[j].bpos.y = sprite[j].y;
-
-//                                sprite[j].x += x>>2;
-//                                sprite[j].y += l>>2;
-
-//                                setsprite(j,(vec3_t *)&sprite[j]);
-
-//                                if (sector[sprite[j].sectnum].floorstat&2)
-//                                    if (sprite[j].statnum == STAT_ZOMBIEACTOR)
-//                                        A_Fall(j);
-//                            }
-//                        }
-//                        break;
-//                    }
-//            }
-
-//            p = myconnectindex;
-//            if (g_player[p].ps.cursectnum == s.sectnum && g_player[p].ps.on_ground)
-//                if (klabs(g_player[p].ps.pos.z-g_player[p].ps.truefz) < PHEIGHT+(9<<8))
-//                {
-//                    fricxv += x<<3;
-//                    fricyv += l<<3;
-//                }
-
-//            sc.floorxpanning += sprite[i].yvel>>7;
-
-//            break;
-//        }
-
-//        case SE_35:
-//            if (sc.ceilingz > s.z)
-//                for (j = 0; j < 8; j++)
-//                {
-//                    s.ang += krand()&511;
-//                    k = A_Spawn(i,SMALLSMOKE);
-//                    sprite[k].xvel = 96+(krand()&127);
-//                    A_SetSprite(k,CLIPMASK0);
-//                    setsprite(k,(vec3_t *)&sprite[k]);
-//                    if (rnd(16))
-//                        A_Spawn(i,EXPLOSION2);
-//                }
-
-//            switch (t[0])
-//            {
-//            case 0:
-//                sc.ceilingz += s.yvel;
-//                if (sc.ceilingz > sc.floorz)
-//                    sc.floorz = sc.ceilingz;
-//                if (sc.ceilingz > s.z+(32<<8))
-//                    t[0]++;
-//                break;
-//            case 1:
-//                sc.ceilingz-=(s.yvel<<2);
-//                if (sc.ceilingz < t[4])
-//                {
-//                    sc.ceilingz = t[4];
-//                    t[0] = 0;
-//                }
-//                break;
-//            }
-//            break;
-
-//        case SE_25_PISTON: //PISTONS
-//            if (t[4] == 0) break;
-
-//            if (sc.floorz <= sc.ceilingz)
-//                s.shade = 0;
-//            else if (sc.ceilingz <= t[3])
-//                s.shade = 1;
-
-//            if (s.shade)
-//            {
-//                sc.ceilingz += sprite[i].yvel<<4;
-//                if (sc.ceilingz > sc.floorz)
-//                    sc.ceilingz = sc.floorz;
-//            }
-//            else
-//            {
-//                sc.ceilingz   -= sprite[i].yvel<<4;
-//                if (sc.ceilingz < t[3])
-//                    sc.ceilingz = t[3];
-//            }
-
-//            break;
-
-//        case SE_26:
-//        {
-//            int32_t p, nextj;
-
-//            s.xvel = 32;
-//            l = (s.xvel*sintable[(s.ang+512)&2047])>>14;
-//            x = (s.xvel*sintable[s.ang&2047])>>14;
-
-//            s.shade++;
-//            if (s.shade > 7)
-//            {
-//                s.x = t[3];
-//                s.y = t[4];
-//                sc.floorz -= ((s.zvel*s.shade)-s.zvel);
-//                s.shade = 0;
-//            }
-//            else
-//                sc.floorz += s.zvel;
-
-//            for (SPRITES_OF_SECT_SAFE(s.sectnum, j, nextj))
-//            {
-//                if (sprite[j].statnum != STAT_EFFECTOR && sprite[j].statnum != STAT_PLAYER)
-//                {
-//                    actor[j].bpos.x = sprite[j].x;
-//                    actor[j].bpos.y = sprite[j].y;
-
-//                    sprite[j].x += l;
-//                    sprite[j].y += x;
-
-//                    sprite[j].z += s.zvel;
-//                    setsprite(j,(vec3_t *)&sprite[j]);
-//                }
-//            }
-
-//            p = myconnectindex;
-//            if (sprite[g_player[p].ps.i].sectnum == s.sectnum && g_player[p].ps.on_ground)
-//            {
-//                fricxv += l<<5;
-//                fricyv += x<<5;
-//            }
-
-//            for (TRAVERSE_CONNECT(p))
-//                if (sprite[g_player[p].ps.i].sectnum == s.sectnum && g_player[p].ps.on_ground)
-//                    g_player[p].ps.pos.z += s.zvel;
-
-//            A_MoveSector(i);
-//            setsprite(i,(vec3_t *)s);
-
-//            break;
-//        }
-
-//        case SE_27_DEMO_CAM:
-//        {
-//            int32_t p;
-//            DukePlayer_t *ps;
-
-//            if (ud.recstat == 0 || !ud.democams) break;
-
-//            actor[i].tempang = s.ang;
-
-//            p = A_FindPlayer(s,&x);
-//            ps = g_player[p].ps;
-
-//            if (sprite[ps.i].extra > 0 && myconnectindex == screenpeek)
-//            {
-//                if (t[0] < 0)
-//                {
-//                    ud.camerasprite = i;
-//                    t[0]++;
-//                }
-//                else if (ud.recstat == 2 && ps.newowner == -1)
-//                {
-//                    if (cansee(s.x,s.y,s.z,sprite[i].sectnum,ps.pos.x,ps.pos.y,ps.pos.z,ps.cursectnum))
-//                    {
-//                        if (x < (int32_t)((unsigned)sh))
-//                        {
-//                            ud.camerasprite = i;
-//                            t[0] = 999;
-//                            s.ang += G_GetAngleDelta(s.ang,getangle(ps.pos.x-s.x,ps.pos.y-s.y))>>3;
-//                            sprite[i].yvel = 100+((s.z-ps.pos.z)/257);
-
-//                        }
-//                        else if (t[0] == 999)
-//                        {
-//                            if (ud.camerasprite == i)
-//                                t[0] = 0;
-//                            else t[0] = -10;
-//                            ud.camerasprite = i;
-
-//                        }
-//                    }
-//                    else
-//                    {
-//                        s.ang = getangle(ps.pos.x-s.x,ps.pos.y-s.y);
-
-//                        if (t[0] == 999)
-//                        {
-//                            if (ud.camerasprite == i)
-//                                t[0] = 0;
-//                            else t[0] = -20;
-//                            ud.camerasprite = i;
-//                        }
-//                    }
-//                }
-//            }
-//            break;
-//        }
-
-//        case SE_28_LIGHTNING:
-//        {
-//            if (t[5] > 0)
-//            {
-//                t[5]--;
-//                break;
-//            }
-
-//            if (actor[i].t_data[0] == 0)
-//            {
-//                A_FindPlayer(s,&x);
-//                if (x > 15500)
-//                    break;
-//                actor[i].t_data[0] = 1;
-//                actor[i].t_data[1] = 64 + (krand()&511);
-//                actor[i].t_data[2] = 0;
-//            }
-//            else
-//            {
-//                actor[i].t_data[2]++;
-//                if (actor[i].t_data[2] > actor[i].t_data[1])
-//                {
-//                    actor[i].t_data[0] = 0;
-//                    g_player[screenpeek].ps.visibility = ud.const_visibility;
-//                    break;
-//                }
-//                else if (actor[i].t_data[2] == (actor[i].t_data[1]>>1))
-//                    A_PlaySound(THUNDER,i);
-//                else if (actor[i].t_data[2] == (actor[i].t_data[1]>>3))
-//                    A_PlaySound(LIGHTNING_SLAP,i);
-//                else if (actor[i].t_data[2] == (actor[i].t_data[1]>>2))
-//                {
-//                    for (SPRITES_OF(STAT_DEFAULT, j))
-//                        if (sprite[j].picnum == NATURALLIGHTNING && sprite[j].hitag == s.hitag)
-//                            sprite[j].cstat |= 32768;
-//                }
-//                else if (actor[i].t_data[2] > (actor[i].t_data[1]>>3) && actor[i].t_data[2] < (actor[i].t_data[1]>>2))
-//                {
-//                    if (cansee(s.x,s.y,s.z,s.sectnum,g_player[screenpeek].ps.pos.x,g_player[screenpeek].ps.pos.y,g_player[screenpeek].ps.pos.z,g_player[screenpeek].ps.cursectnum))
-//                        j = 1;
-//                    else j = 0;
-
-//                    if (rnd(192) && (actor[i].t_data[2]&1))
-//                    {
-//                        if (j)
-//                            g_player[screenpeek].ps.visibility = 0;
-//                    }
-//                    else if (j)
-//                        g_player[screenpeek].ps.visibility = ud.const_visibility;
-
-//                    for (SPRITES_OF(STAT_DEFAULT, j))
-//                    {
-//                        if (sprite[j].picnum == NATURALLIGHTNING && sprite[j].hitag == s.hitag)
-//                        {
-//                            if (rnd(32) && (actor[i].t_data[2]&1))
-//                            {
-//                                int32_t p;
-//                                DukePlayer_t *ps;
-
-//                                sprite[j].cstat &= 32767;
-//                                A_Spawn(j,SMALLSMOKE);
-
-//                                p = A_FindPlayer(s, NULL);
-//                                ps = g_player[p].ps;
-
-//                                x = ldist(&sprite[ps.i], &sprite[j]);
-//                                if (x < 768)
-//                                {
-//                                    if (!A_CheckSoundPlaying(ps.i,DUKE_LONGTERM_PAIN))
-//                                        A_PlaySound(DUKE_LONGTERM_PAIN,ps.i);
-//                                    A_PlaySound(SHORT_CIRCUIT,ps.i);
-//                                    sprite[ps.i].extra -= 8+(krand()&7);
-
-//                                    P_PalFrom(ps, 32, 16,0,0);
-//                                }
-//                                break;
-//                            }
-//                            else sprite[j].cstat |= 32768;
-//                        }
-//                    }
-//                }
-//            }
-//            break;
-//        }
-
-//        case SE_29_WAVES:
-//            s.hitag += 64;
-//            l = mulscale12((int32_t)s.yvel,sintable[s.hitag&2047]);
-//            sc.floorz = s.z + l;
-//            break;
-
-//        case SE_31_FLOOR_RISE_FALL: // True Drop Floor
-//            if (t[0] == 1)
-//            {
-//                // Choose dir
-
-//                if (t[3] > 0)
-//                {
-//                    t[3]--;
-//                    break;
-//                }
-
-//                if (t[2] == 1) // Retract
-//                {
-//                    if (sprite[i].ang != 1536)
-//                        HandleSE31(i, 1, s.z, 0, s.z-sc.floorz);
-//                    else
-//                        HandleSE31(i, 1, t[1], 0, t[1]-sc.floorz);
-
-//                    Yax_SetBunchZs(sc-sector, YAX_FLOOR, sc.floorz);
-
-//                    break;
-//                }
-
-//                if ((s.ang&2047) == 1536)
-//                    HandleSE31(i, 0, s.z, 1, s.z-sc.floorz);
-//                else
-//                    HandleSE31(i, 0, t[1], 1, t[1]-s.z);
-
-//                Yax_SetBunchZs(sc-sector, YAX_FLOOR, sc.floorz);
-//            }
-//            break;
-
-//        case SE_32_CEILING_RISE_FALL: // True Drop Ceiling
-//            if (t[0] == 1)
-//            {
-//                // Choose dir
-
-//                if (t[2] == 1) // Retract
-//                {
-//                    if (sprite[i].ang != 1536)
-//                    {
-//                        if (klabs(sc.ceilingz - s.z) < (sprite[i].yvel<<1))
-//                        {
-//                            sc.ceilingz = s.z;
-//                            A_CallSound(s.sectnum,i);
-//                            t[2] = 0;
-//                            t[0] = 0;
-//                        }
-//                        else sc.ceilingz += ksgn(s.z-sc.ceilingz)*sprite[i].yvel;
-//                    }
-//                    else
-//                    {
-//                        if (klabs(sc.ceilingz - t[1]) < (sprite[i].yvel<<1))
-//                        {
-//                            sc.ceilingz = t[1];
-//                            A_CallSound(s.sectnum,i);
-//                            t[2] = 0;
-//                            t[0] = 0;
-//                        }
-//                        else sc.ceilingz += ksgn(t[1]-sc.ceilingz)*sprite[i].yvel;
-//                    }
-
-//                    Yax_SetBunchZs(sc-sector, YAX_CEILING, sc.ceilingz);
-
-//                    break;
-//                }
-
-//                if ((s.ang&2047) == 1536)
-//                {
-//                    if (klabs(sc.ceilingz-s.z) < (sprite[i].yvel<<1))
-//                    {
-//                        t[0] = 0;
-//                        t[2] = !t[2];
-//                        A_CallSound(s.sectnum,i);
-//                        sc.ceilingz = s.z;
-//                    }
-//                    else sc.ceilingz += ksgn(s.z-sc.ceilingz)*sprite[i].yvel;
-//                }
-//                else
-//                {
-//                    if (klabs(sc.ceilingz-t[1]) < (sprite[i].yvel<<1))
-//                    {
-//                        t[0] = 0;
-//                        t[2] = !t[2];
-//                        A_CallSound(s.sectnum,i);
-//                    }
-//                    else sc.ceilingz -= ksgn(s.z-t[1])*sprite[i].yvel;
-//                }
-
-//                Yax_SetBunchZs(sc-sector, YAX_CEILING, sc.ceilingz);
-//            }
-//            break;
-
-//        case SE_33_QUAKE_DEBRIS:
-//            if (g_earthquakeTime > 0 && (krand()&7) == 0)
-//                RANDOMSCRAP;
-//            break;
-
-//        case SE_36_PROJ_SHOOTER:
-//            if (t[0])
-//            {
-//                if (t[0] == 1)
-//                    A_Shoot(i,sc.extra);
-//                else if (t[0] == GAMETICSPERSEC*5)
-//                    t[0] = 0;
-//                t[0]++;
-//            }
-//            break;
-
-//        case 128: //SE to control glass breakage
-//            wal = &wall[t[2]];
-
-//            if (wal.cstat|32)
-//            {
-//                wal.cstat &= (255-32);
-//                wal.cstat |= 16;
-//                if (wal.nextwall >= 0)
-//                {
-//                    wall[wal.nextwall].cstat &= (255-32);
-//                    wall[wal.nextwall].cstat |= 16;
-//                }
-//            }
-//            else break;
-
-//            wal.overpicnum++;
-//            if (wal.nextwall >= 0)
-//                wall[wal.nextwall].overpicnum++;
-
-//            if (t[0] < t[1]) t[0]++;
-//            else
-//            {
-//                wal.cstat &= (128+32+8+4+2);
-//                if (wal.nextwall >= 0)
-//                    wall[wal.nextwall].cstat &= (128+32+8+4+2);
-//                KILLIT(i);
-//            }
-//            break;
-
-//        case SE_130:
-//            if (t[0] > 80)
-//            {
-//                KILLIT(i);
-//            }
-//            else t[0]++;
-
-//            x = sc.floorz-sc.ceilingz;
-
-//            if (rnd(64))
-//            {
-//                k = A_Spawn(i,EXPLOSION2);
-//                sprite[k].xrepeat = sprite[k].yrepeat = 2+(krand()&7);
-//                sprite[k].z = sc.floorz-(krand()%x);
-//                sprite[k].ang += 256-(krand()%511);
-//                sprite[k].xvel = krand()&127;
-//                A_SetSprite(k,CLIPMASK0);
-//            }
-//            break;
-
-//        case SE_131:
-//            if (t[0] > 40)
-//            {
-//                KILLIT(i);
-//            }
-//            else t[0]++;
-
-//            x = sc.floorz-sc.ceilingz;
-
-//            if (rnd(32))
-//            {
-//                k = A_Spawn(i,EXPLOSION2);
-//                sprite[k].xrepeat = sprite[k].yrepeat = 2+(krand()&3);
-//                sprite[k].z = sc.floorz-(krand()%x);
-//                sprite[k].ang += 256-(krand()%511);
-//                sprite[k].xvel = krand()&127;
-//                A_SetSprite(k,CLIPMASK0);
-//            }
-//            break;
-
-//        case SE_49_POINT_LIGHT:
-//        case SE_50_SPOT_LIGHT:
-//            changespritestat(i, STAT_LIGHT);
-//            break;
-//        }
+                if (t[3] == 1)
+                {
+                    //Change the shades
+
+                    t[3]++;
+                    sc.ceilingstat ^= 1;
+
+                    if (s.ang == 512)
+                    {
+                        walIdx = sc.wallptr, wal = wall[walIdx];
+                        for (j=sc.wallnum; j>0; j--,wal = wall[++walIdx])
+                            wal.shade = s.shade;
+
+                        sc.floorshade = s.shade;
+
+                        if (g_player[0].ps.one_parallax_sectnum >= 0)
+                        {
+                            sc.ceilingpicnum =
+                                sector[g_player[0].ps.one_parallax_sectnum].ceilingpicnum;
+                            sc.ceilingshade  =
+                                sector[g_player[0].ps.one_parallax_sectnum].ceilingshade;
+                        }
+                    }
+                }
+                t[2]++;
+                if (t[2] > 256)
+                    {A_DeleteSprite(i); {i = nexti; continue BOLT;}}
+            }
+            
+
+            if (t[2] == 4 && s.ang != 512)
+                for (x=0; x<7; x++) RANDOMSCRAP(s, i);
+            break;
+
+
+        case SE_15_SLIDING_DOOR:
+
+            if (t[4])
+            {
+                s.xvel = 16;
+
+                if (t[4] == 1) //Opening
+                {
+                    if (t[3] >= (sprite[i].yvel>>3))
+                    {
+                        t[4] = 0; //Turn off the sliders
+                        A_CallSound(s.sectnum,i);
+                        break;
+                    }
+                    t[3]++;
+                }
+                else if (t[4] == 2)
+                {
+                    if (t[3]<1)
+                    {
+                        t[4] = 0;
+                        A_CallSound(s.sectnum,i);
+                        break;
+                    }
+                    t[3]--;
+                }
+
+                A_MoveSector(i);
+                setsprite(i,/*(vec3_t *)*/s);
+            }
+            break;
+
+        case SE_16_REACTOR: //Reactor
+
+            t[2]+=32;
+            if (sc.floorz<sc.ceilingz) s.shade=0;
+
+            else if (sc.ceilingz < t[3])
+            {
+
+                //The following code check to see if
+                //there is any other sprites in the sector.
+                //If there isn't, then kill this sectoreffector
+                //itself.....
+
+                for (j = headspritesect[s.sectnum]; j >= 0; j = nextspritesect[j])
+                {
+                    if (sprite[j].picnum == REACTOR || sprite[j].picnum == REACTOR2)
+                        break;
+                }
+
+                if (j == -1)
+                    {A_DeleteSprite(i); {i = nexti; continue BOLT;}}
+
+                s.shade = 1;
+            }
+
+            if (s.shade) sc.ceilingz+=1024;
+            else sc.ceilingz-=512;
+
+            A_MoveSector(i);
+            setsprite(i,/*(vec3_t *)*/s);
+
+            break;
+
+        case SE_17_WARP_ELEVATOR:
+        {
+            var /*int32_t */nextk:number;
+
+            q = t[0]*(sprite[i].yvel<<2);
+
+            sc.ceilingz += q;
+            sc.floorz += q;
+
+            for (j = headspritesect[s.sectnum]; j >= 0; j = nextspritesect[j])
+            {
+                if (sprite[j].statnum == STAT_PLAYER && sprite[j].owner >= 0)
+                {
+                    var/*const int32_t */p = sprite[j].yvel;
+                    var ps = g_player[p].ps;
+
+                    if (numplayers < 2 && !g_netServer)
+                        ps.opos.z = ps.pos.z;
+                    ps.pos.z += q;
+                    ps.truefz += q;
+                    ps.truecz += q;
+                    if (g_netServer || numplayers > 1)
+                        ps.opos.z = ps.pos.z;
+                }
+                if (sprite[j].statnum != STAT_EFFECTOR)
+                {
+                    actor[j].bpos.z = sprite[j].z;
+                    sprite[j].z += q;
+                }
+
+                actor[j].floorz = sc.floorz;
+                actor[j].ceilingz = sc.ceilingz;
+            }
+
+            if (t[0]) //If in motion
+            {
+                if (klabs(sc.floorz-t[2]) <= sprite[i].yvel)
+                {
+                    G_ActivateWarpElevators(i,0);
+                    break;
+                }
+
+                // If we still see the opening, we can't yet teleport.
+                if (t[0]==-1)
+                {
+                    if (sc.floorz > t[3])
+                        break;
+                }
+                else if (sc.ceilingz < t[4]) break;
+
+                if (t[1] == 0) break;
+                t[1] = 0;
+
+                for (j = headspritestat[STAT_EFFECTOR]; j >= 0; j = nextspritestat[j])
+                {
+                    if (i != j && sprite[j].lotag == SE_17_WARP_ELEVATOR)
+                        if (sc.hitag-t[0] == sector[sprite[j].sectnum].hitag
+                                && sh == sprite[j].hitag)
+                            break;
+                }
+
+                if (j == -1) break;
+
+                for (k = headspritesect[s.sectnum];
+                    k >= 0 && (nextk = nextspritesect[k], 1); k = nextk)
+                {
+                    if (sprite[k].statnum == STAT_PLAYER && sprite[k].owner >= 0)
+                    {
+                        var/*const int32_t */p = sprite[k].yvel;
+                        var ps = g_player[p].ps;
+
+                        ps.pos.x += sprite[j].x-s.x;
+                        ps.pos.y += sprite[j].y-s.y;
+                        ps.pos.z = sector[sprite[j].sectnum].floorz-(sc.floorz-ps.pos.z);
+
+                        actor[k].floorz = sector[sprite[j].sectnum].floorz;
+                        actor[k].ceilingz = sector[sprite[j].sectnum].ceilingz;
+
+                        ps.bobposx = ps.opos.x = ps.pos.x;
+                        ps.bobposy = ps.opos.y = ps.pos.y;
+                        ps.opos.z = ps.pos.z;
+
+                        ps.truefz = actor[k].floorz;
+                        ps.truecz = actor[k].ceilingz;
+                        ps.bobcounter = 0;
+
+                        changespritesect(k,sprite[j].sectnum);
+                        ps.cursectnum = sprite[j].sectnum;
+                    }
+                    else if (sprite[k].statnum != STAT_EFFECTOR)
+                    {
+                        sprite[k].x += sprite[j].x-s.x;
+                        sprite[k].y += sprite[j].y-s.y;
+                        sprite[k].z = sector[sprite[j].sectnum].floorz-
+                                      (sc.floorz-sprite[k].z);
+
+                        actor[k].bpos.copyFrom(sprite[k]);//Bmemcpy(&actor[k].bpos.x, &sprite[k], sizeof(vec3_t));
+
+                        changespritesect(k,sprite[j].sectnum);
+                        setsprite(k,/*(vec3_t *)&*/sprite[k]);
+
+                        actor[k].floorz = sector[sprite[j].sectnum].floorz;
+                        actor[k].ceilingz = sector[sprite[j].sectnum].ceilingz;
+                    }
+                }
+            }
+            break;
+        }
+
+        case SE_18_INCREMENTAL_SECTOR_RISE_FALL:
+            if (t[0])
+            {
+                if (s.pal)
+                {
+                    if (s.ang == 512)
+                    {
+                        sc.ceilingz -= sc.extra;
+                        if (sc.ceilingz <= t[1])
+                        {
+                            sc.ceilingz = t[1];
+                            {A_DeleteSprite(i); {i = nexti; continue BOLT;}}
+                        }
+                    }
+                    else
+                    {
+                        sc.floorz += sc.extra;
+
+                        for (j = headspritesect[s.sectnum]; j >= 0; j = nextspritesect[j])
+                        {
+                            if (sprite[j].picnum == APLAYER && sprite[j].owner >= 0)
+                                if (g_player[sprite[j].yvel].ps.on_ground == 1)
+                                    g_player[sprite[j].yvel].ps.pos.z += sc.extra;
+
+                            if (sprite[j].zvel == 0 && sprite[j].statnum != STAT_EFFECTOR && sprite[j].statnum != STAT_PROJECTILE)
+                            {
+                                actor[j].bpos.z = sprite[j].z += sc.extra;
+                                actor[j].floorz = sc.floorz;
+                            }
+                        }
+
+                        if (sc.floorz >= t[1])
+                        {
+                            sc.floorz = t[1];
+                            {A_DeleteSprite(i); {i = nexti; continue BOLT;}}
+                        }
+                    }
+                }
+                else
+                {
+                    if (s.ang == 512)
+                    {
+                        sc.ceilingz += sc.extra;
+                        if (sc.ceilingz >= s.z)
+                        {
+                            sc.ceilingz = s.z;
+                            {A_DeleteSprite(i); {i = nexti; continue BOLT;}}
+                        }
+                    }
+                    else
+                    {
+                        sc.floorz -= sc.extra;
+
+                        for (j = headspritesect[s.sectnum]; j >= 0; j = nextspritesect[j])
+                        {
+                            if (sprite[j].picnum == APLAYER && sprite[j].owner >= 0)
+                                if (g_player[sprite[j].yvel].ps.on_ground == 1)
+                                    g_player[sprite[j].yvel].ps.pos.z -= sc.extra;
+
+                            if (sprite[j].zvel == 0 && sprite[j].statnum != STAT_EFFECTOR && sprite[j].statnum != STAT_PROJECTILE)
+                            {
+                                actor[j].bpos.z = sprite[j].z -= sc.extra;
+                                actor[j].floorz = sc.floorz;
+                            }
+                        }
+
+                        if (sc.floorz <= s.z)
+                        {
+                            sc.floorz = s.z;
+                            {A_DeleteSprite(i); {i = nexti; continue BOLT;}}
+                        }
+                    }
+                }
+
+                t[2]++;
+                if (t[2] >= s.hitag)
+                {
+                    t[2] = 0;
+                    t[0] = 0;
+                }
+            }
+            break;
+
+        case SE_19_EXPLOSION_LOWERS_CEILING: //Battlestar galactia shields
+
+            if (t[0])
+            {
+                if (t[0] == 1)
+                {
+                    t[0]++;
+                    x = sc.wallptr;
+                    q = x+sc.wallnum;
+                    for (j=x; j<q; j++)
+                        if (wall[j].overpicnum == BIGFORCE)
+                        {
+                            wall[j].cstat &= (128+32+8+4+2);
+                            wall[j].overpicnum = 0;
+                            if (wall[j].nextwall >= 0)
+                            {
+                                wall[wall[j].nextwall].overpicnum = 0;
+                                wall[wall[j].nextwall].cstat &= (128+32+8+4+2);
+                            }
+                        }
+                }
+
+                if (sc.ceilingz < sc.floorz)
+                    sc.ceilingz += sprite[i].yvel;
+                else
+                {
+                    sc.ceilingz = sc.floorz;
+
+                    for (j = headspritestat[STAT_EFFECTOR]; j >= 0; j = nextspritestat[j])
+                    {
+                        if (sprite[j].lotag == SE_0_ROTATING_SECTOR && sprite[j].hitag==sh)
+                        {
+                            var sec = sector[sprite[j].sectnum];
+
+                            q = sprite[sprite[j].owner].sectnum;
+                            sec.floorpal = sec.ceilingpal = sector[q].floorpal;
+                            sec.floorshade = sec.ceilingshade = sector[q].floorshade;
+
+                            actor[sprite[j].owner].t_data[0] = 2;
+                        }
+                    }
+
+                    {A_DeleteSprite(i); {i = nexti; continue BOLT;}}
+                }
+            }
+            else //Not hit yet
+            {
+                if (G_FindExplosionInSector(s.sectnum) >= 0)
+                {
+                    P_DoQuote(QUOTE_UNLOCKED, g_player[myconnectindex].ps);
+
+                    for (l = headspritestat[STAT_EFFECTOR]; l >= 0; l = nextspritestat[l])
+                    {
+                        x = sprite[l].lotag&0x7fff;
+                        switch (x)
+                        {
+                        case SE_0_ROTATING_SECTOR:
+                            if (sprite[l].hitag == sh)
+                            {
+                                var/*int32_t */ow = sprite[l].owner;
+                                q = sprite[l].sectnum;
+                                sector[q].floorshade = sector[q].ceilingshade = sprite[ow].shade;
+                                sector[q].floorpal = sector[q].ceilingpal = sprite[ow].pal;
+                            }
+                            break;
+
+                        case SE_1_PIVOT:
+                        case SE_12_LIGHT_SWITCH:
+//                        case SE_18_INCREMENTAL_SECTOR_RISE_FALL:
+                        case SE_19_EXPLOSION_LOWERS_CEILING:
+                            if (sh == sprite[l].hitag)
+                                if (actor[l].t_data[0] == 0)
+                                {
+                                    actor[l].t_data[0] = 1; //Shut them all on
+                                    sprite[l].owner = i;
+                                }
+
+                            break;
+                        }
+                    }
+                }
+            }
+
+            break;
+
+        case SE_20_STRETCH_BRIDGE: //Extend-o-bridge
+            if (t[0] == 0) break;
+            if (t[0] == 1) s.xvel = 8;
+            else s.xvel = -8;
+
+            if (s.xvel)   //Moving
+            {
+                var/*int32_t */p:number, nextj:number;
+
+                x = (s.xvel*sintable[(s.ang+512)&2047])>>14;
+                l = (s.xvel*sintable[s.ang&2047])>>14;
+
+                t[3] += s.xvel;
+
+                s.x += x;
+                s.y += l;
+
+                if (t[3] <= 0 || (t[3]>>6) >= (sprite[i].yvel>>6))
+                {
+                    s.x -= x;
+                    s.y -= l;
+                    t[0] = 0;
+                    A_CallSound(s.sectnum,i);
+                    break;
+                }
+
+                for (j = headspritesect[s.sectnum]; 
+                    j >= 0 && (nextj = nextspritesect[j], 1) ;
+                j = nextj)
+                {
+                    if (sprite[j].statnum != STAT_EFFECTOR && sprite[j].zvel == 0)
+                    {
+                        sprite[j].x += x;
+                        sprite[j].y += l;
+                        setsprite(j,/*(vec3_t *)*/sprite[j]);
+                        if (sector[sprite[j].sectnum].floorstat&2)
+                            if (sprite[j].statnum == STAT_ZOMBIEACTOR)
+                                A_Fall(j);
+                    }
+                }
+
+                dragpoint(int16(t[1]),wall[t[1]].x+x,wall[t[1]].y+l,0);
+                dragpoint(int16(t[2]),wall[t[2]].x+x,wall[t[2]].y+l,0);
+
+                for (p = 0; p != -1; p = connectpoint2[p])
+                {
+                    var ps = g_player[p].ps;
+
+                    if (ps.cursectnum == s.sectnum && ps.on_ground)
+                    {
+                        ps.pos.x += x;
+                        ps.pos.y += l;
+
+                        ps.opos.x = ps.pos.x;
+                        ps.opos.y = ps.pos.y;
+
+                        ps.pos.z += PHEIGHT;
+                        setsprite(ps.i,/*(vec3_t *)*/ps);
+                        ps.pos.z -= PHEIGHT;
+                    }
+                }
+
+                sc.floorxpanning-=x>>3;
+                sc.floorypanning-=l>>3;
+
+                sc.ceilingxpanning-=x>>3;
+                sc.ceilingypanning-=l>>3;
+            }
+
+            break;
+
+        case SE_21_DROP_FLOOR: // Cascading effect
+        {todoThrow();
+            //int32_t *zptr;
+
+            //if (t[0] == 0) break;
+
+            //if (s.ang == 1536)
+            //    zptr = &sc.ceilingz;
+            //else
+            //    zptr = &sc.floorz;
+
+            //if (t[0] == 1)   //Decide if the s.sectnum should go up or down
+            //{
+            //    s.zvel = ksgn(s.z-*zptr) * (sprite[i].yvel<<4);
+            //    t[0]++;
+            //}
+
+            //if (sc.extra == 0)
+            //{
+            //    *zptr += s.zvel;
+
+            //    if (klabs(*zptr-s.z) < 1024)
+            //    {
+            //        *zptr = s.z;
+            //        {A_DeleteSprite(i); {i = nexti; continue BOLT;}} //All done   // SE_21_KILLIT, see sector.c
+            //    }
+            //}
+            //else sc.extra--;
+            //break;
+        }
+
+        case SE_22_TEETH_DOOR:
+            if (t[1])
+            {
+                if (GetAnimationGoal(new AnimatePtr(sector,t[0],"ceilingz")/*&sector[t[0]].ceilingz*/) >= 0)
+                    sc.ceilingz += sc.extra*9;
+                else t[1] = 0;
+            }
+            break;
+
+        case SE_24_CONVEYOR:
+        case SE_34:
+        {
+            var/*int32_t */p:number, nextj:number;
+
+            if (t[4])
+                break;
+
+            x = (sprite[i].yvel*sintable[(s.ang+512)&2047])>>18;
+            l = (sprite[i].yvel*sintable[s.ang&2047])>>18;
+
+            k = 0;
+
+            for (j = headspritesect[s.sectnum];
+                j >= 0 && (nextj = nextspritesect[j], 1); j = nextj/*(s.sectnum, j, nextj)*/)
+            {
+                if (sprite[j].zvel >= 0)
+                    switch (sprite[j].statnum)
+                    {
+                    case STAT_MISC:
+                        switch (DYNAMICTILEMAP(sprite[j].picnum))
+                        {
+                        case BLOODPOOL__STATIC:
+                        case PUKE__STATIC:
+                        case FOOTPRINTS__STATIC:
+                        case FOOTPRINTS2__STATIC:
+                        case FOOTPRINTS3__STATIC:
+                        case FOOTPRINTS4__STATIC:
+                        case BULLETHOLE__STATIC:
+                        case BLOODSPLAT1__STATIC:
+                        case BLOODSPLAT2__STATIC:
+                        case BLOODSPLAT3__STATIC:
+                        case BLOODSPLAT4__STATIC:
+                            sprite[j].xrepeat = sprite[j].yrepeat = 0;
+                            continue;
+
+                        case LASERLINE__STATIC:
+                            continue;
+                        }
+                        // fall-through
+                    case STAT_STANDABLE:
+                        if (sprite[j].picnum == TRIPBOMB)
+                            break;
+                        // else, fall-through
+                    case STAT_ACTOR:
+                    case STAT_DEFAULT:
+                        if (
+                            sprite[j].picnum == BOLT1 ||
+                            sprite[j].picnum == BOLT1+1 ||
+                            sprite[j].picnum == BOLT1+2 ||
+                            sprite[j].picnum == BOLT1+3 ||
+                            sprite[j].picnum == SIDEBOLT1 ||
+                            sprite[j].picnum == SIDEBOLT1+1 ||
+                            sprite[j].picnum == SIDEBOLT1+2 ||
+                            sprite[j].picnum == SIDEBOLT1+3 ||
+                            A_CheckSwitchTile(j)
+                        )
+                            break;
+
+                        if (!(sprite[j].picnum >= CRANE && sprite[j].picnum <= CRANE+3))
+                        {
+                            if (sprite[j].z > actor[j].floorz-(16<<8))
+                            {
+                                actor[j].bpos.x = sprite[j].x;
+                                actor[j].bpos.y = sprite[j].y;
+
+                                sprite[j].x += x>>2;
+                                sprite[j].y += l>>2;
+
+                                setsprite(j,sprite[j]);
+
+                                if (sector[sprite[j].sectnum].floorstat&2)
+                                    if (sprite[j].statnum == STAT_ZOMBIEACTOR)
+                                        A_Fall(j);
+                            }
+                        }
+                        break;
+                    }
+            }
+
+            p = myconnectindex;
+            if (g_player[p].ps.cursectnum == s.sectnum && g_player[p].ps.on_ground)
+                if (klabs(g_player[p].ps.pos.z-g_player[p].ps.truefz) < PHEIGHT+(9<<8))
+                {
+                    fricxv += x<<3;
+                    fricyv += l<<3;
+                }
+
+            sc.floorxpanning += sprite[i].yvel>>7;
+
+            break;
+        }
+
+        case SE_35:
+            if (sc.ceilingz > s.z)
+                for (j = 0; j < 8; j++)
+                {
+                    s.ang += krand()&511;
+                    k = A_Spawn(i,SMALLSMOKE);
+                    sprite[k].xvel = 96+(krand()&127);
+                    A_SetSprite(k,CLIPMASK0);
+                    setsprite(k,/*(vec3_t *)&*/sprite[k]);
+                    if (rnd(16))
+                        A_Spawn(i,EXPLOSION2);
+                }
+
+            switch (t[0])
+            {
+            case 0:
+                sc.ceilingz += s.yvel;
+                if (sc.ceilingz > sc.floorz)
+                    sc.floorz = sc.ceilingz;
+                if (sc.ceilingz > s.z+(32<<8))
+                    t[0]++;
+                break;
+            case 1:
+                sc.ceilingz-=(s.yvel<<2);
+                if (sc.ceilingz < t[4])
+                {
+                    sc.ceilingz = t[4];
+                    t[0] = 0;
+                }
+                break;
+            }
+            break;
+
+        case SE_25_PISTON: //PISTONS
+            if (t[4] == 0) break;
+
+            if (sc.floorz <= sc.ceilingz)
+                s.shade = 0;
+            else if (sc.ceilingz <= t[3])
+                s.shade = 1;
+
+            if (s.shade)
+            {
+                sc.ceilingz += sprite[i].yvel<<4;
+                if (sc.ceilingz > sc.floorz)
+                    sc.ceilingz = sc.floorz;
+            }
+            else
+            {
+                sc.ceilingz   -= sprite[i].yvel<<4;
+                if (sc.ceilingz < t[3])
+                    sc.ceilingz = t[3];
+            }
+
+            break;
+
+        case SE_26:
+        {
+            var /*int32_t */p:number, nextj:number;
+
+            s.xvel = 32;
+            l = (s.xvel*sintable[(s.ang+512)&2047])>>14;
+            x = (s.xvel*sintable[s.ang&2047])>>14;
+
+            s.shade++;
+            if (s.shade > 7)
+            {
+                s.x = t[3];
+                s.y = t[4];
+                sc.floorz -= ((s.zvel*s.shade)-s.zvel);
+                s.shade = 0;
+            }
+            else
+                sc.floorz += s.zvel;
+
+            for (j = headspritesect[s.sectnum];j >= 0 && (nextj = nextspritesect[j], 1); j = nextj)
+            {
+                if (sprite[j].statnum != STAT_EFFECTOR && sprite[j].statnum != STAT_PLAYER)
+                {
+                    actor[j].bpos.x = sprite[j].x;
+                    actor[j].bpos.y = sprite[j].y;
+
+                    sprite[j].x += l;
+                    sprite[j].y += x;
+
+                    sprite[j].z += s.zvel;
+                    setsprite(j,sprite[j]);
+                }
+            }
+
+            p = myconnectindex;
+            if (sprite[g_player[p].ps.i].sectnum == s.sectnum && g_player[p].ps.on_ground)
+            {
+                fricxv += l<<5;
+                fricyv += x<<5;
+            }
+
+            for (p = 0; p != -1; p = connectpoint2[p])
+                if (sprite[g_player[p].ps.i].sectnum == s.sectnum && g_player[p].ps.on_ground)
+                    g_player[p].ps.pos.z += s.zvel;
+
+            A_MoveSector(i);
+            setsprite(i,s);
+
+            break;
+        }
+
+        case SE_27_DEMO_CAM:
+        {
+            var/*int32_t */p:number;
+            var ps:DukePlayer_t;
+
+            if (ud.recstat == 0 || !ud.democams) break;
+
+            actor[i].tempang = s.ang;
+
+            var $x = new R(x);
+            p = A_FindPlayer(s,$x);
+            x = $x.$;
+            ps = g_player[p].ps;
+
+            if (sprite[ps.i].extra > 0 && myconnectindex == screenpeek)
+            {
+                if (t[0] < 0)
+                {
+                    ud.camerasprite = i;
+                    t[0]++;
+                }
+                else if (ud.recstat == 2 && ps.newowner == -1)
+                {
+                    if (cansee(s.x,s.y,s.z,sprite[i].sectnum,ps.pos.x,ps.pos.y,ps.pos.z,ps.cursectnum))
+                    {
+                        if (x < int32(sh>>>0))
+                        {
+                            ud.camerasprite = i;
+                            t[0] = 999;
+                            s.ang += G_GetAngleDelta(s.ang,getangle(ps.pos.x-s.x,ps.pos.y-s.y))>>3;
+                            sprite[i].yvel = 100+((s.z-ps.pos.z)/257);
+
+                        }
+                        else if (t[0] == 999)
+                        {
+                            if (ud.camerasprite == i)
+                                t[0] = 0;
+                            else t[0] = -10;
+                            ud.camerasprite = i;
+
+                        }
+                    }
+                    else
+                    {
+                        s.ang = getangle(ps.pos.x-s.x,ps.pos.y-s.y);
+
+                        if (t[0] == 999)
+                        {
+                            if (ud.camerasprite == i)
+                                t[0] = 0;
+                            else t[0] = -20;
+                            ud.camerasprite = i;
+                        }
+                    }
+                }
+            }
+            break;
+        }
+
+        case SE_28_LIGHTNING:
+        {
+            if (t[5] > 0)
+            {
+                t[5]--;
+                break;
+            }
+
+            if (actor[i].t_data[0] == 0)
+            {
+                var $x = new R(x);
+                A_FindPlayer(s,$x);
+                x = $x.$;
+                if (x > 15500)
+                    break;
+                actor[i].t_data[0] = 1;
+                actor[i].t_data[1] = 64 + (krand()&511);
+                actor[i].t_data[2] = 0;
+            }
+            else
+            {
+                actor[i].t_data[2]++;
+                if (actor[i].t_data[2] > actor[i].t_data[1])
+                {
+                    actor[i].t_data[0] = 0;
+                    g_player[screenpeek].ps.visibility = ud.const_visibility;
+                    break;
+                }
+                else if (actor[i].t_data[2] == (actor[i].t_data[1]>>1))
+                    A_PlaySound(THUNDER,i);
+                else if (actor[i].t_data[2] == (actor[i].t_data[1]>>3))
+                    A_PlaySound(LIGHTNING_SLAP,i);
+                else if (actor[i].t_data[2] == (actor[i].t_data[1]>>2))
+                {
+                    for (j = headspritestat[STAT_DEFAULT]; j >= 0; j = nextspritestat[j])
+                        if (sprite[j].picnum == NATURALLIGHTNING && sprite[j].hitag == s.hitag)
+                            sprite[j].cstat |= 32768;
+                }
+                else if (actor[i].t_data[2] > (actor[i].t_data[1]>>3) && actor[i].t_data[2] < (actor[i].t_data[1]>>2))
+                {
+                    if (cansee(s.x,s.y,s.z,s.sectnum,g_player[screenpeek].ps.pos.x,g_player[screenpeek].ps.pos.y,g_player[screenpeek].ps.pos.z,g_player[screenpeek].ps.cursectnum))
+                        j = 1;
+                    else j = 0;
+
+                    if (rnd(192) && (actor[i].t_data[2]&1))
+                    {
+                        if (j)
+                            g_player[screenpeek].ps.visibility = 0;
+                    }
+                    else if (j)
+                        g_player[screenpeek].ps.visibility = ud.const_visibility;
+
+                    for (j = headspritestat[STAT_DEFAULT]; j >= 0; j = nextspritestat[j])
+                    {
+                        if (sprite[j].picnum == NATURALLIGHTNING && sprite[j].hitag == s.hitag)
+                        {
+                            if (rnd(32) && (actor[i].t_data[2]&1))
+                            {
+                                var/*int32_t*/ p:number;
+                                var ps:DukePlayer_t;
+
+                                sprite[j].cstat &= 32767;
+                                A_Spawn(j,SMALLSMOKE);
+
+                                p = A_FindPlayer(s, NULL);
+                                ps = g_player[p].ps;
+
+                                x = ldist(sprite[ps.i], sprite[j]);
+                                if (x < 768)
+                                {
+                                    if (!A_CheckSoundPlaying(ps.i,DUKE_LONGTERM_PAIN))
+                                        A_PlaySound(DUKE_LONGTERM_PAIN,ps.i);
+                                    A_PlaySound(SHORT_CIRCUIT,ps.i);
+                                    sprite[ps.i].extra -= 8+(krand()&7);
+
+                                    P_PalFrom(ps, 32, 16,0,0);
+                                }
+                                break;
+                            }
+                            else sprite[j].cstat |= 32768;
+                        }
+                    }
+                }
+            }
+            break;
+        }
+
+        case SE_29_WAVES:
+            s.hitag += 64;
+            l = mulscale12(/*(int32_t)*/s.yvel,sintable[s.hitag&2047]);
+            sc.floorz = s.z + l;
+            break;
+
+        case SE_31_FLOOR_RISE_FALL: // True Drop Floor
+            if (t[0] == 1)
+            {
+                // Choose dir
+
+                if (t[3] > 0)
+                {
+                    t[3]--;
+                    break;
+                }
+
+                if (t[2] == 1) // Retract
+                {
+                    if (sprite[i].ang != 1536)
+                        HandleSE31(i, 1, s.z, 0, s.z-sc.floorz);
+                    else
+                        HandleSE31(i, 1, t[1], 0, t[1]-sc.floorz);
+
+                    Yax_SetBunchZs(sc-sector, YAX_FLOOR, sc.floorz);
+
+                    break;
+                }
+
+                if ((s.ang&2047) == 1536)
+                    HandleSE31(i, 0, s.z, 1, s.z-sc.floorz);
+                else
+                    HandleSE31(i, 0, t[1], 1, t[1]-s.z);
+
+                Yax_SetBunchZs(sc-sector, YAX_FLOOR, sc.floorz);
+            }
+            break;
+
+        case SE_32_CEILING_RISE_FALL: // True Drop Ceiling
+            if (t[0] == 1)
+            {
+                // Choose dir
+
+                if (t[2] == 1) // Retract
+                {
+                    if (sprite[i].ang != 1536)
+                    {
+                        if (klabs(sc.ceilingz - s.z) < (sprite[i].yvel<<1))
+                        {
+                            sc.ceilingz = s.z;
+                            A_CallSound(s.sectnum,i);
+                            t[2] = 0;
+                            t[0] = 0;
+                        }
+                        else sc.ceilingz += ksgn(s.z-sc.ceilingz)*sprite[i].yvel;
+                    }
+                    else
+                    {
+                        if (klabs(sc.ceilingz - t[1]) < (sprite[i].yvel<<1))
+                        {
+                            sc.ceilingz = t[1];
+                            A_CallSound(s.sectnum,i);
+                            t[2] = 0;
+                            t[0] = 0;
+                        }
+                        else sc.ceilingz += ksgn(t[1]-sc.ceilingz)*sprite[i].yvel;
+                    }
+
+                    Yax_SetBunchZs(sc-sector, YAX_CEILING, sc.ceilingz);
+
+                    break;
+                }
+
+                if ((s.ang&2047) == 1536)
+                {
+                    if (klabs(sc.ceilingz-s.z) < (sprite[i].yvel<<1))
+                    {
+                        t[0] = 0;
+                        t[2] = !t[2];
+                        A_CallSound(s.sectnum,i);
+                        sc.ceilingz = s.z;
+                    }
+                    else sc.ceilingz += ksgn(s.z-sc.ceilingz)*sprite[i].yvel;
+                }
+                else
+                {
+                    if (klabs(sc.ceilingz-t[1]) < (sprite[i].yvel<<1))
+                    {
+                        t[0] = 0;
+                        t[2] = !t[2];
+                        A_CallSound(s.sectnum,i);
+                    }
+                    else sc.ceilingz -= ksgn(s.z-t[1])*sprite[i].yvel;
+                }
+
+                Yax_SetBunchZs(sc-sector, YAX_CEILING, sc.ceilingz);
+            }
+            break;
+
+        case SE_33_QUAKE_DEBRIS:
+            if (g_earthquakeTime > 0 && (krand()&7) == 0)
+                RANDOMSCRAP;
+            break;
+
+        case SE_36_PROJ_SHOOTER:
+            if (t[0])
+            {
+                if (t[0] == 1)
+                    A_Shoot(i,sc.extra);
+                else if (t[0] == GAMETICSPERSEC*5)
+                    t[0] = 0;
+                t[0]++;
+            }
+            break;
+
+        case 128: //SE to control glass breakage
+            wal = wall[t[2]];
+
+            if (wal.cstat|32)
+            {
+                wal.cstat &= (255-32);
+                wal.cstat |= 16;
+                if (wal.nextwall >= 0)
+                {
+                    wall[wal.nextwall].cstat &= (255-32);
+                    wall[wal.nextwall].cstat |= 16;
+                }
+            }
+            else break;
+
+            wal.overpicnum++;
+            if (wal.nextwall >= 0)
+                wall[wal.nextwall].overpicnum++;
+
+            if (t[0] < t[1]) t[0]++;
+            else
+            {
+                wal.cstat &= (128+32+8+4+2);
+                if (wal.nextwall >= 0)
+                    wall[wal.nextwall].cstat &= (128+32+8+4+2);
+                {A_DeleteSprite(i); {i = nexti; continue BOLT;}}
+            }
+            break;
+
+        case SE_130:
+            if (t[0] > 80)
+            {
+                {A_DeleteSprite(i); {i = nexti; continue BOLT;}}
+            }
+            else t[0]++;
+
+            x = sc.floorz-sc.ceilingz;
+
+            if (rnd(64))
+            {
+                k = A_Spawn(i,EXPLOSION2);
+                sprite[k].xrepeat = sprite[k].yrepeat = 2+(krand()&7);
+                sprite[k].z = sc.floorz-(krand()%x);
+                sprite[k].ang += 256-(krand()%511);
+                sprite[k].xvel = krand()&127;
+                A_SetSprite(k,CLIPMASK0);
+            }
+            break;
+
+        case SE_131:
+            if (t[0] > 40)
+            {
+                {A_DeleteSprite(i); {i = nexti; continue BOLT;}}
+            }
+            else t[0]++;
+
+            x = sc.floorz-sc.ceilingz;
+
+            if (rnd(32))
+            {
+                k = A_Spawn(i,EXPLOSION2);
+                sprite[k].xrepeat = sprite[k].yrepeat = 2+(krand()&3);
+                sprite[k].z = sc.floorz-(krand()%x);
+                sprite[k].ang += 256-(krand()%511);
+                sprite[k].xvel = krand()&127;
+                A_SetSprite(k,CLIPMASK0);
+            }
+            break;
+
+        case SE_49_POINT_LIGHT:
+        case SE_50_SPOT_LIGHT:
+            changespritestat(i, STAT_LIGHT);
+            break;
+        }
 //BOLT:
-//        i = nexti;
-//    }
+        i = nexti;
+    }
 
-//    //Sloped sin-wave floors!
-//    for (SPRITES_OF(STAT_EFFECTOR, i))
-//    {
-//        const spritetype *s = &sprite[i];
+    //Sloped sin-wave floors!
+    for (i = headspritestat[STAT_EFFECTOR]; i >= 0; i = nextspritestat[i])
+    {
+        var s = sprite[i];
 
-//        if (s.lotag == SE_29_WAVES)
-//        {
-//            sectortype *const sc = &sector[s.sectnum];
+        if (s.lotag == SE_29_WAVES)
+        {
+            var sc = sector[s.sectnum];
 
-//            if (sc.wallnum == 4)
-//            {
-//                wal = &wall[sc.wallptr+2];
-//                if (wal.nextsector >= 0)
-//                    alignflorslope(s.sectnum, wal.x,wal.y, sector[wal.nextsector].floorz);
-//            }
-//        }
-//    }
-//}
+            if (sc.wallnum == 4)
+            {
+                wal = wall[sc.wallptr+2];
+                if (wal.nextsector >= 0)
+                    alignflorslope(s.sectnum, wal.x,wal.y, sector[wal.nextsector].floorz);
+            }
+        }
+    }
+}
 
 function G_DoEffectorLights():void  // STATNUM 14
 {
@@ -8030,7 +8066,7 @@ function G_DoEffectorLights():void  // STATNUM 14
 //                    actor[i].lightptr.publicflags.negative = !!(sprite[i].cstat & 128);
 //                }
 //                actor[i].lightptr.tilenum = actor[i].picnum;
-//            }
+            }
 
             break;
         }

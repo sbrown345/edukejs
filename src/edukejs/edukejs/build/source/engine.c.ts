@@ -12684,15 +12684,15 @@ function/*int32_t */hitscan(/*const vec3_t **/sv: vec3_t, /*int16_t */sectnum: n
 //}
 
 
-////
-//// dragpoint
-////
-//// flags:
-////  1: don't reset walbitmap[] (the bitmap of already dragged vertices)
-////  2: In the editor, do wall[].cstat |= (1<<14) also for the lastwall().
-//void dragpoint(int16_t pointhighlight, int32_t dax, int32_t day, uint8_t flags)
+//
+// dragpoint
+//
+// flags:
+//  1: don't reset walbitmap[] (the bitmap of already dragged vertices)
+//  2: In the editor, do wall[].cstat |= (1<<14) also for the lastwall().
+function dragpoint(/*int16_t*/ pointhighlight:number, /*int32_t */dax:number, /*int32_t */day:number, /*uint8_t */flags:number):number
 //#ifdef YAX_ENABLE
-//{
+{todoThrow();
 //    int32_t i, numyaxwalls=0;
 //    static int16_t yaxwalls[MAXWALLS];
 
@@ -12834,7 +12834,7 @@ function/*int32_t */hitscan(/*const vec3_t **/sv: vec3_t, /*int16_t */sectnum: n
 //        cnt--;
 //    }
 //    while ((tempshort != pointhighlight) && (cnt > 0));
-//}
+}
 //#endif
 
 ////
@@ -13881,20 +13881,20 @@ function updatesectorz(/*int32_t*/ x: number, /*int32_t*/ y: number, /*int32_t*/
 }
 
 
-////
-//// rotatepoint
-////
-//void rotatepoint(int32_t xpivot, int32_t ypivot, int32_t x, int32_t y, int16_t daang, int32_t *x2, int32_t *y2)
-//{
-//    int32_t dacos, dasin;
+//
+// rotatepoint
+//
+function rotatepoint(/*int32_t */xpivot:number, /*int32_t */ypivot:number, /*int32_t */x:number, /*int32_t */y:number, /*int16_t */daang:number, /*int32_t **/x2:R<number>, /*int32_t **/y2:R<number>):void
+{
+    var/*int32_t */dacos:number, dasin:number;
 
-//    dacos = sintable[(daang+2560)&2047];
-//    dasin = sintable[(daang+2048)&2047];
-//    x -= xpivot;
-//    y -= ypivot;
-//    *x2 = dmulscale14(x,dacos,-y,dasin) + xpivot;
-//    *y2 = dmulscale14(y,dacos,x,dasin) + ypivot;
-//}
+    dacos = sintable[(daang+2560)&2047];
+    dasin = sintable[(daang+2048)&2047];
+    x -= xpivot;
+    y -= ypivot;
+    x2.$ = dmulscale14(x,dacos,-y,dasin) + xpivot;
+    y2.$ = dmulscale14(y,dacos,x,dasin) + ypivot;
+}
 
 
 ////
