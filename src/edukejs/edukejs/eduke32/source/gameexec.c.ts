@@ -66,8 +66,8 @@ var g_currentEventExec = -1;
 //# include "gamestructures.c"
 //#endif
 
-//#define VM_CONDITIONAL(xxx) { if ((xxx) || ((insptr = (intptr_t *)*(insptr+1)) && (((*insptr) & 0xfff) == CON_ELSE))) \
-//{ insptr += 2; VM_Execute(0); } }
+function VM_CONDITIONAL(xxx:any):void { if ((xxx) || ((insptr = /*(intptr_t *)**/script[insptr+1]) && (((script[insptr]) & 0xfff) == CON_ELSE))) 
+{ insptr += 2; VM_Execute(0); } }
 function VM_ScriptInfo (): void 
 {
 //#if !defined LUNATIC
@@ -1434,7 +1434,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //            {
 //                DukePlayer_t *const ps = g_player[vm.g_p].ps;
 
-//                if (*insptr == 0)
+//                if (script[insptr] == 0)
 //                {
 //                    int32_t j = 0;
 //                    for (; j < ps.weapreccnt; j++)
@@ -1507,10 +1507,10 @@ function VM_Execute(/*int32_t */loop: number): void
 //                int32_t j = (script[insptr++] - vm.g_sp.xrepeat)<<1;
 //                vm.g_sp.xrepeat += ksgn(j);
 
-//                if ((vm.g_sp.picnum == APLAYER && vm.g_sp.yrepeat < 36) || *insptr < vm.g_sp.yrepeat ||
+//                if ((vm.g_sp.picnum == APLAYER && vm.g_sp.yrepeat < 36) || script[insptr] < vm.g_sp.yrepeat ||
 //                        ((vm.g_sp.yrepeat*(tilesizy[vm.g_sp.picnum]+8))<<2) < (actor[vm.g_i].floorz - actor[vm.g_i].ceilingz))
 //                {
-//                    j = ((*insptr)-vm.g_sp.yrepeat)<<1;
+//                    j = ((script[insptr])-vm.g_sp.yrepeat)<<1;
 //                    if (klabs(j)) vm.g_sp.yrepeat += ksgn(j);
 //                }
 //            }
@@ -1558,23 +1558,23 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_IFSOUND:
 //            if (((unsigned)*(++insptr) >= MAXSOUNDS))
 //            {
-//                CON_ERRPRINTF("Invalid sound %d\n", (int32_t)*insptr);
+//                CON_ERRPRINTF("Invalid sound %d\n", (int32_t)script[insptr]);
 //                insptr++;
 //                continue;
 //            }
-//            VM_CONDITIONAL(S_CheckSoundPlaying(vm.g_i,*insptr));
-//            //    VM_DoConditional(SoundOwner[*insptr][0].ow == vm.g_i);
+//            VM_CONDITIONAL(S_CheckSoundPlaying(vm.g_i,script[insptr]));
+//            //    VM_DoConditional(SoundOwner[script[insptr]][0].ow == vm.g_i);
 //            continue;
 
 //        case CON_STOPSOUND:
 //            if (((unsigned)*(++insptr) >= MAXSOUNDS))
 //            {
-//                CON_ERRPRINTF("Invalid sound %d\n", (int32_t)*insptr);
+//                CON_ERRPRINTF("Invalid sound %d\n", (int32_t)script[insptr]);
 //                insptr++;
 //                continue;
 //            }
-//            if (S_CheckSoundPlaying(vm.g_i,*insptr))
-//                S_StopSound((int16_t)*insptr);
+//            if (S_CheckSoundPlaying(vm.g_i,script[insptr]))
+//                S_StopSound((int16_t)script[insptr]);
 //            insptr++;
 //            continue;
 
@@ -1614,21 +1614,21 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_GLOBALSOUND:
 //            if (((unsigned)*(++insptr) >= MAXSOUNDS))
 //            {
-//                CON_ERRPRINTF("Invalid sound %d\n", (int32_t)*insptr);
+//                CON_ERRPRINTF("Invalid sound %d\n", (int32_t)script[insptr]);
 //                insptr++;
 //                continue;
 //            }
 //            if (vm.g_p == screenpeek || (GametypeFlags[ud.coop]&GAMETYPE_COOPSOUND)
 //                || (g_fakeMultiMode==2)
 //                )
-//                A_PlaySound(*insptr,g_player[screenpeek].ps.i);
+//                A_PlaySound(script[insptr],g_player[screenpeek].ps.i);
 //            insptr++;
 //            continue;
 
 //        case CON_SOUND:
 //            if ((unsigned)*(++insptr) >= MAXSOUNDS)
 //            {
-//                CON_ERRPRINTF("Invalid sound %d\n", (int32_t)*insptr);
+//                CON_ERRPRINTF("Invalid sound %d\n", (int32_t)script[insptr]);
 //                insptr++;
 //                continue;
 //            }
@@ -1750,7 +1750,7 @@ function VM_Execute(/*int32_t */loop: number): void
 
 //                if (vm.g_sp.picnum != ATOMICHEALTH)
 //                {
-//                    if (j > ps.max_player_health && *insptr > 0)
+//                    if (j > ps.max_player_health && script[insptr] > 0)
 //                    {
 //                        insptr++;
 //                        continue;
@@ -1758,15 +1758,15 @@ function VM_Execute(/*int32_t */loop: number): void
 //                    else
 //                    {
 //                        if (j > 0)
-//                            j += *insptr;
-//                        if (j > ps.max_player_health && *insptr > 0)
+//                            j += script[insptr];
+//                        if (j > ps.max_player_health && script[insptr] > 0)
 //                            j = ps.max_player_health;
 //                    }
 //                }
 //                else
 //                {
 //                    if (j > 0)
-//                        j += *insptr;
+//                        j += script[insptr];
 //                    if (j > (ps.max_player_health<<1))
 //                        j = (ps.max_player_health<<1);
 //                }
@@ -1775,9 +1775,9 @@ function VM_Execute(/*int32_t */loop: number): void
 
 //                if (ud.god == 0)
 //                {
-//                    if (*insptr > 0)
+//                    if (script[insptr] > 0)
 //                    {
-//                        if ((j - *insptr) < (ps.max_player_health>>2) &&
+//                        if ((j - script[insptr]) < (ps.max_player_health>>2) &&
 //                                j >= (ps.max_player_health>>2))
 //                            A_PlaySound(DUKE_GOTHEALTHATLOW,ps.i);
 
@@ -1833,7 +1833,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //            insptr++;
 //            {
 //                int32_t var1 = Gv_GetVarX(script[insptr++]), var2;
-//                if (tw == CON_OPERATEACTIVATORS && *insptr == g_iThisActorID)
+//                if (tw == CON_OPERATEACTIVATORS && script[insptr] == g_iThisActorID)
 //                {
 //                    var2 = vm.g_p;
 //                    insptr++;
@@ -2130,7 +2130,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //            insptr++;
 //            {
 //                int32_t i = Gv_GetVarX(script[insptr++]), j;
-//                if (tw == CON_GETPNAME && *insptr == g_iThisActorID)
+//                if (tw == CON_GETPNAME && script[insptr] == g_iThisActorID)
 //                {
 //                    j = vm.g_p;
 //                    insptr++;
@@ -2684,11 +2684,11 @@ function VM_Execute(/*int32_t */loop: number): void
 //            switch (tw)
 //            {
 //            case CON_SAVEGAMEVAR:
-//                i=Gv_GetVarX(*insptr);
+//                i=Gv_GetVarX(script[insptr]);
 //                SCRIPT_PutNumber(ud.config.scripthandle, "Gamevars",aGameVars[script[insptr++]].szLabel,i,FALSE,FALSE);
 //                break;
 //            case CON_READGAMEVAR:
-//                SCRIPT_GetNumber(ud.config.scripthandle, "Gamevars",aGameVars[*insptr].szLabel,&i);
+//                SCRIPT_GetNumber(ud.config.scripthandle, "Gamevars",aGameVars[script[insptr]].szLabel,&i);
 //                Gv_SetVarX(script[insptr++], i);
 //                break;
 //            }
@@ -3204,22 +3204,22 @@ function VM_Execute(/*int32_t */loop: number): void
 
 //        case CON_IFWASWEAPON:
 //            insptr++;
-//            VM_CONDITIONAL(actor[vm.g_i].picnum == *insptr);
+//            VM_CONDITIONAL(actor[vm.g_i].picnum == script[insptr]);
 //            continue;
 
 //        case CON_IFAI:
 //            insptr++;
-//            VM_CONDITIONAL(AC_AI_ID(vm.g_t) == *insptr);
+//            VM_CONDITIONAL(AC_AI_ID(vm.g_t) == script[insptr]);
 //            continue;
 
         case CON_IFACTION:
             insptr++;
-            VM_CONDITIONAL(AC_ACTION_ID(vm.g_t) == *insptr);
+            VM_CONDITIONAL(AC_ACTION_ID(vm.g_t) == script[insptr]);
             continue;
 
 //        case CON_IFACTIONCOUNT:
 //            insptr++;
-//            VM_CONDITIONAL(AC_ACTION_COUNT(vm.g_t) >= *insptr);
+//            VM_CONDITIONAL(AC_ACTION_COUNT(vm.g_t) >= script[insptr]);
 //            continue;
 
 //        case CON_RESETACTIONCOUNT:
@@ -3234,7 +3234,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //                int32_t s, l, j;
 
 //                if ((unsigned)vm.g_sp.sectnum < MAXSECTORS)
-//                    for (j=(*insptr)-1; j>=0; j--)
+//                    for (j=(script[insptr])-1; j>=0; j--)
 //                    {
 //                        if (vm.g_sp.picnum == BLIMP && dnum == SCRAP1)
 //                            s = 0;
@@ -3317,7 +3317,7 @@ function VM_Execute(/*int32_t */loop: number): void
 
 //        case CON_IFMOVE:
 //            insptr++;
-//            VM_CONDITIONAL(AC_MOVE_ID(vm.g_t) == *insptr);
+//            VM_CONDITIONAL(AC_MOVE_ID(vm.g_t) == script[insptr]);
 //            continue;
 
 //        case CON_RESETPLAYER:
@@ -3337,12 +3337,12 @@ function VM_Execute(/*int32_t */loop: number): void
 
 //        case CON_IFCOUNT:
 //            insptr++;
-//            VM_CONDITIONAL(AC_COUNT(vm.g_t) >= *insptr);
+//            VM_CONDITIONAL(AC_COUNT(vm.g_t) >= script[insptr]);
 //            continue;
 
 //        case CON_IFACTOR:
 //            insptr++;
-//            VM_CONDITIONAL(vm.g_sp.picnum == *insptr);
+//            VM_CONDITIONAL(vm.g_sp.picnum == script[insptr]);
 //            continue;
 
 //        case CON_RESETCOUNT:
@@ -3358,28 +3358,28 @@ function VM_Execute(/*int32_t */loop: number): void
 //            switch (*(insptr-1))
 //            {
 //            case GET_STEROIDS:
-//                ps.inv_amount[GET_STEROIDS] = *insptr;
+//                ps.inv_amount[GET_STEROIDS] = script[insptr];
 //                ps.inven_icon = ICON_STEROIDS;
 //                break;
 
 //            case GET_SHIELD:
-//                ps.inv_amount[GET_SHIELD] += *insptr;// 100;
+//                ps.inv_amount[GET_SHIELD] += script[insptr];// 100;
 //                if (ps.inv_amount[GET_SHIELD] > ps.max_shield_amount)
 //                    ps.inv_amount[GET_SHIELD] = ps.max_shield_amount;
 //                break;
 
 //            case GET_SCUBA:
-//                ps.inv_amount[GET_SCUBA] = *insptr;// 1600;
+//                ps.inv_amount[GET_SCUBA] = script[insptr];// 1600;
 //                ps.inven_icon = ICON_SCUBA;
 //                break;
 
 //            case GET_HOLODUKE:
-//                ps.inv_amount[GET_HOLODUKE] = *insptr;// 1600;
+//                ps.inv_amount[GET_HOLODUKE] = script[insptr];// 1600;
 //                ps.inven_icon = ICON_HOLODUKE;
 //                break;
 
 //            case GET_JETPACK:
-//                ps.inv_amount[GET_JETPACK] = *insptr;// 1600;
+//                ps.inv_amount[GET_JETPACK] = script[insptr];// 1600;
 //                ps.inven_icon = ICON_JETPACK;
 //                break;
 
@@ -3399,18 +3399,18 @@ function VM_Execute(/*int32_t */loop: number): void
 //                break;
 
 //            case GET_HEATS:
-//                ps.inv_amount[GET_HEATS] = *insptr;
+//                ps.inv_amount[GET_HEATS] = script[insptr];
 //                ps.inven_icon = ICON_HEATS;
 //                break;
 
 //            case GET_FIRSTAID:
 //                ps.inven_icon = ICON_FIRSTAID;
-//                ps.inv_amount[GET_FIRSTAID] = *insptr;
+//                ps.inv_amount[GET_FIRSTAID] = script[insptr];
 //                break;
 
 //            case GET_BOOTS:
 //                ps.inven_icon = ICON_BOOTS;
-//                ps.inv_amount[GET_BOOTS] = *insptr;
+//                ps.inv_amount[GET_BOOTS] = script[insptr];
 //                break;
 //            default:
 //                CON_ERRPRINTF("Invalid inventory ID %d\n", (int32_t)*(insptr-1));
@@ -3492,7 +3492,7 @@ function VM_Execute(/*int32_t */loop: number): void
 
 //        case CON_IFSTRENGTH:
 //            insptr++;
-//            VM_CONDITIONAL(vm.g_sp.extra <= *insptr);
+//            VM_CONDITIONAL(vm.g_sp.extra <= script[insptr]);
 //            continue;
 
 //        case CON_GUTS:
@@ -3502,7 +3502,7 @@ function VM_Execute(/*int32_t */loop: number): void
 
 //        case CON_IFSPAWNEDBY:
 //            insptr++;
-//            VM_CONDITIONAL(actor[vm.g_i].picnum == *insptr);
+//            VM_CONDITIONAL(actor[vm.g_i].picnum == script[insptr]);
 //            continue;
 
 //        case CON_WACKPLAYER:
@@ -3549,7 +3549,7 @@ function VM_Execute(/*int32_t */loop: number): void
 
 //        case CON_IFGAPZL:
 //            insptr++;
-//            VM_CONDITIONAL(((actor[vm.g_i].floorz - actor[vm.g_i].ceilingz) >> 8) < *insptr);
+//            VM_CONDITIONAL(((actor[vm.g_i].floorz - actor[vm.g_i].ceilingz) >> 8) < script[insptr]);
 //            continue;
 
 //        case CON_IFHITSPACE:
@@ -3625,12 +3625,12 @@ function VM_Execute(/*int32_t */loop: number): void
 
 //        case CON_IFFLOORDISTL:
 //            insptr++;
-//            VM_CONDITIONAL((actor[vm.g_i].floorz - vm.g_sp.z) <= ((*insptr)<<8));
+//            VM_CONDITIONAL((actor[vm.g_i].floorz - vm.g_sp.z) <= ((script[insptr])<<8));
 //            continue;
 
 //        case CON_IFCEILINGDISTL:
 //            insptr++;
-//            VM_CONDITIONAL((vm.g_sp.z - actor[vm.g_i].ceilingz) <= ((*insptr)<<8));
+//            VM_CONDITIONAL((vm.g_sp.z - actor[vm.g_i].ceilingz) <= ((script[insptr])<<8));
 //            continue;
 
 //        case CON_PALFROM:
@@ -3665,7 +3665,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //                {
 //                    CON_ERRPRINTF("null quote %d\n", ScriptQuotes[sq] ? dq : sq);
 
-//                    while ((*insptr & 0xFFF) != CON_NULLOP)
+//                    while ((script[insptr] & 0xFFF) != CON_NULLOP)
 //                        Gv_GetVarX(script[insptr++]);
 
 //                    insptr++; // skip the NOP
@@ -3677,7 +3677,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //                    int32_t len = Bstrlen(ScriptQuotes[sq]);
 //                    char tempbuf[MAXQUOTELEN];
 
-//                    while ((*insptr & 0xFFF) != CON_NULLOP && i < 32)
+//                    while ((script[insptr] & 0xFFF) != CON_NULLOP && i < 32)
 //                        arg[i++] = Gv_GetVarX(script[insptr++]);
 //                    numargs = i;
 
@@ -3762,14 +3762,14 @@ function VM_Execute(/*int32_t */loop: number): void
 //            {
 //                int32_t m=1;
 //                char szBuf[256];
-//                int32_t lVarID = *insptr;
+//                int32_t lVarID = script[insptr];
 
 //                if ((lVarID >= g_gameVarCount) || lVarID < 0)
 //                {
-//                    if (*insptr==MAXGAMEVARS) // addlogvar for a constant?  Har.
+//                    if (script[insptr]==MAXGAMEVARS) // addlogvar for a constant?  Har.
 //                        insptr++;
-//                    //                else if (*insptr > g_gameVarCount && (*insptr < (MAXGAMEVARS<<1)+MAXGAMEVARS+1+MAXGAMEARRAYS))
-//                    else if (*insptr&(MAXGAMEVARS<<2))
+//                    //                else if (script[insptr] > g_gameVarCount && (script[insptr] < (MAXGAMEVARS<<1)+MAXGAMEVARS+1+MAXGAMEARRAYS))
+//                    else if (script[insptr]&(MAXGAMEVARS<<2))
 //                    {
 //                        int32_t index;
 
@@ -3797,7 +3797,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //                            continue;
 //                        }
 //                    }
-//                    else if (*insptr&(MAXGAMEVARS<<3))
+//                    else if (script[insptr]&(MAXGAMEVARS<<3))
 //                    {
 //                        //                    FIXME FIXME FIXME
 //                        if ((lVarID & (MAXGAMEVARS-1)) == g_iActorVarID)
@@ -3815,7 +3815,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //                            continue;
 //                        }
 //                    }
-//                    else if (*insptr&(MAXGAMEVARS<<1))
+//                    else if (script[insptr]&(MAXGAMEVARS<<1))
 //                    {
 //                        m = -m;
 //                        lVarID ^= (MAXGAMEVARS<<1);
@@ -4224,8 +4224,8 @@ function VM_Execute(/*int32_t */loop: number): void
 //            {
 //                int32_t iPlayer = vm.g_p;
 
-//                if (*insptr != g_iThisActorID)
-//                    iPlayer=Gv_GetVarX(*insptr);
+//                if (script[insptr] != g_iThisActorID)
+//                    iPlayer=Gv_GetVarX(script[insptr]);
 
 //                insptr++;
 //                {
@@ -4322,8 +4322,8 @@ function VM_Execute(/*int32_t */loop: number): void
 //            {
 //                int32_t j = vm.g_p;
 
-//                if (*insptr != g_iThisActorID)
-//                    j=Gv_GetVarX(*insptr);
+//                if (script[insptr] != g_iThisActorID)
+//                    j=Gv_GetVarX(script[insptr]);
 
 //                insptr++;
 
@@ -4363,13 +4363,13 @@ function VM_Execute(/*int32_t */loop: number): void
 
 //        case CON_SETVAR:
 //            insptr++;
-//            if ((aGameVars[*insptr].dwFlags & (GAMEVAR_USER_MASK|GAMEVAR_PTR_MASK)) == 0)
+//            if ((aGameVars[script[insptr]].dwFlags & (GAMEVAR_USER_MASK|GAMEVAR_PTR_MASK)) == 0)
 //            {
-//                aGameVars[*insptr].val.lValue = *(insptr+1);
+//                aGameVars[script[insptr]].val.lValue = *(insptr+1);
 //                insptr += 2;
 //                continue;
 //            }
-//            Gv_SetVarX(*insptr, *(insptr+1));
+//            Gv_SetVarX(script[insptr], *(insptr+1));
 //            insptr += 2;
 //            continue;
 
@@ -4546,13 +4546,13 @@ function VM_Execute(/*int32_t */loop: number): void
 
 //        case CON_RANDVAR:
 //            insptr++;
-//            Gv_SetVarX(*insptr, mulscale16(krand(), *(insptr+1)+1));
+//            Gv_SetVarX(script[insptr], mulscale16(krand(), *(insptr+1)+1));
 //            insptr += 2;
 //            continue;
 
 //        case CON_DISPLAYRANDVAR:
 //            insptr++;
-//            Gv_SetVarX(*insptr, mulscale15(system_15bit_rand(), *(insptr+1)+1));
+//            Gv_SetVarX(script[insptr], mulscale15(system_15bit_rand(), *(insptr+1)+1));
 //            insptr += 2;
 //            continue;
 
@@ -4569,7 +4569,7 @@ function VM_Execute(/*int32_t */loop: number): void
 
 //        case CON_MULVAR:
 //            insptr++;
-//            Gv_MulVar(*insptr, *(insptr+1));
+//            Gv_MulVar(script[insptr], *(insptr+1));
 //            insptr += 2;
 //            continue;
 
@@ -4581,7 +4581,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //                insptr += 2;
 //                continue;
 //            }
-//            Gv_DivVar(*insptr, *(insptr+1));
+//            Gv_DivVar(script[insptr], *(insptr+1));
 //            insptr += 2;
 //            continue;
 
@@ -4594,25 +4594,25 @@ function VM_Execute(/*int32_t */loop: number): void
 //                continue;
 //            }
 
-//            Gv_ModVar(*insptr,*(insptr+1));
+//            Gv_ModVar(script[insptr],*(insptr+1));
 //            insptr += 2;
 //            continue;
 
 //        case CON_ANDVAR:
 //            insptr++;
-//            Gv_AndVar(*insptr,*(insptr+1));
+//            Gv_AndVar(script[insptr],*(insptr+1));
 //            insptr += 2;
 //            continue;
 
 //        case CON_ORVAR:
 //            insptr++;
-//            Gv_OrVar(*insptr,*(insptr+1));
+//            Gv_OrVar(script[insptr],*(insptr+1));
 //            insptr += 2;
 //            continue;
 
 //        case CON_XORVAR:
 //            insptr++;
-//            Gv_XorVar(*insptr,*(insptr+1));
+//            Gv_XorVar(script[insptr],*(insptr+1));
 //            insptr += 2;
 //            continue;
 
@@ -4742,7 +4742,7 @@ function VM_Execute(/*int32_t */loop: number): void
 
 //        case CON_SUBVAR:
 //            insptr++;
-//            Gv_SubVar(*insptr, *(insptr+1));
+//            Gv_SubVar(script[insptr], *(insptr+1));
 //            insptr += 2;
 //            continue;
 
@@ -4756,43 +4756,43 @@ function VM_Execute(/*int32_t */loop: number): void
 
 //        case CON_ADDVAR:
 //            insptr++;
-//            Gv_AddVar(*insptr, *(insptr+1));
+//            Gv_AddVar(script[insptr], *(insptr+1));
 //            insptr += 2;
 //            continue;
 
 //        case CON_SHIFTVARL:
 //            insptr++;
-//            if ((aGameVars[*insptr].dwFlags & (GAMEVAR_USER_MASK|GAMEVAR_PTR_MASK)) == 0)
+//            if ((aGameVars[script[insptr]].dwFlags & (GAMEVAR_USER_MASK|GAMEVAR_PTR_MASK)) == 0)
 //            {
-//                aGameVars[*insptr].val.lValue <<= *(insptr+1);
+//                aGameVars[script[insptr]].val.lValue <<= *(insptr+1);
 //                insptr += 2;
 //                continue;
 //            }
-//            Gv_SetVarX(*insptr, Gv_GetVarX(*insptr) << *(insptr+1));
+//            Gv_SetVarX(script[insptr], Gv_GetVarX(script[insptr]) << *(insptr+1));
 //            insptr += 2;
 //            continue;
 
 //        case CON_SHIFTVARR:
 //            insptr++;
-//            if ((aGameVars[*insptr].dwFlags & (GAMEVAR_USER_MASK|GAMEVAR_PTR_MASK)) == 0)
+//            if ((aGameVars[script[insptr]].dwFlags & (GAMEVAR_USER_MASK|GAMEVAR_PTR_MASK)) == 0)
 //            {
-//                aGameVars[*insptr].val.lValue >>= *(insptr+1);
+//                aGameVars[script[insptr]].val.lValue >>= *(insptr+1);
 //                insptr += 2;
 //                continue;
 //            }
-//            Gv_SetVarX(*insptr, Gv_GetVarX(*insptr) >> *(insptr+1));
+//            Gv_SetVarX(script[insptr], Gv_GetVarX(script[insptr]) >> *(insptr+1));
 //            insptr += 2;
 //            continue;
 
 //        case CON_SIN:
 //            insptr++;
-//            Gv_SetVarX(*insptr, sintable[Gv_GetVarX(*(insptr+1))&2047]);
+//            Gv_SetVarX(script[insptr], sintable[Gv_GetVarX(*(insptr+1))&2047]);
 //            insptr += 2;
 //            continue;
 
 //        case CON_COS:
 //            insptr++;
-//            Gv_SetVarX(*insptr, sintable[(Gv_GetVarX(*(insptr+1))+512)&2047]);
+//            Gv_SetVarX(script[insptr], sintable[(Gv_GetVarX(*(insptr+1))+512)&2047]);
 //            insptr += 2;
 //            continue;
 
@@ -4949,7 +4949,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //            insptr++;
 //            {
 //                int32_t j=Gv_GetVarX(script[insptr++]);
-//                VM_CONDITIONAL(j == *insptr);
+//                VM_CONDITIONAL(j == script[insptr]);
 //            }
 //            continue;
 
@@ -4957,7 +4957,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //            insptr++;
 //            {
 //                int32_t j=Gv_GetVarX(script[insptr++]);
-//                VM_CONDITIONAL(j != *insptr);
+//                VM_CONDITIONAL(j != script[insptr]);
 //            }
 //            continue;
 
@@ -4968,7 +4968,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //            do
 //            {
 //                insptr=savedinsptr;
-//                j = (Gv_GetVarX(*(insptr-1)) != *insptr);
+//                j = (Gv_GetVarX(*(insptr-1)) != script[insptr]);
 //                VM_CONDITIONAL(j);
 //            }
 //            while (j);
@@ -4995,7 +4995,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //            insptr++;
 //            {
 //                int32_t j=Gv_GetVarX(script[insptr++]);
-//                VM_CONDITIONAL(j & *insptr);
+//                VM_CONDITIONAL(j & script[insptr]);
 //            }
 //            continue;
 
@@ -5003,7 +5003,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //            insptr++;
 //            {
 //                int32_t j=Gv_GetVarX(script[insptr++]);
-//                VM_CONDITIONAL(j | *insptr);
+//                VM_CONDITIONAL(j | script[insptr]);
 //            }
 //            continue;
 
@@ -5011,7 +5011,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //            insptr++;
 //            {
 //                int32_t j=Gv_GetVarX(script[insptr++]);
-//                VM_CONDITIONAL(j ^ *insptr);
+//                VM_CONDITIONAL(j ^ script[insptr]);
 //            }
 //            continue;
 
@@ -5019,7 +5019,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //            insptr++;
 //            {
 //                int32_t j=Gv_GetVarX(script[insptr++]);
-//                VM_CONDITIONAL(j || *insptr);
+//                VM_CONDITIONAL(j || script[insptr]);
 //            }
 //            continue;
 
@@ -5027,7 +5027,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //            insptr++;
 //            {
 //                int32_t j=Gv_GetVarX(script[insptr++]);
-//                VM_CONDITIONAL(j > *insptr);
+//                VM_CONDITIONAL(j > script[insptr]);
 //            }
 //            continue;
 
@@ -5035,13 +5035,13 @@ function VM_Execute(/*int32_t */loop: number): void
 //            insptr++;
 //            {
 //                int32_t j=Gv_GetVarX(script[insptr++]);
-//                VM_CONDITIONAL(j < *insptr);
+//                VM_CONDITIONAL(j < script[insptr]);
 //            }
 //            continue;
 
 //        case CON_IFPHEALTHL:
 //            insptr++;
-//            VM_CONDITIONAL(sprite[g_player[vm.g_p].ps.i].extra < *insptr);
+//            VM_CONDITIONAL(sprite[g_player[vm.g_p].ps.i].extra < script[insptr]);
 //            continue;
 
 //        case CON_IFPINVENTORY:
@@ -5053,7 +5053,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //                switch (script[insptr++])
 //                {
 //                case GET_STEROIDS:
-//                    if (ps.inv_amount[GET_STEROIDS] != *insptr)
+//                    if (ps.inv_amount[GET_STEROIDS] != script[insptr])
 //                        j = 1;
 //                    break;
 //                case GET_SHIELD:
@@ -5061,13 +5061,13 @@ function VM_Execute(/*int32_t */loop: number): void
 //                        j = 1;
 //                    break;
 //                case GET_SCUBA:
-//                    if (ps.inv_amount[GET_SCUBA] != *insptr) j = 1;
+//                    if (ps.inv_amount[GET_SCUBA] != script[insptr]) j = 1;
 //                    break;
 //                case GET_HOLODUKE:
-//                    if (ps.inv_amount[GET_HOLODUKE] != *insptr) j = 1;
+//                    if (ps.inv_amount[GET_HOLODUKE] != script[insptr]) j = 1;
 //                    break;
 //                case GET_JETPACK:
-//                    if (ps.inv_amount[GET_JETPACK] != *insptr) j = 1;
+//                    if (ps.inv_amount[GET_JETPACK] != script[insptr]) j = 1;
 //                    break;
 //                case GET_ACCESS:
 //                    switch (vm.g_sp.pal)
@@ -5084,13 +5084,13 @@ function VM_Execute(/*int32_t */loop: number): void
 //                    }
 //                    break;
 //                case GET_HEATS:
-//                    if (ps.inv_amount[GET_HEATS] != *insptr) j = 1;
+//                    if (ps.inv_amount[GET_HEATS] != script[insptr]) j = 1;
 //                    break;
 //                case GET_FIRSTAID:
-//                    if (ps.inv_amount[GET_FIRSTAID] != *insptr) j = 1;
+//                    if (ps.inv_amount[GET_FIRSTAID] != script[insptr]) j = 1;
 //                    break;
 //                case GET_BOOTS:
-//                    if (ps.inv_amount[GET_BOOTS] != *insptr) j = 1;
+//                    if (ps.inv_amount[GET_BOOTS] != script[insptr]) j = 1;
 //                    break;
 //                default:
 //                    CON_ERRPRINTF("invalid inventory ID: %d\n", (int32_t)*(insptr-1));
@@ -5156,23 +5156,23 @@ function VM_Execute(/*int32_t */loop: number): void
 //        case CON_QUOTE:
 //            insptr++;
 
-//            if ((unsigned)(*insptr) >= MAXQUOTES)
+//            if ((unsigned)(script[insptr]) >= MAXQUOTES)
 //            {
-//                CON_ERRPRINTF("invalid quote ID %d\n", (int32_t)(*insptr));
+//                CON_ERRPRINTF("invalid quote ID %d\n", (int32_t)(script[insptr]));
 //                insptr++;
 //                continue;
 //            }
 
-//            if ((ScriptQuotes[*insptr] == NULL))
+//            if ((ScriptQuotes[script[insptr]] == NULL))
 //            {
-//                CON_ERRPRINTF("null quote %d\n", (int32_t)*insptr);
+//                CON_ERRPRINTF("null quote %d\n", (int32_t)script[insptr]);
 //                insptr++;
 //                continue;
 //            }
 
 //            if ((unsigned)vm.g_p >= MAXPLAYERS)
 //            {
-//                CON_ERRPRINTF("bad player for quote %d: (%d)\n", (int32_t)*insptr,vm.g_p);
+//                CON_ERRPRINTF("bad player for quote %d: (%d)\n", (int32_t)script[insptr],vm.g_p);
 //                insptr++;
 //                continue;
 //            }
@@ -5258,14 +5258,14 @@ function VM_Execute(/*int32_t */loop: number): void
 
 //        case CON_IFSPRITEPAL:
 //            insptr++;
-//            VM_CONDITIONAL(vm.g_sp.pal == *insptr);
+//            VM_CONDITIONAL(vm.g_sp.pal == script[insptr]);
 //            continue;
 
 //        case CON_IFANGDIFFL:
 //            insptr++;
 //            {
 //                int32_t j = klabs(G_GetAngleDelta(g_player[vm.g_p].ps.ang,vm.g_sp.ang));
-//                VM_CONDITIONAL(j <= *insptr);
+//                VM_CONDITIONAL(j <= script[insptr]);
 //            }
 //            continue;
 
@@ -5383,7 +5383,7 @@ function A_Execute(/*int32_t */iActor:number,/*int32_t */iPlayer:number,/*int32_
         return;
     }
 
-    /* Qbix: Changed variables to be aware of the sizeof *insptr
+    /* Qbix: Changed variables to be aware of the sizeof script[insptr]
      * (whether it is int32_t vs intptr_t), Although it is specifically cast to intptr_t*
      * which might be corrected if the code is converted to use offsets */
     /* Helixhorned: let's do away with intptr_t's... */
