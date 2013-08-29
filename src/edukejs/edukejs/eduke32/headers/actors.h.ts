@@ -99,7 +99,7 @@ function AC_CURFRAME(t: Int32Array) { return (t)[3]; }  /* the actor's current f
 // * action composite: */
 function AC_ACTION_ID(t: Int32Array): number {return (t)[4];}
 function AC_ACTION_ID_SET(t: Int32Array, v: number): void {(t)[4] = v;}
-//#define AC_AI_ID(t) ((t)[5])  /* the ID of the actor's current ai */
+function AC_AI_ID(t: Int32Array): number {return (t)[5];}  /* the ID of the actor's current ai */
 
 //#ifdef LUNATIC
 //struct action {

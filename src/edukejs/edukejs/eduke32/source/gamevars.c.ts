@@ -810,8 +810,8 @@ function badindex():void {
 }
 }
 
-//int32_t __fastcall Gv_GetVarX(register int32_t id)
-//{
+function /*int32_t */__fastcall Gv_GetVarX(/*int32_t */id:number):number
+{todoThrow();
 //    if (id == g_iThisActorID)
 //        return vm.g_i;
 
@@ -977,7 +977,7 @@ function badindex():void {
 //        CON_ERRPRINTF("Gv_GetVarX(): WTF?\n");
 //        return -1;
 //    }
-//}
+}
 
 //void __fastcall Gv_SetVarX(register int32_t id, register int32_t lValue)
 //{
