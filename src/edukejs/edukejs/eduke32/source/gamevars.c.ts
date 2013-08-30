@@ -810,7 +810,7 @@ function badindex():void {
 }
 }
 
-function /*int32_t */__fastcall Gv_GetVarX(/*int32_t */id:number):number
+function /*int32_t __fastcall*/ Gv_GetVarX(/*int32_t */id:number):number
 {todoThrow();
 //    if (id == g_iThisActorID)
 //        return vm.g_i;

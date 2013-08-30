@@ -17,6 +17,7 @@ var DEBUG_SCRIPT_CHANGE = false;
 var DEBUG_LOAD_TILE_ART = false;
 var DEBUG_PLAYER_POS = false;
 var DEBUG_GETZRANGE = false;
+var DEBUG_VM_EXECUTE = true;
 
 var dlog = function (log: boolean, format: string, ...args: any[]) {
     if(!log || SKIP_ALL_LOGGING) return;

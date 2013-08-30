@@ -1196,6 +1196,11 @@ function VM_Execute(/*int32_t */loop: number): void
         g_errorLineNum = tw>>12;
         g_tw = tw &= 0xFFF;
 
+        dlog(DEBUG_VM_EXECUTE, "tw: %i\n", tw);
+        if(tw==0)  {
+            debugger;
+            dlogFlush();
+        }
         switch (tw)
         {
 //        case CON_REDEFINEQUOTE:
@@ -5356,7 +5361,6 @@ function A_LoadActor(iActor: number):void
 // NORECURSE
 function A_Execute(/*int32_t */iActor:number,/*int32_t */iPlayer:number,/*int32_t */lDist:number):void
 {
-    debugger;
 //#ifdef LUNATIC
 //    int32_t killit=0;
 //#else

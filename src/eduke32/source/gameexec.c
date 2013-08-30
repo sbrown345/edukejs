@@ -1172,6 +1172,7 @@ skip_check:
         g_errorLineNum = tw>>12;
         g_tw = tw &= 0xFFF;
 
+        dlog(DEBUG_VM_EXECUTE, "tw: %i\n", tw);
         switch (tw)
         {
         case CON_REDEFINEQUOTE:

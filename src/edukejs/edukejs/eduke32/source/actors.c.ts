@@ -6836,6 +6836,7 @@ function G_MoveEffectors():void   //STATNUM 3
 //#ifdef YAX_ENABLE
                 if (s.ang == 512)
                 {
+                    todoThrow("sc-sector ?");
                     var/*int16_t */cf=!s.owner?1:0, bn=yax_getbunch(sc-sector, cf);
                     var/*int32_t */jj:number, daz=SECTORFLD(sc-sector,z, cf);
 
