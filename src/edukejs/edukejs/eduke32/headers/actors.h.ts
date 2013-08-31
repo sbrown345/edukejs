@@ -170,6 +170,8 @@ class projectile_t {
     }
 }
 
+ initProjectilesHack();
+
 //// Select an actor's actiontics and movflags locations depending on
 //// whether we compile the Lunatic build.
 //// <spr>: sprite pointer

@@ -255,194 +255,194 @@ function /*int32_t */A_GetHitscanRange(/*int32_t */i:number):number
     return (FindDistance2D(hit.pos.x-sprite[i].x,hit.pos.y-sprite[i].y));
 }
 
-//static int32_t A_FindTargetSprite(spritetype *s,int32_t aang,int32_t atwith)
-//{
-//    int32_t gotshrinker,gotfreezer;
-//    int32_t i, j, a, k, cans;
-//    static int32_t aimstats[] = { 10, 13, 1, 2 };
-//    int32_t dx1, dy1, dx2, dy2, dx3, dy3, smax, sdist;
-//    int32_t xv, yv;
+function /*int32_t */A_FindTargetSprite(s:spritetype,/*int32_t */aang:number,/*int32_t */atwith:number):number
+{
+    var /*int32_t */gotshrinker:number,gotfreezer:number;
+    var/*int32_t */i:number, j:number, a:number, k:number, cans:number;
+    var aimstats = new Int32Array([ 10, 13, 1, 2 ]);
+    var /*int32_t */dx1:number, dy1:number, dx2:number, dy2:number, dx3:number, dy3:number, smax:number, sdist:number;
+    var /*int32_t */xv:number, yv:number;
 
-//    if (s.picnum == APLAYER)
-//    {
-//        if (!g_player[s.yvel].ps.auto_aim)
-//            return -1;
+    if (s.picnum == APLAYER)
+    {
+        if (!g_player[s.yvel].ps.auto_aim)
+            return -1;
 
-//        if (g_player[s.yvel].ps.auto_aim == 2)
-//        {
-//            if (A_CheckSpriteTileFlags(atwith,SPRITE_PROJECTILE) && (ProjectileData[atwith].workslike & PROJECTILE_RPG))
-//                return -1;
-//            else switch (DYNAMICTILEMAP(atwith))
-//                {
-//                case TONGUE__STATIC:
-//                case FREEZEBLAST__STATIC:
-//                case SHRINKSPARK__STATIC:
-//                case SHRINKER__STATIC:
-//                case RPG__STATIC:
-//                case FIRELASER__STATIC:
-//                case SPIT__STATIC:
-//                case COOLEXPLOSION1__STATIC:
-//                    return -1;
-//                default:
-//                    break;
-//                }
-//        }
-//    }
+        if (g_player[s.yvel].ps.auto_aim == 2)
+        {
+            if (A_CheckSpriteTileFlags(atwith,SPRITE_PROJECTILE) && (ProjectileData[atwith].workslike & PROJECTILE_RPG))
+                return -1;
+            else switch (DYNAMICTILEMAP(atwith))
+                {
+                case TONGUE__STATIC:
+                case FREEZEBLAST__STATIC:
+                case SHRINKSPARK__STATIC:
+                case SHRINKER__STATIC:
+                case RPG__STATIC:
+                case FIRELASER__STATIC:
+                case SPIT__STATIC:
+                case COOLEXPLOSION1__STATIC:
+                    return -1;
+                default:
+                    break;
+                }
+        }
+    }
 
-//    a = s.ang;
+    a = s.ang;
 
-//    j = -1;
+    j = -1;
 
-//    gotshrinker = (s.picnum == APLAYER && PWEAPON(0, g_player[s.yvel].ps.curr_weapon, WorksLike) == SHRINKER_WEAPON);
-//    gotfreezer = (s.picnum == APLAYER && PWEAPON(0, g_player[s.yvel].ps.curr_weapon, WorksLike) == FREEZE_WEAPON);
+    gotshrinker = (s.picnum == APLAYER && PWEAPON(0, g_player[s.yvel].ps.curr_weapon, WorksLike) == SHRINKER_WEAPON)?1:0;
+    gotfreezer = (s.picnum == APLAYER && PWEAPON(0, g_player[s.yvel].ps.curr_weapon, WorksLike) == FREEZE_WEAPON)?1:0;
 
-//    smax = INT32_MAX;
+    smax = INT32_MAX;
 
-//    dx1 = sintable[(a+512-aang)&2047];
-//    dy1 = sintable[(a-aang)&2047];
-//    dx2 = sintable[(a+512+aang)&2047];
-//    dy2 = sintable[(a+aang)&2047];
+    dx1 = sintable[(a+512-aang)&2047];
+    dy1 = sintable[(a-aang)&2047];
+    dx2 = sintable[(a+512+aang)&2047];
+    dy2 = sintable[(a+aang)&2047];
 
-//    dx3 = sintable[(a+512)&2047];
-//    dy3 = sintable[a&2047];
+    dx3 = sintable[(a+512)&2047];
+    dy3 = sintable[a&2047];
 
-//    for (k=0; k<4; k++)
-//    {
-//        if (j >= 0)
-//            break;
-//        for (i=headspritestat[aimstats[k]]; i >= 0; i=nextspritestat[i])
-//            if (sprite[i].xrepeat > 0 && sprite[i].extra >= 0 && (sprite[i].cstat&(257+32768)) == 257)
-//                if (A_CheckEnemySprite(&sprite[i]) || k < 2)
-//                {
-//                    if (A_CheckEnemySprite(&sprite[i]) || sprite[i].picnum == APLAYER || sprite[i].picnum == SHARK)
-//                    {
-//                        if (sprite[i].picnum == APLAYER &&
-//                                //                        ud.ffire == 0 &&
-//                                (GTFLAGS(GAMETYPE_PLAYERSFRIENDLY) || (GTFLAGS(GAMETYPE_TDM) &&
-//                                        g_player[sprite[i].yvel].ps.team == g_player[s.yvel].ps.team)) &&
-//                                s.picnum == APLAYER &&
-//                                s != &sprite[i])
-//                            continue;
+    for (k=0; k<4; k++)
+    {
+        if (j >= 0)
+            break;
+        for (i=headspritestat[aimstats[k]]; i >= 0; i=nextspritestat[i])
+            if (sprite[i].xrepeat > 0 && sprite[i].extra >= 0 && (sprite[i].cstat&(257+32768)) == 257)
+                if (A_CheckEnemySprite(sprite[i]) || k < 2)
+                {
+                    if (A_CheckEnemySprite(sprite[i]) || sprite[i].picnum == APLAYER || sprite[i].picnum == SHARK)
+                    {
+                        if (sprite[i].picnum == APLAYER &&
+                                //                        ud.ffire == 0 &&
+                                (GTFLAGS(GAMETYPE_PLAYERSFRIENDLY) || (GTFLAGS(GAMETYPE_TDM) &&
+                                        g_player[sprite[i].yvel].ps.team == g_player[s.yvel].ps.team)) &&
+                                s.picnum == APLAYER &&
+                                s != sprite[i])
+                            continue;
 
-//                        if (gotshrinker && sprite[i].xrepeat < 30)
-//                        {
-//                            if (sprite[i].picnum == SHARK)
-//                            {
-//                                if (sprite[i].xrepeat < 20) continue;
-//                                continue;
-//                            }
-//                            else if (!(sprite[i].picnum >= GREENSLIME && sprite[i].picnum <= GREENSLIME+7))
-//                                continue;
-//                        }
-//                        if (gotfreezer && sprite[i].pal == 1) continue;
-//                    }
+                        if (gotshrinker && sprite[i].xrepeat < 30)
+                        {
+                            if (sprite[i].picnum == SHARK)
+                            {
+                                if (sprite[i].xrepeat < 20) continue;
+                                continue;
+                            }
+                            else if (!(sprite[i].picnum >= GREENSLIME && sprite[i].picnum <= GREENSLIME+7))
+                                continue;
+                        }
+                        if (gotfreezer && sprite[i].pal == 1) continue;
+                    }
 
-//                    xv = (sprite[i].x-s.x);
-//                    yv = (sprite[i].y-s.y);
+                    xv = (sprite[i].x-s.x);
+                    yv = (sprite[i].y-s.y);
 
-//                    if ((dy1*xv <= dx1*yv) && (dy2*xv >= dx2*yv))
-//                    {
-//                        sdist = mulscale(dx3,xv,14) + mulscale(dy3,yv,14);
+                    if ((dy1*xv <= dx1*yv) && (dy2*xv >= dx2*yv))
+                    {
+                        sdist = mulscale(dx3,xv,14) + mulscale(dy3,yv,14);
 
-//                        if (sdist > 512 && sdist < smax)
-//                        {
-//                            if (s.picnum == APLAYER)
-//                                a = (klabs(scale(sprite[i].z-s.z,10,sdist)-(g_player[s.yvel].ps.horiz+g_player[s.yvel].ps.horizoff-100)) < 100);
-//                            else a = 1;
+                        if (sdist > 512 && sdist < smax)
+                        {
+                            if (s.picnum == APLAYER)
+                                a = (klabs(scale(sprite[i].z-s.z,10,sdist)-(g_player[s.yvel].ps.horiz+g_player[s.yvel].ps.horizoff-100)) < 100)?1:0;
+                            else a = 1;
 
-//                            if (sprite[i].picnum == ORGANTIC || sprite[i].picnum == ROTATEGUN)
-//                                cans = cansee(sprite[i].x,sprite[i].y,sprite[i].z,sprite[i].sectnum,s.x,s.y,s.z-(32<<8),s.sectnum);
-//                            else cans = cansee(sprite[i].x,sprite[i].y,sprite[i].z-(32<<8),sprite[i].sectnum,s.x,s.y,s.z-(32<<8),s.sectnum);
+                            if (sprite[i].picnum == ORGANTIC || sprite[i].picnum == ROTATEGUN)
+                                cans = cansee(sprite[i].x,sprite[i].y,sprite[i].z,sprite[i].sectnum,s.x,s.y,s.z-(32<<8),s.sectnum);
+                            else cans = cansee(sprite[i].x,sprite[i].y,sprite[i].z-(32<<8),sprite[i].sectnum,s.x,s.y,s.z-(32<<8),s.sectnum);
 
-//                            if (a && cans)
-//                            {
-//                                smax = sdist;
-//                                j = i;
-//                            }
-//                        }
-//                    }
-//                }
-//    }
+                            if (a && cans)
+                            {
+                                smax = sdist;
+                                j = i;
+                            }
+                        }
+                    }
+                }
+    }
 
-//    return j;
-//}
+    return j;
+}
 
-//static void A_SetHitData(int32_t i, const hitdata_t *hit)
-//{
-//    actor[i].t_data[6] = hit.wall;
-//    actor[i].t_data[7] = hit.sect;
-//    actor[i].t_data[8] = hit.sprite;
-//}
+function A_SetHitData(/*int32_t */i:number, hit:hitdata_t ):void
+{
+    actor[i].t_data[6] = hit.wall;
+    actor[i].t_data[7] = hit.sect;
+    actor[i].t_data[8] = hit.sprite;
+}
 
-//static int32_t CheckShootSwitchTile(int32_t pn)
-//{
-//    return pn == DIPSWITCH || pn == DIPSWITCH+1 ||
-//        pn == DIPSWITCH2 || pn == DIPSWITCH2+1 ||
-//        pn == DIPSWITCH3 || pn == DIPSWITCH3+1 ||
-//        pn == HANDSWITCH || pn == HANDSWITCH+1;
-//}
+function/* int32_t */CheckShootSwitchTile(/*int32_t */pn:number):number
+{
+    return (pn == DIPSWITCH || pn == DIPSWITCH+1 ||
+        pn == DIPSWITCH2 || pn == DIPSWITCH2+1 ||
+        pn == DIPSWITCH3 || pn == DIPSWITCH3+1 ||
+        pn == HANDSWITCH || pn == HANDSWITCH+1)?1:0;
+}
 
-//static int32_t safeldist(int32_t spritenum1, const spritetype *s2)
-//{
-//    int32_t dst = ldist(&sprite[spritenum1], s2);
-//    return dst ? dst : 1;
-//}
+function /*int32_t */safeldist(/*int32_t */spritenum1:number, s2:spritetype):number
+{
+    var/*int32_t */dst = ldist(sprite[spritenum1], s2);
+    return dst ? dst : 1;
+}
 
-//// flags:
-////  1: do sprite center adjustment (cen-=(8<<8)) for GREENSLIME or ROTATEGUN
-////  2: do auto getangle only if not RECON (if clear, do unconditionally)
-//static int32_t GetAutoAimAngle(int32_t i, int32_t p, int32_t atwith,
-//                               int32_t cen_add, int32_t flags,
-//                               const vec3_t *srcvect, int32_t vel,
-//                               int32_t *zvel, int16_t *sa)
-//{
-//    int32_t j = -1;
+// flags:
+//  1: do sprite center adjustment (cen-=(8<<8)) for GREENSLIME or ROTATEGUN
+//  2: do auto getangle only if not RECON (if clear, do unconditionally)
+function /*int32_t */GetAutoAimAngle(/*int32_t */i:number, /*int32_t */p:number, /*int32_t */atwith:number,
+                               /*int32_t */cen_add:number, /*int32_t */flags:number,
+                               /*const vec3_t **/srcvect:IVec3, /*int32_t */vel:number,
+                               /*int32_t **/zvel:R<number>, /*int16_t **/sa:R<number>):number
+{
+    var /*int32_t */j = -1;
 
-//    Bassert((unsigned)p < MAXPLAYERS);
+    Bassert(/*(unsigned)*/p < MAXPLAYERS);
 
 //#ifdef LUNATIC
 //    g_player[p].ps.autoaimang = AUTO_AIM_ANGLE;
 //#else
-//    Gv_SetVar(g_iAimAngleVarID, AUTO_AIM_ANGLE, i, p);
+    Gv_SetVar(g_iAimAngleVarID, AUTO_AIM_ANGLE, i, p);
 //#endif
 
-//    if (G_HaveEvent(EVENT_GETAUTOAIMANGLE))
-//        VM_OnEvent(EVENT_GETAUTOAIMANGLE, i, p, -1, 0);
+    if (G_HaveEvent(EVENT_GETAUTOAIMANGLE))
+        VM_OnEvent(EVENT_GETAUTOAIMANGLE, i, p, -1, 0);
 
-//    {
+    {
 //#ifdef LUNATIC
 //        int32_t aimang = g_player[p].ps.autoaimang;
 //#else
-//        int32_t aimang = Gv_GetVar(g_iAimAngleVarID, i, p);
+        var/*int32_t */aimang = Gv_GetVar(g_iAimAngleVarID, i, p);
 //#endif
-//        if (aimang > 0)
-//            j = A_FindTargetSprite(&sprite[i], aimang, atwith);
-//    }
+        if (aimang > 0)
+            j = A_FindTargetSprite(sprite[i], aimang, atwith);
+    }
 
-//    if (j >= 0)
-//    {
-//        const spritetype *const spr = &sprite[j];
-//        int32_t cen = 2*(spr.yrepeat*tilesizy[spr.picnum]) + cen_add;
-//        int32_t dst;
+    if (j >= 0)
+    {
+        var spr = sprite[j];
+        var /*int32_t */cen = 2*(spr.yrepeat*tilesizy[spr.picnum]) + cen_add;
+        var /*int32_t */dst:number;
 
-//        if (flags)
-//        {
-//            int32_t pn = spr.picnum;
-//            if ((pn >= GREENSLIME && pn <= GREENSLIME+7) || spr.picnum==ROTATEGUN)
-//            {
-//                cen -= (8<<8);
-//            }
-//        }
+        if (flags)
+        {
+            var/*int32_t */pn = spr.picnum;
+            if ((pn >= GREENSLIME && pn <= GREENSLIME+7) || spr.picnum==ROTATEGUN)
+            {
+                cen -= (8<<8);
+            }
+        }
 
-//        dst = safeldist(g_player[p].ps.i, &sprite[j]);
-//        *zvel = ((spr.z - srcvect.z - cen)*vel) / dst;
+        dst = safeldist(g_player[p].ps.i, sprite[j]);
+        zvel.$ = int32(((spr.z - srcvect.z - cen)*vel) / dst);
 
-//        if (!(flags&2) || sprite[j].picnum != RECON)
-//            *sa = getangle(spr.x-srcvect.x, spr.y-srcvect.y);
-//    }
+        if (!(flags&2) || sprite[j].picnum != RECON)
+            sa.$ = getangle(spr.x-srcvect.x, spr.y-srcvect.y);
+    }
 
-//    return j;
-//}
+    return j;
+}
 
 //static void Proj_MaybeSpawn(int32_t k, int32_t atwith, const hitdata_t *hit)
 //{
@@ -889,7 +889,7 @@ function /*int32_t */A_ShootWithZvel(/*int32_t*/ i:number, /*int32_t */atwith:nu
     var /*int16_t */sa:number;
     var/*int32_t */j:number, k=-1, l:number;
     var/*int32_t */vel:number, zvel = 0;
-    var hit:hitdata_t ;
+    var hit = new hitdata_t() ;
     var srcvect = new vec3_t ();
     var s = sprite[i];
     var /*const int16_t */sect = s.sectnum;
@@ -1148,7 +1148,11 @@ function /*int32_t */A_ShootWithZvel(/*int32_t*/ i:number, /*int32_t */atwith:nu
 
         //    if (p >= 0)
         //    {
+                var $zvel = new R(zvel);
+                var $sa = new R(sa);
         //        j = GetAutoAimAngle(i, p, atwith, 8<<8, 0+2, &srcvect, vel, &zvel, &sa);
+                zvel = $zvel.$;
+                sa = $sa.$;
 
         //        if (j < 0)
         //            zvel = (100-ps.horiz-ps.horizoff)*(proj.vel/8);
@@ -1329,87 +1333,91 @@ function /*int32_t */A_ShootWithZvel(/*int32_t*/ i:number, /*int32_t */atwith:nu
         case FIRELASER__STATIC:
         case SPIT__STATIC:
         case COOLEXPLOSION1__STATIC:
-        {todoThrow();
-            //var/*int32_t */tsiz;
+        {
+            var/*int32_t */tsiz;
 
-            //if (s.extra >= 0) s.shade = -96;
+            if (s.extra >= 0) s.shade = -96;
 
-            //if (atwith == SPIT) vel = 292;
-            //else
-            //{
-            //    if (atwith == COOLEXPLOSION1)
-            //    {
-            //        if (s.picnum == BOSS2) vel = 644;
-            //        else vel = 348;
-            //        srcvect.z -= (4<<7);
-            //    }
-            //    else
-            //    {
-            //        vel = 840;
-            //        srcvect.z -= (4<<7);
-            //    }
-            //}
+            if (atwith == SPIT) vel = 292;
+            else
+            {
+                if (atwith == COOLEXPLOSION1)
+                {
+                    if (s.picnum == BOSS2) vel = 644;
+                    else vel = 348;
+                    srcvect.z -= (4<<7);
+                }
+                else
+                {
+                    vel = 840;
+                    srcvect.z -= (4<<7);
+                }
+            }
 
-            //if (p >= 0)
-            //{
-            //    j = GetAutoAimAngle(i, p, atwith, -(12<<8), 0, &srcvect, vel, &zvel, &sa);
+            if (p >= 0)
+            {
+                var $zvel = new R(zvel);
+                var $sa = new R(sa);
+                j = GetAutoAimAngle(i, p, atwith, -(12<<8), 0, srcvect, vel, $zvel, $sa);
+                zvel = $zvel.$;
+                sa = $sa.$;
 
-            //    if (j < 0)
-            //        zvel = (100-ps.horiz-ps.horizoff)*98;
-            //}
-            //else
-            //{
-            //    j = A_FindPlayer(s, NULL);
-            //    //                sa = getangle(g_player[j].ps.opos.x-sx,g_player[j].ps.opos.y-sy);
-            //    sa += 16-(krand()&31);
-            //    hit.pos.x = safeldist(g_player[j].ps.i, s);
-            //    zvel = ((g_player[j].ps.opos.z - srcvect.z + (3<<8))*vel) / hit.pos.x;
-            //}
+                if (j < 0)
+                    zvel = (100-ps.horiz-ps.horizoff)*98;
+            }
+            else
+            {
+                j = A_FindPlayer(s, NULL);
+                //                sa = getangle(g_player[j].ps.opos.x-sx,g_player[j].ps.opos.y-sy);
+                sa += 16-(krand()&31);
+                hit.pos.x = safeldist(g_player[j].ps.i, s);
+                zvel = int32(((g_player[j].ps.opos.z - srcvect.z + (3<<8))*vel) / hit.pos.x);
+            }
 
-            //zvel = A_GetShootZvel(zvel);
+            zvel = A_GetShootZvel(zvel);
 
-            //if (atwith == SPIT)
-            //{
-            //    tsiz = 18;
-            //    srcvect.z -= (10<<8);
-            //}
-            //else if (p >= 0)
-            //    tsiz = 7;
-            //else
-            //{
-            //    if (atwith == FIRELASER)
-            //    {
-            //        if (p >= 0)
-            //            tsiz = 34;
-            //        else
-            //            tsiz = 18;
-            //    }
-            //    else
-            //        tsiz = 18;
-            //}
+            if (atwith == SPIT)
+            {
+                tsiz = 18;
+                srcvect.z -= (10<<8);
+            }
+            else if (p >= 0)
+                tsiz = 7;
+            else
+            {
+                if (atwith == FIRELASER)
+                {
+                    if (p >= 0)
+                        tsiz = 34;
+                    else
+                        tsiz = 18;
+                }
+                else
+                    tsiz = 18;
+            }
 
-            //j = A_InsertSprite(sect,srcvect.x,srcvect.y,srcvect.z,
-            //                   atwith,-127,tsiz,tsiz,sa,vel,zvel,i,4);
-            //sprite[j].extra += (krand()&7);
+            j = A_InsertSprite(sect,srcvect.x,srcvect.y,srcvect.z,
+                               atwith,-127,tsiz,tsiz,sa,vel,zvel,i,4);
+            sprite[j].extra += (krand()&7);
 
-            //if (atwith == COOLEXPLOSION1)
-            //{
-            //    sprite[j].shade = 0;
-            //    if (sprite[i].picnum == BOSS2)
-            //    {
-            //        l = sprite[j].xvel;
-            //        sprite[j].xvel = MinibossScale(1024);
-            //        A_SetSprite(j,CLIPMASK0);
-            //        sprite[j].xvel = l;
-            //        sprite[j].ang += 128-(krand()&255);
-            //    }
-            //}
+            if (atwith == COOLEXPLOSION1)
+            {
+                sprite[j].shade = 0;
+                if (sprite[i].picnum == BOSS2)
+                {
+                    l = sprite[j].xvel;
+                    sprite[j].xvel = MinibossScale(1024);
+                    A_SetSprite(j,CLIPMASK0);
+                    sprite[j].xvel = l;
+                    sprite[j].ang += 128-(krand()&255);
+                }
+            }
 
-            //sprite[j].cstat = 128;
-            //sprite[j].clipdist = 4;
+            sprite[j].cstat = 128;
+            sprite[j].clipdist = 4;
 
-            //sa = s.ang+32-(krand()&63);
-            //zvel += 512-(krand()&1023);
+            sa = s.ang+32-(krand()&63);
+            zvel += 512-(krand()&1023);
 
             return j;
         }
@@ -1426,7 +1434,11 @@ function /*int32_t */A_ShootWithZvel(/*int32_t*/ i:number, /*int32_t */atwith:nu
 
             //if (p >= 0)
             //{
+                var $zvel = new R(zvel);
+                var $sa = new R(sa);
             //    j = GetAutoAimAngle(i, p, atwith, 8<<8, 0+2, &srcvect, vel, &zvel, &sa);
+                zvel = $zvel.$;
+                sa = $sa.$;
 
             //    if (j < 0)
             //        zvel = (100-ps.horiz-ps.horizoff)*81;
@@ -1635,7 +1647,11 @@ function /*int32_t */A_ShootWithZvel(/*int32_t*/ i:number, /*int32_t */atwith:nu
             todoThrow();
             //if (p >= 0)
             //{
+                var $zvel = new R(zvel);
+                var $sa = new R(sa);
             //    j = GetAutoAimAngle(i, p, atwith, 5<<8, 0+1, &srcvect, 256, &zvel, &sa);
+                zvel = $zvel.$;
+                sa = $sa.$;
 
             //    if (j < 0)
             //    {
@@ -1700,31 +1716,35 @@ function /*int32_t */A_ShootWithZvel(/*int32_t*/ i:number, /*int32_t */atwith:nu
 
             break;
 
-        case SHRINKER__STATIC:todoThrow();
-            //if (s.extra >= 0) s.shade = -96;
-            //if (p >= 0)
-            //{
-            //    j = GetAutoAimAngle(i, p, atwith, 4<<8, 0, &srcvect, 768, &zvel, &sa);
+        case SHRINKER__STATIC:
+            if (s.extra >= 0) s.shade = -96;
+            if (p >= 0)
+            {
+                var $zvel = new R(zvel);
+                var $sa = new R(sa);
+                j = GetAutoAimAngle(i, p, atwith, 4<<8, 0, srcvect, 768, $zvel, $sa);
+                zvel = $zvel.$;
+                sa = $sa.$;
 
-            //    if (j < 0)
-            //        zvel = (100-ps.horiz-ps.horizoff)*98;
-            //}
-            //else if (s.statnum != STAT_EFFECTOR)
-            //{
-            //    j = A_FindPlayer(s, NULL);
-            //    l = safeldist(g_player[j].ps.i, s);
-            //    zvel = ((g_player[j].ps.opos.z-srcvect.z)*512) / l ;
-            //}
-            //else zvel = 0;
+                if (j < 0)
+                    zvel = (100-ps.horiz-ps.horizoff)*98;
+            }
+            else if (s.statnum != STAT_EFFECTOR)
+            {
+                j = A_FindPlayer(s, NULL);
+                l = safeldist(g_player[j].ps.i, s);
+                zvel = ((g_player[j].ps.opos.z-srcvect.z)*512) / l ;
+            }
+            else zvel = 0;
 
-            //zvel = A_GetShootZvel(zvel);
-            //j = A_InsertSprite(sect,
-            //                   srcvect.x+(sintable[(512+sa+512)&2047]>>12),
-            //                   srcvect.y+(sintable[(sa+512)&2047]>>12),
-            //                   srcvect.z+(2<<8),SHRINKSPARK,-16,28,28,sa,768,zvel,i,4);
+            zvel = A_GetShootZvel(zvel);
+            j = A_InsertSprite(sect,
+                               srcvect.x+(sintable[(512+sa+512)&2047]>>12),
+                               srcvect.y+(sintable[(sa+512)&2047]>>12),
+                               srcvect.z+(2<<8),SHRINKSPARK,-16,28,28,sa,768,zvel,i,4);
 
-            //sprite[j].cstat = 128;
-            //sprite[j].clipdist = 32;
+            sprite[j].cstat = 128;
+            sprite[j].clipdist = 32;
 
             return j;
         }

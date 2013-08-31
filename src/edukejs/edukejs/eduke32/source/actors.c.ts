@@ -366,34 +366,38 @@ function A_RadiusDamage(/*int32_t*/ i:number, /*int32_t */r:number, /*int32_t */
 //    }
 }
 
-//// Maybe do a projectile transport via an SE7.
-//// <spritenum>: the projectile
-//// <i>: the SE7
-//// <fromunderp>: below.above change?
-//static int32_t Proj_MaybeDoTransport(int32_t spritenum, int32_t i, int32_t fromunderp, int32_t daz)
-//{
-//    if (totalclock > actor[spritenum].lasttransport)
-//    {
-//        spritetype *const spr = &sprite[spritenum];
-//        const spritetype *const otherse = &sprite[sprite[i].owner];
+// Maybe do a projectile transport via an SE7.
+// <spritenum>: the projectile
+// <i>: the SE7
+// <fromunderp>: below.above change?
+function /*int32_t */Proj_MaybeDoTransport(/*int32_t */spritenum:number, /*int32_t */i:number, /*int32_t */fromunderp:number, /*int32_t */daz:number):number
+{
+    if (totalclock > actor[spritenum].lasttransport)
+    {
+        var spr = sprite[spritenum];
+        var otherse = sprite[sprite[i].owner];
 
-//        actor[spritenum].lasttransport = totalclock + (TICSPERFRAME<<2);
+        actor[spritenum].lasttransport = totalclock + (TICSPERFRAME<<2);
 
-//        spr.x += (otherse.x-sprite[i].x);
-//        spr.y += (otherse.y-sprite[i].y);
-//        if (!fromunderp)  // above.below
-//            spr.z = sector[otherse.sectnum].ceilingz - daz + sector[sprite[i].sectnum].floorz;
-//        else  // below.above
-//            spr.z = sector[otherse.sectnum].floorz - daz + sector[sprite[i].sectnum].ceilingz;
+        spr.x += (otherse.x-sprite[i].x);
+        spr.y += (otherse.y-sprite[i].y);
+        if (!fromunderp)  // above.below
+            spr.z = sector[otherse.sectnum].ceilingz - daz + sector[sprite[i].sectnum].floorz;
+        else  // below.above
+            spr.z = sector[otherse.sectnum].floorz - daz + sector[sprite[i].sectnum].ceilingz;
 
-//        Bmemcpy(&actor[spritenum].bpos.x, &sprite[spritenum], sizeof(vec3_t));
-//        changespritesect(spritenum, otherse.sectnum);
+        //Bmemcpy(&actor[spritenum].bpos.x, &sprite[spritenum], sizeof(vec3_t));
+        actor[spritenum].bpos.x = sprite[spritenum].x;
+        actor[spritenum].bpos.y = sprite[spritenum].y;
+        actor[spritenum].bpos.z = sprite[spritenum].z;
 
-//        return 1;
-//    }
+        changespritesect(spritenum, otherse.sectnum);
 
-//    return 0;
-//}
+        return 1;
+    }
+
+    return 0;
+}
 
 // Check whether sprite <s> is on/in a non-SE7 water sector.
 // <othersectptr>: if not NULL, the sector on the other side.
@@ -604,24 +608,23 @@ function /*int32_t */A_MoveSprite(/*int32_t*/ spritenum: number, /*const vec3_t 
         if (spr.statnum == STAT_PROJECTILE)
         {
             var i: number;
-            todoThrow();
-            //// Projectile sector changes due to transport SEs (SE7_PROJECTILE).
-            //// PROJECTILE_CHSECT
-            //for (SPRITES_OF(STAT_TRANSPORT, i))
-            //    if (sprite[i].sectnum == dasectnum)
-            //    {
-            //        var /*int32_t */lotag = sector[dasectnum].lotag;
+            // Projectile sector changes due to transport SEs (SE7_PROJECTILE).
+            // PROJECTILE_CHSECT
+            for (i = headspritestat[STAT_TRANSPORT]; i >= 0; i = nextspritestat[i])
+                if (sprite[i].sectnum == dasectnum)
+                {
+                    var /*int32_t */lotag = sector[dasectnum].lotag;
 
-            //        if (lotag == ST_1_ABOVE_WATER)
-            //            if (daz >= actor[spritenum].floorz)
-            //                if (Proj_MaybeDoTransport(spritenum, i, 0, daz))
-            //                    return 0;
+                    if (lotag == ST_1_ABOVE_WATER)
+                        if (daz >= actor[spritenum].floorz)
+                            if (Proj_MaybeDoTransport(spritenum, i, 0, daz))
+                                return 0;
 
-            //        if (lotag == ST_2_UNDERWATER)
-            //            if (daz <= actor[spritenum].ceilingz)
-            //                if (Proj_MaybeDoTransport(spritenum, i, 1, daz))
-            //                    return 0;
-            //    }
+                    if (lotag == ST_2_UNDERWATER)
+                        if (daz <= actor[spritenum].ceilingz)
+                            if (Proj_MaybeDoTransport(spritenum, i, 1, daz))
+                                return 0;
+                }
         }
 
     return retval;
@@ -873,13 +876,13 @@ function A_MoveSector(/*int32_t */i:number):void
 //#define LIGHTRAD2 (((s.yrepeat) + (rand()%(s.yrepeat>>2))) * tilesizy[s.picnum + LIGHTRAD_PICOFS])
 
 function G_AddGameLight(/*int32_t*/ radius:number, /*int32_t */srcsprite:number, /*int32_t */zoffset:number, /*int32_t */range:number, /*int32_t */color:number, /*int32_t */priority:number):void
-{todoThrow();
+{
 //#ifdef POLYMER
     var s = sprite[srcsprite];
 
     if (getrendermode() != REND_POLYMER)
         return;
-
+    todoThrow();
     if (actor[srcsprite].lightptr == NULL)
     {
 //#pragma pack(push,1)
@@ -2737,35 +2740,35 @@ for(;;) {
 //    }
 //}
 
-//static void G_WeaponHitCeilingOrFloor(int32_t i, spritetype *s, int32_t *j)
-//{
-//    if (actor[i].flags & SPRITE_DIDNOSE7WATER)
-//    {
-//        actor[i].flags &= ~SPRITE_DIDNOSE7WATER;
-//        return;
-//    }
+function G_WeaponHitCeilingOrFloor(/*int32_t */i:number, s:spritetype, /*int32_t **/j:R<number>):void
+{
+    if (actor[i].flags & SPRITE_DIDNOSE7WATER)
+    {
+        actor[i].flags &= ~SPRITE_DIDNOSE7WATER;
+        return;
+    }
 
-//    if (s.z < actor[i].ceilingz)
-//    {
-//        *j = 16384|s.sectnum;
-//        s.zvel = -1;
-//    }
-//    else if (s.z > actor[i].floorz + (16<<8)*(sector[s.sectnum].lotag == ST_1_ABOVE_WATER))
-//    {
-//        *j = 16384|s.sectnum;
+    if (s.z < actor[i].ceilingz)
+    {
+        j.$ = 16384|s.sectnum;
+        s.zvel = -1;
+    }
+    else if (s.z > actor[i].floorz + (16<<8)*(sector[s.sectnum].lotag == ST_1_ABOVE_WATER))
+    {
+        j.$ = 16384|s.sectnum;
 
-//        if (sector[s.sectnum].lotag != ST_1_ABOVE_WATER)
-//            s.zvel = 1;
-//    }
-//}
+        if (sector[s.sectnum].lotag != ST_1_ABOVE_WATER)
+            s.zvel = 1;
+    }
+}
 
-//static void Proj_BounceOffWall(spritetype *s, int32_t j)
-//{
-//    int32_t k = getangle(
-//        wall[wall[j].point2].x-wall[j].x,
-//        wall[wall[j].point2].y-wall[j].y);
-//    s.ang = ((k<<1) - s.ang)&2047;
-//}
+function Proj_BounceOffWall(s:spritetype, /*int32_t */j:number):void
+{
+    var/*int32_t */k = getangle(
+        wall[wall[j].point2].x-wall[j].x,
+        wall[wall[j].point2].y-wall[j].y);
+    s.ang = ((k<<1) - s.ang)&2047;
+}
 
 function G_MoveWeapons():void 
 {
@@ -3142,8 +3145,11 @@ function G_MoveWeapons():void
             if (s.sectnum < 0)
                 {A_DeleteSprite(i); i = nexti; continue BOLT;}
 
-            if ((j&49152) != 49152 && s.picnum != FREEZEBLAST)
-                todoThrow("G_WeaponHitCeilingOrFloor(i, s, &j);");
+            if ((j&49152) != 49152 && s.picnum != FREEZEBLAST) {
+                var $j = new R(j);
+                G_WeaponHitCeilingOrFloor(i, s, $j);
+                j = $j.$;
+            }
 
             if (s.picnum == FIRELASER)
             {
@@ -3152,7 +3158,7 @@ function G_MoveWeapons():void
                     x = A_InsertSprite(s.sectnum,
                                        s.x+((k*sintable[(s.ang+512)&2047])>>9),
                                        s.y+((k*sintable[s.ang&2047])>>9),
-                                       s.z+((k*ksgn(s.zvel))*klabs(s.zvel/24)),FIRELASER,-40+(k<<2),
+                                       s.z+((k*ksgn(s.zvel))*klabs(int32(s.zvel/24))),FIRELASER,-40+(k<<2),
                                        s.xrepeat,s.yrepeat,0,0,0,s.owner,5);
 
                     sprite[x].cstat = 128;
