@@ -127,7 +127,7 @@ function G_CheckForSpaceCeiling(/*int32_t*/ sectnum: number): number
 }
 
 function G_CheckForSpaceFloor(/*int32_t*/ sectnum: number): number
-{
+{    
     return ((sector[sectnum].floorstat&1) && sector[sectnum].ceilingpal == 0 &&
             (sector[sectnum].floorpicnum==MOONSKY1 || sector[sectnum].floorpicnum==BIGORBIT1)) ? 1 : 0;
 }

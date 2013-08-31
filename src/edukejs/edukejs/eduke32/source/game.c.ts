@@ -1414,7 +1414,7 @@ function G_AddUserQuote(/*const char **/daquote:Uint8Array):void
 //            if (setgamemode(ud.config.ScreenMode, ud.config.ScreenWidth, ud.config.ScreenHeight, ud.config.ScreenBPP))
 //                G_GameExit("Failed to recover from failure to set fullscreen video mode.\n");
 //        }
-//        else ud.config.ScreenMode = !ud.config.ScreenMode;
+//        else ud.config.ScreenMode = !ud.config.ScreenMode?1:0;
 //        KB_ClearKeyDown(sc_Enter);
 //        g_restorePalette = 1;
 //        G_UpdateScreenArea();
@@ -7072,7 +7072,7 @@ function /*int32_t */getofs_viewtype5(s:spritetype, t:spritetype, /*int32_t*/ a:
 function /*int32_t */getofs_viewtype7(s:spritetype, t:spritetype, /*int32_t*/ a:number, /*uint8_t */invertp:number):number
 {
     var/*int32_t */angdif = invertp ? a-s.ang : s.ang-a;
-    var/*int32_t */k = ((angdif+3072+128)&2047)/170;
+    var/*int32_t */k = int32(((angdif+3072+128)&2047)/170);
 
     if (k>6)
     {
@@ -8170,7 +8170,7 @@ function G_DoCheats(): void
 //                    break;
 
 //                case CHEAT_CLIP:
-//                    ud.noclip = !ud.noclip;
+//                    ud.noclip = !ud.noclip?1:0;
 //                    P_DoQuote(QUOTE_CHEAT_NOCLIP-!ud.noclip, g_player[myconnectindex].ps);
 //                    end_cheat();
 //                    return;
@@ -8382,7 +8382,7 @@ function G_DoCheats(): void
 //                    return;
 
 //                case CHEAT_SHOWMAP: // SHOW ALL OF THE MAP TOGGLE;
-//                    ud.showallmap = !ud.showallmap;
+//                    ud.showallmap = !ud.showallmap?1:0;
 
 //                    for (i=0; i<(MAXSECTORS>>3); i++)
 //                        show2dsector[i] = ud.showallmap*255;
@@ -8399,7 +8399,7 @@ function G_DoCheats(): void
 //                    return;
 
 //                case CHEAT_RATE:
-//                    ud.tickrate = !ud.tickrate;
+//                    ud.tickrate = !ud.tickrate?1:0;
 //                    end_cheat();
 //                    return;
 
@@ -8483,7 +8483,7 @@ function G_DoCheats(): void
 //void G_SetViewportShrink(int32_t dir)
 //{
 //    if (ud.screen_size == 8 && dir!=0 && (dir>0)==(int32_t)ud.statusbarmode)
-//        ud.statusbarmode = !ud.statusbarmode;
+//        ud.statusbarmode = !ud.statusbarmode?1:0;
 //    else
 //        ud.screen_size += dir;
 //    G_UpdateScreenArea();
@@ -8587,7 +8587,7 @@ function G_HandleLocalKeys(): void
 //    if (BUTTON(gamefunc_Toggle_Crosshair))
 //    {
 //        CONTROL_ClearButton(gamefunc_Toggle_Crosshair);
-//        ud.crosshair = !ud.crosshair;
+//        ud.crosshair = !ud.crosshair?1:0;
 //        P_DoQuote(QUOTE_CROSSHAIR_OFF-ud.crosshair,g_player[screenpeek].ps);
 //    }
 
@@ -8626,7 +8626,7 @@ function G_HandleLocalKeys(): void
 //        {
 //            KB_ClearKeyDown(sc_Space);
 
-//            g_demo_paused = !g_demo_paused;
+//            g_demo_paused = !g_demo_paused?1:0;
 //            g_demo_rewind = 0;
 
 //            if (g_demo_paused)
@@ -8639,7 +8639,7 @@ function G_HandleLocalKeys(): void
 //        if (KB_KeyPressed(sc_Tab))
 //        {
 //            KB_ClearKeyDown(sc_Tab);
-//            g_demo_showStats = !g_demo_showStats;
+//            g_demo_showStats = !g_demo_showStats?1:0;
 //        }
 
 //#if 0
@@ -8972,7 +8972,7 @@ function G_HandleLocalKeys(): void
 //        if (KB_UnBoundKeyPressed(sc_F8))
 //        {
 //            KB_ClearKeyDown(sc_F8);
-//            ud.fta_on = !ud.fta_on;
+//            ud.fta_on = !ud.fta_on?1:0;
 //            if (ud.fta_on) P_DoQuote(QUOTE_MESSAGES_ON,g_player[myconnectindex].ps);
 //            else
 //            {
@@ -10995,56 +10995,56 @@ function G_BackToMenu(): void
     //wm_setapptitle(tempbuf);
 }
 
-//static int32_t G_EndOfLevel(void)
-//{
-//    P_SetGamePalette(g_player[myconnectindex].ps, BASEPAL, 0);
-//    P_UpdateScreenPal(g_player[myconnectindex].ps);
+function /*int32_t */G_EndOfLevel():number
+{
+    P_SetGamePalette(g_player[myconnectindex].ps, BASEPAL, 0);
+    P_UpdateScreenPal(g_player[myconnectindex].ps);
 
-//    if (g_player[myconnectindex].ps.gm&MODE_EOL)
-//    {
-//        G_CloseDemoWrite();
+    if (g_player[myconnectindex].ps.gm&MODE_EOL)
+    {todoThrow();
+        //G_CloseDemoWrite();
 
-//        ready2send = 0;
+        //ready2send = 0;
 
-//        if (ud.display_bonus_screen == 1)
-//        {
-//            int32_t i = ud.screen_size;
-//            ud.screen_size = 0;
-//            G_UpdateScreenArea();
-//            ud.screen_size = i;
-//            G_BonusScreen(0);
-//        }
-//        if (ud.eog)
-//        {
-//            ud.eog = 0;
-//            if ((!g_netServer && ud.multimode < 2))
-//            {
-//                if (!VOLUMEALL)
-//                    G_DoOrderScreen();
-//                g_player[myconnectindex].ps.gm = MODE_MENU;
-//                M_ChangeMenu(MENU_MAIN);
-//                probey = 0;
-//                return 2;
-//            }
-//            else
-//            {
-//                ud.m_level_number = 0;
-//                ud.level_number = 0;
-//            }
-//        }
-//    }
-//    ud.display_bonus_screen = 1;
-//    ready2send = 0;
-//    if (numplayers > 1) g_player[myconnectindex].ps.gm = MODE_GAME;
-//    if (G_EnterLevel(g_player[myconnectindex].ps.gm))
-//    {
-//        G_BackToMenu();
-//        return 2;
-//    }
-//    Net_WaitForServer();
-//    return 1;
+        //if (ud.display_bonus_screen == 1)
+        //{
+        //    int32_t i = ud.screen_size;
+        //    ud.screen_size = 0;
+        //    G_UpdateScreenArea();
+        //    ud.screen_size = i;
+        //    G_BonusScreen(0);
+        //}
+        //if (ud.eog)
+        //{
+        //    ud.eog = 0;
+        //    if ((!g_netServer && ud.multimode < 2))
+        //    {
+        //        if (!VOLUMEALL)
+        //            G_DoOrderScreen();
+        //        g_player[myconnectindex].ps.gm = MODE_MENU;
+        //        M_ChangeMenu(MENU_MAIN);
+        //        probey = 0;
+        //        return 2;
+        //    }
+        //    else
+        //    {
+        //        ud.m_level_number = 0;
+        //        ud.level_number = 0;
+        //    }
+        //}
+    }
+    ud.display_bonus_screen = 1;
+    ready2send = 0;
+    if (numplayers > 1) g_player[myconnectindex].ps.gm = MODE_GAME;
+    if (G_EnterLevel(g_player[myconnectindex].ps.gm))
+    {
+        G_BackToMenu();
+        return 2;
+    }
+    Net_WaitForServer();
+    return 1;
 
-//}
+}
 
 //void app_crashhandler(void)
 //{
@@ -11999,12 +11999,12 @@ var tempWhile = 0;
         G_DoCheats();
 
         if (g_player[myconnectindex].ps.gm & (MODE_EOL|MODE_RESTART))
-        {todoThrow();
-            //switch (G_EndOfLevel())
-            //{
-            //case 1: continue;
-            //case 2: goto MAIN_LOOP_RESTART;
-            //}
+        {
+            switch (G_EndOfLevel())
+            {
+            case 1: todoThrow("continue");
+            case 2: todoThrow("goto MAIN_LOOP_RESTART");
+            }
         }
 
         if (g_networkMode == NET_DEDICATED_SERVER)

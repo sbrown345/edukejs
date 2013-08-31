@@ -243,7 +243,7 @@ function P_QuickKill(p: DukePlayer_t): void
 function /*int32_t */A_GetHitscanRange(/*int32_t */i:number):number
 {
     var /*int32_t */zoff = (sprite[i].picnum == APLAYER) ? PHEIGHT : 0;
-    var hit:hitdata_t;
+    var hit = new hitdata_t();
 
     sprite[i].z -= zoff;
     hitscan(new vec3_t(sprite[i].x, sprite[i].y, sprite[i].z) ,sprite[i].sectnum,
@@ -444,61 +444,61 @@ function /*int32_t */GetAutoAimAngle(/*int32_t */i:number, /*int32_t */p:number,
     return j;
 }
 
-//static void Proj_MaybeSpawn(int32_t k, int32_t atwith, const hitdata_t *hit)
-//{
-//    // atwith < 0 is for hard-coded projectiles
-//    int32_t spawntile = atwith < 0 ? -atwith : ProjectileData[atwith].spawns;
+function /*void */Proj_MaybeSpawn(/*int32_t */k:number, /*int32_t */atwith:number, hit:hitdata_t):void
+{
+    // atwith < 0 is for hard-coded projectiles
+    var /*int32_t */spawntile = atwith < 0 ? -atwith : ProjectileData[atwith].spawns;
 
-//    if (spawntile >= 0)
-//    {
-//        int32_t wh = A_Spawn(k, spawntile);
+    if (spawntile >= 0)
+    {
+        var/*int32_t */wh = A_Spawn(k, spawntile);
 
-//        if (atwith >= 0)
-//        {
-//            if (ProjectileData[atwith].sxrepeat > 4)
-//                sprite[wh].xrepeat = ProjectileData[atwith].sxrepeat;
-//            if (ProjectileData[atwith].syrepeat > 4)
-//                sprite[wh].yrepeat = ProjectileData[atwith].syrepeat;
-//        }
+        if (atwith >= 0)
+        {
+            if (ProjectileData[atwith].sxrepeat > 4)
+                sprite[wh].xrepeat = ProjectileData[atwith].sxrepeat;
+            if (ProjectileData[atwith].syrepeat > 4)
+                sprite[wh].yrepeat = ProjectileData[atwith].syrepeat;
+        }
 
-//        A_SetHitData(wh, hit);
-//    }
-//}
+        A_SetHitData(wh, hit);
+    }
+}
 
-//// <extra>: damage that this shotspark does
-//static int32_t Proj_InsertShotspark(const hitdata_t *hit, int32_t i, int32_t atwith,
-//                                    int32_t xyrepeat, int32_t ang, int32_t extra)
-//{
-//    int32_t k = A_InsertSprite(hit.sect, hit.pos.x, hit.pos.y, hit.pos.z,
-//                               SHOTSPARK1,-15, xyrepeat,xyrepeat, ang,0,0,i,4);
-//    sprite[k].extra = extra;
-//    // This is a hack to allow you to detect which weapon spawned a SHOTSPARK1:
-//    sprite[k].yvel = atwith;
-//    A_SetHitData(k, hit);
+// <extra>: damage that this shotspark does
+function Proj_InsertShotspark(hit:hitdata_t, /*int32_t */i:number, /*int32_t */atwith:number,
+                                    /*int32_t */xyrepeat:number, /*int32_t */ang:number, /*int32_t */extra:number):number
+{
+    var /*int32_t */k = A_InsertSprite(hit.sect, hit.pos.x, hit.pos.y, hit.pos.z,
+                               SHOTSPARK1,-15, xyrepeat,xyrepeat, ang,0,0,i,4);
+    sprite[k].extra = extra;
+    // This is a hack to allow you to detect which weapon spawned a SHOTSPARK1:
+    sprite[k].yvel = atwith;
+    A_SetHitData(k, hit);
 
-//    return k;
-//}
+    return k;
+}
 
-//static int32_t Proj_GetExtra(int32_t atwith)
-//{
-//    int32_t extra = ProjectileData[atwith].extra;
-//    if (ProjectileData[atwith].extra_rand > 0)
-//        extra += (krand()%ProjectileData[atwith].extra_rand);
-//    return extra;
-//}
+function /*int32_t */Proj_GetExtra(/*int32_t */atwith:number):number
+{
+    var /*int32_t */extra = ProjectileData[atwith].extra;
+    if (ProjectileData[atwith].extra_rand > 0)
+        extra += (krand()%ProjectileData[atwith].extra_rand);
+    return extra;
+}
 
-//static void Proj_MaybeAddSpread(int32_t not_accurate_p, int32_t *zvel, int16_t *sa,
-//                                int32_t zRange, int32_t angRange)
-//{
-//    if (not_accurate_p)
-//    {
-//        // Ranges <= 1 mean no spread at all. A range of 1 calls krand() though.
-//        if (zRange > 0)
-//            *zvel += zRange/2 - krand()%zRange;
-//        if (angRange > 0)
-//            *sa += angRange/2 - krand()%angRange;
-//    }
-//}
+function Proj_MaybeAddSpread(/*int32_t */not_accurate_p:number, /*int32_t **/zvel:R<number>, /*int16_t **/sa:R<number>,
+                                /*int32_t */zRange:number, /*int32_t */angRange:number):void
+{
+    if (not_accurate_p)
+    {
+        // Ranges <= 1 mean no spread at all. A range of 1 calls krand() though.
+        if (zRange > 0)
+            zvel.$ += int32(zRange/2) - krand()%zRange;
+        if (angRange > 0)
+            sa.$ += int32(angRange/2) - krand()%angRange;
+    }
+}
 
 
 var /*int32_t */g_overrideShootZvel = 0;  // a boolean
@@ -509,98 +509,98 @@ function /*int32_t */A_GetShootZvel(/*int32_t */defaultzvel:number):number
     return g_overrideShootZvel ? g_shootZvel : defaultzvel;
 }
 
-//// Prepare hitscan weapon fired from player p.
-//static void P_PreFireHitscan(int32_t i, int32_t p, int32_t atwith,
-//                             vec3_t *srcvect, int32_t *zvel, int16_t *sa,
-//                             int32_t accurate_autoaim_p,
-//                             int32_t not_accurate_p)
-//{
-//    int32_t angRange=32;
-//    int32_t zRange=256;
+// Prepare hitscan weapon fired from player p.
+function P_PreFireHitscan(/*int32_t*/ i:number, /*int32_t */p:number, /*int32_t */atwith:number,
+                             srcvect:vec3_t, /*int32_t **/zvel:R<number>, /*int16_t */sa:R<number>,
+                             /*int32_t */accurate_autoaim_p:number,
+                             /*int32_t */not_accurate_p:number):void
+{
+    var/*int32_t */angRange=32;
+    var/*int32_t */zRange=256;
 
-//    int32_t j = GetAutoAimAngle(i, p, atwith, 5<<8, 0+1, srcvect, 256, zvel, sa);
-//    DukePlayer_t *const ps = g_player[p].ps;
+    var/*int32_t */j = GetAutoAimAngle(i, p, atwith, 5<<8, 0+1, srcvect, 256, zvel, sa);
+    var ps = g_player[p].ps;
 
 //#ifdef LUNATIC
 //    ps.angrange = angRange;
 //    ps.zrange = zRange;
 //#else
-//    Gv_SetVar(g_iAngRangeVarID,angRange, i,p);
-//    Gv_SetVar(g_iZRangeVarID,zRange,i,p);
+    Gv_SetVar(g_iAngRangeVarID,angRange, i,p);
+    Gv_SetVar(g_iZRangeVarID,zRange,i,p);
 //#endif
 
-//    if (G_HaveEvent(EVENT_GETSHOTRANGE))
-//        VM_OnEvent(EVENT_GETSHOTRANGE, i,p, -1, 0);
+    if (G_HaveEvent(EVENT_GETSHOTRANGE))
+        VM_OnEvent(EVENT_GETSHOTRANGE, i,p, -1, 0);
 
 //#ifdef LUNATIC
 //    angRange = ps.angrange;
 //    zRange = ps.zrange;
 //#else
-//    angRange=Gv_GetVar(g_iAngRangeVarID,i,p);
-//    zRange=Gv_GetVar(g_iZRangeVarID,i,p);
+    angRange=Gv_GetVar(g_iAngRangeVarID,i,p);
+    zRange=Gv_GetVar(g_iZRangeVarID,i,p);
 //#endif
 
-//    if (accurate_autoaim_p)
-//    {
-//        if (!ps.auto_aim)
-//        {
-//            hitdata_t hit;
+    if (accurate_autoaim_p)
+    {
+        if (!ps.auto_aim)
+        {
+            var hit = new hitdata_t ();
 
-//            *zvel = A_GetShootZvel((100-ps.horiz-ps.horizoff)<<5);
+            zvel.$ = A_GetShootZvel((100-ps.horiz-ps.horizoff)<<5);
 
-//            hitscan(srcvect, sprite[i].sectnum, sintable[(*sa+512)&2047], sintable[*sa&2047],
-//                    *zvel<<6,&hit,CLIPMASK1);
+            hitscan(srcvect, sprite[i].sectnum, sintable[(sa.$+512)&2047], sintable[sa.$&2047],
+                    zvel.$<<6,hit,CLIPMASK1);
 
-//            if (hit.sprite != -1)
-//            {
-//                const int32_t hitstatnumsbitmap =
-//                    ((1<<STAT_ACTOR) | (1<<STAT_ZOMBIEACTOR) | (1<<STAT_PLAYER) | (1<<STAT_DUMMYPLAYER));
-//                const int32_t st = sprite[hit.sprite].statnum;
+            if (hit.sprite != -1)
+            {
+                var /*const int32_t */hitstatnumsbitmap =
+                    ((1<<STAT_ACTOR) | (1<<STAT_ZOMBIEACTOR) | (1<<STAT_PLAYER) | (1<<STAT_DUMMYPLAYER));
+                var /*const int32_t */st = sprite[hit.sprite].statnum;
 
-//                if (st>=0 && st<=30 && (hitstatnumsbitmap&(1<<st)))
-//                    j = hit.sprite;
-//            }
-//        }
+                if (st>=0 && st<=30 && (hitstatnumsbitmap&(1<<st)))
+                    j = hit.sprite;
+            }
+        }
 
-//        if (j == -1)
-//        {
-//            *zvel = (100-ps.horiz-ps.horizoff)<<5;
-//            Proj_MaybeAddSpread(not_accurate_p, zvel, sa, zRange, angRange);
-//        }
-//    }
-//    else
-//    {
-//        if (j == -1)  // no target
-//            *zvel = (100-ps.horiz-ps.horizoff)<<5;
-//        Proj_MaybeAddSpread(not_accurate_p, zvel, sa, zRange, angRange);
-//    }
+        if (j == -1)
+        {
+            zvel.$ = (100-ps.horiz-ps.horizoff)<<5;
+            Proj_MaybeAddSpread(not_accurate_p, zvel, sa, zRange, angRange);
+        }
+    }
+    else
+    {
+        if (j == -1)  // no target
+            zvel.$ = (100-ps.horiz-ps.horizoff)<<5;
+        Proj_MaybeAddSpread(not_accurate_p, zvel, sa, zRange, angRange);
+    }
 
-//    srcvect.z -= (2<<8);
-//}
+    srcvect.z -= (2<<8);
+}
 
-//// Hitscan weapon fired from actor (sprite s);
-//static void A_PreFireHitscan(const spritetype *s, vec3_t *srcvect, int32_t *zvel, int16_t *sa,
-//                             int32_t not_accurate_p)
-//{
-//    const int32_t j = A_FindPlayer(s, NULL);
-//    const DukePlayer_t *targetps = g_player[j].ps;
+// Hitscan weapon fired from actor (sprite s);
+function A_PreFireHitscan(s:spritetype, srcvect: IVec3, /*int32_t */zvel:R<number>, /*int16_t **/sa:R<number>,
+                             /*int32_t */not_accurate_p:number):void 
+{
+    var j = A_FindPlayer(s, NULL);
+    var targetps = g_player[j].ps;
 
-//    const int32_t d = safeldist(targetps.i, s);
-//    *zvel = ((targetps.pos.z-srcvect.z)<<8) / d;
+    var d = safeldist(targetps.i, s);
+    zvel.$ = int32(((targetps.pos.z-srcvect.z)<<8) / d);
 
-//    srcvect.z -= (4<<8);
+    srcvect.z -= (4<<8);
 
-//    if (s.picnum != BOSS1)
-//    {
-//        Proj_MaybeAddSpread(not_accurate_p, zvel, sa, 256, 64);
-//    }
-//    else
-//    {
-//        *sa = getangle(targetps.pos.x-srcvect.x, targetps.pos.y-srcvect.y);
+    if (s.picnum != BOSS1)
+    {
+        Proj_MaybeAddSpread(not_accurate_p, zvel, sa, 256, 64);
+    }
+    else
+    {
+        sa.$ = getangle(targetps.pos.x-srcvect.x, targetps.pos.y-srcvect.y);
 
-//        Proj_MaybeAddSpread(not_accurate_p, zvel, sa, 256, 128);
-//    }
-//}
+        Proj_MaybeAddSpread(not_accurate_p, zvel, sa, 256, 128);
+    }
+}
 
 function /*int32_t */Proj_DoHitscan(/*int32_t */i:number, /*int32_t */cstatmask:number,
                               /*const vec3_t **/srcvect:vec3_t, /*int32_t */zvel:number, /*int16_t */sa:number,
@@ -641,26 +641,26 @@ function /*int32_t */Proj_DoHitscan(/*int32_t */i:number, /*int32_t */cstatmask:
 //    }
 //}
 
-//static int32_t SectorContainsSE13(int32_t sectnum)
-//{
-//    int32_t i;
-//    if (sectnum >= 0)
-//        for (SPRITES_OF_SECT(sectnum, i))
-//            if (sprite[i].statnum == STAT_EFFECTOR && sprite[i].lotag == SE_13_EXPLOSIVE)
-//                return 1;
-//    return 0;
-//}
+function /*int32_t*/ SectorContainsSE13(/*int32_t */sectnum:number):number
+{
+    var /*int32_t */i:number;
+    if (sectnum >= 0)
+        for (i = headspritesect[sectnum]; i >= 0; i = nextspritesect[i])
+            if (sprite[i].statnum == STAT_EFFECTOR && sprite[i].lotag == SE_13_EXPLOSIVE)
+                return 1;
+    return 0;
+}
 
-//// Maybe handle bit 2 (swap wall bottoms).
-//// (in that case walltype *hitwal may be stale)
-//static void HandleHitWall(hitdata_t *hit)
-//{
-//    const walltype *const hitwal = &wall[hit.wall];
+// Maybe handle bit 2 (swap wall bottoms).
+// (in that case walltype *hitwal may be stale)
+function HandleHitWall(hit:hitdata_t ):void
+{
+    var hitwal = wall[hit.wall];
 
-//    if ((hitwal.cstat&2) && redwallp(hitwal))
-//        if (hit.pos.z >= sector[hitwal.nextsector].floorz)
-//            hit.wall = hitwal.nextwall;
-//}
+    if ((hitwal.cstat&2) && redwallp(hitwal))
+        if (hit.pos.z >= sector[hitwal.nextsector].floorz)
+            hit.wall = hitwal.nextwall;
+}
 
 //// Finish shooting hitscan weapon from player <p>. <k> is the inserted SHOTSPARK1.
 //// * <spawnatimpacttile> is passed to Proj_MaybeSpawn()
@@ -787,101 +787,101 @@ function /*int32_t */Proj_DoHitscan(/*int32_t */i:number, /*int32_t */cstatmask:
 //    return 0;
 //}
 
-//// Finish shooting hitscan weapon from actor (sprite <i>).
-//static int32_t A_PostFireHitscan(const hitdata_t *hit, int32_t i, int32_t atwith, int32_t sa, int32_t extra,
-//                                 int32_t spawnatimpacttile, int32_t damagewalltile)
-//{
-//    int32_t k = Proj_InsertShotspark(hit, i, atwith, 24, sa, extra);
+// Finish shooting hitscan weapon from actor (sprite <i>).
+function /*int32_t */A_PostFireHitscan(hit:hitdata_t,/* int32_t */i:number, /*int32_t */atwith:number, /*int32_t */sa:number, /*int32_t */extra:number,
+                                 /*int32_t */spawnatimpacttile:number, /*int32_t */damagewalltile:number):number
+{
+    var /*int32_t */k = Proj_InsertShotspark(hit, i, atwith, 24, sa, extra);
 
-//    if (hit.sprite >= 0)
-//    {
-//        A_DamageObject(hit.sprite, k);
+    if (hit.sprite >= 0)
+    {
+        A_DamageObject(hit.sprite, k);
 
-//        if (sprite[hit.sprite].picnum != APLAYER)
-//            Proj_MaybeSpawn(k, spawnatimpacttile, hit);
-//        else
-//            sprite[k].xrepeat = sprite[k].yrepeat = 0;
-//    }
-//    else if (hit.wall >= 0)
-//        A_DamageWall(k, hit.wall, &hit.pos, damagewalltile);
+        if (sprite[hit.sprite].picnum != APLAYER)
+            Proj_MaybeSpawn(k, spawnatimpacttile, hit);
+        else
+            sprite[k].xrepeat = sprite[k].yrepeat = 0;
+    }
+    else if (hit.wall >= 0)
+        A_DamageWall(k, hit.wall, hit.pos, damagewalltile);
 
-//    return k;
-//}
+    return k;
+}
 
-//// Common "spawn blood?" predicate.
-//// minzdiff: minimal "step" height for blood to be spawned
-//static int32_t Proj_CheckBlood(const vec3_t *srcvect, const hitdata_t *hit,
-//                               int32_t projrange, int32_t minzdiff)
-//{
-//    if (hit.wall >= 0 && hit.sect >= 0)
-//    {
-//        const walltype *const hitwal = &wall[hit.wall];
+// Common "spawn blood?" predicate.
+// minzdiff: minimal "step" height for blood to be spawned
+function /*int32_t */Proj_CheckBlood(srcvect:vec3_t, hit:hitdata_t,
+                               /*int32_t */projrange:number, /*int32_t */minzdiff:number):number
+{
+    if (hit.wall >= 0 && hit.sect >= 0)
+    {
+        var hitwal = wall[hit.wall];
 
-//        if (FindDistance2D(srcvect.x-hit.pos.x, srcvect.y-hit.pos.y) < projrange)
-//            if (hitwal.overpicnum != BIGFORCE && (hitwal.cstat&16) == 0)
-//                if (sector[hit.sect].lotag == 0)
-//                    if (hitwal.nextsector < 0 ||
-//                        (sector[hitwal.nextsector].lotag == 0 && sector[hit.sect].lotag == 0 &&
-//                         sector[hit.sect].floorz-sector[hitwal.nextsector].floorz > minzdiff))
-//                    return 1;
-//    }
+        if (FindDistance2D(srcvect.x-hit.pos.x, srcvect.y-hit.pos.y) < projrange)
+            if (hitwal.overpicnum != BIGFORCE && (hitwal.cstat&16) == 0)
+                if (sector[hit.sect].lotag == 0)
+                    if (hitwal.nextsector < 0 ||
+                        (sector[hitwal.nextsector].lotag == 0 && sector[hit.sect].lotag == 0 &&
+                         sector[hit.sect].floorz-sector[hitwal.nextsector].floorz > minzdiff))
+                    return 1;
+    }
 
-//    return 0;
-//}
+    return 0;
+}
 
-//static void Proj_HandleKnee(hitdata_t *hit, int32_t i, int32_t p, int32_t atwith, int32_t sa,
-//                            const projectile_t *proj, int32_t inserttile,
-//                            int32_t addrandextra, int32_t spawnatimpacttile, int32_t soundnum)
-//{
-//    const DukePlayer_t *const ps = p >= 0 ? g_player[p].ps : NULL;
+function Proj_HandleKnee(hit:hitdata_t, /*int32_t */i:number, /*int32_t */p:number, /*int32_t */atwith:number, /*int32_t */sa:number,
+                            proj:projectile_t, /*int32_t */inserttile:number,
+                            /*int32_t */addrandextra:number, /*int32_t*/ spawnatimpacttile:number, /*int32_t */soundnum:number):void
+{
+    var ps = p >= 0 ? g_player[p].ps : NULL;
 
-//    int32_t j = A_InsertSprite(hit.sect,hit.pos.x,hit.pos.y,hit.pos.z,
-//                               inserttile,-15,0,0,sa,32,0,i,4);
+    var/*int32_t */j = A_InsertSprite(hit.sect,hit.pos.x,hit.pos.y,hit.pos.z,
+                               inserttile,-15,0,0,sa,32,0,i,4);
 
-//    if (proj != NULL)
-//    {
-//        // Custom projectiles.
-//        SpriteProjectile[j].workslike = ProjectileData[sprite[j].picnum].workslike;
-//        sprite[j].extra = proj.extra;
-//    }
+    if (proj != NULL)
+    {
+        // Custom projectiles.
+        SpriteProjectile[j].workslike = ProjectileData[sprite[j].picnum].workslike;
+        sprite[j].extra = proj.extra;
+    }
 
-//    if (addrandextra > 0)
-//        sprite[j].extra += (krand()&addrandextra);
+    if (addrandextra > 0)
+        sprite[j].extra += (krand()&addrandextra);
 
-//    if (p >= 0)
-//    {
-//        if (spawnatimpacttile >= 0)
-//        {
-//            int32_t k = A_Spawn(j, spawnatimpacttile);
-//            sprite[k].z -= (8<<8);
-//            A_SetHitData(k, hit);
-//        }
+    if (p >= 0)
+    {
+        if (spawnatimpacttile >= 0)
+        {
+            var /*int32_t */k = A_Spawn(j, spawnatimpacttile);
+            sprite[k].z -= (8<<8);
+            A_SetHitData(k, hit);
+        }
 
-//        if (soundnum >= 0)
-//            A_PlaySound(soundnum, j);
-//    }
+        if (soundnum >= 0)
+            A_PlaySound(soundnum, j);
+    }
 
-//    if (p >= 0 && ps.inv_amount[GET_STEROIDS] > 0 && ps.inv_amount[GET_STEROIDS] < 400)
-//        sprite[j].extra += (ps.max_player_health>>2);
+    if (p >= 0 && ps.inv_amount[GET_STEROIDS] > 0 && ps.inv_amount[GET_STEROIDS] < 400)
+        sprite[j].extra += (ps.max_player_health>>2);
 
-//    if (hit.sprite >= 0 && sprite[hit.sprite].picnum != ACCESSSWITCH && sprite[hit.sprite].picnum != ACCESSSWITCH2)
-//    {
-//        A_DamageObject(hit.sprite, j);
-//        if (p >= 0)
-//            P_ActivateSwitch(p, hit.sprite,1);
-//    }
-//    else if (hit.wall >= 0)
-//    {
-//        HandleHitWall(hit);
+    if (hit.sprite >= 0 && sprite[hit.sprite].picnum != ACCESSSWITCH && sprite[hit.sprite].picnum != ACCESSSWITCH2)
+    {
+        A_DamageObject(hit.sprite, j);
+        if (p >= 0)
+            P_ActivateSwitch(p, hit.sprite,1);
+    }
+    else if (hit.wall >= 0)
+    {
+        HandleHitWall(hit);
 
-//        if (wall[hit.wall].picnum != ACCESSSWITCH && wall[hit.wall].picnum != ACCESSSWITCH2)
-//        {
-//            A_DamageWall(j, hit.wall, &hit.pos, atwith);
-//            if (p >= 0)
-//                P_ActivateSwitch(p, hit.wall,0);
-//        }
-//    }
-//}
+        if (wall[hit.wall].picnum != ACCESSSWITCH && wall[hit.wall].picnum != ACCESSSWITCH2)
+        {
+            A_DamageWall(j, hit.wall, hit.pos, atwith);
+            if (p >= 0)
+                P_ActivateSwitch(p, hit.wall,0);
+        }
+    }
+}
 
 //#define MinibossScale(s) (((s)*sprite[i].yrepeat)/80)
 function /*int32_t */A_ShootWithZvel(/*int32_t*/ i:number, /*int32_t */atwith:number, /*int32_t */override_zvel:number):number
@@ -1000,7 +1000,7 @@ function /*int32_t */A_ShootWithZvel(/*int32_t*/ i:number, /*int32_t */atwith:nu
                 }
                 else if (!(proj.workslike & PROJECTILE_NOAIM))
                 {
-                    var/*int32_t */x;
+                    var/*int32_t */x:number;
                     var $x = new R(x);
                     j = g_player[A_FindPlayer(s,$x)].ps.i;
                     x = $x.$;
@@ -1238,7 +1238,7 @@ function /*int32_t */A_ShootWithZvel(/*int32_t*/ i:number, /*int32_t */atwith:nu
                 }
                 else
                 {
-                    var/*int32_t */x;
+                    var/*int32_t */x:number;
                     var $x = new R(x);
                     j = g_player[A_FindPlayer(s,$x)].ps.i;
                     x = $x.$;
@@ -1293,40 +1293,44 @@ function /*int32_t */A_ShootWithZvel(/*int32_t*/ i:number, /*int32_t */atwith:nu
         case SHOTSPARK1__STATIC:
         case SHOTGUN__STATIC:
         case CHAINGUN__STATIC:
-            todoThrow();
-            //if (s.extra >= 0) s.shade = -96;
+            if (s.extra >= 0) s.shade = -96;
 
-            //if (p >= 0)
-            //    P_PreFireHitscan(i, p, atwith, srcvect, &zvel, &sa,
-            //                     atwith == SHOTSPARK1__STATIC && !WW2GI && !NAM,
-            //                     1);
-            //else
-            //    A_PreFireHitscan(s, &srcvect, &zvel, &sa, 1);
+            var $zvel = new R(zvel);
+            var $sa = new R(sa);
+            if (p >= 0) 
+                P_PreFireHitscan(i, p, atwith, srcvect, $zvel, $sa,
+                                 atwith == SHOTSPARK1__STATIC && !WW2GI && !NAM,
+                                 1);
+            else
+                A_PreFireHitscan(s, srcvect, $zvel, $sa, 1);
 
-            //if (Proj_DoHitscan(i, 256+1, &srcvect, zvel, sa, &hit))
-            //    return -1;
+            zvel = $zvel.$;
+            sa = $sa.$;
 
-            //if ((krand()&15) == 0 && sector[hit.sect].lotag == ST_2_UNDERWATER)
-            //    A_DoWaterTracers(hit.pos.x,hit.pos.y,hit.pos.z,
-            //                     srcvect.x,srcvect.y,srcvect.z,8-(ud.multimode>>1));
+            if (Proj_DoHitscan(i, 256+1, srcvect, zvel, sa, hit))
+                return -1;
 
-            //if (p >= 0)
-            //{
-            //    k = Proj_InsertShotspark(&hit, i, atwith, 10, sa,
-            //                             G_InitialActorStrength(atwith) + (krand()%6));
+            if ((krand()&15) == 0 && sector[hit.sect].lotag == ST_2_UNDERWATER)
+                A_DoWaterTracers(hit.pos.x,hit.pos.y,hit.pos.z,
+                                 srcvect.x,srcvect.y,srcvect.z,8-(ud.multimode>>1));
 
-            //    if (P_PostFireHitscan(p, k, &hit, i, atwith, zvel,
-            //                          -SMALLSMOKE, BULLETHOLE, SHOTSPARK1, 0) < 0)
-            //        return -1;
-            //}
-            //else
-            //{
-            //    k = A_PostFireHitscan(&hit, i, atwith, sa, G_InitialActorStrength(atwith),
-            //                          -SMALLSMOKE, SHOTSPARK1);
-            //}
+            if (p >= 0)
+            {
+                k = Proj_InsertShotspark(hit, i, atwith, 10, sa,
+                                         G_InitialActorStrength(atwith) + (krand()%6));
 
-            //if ((krand()&255) < 4)
-            //    S_PlaySound3D(PISTOL_RICOCHET, k, &hit.pos);
+                if (P_PostFireHitscan(p, k, hit, i, atwith, zvel,
+                                      -SMALLSMOKE, BULLETHOLE, SHOTSPARK1, 0) < 0)
+                    return -1;
+            }
+            else
+            {
+                k = A_PostFireHitscan(hit, i, atwith, sa, G_InitialActorStrength(atwith),
+                                      -SMALLSMOKE, SHOTSPARK1);
+            }
+
+            if ((krand()&255) < 4)
+                S_PlaySound3D(PISTOL_RICOCHET, k, hit.pos);
 
             return -1;
 
@@ -1334,7 +1338,7 @@ function /*int32_t */A_ShootWithZvel(/*int32_t*/ i:number, /*int32_t */atwith:nu
         case SPIT__STATIC:
         case COOLEXPLOSION1__STATIC:
         {
-            var/*int32_t */tsiz;
+            var/*int32_t */tsiz:number;
 
             if (s.extra >= 0) s.shade = -96;
 

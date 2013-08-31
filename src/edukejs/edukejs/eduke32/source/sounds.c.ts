@@ -545,8 +545,8 @@ function S_Cleanup():void
 //    return explosion;
 //}
 
-//int32_t S_PlaySound3D(int32_t num, int32_t i, const vec3_t *pos)
-//{
+function /*int32_t */S_PlaySound3D(/*int32_t */num:number, /*int32_t */i:number, pos:vec3_t):number
+{todoUnimportant();return -1
 //    int32_t j = 0;
 //    int32_t sndist, sndang, explosionp;
 //    int32_t voice, pitch;
@@ -694,8 +694,8 @@ function S_Cleanup():void
 //    g_sounds[num].SoundOwner[j].sndist = sndist>>6;
 //    g_sounds[num].SoundOwner[j].clock = totalclock;
 
-//    return voice;
-//}
+    return voice;
+}
 
 function S_PlaySound(/*int32_t*/ num: number): number
 {todoUnimportant("S_PlaySound");

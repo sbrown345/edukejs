@@ -8460,45 +8460,45 @@ function changespritestat(/*int16_t*/ spritenum: number, /*int16_t*/ newstatnum:
 
 
 ////
-//// lintersect (internal)
-////
-//static int32_t lintersect(int32_t x1, int32_t y1, int32_t z1,
-//                          int32_t x2, int32_t y2, int32_t z2,
-//                          int32_t x3, int32_t y3, int32_t x4, int32_t y4,
-//                          int32_t *intx, int32_t *inty, int32_t *intz)
-//{
-//    //p1 to p2 is a line segment
-//    int32_t x21, y21, x34, y34, x31, y31, bot, topt, topu, t;
+// lintersect (internal)
+//
+function /*int32_t */lintersect(/*int32_t*/ x1:number, /*int32_t*/ y1:number, /*int32_t*/ z1:number,
+                          /*int32_t*/ x2:number, /*int32_t*/ y2:number, /*int32_t*/ z2:number,
+                          /*int32_t*/ x3:number, /*int32_t*/ y3:number, /*int32_t*/ x4:number, /*int32_t*/ y4:number,
+                          /*int32_t **/intx:R<number>, /*int32_t **/inty:R<number>, /*int32_t **/intz:R<number>):number
+{
+    //p1 to p2 is a line segment
+    var /*int32_t */x21:number, y21:number, x34:number, y34:number, x31:number, y31:number, bot:number, topt:number, topu:number, t:number;
 
-//    x21 = x2-x1; x34 = x3-x4;
-//    y21 = y2-y1; y34 = y3-y4;
-//    bot = x21*y34 - y21*x34;
-//    if (bot >= 0)
-//    {
-//        if (bot == 0) return(0);
-//        x31 = x3-x1; y31 = y3-y1;
-//        topt = x31*y34 - y31*x34; if ((topt < 0) || (topt >= bot)) return(0);
-//        topu = x21*y31 - y21*x31; if ((topu < 0) || (topu >= bot)) return(0);
-//    }
-//    else
-//    {
-//        x31 = x3-x1; y31 = y3-y1;
-//        topt = x31*y34 - y31*x34; if ((topt > 0) || (topt <= bot)) return(0);
-//        topu = x21*y31 - y21*x31; if ((topu > 0) || (topu <= bot)) return(0);
-//    }
-//    t = divscale24(topt,bot);
-//    *intx = x1 + mulscale24(x21,t);
-//    *inty = y1 + mulscale24(y21,t);
-//    *intz = z1 + mulscale24(z2-z1,t);
-//    return(1);
-//}
+    x21 = x2-x1; x34 = x3-x4;
+    y21 = y2-y1; y34 = y3-y4;
+    bot = x21*y34 - y21*x34;
+    if (bot >= 0)
+    {
+        if (bot == 0) return(0);
+        x31 = x3-x1; y31 = y3-y1;
+        topt = x31*y34 - y31*x34; if ((topt < 0) || (topt >= bot)) return(0);
+        topu = x21*y31 - y21*x31; if ((topu < 0) || (topu >= bot)) return(0);
+    }
+    else
+    {
+        x31 = x3-x1; y31 = y3-y1;
+        topt = x31*y34 - y31*x34; if ((topt > 0) || (topt <= bot)) return(0);
+        topu = x21*y31 - y21*x31; if ((topu > 0) || (topu <= bot)) return(0);
+    }
+    t = divscale24(topt,bot);
+    intx.$ = x1 + mulscale24(x21,t);
+    inty.$ = y1 + mulscale24(y21,t);
+    intz.$ = z1 + mulscale24(z2-z1,t);
+    return(1);
+}
 
 
-//int32_t lineintersect(int32_t x1, int32_t y1, int32_t z1, int32_t x2, int32_t y2, int32_t z2, int32_t x3,
-//                      int32_t y3, int32_t x4, int32_t y4, int32_t *intx, int32_t *inty, int32_t *intz)
-//{
-//    return lintersect(x1, y1, z1, x2, y2, z2, x3, y3, x4, y4, intx, inty, intz);
-//}
+function /*int32_t*/ lineintersect(/*int32_t*/ x1:number, /*int32_t*/ y1:number, /*int32_t*/ z1:number, /*int32_t*/ x2:number, /*int32_t*/ y2:number, /*int32_t*/ z2:number, /*int32_t*/ x3:number,
+                      /*int32_t*/ y3:number, /*int32_t*/ x4:number, /*int32_t*/ y4:number, /*int32_t*/ intx:R<number>, /*int32_t*/ inty:R<number>, /*int32_t*/ intz:R<number>):number
+{
+    return lintersect(x1, y1, z1, x2, y2, z2, x3, y3, x4, y4, intx, inty, intz);
+}
 
 //
 // rintersect (internal)
@@ -11657,7 +11657,7 @@ function inside(/*int32_t*/ x: number, /*int32_t*/ y: number, /*int16_t*/ sectnu
     return -1;
 }
 
-function /*int32_t */getangle(/*int32_t */xvect:number, /*int32_t */yvect:number)
+function /*int32_t */getangle(/*int32_t */xvect:number, /*int32_t */yvect:number):number
 {
     if ((xvect|yvect) == 0) return(0);
     if (xvect == 0) return 512+((yvect<0?1:0)<<10);
@@ -12088,7 +12088,7 @@ function /*int32_t */hitscan_trysector(/*const vec3_t **/sv: IVec3, sec:sectorty
         else
         {
             var/*const int32_t */curidx=/*(int32_t)*/tmp[0];
-            var curspr=/*(spritetype *)*/tmp[1];
+            var curspr:spritetype=/*(spritetype *)*/sprite[tmp[1]];
             var /*const int32_t */thislastsec = tmp[2];
 
             if (!thislastsec)
@@ -12644,104 +12644,112 @@ break;/*restart_grand*/}
 
 
 ////
-//// neartag
-////
-//void neartag(int32_t xs, int32_t ys, int32_t zs, int16_t sectnum, int16_t ange, int16_t *neartagsector, int16_t *neartagwall,
-//             int16_t *neartagsprite, int32_t *neartaghitdist, int32_t neartagrange, uint8_t tagsearch,
-//             int32_t (*blacklist_sprite_func)(int32_t))
-//{
-//    int16_t tempshortcnt, tempshortnum;
+// neartag
+//
+function neartag(/*int32_t*/ xs:number, /*int32_t*/ ys:number, /*int32_t */zs:number, /*int16_t */sectnum:number, /*int16_t */ange:number, /*int16_t */neartagsector:R<number>, /*int16_t */neartagwall:R<number>,
+             /*int16_t **/neartagsprite:R<number>, /*int32_t **/neartaghitdist:R<number>, /*int32_t */neartagrange:number, /*uint8_t */tagsearch:number,
+             blacklist_sprite_func: any/*(number) => ():number*/ /*int32_t (*blacklist_sprite_func)(int32_t)*/):void
+{
+    var/*int16_t */tempshortcnt, tempshortnum;
 
-//    const int32_t vx = mulscale14(sintable[(ange+2560)&2047],neartagrange);
-//    const int32_t vy = mulscale14(sintable[(ange+2048)&2047],neartagrange);
-//    vec3_t hitv = { xs+vx, ys+vy, 0 };
-//    const vec3_t sv = { xs, ys, zs };
+    var/*const int32_t */vx = mulscale14(sintable[(ange+2560)&2047],neartagrange);
+    var/*const int32_t */vy = mulscale14(sintable[(ange+2048)&2047],neartagrange);
+    var hitv = new vec3_t ( xs+vx, ys+vy, 0 );
+    var sv = new vec3_t ( xs, ys, zs );
 
-//    *neartagsector = -1; *neartagwall = -1; *neartagsprite = -1;
-//    *neartaghitdist = 0;
+    neartagsector.$ = -1; neartagwall.$ = -1; neartagsprite.$ = -1;
+    neartaghitdist.$ = 0;
 
-//    if (sectnum < 0 || (tagsearch & 3) == 0)
-//        return;
+    if (sectnum < 0 || (tagsearch & 3) == 0)
+        return;
 
-//    clipsectorlist[0] = sectnum;
-//    tempshortcnt = 0; tempshortnum = 1;
+    clipsectorlist[0] = sectnum;
+    tempshortcnt = 0; tempshortnum = 1;
 
-//    do
-//    {
-//        const int32_t dasector = clipsectorlist[tempshortcnt];
+    do
+    {
+        var /*int32_t */dasector = clipsectorlist[tempshortcnt];
 
-//        const int32_t startwall = sector[dasector].wallptr;
-//        const int32_t endwall = startwall + sector[dasector].wallnum - 1;
-//        const walltype *wal;
-//        int32_t z;
+        var /*int32_t*/ startwall = sector[dasector].wallptr;
+        var /*int32_t*/ endwall = startwall + sector[dasector].wallnum - 1;
+        var wal: walltype,walIdx:number;
+        var/*int32_t */z:number;
 
-//        for (z=startwall,wal=&wall[startwall]; z<=endwall; z++,wal++)
-//        {
-//            const walltype *const wal2 = &wall[wal.point2];
-//            const int32_t nextsector = wal.nextsector;
+        for (z=startwall,wal=wall[walIdx=startwall]; z<=endwall; z++, wal = wall[++walIdx])
+        {
+            var wal2 = wall[wal.point2];
+            var /*int32_t */nextsector = wal.nextsector;
 
-//            const int32_t x1=wal.x, y1=wal.y, x2=wal2.x, y2=wal2.y;
-//            int32_t intx, inty, intz, good = 0;
+            var/*const int32_t */x1=wal.x, y1=wal.y, x2=wal2.x, y2=wal2.y;
+            var/*int32_t */intx:number, inty:number, intz:number, good = 0;
 
-//            if (nextsector >= 0)
-//            {
-//                if ((tagsearch&1) && sector[nextsector].lotag) good |= 1;
-//                if ((tagsearch&2) && sector[nextsector].hitag) good |= 1;
-//            }
+            if (nextsector >= 0)
+            {
+                if ((tagsearch&1) && sector[nextsector].lotag) good |= 1;
+                if ((tagsearch&2) && sector[nextsector].hitag) good |= 1;
+            }
 
-//            if ((tagsearch&1) && wal.lotag) good |= 2;
-//            if ((tagsearch&2) && wal.hitag) good |= 2;
+            if ((tagsearch&1) && wal.lotag) good |= 2;
+            if ((tagsearch&2) && wal.hitag) good |= 2;
 
-//            if ((good == 0) && (nextsector < 0)) continue;
-//            if ((int64_t)(x1-xs)*(y2-ys) < (int64_t)(x2-xs)*(y1-ys)) continue;
+            if ((good == 0) && (nextsector < 0)) continue;
+            if (/*(int64_t)*/(x1-xs)*(y2-ys) < /*(int64_t)*/(x2-xs)*(y1-ys)) continue;
 
-//            if (lintersect(xs,ys,zs,hitv.x,hitv.y,hitv.z,x1,y1,x2,y2,&intx,&inty,&intz) == 1)
-//            {
-//                if (good != 0)
-//                {
-//                    if (good&1) *neartagsector = nextsector;
-//                    if (good&2) *neartagwall = z;
-//                    *neartaghitdist = dmulscale14(intx-xs,sintable[(ange+2560)&2047],inty-ys,sintable[(ange+2048)&2047]);
-//                    hitv.x = intx; hitv.y = inty; hitv.z = intz;
-//                }
+            var $intx = new R(intx);
+            var $inty = new R(inty);
+            var $intz = new R(intz);
+            var result = lintersect(xs,ys,zs,hitv.x,hitv.y,hitv.z,x1,y1,x2,y2,$intx,$inty,$intz) == 1;
+            intx = $intx.$;
+            inty = $inty.$;
+            intz = $intz.$;
 
-//                if (nextsector >= 0)
-//                {
-//                    int32_t zz;
-//                    for (zz=tempshortnum-1; zz>=0; zz--)
-//                        if (clipsectorlist[zz] == nextsector) break;
-//                    if (zz < 0) clipsectorlist[tempshortnum++] = nextsector;
-//                }
-//            }
-//        }
+            if (result)
+            {
+                if (good != 0)
+                {
+                    if (good&1) neartagsector.$ = nextsector;
+                    if (good&2) neartagwall.$ = z;
+                    neartaghitdist.$ = dmulscale14(intx-xs,sintable[(ange+2560)&2047],inty-ys,sintable[(ange+2048)&2047]);
+                    hitv.x = intx; hitv.y = inty; hitv.z = intz;
+                }
 
-//        tempshortcnt++;
+                if (nextsector >= 0)
+                {
+                    var/*int32_t */zz:number;
+                    for (zz=tempshortnum-1; zz>=0; zz--)
+                        if (clipsectorlist[zz] == nextsector) break;
+                    if (zz < 0) clipsectorlist[tempshortnum++] = nextsector;
+                }
+            }
+        }
 
-//        if (tagsearch & 4)
-//            continue; // skip sprite search
+        tempshortcnt++;
 
-//        for (z=headspritesect[dasector]; z>=0; z=nextspritesect[z])
-//        {
-//            const spritetype *const spr = &sprite[z];
+        if (tagsearch & 4)
+            continue; // skip sprite search
 
-//            if (blacklist_sprite_func && blacklist_sprite_func(z))
-//                continue;
+        for (z=headspritesect[dasector]; z>=0; z=nextspritesect[z])
+        {
+            var spr = sprite[z];
 
-//            if (((tagsearch&1) && spr.lotag) || ((tagsearch&2) && spr.hitag))
-//            {
-//                if (try_facespr_intersect(spr, &sv, vx, vy, 0, &hitv, 1))
-//                {
-//                    *neartagsprite = z;
-//                    *neartaghitdist = dmulscale14(hitv.x-xs, sintable[(ange+2560)&2047],
-//                                                  hitv.y-ys, sintable[(ange+2048)&2047]);
-//                }
-//            }
-//        }
-//    }
-//    while (tempshortcnt < tempshortnum);
+            if (blacklist_sprite_func && blacklist_sprite_func(z))
+                continue;
 
-//    return;
-//}
+            if (((tagsearch&1) && spr.lotag) || ((tagsearch&2) && spr.hitag))
+            {
+                if (try_facespr_intersect(spr, sv, vx, vy, 0, hitv, 1))
+                {
+                    neartagsprite.$ = z;
+                    neartaghitdist.$ = dmulscale14(hitv.x-xs, sintable[(ange+2560)&2047],
+                                                  hitv.y-ys, sintable[(ange+2048)&2047]);
+                }
+            }
+        }
+    }
+    while (tempshortcnt < tempshortnum);
+
+    return;
+}
 
 
 //

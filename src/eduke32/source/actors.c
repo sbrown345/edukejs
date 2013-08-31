@@ -8339,8 +8339,6 @@ void G_MoveWorld(void)
     }
     while (k--);
 
-#ifdef DEBUG_TODO
     G_DoSectorAnimations();
-#endif
     G_MoveFX();               //ST 11
 }

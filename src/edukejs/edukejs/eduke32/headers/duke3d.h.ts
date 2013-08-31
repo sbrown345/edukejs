@@ -166,14 +166,14 @@ function G_HaveActor(/*int32_t */actortile: number): number
 //#endif
 }
 
-//static inline int32_t G_InitialActorStrength(int32_t actortile)
-//{
+function /*static inline int32_t */G_InitialActorStrength(/*int32_t */actortile:number):number
+{
 //#ifdef LUNATIC
 //    return g_elActors[actortile].strength;
 //#else
-//    return g_tile[actortile].execPtr[0];
+    return script[g_tile[actortile].execPtr];/*g_tile[actortile].execPtr[0];*/
 //#endif
-//}
+}
 
 //#ifdef EXTERNC
 //}

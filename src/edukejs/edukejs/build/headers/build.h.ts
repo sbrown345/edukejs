@@ -465,13 +465,13 @@ class spritetype implements ITypeInfo, IVec3
     private  _x:number; private _y:number; private _z:number;         //Tracker(Sprite, int32_t)  
 
     private _cstat: Uint16Array;
-    picnum:number;                            //Tracker(Sprite, int16_t)  
+    private _picnum:Int16Array;                            //Tracker(Sprite, int16_t)  
     shade:number;                             //Tracker(Sprite, int8_t)   
     pal:number; clipdist:number; filler:number;   //Tracker(Sprite, uint8_t)  
     xrepeat:number; yrepeat:number;                  //Tracker(Sprite, uint8_t)  
     xoffset:number; yoffset:number;                  //Tracker(Sprite, int8_t)   
-    sectnum:number; statnum:number;                  //Tracker(Sprite, int16_t)  
-    ang:number; owner:number; private _xvel:Int16Array; private _yvel:Int16Array; private _zvel:Int16Array;      //Tracker(Sprite, int16_t)  
+    _sectnum:Int16Array; statnum:number;                  //Tracker(Sprite, int16_t)  
+    _ang:number; owner:number; private _xvel:Int16Array; private _yvel:Int16Array; private _zvel:Int16Array;      //Tracker(Sprite, int16_t)  
     private _lotag:Uint16Array;private _hitag:Uint16Array;                      //Tracker(Sprite, uint16_t) 
     private _extra:Int16Array;                             //Tracker(Sprite, int16_t)  
 
@@ -484,6 +484,15 @@ class spritetype implements ITypeInfo, IVec3
     
     get cstat(): number  {return this._cstat[0];}
     set cstat(val: number) {this._cstat[0] = val;} //Tracker(Sprite, uint16_t)
+    
+    get picnum(): number  {return this._picnum[0];}
+    set picnum(val: number) {assert.int32(val); this._picnum[0] = val;} //Tracker(Sprite, int16_t)
+    
+    get sectnum(): number  {return this._sectnum[0];}
+    set sectnum(val: number) {this._sectnum[0] = val;} //Tracker(Sprite, int16_t)
+
+    get ang(): number  {return this._ang[0];}
+    set ang(val: number) {assert.int16(val); this._ang[0] = val; }
 
     get xvel(): number  {return this._xvel[0];}
     set xvel(val: number) {this._xvel[0] = val; }
@@ -520,13 +529,13 @@ class spritetype implements ITypeInfo, IVec3
     init(): void {
         this.x = 0, this.y = 0, this.z = 0;         //Tracker(Sprite, int32_t)  
         this._cstat = new Uint16Array(1);            //Tracker(Sprite, uint16_t) //todo: force this to be u16??????
-        this.picnum = 0;                            //Tracker(Sprite, int16_t)  
+        this._picnum = new Int16Array(1);                            //Tracker(Sprite, int16_t)  
         this.shade = 0;                             //Tracker(Sprite, int8_t)   
         this.pal = 0, this.clipdist = 0, this.filler = 0;   //Tracker(Sprite, uint8_t)  
         this.xrepeat = 0, this.yrepeat = 0;                  //Tracker(Sprite, uint8_t)  
         this.xoffset = 0, this.yoffset = 0;                  //Tracker(Sprite, int8_t)   
-        this.sectnum = 0, this.statnum = 0;                  //Tracker(Sprite, int16_t)  
-        this.ang = 0, this.owner = 0, this._xvel = new Int16Array(1), this._yvel = new Int16Array(1), this._zvel = new Int16Array(1);      //Tracker(Sprite, int16_t)  
+        this._sectnum = new Int16Array(1), this.statnum = 0;                  //Tracker(Sprite, int16_t)  
+        this._ang = new Int16Array(1); this.owner = 0, this._xvel = new Int16Array(1), this._yvel = new Int16Array(1), this._zvel = new Int16Array(1);      //Tracker(Sprite, int16_t)  
         this._lotag = new Uint16Array(1), this._hitag = new Uint16Array(1);                     //Tracker(Sprite, uint16_t) 
         this._extra = new Int16Array(1);                             //Tracker(Sprite, int16_t)  
     }

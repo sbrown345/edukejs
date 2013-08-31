@@ -264,7 +264,7 @@ function /*int32_t */A_GetFurthestAngle(/*int32_t */iActor:number, /*int32_t */a
         var /*int32_t*/ d:number, j:number;
         var /*int32_t*/ greatestd = INT32_MIN;
         var /*int32_t*/ angincs=2048/angs;
-        var hit:hitdata_t;
+        var hit = new hitdata_t();
 
         for (j=s.ang; j<(2048+s.ang); j+=angincs)
         {
@@ -296,7 +296,7 @@ function/*int32_t */A_FurthestVisiblePoint(/*int32_t*/ iActor:number, ts:spritet
         var/*int32_t */d:number, da:number;//, d, cd, ca,tempx,tempy,cx,cy;
         var/*int32_t */j:number, angincs:number;
         var s = sprite[iActor];
-        var hit:hitdata_t;
+        var hit= new hitdata_t();
 
         if ((!g_netServer && ud.multimode < 2) && ud.player_skill < 3)
             angincs = 2048/2;
@@ -818,36 +818,36 @@ function VM_Move():void
     else vm.g_sp.shade += (sector[vm.g_sp.sectnum].floorshade-vm.g_sp.shade)>>1;
 }
 
-//static void P_AddWeaponMaybeSwitch(DukePlayer_t *ps, int32_t weap)
-//{
-//    if ((ps.weaponswitch & 1) && (ps.weaponswitch & 4))
-//    {
-//        int32_t snum = sprite[ps.i].yvel;
-//        var/*int32_t */i, w, new_wchoice = -1, curr_wchoice = -1;
+function P_AddWeaponMaybeSwitch(ps:DukePlayer_t, /*int32_t */weap:number):void
+{
+    if ((ps.weaponswitch & 1) && (ps.weaponswitch & 4))
+    {
+        var /*int32_t */snum = sprite[ps.i].yvel;
+        var/*int32_t */i, w, new_wchoice = -1, curr_wchoice = -1;
 
-//        for (i=0; i<10 && (new_wchoice < 0 || curr_wchoice < 0); i++)
-//        {
-//            w = g_player[snum].wchoice[i];
+        for (i=0; i<10 && (new_wchoice < 0 || curr_wchoice < 0); i++)
+        {
+            w = g_player[snum].wchoice[i];
 
-//            if (w == 0) w = 9;
-//            else w--;
+            if (w == 0) w = 9;
+            else w--;
 
-//            if (w == ps.curr_weapon)
-//                curr_wchoice = i;
-//            if (w == weap)
-//                new_wchoice = i;
-//        }
+            if (w == ps.curr_weapon)
+                curr_wchoice = i;
+            if (w == weap)
+                new_wchoice = i;
+        }
 
-//        if (new_wchoice < curr_wchoice)
-//            P_AddWeapon(ps, weap);
-//        else
-//            P_AddWeaponNoSwitch(ps, weap);
-//    }
-//    else if (ps.weaponswitch & 1)
-//        P_AddWeapon(ps, weap);
-//    else
-//        P_AddWeaponNoSwitch(ps, weap);
-//}
+        if (new_wchoice < curr_wchoice)
+            P_AddWeapon(ps, weap);
+        else
+            P_AddWeaponNoSwitch(ps, weap);
+    }
+    else if (ps.weaponswitch & 1)
+        P_AddWeapon(ps, weap);
+    else
+        P_AddWeaponNoSwitch(ps, weap);
+}
 
 //#if defined LUNATIC
 //void P_AddWeaponMaybeSwitchI(int32_t snum, int32_t weap)
@@ -1005,57 +1005,57 @@ function VM_Fall(/*int32_t */g_i:number, g_sp:spritetype ):void
     g_sp.zvel = 0;
 }
 
-//static int32_t VM_ResetPlayer(int32_t g_p, int32_t g_flags)
-//{
-//    //AddLog("resetplayer");
-//    if (!g_netServer && ud.multimode < 2)
-//    {
-//        if (g_lastSaveSlot >= 0 && ud.recstat != 2)
-//        {
-//            g_player[g_p].ps.gm |= MODE_MENU;
-//            KB_ClearKeyDown(sc_Space);
-//            M_ChangeMenu(15000);
-//        }
-//        else g_player[g_p].ps.gm = MODE_RESTART;
+function /*int32_t */VM_ResetPlayer(/*int32_t */g_p:number, /*int32_t */g_flags:number):number
+{
+    //AddLog("resetplayer");
+    if (!g_netServer && ud.multimode < 2)
+    {
+        if (g_lastSaveSlot >= 0 && ud.recstat != 2)
+        {
+            g_player[g_p].ps.gm |= MODE_MENU;
+            KB_ClearKeyDown(sc_Space);
+            M_ChangeMenu(15000);
+        }
+        else g_player[g_p].ps.gm = MODE_RESTART;
 
-//        g_flags |= VM_NOEXECUTE;
-//    }
-//    else
-//    {
-//        if (g_p == myconnectindex)
-//        {
-//            CAMERADIST = 0;
-//            CAMERACLOCK = totalclock;
-//        }
+        g_flags |= VM_NOEXECUTE;
+    }
+    else
+    {
+        if (g_p == myconnectindex)
+        {
+            CAMERADIST = 0;
+            CAMERACLOCK = totalclock;
+        }
 
-//        if (g_fakeMultiMode)
-//            P_ResetPlayer(g_p);
+        if (g_fakeMultiMode)
+            P_ResetPlayer(g_p);
 //#ifndef NETCODE_DISABLE
-//        if (g_netServer)
-//        {
-//            int32_t jj = 0;
+        if (g_netServer)
+        {todoThrow();
+            var/*int32_t */jj = 0;
 
-//            P_ResetPlayer(g_p);
+            //P_ResetPlayer(g_p);
 
-//            packbuf[jj++] = PACKET_PLAYER_SPAWN;
-//            packbuf[jj++] = g_p;
+            //packbuf[jj++] = PACKET_PLAYER_SPAWN;
+            //packbuf[jj++] = g_p;
 
-//            Bmemcpy(&packbuf[jj], &g_player[g_p].ps.pos.x, sizeof(vec3_t) * 2);
-//            jj += sizeof(vec3_t) * 2;
+            //Bmemcpy(&packbuf[jj], &g_player[g_p].ps.pos.x, sizeof(vec3_t) * 2);
+            //jj += sizeof(vec3_t) * 2;
 
-//            packbuf[jj++] = 0;
+            //packbuf[jj++] = 0;
 
-//            enet_host_broadcast(g_netServer, CHAN_GAMESTATE, enet_packet_create(
-//                                    packbuf, jj, ENET_PACKET_FLAG_RELIABLE));
-//        }
+            //enet_host_broadcast(g_netServer, CHAN_GAMESTATE, enet_packet_create(
+            //                        packbuf, jj, ENET_PACKET_FLAG_RELIABLE));
+        }
 //#endif
-//    }
+    }
 
-//    P_UpdateScreenPal(g_player[g_p].ps);
-//    //AddLog("EOF: resetplayer");
+    P_UpdateScreenPal(g_player[g_p].ps);
+    //AddLog("EOF: resetplayer");
 
-//    return g_flags;
-//}
+    return g_flags;
+}
 
 //void G_GetTimeDate(int32_t *vals)
 //{
@@ -3029,8 +3029,8 @@ function VM_Execute(/*int32_t */loop: number): void
         case CON_HITSCAN:
             insptr++;
             {
-                var vect = new vec3_t ();
-                var hit = new hitdata_t ();
+                var vect = new vec3_t();
+                var hit = new hitdata_t();
 
                 vect.x = Gv_GetVarX(script[insptr++]);
                 vect.y = Gv_GetVarX(script[insptr++]);
@@ -3596,25 +3596,33 @@ function VM_Execute(/*int32_t */loop: number): void
         case CON_OPERATE:
             insptr++;
             if (sector[vm.g_sp.sectnum].lotag == 0)
-            {todoThrow();
-                //neartag(vm.g_sp.x,vm.g_sp.y,vm.g_sp.z-(32<<8),vm.g_sp.sectnum,vm.g_sp.ang,
-                //        &neartagsector,&neartagwall,&neartagsprite,&neartaghitdist, 768, 4+1, NULL);
+            {
+                var $neartagsector = new R(neartagsector);
+                var $neartagwall = new R(neartagwall);
+                var $neartagsprite = new R(neartagsprite);
+                var $neartaghitdist = new R(neartaghitdist);
+                neartag(vm.g_sp.x,vm.g_sp.y,vm.g_sp.z-(32<<8),vm.g_sp.sectnum,vm.g_sp.ang,
+                        $neartagsector,$neartagwall,$neartagsprite,$neartaghitdist, 768, 4+1, NULL);
+                neartagsector = $neartagsector.$;
+                neartagwall = $neartagwall.$;
+                neartagsprite = $neartagsprite.$;
+                neartaghitdist = $neartaghitdist.$;
 
-                //if (neartagsector >= 0 && isanearoperator(sector[neartagsector].lotag))
-                //    if ((sector[neartagsector].lotag&0xff) == ST_23_SWINGING_DOOR || sector[neartagsector].floorz == sector[neartagsector].ceilingz)
-                //        if ((sector[neartagsector].lotag&16384) == 0)
-                //            if ((sector[neartagsector].lotag&32768) == 0)
-                //            {
-                //                var/*int32_t */j = headspritesect[neartagsector];
-                //                while (j >= 0)
-                //                {
-                //                    if (sprite[j].picnum == ACTIVATOR)
-                //                        break;
-                //                    j = nextspritesect[j];
-                //                }
-                //                if (j == -1)
-                //                    G_OperateSectors(neartagsector,vm.g_i);
-                //            }
+                if (neartagsector >= 0 && isanearoperator(sector[neartagsector].lotag))
+                    if ((sector[neartagsector].lotag&0xff) == ST_23_SWINGING_DOOR || sector[neartagsector].floorz == sector[neartagsector].ceilingz)
+                        if ((sector[neartagsector].lotag&16384) == 0)
+                            if ((sector[neartagsector].lotag&32768) == 0)
+                            {
+                                var/*int32_t */j = headspritesect[neartagsector];
+                                while (j >= 0)
+                                {
+                                    if (sprite[j].picnum == ACTIVATOR)
+                                        break;
+                                    j = nextspritesect[j];
+                                }
+                                if (j == -1)
+                                    G_OperateSectors(neartagsector,vm.g_i);
+                            }
             }
             continue;
 

@@ -304,80 +304,80 @@ function A_FindPlayer(/*const spritetype **/s: spritetype, d: R<number>): number
     }
 }
 
-//void G_DoSectorAnimations(void)
-//{
-//    int32_t i, j, a, p, v, dasect;
+function G_DoSectorAnimations():void
+{
+    var /*int32_t */i:number, j:number, a:number, p:number, v:number, dasect:number;
 
-//    for (i=g_animateCount-1; i>=0; i--)
-//    {
-//        a = *animateptr[i];
-//        v = animatevel[i]*TICSPERFRAME;
-//        dasect = animatesect[i];
+    for (i=g_animateCount-1; i>=0; i--)
+    {
+        a = animateptr[i].getValue();
+        v = animatevel[i]*TICSPERFRAME;
+        dasect = animatesect[i];
 
-//        if (a == animategoal[i])
-//        {
-//            G_StopInterpolation(animateptr[i]);
+        if (a == animategoal[i])
+        {
+            G_StopInterpolation(animateptr[i]);
 
-//            // This fixes a bug where wall or floor sprites contained in
-//            // elevator sectors (ST 16-19) would jitter vertically after the
-//            // elevator had stopped.
-//            if (animateptr[i] == &sector[animatesect[i]].floorz)
-//                for (j=headspritesect[dasect]; j>=0; j=nextspritesect[j])
-//                    if (sprite[j].statnum != STAT_EFFECTOR)
-//                        actor[j].bpos.z = sprite[j].z;
+            // This fixes a bug where wall or floor sprites contained in
+            // elevator sectors (ST 16-19) would jitter vertically after the
+            // elevator had stopped.
+            if (animateptr[i] == sector[animatesect[i]].floorz)
+                for (j=headspritesect[dasect]; j>=0; j=nextspritesect[j])
+                    if (sprite[j].statnum != STAT_EFFECTOR)
+                        actor[j].bpos.z = sprite[j].z;
 
-//            g_animateCount--;
-//            animateptr[i] = animateptr[g_animateCount];
-//            animategoal[i] = animategoal[g_animateCount];
-//            animatevel[i] = animatevel[g_animateCount];
-//            animatesect[i] = animatesect[g_animateCount];
-//            if (sector[animatesect[i]].lotag == ST_18_ELEVATOR_DOWN || sector[animatesect[i]].lotag == ST_19_ELEVATOR_UP)
-//                if (animateptr[i] == &sector[animatesect[i]].ceilingz)
-//                    continue;
+            g_animateCount--;
+            animateptr[i] = animateptr[g_animateCount];
+            animategoal[i] = animategoal[g_animateCount];
+            animatevel[i] = animatevel[g_animateCount];
+            animatesect[i] = animatesect[g_animateCount];
+            if (sector[animatesect[i]].lotag == ST_18_ELEVATOR_DOWN || sector[animatesect[i]].lotag == ST_19_ELEVATOR_UP)
+                if (animateptr[i] == sector[animatesect[i]].ceilingz)
+                    continue;
 
-//            if ((sector[dasect].lotag&0xff) != ST_22_SPLITTING_DOOR)
-//                A_CallSound(dasect,-1);
+            if ((sector[dasect].lotag&0xff) != ST_22_SPLITTING_DOOR)
+                A_CallSound(dasect,-1);
 
-//            continue;
-//        }
+            continue;
+        }
 
-//        if (v > 0)
-//        {
-//            a = min(a+v,animategoal[i]);
-//        }
-//        else
-//        {
-//            a = max(a+v,animategoal[i]);
-//        }
+        if (v > 0)
+        {
+            a = min(a+v,animategoal[i]);
+        }
+        else
+        {
+            a = max(a+v,animategoal[i]);
+        }
 
-//        if (animateptr[i] == &sector[animatesect[i]].floorz)
-//        {
-//            for (TRAVERSE_CONNECT(p))
-//                if (g_player[p].ps.cursectnum == dasect)
-//                    if ((sector[dasect].floorz-g_player[p].ps.pos.z) < (64<<8))
-//                        if (sprite[g_player[p].ps.i].owner >= 0)
-//                        {
-//                            g_player[p].ps.pos.z += v;
-//                            g_player[p].ps.vel.z = 0;
-//                            if (p == myconnectindex)
-//                            {
-//                                my.z += v;
-//                                myvel.z = 0;
-//                            }
-//                        }
+        if (animateptr[i] == sector[animatesect[i]].floorz)
+        {
+            for (p = 0; p != -1; p = connectpoint2[p])
+                if (g_player[p].ps.cursectnum == dasect)
+                    if ((sector[dasect].floorz-g_player[p].ps.pos.z) < (64<<8))
+                        if (sprite[g_player[p].ps.i].owner >= 0)
+                        {
+                            g_player[p].ps.pos.z += v;
+                            g_player[p].ps.vel.z = 0;
+                            if (p == myconnectindex)
+                            {
+                                my.z += v;
+                                myvel.z = 0;
+                            }
+                        }
 
-//            for (j=headspritesect[dasect]; j>=0; j=nextspritesect[j])
-//                if (sprite[j].statnum != STAT_EFFECTOR)
-//                {
-//                    actor[j].bpos.z = sprite[j].z;
-//                    sprite[j].z += v;
-//                    actor[j].floorz = sector[dasect].floorz+v;
-//                }
-//        }
+            for (j=headspritesect[dasect]; j>=0; j=nextspritesect[j])
+                if (sprite[j].statnum != STAT_EFFECTOR)
+                {
+                    actor[j].bpos.z = sprite[j].z;
+                    sprite[j].z += v;
+                    actor[j].floorz = sector[dasect].floorz+v;
+                }
+        }
 
-//        *animateptr[i] = a;
-//    }
-//}
+        animateptr[i].setValue(a);
+    }
+}
 
 class AnimatePtr {
     obj: any;
@@ -1104,7 +1104,7 @@ function G_OperateRespawns(/*int32_t */low:number):void
 function G_OperateActivators(/*int32_t */low:number,/*int32_t */snum:number): void 
 {
     var /*int32_t */i:number, j:number, k:number;
-    var /*int16_t **/p:number;
+    var /*int16_t **/p:Int16Array;
     var wal:walltype, walIdx:number;
 
     for (i=g_numCyclers-1; i>=0; i--)
@@ -1113,7 +1113,7 @@ function G_OperateActivators(/*int32_t */low:number,/*int32_t */snum:number): vo
 
         if (p[4] == low)
         {
-            p[5] = !p[5];
+            p[5] = !p[5]?1:0;
 
             sector[p[0]].floorshade = sector[p[0]].ceilingshade = p[3];
             walIdx = sector[p[0]].wallptr;wal = wall[walIdx];
@@ -1658,7 +1658,7 @@ function /*int32_t */P_ActivateSwitch(/*int32_t */snum:number,/*int32_t */w:numb
 //                case SE_24_CONVEYOR:
 //                case SE_34:
 //                case SE_25_PISTON:
-//                    actor[x].t_data[4] = !actor[x].t_data[4];
+//                    actor[x].t_data[4] = !actor[x].t_data[4]?1:0;
 //                    if (actor[x].t_data[4])
 //                        P_DoQuote(QUOTE_DEACTIVATED,g_player[snum].ps);
 //                    else P_DoQuote(QUOTE_ACTIVATED,g_player[snum].ps);
@@ -2065,472 +2065,474 @@ function A_DamageWall(/*int32_t */spr:number,/*int32_t */dawallnum:number,/*cons
 //    return 0;
 //}
 
-//// hard coded props... :(
-//void A_DamageObject(int32_t i,int32_t sn)
-//{
-//    int16_t j;
-//    int32_t k, rpg=0;
-//    spritetype *s;
+// hard coded props... :(
+function A_DamageObject(/*int32_t */i:number,/*int32_t */sn:number):void
+{
+    var /*int16_t */j:number;
+    var /*int32_t */k:number, rpg=0;
+    var s:spritetype;
 
-//    if (g_netClient)
-//    {
-//        return;
-//    }
+    if (g_netClient)
+    {
+        return;
+    }
 
-////    int32_t switchpicnum = sprite[i].picnum;
+//    int32_t switchpicnum = sprite[i].picnum;
 
-//    i &= (MAXSPRITES-1);
+    i &= (MAXSPRITES-1);
 
-//    if (A_CheckSpriteFlags(sn,SPRITE_PROJECTILE))
-//        if (SpriteProjectile[sn].workslike & PROJECTILE_RPG)
-//            rpg = 1;
-///*
-//    switchpicnum = sprite[i].picnum;
-//    if (sprite[i].picnum > WATERFOUNTAIN && sprite[i].picnum < WATERFOUNTAIN+3)
-//    {
-//        switchpicnum = WATERFOUNTAIN;
-//    }
-//*/
-//    switch (DYNAMICTILEMAP(sprite[i].picnum))
-//    {
-//    case OCEANSPRITE1__STATIC:
-//    case OCEANSPRITE2__STATIC:
-//    case OCEANSPRITE3__STATIC:
-//    case OCEANSPRITE4__STATIC:
-//    case OCEANSPRITE5__STATIC:
-//        A_Spawn(i,SMALLSMOKE);
-//        A_DeleteSprite(i);
-//        break;
-//    case QUEBALL__STATIC:
-//    case STRIPEBALL__STATIC:
-//        if (sprite[sn].picnum == QUEBALL || sprite[sn].picnum == STRIPEBALL)
-//        {
-//            sprite[sn].xvel = (sprite[i].xvel>>1)+(sprite[i].xvel>>2);
-//            sprite[sn].ang -= (sprite[i].ang<<1)+1024;
-//            sprite[i].ang = getangle(sprite[i].x-sprite[sn].x,sprite[i].y-sprite[sn].y)-512;
-//            if (S_CheckSoundPlaying(i,POOLBALLHIT) < 2)
-//                A_PlaySound(POOLBALLHIT,i);
-//        }
-//        else
-//        {
-//            if (krand()&3)
-//            {
-//                sprite[i].xvel = 164;
-//                sprite[i].ang = sprite[sn].ang;
-//            }
-//            else
-//            {
-//                A_SpawnWallGlass(i,-1,3);
-//                A_DeleteSprite(i);
-//            }
-//        }
-//        break;
-//    case TREE1__STATIC:
-//    case TREE2__STATIC:
-//    case TIRE__STATIC:
-//    case CONE__STATIC:
-//    case BOX__STATIC:
-//    {
-//        if (rpg == 1)
-//            if (actor[i].t_data[0] == 0)
-//            {
-//                sprite[i].cstat &= ~257;
-//                actor[i].t_data[0] = 1;
-//                A_Spawn(i,BURNING);
-//            }
-//        switch (DYNAMICTILEMAP(sprite[sn].picnum))
-//        {
-//        case RADIUSEXPLOSION__STATIC:
-//        case RPG__STATIC:
-//        case FIRELASER__STATIC:
-//        case HYDRENT__STATIC:
-//        case HEAVYHBOMB__STATIC:
-//            if (actor[i].t_data[0] == 0)
-//            {
-//                sprite[i].cstat &= ~257;
-//                actor[i].t_data[0] = 1;
-//                A_Spawn(i,BURNING);
-//            }
-//            break;
-//        }
-//        break;
-//    }
-//    case CACTUS__STATIC:
-//    {
-//        if (rpg == 1)
-//            for (k=64; k>0; k--)
-//            {
-//                j = A_InsertSprite(sprite[i].sectnum,sprite[i].x,sprite[i].y,sprite[i].z-(krand()%(48<<8)),SCRAP3+(krand()&3),-8,48,48,krand()&2047,(krand()&63)+64,-(krand()&4095)-(sprite[i].zvel>>2),i,5);
-//                sprite[j].pal = 8;
-//            }
-//        //        case CACTUSBROKE:
-//        switch (DYNAMICTILEMAP(sprite[sn].picnum))
-//        {
-//        case RADIUSEXPLOSION__STATIC:
-//        case RPG__STATIC:
-//        case FIRELASER__STATIC:
-//        case HYDRENT__STATIC:
-//        case HEAVYHBOMB__STATIC:
-//            for (k=64; k>0; k--)
-//            {
-//                j = A_InsertSprite(sprite[i].sectnum,sprite[i].x,sprite[i].y,sprite[i].z-(krand()%(48<<8)),SCRAP3+(krand()&3),-8,48,48,krand()&2047,(krand()&63)+64,-(krand()&4095)-(sprite[i].zvel>>2),i,5);
-//                sprite[j].pal = 8;
-//            }
+    if (A_CheckSpriteFlags(sn,SPRITE_PROJECTILE))
+        if (SpriteProjectile[sn].workslike & PROJECTILE_RPG)
+            rpg = 1;
+/*
+    switchpicnum = sprite[i].picnum;
+    if (sprite[i].picnum > WATERFOUNTAIN && sprite[i].picnum < WATERFOUNTAIN+3)
+    {
+        switchpicnum = WATERFOUNTAIN;
+    }
+*/
+    switch (DYNAMICTILEMAP(sprite[i].picnum))
+    {
+    case OCEANSPRITE1__STATIC:
+    case OCEANSPRITE2__STATIC:
+    case OCEANSPRITE3__STATIC:
+    case OCEANSPRITE4__STATIC:
+    case OCEANSPRITE5__STATIC:
+        A_Spawn(i,SMALLSMOKE);
+        A_DeleteSprite(i);
+        break;
+    case QUEBALL__STATIC:
+    case STRIPEBALL__STATIC:
+        if (sprite[sn].picnum == QUEBALL || sprite[sn].picnum == STRIPEBALL)
+        {
+            sprite[sn].xvel = (sprite[i].xvel>>1)+(sprite[i].xvel>>2);
+            sprite[sn].ang -= (sprite[i].ang<<1)+1024;
+            sprite[i].ang = getangle(sprite[i].x-sprite[sn].x,sprite[i].y-sprite[sn].y)-512;
+            if (S_CheckSoundPlaying(i,POOLBALLHIT) < 2)
+                A_PlaySound(POOLBALLHIT,i);
+        }
+        else
+        {
+            if (krand()&3)
+            {
+                sprite[i].xvel = 164;
+                sprite[i].ang = sprite[sn].ang;
+            }
+            else
+            {
+                A_SpawnWallGlass(i,-1,3);
+                A_DeleteSprite(i);
+            }
+        }
+        break;
+    case TREE1__STATIC:
+    case TREE2__STATIC:
+    case TIRE__STATIC:
+    case CONE__STATIC:
+    case BOX__STATIC:
+    {
+        if (rpg == 1)
+            if (actor[i].t_data[0] == 0)
+            {
+                sprite[i].cstat &= ~257;
+                actor[i].t_data[0] = 1;
+                A_Spawn(i,BURNING);
+            }
+        switch (DYNAMICTILEMAP(sprite[sn].picnum))
+        {
+        case RADIUSEXPLOSION__STATIC:
+        case RPG__STATIC:
+        case FIRELASER__STATIC:
+        case HYDRENT__STATIC:
+        case HEAVYHBOMB__STATIC:
+            if (actor[i].t_data[0] == 0)
+            {
+                sprite[i].cstat &= ~257;
+                actor[i].t_data[0] = 1;
+                A_Spawn(i,BURNING);
+            }
+            break;
+        }
+        break;
+    }
+    case CACTUS__STATIC:
+    {
+        if (rpg == 1)
+            for (k=64; k>0; k--)
+            {
+                j = A_InsertSprite(sprite[i].sectnum,sprite[i].x,sprite[i].y,sprite[i].z-(krand()%(48<<8)),SCRAP3+(krand()&3),-8,48,48,krand()&2047,(krand()&63)+64,-(krand()&4095)-(sprite[i].zvel>>2),i,5);
+                sprite[j].pal = 8;
+            }
+        //        case CACTUSBROKE:
+        switch (DYNAMICTILEMAP(sprite[sn].picnum))
+        {
+        case RADIUSEXPLOSION__STATIC:
+        case RPG__STATIC:
+        case FIRELASER__STATIC:
+        case HYDRENT__STATIC:
+        case HEAVYHBOMB__STATIC:
+            for (k=64; k>0; k--)
+            {
+                j = A_InsertSprite(sprite[i].sectnum,sprite[i].x,sprite[i].y,sprite[i].z-(krand()%(48<<8)),SCRAP3+(krand()&3),-8,48,48,krand()&2047,(krand()&63)+64,-(krand()&4095)-(sprite[i].zvel>>2),i,5);
+                sprite[j].pal = 8;
+            }
 
-//            if (sprite[i].picnum == CACTUS)
-//                sprite[i].picnum = CACTUSBROKE;
-//            sprite[i].cstat &= ~257;
-//            //       else A_DeleteSprite(i);
-//            break;
-//        }
-//        break;
-//    }
-//    case HANGLIGHT__STATIC:
-//    case GENERICPOLE2__STATIC:
-//        for (k=6; k>0; k--)
-//            A_InsertSprite(sprite[i].sectnum,sprite[i].x,sprite[i].y,sprite[i].z-(8<<8),SCRAP1+(krand()&15),-8,48,48,krand()&2047,(krand()&63)+64,-(krand()&4095)-(sprite[i].zvel>>2),i,5);
-//        A_PlaySound(GLASS_HEAVYBREAK,i);
-//        A_DeleteSprite(i);
-//        break;
+            if (sprite[i].picnum == CACTUS)
+                sprite[i].picnum = CACTUSBROKE;
+            sprite[i].cstat &= ~257;
+            //       else A_DeleteSprite(i);
+            break;
+        }
+        break;
+    }
+    case HANGLIGHT__STATIC:
+    case GENERICPOLE2__STATIC:
+        for (k=6; k>0; k--)
+            A_InsertSprite(sprite[i].sectnum,sprite[i].x,sprite[i].y,sprite[i].z-(8<<8),SCRAP1+(krand()&15),-8,48,48,krand()&2047,(krand()&63)+64,-(krand()&4095)-(sprite[i].zvel>>2),i,5);
+        A_PlaySound(GLASS_HEAVYBREAK,i);
+        A_DeleteSprite(i);
+        break;
 
 
-//    case FANSPRITE__STATIC:
-//        sprite[i].picnum = FANSPRITEBROKE;
-//        sprite[i].cstat &= (65535-257);
-//        if (sector[sprite[i].sectnum].floorpicnum == FANSHADOW)
-//            sector[sprite[i].sectnum].floorpicnum = FANSHADOWBROKE;
+    case FANSPRITE__STATIC:
+        sprite[i].picnum = FANSPRITEBROKE;
+        sprite[i].cstat &= (65535-257);
+        if (sector[sprite[i].sectnum].floorpicnum == FANSHADOW)
+            sector[sprite[i].sectnum].floorpicnum = FANSHADOWBROKE;
 
-//        A_PlaySound(GLASS_HEAVYBREAK,i);
-//        s = &sprite[i];
-//        for (j=16; j>0; j--) RANDOMSCRAP;
+        A_PlaySound(GLASS_HEAVYBREAK,i);
+        s = sprite[i];
+        for (j=16; j>0; j--) RANDOMSCRAP;
 
-//        break;
-//    case WATERFOUNTAIN__STATIC:
-//        //    case WATERFOUNTAIN+1:
-//        //    case WATERFOUNTAIN+2:
-//        //    case __STATIC:
-//        sprite[i].picnum = WATERFOUNTAINBROKE;
-//        A_Spawn(i,TOILETWATER);
-//        break;
-//    case SATELITE__STATIC:
-//    case FUELPOD__STATIC:
-//    case SOLARPANNEL__STATIC:
-//    case ANTENNA__STATIC:
-//        if (sprite[sn].extra != G_InitialActorStrength(SHOTSPARK1))
-//        {
-//            for (j=15; j>0; j--)
-//                A_InsertSprite(sprite[i].sectnum,sprite[i].x,sprite[i].y,sector[sprite[i].sectnum].floorz-(12<<8)-(j<<9),SCRAP1+(krand()&15),-8,64,64,
-//                               krand()&2047,(krand()&127)+64,-(krand()&511)-256,i,5);
-//            A_Spawn(i,EXPLOSION2);
-//            A_DeleteSprite(i);
-//        }
-//        break;
-//    case BOTTLE1__STATIC:
-//    case BOTTLE2__STATIC:
-//    case BOTTLE3__STATIC:
-//    case BOTTLE4__STATIC:
-//    case BOTTLE5__STATIC:
-//    case BOTTLE6__STATIC:
-//    case BOTTLE8__STATIC:
-//    case BOTTLE10__STATIC:
-//    case BOTTLE11__STATIC:
-//    case BOTTLE12__STATIC:
-//    case BOTTLE13__STATIC:
-//    case BOTTLE14__STATIC:
-//    case BOTTLE15__STATIC:
-//    case BOTTLE16__STATIC:
-//    case BOTTLE17__STATIC:
-//    case BOTTLE18__STATIC:
-//    case BOTTLE19__STATIC:
-//    case WATERFOUNTAINBROKE__STATIC:
-//    case DOMELITE__STATIC:
-//    case SUSHIPLATE1__STATIC:
-//    case SUSHIPLATE2__STATIC:
-//    case SUSHIPLATE3__STATIC:
-//    case SUSHIPLATE4__STATIC:
-//    case SUSHIPLATE5__STATIC:
-//    case WAITTOBESEATED__STATIC:
-//    case VASE__STATIC:
-//    case STATUEFLASH__STATIC:
-//    case STATUE__STATIC:
-//        if (sprite[i].picnum == BOTTLE10)
-//            A_SpawnMultiple(i, MONEY, 4+(krand()&3));
-//        else if (sprite[i].picnum == STATUE || sprite[i].picnum == STATUEFLASH)
-//        {
-//            A_SpawnRandomGlass(i,-1,40);
-//            A_PlaySound(GLASS_HEAVYBREAK,i);
-//        }
-//        else if (sprite[i].picnum == VASE)
-//            A_SpawnWallGlass(i,-1,40);
+        break;
+    case WATERFOUNTAIN__STATIC:
+        //    case WATERFOUNTAIN+1:
+        //    case WATERFOUNTAIN+2:
+        //    case __STATIC:
+        sprite[i].picnum = WATERFOUNTAINBROKE;
+        A_Spawn(i,TOILETWATER);
+        break;
+    case SATELITE__STATIC:
+    case FUELPOD__STATIC:
+    case SOLARPANNEL__STATIC:
+    case ANTENNA__STATIC:
+        if (sprite[sn].extra != G_InitialActorStrength(SHOTSPARK1))
+        {
+            for (j=15; j>0; j--)
+                A_InsertSprite(sprite[i].sectnum,sprite[i].x,sprite[i].y,sector[sprite[i].sectnum].floorz-(12<<8)-(j<<9),SCRAP1+(krand()&15),-8,64,64,
+                               krand()&2047,(krand()&127)+64,-(krand()&511)-256,i,5);
+            A_Spawn(i,EXPLOSION2);
+            A_DeleteSprite(i);
+        }
+        break;
+    case BOTTLE1__STATIC:
+    case BOTTLE2__STATIC:
+    case BOTTLE3__STATIC:
+    case BOTTLE4__STATIC:
+    case BOTTLE5__STATIC:
+    case BOTTLE6__STATIC:
+    case BOTTLE8__STATIC:
+    case BOTTLE10__STATIC:
+    case BOTTLE11__STATIC:
+    case BOTTLE12__STATIC:
+    case BOTTLE13__STATIC:
+    case BOTTLE14__STATIC:
+    case BOTTLE15__STATIC:
+    case BOTTLE16__STATIC:
+    case BOTTLE17__STATIC:
+    case BOTTLE18__STATIC:
+    case BOTTLE19__STATIC:
+    case WATERFOUNTAINBROKE__STATIC:
+    case DOMELITE__STATIC:
+    case SUSHIPLATE1__STATIC:
+    case SUSHIPLATE2__STATIC:
+    case SUSHIPLATE3__STATIC:
+    case SUSHIPLATE4__STATIC:
+    case SUSHIPLATE5__STATIC:
+    case WAITTOBESEATED__STATIC:
+    case VASE__STATIC:
+    case STATUEFLASH__STATIC:
+    case STATUE__STATIC:
+        if (sprite[i].picnum == BOTTLE10)
+            A_SpawnMultiple(i, MONEY, 4+(krand()&3));
+        else if (sprite[i].picnum == STATUE || sprite[i].picnum == STATUEFLASH)
+        {
+            A_SpawnRandomGlass(i,-1,40);
+            A_PlaySound(GLASS_HEAVYBREAK,i);
+        }
+        else if (sprite[i].picnum == VASE)
+            A_SpawnWallGlass(i,-1,40);
 
-//        A_PlaySound(GLASS_BREAKING,i);
-//        sprite[i].ang = krand()&2047;
-//        A_SpawnWallGlass(i,-1,8);
-//        A_DeleteSprite(i);
-//        break;
-//    case FETUS__STATIC:
-//        sprite[i].picnum = FETUSBROKE;
-//        A_PlaySound(GLASS_BREAKING,i);
-//        A_SpawnWallGlass(i,-1,10);
-//        break;
-//    case FETUSBROKE__STATIC:
-//        for (j=48; j>0; j--)
-//        {
-//            A_Shoot(i,BLOODSPLAT1);
-//            sprite[i].ang += 333;
-//        }
-//        A_PlaySound(GLASS_HEAVYBREAK,i);
-//        A_PlaySound(SQUISHED,i);
-//    case BOTTLE7__STATIC:
-//        A_PlaySound(GLASS_BREAKING,i);
-//        A_SpawnWallGlass(i,-1,10);
-//        A_DeleteSprite(i);
-//        break;
-//    case HYDROPLANT__STATIC:
-//        sprite[i].picnum = BROKEHYDROPLANT;
-//        A_PlaySound(GLASS_BREAKING,i);
-//        A_SpawnWallGlass(i,-1,10);
-//        break;
+        A_PlaySound(GLASS_BREAKING,i);
+        sprite[i].ang = krand()&2047;
+        A_SpawnWallGlass(i,-1,8);
+        A_DeleteSprite(i);
+        break;
+    case FETUS__STATIC:
+        sprite[i].picnum = FETUSBROKE;
+        A_PlaySound(GLASS_BREAKING,i);
+        A_SpawnWallGlass(i,-1,10);
+        break;
+    case FETUSBROKE__STATIC:
+        for (j=48; j>0; j--)
+        {
+            A_Shoot(i,BLOODSPLAT1);
+            sprite[i].ang += 333;
+        }
+        A_PlaySound(GLASS_HEAVYBREAK,i);
+        A_PlaySound(SQUISHED,i);
+    case BOTTLE7__STATIC:
+        A_PlaySound(GLASS_BREAKING,i);
+        A_SpawnWallGlass(i,-1,10);
+        A_DeleteSprite(i);
+        break;
+    case HYDROPLANT__STATIC:
+        sprite[i].picnum = BROKEHYDROPLANT;
+        A_PlaySound(GLASS_BREAKING,i);
+        A_SpawnWallGlass(i,-1,10);
+        break;
 
-//    case FORCESPHERE__STATIC:
-//        sprite[i].xrepeat = 0;
-//        actor[sprite[i].owner].t_data[0] = 32;
-//        actor[sprite[i].owner].t_data[1] = !actor[sprite[i].owner].t_data[1];
-//        actor[sprite[i].owner].t_data[2] ++;
-//        A_Spawn(i,EXPLOSION2);
-//        break;
+    case FORCESPHERE__STATIC:
+        sprite[i].xrepeat = 0;
+        actor[sprite[i].owner].t_data[0] = 32;
+        actor[sprite[i].owner].t_data[1] = !actor[sprite[i].owner].t_data[1]?1:0;
+        actor[sprite[i].owner].t_data[2] ++;
+        A_Spawn(i,EXPLOSION2);
+        break;
 
-//    case BROKEHYDROPLANT__STATIC:
-//        A_PlaySound(GLASS_BREAKING,i);
-//        A_SpawnWallGlass(i,-1,5);
-//        A_DeleteSprite(i);
-//        break;
+    case BROKEHYDROPLANT__STATIC:
+        A_PlaySound(GLASS_BREAKING,i);
+        A_SpawnWallGlass(i,-1,5);
+        A_DeleteSprite(i);
+        break;
 
-//    case TOILET__STATIC:
-//        sprite[i].picnum = TOILETBROKE;
-//        sprite[i].cstat |= (krand()&1)<<2;
-//        sprite[i].cstat &= ~257;
-//        A_Spawn(i,TOILETWATER);
-//        A_PlaySound(GLASS_BREAKING,i);
-//        break;
+    case TOILET__STATIC:
+        sprite[i].picnum = TOILETBROKE;
+        sprite[i].cstat |= (krand()&1)<<2;
+        sprite[i].cstat &= ~257;
+        A_Spawn(i,TOILETWATER);
+        A_PlaySound(GLASS_BREAKING,i);
+        break;
 
-//    case STALL__STATIC:
-//        sprite[i].picnum = STALLBROKE;
-//        sprite[i].cstat |= (krand()&1)<<2;
-//        sprite[i].cstat &= ~257;
-//        A_Spawn(i,TOILETWATER);
-//        A_PlaySound(GLASS_HEAVYBREAK,i);
-//        break;
+    case STALL__STATIC:
+        sprite[i].picnum = STALLBROKE;
+        sprite[i].cstat |= (krand()&1)<<2;
+        sprite[i].cstat &= ~257;
+        A_Spawn(i,TOILETWATER);
+        A_PlaySound(GLASS_HEAVYBREAK,i);
+        break;
 
-//    case HYDRENT__STATIC:
-//        sprite[i].picnum = BROKEFIREHYDRENT;
-//        A_Spawn(i,TOILETWATER);
+    case HYDRENT__STATIC:
+        sprite[i].picnum = BROKEFIREHYDRENT;
+        A_Spawn(i,TOILETWATER);
 
-//        //            for(k=0;k<5;k++)
-//        //          {
-//        //            j = A_InsertSprite(sprite[i].sectnum,sprite[i].x,sprite[i].y,sprite[i].z-(krand()%(48<<8)),SCRAP3+(krand()&3),-8,48,48,krand()&2047,(krand()&63)+64,-(krand()&4095)-(sprite[i].zvel>>2),i,5);
-//        //          sprite[j].pal = 2;
-//        //    }
-//        A_PlaySound(GLASS_HEAVYBREAK,i);
-//        break;
+        //            for(k=0;k<5;k++)
+        //          {
+        //            j = A_InsertSprite(sprite[i].sectnum,sprite[i].x,sprite[i].y,sprite[i].z-(krand()%(48<<8)),SCRAP3+(krand()&3),-8,48,48,krand()&2047,(krand()&63)+64,-(krand()&4095)-(sprite[i].zvel>>2),i,5);
+        //          sprite[j].pal = 2;
+        //    }
+        A_PlaySound(GLASS_HEAVYBREAK,i);
+        break;
 
-//    case GRATE1__STATIC:
-//        sprite[i].picnum = BGRATE1;
-//        sprite[i].cstat &= (65535-256-1);
-//        A_PlaySound(VENT_BUST,i);
-//        break;
+    case GRATE1__STATIC:
+        sprite[i].picnum = BGRATE1;
+        sprite[i].cstat &= (65535-256-1);
+        A_PlaySound(VENT_BUST,i);
+        break;
 
-//    case CIRCLEPANNEL__STATIC:
-//        sprite[i].picnum = CIRCLEPANNELBROKE;
-//        sprite[i].cstat &= (65535-256-1);
-//        A_PlaySound(VENT_BUST,i);
-//        break;
-//    case PANNEL1__STATIC:
-//    case PANNEL2__STATIC:
-//        sprite[i].picnum = BPANNEL1;
-//        sprite[i].cstat &= (65535-256-1);
-//        A_PlaySound(VENT_BUST,i);
-//        break;
-//    case PANNEL3__STATIC:
-//        sprite[i].picnum = BPANNEL3;
-//        sprite[i].cstat &= (65535-256-1);
-//        A_PlaySound(VENT_BUST,i);
-//        break;
-//    case PIPE1__STATIC:
-//    case PIPE2__STATIC:
-//    case PIPE3__STATIC:
-//    case PIPE4__STATIC:
-//    case PIPE5__STATIC:
-//    case PIPE6__STATIC:
-//        switch (DYNAMICTILEMAP(sprite[i].picnum))
-//        {
-//        case PIPE1__STATIC:
-//            sprite[i].picnum=PIPE1B;
-//            break;
-//        case PIPE2__STATIC:
-//            sprite[i].picnum=PIPE2B;
-//            break;
-//        case PIPE3__STATIC:
-//            sprite[i].picnum=PIPE3B;
-//            break;
-//        case PIPE4__STATIC:
-//            sprite[i].picnum=PIPE4B;
-//            break;
-//        case PIPE5__STATIC:
-//            sprite[i].picnum=PIPE5B;
-//            break;
-//        case PIPE6__STATIC:
-//            sprite[i].picnum=PIPE6B;
-//            break;
-//        }
+    case CIRCLEPANNEL__STATIC:
+        sprite[i].picnum = CIRCLEPANNELBROKE;
+        sprite[i].cstat &= (65535-256-1);
+        A_PlaySound(VENT_BUST,i);
+        break;
+    case PANNEL1__STATIC:
+    case PANNEL2__STATIC:
+        sprite[i].picnum = BPANNEL1;
+        sprite[i].cstat &= (65535-256-1);
+        A_PlaySound(VENT_BUST,i);
+        break;
+    case PANNEL3__STATIC:
+        sprite[i].picnum = BPANNEL3;
+        sprite[i].cstat &= (65535-256-1);
+        A_PlaySound(VENT_BUST,i);
+        break;
+    case PIPE1__STATIC:
+    case PIPE2__STATIC:
+    case PIPE3__STATIC:
+    case PIPE4__STATIC:
+    case PIPE5__STATIC:
+    case PIPE6__STATIC:
+        switch (DYNAMICTILEMAP(sprite[i].picnum))
+        {
+        case PIPE1__STATIC:
+            sprite[i].picnum=PIPE1B;
+            break;
+        case PIPE2__STATIC:
+            sprite[i].picnum=PIPE2B;
+            break;
+        case PIPE3__STATIC:
+            sprite[i].picnum=PIPE3B;
+            break;
+        case PIPE4__STATIC:
+            sprite[i].picnum=PIPE4B;
+            break;
+        case PIPE5__STATIC:
+            sprite[i].picnum=PIPE5B;
+            break;
+        case PIPE6__STATIC:
+            sprite[i].picnum=PIPE6B;
+            break;
+        }
 
-//        j = A_Spawn(i,STEAM);
-//        sprite[j].z = sector[sprite[i].sectnum].floorz-(32<<8);
-//        break;
+        j = A_Spawn(i,STEAM);
+        sprite[j].z = sector[sprite[i].sectnum].floorz-(32<<8);
+        break;
 
-//    case MONK__STATIC:
-//    case LUKE__STATIC:
-//    case INDY__STATIC:
-//    case JURYGUY__STATIC:
-//        A_PlaySound(sprite[i].lotag,i);
-//        A_Spawn(i,sprite[i].hitag);
-//    case SPACEMARINE__STATIC:
-//        sprite[i].extra -= sprite[sn].extra;
-//        if (sprite[i].extra > 0) break;
-//        sprite[i].ang = krand()&2047;
-//        A_Shoot(i,BLOODSPLAT1);
-//        sprite[i].ang = krand()&2047;
-//        A_Shoot(i,BLOODSPLAT2);
-//        sprite[i].ang = krand()&2047;
-//        A_Shoot(i,BLOODSPLAT3);
-//        sprite[i].ang = krand()&2047;
-//        A_Shoot(i,BLOODSPLAT4);
-//        sprite[i].ang = krand()&2047;
-//        A_Shoot(i,BLOODSPLAT1);
-//        sprite[i].ang = krand()&2047;
-//        A_Shoot(i,BLOODSPLAT2);
-//        sprite[i].ang = krand()&2047;
-//        A_Shoot(i,BLOODSPLAT3);
-//        sprite[i].ang = krand()&2047;
-//        A_Shoot(i,BLOODSPLAT4);
-//        A_DoGuts(i,JIBS1,1);
-//        A_DoGuts(i,JIBS2,2);
-//        A_DoGuts(i,JIBS3,3);
-//        A_DoGuts(i,JIBS4,4);
-//        A_DoGuts(i,JIBS5,1);
-//        A_DoGuts(i,JIBS3,6);
-//        S_PlaySound(SQUISHED);
-//        A_DeleteSprite(i);
-//        break;
-//    case CHAIR1__STATIC:
-//    case CHAIR2__STATIC:
-//        sprite[i].picnum = BROKENCHAIR;
-//        sprite[i].cstat = 0;
-//        break;
-//    case CHAIR3__STATIC:
-//    case MOVIECAMERA__STATIC:
-//    case SCALE__STATIC:
-//    case VACUUM__STATIC:
-//    case CAMERALIGHT__STATIC:
-//    case IVUNIT__STATIC:
-//    case POT1__STATIC:
-//    case POT2__STATIC:
-//    case POT3__STATIC:
-//    case TRIPODCAMERA__STATIC:
-//        A_PlaySound(GLASS_HEAVYBREAK,i);
-//        s = &sprite[i];
-//        for (j=16; j>0; j--) RANDOMSCRAP;
-//        A_DeleteSprite(i);
-//        break;
-//    case PLAYERONWATER__STATIC:
-//        i = sprite[i].owner;
-//    default:
-//        if ((sprite[i].cstat&16) && sprite[i].hitag == 0 && sprite[i].lotag == 0 && sprite[i].statnum == STAT_DEFAULT)
-//            break;
+    case MONK__STATIC:
+    case LUKE__STATIC:
+    case INDY__STATIC:
+    case JURYGUY__STATIC:
+        A_PlaySound(sprite[i].lotag,i);
+        A_Spawn(i,sprite[i].hitag);
+    case SPACEMARINE__STATIC:
+        sprite[i].extra -= sprite[sn].extra;
+        if (sprite[i].extra > 0) break;
+        sprite[i].ang = krand()&2047;
+        A_Shoot(i,BLOODSPLAT1);
+        sprite[i].ang = krand()&2047;
+        A_Shoot(i,BLOODSPLAT2);
+        sprite[i].ang = krand()&2047;
+        A_Shoot(i,BLOODSPLAT3);
+        sprite[i].ang = krand()&2047;
+        A_Shoot(i,BLOODSPLAT4);
+        sprite[i].ang = krand()&2047;
+        A_Shoot(i,BLOODSPLAT1);
+        sprite[i].ang = krand()&2047;
+        A_Shoot(i,BLOODSPLAT2);
+        sprite[i].ang = krand()&2047;
+        A_Shoot(i,BLOODSPLAT3);
+        sprite[i].ang = krand()&2047;
+        A_Shoot(i,BLOODSPLAT4);
+        A_DoGuts(i,JIBS1,1);
+        A_DoGuts(i,JIBS2,2);
+        A_DoGuts(i,JIBS3,3);
+        A_DoGuts(i,JIBS4,4);
+        A_DoGuts(i,JIBS5,1);
+        A_DoGuts(i,JIBS3,6);
+        S_PlaySound(SQUISHED);
+        A_DeleteSprite(i);
+        break;
+    case CHAIR1__STATIC:
+    case CHAIR2__STATIC:
+        sprite[i].picnum = BROKENCHAIR;
+        sprite[i].cstat = 0;
+        break;
+    case CHAIR3__STATIC:
+    case MOVIECAMERA__STATIC:
+    case SCALE__STATIC:
+    case VACUUM__STATIC:
+    case CAMERALIGHT__STATIC:
+    case IVUNIT__STATIC:
+    case POT1__STATIC:
+    case POT2__STATIC:
+    case POT3__STATIC:
+    case TRIPODCAMERA__STATIC:
+        A_PlaySound(GLASS_HEAVYBREAK,i);
+        s = sprite[i];
+        for (j=16; j>0; j--) RANDOMSCRAP;
+        A_DeleteSprite(i);
+        break;
+    case PLAYERONWATER__STATIC:
+        i = sprite[i].owner;
+    default:
+        if ((sprite[i].cstat&16) && sprite[i].hitag == 0 && sprite[i].lotag == 0 && sprite[i].statnum == STAT_DEFAULT)
+            break;
 
-//        if ((sprite[sn].picnum == FREEZEBLAST || sprite[sn].owner != i) && sprite[i].statnum != STAT_PROJECTILE)
-//        {
-//            if (A_CheckEnemySprite(&sprite[i]) == 1)
-//            {
-//                if (sprite[sn].picnum == RPG) sprite[sn].extra <<= 1;
+        if ((sprite[sn].picnum == FREEZEBLAST || sprite[sn].owner != i) && sprite[i].statnum != STAT_PROJECTILE)
+        {
+            if (A_CheckEnemySprite(sprite[i]) == 1)
+            {
+                if (sprite[sn].picnum == RPG) sprite[sn].extra <<= 1;
 
-//                if ((sprite[i].picnum != DRONE) && (sprite[i].picnum != ROTATEGUN) && (sprite[i].picnum != COMMANDER) && (sprite[i].picnum < GREENSLIME || sprite[i].picnum > GREENSLIME+7))
-//                    if (sprite[sn].picnum != FREEZEBLAST)
-//                        if (!A_CheckSpriteTileFlags(sprite[i].picnum, SPRITE_BADGUY))
-//                        {
-//                            j = A_Spawn(sn,JIBS6);
-//                            if (sprite[sn].pal == 6)
-//                                sprite[j].pal = 6;
-//                            sprite[j].z += (4<<8);
-//                            sprite[j].xvel = 16;
-//                            sprite[j].xrepeat = sprite[j].yrepeat = 24;
-//                            sprite[j].ang += 32-(krand()&63);
-//                        }
+                if ((sprite[i].picnum != DRONE) && (sprite[i].picnum != ROTATEGUN) && (sprite[i].picnum != COMMANDER) && (sprite[i].picnum < GREENSLIME || sprite[i].picnum > GREENSLIME+7))
+                    if (sprite[sn].picnum != FREEZEBLAST)
+                        if (!A_CheckSpriteTileFlags(sprite[i].picnum, SPRITE_BADGUY))
+                        {
+                            j = A_Spawn(sn,JIBS6);
+                            if (sprite[sn].pal == 6)
+                                sprite[j].pal = 6;
+                            sprite[j].z += (4<<8);
+                            sprite[j].xvel = 16;
+                            sprite[j].xrepeat = sprite[j].yrepeat = 24;
+                            sprite[j].ang += 32-(krand()&63);
+                        }
 
-//                j = sprite[sn].owner;
+                j = sprite[sn].owner;
 
-//                if (j >= 0 && sprite[j].picnum == APLAYER && sprite[i].picnum != ROTATEGUN && sprite[i].picnum != DRONE)
-//                    if (g_player[sprite[j].yvel].ps.curr_weapon == SHOTGUN_WEAPON)
-//                    {
-//                        A_Shoot(i,BLOODSPLAT3);
-//                        A_Shoot(i,BLOODSPLAT1);
-//                        A_Shoot(i,BLOODSPLAT2);
-//                        A_Shoot(i,BLOODSPLAT4);
-//                    }
+                if (j >= 0 && sprite[j].picnum == APLAYER && sprite[i].picnum != ROTATEGUN && sprite[i].picnum != DRONE)
+                    if (g_player[sprite[j].yvel].ps.curr_weapon == SHOTGUN_WEAPON)
+                    {
+                        A_Shoot(i,BLOODSPLAT3);
+                        A_Shoot(i,BLOODSPLAT1);
+                        A_Shoot(i,BLOODSPLAT2);
+                        A_Shoot(i,BLOODSPLAT4);
+                    }
 
-//                if (sprite[i].picnum != TANK && sprite[i].picnum != BOSS1 && sprite[i].picnum != BOSS4 && sprite[i].picnum != BOSS2 && sprite[i].picnum != BOSS3 && sprite[i].picnum != RECON && sprite[i].picnum != ROTATEGUN)
-//                {
-//                    if (sprite[i].extra > 0)
-//                    {
-//                        if ((sprite[i].cstat&48) == 0)
-//                            sprite[i].ang = (sprite[sn].ang+1024)&2047;
-//                        sprite[i].xvel = -(sprite[sn].extra<<2);
-//                        j = sprite[i].sectnum;
-//                        pushmove((vec3_t *)&sprite[i],&j,128L,(4L<<8),(4L<<8),CLIPMASK0);
-//                        if (j != sprite[i].sectnum && (unsigned)j < MAXSECTORS)
-//                            changespritesect(i,j);
-//                    }
-//                }
+                if (sprite[i].picnum != TANK && sprite[i].picnum != BOSS1 && sprite[i].picnum != BOSS4 && sprite[i].picnum != BOSS2 && sprite[i].picnum != BOSS3 && sprite[i].picnum != RECON && sprite[i].picnum != ROTATEGUN)
+                {
+                    if (sprite[i].extra > 0)
+                    {
+                        if ((sprite[i].cstat&48) == 0)
+                            sprite[i].ang = (sprite[sn].ang+1024)&2047;
+                        sprite[i].xvel = -(sprite[sn].extra<<2);
+                        j = sprite[i].sectnum;
+                        var $j = new R(j);
+                        pushmove(/*(vec3_t *)&*/sprite[i],$j,128,(4<<8),(4<<8),CLIPMASK0);
+                        j = $j.$;
+                        if (j != sprite[i].sectnum && /*(unsigned)*/j < MAXSECTORS)
+                            changespritesect(i,j);
+                    }
+                }
 
-//                if (sprite[i].statnum == STAT_ZOMBIEACTOR)
-//                {
-//                    changespritestat(i, STAT_ACTOR);
-//                    actor[i].timetosleep = SLEEPTIME;
-//                }
-//                if ((sprite[i].xrepeat < 24 || sprite[i].picnum == SHARK) && sprite[sn].picnum == SHRINKSPARK)
-//                    return;
-//            }
+                if (sprite[i].statnum == STAT_ZOMBIEACTOR)
+                {
+                    changespritestat(i, STAT_ACTOR);
+                    actor[i].timetosleep = SLEEPTIME;
+                }
+                if ((sprite[i].xrepeat < 24 || sprite[i].picnum == SHARK) && sprite[sn].picnum == SHRINKSPARK)
+                    return;
+            }
 
-//            if (sprite[i].statnum != STAT_ZOMBIEACTOR)
-//            {
-//                if (sprite[sn].picnum == FREEZEBLAST && ((sprite[i].picnum == APLAYER && sprite[i].pal == 1) || (g_freezerSelfDamage == 0 && sprite[sn].owner == i)))
-//                    return;
+            if (sprite[i].statnum != STAT_ZOMBIEACTOR)
+            {
+                if (sprite[sn].picnum == FREEZEBLAST && ((sprite[i].picnum == APLAYER && sprite[i].pal == 1) || (g_freezerSelfDamage == 0 && sprite[sn].owner == i)))
+                    return;
 
-//                actor[i].picnum = sprite[sn].picnum;
-//                actor[i].extra += sprite[sn].extra;
-//                actor[i].ang = sprite[sn].ang;
-//                actor[i].owner = sprite[sn].owner;
-//            }
+                actor[i].picnum = sprite[sn].picnum;
+                actor[i].extra += sprite[sn].extra;
+                actor[i].ang = sprite[sn].ang;
+                actor[i].owner = sprite[sn].owner;
+            }
 
-//            if (sprite[i].statnum == STAT_PLAYER)
-//            {
-//                DukePlayer_t *ps = g_player[sprite[i].yvel].ps;
+            if (sprite[i].statnum == STAT_PLAYER)
+            {
+                var ps = g_player[sprite[i].yvel].ps;
 
-//                if (ps.newowner >= 0)
-//                    G_ClearCameraView(ps);
+                if (ps.newowner >= 0)
+                    G_ClearCameraView(ps);
 
-//                if (sprite[i].xrepeat < 24 && sprite[sn].picnum == SHRINKSPARK)
-//                    return;
+                if (sprite[i].xrepeat < 24 && sprite[sn].picnum == SHRINKSPARK)
+                    return;
 
-//                if (sprite[actor[i].owner].picnum != APLAYER)
-//                    if (ud.player_skill >= 3)
-//                        sprite[sn].extra += (sprite[sn].extra>>1);
-//            }
+                if (sprite[actor[i].owner].picnum != APLAYER)
+                    if (ud.player_skill >= 3)
+                        sprite[sn].extra += (sprite[sn].extra>>1);
+            }
 
-//        }
-//        break;
-//    }
-//}
+        }
+        break;
+    }
+}
 
 function G_AlignWarpElevators(): void
 {
@@ -2676,7 +2678,7 @@ function P_HandleSharedKeys(/*int32_t */snum:number): void
 //            if (VM_OnEvent(EVENT_USENIGHTVISION,g_player[snum].ps.i,snum, -1, 0) == 0
 //                    &&  p.inv_amount[GET_HEATS] > 0)
 //            {
-//                p.heat_on = !p.heat_on;
+//                p.heat_on = !p.heat_on?1:0;
 //                P_UpdateScreenPal(p);
 //                p.inven_icon = ICON_HEATS;
 //                A_PlaySound(NITEVISION_ONOFF,p.i);
@@ -3037,7 +3039,7 @@ function P_HandleSharedKeys(/*int32_t */snum:number): void
 //            {
 //                if (p.inv_amount[GET_JETPACK] > 0)
 //                {
-//                    p.jetpack_on = !p.jetpack_on;
+//                    p.jetpack_on = !p.jetpack_on?1:0;
 //                    if (p.jetpack_on)
 //                    {
 //                        p.inven_icon = ICON_JETPACK;

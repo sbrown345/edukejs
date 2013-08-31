@@ -378,7 +378,7 @@ var PROJECTILE_HITSCAN             = 0x00000001,
     PROJECTILE_ACCURATE            = 0x00100000;
 //};
 
-var g_tile: tiledata_t[] = newStructArray(tiledata_t, MAXTILES);
+var g_tile: tiledata_t[] = newStructArray<tiledata_t>(tiledata_t, MAXTILES);
 var actor: actor_t[] = newStructArray<actor_t>(actor_t, MAXSPRITES);//extern actor_t          
 //extern int32_t          block_deletesprite;
 //extern int32_t          g_noEnemies;
