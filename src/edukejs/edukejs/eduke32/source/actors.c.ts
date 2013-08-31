@@ -1627,985 +1627,1009 @@ function G_MoveFallers():void
     }
 }
 
-//ACTOR_STATIC void G_MoveStandables(void)
-//{
-//    int32_t i = headspritestat[STAT_STANDABLE], j, switchpicnum;
-//    int32_t l=0, x;
-
-//    while (i >= 0)
-//    {
-//        const int32_t nexti = nextspritestat[i];
-
-//        int32_t *const t = &actor[i].t_data[0];
-//        spritetype *const s = &sprite[i];
-//        const int32_t sect = s.sectnum;
-
-//        if (sect < 0)
-//            KILLIT(i);
-
-//        // Rotation-fixed sprites in rotating sectors already have bpos* updated.
-//        if ((t[7]&(0xffff0000))!=ROTFIXSPR_MAGIC)
-//            Bmemcpy(&actor[i].bpos.x, s, sizeof(vec3_t));
-
-//        if (sprite[i].picnum >= CRANE && sprite[i].picnum <= CRANE+3)
-//        {
-//            int32_t nextj;
-
-//            //t[0] = state
-//            //t[1] = checking sector number
-
-//            if (s.xvel) A_GetZLimits(i);
-
-//            if (t[0] == 0)   //Waiting to check the sector
-//            {
-//                for (SPRITES_OF_SECT_SAFE(t[1], j, nextj))
-//                {
-//                    switch (sprite[j].statnum)
-//                    {
-//                    case STAT_ACTOR:
-//                    case STAT_ZOMBIEACTOR:
-//                    case STAT_STANDABLE:
-//                    case STAT_PLAYER:
-//                    {
-//                        vec3_t vect = { msx[t[4]+1], msy[t[4]+1], sprite[j].z };
-
-//                        s.ang = getangle(vect.x-s.x, vect.y-s.y);
-//                        setsprite(j, &vect);
-//                        t[0]++;
-//                        goto BOLT;
-//                    }
-//                    }
-//                }
-//            }
-
-//            else if (t[0]==1)
-//            {
-//                if (s.xvel < 184)
-//                {
-//                    s.picnum = CRANE+1;
-//                    s.xvel += 8;
-//                }
-//                A_SetSprite(i,CLIPMASK0);
-//                if (sect == t[1])
-//                    t[0]++;
-//            }
-//            else if (t[0]==2 || t[0]==7)
-//            {
-//                s.z += (1024+512);
-
-//                if (t[0]==2)
-//                {
-//                    if (sector[sect].floorz - s.z < (64<<8))
-//                        if (s.picnum > CRANE) s.picnum--;
-
-//                    if (sector[sect].floorz - s.z < 4096+1024)
-//                        t[0]++;
-//                }
-
-//                if (t[0]==7)
-//                {
-//                    if (sector[sect].floorz - s.z < (64<<8))
-//                    {
-//                        if (s.picnum > CRANE) s.picnum--;
-//                        else
-//                        {
-//                            if (s.owner==-2)
-//                            {
-//                                int32_t p = A_FindPlayer(s, NULL);
-//                                A_PlaySound(DUKE_GRUNT,g_player[p].ps.i);
-//                                if (g_player[p].ps.on_crane == i)
-//                                    g_player[p].ps.on_crane = -1;
-//                            }
-
-//                            t[0]++;
-//                            s.owner = -1;
-//                        }
-//                    }
-//                }
-//            }
-//            else if (t[0]==3)
-//            {
-//                s.picnum++;
-//                if (s.picnum == CRANE+2)
-//                {
-//                    int32_t p = G_CheckPlayerInSector(t[1]);
-
-//                    if (p >= 0 && g_player[p].ps.on_ground)
-//                    {
-//                        s.owner = -2;
-//                        g_player[p].ps.on_crane = i;
-//                        A_PlaySound(DUKE_GRUNT,g_player[p].ps.i);
-//                        g_player[p].ps.ang = s.ang+1024;
-//                    }
-//                    else
-//                    {
-//                        for (SPRITES_OF_SECT(t[1], j))
-//                        {
-//                            switch (sprite[j].statnum)
-//                            {
-//                            case STAT_ACTOR:
-//                            case STAT_STANDABLE:
-//                                s.owner = j;
-//                                break;
-//                            }
-//                        }
-//                    }
-
-//                    t[0]++;//Grabbed the sprite
-//                    t[2]=0;
-//                    goto BOLT;
-//                }
-//            }
-//            else if (t[0]==4) //Delay before going up
-//            {
-//                t[2]++;
-//                if (t[2] > 10)
-//                    t[0]++;
-//            }
-//            else if (t[0]==5 || t[0] == 8)
-//            {
-//                if (t[0]==8 && s.picnum < (CRANE+2))
-//                    if ((sector[sect].floorz-s.z) > 8192)
-//                        s.picnum++;
-
-//                if (s.z < msx[t[4]+2])
-//                {
-//                    t[0]++;
-//                    s.xvel = 0;
-//                }
-//                else
-//                    s.z -= (1024+512);
-//            }
-//            else if (t[0]==6)
-//            {
-//                if (s.xvel < 192)
-//                    s.xvel += 8;
-//                s.ang = getangle(msx[t[4]]-s.x,msy[t[4]]-s.y);
-//                A_SetSprite(i,CLIPMASK0);
-//                if (((s.x-msx[t[4]])*(s.x-msx[t[4]])+(s.y-msy[t[4]])*(s.y-msy[t[4]])) < (128*128))
-//                    t[0]++;
-//            }
-
-//            else if (t[0]==9)
-//                t[0] = 0;
-
-//            {
-//                vec3_t vect;
-//                Bmemcpy(&vect,s,sizeof(vec3_t));
-//                vect.z -= (34<<8);
-//                setsprite(msy[t[4]+2],&vect);
-//            }
-
-
-//            if (s.owner != -1)
-//            {
-//                int32_t p = A_FindPlayer(s, NULL);
-
-//                if (A_IncurDamage(i) >= 0)
-//                {
-//                    if (s.owner == -2)
-//                        if (g_player[p].ps.on_crane == i)
-//                            g_player[p].ps.on_crane = -1;
-//                    s.owner = -1;
-//                    s.picnum = CRANE;
-//                    goto BOLT;
-//                }
-
-//                if (s.owner >= 0)
-//                {
-//                    setsprite(s.owner,(vec3_t *)s);
-
-//                    Bmemcpy(&actor[s.owner].bpos.x, s, sizeof(vec3_t));
-
-//                    s.zvel = 0;
-//                }
-//                else if (s.owner == -2)
-//                {
-//                    DukePlayer_t *const ps = g_player[p].ps;
-
-//                    ps.opos.x = ps.pos.x = s.x-(sintable[(ps.ang+512)&2047]>>6);
-//                    ps.opos.y = ps.pos.y = s.y-(sintable[ps.ang&2047]>>6);
-//                    ps.opos.z = ps.pos.z = s.z+(2<<8);
-
-//                    setsprite(ps.i, (vec3_t *)ps);
-//                    ps.cursectnum = sprite[ps.i].sectnum;
-//                }
-//            }
-
-//            goto BOLT;
-//        }
-
-//        if (sprite[i].picnum >= WATERFOUNTAIN && sprite[i].picnum <= WATERFOUNTAIN+3)
-//        {
-//            if (t[0] > 0)
-//            {
-//                if (t[0] < 20)
-//                {
-//                    t[0]++;
-
-//                    s.picnum++;
-
-//                    if (s.picnum == (WATERFOUNTAIN+3))
-//                        s.picnum = WATERFOUNTAIN+1;
-//                }
-//                else
-//                {
-//                    A_FindPlayer(s,&x);
-
-//                    if (x > 512)
-//                    {
-//                        t[0] = 0;
-//                        s.picnum = WATERFOUNTAIN;
-//                    }
-//                    else t[0] = 1;
-//                }
-//            }
-//            goto BOLT;
-//        }
-
-//        if (AFLAMABLE(s.picnum))
-//        {
-//            if (actor[i].t_data[0] == 1)
-//            {
-//                actor[i].t_data[1]++;
-//                if ((actor[i].t_data[1]&3) > 0) goto BOLT;
-
-//                if (s.picnum == TIRE && actor[i].t_data[1] == 32)
-//                {
-//                    s.cstat = 0;
-//                    j = A_Spawn(i,BLOODPOOL);
-//                    sprite[j].shade = 127;
-//                }
-//                else
-//                {
-//                    if (s.shade < 64) s.shade++;
-//                    else KILLIT(i);
-//                }
-
-//                j = s.xrepeat-(krand()&7);
-//                if (j < 10)
-//                    KILLIT(i);
-
-//                s.xrepeat = j;
-
-//                j = s.yrepeat-(krand()&7);
-//                if (j < 4)
-//                    KILLIT(i);
-
-//                s.yrepeat = j;
-//            }
-//            if (s.picnum == BOX)
-//            {
-//                A_Fall(i);
-//                actor[i].ceilingz = sector[s.sectnum].ceilingz;
-//            }
-//            goto BOLT;
-//        }
-
-//        if (s.picnum == TRIPBOMB)
-//        {
-//            if (actor[i].t_data[6] == 1)
-//            {
-
-//                if (actor[i].t_data[7] >= 1)
-//                {
-//                    actor[i].t_data[7]--;
-//                }
-
-//                if (actor[i].t_data[7] <= 0)
-//                {
-//                    actor[i].t_data[2]=16;
-//                    actor[i].t_data[6]=3;
-//                    A_PlaySound(LASERTRIP_ARMING,i);
-//                }
-//                // we're on a timer....
-//            }
-//            if (actor[i].t_data[2] > 0 && actor[i].t_data[6] == 3)
-//            {
-//                actor[i].t_data[2]--;
-
-//                if (actor[i].t_data[2] == 8)
-//                {
-//                    for (j=0; j<5; j++) RANDOMSCRAP(s, i);
-//                    x = s.extra;
-//                    A_RadiusDamage(i, g_tripbombBlastRadius, x>>2,x>>1,x-(x>>2),x);
-
-//                    j = A_Spawn(i,EXPLOSION2);
-//                    A_PlaySound(LASERTRIP_EXPLODE,j);
-//                    sprite[j].ang = s.ang;
-//                    sprite[j].xvel = 348;
-//                    A_SetSprite(j,CLIPMASK0);
-
-//                    for (SPRITES_OF(STAT_MISC, j))
-//                    {
-//                        if (sprite[j].picnum == LASERLINE && s.hitag == sprite[j].hitag)
-//                            sprite[j].xrepeat = sprite[j].yrepeat = 0;
-//                    }
-
-//                    KILLIT(i);
-//                }
-//                goto BOLT;
-//            }
-//            else
-//            {
-//                const int32_t oextra = s.extra;
-//                s.extra = 1;
-//                l = s.ang;
-//                if (A_IncurDamage(i) >= 0)
-//                {
-//                    actor[i].t_data[6] = 3;
-//                    actor[i].t_data[2] = 16;
-//                }
-//                s.extra = oextra;
-//                s.ang = l;
-//            }
-
-//            switch (actor[i].t_data[0])
-//            {
-//            default:
-//                A_FindPlayer(s,&x);
-//                if (x > 768 || actor[i].t_data[0] > 16) actor[i].t_data[0]++;
-//                break;
-
-//            case 32:
-//            {
-//                int16_t m;
-
-//                l = s.ang;
-//                s.ang = actor[i].t_data[5];
-
-//                actor[i].t_data[3] = s.x;
-//                actor[i].t_data[4] = s.y;
-
-//                s.x += sintable[(actor[i].t_data[5]+512)&2047]>>9;
-//                s.y += sintable[(actor[i].t_data[5])&2047]>>9;
-//                s.z -= (3<<8);
-
-//                setsprite(i,s);
-
-//                x = A_CheckHitSprite(i, &m);
-
-//                actor[i].lastvx = x;
-
-//                s.ang = l;
-
-//                //                if(lTripBombControl & TRIPBOMB_TRIPWIRE)
-//                if (actor[i].t_data[6] != 1)
-//                {
-//                    // we're on a trip wire
-//                    int16_t cursectnum;
-
-//                    while (x > 0)
-//                    {
-//                        j = A_Spawn(i,LASERLINE);
-//                        setsprite(j,sprite[j]);
-//                        sprite[j].hitag = s.hitag;
-//                        actor[j].t_data[1] = sprite[j].z;
-
-//                        s.x += sintable[(actor[i].t_data[5]+512)&2047]>>4;
-//                        s.y += sintable[(actor[i].t_data[5])&2047]>>4;
-
-//                        if (x < 1024)
-//                        {
-//                            sprite[j].xrepeat = x>>5;
-//                            break;
-//                        }
-//                        x -= 1024;
-
-//                        cursectnum = s.sectnum;
-//                        updatesector(s.x, s.y, &cursectnum);
-//                        if (cursectnum < 0)
-//                            break;
-//                    }
-//                }
-
-//                actor[i].t_data[0]++;
-
-//                s.x = actor[i].t_data[3];
-//                s.y = actor[i].t_data[4];
-//                s.z += (3<<8);
-
-//                setsprite(i,s);
-//                actor[i].t_data[3] = actor[i].t_data[2] = 0;
-
-//                if (m >= 0 && actor[i].t_data[6] != 1)
-//                {
-//                    actor[i].t_data[6] = 3;
-//                    actor[i].t_data[2] = 13;
-//                    A_PlaySound(LASERTRIP_ARMING,i);
-//                }
-//                break;
-//            }
-
-//            case 33:
-//                actor[i].t_data[1]++;
-
-//                actor[i].t_data[3] = s.x;
-//                actor[i].t_data[4] = s.y;
-
-//                s.x += sintable[(actor[i].t_data[5]+512)&2047]>>9;
-//                s.y += sintable[(actor[i].t_data[5])&2047]>>9;
-//                s.z -= (3<<8);
-
-//                setsprite(i,s);
-
-//                x = A_CheckHitSprite(i, NULL);
-
-//                s.x = actor[i].t_data[3];
-//                s.y = actor[i].t_data[4];
-//                s.z += (3<<8);
-//                setsprite(i,s);
-
-////                if( Actor[i].lastvx != x && lTripBombControl & TRIPBOMB_TRIPWIRE)
-//                if (actor[i].lastvx != x && actor[i].t_data[6] != 1)
-//                {
-//                    actor[i].t_data[6] = 3;
-//                    actor[i].t_data[2] = 13;
-//                    A_PlaySound(LASERTRIP_ARMING,i);
-//                }
-//                break;
-//            }
-
-//            goto BOLT;
-//        }
-
-//        if (s.picnum >= CRACK1 && s.picnum <= CRACK4)
-//        {
-//            if (s.hitag > 0)
-//            {
-//                int32_t k;
-
-//                t[0] = s.cstat;
-//                t[1] = s.ang;
-
-//                k = A_IncurDamage(i);
-//                if (k < 0)
-//                    goto crack_default;
-
-//                switch (DYNAMICTILEMAP(k))
-//                {
-//                case FIREEXT__STATIC:
-//                case RPG__STATIC:
-//                case RADIUSEXPLOSION__STATIC:
-//                case SEENINE__STATIC:
-//                case OOZFILTER__STATIC:
-//                    for (SPRITES_OF(STAT_STANDABLE, j))
-//                    {
-//                        if (s.hitag == sprite[j].hitag && (sprite[j].picnum == OOZFILTER || sprite[j].picnum == SEENINE))
-//                            if (sprite[j].shade != -32)
-//                                sprite[j].shade = -32;
-//                    }
-
-//                    goto DETONATE;
-
-//                crack_default:
-//                default:
-//                    s.cstat = t[0];
-//                    s.ang = t[1];
-//                    s.extra = 0;
-
-//                    goto BOLT;
-//                }
-//            }
-//            goto BOLT;
-//        }
-
-//        if (s.picnum == FIREEXT)
-//        {
-//            int32_t k;
-
-//            if (A_IncurDamage(i) < 0)
-//                goto BOLT;
-
-//            for (k=0; k<16; k++)
-//            {
-//                j = A_InsertSprite(sprite[i].sectnum,sprite[i].x,sprite[i].y,sprite[i].z-(krand()%(48<<8)),SCRAP3+(krand()&3),-8,48,48,krand()&2047,(krand()&63)+64,-(krand()&4095)-(sprite[i].zvel>>2),i,5);
-//                sprite[j].pal = 2;
-//            }
-
-//            j = A_Spawn(i,EXPLOSION2);
-//            A_PlaySound(PIPEBOMB_EXPLODE,j);
-//            A_PlaySound(GLASS_HEAVYBREAK,j);
-
-//            if ((int16_t)s.hitag > 0)
-//            {
-//                for (SPRITES_OF(STAT_STANDABLE, j))
-//                {
-//                    // XXX: This block seems to be CODEDUP'd a lot of times.
-//                    if (s.hitag == sprite[j].hitag && (sprite[j].picnum == OOZFILTER || sprite[j].picnum == SEENINE))
-//                        if (sprite[j].shade != -32)
-//                            sprite[j].shade = -32;
-//                }
-
-//                x = s.extra;
-//                A_RadiusDamage(i, g_pipebombBlastRadius,x>>2, x-(x>>1),x-(x>>2), x);
-//                j = A_Spawn(i,EXPLOSION2);
-//                A_PlaySound(PIPEBOMB_EXPLODE,j);
-
-//                goto DETONATE;
-//            }
-//            else
-//            {
-//                A_RadiusDamage(i,g_seenineBlastRadius,10,15,20,25);
-//                KILLIT(i);
-//            }
-//            goto BOLT;
-//        }
-
-//        if (s.picnum == OOZFILTER || s.picnum == SEENINE || s.picnum == SEENINEDEAD || s.picnum == SEENINEDEAD+1)
-//        {
-//            if (s.shade != -32 && s.shade != -33)
-//            {
-//                if (s.xrepeat)
-//                    j = (A_IncurDamage(i) >= 0);
-//                else
-//                    j = 0;
-
-//                if (j || s.shade == -31)
-//                {
-//                    if (j) s.lotag = 0;
-
-//                    t[3] = 1;
-
-//                    for (SPRITES_OF(STAT_STANDABLE, j))
-//                    {
-//                        if (s.hitag == sprite[j].hitag && (sprite[j].picnum == SEENINE || sprite[j].picnum == OOZFILTER))
-//                            sprite[j].shade = -32;
-//                    }
-//                }
-//            }
-//            else
-//            {
-//                if (s.shade == -32)
-//                {
-//                    if ((int16_t)s.lotag > 0)
-//                    {
-//                        s.lotag -= 3;
-//                        if ((int16_t)s.lotag <= 0)
-//                            s.lotag = (uint16_t)(-99);
-//                    }
-//                    else
-//                        s.shade = -33;
-//                }
-//                else
-//                {
-//                    if (s.xrepeat > 0)
-//                    {
-//                        actor[i].t_data[2]++;
-//                        if (actor[i].t_data[2] == 3)
-//                        {
-//                            if (s.picnum == OOZFILTER)
-//                            {
-//                                actor[i].t_data[2] = 0;
-//                                goto DETONATE;
-//                            }
-
-//                            if (s.picnum != (SEENINEDEAD+1))
-//                            {
-//                                actor[i].t_data[2] = 0;
-
-//                                if (s.picnum == SEENINEDEAD)
-//                                    s.picnum++;
-//                                else if (s.picnum == SEENINE)
-//                                    s.picnum = SEENINEDEAD;
-//                            }
-//                            else goto DETONATE;
-//                        }
-//                        goto BOLT;
-//                    }
-
-//DETONATE:
-//                    g_earthquakeTime = 16;
-
-//                    for (j = headspritestat[STAT_EFFECTOR]; j >= 0; j = nextspritestat[j])
-//                    {
-//                        if (s.hitag == sprite[j].hitag)
-//                        {
-//                            if (sprite[j].lotag == SE_13_EXPLOSIVE)
-//                            {
-//                                if (actor[j].t_data[2] == 0)
-//                                    actor[j].t_data[2] = 1;
-//                            }
-//                            else if (sprite[j].lotag == SE_8_UP_OPEN_DOOR_LIGHTS)
-//                                actor[j].t_data[4] = 1;
-//                            else if (sprite[j].lotag == SE_18_INCREMENTAL_SECTOR_RISE_FALL)
-//                            {
-//                                if (actor[j].t_data[0] == 0)
-//                                    actor[j].t_data[0] = 1;
-//                            }
-//                            else if (sprite[j].lotag == SE_21_DROP_FLOOR)
-//                                actor[j].t_data[0] = 1;
-//                        }
-//                    }
-
-//                    s.z -= (32<<8);
-
-//                    if (s.xrepeat)
-//                        for (x=0; x<8; x++) RANDOMSCRAP(s, i);
-
-//                    if ((t[3] == 1 && s.xrepeat) || (int16_t)s.lotag == -99)
-//                    {
-//                        int32_t j = A_Spawn(i,EXPLOSION2);
-//                        x = s.extra;
-//                        A_RadiusDamage(i,g_seenineBlastRadius,x>>2, x-(x>>1),x-(x>>2), x);
-//                        A_PlaySound(PIPEBOMB_EXPLODE,j);
-//                    }
-
-//                    KILLIT(i);
-//                }
-//            }
-//            goto BOLT;
-//        }
-
-//        if (s.picnum == MASTERSWITCH)
-//        {
-//            if (s.yvel == 1)
-//            {
-//                s.hitag--;
-//                if ((int16_t)s.hitag <= 0)
-//                {
-//                    G_OperateSectors(sect,i);
-
-//                    for (SPRITES_OF_SECT(sect, j))
-//                    {
-//                        if (sprite[j].statnum == STAT_EFFECTOR)
-//                        {
-//                            switch (sprite[j].lotag)
-//                            {
-//                            case SE_2_EARTHQUAKE:
-//                            case SE_21_DROP_FLOOR:
-//                            case SE_31_FLOOR_RISE_FALL:
-//                            case SE_32_CEILING_RISE_FALL:
-//                            case SE_36_PROJ_SHOOTER:
-//                                actor[j].t_data[0] = 1;
-//                                break;
-//                            case SE_3_RANDOM_LIGHTS_AFTER_SHOT_OUT:
-//                                actor[j].t_data[4] = 1;
-//                                break;
-//                            }
-//                        }
-//                        else if (sprite[j].statnum == STAT_STANDABLE)
-//                        {
-//                            switch (DYNAMICTILEMAP(sprite[j].picnum))
-//                            {
-//                            case SEENINE__STATIC:
-//                            case OOZFILTER__STATIC:
-//                                sprite[j].shade = -31;
-//                                break;
-//                            }
-//                        }
-//                    }
-
-//                    KILLIT(i);
-//                }
-//            }
-//            goto BOLT;
-//        }
-
-//        switchpicnum = s.picnum;
-
-//        if (switchpicnum > SIDEBOLT1 && switchpicnum <= SIDEBOLT1+3)
-//            switchpicnum = SIDEBOLT1;
-//        else if (switchpicnum > BOLT1 && switchpicnum <= BOLT1+3)
-//            switchpicnum = BOLT1;
-
-//        switch (DYNAMICTILEMAP(switchpicnum))
-//        {
-//        case VIEWSCREEN__STATIC:
-//        case VIEWSCREEN2__STATIC:
-
-//            if (s.xrepeat == 0)
-//                KILLIT(i);
-
-//            A_FindPlayer(s, &x);
-
-//            if (x < 2048)
-//            {
-//                if (sprite[i].yvel == 1)
-//                    camsprite = i;
-//            }
-//            else if (camsprite != -1 && actor[i].t_data[0] == 1)
-//            {
-//                camsprite = -1;
-//                actor[i].t_data[0] = 0;
-//                //loadtile(s.picnum);
-//                //invalidatetile(s.picnum,-1,255);
-//                walock[TILE_VIEWSCR] = 199;
-//            }
-
-//            goto BOLT;
-
-//        case TRASH__STATIC:
-
-//            if (s.xvel == 0) s.xvel = 1;
-//            if (A_SetSprite(i, CLIPMASK0))
-//            {
-//                A_Fall(i);
-//                if (krand()&1) s.zvel -= 256;
-//                if (klabs(s.xvel) < 48)
-//                    s.xvel += (krand()&3);
-//            }
-//            else KILLIT(i);
-//            break;
-
-//        case SIDEBOLT1__STATIC:
-//            //        case SIDEBOLT1+1:
-//            //        case SIDEBOLT1+2:
-//            //        case SIDEBOLT1+3:
-//            A_FindPlayer(s, &x);
-//            if (x > 20480) goto BOLT;
-
-//CLEAR_THE_BOLT2:
-//            if (t[2])
-//            {
-//                t[2]--;
-//                goto BOLT;
-//            }
-//            if ((s.xrepeat|s.yrepeat) == 0)
-//            {
-//                s.xrepeat=t[0];
-//                s.yrepeat=t[1];
-//            }
-//            if ((krand()&8) == 0)
-//            {
-//                t[0]=s.xrepeat;
-//                t[1]=s.yrepeat;
-//                t[2] = g_globalRandom&4;
-//                s.xrepeat=s.yrepeat=0;
-//                goto CLEAR_THE_BOLT2;
-//            }
-//            s.picnum++;
-
-//            // NOTE: Um, this 'l' was assigned to last at the beginning of this function.
-//            // SIDEBOLT1 never gets translucent as a consequence, unlike BOLT1.
-//            if (l&1) s.cstat ^= 2;
-
-//            if ((krand()&1) && sector[sect].floorpicnum == HURTRAIL)
-//                A_PlaySound(SHORT_CIRCUIT,i);
-
-//            if (s.picnum == SIDEBOLT1+4) s.picnum = SIDEBOLT1;
-
-//            goto BOLT;
-
-//        case BOLT1__STATIC:
-//            //        case BOLT1+1:
-//            //        case BOLT1+2:
-//            //        case BOLT1+3:
-//            A_FindPlayer(s, &x);
-//            if (x > 20480) goto BOLT;
-
-//            if (t[3] == 0)
-//                t[3]=sector[sect].floorshade;
-
-//CLEAR_THE_BOLT:
-//            if (t[2])
-//            {
-//                t[2]--;
-//                sector[sect].floorshade = 20;
-//                sector[sect].ceilingshade = 20;
-//                goto BOLT;
-//            }
-//            if ((s.xrepeat|s.yrepeat) == 0)
-//            {
-//                s.xrepeat=t[0];
-//                s.yrepeat=t[1];
-//            }
-//            else if ((krand()&8) == 0)
-//            {
-//                t[0]=s.xrepeat;
-//                t[1]=s.yrepeat;
-//                t[2] = g_globalRandom&4;
-//                s.xrepeat=s.yrepeat=0;
-//                goto CLEAR_THE_BOLT;
-//            }
-//            s.picnum++;
-
-//            l = g_globalRandom&7;
-//            s.xrepeat=l+8;
-
-//            if (l&1) s.cstat ^= 2;
-
-//            if (s.picnum == (BOLT1+1) && (krand()&7) == 0 && sector[sect].floorpicnum == HURTRAIL)
-//                A_PlaySound(SHORT_CIRCUIT,i);
-
-//            if (s.picnum==BOLT1+4) s.picnum=BOLT1;
-
-//            if (s.picnum&1)
-//            {
-//                sector[sect].floorshade = 0;
-//                sector[sect].ceilingshade = 0;
-//            }
-//            else
-//            {
-//                sector[sect].floorshade = 20;
-//                sector[sect].ceilingshade = 20;
-//            }
-//            goto BOLT;
-
-//        case WATERDRIP__STATIC:
-
-//            if (t[1])
-//            {
-//                if (--t[1] == 0)
-//                    s.cstat &= 32767;
-//            }
-//            else
-//            {
-//                A_Fall(i);
-//                A_SetSprite(i,CLIPMASK0);
-//                if (s.xvel > 0) s.xvel -= 2;
-
-//                if (s.zvel == 0)
-//                {
-//                    s.cstat |= 32768;
-
-//                    if (s.pal != 2 && s.hitag == 0)
-//                        A_PlaySound(SOMETHING_DRIPPING,i);
-
-//                    if (sprite[s.owner].picnum != WATERDRIP)
-//                    {
-//                        KILLIT(i);
-//                    }
-//                    else
-//                    {
-//                        actor[i].bpos.z = s.z = t[0];
-//                        t[1] = 48+(krand()&31);
-//                    }
-//                }
-//            }
-
-
-//            goto BOLT;
-
-//        case DOORSHOCK__STATIC:
-//            j = klabs(sector[sect].ceilingz-sector[sect].floorz)>>9;
-//            s.yrepeat = j+4;
-//            s.xrepeat = 16;
-//            s.z = sector[sect].floorz;
-//            goto BOLT;
-
-//        case TOUCHPLATE__STATIC:
-//            if (t[1] == 1 && (int16_t)s.hitag >= 0)  //Move the sector floor
-//            {
-//                x = sector[sect].floorz;
-
-//                if (t[3] == 1)
-//                {
-//                    if (x >= t[2])
-//                    {
-//                        sector[sect].floorz = x;
-//                        t[1] = 0;
-//                    }
-//                    else
-//                    {
-//                        var/*int32_t*/ p:number;
-//                        sector[sect].floorz += sector[sect].extra;
-//                        p = G_CheckPlayerInSector(sect);
-//                        if (p >= 0) g_player[p].ps.pos.z += sector[sect].extra;
-//                    }
-//                }
-//                else
-//                {
-//                    if (x <= s.z)
-//                    {
-//                        sector[sect].floorz = s.z;
-//                        t[1] = 0;
-//                    }
-//                    else
-//                    {
-//                        var/*int32_t*/ p:number;
-//                        sector[sect].floorz -= sector[sect].extra;
-//                        p = G_CheckPlayerInSector(sect);
-//                        if (p >= 0)
-//                            g_player[p].ps.pos.z -= sector[sect].extra;
-//                    }
-//                }
-//                goto BOLT;
-//            }
-
-//            if (t[5] == 1) goto BOLT;
-
-//            {
-//                int32_t p = G_CheckPlayerInSector(sect);
-
-//                if (p >= 0 &&
-//                    (g_player[p].ps.on_ground || s.ang == 512))
-//                {
-//                    if (t[0] == 0 && !G_CheckActivatorMotion(s.lotag))
-//                    {
-//                        t[0] = 1;
-//                        t[1] = 1;
-//                        t[3] = !t[3];
-//                        G_OperateMasterSwitches(s.lotag);
-//                        G_OperateActivators(s.lotag,p);
-//                        if ((int16_t)s.hitag > 0)
-//                        {
-//                            s.hitag--;
-//                            if (s.hitag == 0) t[5] = 1;
-//                        }
-//                    }
-//                }
-//                else t[0] = 0;
-//            }
-
-//            if (t[1] == 1)
-//            {
-//                for (SPRITES_OF(STAT_STANDABLE, j))
-//                {
-//                    if (j != i && sprite[j].picnum == TOUCHPLATE && sprite[j].lotag == s.lotag)
-//                    {
-//                        actor[j].t_data[1] = 1;
-//                        actor[j].t_data[3] = t[3];
-//                    }
-//                }
-//            }
-//            goto BOLT;
-
-//        case CANWITHSOMETHING__STATIC:
-//        case CANWITHSOMETHING2__STATIC:
-//        case CANWITHSOMETHING3__STATIC:
-//        case CANWITHSOMETHING4__STATIC:
-//            A_Fall(i);
-//            if (A_IncurDamage(i) >= 0)
-//            {
-//                A_PlaySound(VENT_BUST,i);
-
-//                for (j=9; j>=0; j--)
-//                    RANDOMSCRAP(s, i);
-
-//                if (s.lotag) A_Spawn(i,s.lotag);
-
-//                KILLIT(i);
-//            }
-//            goto BOLT;
-
-//        case FLOORFLAME__STATIC:
-//        case FIREBARREL__STATIC:
-//        case FIREVASE__STATIC:
-//        case EXPLODINGBARREL__STATIC:
-//        case WOODENHORSE__STATIC:
-//        case HORSEONSIDE__STATIC:
-//        case NUKEBARREL__STATIC:
-//        case NUKEBARRELDENTED__STATIC:
-//        case NUKEBARRELLEAKED__STATIC:
-//        case TOILETWATER__STATIC:
-//        case RUBBERCAN__STATIC:
-//        case STEAM__STATIC:
-//        case CEILINGSTEAM__STATIC:
-//        case WATERBUBBLEMAKER__STATIC:
-//            if (!G_HaveActor(sprite[i].picnum))
-//                goto BOLT;
-//            {
-//                int32_t p = A_FindPlayer(s, &x);
-//                A_Execute(i,p,x);
-//            }
-//            goto BOLT;
-//        }
+function G_MoveStandables():void
+{
+    var/*int32_t */i = headspritestat[STAT_STANDABLE], j:number, switchpicnum:number;
+    var/*int32_t */l=0, x:number;
+
+    BOLT:
+    while (i >= 0)
+    {
+        var/*const int32_t */nexti = nextspritestat[i];
+
+        var/*int32_t *const */t = actor[i].t_data[0];
+        var s = sprite[i];
+        var /*const int32_t */sect = s.sectnum;
+
+        if (sect < 0)
+            KILLIT(i);
+
+        // Rotation-fixed sprites in rotating sectors already have bpos* updated.
+        if ((t[7]&(0xffff0000))!=ROTFIXSPR_MAGIC) {
+            //Bmemcpy(&actor[i].bpos.x, s, sizeof(vec3_t));
+            actor[i].bpos.x = s.x;
+            actor[i].bpos.y = s.y;
+            actor[i].bpos.z = s.z;
+        }
+
+        if (sprite[i].picnum >= CRANE && sprite[i].picnum <= CRANE+3)
+        {
+            var/*int32_t */nextj:number;
+            
+            //t[0] = state
+            //t[1] = checking sector number
+
+            if (s.xvel) A_GetZLimits(i);
+
+            if (t[0] == 0)   //Waiting to check the sector
+            {
+                for (j = headspritesect[t[1]];
+                    j >= 0 && (nextj = nextspritesect[j], 1); j = nextj)
+                {
+                    switch (sprite[j].statnum)
+                    {
+                    case STAT_ACTOR:
+                    case STAT_ZOMBIEACTOR:
+                    case STAT_STANDABLE:
+                    case STAT_PLAYER:
+                    {
+                        var vect = new vec3_t ( msx[t[4]+1], msy[t[4]+1], sprite[j].z );
+
+                        s.ang = getangle(vect.x-s.x, vect.y-s.y);
+                        setsprite(j, vect);
+                        t[0]++;
+                        goto BOLT;
+                    }
+                    }
+                }
+            }
+
+            else if (t[0]==1)
+            {
+                if (s.xvel < 184)
+                {
+                    s.picnum = CRANE+1;
+                    s.xvel += 8;
+                }
+                A_SetSprite(i,CLIPMASK0);
+                if (sect == t[1])
+                    t[0]++;
+            }
+            else if (t[0]==2 || t[0]==7)
+            {
+                s.z += (1024+512);
+
+                if (t[0]==2)
+                {
+                    if (sector[sect].floorz - s.z < (64<<8))
+                        if (s.picnum > CRANE) s.picnum--;
+
+                    if (sector[sect].floorz - s.z < 4096+1024)
+                        t[0]++;
+                }
+
+                if (t[0]==7)
+                {
+                    if (sector[sect].floorz - s.z < (64<<8))
+                    {
+                        if (s.picnum > CRANE) s.picnum--;
+                        else
+                        {
+                            if (s.owner==-2)
+                            {
+                                int32_t p = A_FindPlayer(s, NULL);
+                                A_PlaySound(DUKE_GRUNT,g_player[p].ps.i);
+                                if (g_player[p].ps.on_crane == i)
+                                    g_player[p].ps.on_crane = -1;
+                            }
+
+                            t[0]++;
+                            s.owner = -1;
+                        }
+                    }
+                }
+            }
+            else if (t[0]==3)
+            {
+                s.picnum++;
+                if (s.picnum == CRANE+2)
+                {
+                    var/*int32_t */p = G_CheckPlayerInSector(t[1]);
+
+                    if (p >= 0 && g_player[p].ps.on_ground)
+                    {
+                        s.owner = -2;
+                        g_player[p].ps.on_crane = i;
+                        A_PlaySound(DUKE_GRUNT,g_player[p].ps.i);
+                        g_player[p].ps.ang = s.ang+1024;
+                    }
+                    else
+                    {
+                        for (j = headspritesect[t[1]]; j >= 0; j = nextspritesect[j] /*SPRITES_OF_SECT(t[1], j)*/)
+                        {
+                            switch (sprite[j].statnum)
+                            {
+                            case STAT_ACTOR:
+                            case STAT_STANDABLE:
+                                s.owner = j;
+                                break;
+                            }
+                        }
+                    }
+
+                    t[0]++;//Grabbed the sprite
+                    t[2]=0;
+                    goto BOLT;
+                }
+            }
+            else if (t[0]==4) //Delay before going up
+            {
+                t[2]++;
+                if (t[2] > 10)
+                    t[0]++;
+            }
+            else if (t[0]==5 || t[0] == 8)
+            {
+                if (t[0]==8 && s.picnum < (CRANE+2))
+                    if ((sector[sect].floorz-s.z) > 8192)
+                        s.picnum++;
+
+                if (s.z < msx[t[4]+2])
+                {
+                    t[0]++;
+                    s.xvel = 0;
+                }
+                else
+                    s.z -= (1024+512);
+            }
+            else if (t[0]==6)
+            {
+                if (s.xvel < 192)
+                    s.xvel += 8;
+                s.ang = getangle(msx[t[4]]-s.x,msy[t[4]]-s.y);
+                A_SetSprite(i,CLIPMASK0);
+                if (((s.x-msx[t[4]])*(s.x-msx[t[4]])+(s.y-msy[t[4]])*(s.y-msy[t[4]])) < (128*128))
+                    t[0]++;
+            }
+
+            else if (t[0]==9)
+                t[0] = 0;
+
+            {
+                var vect = new vec3_t(s.x, s.y, s.z);//Bmemcpy(&vect,s,sizeof(vec3_t));
+                vect.z -= (34<<8);
+                setsprite(msy[t[4]+2],vect);
+            }
+
+
+            if (s.owner != -1)
+            {
+                var/*int32_t */p = A_FindPlayer(s, NULL);
+
+                if (A_IncurDamage(i) >= 0)
+                {
+                    if (s.owner == -2)
+                        if (g_player[p].ps.on_crane == i)
+                            g_player[p].ps.on_crane = -1;
+                    s.owner = -1;
+                    s.picnum = CRANE;
+                    goto BOLT;
+                }
+
+                if (s.owner >= 0)
+                {
+                    setsprite(s.owner,/*(vec3_t *)*/s);
+
+                    //Bmemcpy(&actor[s.owner].bpos.x, s, sizeof(vec3_t));
+                    actor[s.owner].bpos.x = s.x;
+                    actor[s.owner].bpos.y = s.y;
+                    actor[s.owner].bpos.z = s.z;
+
+                    s.zvel = 0;
+                }
+                else if (s.owner == -2)
+                {
+                    var ps = g_player[p].ps;
+
+                    ps.opos.x = ps.pos.x = s.x-(sintable[(ps.ang+512)&2047]>>6);
+                    ps.opos.y = ps.pos.y = s.y-(sintable[ps.ang&2047]>>6);
+                    ps.opos.z = ps.pos.z = s.z+(2<<8);
+
+                    setsprite(ps.i, /*(vec3_t *)*/ps);
+                    ps.cursectnum = sprite[ps.i].sectnum;
+                }
+            }
+
+            goto BOLT;
+        }
+
+        if (sprite[i].picnum >= WATERFOUNTAIN && sprite[i].picnum <= WATERFOUNTAIN+3)
+        {
+            if (t[0] > 0)
+            {
+                if (t[0] < 20)
+                {
+                    t[0]++;
+
+                    s.picnum++;
+
+                    if (s.picnum == (WATERFOUNTAIN+3))
+                        s.picnum = WATERFOUNTAIN+1;
+                }
+                else
+                {
+                    var $x = new R(x);
+                    A_FindPlayer(s,$x);
+                    x = $x.$;
+
+                    if (x > 512)
+                    {
+                        t[0] = 0;
+                        s.picnum = WATERFOUNTAIN;
+                    }
+                    else t[0] = 1;
+                }
+            }
+            goto BOLT;
+        }
+
+        if (AFLAMABLE(s.picnum))
+        {
+            if (actor[i].t_data[0] == 1)
+            {
+                actor[i].t_data[1]++;
+                if ((actor[i].t_data[1]&3) > 0) goto BOLT;
+
+                if (s.picnum == TIRE && actor[i].t_data[1] == 32)
+                {
+                    s.cstat = 0;
+                    j = A_Spawn(i,BLOODPOOL);
+                    sprite[j].shade = 127;
+                }
+                else
+                {
+                    if (s.shade < 64) s.shade++;
+                    else KILLIT(i);
+                }
+
+                j = s.xrepeat-(krand()&7);
+                if (j < 10)
+                    KILLIT(i);
+
+                s.xrepeat = j;
+
+                j = s.yrepeat-(krand()&7);
+                if (j < 4)
+                    KILLIT(i);
+
+                s.yrepeat = j;
+            }
+            if (s.picnum == BOX)
+            {
+                A_Fall(i);
+                actor[i].ceilingz = sector[s.sectnum].ceilingz;
+            }
+            goto BOLT;
+        }
+
+        if (s.picnum == TRIPBOMB)
+        {
+            if (actor[i].t_data[6] == 1)
+            {
+
+                if (actor[i].t_data[7] >= 1)
+                {
+                    actor[i].t_data[7]--;
+                }
+
+                if (actor[i].t_data[7] <= 0)
+                {
+                    actor[i].t_data[2]=16;
+                    actor[i].t_data[6]=3;
+                    A_PlaySound(LASERTRIP_ARMING,i);
+                }
+                // we're on a timer....
+            }
+            if (actor[i].t_data[2] > 0 && actor[i].t_data[6] == 3)
+            {
+                actor[i].t_data[2]--;
+
+                if (actor[i].t_data[2] == 8)
+                {
+                    for (j=0; j<5; j++) RANDOMSCRAP(s, i);
+                    x = s.extra;
+                    A_RadiusDamage(i, g_tripbombBlastRadius, x>>2,x>>1,x-(x>>2),x);
+
+                    j = A_Spawn(i,EXPLOSION2);
+                    A_PlaySound(LASERTRIP_EXPLODE,j);
+                    sprite[j].ang = s.ang;
+                    sprite[j].xvel = 348;
+                    A_SetSprite(j,CLIPMASK0);
+
+                    for (j = headspritestat[STAT_MISC]; j >= 0; j = nextspritestat[j])
+                    {
+                        if (sprite[j].picnum == LASERLINE && s.hitag == sprite[j].hitag)
+                            sprite[j].xrepeat = sprite[j].yrepeat = 0;
+                    }
+
+                    KILLIT(i);
+                }
+                goto BOLT;
+            }
+            else
+            {
+                var/*int32_t */oextra = s.extra;
+                s.extra = 1;
+                l = s.ang;
+                if (A_IncurDamage(i) >= 0)
+                {
+                    actor[i].t_data[6] = 3;
+                    actor[i].t_data[2] = 16;
+                }
+                s.extra = oextra;
+                s.ang = l;
+            }
+
+            switch (actor[i].t_data[0])
+            {
+            default:
+                var $x = new R(x);
+                A_FindPlayer(s,$x);
+                x = $x.$;
+                if (x > 768 || actor[i].t_data[0] > 16) actor[i].t_data[0]++;
+                break;
+
+            case 32:
+            {
+                var/*int16_t */m:number;
+
+                l = s.ang;
+                s.ang = actor[i].t_data[5];
+
+                actor[i].t_data[3] = s.x;
+                actor[i].t_data[4] = s.y;
+
+                s.x += sintable[(actor[i].t_data[5]+512)&2047]>>9;
+                s.y += sintable[(actor[i].t_data[5])&2047]>>9;
+                s.z -= (3<<8);
+
+                setsprite(i,s);
+
+                var $m = new R(m);
+                x = A_CheckHitSprite(i, $m);
+                m = $m.$;
+
+                actor[i].lastvx = x;
+
+                s.ang = l;
+
+                //                if(lTripBombControl & TRIPBOMB_TRIPWIRE)
+                if (actor[i].t_data[6] != 1)
+                {
+                    // we're on a trip wire
+                    var/*int16_t */cursectnum:number;
+
+                    while (x > 0)
+                    {
+                        j = A_Spawn(i,LASERLINE);
+                        setsprite(j,sprite[j]);
+                        sprite[j].hitag = s.hitag;
+                        actor[j].t_data[1] = sprite[j].z;
+
+                        s.x += sintable[(actor[i].t_data[5]+512)&2047]>>4;
+                        s.y += sintable[(actor[i].t_data[5])&2047]>>4;
+
+                        if (x < 1024)
+                        {
+                            sprite[j].xrepeat = x>>5;
+                            break;
+                        }
+                        x -= 1024;
+
+                        cursectnum = s.sectnum;
+                        var $cursectnum = new R(cursectnum);
+                        updatesector(s.x, s.y, $cursectnum);
+                        cursectnum = $cursectnum.$;
+                        if (cursectnum < 0)
+                            break;
+                    }
+                }
+
+                actor[i].t_data[0]++;
+
+                s.x = actor[i].t_data[3];
+                s.y = actor[i].t_data[4];
+                s.z += (3<<8);
+
+                setsprite(i,s);
+                actor[i].t_data[3] = actor[i].t_data[2] = 0;
+
+                if (m >= 0 && actor[i].t_data[6] != 1)
+                {
+                    actor[i].t_data[6] = 3;
+                    actor[i].t_data[2] = 13;
+                    A_PlaySound(LASERTRIP_ARMING,i);
+                }
+                break;
+            }
+
+            case 33:
+                actor[i].t_data[1]++;
+
+                actor[i].t_data[3] = s.x;
+                actor[i].t_data[4] = s.y;
+
+                s.x += sintable[(actor[i].t_data[5]+512)&2047]>>9;
+                s.y += sintable[(actor[i].t_data[5])&2047]>>9;
+                s.z -= (3<<8);
+
+                setsprite(i,s);
+
+                x = A_CheckHitSprite(i, NULL);
+
+                s.x = actor[i].t_data[3];
+                s.y = actor[i].t_data[4];
+                s.z += (3<<8);
+                setsprite(i,s);
+
+//                if( Actor[i].lastvx != x && lTripBombControl & TRIPBOMB_TRIPWIRE)
+                if (actor[i].lastvx != x && actor[i].t_data[6] != 1)
+                {
+                    actor[i].t_data[6] = 3;
+                    actor[i].t_data[2] = 13;
+                    A_PlaySound(LASERTRIP_ARMING,i);
+                }
+                break;
+            }
+
+            goto BOLT;
+        }
+
+        if (s.picnum >= CRACK1 && s.picnum <= CRACK4)
+        {
+            if (s.hitag > 0)
+            {
+                var/*int32_t */k:number;
+
+                t[0] = s.cstat;
+                t[1] = s.ang;
+
+                k = A_IncurDamage(i);
+                if (k < 0)
+                    goto crack_default;
+
+                switch (DYNAMICTILEMAP(k))
+                {
+                case FIREEXT__STATIC:
+                case RPG__STATIC:
+                case RADIUSEXPLOSION__STATIC:
+                case SEENINE__STATIC:
+                case OOZFILTER__STATIC:
+                    for (j = headspritestat[STAT_STANDABLE]; j >= 0; j = nextspritestat[j])
+                    {
+                        if (s.hitag == sprite[j].hitag && (sprite[j].picnum == OOZFILTER || sprite[j].picnum == SEENINE))
+                            if (sprite[j].shade != -32)
+                                sprite[j].shade = -32;
+                    }
+
+                    goto DETONATE;
+
+                crack_default:
+                default:
+                    s.cstat = t[0];
+                    s.ang = t[1];
+                    s.extra = 0;
+
+                    goto BOLT;
+                }
+            }
+            goto BOLT;
+        }
+
+        if (s.picnum == FIREEXT)
+        {
+            var/*int32_t */k:number;
+
+            if (A_IncurDamage(i) < 0)
+                goto BOLT;
+
+            for (k=0; k<16; k++)
+            {
+                j = A_InsertSprite(sprite[i].sectnum,sprite[i].x,sprite[i].y,sprite[i].z-(krand()%(48<<8)),SCRAP3+(krand()&3),-8,48,48,krand()&2047,(krand()&63)+64,-(krand()&4095)-(sprite[i].zvel>>2),i,5);
+                sprite[j].pal = 2;
+            }
+
+            j = A_Spawn(i,EXPLOSION2);
+            A_PlaySound(PIPEBOMB_EXPLODE,j);
+            A_PlaySound(GLASS_HEAVYBREAK,j);
+
+            if (int16(s.hitag) > 0)
+            {
+                for (j = headspritestat[STAT_STANDABLE]; j >= 0; j = nextspritestat[j])
+                {
+                    // XXX: This block seems to be CODEDUP'd a lot of times.
+                    if (s.hitag == sprite[j].hitag && (sprite[j].picnum == OOZFILTER || sprite[j].picnum == SEENINE))
+                        if (sprite[j].shade != -32)
+                            sprite[j].shade = -32;
+                }
+
+                x = s.extra;
+                A_RadiusDamage(i, g_pipebombBlastRadius,x>>2, x-(x>>1),x-(x>>2), x);
+                j = A_Spawn(i,EXPLOSION2);
+                A_PlaySound(PIPEBOMB_EXPLODE,j);
+
+                goto DETONATE;
+            }
+            else
+            {
+                A_RadiusDamage(i,g_seenineBlastRadius,10,15,20,25);
+                KILLIT(i);
+            }
+            goto BOLT;
+        }
+
+        if (s.picnum == OOZFILTER || s.picnum == SEENINE || s.picnum == SEENINEDEAD || s.picnum == SEENINEDEAD+1)
+        {
+            if (s.shade != -32 && s.shade != -33)
+            {
+                if (s.xrepeat)
+                    j = (A_IncurDamage(i) >= 0);
+                else
+                    j = 0;
+
+                if (j || s.shade == -31)
+                {
+                    if (j) s.lotag = 0;
+
+                    t[3] = 1;
+
+                    for (j = headspritestat[STAT_STANDABLE]; j >= 0; j = nextspritestat[j])
+                    {
+                        if (s.hitag == sprite[j].hitag && (sprite[j].picnum == SEENINE || sprite[j].picnum == OOZFILTER))
+                            sprite[j].shade = -32;
+                    }
+                }
+            }
+            else
+            {
+                if (s.shade == -32)
+                {
+                    if (int16(s.lotag) > 0)
+                    {
+                        s.lotag -= 3;
+                        if (int16(s.lotag) <= 0)
+                            s.lotag = /*(uint16_t)*/(-99);
+                    }
+                    else
+                        s.shade = -33;
+                }
+                else
+                {
+                    if (s.xrepeat > 0)
+                    {
+                        actor[i].t_data[2]++;
+                        if (actor[i].t_data[2] == 3)
+                        {
+                            if (s.picnum == OOZFILTER)
+                            {
+                                actor[i].t_data[2] = 0;
+                                goto DETONATE;
+                            }
+
+                            if (s.picnum != (SEENINEDEAD+1))
+                            {
+                                actor[i].t_data[2] = 0;
+
+                                if (s.picnum == SEENINEDEAD)
+                                    s.picnum++;
+                                else if (s.picnum == SEENINE)
+                                    s.picnum = SEENINEDEAD;
+                            }
+                            else goto DETONATE;
+                        }
+                        goto BOLT;
+                    }
+
+DETONATE:
+                    g_earthquakeTime = 16;
+
+                    for (j = headspritestat[STAT_EFFECTOR]; j >= 0; j = nextspritestat[j])
+                    {
+                        if (s.hitag == sprite[j].hitag)
+                        {
+                            if (sprite[j].lotag == SE_13_EXPLOSIVE)
+                            {
+                                if (actor[j].t_data[2] == 0)
+                                    actor[j].t_data[2] = 1;
+                            }
+                            else if (sprite[j].lotag == SE_8_UP_OPEN_DOOR_LIGHTS)
+                                actor[j].t_data[4] = 1;
+                            else if (sprite[j].lotag == SE_18_INCREMENTAL_SECTOR_RISE_FALL)
+                            {
+                                if (actor[j].t_data[0] == 0)
+                                    actor[j].t_data[0] = 1;
+                            }
+                            else if (sprite[j].lotag == SE_21_DROP_FLOOR)
+                                actor[j].t_data[0] = 1;
+                        }
+                    }
+
+                    s.z -= (32<<8);
+
+                    if (s.xrepeat)
+                        for (x=0; x<8; x++) RANDOMSCRAP(s, i);
+
+                    if ((t[3] == 1 && s.xrepeat) || int16(s.lotag) == -99)
+                    {
+                        var/*int32_t */j = A_Spawn(i,EXPLOSION2);
+                        x = s.extra;
+                        A_RadiusDamage(i,g_seenineBlastRadius,x>>2, x-(x>>1),x-(x>>2), x);
+                        A_PlaySound(PIPEBOMB_EXPLODE,j);
+                    }
+
+                    KILLIT(i);
+                }
+            }
+            goto BOLT;
+        }
+
+        if (s.picnum == MASTERSWITCH)
+        {
+            if (s.yvel == 1)
+            {
+                s.hitag--;
+                if (int16(s.hitag) <= 0)
+                {
+                    G_OperateSectors(sect,i);
+
+                    for (j = headspritesect[sect]; j >= 0; j = nextspritesect[j])
+                    {
+                        if (sprite[j].statnum == STAT_EFFECTOR)
+                        {
+                            switch (sprite[j].lotag)
+                            {
+                            case SE_2_EARTHQUAKE:
+                            case SE_21_DROP_FLOOR:
+                            case SE_31_FLOOR_RISE_FALL:
+                            case SE_32_CEILING_RISE_FALL:
+                            case SE_36_PROJ_SHOOTER:
+                                actor[j].t_data[0] = 1;
+                                break;
+                            case SE_3_RANDOM_LIGHTS_AFTER_SHOT_OUT:
+                                actor[j].t_data[4] = 1;
+                                break;
+                            }
+                        }
+                        else if (sprite[j].statnum == STAT_STANDABLE)
+                        {
+                            switch (DYNAMICTILEMAP(sprite[j].picnum))
+                            {
+                            case SEENINE__STATIC:
+                            case OOZFILTER__STATIC:
+                                sprite[j].shade = -31;
+                                break;
+                            }
+                        }
+                    }
+
+                    KILLIT(i);
+                }
+            }
+            goto BOLT;
+        }
+
+        switchpicnum = s.picnum;
+
+        if (switchpicnum > SIDEBOLT1 && switchpicnum <= SIDEBOLT1+3)
+            switchpicnum = SIDEBOLT1;
+        else if (switchpicnum > BOLT1 && switchpicnum <= BOLT1+3)
+            switchpicnum = BOLT1;
+
+        switch (DYNAMICTILEMAP(switchpicnum))
+        {
+        case VIEWSCREEN__STATIC:
+        case VIEWSCREEN2__STATIC:
+
+            if (s.xrepeat == 0)
+                KILLIT(i);
+
+            var $x = new R(x);
+            A_FindPlayer(s, $x);
+            x = $x.$;
+
+            if (x < 2048)
+            {
+                if (sprite[i].yvel == 1)
+                    camsprite = i;
+            }
+            else if (camsprite != -1 && actor[i].t_data[0] == 1)
+            {
+                camsprite = -1;
+                actor[i].t_data[0] = 0;
+                //loadtile(s.picnum);
+                //invalidatetile(s.picnum,-1,255);
+                walock[TILE_VIEWSCR] = 199;
+            }
+
+            goto BOLT;
+
+        case TRASH__STATIC:
+
+            if (s.xvel == 0) s.xvel = 1;
+            if (A_SetSprite(i, CLIPMASK0))
+            {
+                A_Fall(i);
+                if (krand()&1) s.zvel -= 256;
+                if (klabs(s.xvel) < 48)
+                    s.xvel += (krand()&3);
+            }
+            else KILLIT(i);
+            break;
+
+        case SIDEBOLT1__STATIC:
+            //        case SIDEBOLT1+1:
+            //        case SIDEBOLT1+2:
+            //        case SIDEBOLT1+3:
+            var $x = new R(x);
+            A_FindPlayer(s, $x);
+            x = $x.$;
+            if (x > 20480) goto BOLT;
+
+CLEAR_THE_BOLT2:
+            if (t[2])
+            {
+                t[2]--;
+                goto BOLT;
+            }
+            if ((s.xrepeat|s.yrepeat) == 0)
+            {
+                s.xrepeat=t[0];
+                s.yrepeat=t[1];
+            }
+            if ((krand()&8) == 0)
+            {
+                t[0]=s.xrepeat;
+                t[1]=s.yrepeat;
+                t[2] = g_globalRandom&4;
+                s.xrepeat=s.yrepeat=0;
+                goto CLEAR_THE_BOLT2;
+            }
+            s.picnum++;
+
+            // NOTE: Um, this 'l' was assigned to last at the beginning of this function.
+            // SIDEBOLT1 never gets translucent as a consequence, unlike BOLT1.
+            if (l&1) s.cstat ^= 2;
+
+            if ((krand()&1) && sector[sect].floorpicnum == HURTRAIL)
+                A_PlaySound(SHORT_CIRCUIT,i);
+
+            if (s.picnum == SIDEBOLT1+4) s.picnum = SIDEBOLT1;
+
+            goto BOLT;
+
+        case BOLT1__STATIC:
+            //        case BOLT1+1:
+            //        case BOLT1+2:
+            //        case BOLT1+3:
+            var $x = new R(x);
+            A_FindPlayer(s, $x);
+            x = $x.$;
+            if (x > 20480) goto BOLT;
+
+            if (t[3] == 0)
+                t[3]=sector[sect].floorshade;
+
+CLEAR_THE_BOLT:
+            if (t[2])
+            {
+                t[2]--;
+                sector[sect].floorshade = 20;
+                sector[sect].ceilingshade = 20;
+                goto BOLT;
+            }
+            if ((s.xrepeat|s.yrepeat) == 0)
+            {
+                s.xrepeat=t[0];
+                s.yrepeat=t[1];
+            }
+            else if ((krand()&8) == 0)
+            {
+                t[0]=s.xrepeat;
+                t[1]=s.yrepeat;
+                t[2] = g_globalRandom&4;
+                s.xrepeat=s.yrepeat=0;
+                goto CLEAR_THE_BOLT;
+            }
+            s.picnum++;
+
+            l = g_globalRandom&7;
+            s.xrepeat=l+8;
+
+            if (l&1) s.cstat ^= 2;
+
+            if (s.picnum == (BOLT1+1) && (krand()&7) == 0 && sector[sect].floorpicnum == HURTRAIL)
+                A_PlaySound(SHORT_CIRCUIT,i);
+
+            if (s.picnum==BOLT1+4) s.picnum=BOLT1;
+
+            if (s.picnum&1)
+            {
+                sector[sect].floorshade = 0;
+                sector[sect].ceilingshade = 0;
+            }
+            else
+            {
+                sector[sect].floorshade = 20;
+                sector[sect].ceilingshade = 20;
+            }
+            goto BOLT;
+
+        case WATERDRIP__STATIC:
+
+            if (t[1])
+            {
+                if (--t[1] == 0)
+                    s.cstat &= 32767;
+            }
+            else
+            {
+                A_Fall(i);
+                A_SetSprite(i,CLIPMASK0);
+                if (s.xvel > 0) s.xvel -= 2;
+
+                if (s.zvel == 0)
+                {
+                    s.cstat |= 32768;
+
+                    if (s.pal != 2 && s.hitag == 0)
+                        A_PlaySound(SOMETHING_DRIPPING,i);
+
+                    if (sprite[s.owner].picnum != WATERDRIP)
+                    {
+                        KILLIT(i);
+                    }
+                    else
+                    {
+                        actor[i].bpos.z = s.z = t[0];
+                        t[1] = 48+(krand()&31);
+                    }
+                }
+            }
+
+
+            goto BOLT;
+
+        case DOORSHOCK__STATIC:
+            j = klabs(sector[sect].ceilingz-sector[sect].floorz)>>9;
+            s.yrepeat = j+4;
+            s.xrepeat = 16;
+            s.z = sector[sect].floorz;
+            goto BOLT;
+
+        case TOUCHPLATE__STATIC:
+            if (t[1] == 1 && int16(s.hitag) >= 0)  //Move the sector floor
+            {
+                x = sector[sect].floorz;
+
+                if (t[3] == 1)
+                {
+                    if (x >= t[2])
+                    {
+                        sector[sect].floorz = x;
+                        t[1] = 0;
+                    }
+                    else
+                    {
+                        var/*int32_t*/ p:number;
+                        sector[sect].floorz += sector[sect].extra;
+                        p = G_CheckPlayerInSector(sect);
+                        if (p >= 0) g_player[p].ps.pos.z += sector[sect].extra;
+                    }
+                }
+                else
+                {
+                    if (x <= s.z)
+                    {
+                        sector[sect].floorz = s.z;
+                        t[1] = 0;
+                    }
+                    else
+                    {
+                        var/*int32_t*/ p:number;
+                        sector[sect].floorz -= sector[sect].extra;
+                        p = G_CheckPlayerInSector(sect);
+                        if (p >= 0)
+                            g_player[p].ps.pos.z -= sector[sect].extra;
+                    }
+                }
+                goto BOLT;
+            }
+
+            if (t[5] == 1) goto BOLT;
+
+            {
+                var/*int32_t */p = G_CheckPlayerInSector(sect);
+
+                if (p >= 0 &&
+                    (g_player[p].ps.on_ground || s.ang == 512))
+                {
+                    if (t[0] == 0 && !G_CheckActivatorMotion(s.lotag))
+                    {
+                        t[0] = 1;
+                        t[1] = 1;
+                        t[3] = !t[3];
+                        G_OperateMasterSwitches(s.lotag);
+                        G_OperateActivators(s.lotag,p);
+                        if (int16(s.hitag) > 0)
+                        {
+                            s.hitag--;
+                            if (s.hitag == 0) t[5] = 1;
+                        }
+                    }
+                }
+                else t[0] = 0;
+            }
+
+            if (t[1] == 1)
+            {
+                for (j = headspritestat[STAT_STANDABLE]; j >= 0; j = nextspritestat[j])
+                {
+                    if (j != i && sprite[j].picnum == TOUCHPLATE && sprite[j].lotag == s.lotag)
+                    {
+                        actor[j].t_data[1] = 1;
+                        actor[j].t_data[3] = t[3];
+                    }
+                }
+            }
+            goto BOLT;
+
+        case CANWITHSOMETHING__STATIC:
+        case CANWITHSOMETHING2__STATIC:
+        case CANWITHSOMETHING3__STATIC:
+        case CANWITHSOMETHING4__STATIC:
+            A_Fall(i);
+            if (A_IncurDamage(i) >= 0)
+            {
+                A_PlaySound(VENT_BUST,i);
+
+                for (j=9; j>=0; j--)
+                    RANDOMSCRAP(s, i);
+
+                if (s.lotag) A_Spawn(i,s.lotag);
+
+                KILLIT(i);
+            }
+            goto BOLT;
+
+        case FLOORFLAME__STATIC:
+        case FIREBARREL__STATIC:
+        case FIREVASE__STATIC:
+        case EXPLODINGBARREL__STATIC:
+        case WOODENHORSE__STATIC:
+        case HORSEONSIDE__STATIC:
+        case NUKEBARREL__STATIC:
+        case NUKEBARRELDENTED__STATIC:
+        case NUKEBARRELLEAKED__STATIC:
+        case TOILETWATER__STATIC:
+        case RUBBERCAN__STATIC:
+        case STEAM__STATIC:
+        case CEILINGSTEAM__STATIC:
+        case WATERBUBBLEMAKER__STATIC:
+            if (!G_HaveActor(sprite[i].picnum))
+                goto BOLT;
+            {                
+                var $x = new R(x);
+                var p = A_FindPlayer(s, $x);
+                x = $x.$;
+                A_Execute(i,p,x);
+            }
+            goto BOLT;
+        }
 
 //BOLT:
-//        i = nexti;
-//    }
-//}
+        i = nexti;
+    }
+}
 
 //ACTOR_STATIC void A_DoProjectileBounce(int32_t i)
 //{
@@ -7994,7 +8018,7 @@ function G_DoEffectorLights():void  // STATNUM 14
 //                    mylight.color[1] = sprite[i].yvel;
 //                    mylight.color[2] = sprite[i].zvel;
 //                    mylight.radius = (256-(sprite[i].shade+128))<<1;
-//                    mylight.faderadius = (int16_t)(mylight.radius * 0.75);
+//                    mylight.faderadius = int16(mylight.radius * 0.75);
 //                    mylight.angle = sprite[i].ang;
 //                    mylight.horiz = sprite[i].extra;
 //                    mylight.minshade = sprite[i].xoffset;
@@ -8047,7 +8071,7 @@ function G_DoEffectorLights():void  // STATNUM 14
 //                if (((256-(sprite[i].shade+128))<<1) != actor[i].lightptr.radius)
 //                {
 //                    actor[i].lightptr.radius = (256-(sprite[i].shade+128))<<1;
-//                    actor[i].lightptr.faderadius = (int16_t)(actor[i].lightptr.radius * 0.75);
+//                    actor[i].lightptr.faderadius = int16(actor[i].lightptr.radius * 0.75);
 //                    actor[i].lightptr.flags.invalidate = 1;
 //                }
 //                if (sprite[i].ang != actor[i].lightptr.angle)
