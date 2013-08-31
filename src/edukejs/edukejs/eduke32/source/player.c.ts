@@ -501,13 +501,13 @@ function /*int32_t */A_GetHitscanRange(/*int32_t */i:number):number
 //}
 
 
-//static int32_t g_overrideShootZvel = 0;  // a boolean
-//static int32_t g_shootZvel;  // the actual zvel if the above is !=0
+var /*int32_t */g_overrideShootZvel = 0;  // a boolean
+var /*int32_t */g_shootZvel:number;  // the actual zvel if the above is !=0
 
-//static int32_t A_GetShootZvel(int32_t defaultzvel)
-//{
-//    return g_overrideShootZvel ? g_shootZvel : defaultzvel;
-//}
+function /*int32_t */A_GetShootZvel(/*int32_t */defaultzvel:number):number
+{
+    return g_overrideShootZvel ? g_shootZvel : defaultzvel;
+}
 
 //// Prepare hitscan weapon fired from player p.
 //static void P_PreFireHitscan(int32_t i, int32_t p, int32_t atwith,
@@ -602,25 +602,25 @@ function /*int32_t */A_GetHitscanRange(/*int32_t */i:number):number
 //    }
 //}
 
-//static int32_t Proj_DoHitscan(int32_t i, int32_t cstatmask,
-//                              const vec3_t *srcvect, int32_t zvel, int16_t sa,
-//                              hitdata_t *hit)
-//{
-//    spritetype *const s = &sprite[i];
+function /*int32_t */Proj_DoHitscan(/*int32_t */i:number, /*int32_t */cstatmask:number,
+                              /*const vec3_t **/srcvect:vec3_t, /*int32_t */zvel:number, /*int16_t */sa:number,
+                              hit:hitdata_t):number
+{
+    var s = sprite[i];
 
-//    s.cstat &= ~cstatmask;
+    s.cstat &= ~cstatmask;
 
-//    zvel = A_GetShootZvel(zvel);
+    zvel = A_GetShootZvel(zvel);
 
-//    hitscan(srcvect, s.sectnum,
-//            sintable[(sa+512)&2047],
-//            sintable[sa&2047],
-//            zvel<<6, hit, CLIPMASK1);
+    hitscan(srcvect, s.sectnum,
+            sintable[(sa+512)&2047],
+            sintable[sa&2047],
+            zvel<<6, hit, CLIPMASK1);
 
-//    s.cstat |= cstatmask;
+    s.cstat |= cstatmask;
 
-//    return (hit.sect < 0);
-//}
+    return (hit.sect < 0)?1:0;
+}
 
 //static void Proj_DoRandDecalSize(int32_t spritenum, int32_t atwith)
 //{
@@ -885,838 +885,850 @@ function /*int32_t */A_GetHitscanRange(/*int32_t */i:number):number
 
 //#define MinibossScale(s) (((s)*sprite[i].yrepeat)/80)
 function /*int32_t */A_ShootWithZvel(/*int32_t*/ i:number, /*int32_t */atwith:number, /*int32_t */override_zvel:number):number
-{todoThrow();
-//    int16_t sa;
-//    int32_t j, k=-1, l;
-//    int32_t vel, zvel = 0;
-//    hitdata_t hit;
-//    vec3_t srcvect;
-//    spritetype *const s = &sprite[i];
-//    const int16_t sect = s.sectnum;
+{
+    var /*int16_t */sa:number;
+    var/*int32_t */j:number, k=-1, l:number;
+    var/*int32_t */vel:number, zvel = 0;
+    var hit:hitdata_t ;
+    var srcvect = new vec3_t ();
+    var s = sprite[i];
+    var /*const int16_t */sect = s.sectnum;
 
-//    const int32_t p = (s.picnum == APLAYER) ? s.yvel : -1;
-//    DukePlayer_t *const ps = p >= 0 ? g_player[p].ps : NULL;
+    var/*int32_t */p = (s.picnum == APLAYER) ? s.yvel : -1;
+    var ps = p >= 0 ? g_player[p].ps : NULL;
 
-//    if (override_zvel != SHOOT_HARDCODED_ZVEL)
-//    {
-//        g_overrideShootZvel = 1;
-//        g_shootZvel = override_zvel;
-//    }
-//    else
-//    {
-//        g_overrideShootZvel = 0;
-//    }
+    if (override_zvel != SHOOT_HARDCODED_ZVEL)
+    {
+        g_overrideShootZvel = 1;
+        g_shootZvel = override_zvel;
+    }
+    else
+    {
+        g_overrideShootZvel = 0;
+    }
 
-//    if (s.picnum == APLAYER)
-//    {
-//        Bmemcpy(&srcvect,ps,sizeof(vec3_t));
-//        srcvect.z += ps.pyoff+(4<<8);
-//        sa = ps.ang;
+    if (s.picnum == APLAYER)
+    {        
+        srcvect.copyFrom(ps.pos); //Bmemcpy(&srcvect,ps,sizeof(vec3_t));
+        srcvect.z += ps.pyoff+(4<<8);
+        sa = ps.ang;
 
-//        ps.crack_time = 777;
-//    }
-//    else
-//    {
-//        sa = s.ang;
-//        Bmemcpy(&srcvect,s,sizeof(vec3_t));
-//        srcvect.z -= (((s.yrepeat*tilesizy[s.picnum])<<1)-(4<<8));
+        ps.crack_time = 777;
+    }
+    else
+    {
+        sa = s.ang;
+        //Bmemcpy(&srcvect,s,sizeof(vec3_t));
+        srcvect.x = s.x;
+        srcvect.y = s.y;
+        srcvect.z -= (((s.yrepeat*tilesizy[s.picnum])<<1)-(4<<8));
 
-//        if (s.picnum != ROTATEGUN)
-//        {
-//            srcvect.z -= (7<<8);
+        if (s.picnum != ROTATEGUN)
+        {
+            srcvect.z -= (7<<8);
 
-//            if (A_CheckEnemySprite(s) && sprite[i].picnum != COMMANDER)
-//            {
-//                srcvect.x += (sintable[(sa+1024+96)&2047]>>7);
-//                srcvect.y += (sintable[(sa+512+96)&2047]>>7);
-//            }
-//        }
-
-//#ifdef POLYMER
-//        if (atwith >= 0)
-//            switch (DYNAMICTILEMAP(atwith))
-//            {
-//            case FIRELASER__STATIC:
-//            case SHOTGUN__STATIC:
-//            case SHOTSPARK1__STATIC:
-//            case CHAINGUN__STATIC:
-//            case RPG__STATIC:
-//            case MORTER__STATIC:
-//            {
-//                int32_t x = ((sintable[(s.ang+512)&2047])>>7), y = ((sintable[(s.ang)&2047])>>7);
-//                s. x += x;
-//                s. y += y;
-//                G_AddGameLight(0, i, PHEIGHT, 8192, 255+(95<<8),PR_LIGHT_PRIO_MAX_GAME);
-//                actor[i].lightcount = 2;
-//                s. x -= x;
-//                s. y -= y;
-//            }
-
-//            break;
-//            }
-//#endif // POLYMER
-//    }
-
-//    if (A_CheckSpriteTileFlags(atwith, SPRITE_PROJECTILE))
-//    {
-//        /* Custom projectiles */
-//        projectile_t *const proj = (Bassert(atwith >= 0), &ProjectileData[atwith]);
+            if (A_CheckEnemySprite(s) && sprite[i].picnum != COMMANDER)
+            {
+                srcvect.x += (sintable[(sa+1024+96)&2047]>>7);
+                srcvect.y += (sintable[(sa+512+96)&2047]>>7);
+            }
+        }
 
 //#ifdef POLYMER
-//        if (proj.flashcolor)
-//        {
-//            int32_t x = ((sintable[(s.ang+512)&2047])>>7), y = ((sintable[(s.ang)&2047])>>7);
+        if (atwith >= 0)
+            switch (DYNAMICTILEMAP(atwith))
+            {
+            case FIRELASER__STATIC:
+            case SHOTGUN__STATIC:
+            case SHOTSPARK1__STATIC:
+            case CHAINGUN__STATIC:
+            case RPG__STATIC:
+            case MORTER__STATIC:
+            {
+                var/*int32_t */x = (sintable[(s.ang+512)&2047])>>7, y = (sintable[(s.ang)&2047])>>7;
+                s. x += x;
+                s. y += y;
+                G_AddGameLight(0, i, PHEIGHT, 8192, 255+(95<<8),PR_LIGHT_PRIO_MAX_GAME);
+                actor[i].lightcount = 2;
+                s. x -= x;
+                s. y -= y;
+            }
 
-//            s. x += x;
-//            s. y += y;
-//            G_AddGameLight(0, i, PHEIGHT, 8192, proj.flashcolor,PR_LIGHT_PRIO_MAX_GAME);
-//            actor[i].lightcount = 2;
-//            s. x -= x;
-//            s. y -= y;
-//        }
+            break;
+            }
+//#endif // POLYMER
+    }
+
+    if (A_CheckSpriteTileFlags(atwith, SPRITE_PROJECTILE))
+    {
+        /* Custom projectiles */
+        var proj = ProjectileData[atwith];//projectile_t *const proj = (Bassert(atwith >= 0), &ProjectileData[atwith]);
+
+//#ifdef POLYMER
+        if (proj.flashcolor)
+        {
+            var/*int32_t */x = (sintable[(s.ang+512)&2047])>>7, y = (sintable[(s.ang)&2047])>>7;
+
+            s. x += x;
+            s. y += y;
+            G_AddGameLight(0, i, PHEIGHT, 8192, proj.flashcolor,PR_LIGHT_PRIO_MAX_GAME);
+            actor[i].lightcount = 2;
+            s. x -= x;
+            s. y -= y;
+        }
 //#endif // POLYMER
 
-//        if (proj.offset == 0)
-//            proj.offset = 1;
-
-//        if (proj.workslike & PROJECTILE_BLOOD || proj.workslike & PROJECTILE_KNEE)
-//        {
-//            if (proj.workslike & PROJECTILE_BLOOD)
-//            {
-//                sa += 64 - (krand()&127);
-//                if (p < 0) sa += 1024;
-//                zvel = 1024-(krand()&2047);
-//            }
-
-//            if (proj.workslike & PROJECTILE_KNEE)
-//            {
-//                if (p >= 0)
-//                {
-//                    zvel = (100-ps.horiz-ps.horizoff)<<5;
-//                    srcvect.z += (6<<8);
-//                    sa += 15;
-//                }
-//                else if (!(proj.workslike & PROJECTILE_NOAIM))
-//                {
-//                    int32_t x;
-//                    j = g_player[A_FindPlayer(s,&x)].ps.i;
-//                    zvel = ((sprite[j].z-srcvect.z)<<8) / (x+1);
-//                    sa = getangle(sprite[j].x-srcvect.x,sprite[j].y-srcvect.y);
-//                }
-//            }
-
-//            Proj_DoHitscan(i, 0, &srcvect, zvel, sa, &hit);
-
-//            if (proj.workslike & PROJECTILE_BLOOD)
-//            {
-//                if (proj.range == 0)
-//                    proj.range = 1024;
-
-//                if (Proj_CheckBlood(&srcvect, &hit, proj.range,
-//                                    mulscale3(proj.yrepeat, tilesizy[proj.decal])<<8))
-//                {
-//                    const walltype *const hitwal = &wall[hit.wall];
-
-//                    if (FindDistance2D(hitwal.x-wall[hitwal.point2].x, hitwal.y-wall[hitwal.point2].y) >
-//                        (mulscale3(proj.xrepeat+8, tilesizx[proj.decal])))
-//                    {
-//                        if (SectorContainsSE13(hitwal.nextsector))
-//                            return -1;
-
-//                        if (hitwal.nextwall >= 0 && wall[hitwal.nextwall].hitag != 0)
-//                            return -1;
-
-//                        if (hitwal.hitag == 0)
-//                        {
-//                            if (proj.decal >= 0)
-//                            {
-//                                k = A_Spawn(i,proj.decal);
-
-//                                if (!A_CheckSpriteFlags(k, SPRITE_DECAL))
-//                                    actor[k].flags |= SPRITE_DECAL;
-
-//                                sprite[k].xvel = -1;
-//                                sprite[k].ang = getangle(hitwal.x-wall[hitwal.point2].x,
-//                                                         hitwal.y-wall[hitwal.point2].y)+512;
-//                                Bmemcpy(&sprite[k], &hit.pos, sizeof(vec3_t));
-
-//                                Proj_DoRandDecalSize(k, atwith);
-
-//                                sprite[k].z += sprite[k].yrepeat<<8;
-
-////                                sprite[k].cstat = 16+(krand()&12);
-//                                sprite[k].cstat = 16;
-//                                if (krand()&1)
-//                                    sprite[k].cstat |= 4;
-//                                if (krand()&1)
-//                                    sprite[k].cstat |= 8;
-
-//                                sprite[k].shade = sector[sprite[k].sectnum].floorshade;
-
-//                                sprite[k].x -= sintable[(sprite[k].ang+2560)&2047]>>13;
-//                                sprite[k].y -= sintable[(sprite[k].ang+2048)&2047]>>13;
-
-//                                A_SetSprite(k,CLIPMASK0);
-//                                A_AddToDeleteQueue(k);
-//                                changespritestat(k,5);
-//                            }
-//                        }
-//                    }
-//                }
-
-//                return -1;
-//            }
-
-//            if (hit.sect < 0) return -1;
-
-//            if (proj.range == 0 && (proj.workslike & PROJECTILE_KNEE))
-//                proj.range = 1024;
-
-//            if (proj.range > 0 && klabs(srcvect.x-hit.pos.x)+klabs(srcvect.y-hit.pos.y) > proj.range)
-//                return -1;
-
-//            Proj_HandleKnee(&hit, i, p, atwith, sa,
-//                            proj, atwith,
-//                            proj.extra_rand,
-//                            proj.spawns, proj.sound);
-//            return -1;
-//        }
-
-//        if (proj.workslike & PROJECTILE_HITSCAN)
-//        {
-//            if (s.extra >= 0) s.shade = proj.shade;
-
-//            if (p >= 0)
-//                P_PreFireHitscan(i, p, atwith, &srcvect, &zvel, &sa,
-//                              proj.workslike & PROJECTILE_ACCURATE_AUTOAIM,
-//                              !(proj.workslike & PROJECTILE_ACCURATE));
-//            else
-//                A_PreFireHitscan(s, &srcvect, &zvel, &sa,
-//                                 !(proj.workslike & PROJECTILE_ACCURATE));
-
-//            if (Proj_DoHitscan(i, (proj.cstat >= 0) ? proj.cstat : 256+1,
-//                               &srcvect, zvel, sa, &hit))
-//                return -1;
-
-//            if (proj.range > 0 && klabs(srcvect.x-hit.pos.x)+klabs(srcvect.y-hit.pos.y) > proj.range)
-//                return -1;
-
-//            if (proj.trail >= 0)
-//                A_HitscanProjTrail(&srcvect,&hit.pos,sa,atwith);
-
-//            if (proj.workslike & PROJECTILE_WATERBUBBLES)
-//            {
-//                if ((krand()&15) == 0 && sector[hit.sect].lotag == ST_2_UNDERWATER)
-//                    A_DoWaterTracers(hit.pos.x,hit.pos.y,hit.pos.z,
-//                                     srcvect.x,srcvect.y,srcvect.z,8-(ud.multimode>>1));
-//            }
-
-//            if (p >= 0)
-//            {
-//                k = Proj_InsertShotspark(&hit, i, atwith, 10, sa, Proj_GetExtra(atwith));
-
-//                if (P_PostFireHitscan(p, k, &hit, i, atwith, zvel,
-//                                      atwith, proj.decal, atwith, 1+2) < 0)
-//                    return -1;
-//            }
-//            else
-//            {
-//                k = A_PostFireHitscan(&hit, i, atwith, sa, Proj_GetExtra(atwith),
-//                                      atwith, atwith);
-//            }
-
-//            if ((krand()&255) < 4 && proj.isound >= 0)
-//                S_PlaySound3D(proj.isound, k, &hit.pos);
-
-//            return -1;
-//        }
-
-//        if (proj.workslike & PROJECTILE_RPG)
-//        {
-//            if (s.extra >= 0) s.shade = proj.shade;
-
-//            vel = proj.vel;
-
-//            j = -1;
-
-//            if (p >= 0)
-//            {
-//                j = GetAutoAimAngle(i, p, atwith, 8<<8, 0+2, &srcvect, vel, &zvel, &sa);
-
-//                if (j < 0)
-//                    zvel = (100-ps.horiz-ps.horizoff)*(proj.vel/8);
-
-//                if (proj.sound >= 0)
-//                    A_PlaySound(proj.sound,i);
-//            }
-//            else
-//            {
-//                if (!(proj.workslike & PROJECTILE_NOAIM))
-//                {
-//                    j = A_FindPlayer(s, NULL);
-//                    sa = getangle(g_player[j].ps.opos.x-srcvect.x,g_player[j].ps.opos.y-srcvect.y);
-
-//                    l = safeldist(g_player[j].ps.i, s);
-//                    zvel = ((g_player[j].ps.opos.z-srcvect.z)*vel) / l;
-
-//                    if (A_CheckEnemySprite(s) && (s.hitag&face_player_smart))
-//                        sa = s.ang+(krand()&31)-16;
-//                }
-//            }
-
-//            if (p >= 0 && j >= 0)
-//                l = j;
-//            else l = -1;
-
-//            if (numplayers > 1 && g_netClient) return -1;
-
-//            zvel = A_GetShootZvel(zvel);
-//            j = A_InsertSprite(sect,
-//                               srcvect.x+(sintable[(348+sa+512)&2047]/proj.offset),
-//                               srcvect.y+(sintable[(sa+348)&2047]/proj.offset),
-//                               srcvect.z-(1<<8),atwith,0,14,14,sa,vel,zvel,i,4);
-
-//            sprite[j].xrepeat=proj.xrepeat;
-//            sprite[j].yrepeat=proj.yrepeat;
-
-//            if (proj.extra_rand > 0)
-//                sprite[j].extra += (krand()&proj.extra_rand);
-//            if (!(proj.workslike & PROJECTILE_BOUNCESOFFWALLS))
-//                sprite[j].yvel = l;
-//            else
-//            {
-//                if (proj.bounces >= 1) sprite[j].yvel = proj.bounces;
-//                else sprite[j].yvel = g_numFreezeBounces;
-//                sprite[j].zvel -= (2<<4);
-//            }
-
-//            if (proj.cstat >= 0) sprite[j].cstat = proj.cstat;
-//            else sprite[j].cstat = 128;
-//            if (proj.clipdist != 255) sprite[j].clipdist = proj.clipdist;
-//            else sprite[j].clipdist = 40;
-
-//            {
-//                int32_t picnum = sprite[j].picnum;
-//                Bmemcpy(&SpriteProjectile[j], &ProjectileData[picnum], sizeof(projectile_t));
-//            }
-
-//            return j;
-//        }
-
-//    }
-//    else if (atwith >= 0)
-//    {
-//        switch (DYNAMICTILEMAP(atwith))
-//        {
-//        case BLOODSPLAT1__STATIC:
-//        case BLOODSPLAT2__STATIC:
-//        case BLOODSPLAT3__STATIC:
-//        case BLOODSPLAT4__STATIC:
-//            sa += 64 - (krand()&127);
-//            if (p < 0) sa += 1024;
-//            zvel = 1024-(krand()&2047);
-//            // fall-through
-//        case KNEE__STATIC:
-//            if (atwith == KNEE)
-//            {
-//                if (p >= 0)
-//                {
-//                    zvel = (100-ps.horiz-ps.horizoff)<<5;
-//                    srcvect.z += (6<<8);
-//                    sa += 15;
-//                }
-//                else
-//                {
-//                    int32_t x;
-//                    j = g_player[A_FindPlayer(s,&x)].ps.i;
-//                    zvel = ((sprite[j].z-srcvect.z)<<8) / (x+1);
-//                    sa = getangle(sprite[j].x-srcvect.x,sprite[j].y-srcvect.y);
-//                }
-//            }
-
-//            Proj_DoHitscan(i, 0, &srcvect, zvel, sa, &hit);
-
-//            if (atwith >= BLOODSPLAT1 && atwith <= BLOODSPLAT4)
-//            {
-//                if (Proj_CheckBlood(&srcvect, &hit, 1024, 16<<8))
-//                {
-//                    const walltype *const hitwal = &wall[hit.wall];
-
-//                    if (SectorContainsSE13(hitwal.nextsector))
-//                        return -1;
-
-//                    if (hitwal.nextwall >= 0 && wall[hitwal.nextwall].hitag != 0)
-//                        return -1;
-
-//                    if (hitwal.hitag == 0)
-//                    {
-//                        k = A_Spawn(i,atwith);
-//                        sprite[k].xvel = -12;
-//                        sprite[k].ang = getangle(hitwal.x-wall[hitwal.point2].x,
-//                                                 hitwal.y-wall[hitwal.point2].y)+512;
-//                        Bmemcpy(&sprite[k], &hit.pos, sizeof(vec3_t));
-
-//                        sprite[k].cstat |= (krand()&4);
-//                        A_SetSprite(k,CLIPMASK0);
-//                        setsprite(k, (vec3_t *)&sprite[k]);
-//                        if (sprite[i].picnum == OOZFILTER || sprite[i].picnum == NEWBEAST)
-//                            sprite[k].pal = 6;
-//                    }
-//                }
-
-//                return -1;
-//            }
-
-//            if (hit.sect < 0) break;
-
-//            if (klabs(srcvect.x-hit.pos.x)+klabs(srcvect.y-hit.pos.y) < 1024)
-//                Proj_HandleKnee(&hit, i, p, atwith, sa,
-//                                NULL, KNEE, 7, SMALLSMOKE, KICK_HIT);
-//            break;
-
-//        case SHOTSPARK1__STATIC:
-//        case SHOTGUN__STATIC:
-//        case CHAINGUN__STATIC:
-
-//            if (s.extra >= 0) s.shade = -96;
-
-//            if (p >= 0)
-//                P_PreFireHitscan(i, p, atwith, &srcvect, &zvel, &sa,
-//                                 atwith == SHOTSPARK1__STATIC && !WW2GI && !NAM,
-//                                 1);
-//            else
-//                A_PreFireHitscan(s, &srcvect, &zvel, &sa, 1);
-
-//            if (Proj_DoHitscan(i, 256+1, &srcvect, zvel, sa, &hit))
-//                return -1;
-
-//            if ((krand()&15) == 0 && sector[hit.sect].lotag == ST_2_UNDERWATER)
-//                A_DoWaterTracers(hit.pos.x,hit.pos.y,hit.pos.z,
-//                                 srcvect.x,srcvect.y,srcvect.z,8-(ud.multimode>>1));
-
-//            if (p >= 0)
-//            {
-//                k = Proj_InsertShotspark(&hit, i, atwith, 10, sa,
-//                                         G_InitialActorStrength(atwith) + (krand()%6));
-
-//                if (P_PostFireHitscan(p, k, &hit, i, atwith, zvel,
-//                                      -SMALLSMOKE, BULLETHOLE, SHOTSPARK1, 0) < 0)
-//                    return -1;
-//            }
-//            else
-//            {
-//                k = A_PostFireHitscan(&hit, i, atwith, sa, G_InitialActorStrength(atwith),
-//                                      -SMALLSMOKE, SHOTSPARK1);
-//            }
-
-//            if ((krand()&255) < 4)
-//                S_PlaySound3D(PISTOL_RICOCHET, k, &hit.pos);
-
-//            return -1;
-
-//        case FIRELASER__STATIC:
-//        case SPIT__STATIC:
-//        case COOLEXPLOSION1__STATIC:
-//        {
-//            int32_t tsiz;
-
-//            if (s.extra >= 0) s.shade = -96;
-
-//            if (atwith == SPIT) vel = 292;
-//            else
-//            {
-//                if (atwith == COOLEXPLOSION1)
-//                {
-//                    if (s.picnum == BOSS2) vel = 644;
-//                    else vel = 348;
-//                    srcvect.z -= (4<<7);
-//                }
-//                else
-//                {
-//                    vel = 840;
-//                    srcvect.z -= (4<<7);
-//                }
-//            }
-
-//            if (p >= 0)
-//            {
-//                j = GetAutoAimAngle(i, p, atwith, -(12<<8), 0, &srcvect, vel, &zvel, &sa);
-
-//                if (j < 0)
-//                    zvel = (100-ps.horiz-ps.horizoff)*98;
-//            }
-//            else
-//            {
-//                j = A_FindPlayer(s, NULL);
-//                //                sa = getangle(g_player[j].ps.opos.x-sx,g_player[j].ps.opos.y-sy);
-//                sa += 16-(krand()&31);
-//                hit.pos.x = safeldist(g_player[j].ps.i, s);
-//                zvel = ((g_player[j].ps.opos.z - srcvect.z + (3<<8))*vel) / hit.pos.x;
-//            }
-
-//            zvel = A_GetShootZvel(zvel);
-
-//            if (atwith == SPIT)
-//            {
-//                tsiz = 18;
-//                srcvect.z -= (10<<8);
-//            }
-//            else if (p >= 0)
-//                tsiz = 7;
-//            else
-//            {
-//                if (atwith == FIRELASER)
-//                {
-//                    if (p >= 0)
-//                        tsiz = 34;
-//                    else
-//                        tsiz = 18;
-//                }
-//                else
-//                    tsiz = 18;
-//            }
-
-//            j = A_InsertSprite(sect,srcvect.x,srcvect.y,srcvect.z,
-//                               atwith,-127,tsiz,tsiz,sa,vel,zvel,i,4);
-//            sprite[j].extra += (krand()&7);
-
-//            if (atwith == COOLEXPLOSION1)
-//            {
-//                sprite[j].shade = 0;
-//                if (sprite[i].picnum == BOSS2)
-//                {
-//                    l = sprite[j].xvel;
-//                    sprite[j].xvel = MinibossScale(1024);
-//                    A_SetSprite(j,CLIPMASK0);
-//                    sprite[j].xvel = l;
-//                    sprite[j].ang += 128-(krand()&255);
-//                }
-//            }
-
-//            sprite[j].cstat = 128;
-//            sprite[j].clipdist = 4;
-
-//            sa = s.ang+32-(krand()&63);
-//            zvel += 512-(krand()&1023);
-
-//            return j;
-//        }
-
-//        case FREEZEBLAST__STATIC:
-//            srcvect.z += (3<<8);
-//        case RPG__STATIC:
-//            // XXX: "CODEDUP"
-//            if (s.extra >= 0) s.shade = -96;
-
-//            vel = 644;
-
-//            j = -1;
-
-//            if (p >= 0)
-//            {
-//                j = GetAutoAimAngle(i, p, atwith, 8<<8, 0+2, &srcvect, vel, &zvel, &sa);
-
-//                if (j < 0)
-//                    zvel = (100-ps.horiz-ps.horizoff)*81;
-
-//                if (atwith == RPG)
-//                    A_PlaySound(RPG_SHOOT,i);
-//            }
-//            else
-//            {
-//                j = A_FindPlayer(s, NULL);
-//                sa = getangle(g_player[j].ps.opos.x-srcvect.x,g_player[j].ps.opos.y-srcvect.y);
-//                if (sprite[i].picnum == BOSS3)
-//                    srcvect.z -= MinibossScale(32<<8);
-//                else if (sprite[i].picnum == BOSS2)
-//                {
-//                    vel += 128;
-//                    srcvect.z += MinibossScale(24<<8);
-//                }
-
-//                l = safeldist(g_player[j].ps.i, s);
-//                zvel = ((g_player[j].ps.opos.z-srcvect.z)*vel) / l;
-
-//                if (A_CheckEnemySprite(s) && (s.hitag&face_player_smart))
-//                    sa = s.ang+(krand()&31)-16;
-//            }
-
-//            if (p >= 0 && j >= 0)
-//                l = j;
-//            else l = -1;
-
-//            if (numplayers > 1 && g_netClient) return -1;
-
-//            zvel = A_GetShootZvel(zvel);
-//            j = A_InsertSprite(sect,
-//                               srcvect.x+(sintable[(348+sa+512)&2047]/448),
-//                               srcvect.y+(sintable[(sa+348)&2047]/448),
-//                               srcvect.z-(1<<8),atwith,0,14,14,sa,vel,zvel,i,4);
-
-//            sprite[j].extra += (krand()&7);
-//            if (atwith != FREEZEBLAST)
-//                sprite[j].yvel = l;
-//            else
-//            {
-//                sprite[j].yvel = g_numFreezeBounces;
-//                sprite[j].xrepeat >>= 1;
-//                sprite[j].yrepeat >>= 1;
-//                sprite[j].zvel -= (2<<4);
-//            }
-
-//            if (p == -1)
-//            {
-//                if (sprite[i].picnum == BOSS3)
-//                {
-//                    if (krand()&1)
-//                    {
-//                        sprite[j].x -= MinibossScale(sintable[sa&2047]>>6);
-//                        sprite[j].y -= MinibossScale(sintable[(sa+1024+512)&2047]>>6);
-//                        sprite[j].ang -= MinibossScale(8);
-//                    }
-//                    else
-//                    {
-//                        sprite[j].x += MinibossScale(sintable[sa&2047]>>6);
-//                        sprite[j].y += MinibossScale(sintable[(sa+1024+512)&2047]>>6);
-//                        sprite[j].ang += MinibossScale(4);
-//                    }
-//                    sprite[j].xrepeat = MinibossScale(42);
-//                    sprite[j].yrepeat = MinibossScale(42);
-//                }
-//                else if (sprite[i].picnum == BOSS2)
-//                {
-//                    sprite[j].x -= MinibossScale(sintable[sa&2047]/56);
-//                    sprite[j].y -= MinibossScale(sintable[(sa+1024+512)&2047]/56);
-//                    sprite[j].ang -= MinibossScale(8)+(krand()&255)-128;
-//                    sprite[j].xrepeat = 24;
-//                    sprite[j].yrepeat = 24;
-//                }
-//                else if (atwith != FREEZEBLAST)
-//                {
-//                    sprite[j].xrepeat = 30;
-//                    sprite[j].yrepeat = 30;
-//                    sprite[j].extra >>= 2;
-//                }
-//            }
-
-//            else if (PWEAPON(0, g_player[p].ps.curr_weapon, WorksLike) == DEVISTATOR_WEAPON)
-//            {
-//                sprite[j].extra >>= 2;
-//                sprite[j].ang += 16-(krand()&31);
-//                sprite[j].zvel += 256-(krand()&511);
-
-//                if (g_player[p].ps.hbomb_hold_delay)
-//                {
-//                    sprite[j].x -= sintable[sa&2047]/644;
-//                    sprite[j].y -= sintable[(sa+1024+512)&2047]/644;
-//                }
-//                else
-//                {
-//                    sprite[j].x += sintable[sa&2047]>>8;
-//                    sprite[j].y += sintable[(sa+1024+512)&2047]>>8;
-//                }
-//                sprite[j].xrepeat >>= 1;
-//                sprite[j].yrepeat >>= 1;
-//            }
-
-//            sprite[j].cstat = 128;
-//            if (atwith == RPG)
-//                sprite[j].clipdist = 4;
-//            else
-//                sprite[j].clipdist = 40;
-
-//            return j;
-
-//        case HANDHOLDINGLASER__STATIC:
-//        {
-//            const int32_t zoff = (p>=0) ? g_player[p].ps.pyoff : 0;
-//            if (p >= 0)
-//                zvel = (100-ps.horiz-ps.horizoff)*32;
-//            else zvel = 0;
-
-//            srcvect.z -= zoff;
-//            Proj_DoHitscan(i, 0, &srcvect, zvel, sa, &hit);
-//            srcvect.z += zoff;
-
-//            j = 0;
-//            if (hit.sprite >= 0) break;
-
-//            if (hit.wall >= 0 && hit.sect >= 0)
-//                if (((hit.pos.x-srcvect.x)*(hit.pos.x-srcvect.x)+(hit.pos.y-srcvect.y)*(hit.pos.y-srcvect.y)) < (290*290))
-//                {
-//                    // ST_2_UNDERWATER
-//                    if (wall[hit.wall].nextsector >= 0)
-//                    {
-//                        if (sector[wall[hit.wall].nextsector].lotag <= 2 && sector[hit.sect].lotag <= 2)
-//                            j = 1;
-//                    }
-//                    else if (sector[hit.sect].lotag <= 2)
-//                        j = 1;
-//                }
-
-//            if (j == 1)
-//            {
-//                int32_t lTripBombControl = (p < 0) ? 0 :
+        if (proj.offset == 0)
+            proj.offset = 1;
+
+        if (proj.workslike & PROJECTILE_BLOOD || proj.workslike & PROJECTILE_KNEE)
+        {
+            if (proj.workslike & PROJECTILE_BLOOD)
+            {
+                sa += 64 - (krand()&127);
+                if (p < 0) sa += 1024;
+                zvel = 1024-(krand()&2047);
+            }
+
+            if (proj.workslike & PROJECTILE_KNEE)
+            {
+                if (p >= 0)
+                {
+                    zvel = (100-ps.horiz-ps.horizoff)<<5;
+                    srcvect.z += (6<<8);
+                    sa += 15;
+                }
+                else if (!(proj.workslike & PROJECTILE_NOAIM))
+                {
+                    var/*int32_t */x;
+                    var $x = new R(x);
+                    j = g_player[A_FindPlayer(s,$x)].ps.i;
+                    x = $x.$;
+                    zvel = int32(((sprite[j].z-srcvect.z)<<8) / (x+1));
+                    sa = getangle(sprite[j].x-srcvect.x,sprite[j].y-srcvect.y);
+                }
+            }
+
+            Proj_DoHitscan(i, 0, srcvect, zvel, sa, hit);
+
+            if (proj.workslike & PROJECTILE_BLOOD)
+            {
+                if (proj.range == 0)
+                    proj.range = 1024;
+
+                if (Proj_CheckBlood(srcvect, hit, proj.range,
+                                    mulscale3(proj.yrepeat, tilesizy[proj.decal])<<8))
+                {
+                    var hitwal = wall[hit.wall];
+
+                    if (FindDistance2D(hitwal.x-wall[hitwal.point2].x, hitwal.y-wall[hitwal.point2].y) >
+                        (mulscale3(proj.xrepeat+8, tilesizx[proj.decal])))
+                    {
+                        if (SectorContainsSE13(hitwal.nextsector))
+                            return -1;
+
+                        if (hitwal.nextwall >= 0 && wall[hitwal.nextwall].hitag != 0)
+                            return -1;
+
+                        if (hitwal.hitag == 0)
+                        {
+                            if (proj.decal >= 0)
+                            {
+                                k = A_Spawn(i,proj.decal);
+
+                                if (!A_CheckSpriteFlags(k, SPRITE_DECAL))
+                                    actor[k].flags |= SPRITE_DECAL;
+
+                                sprite[k].xvel = -1;
+                                sprite[k].ang = getangle(hitwal.x-wall[hitwal.point2].x,
+                                                         hitwal.y-wall[hitwal.point2].y)+512;
+                                //Bmemcpy(&sprite[k], &hit.pos, sizeof(vec3_t));
+                                sprite[k].x = hit.pos.x;
+                                sprite[k].y = hit.pos.y;
+                                sprite[k].z = hit.pos.z;
+
+                                Proj_DoRandDecalSize(k, atwith);
+
+                                sprite[k].z += sprite[k].yrepeat<<8;
+
+//                                sprite[k].cstat = 16+(krand()&12);
+                                sprite[k].cstat = 16;
+                                if (krand()&1)
+                                    sprite[k].cstat |= 4;
+                                if (krand()&1)
+                                    sprite[k].cstat |= 8;
+
+                                sprite[k].shade = sector[sprite[k].sectnum].floorshade;
+
+                                sprite[k].x -= sintable[(sprite[k].ang+2560)&2047]>>13;
+                                sprite[k].y -= sintable[(sprite[k].ang+2048)&2047]>>13;
+
+                                A_SetSprite(k,CLIPMASK0);
+                                A_AddToDeleteQueue(k);
+                                changespritestat(k,5);
+                            }
+                        }
+                    }
+                }
+
+                return -1;
+            }
+
+            if (hit.sect < 0) return -1;
+
+            if (proj.range == 0 && (proj.workslike & PROJECTILE_KNEE))
+                proj.range = 1024;
+
+            if (proj.range > 0 && klabs(srcvect.x-hit.pos.x)+klabs(srcvect.y-hit.pos.y) > proj.range)
+                return -1;
+
+            Proj_HandleKnee(hit, i, p, atwith, sa,
+                            proj, atwith,
+                            proj.extra_rand,
+                            proj.spawns, proj.sound);
+            return -1;
+        }
+
+        if (proj.workslike & PROJECTILE_HITSCAN)
+        {todoThrow();
+            //if (s.extra >= 0) s.shade = proj.shade;
+
+            //if (p >= 0)
+            //    P_PreFireHitscan(i, p, atwith, srcvect, &zvel, &sa,
+            //                  proj.workslike & PROJECTILE_ACCURATE_AUTOAIM,
+            //                  !(proj.workslike & PROJECTILE_ACCURATE));
+            //else
+            //    A_PreFireHitscan(s, &srcvect, &zvel, &sa,
+            //                     !(proj.workslike & PROJECTILE_ACCURATE));
+
+            //if (Proj_DoHitscan(i, (proj.cstat >= 0) ? proj.cstat : 256+1,
+            //                   &srcvect, zvel, sa, hit))
+            //    return -1;
+
+            //if (proj.range > 0 && klabs(srcvect.x-hit.pos.x)+klabs(srcvect.y-hit.pos.y) > proj.range)
+            //    return -1;
+
+            //if (proj.trail >= 0)
+            //    A_HitscanProjTrail(&srcvect,&hit.pos,sa,atwith);
+
+            //if (proj.workslike & PROJECTILE_WATERBUBBLES)
+            //{
+            //    if ((krand()&15) == 0 && sector[hit.sect].lotag == ST_2_UNDERWATER)
+            //        A_DoWaterTracers(hit.pos.x,hit.pos.y,hit.pos.z,
+            //                         srcvect.x,srcvect.y,srcvect.z,8-(ud.multimode>>1));
+            //}
+
+            //if (p >= 0)
+            //{
+            //    k = Proj_InsertShotspark(&hit, i, atwith, 10, sa, Proj_GetExtra(atwith));
+
+            //    if (P_PostFireHitscan(p, k, &hit, i, atwith, zvel,
+            //                          atwith, proj.decal, atwith, 1+2) < 0)
+            //        return -1;
+            //}
+            //else
+            //{
+            //    k = A_PostFireHitscan(&hit, i, atwith, sa, Proj_GetExtra(atwith),
+            //                          atwith, atwith);
+            //}
+
+            //if ((krand()&255) < 4 && proj.isound >= 0)
+            //    S_PlaySound3D(proj.isound, k, &hit.pos);
+
+            return -1;
+        }
+
+        if (proj.workslike & PROJECTILE_RPG)
+        {todoThrow();
+        //    if (s.extra >= 0) s.shade = proj.shade;
+
+        //    vel = proj.vel;
+
+        //    j = -1;
+
+        //    if (p >= 0)
+        //    {
+        //        j = GetAutoAimAngle(i, p, atwith, 8<<8, 0+2, &srcvect, vel, &zvel, &sa);
+
+        //        if (j < 0)
+        //            zvel = (100-ps.horiz-ps.horizoff)*(proj.vel/8);
+
+        //        if (proj.sound >= 0)
+        //            A_PlaySound(proj.sound,i);
+        //    }
+        //    else
+        //    {
+        //        if (!(proj.workslike & PROJECTILE_NOAIM))
+        //        {
+        //            j = A_FindPlayer(s, NULL);
+        //            sa = getangle(g_player[j].ps.opos.x-srcvect.x,g_player[j].ps.opos.y-srcvect.y);
+
+        //            l = safeldist(g_player[j].ps.i, s);
+        //            zvel = ((g_player[j].ps.opos.z-srcvect.z)*vel) / l;
+
+        //            if (A_CheckEnemySprite(s) && (s.hitag&face_player_smart))
+        //                sa = s.ang+(krand()&31)-16;
+        //        }
+        //    }
+
+        //    if (p >= 0 && j >= 0)
+        //        l = j;
+        //    else l = -1;
+
+        //    if (numplayers > 1 && g_netClient) return -1;
+
+        //    zvel = A_GetShootZvel(zvel);
+        //    j = A_InsertSprite(sect,
+        //                       srcvect.x+(sintable[(348+sa+512)&2047]/proj.offset),
+        //                       srcvect.y+(sintable[(sa+348)&2047]/proj.offset),
+        //                       srcvect.z-(1<<8),atwith,0,14,14,sa,vel,zvel,i,4);
+
+        //    sprite[j].xrepeat=proj.xrepeat;
+        //    sprite[j].yrepeat=proj.yrepeat;
+
+        //    if (proj.extra_rand > 0)
+        //        sprite[j].extra += (krand()&proj.extra_rand);
+        //    if (!(proj.workslike & PROJECTILE_BOUNCESOFFWALLS))
+        //        sprite[j].yvel = l;
+        //    else
+        //    {
+        //        if (proj.bounces >= 1) sprite[j].yvel = proj.bounces;
+        //        else sprite[j].yvel = g_numFreezeBounces;
+        //        sprite[j].zvel -= (2<<4);
+        //    }
+
+        //    if (proj.cstat >= 0) sprite[j].cstat = proj.cstat;
+        //    else sprite[j].cstat = 128;
+        //    if (proj.clipdist != 255) sprite[j].clipdist = proj.clipdist;
+        //    else sprite[j].clipdist = 40;
+
+        //    {
+        //        var/*int32_t */picnum = sprite[j].picnum;
+        //        Bmemcpy(&SpriteProjectile[j], &ProjectileData[picnum], sizeof(projectile_t));
+        //    }
+
+        //    return j;
+        }
+
+    }
+    else if (atwith >= 0)
+    {
+        switch (DYNAMICTILEMAP(atwith))
+        {
+        case BLOODSPLAT1__STATIC:
+        case BLOODSPLAT2__STATIC:
+        case BLOODSPLAT3__STATIC:
+        case BLOODSPLAT4__STATIC:
+            sa += 64 - (krand()&127);
+            if (p < 0) sa += 1024;
+            zvel = 1024-(krand()&2047);
+            // fall-through
+        case KNEE__STATIC:
+            if (atwith == KNEE)
+            {
+                if (p >= 0)
+                {
+                    zvel = (100-ps.horiz-ps.horizoff)<<5;
+                    srcvect.z += (6<<8);
+                    sa += 15;
+                }
+                else
+                {
+                    var/*int32_t */x;
+                    var $x = new R(x);
+                    j = g_player[A_FindPlayer(s,$x)].ps.i;
+                    x = $x.$;
+                    zvel = int32(((sprite[j].z-srcvect.z)<<8) / (x+1));
+                    sa = getangle(sprite[j].x-srcvect.x,sprite[j].y-srcvect.y);
+                }
+            }
+
+            Proj_DoHitscan(i, 0, srcvect, zvel, sa, hit);
+
+            if (atwith >= BLOODSPLAT1 && atwith <= BLOODSPLAT4)
+            {
+                if (Proj_CheckBlood(srcvect, hit, 1024, 16<<8))
+                {
+                    var hitwal = wall[hit.wall];
+
+                    if (SectorContainsSE13(hitwal.nextsector))
+                        return -1;
+
+                    if (hitwal.nextwall >= 0 && wall[hitwal.nextwall].hitag != 0)
+                        return -1;
+
+                    if (hitwal.hitag == 0)
+                    {
+                        k = A_Spawn(i,atwith);
+                        sprite[k].xvel = -12;
+                        sprite[k].ang = getangle(hitwal.x-wall[hitwal.point2].x,
+                                                 hitwal.y-wall[hitwal.point2].y)+512;
+                        //Bmemcpy(&sprite[k], &hit.pos, sizeof(vec3_t));
+                        sprite[k].x = hit.pos.x;
+                        sprite[k].y = hit.pos.y;
+                        sprite[k].z = hit.pos.z;
+
+                        sprite[k].cstat |= (krand()&4);
+                        A_SetSprite(k,CLIPMASK0);
+                        setsprite(k, /*(vec3_t *)&*/sprite[k]);
+                        if (sprite[i].picnum == OOZFILTER || sprite[i].picnum == NEWBEAST)
+                            sprite[k].pal = 6;
+                    }
+                }
+
+                return -1;
+            }
+
+            if (hit.sect < 0) break;
+
+            if (klabs(srcvect.x-hit.pos.x)+klabs(srcvect.y-hit.pos.y) < 1024)
+                Proj_HandleKnee(hit, i, p, atwith, sa,
+                                NULL, KNEE, 7, SMALLSMOKE, KICK_HIT);
+            break;
+
+        case SHOTSPARK1__STATIC:
+        case SHOTGUN__STATIC:
+        case CHAINGUN__STATIC:
+            todoThrow();
+            //if (s.extra >= 0) s.shade = -96;
+
+            //if (p >= 0)
+            //    P_PreFireHitscan(i, p, atwith, srcvect, &zvel, &sa,
+            //                     atwith == SHOTSPARK1__STATIC && !WW2GI && !NAM,
+            //                     1);
+            //else
+            //    A_PreFireHitscan(s, &srcvect, &zvel, &sa, 1);
+
+            //if (Proj_DoHitscan(i, 256+1, &srcvect, zvel, sa, &hit))
+            //    return -1;
+
+            //if ((krand()&15) == 0 && sector[hit.sect].lotag == ST_2_UNDERWATER)
+            //    A_DoWaterTracers(hit.pos.x,hit.pos.y,hit.pos.z,
+            //                     srcvect.x,srcvect.y,srcvect.z,8-(ud.multimode>>1));
+
+            //if (p >= 0)
+            //{
+            //    k = Proj_InsertShotspark(&hit, i, atwith, 10, sa,
+            //                             G_InitialActorStrength(atwith) + (krand()%6));
+
+            //    if (P_PostFireHitscan(p, k, &hit, i, atwith, zvel,
+            //                          -SMALLSMOKE, BULLETHOLE, SHOTSPARK1, 0) < 0)
+            //        return -1;
+            //}
+            //else
+            //{
+            //    k = A_PostFireHitscan(&hit, i, atwith, sa, G_InitialActorStrength(atwith),
+            //                          -SMALLSMOKE, SHOTSPARK1);
+            //}
+
+            //if ((krand()&255) < 4)
+            //    S_PlaySound3D(PISTOL_RICOCHET, k, &hit.pos);
+
+            return -1;
+
+        case FIRELASER__STATIC:
+        case SPIT__STATIC:
+        case COOLEXPLOSION1__STATIC:
+        {todoThrow();
+            //var/*int32_t */tsiz;
+
+            //if (s.extra >= 0) s.shade = -96;
+
+            //if (atwith == SPIT) vel = 292;
+            //else
+            //{
+            //    if (atwith == COOLEXPLOSION1)
+            //    {
+            //        if (s.picnum == BOSS2) vel = 644;
+            //        else vel = 348;
+            //        srcvect.z -= (4<<7);
+            //    }
+            //    else
+            //    {
+            //        vel = 840;
+            //        srcvect.z -= (4<<7);
+            //    }
+            //}
+
+            //if (p >= 0)
+            //{
+            //    j = GetAutoAimAngle(i, p, atwith, -(12<<8), 0, &srcvect, vel, &zvel, &sa);
+
+            //    if (j < 0)
+            //        zvel = (100-ps.horiz-ps.horizoff)*98;
+            //}
+            //else
+            //{
+            //    j = A_FindPlayer(s, NULL);
+            //    //                sa = getangle(g_player[j].ps.opos.x-sx,g_player[j].ps.opos.y-sy);
+            //    sa += 16-(krand()&31);
+            //    hit.pos.x = safeldist(g_player[j].ps.i, s);
+            //    zvel = ((g_player[j].ps.opos.z - srcvect.z + (3<<8))*vel) / hit.pos.x;
+            //}
+
+            //zvel = A_GetShootZvel(zvel);
+
+            //if (atwith == SPIT)
+            //{
+            //    tsiz = 18;
+            //    srcvect.z -= (10<<8);
+            //}
+            //else if (p >= 0)
+            //    tsiz = 7;
+            //else
+            //{
+            //    if (atwith == FIRELASER)
+            //    {
+            //        if (p >= 0)
+            //            tsiz = 34;
+            //        else
+            //            tsiz = 18;
+            //    }
+            //    else
+            //        tsiz = 18;
+            //}
+
+            //j = A_InsertSprite(sect,srcvect.x,srcvect.y,srcvect.z,
+            //                   atwith,-127,tsiz,tsiz,sa,vel,zvel,i,4);
+            //sprite[j].extra += (krand()&7);
+
+            //if (atwith == COOLEXPLOSION1)
+            //{
+            //    sprite[j].shade = 0;
+            //    if (sprite[i].picnum == BOSS2)
+            //    {
+            //        l = sprite[j].xvel;
+            //        sprite[j].xvel = MinibossScale(1024);
+            //        A_SetSprite(j,CLIPMASK0);
+            //        sprite[j].xvel = l;
+            //        sprite[j].ang += 128-(krand()&255);
+            //    }
+            //}
+
+            //sprite[j].cstat = 128;
+            //sprite[j].clipdist = 4;
+
+            //sa = s.ang+32-(krand()&63);
+            //zvel += 512-(krand()&1023);
+
+            return j;
+        }
+
+        case FREEZEBLAST__STATIC:
+            srcvect.z += (3<<8);
+        case RPG__STATIC:todoThrow();
+            //// XXX: "CODEDUP"
+            //if (s.extra >= 0) s.shade = -96;
+
+            //vel = 644;
+
+            //j = -1;
+
+            //if (p >= 0)
+            //{
+            //    j = GetAutoAimAngle(i, p, atwith, 8<<8, 0+2, &srcvect, vel, &zvel, &sa);
+
+            //    if (j < 0)
+            //        zvel = (100-ps.horiz-ps.horizoff)*81;
+
+            //    if (atwith == RPG)
+            //        A_PlaySound(RPG_SHOOT,i);
+            //}
+            //else
+            //{
+            //    j = A_FindPlayer(s, NULL);
+            //    sa = getangle(g_player[j].ps.opos.x-srcvect.x,g_player[j].ps.opos.y-srcvect.y);
+            //    if (sprite[i].picnum == BOSS3)
+            //        srcvect.z -= MinibossScale(32<<8);
+            //    else if (sprite[i].picnum == BOSS2)
+            //    {
+            //        vel += 128;
+            //        srcvect.z += MinibossScale(24<<8);
+            //    }
+
+            //    l = safeldist(g_player[j].ps.i, s);
+            //    zvel = ((g_player[j].ps.opos.z-srcvect.z)*vel) / l;
+
+            //    if (A_CheckEnemySprite(s) && (s.hitag&face_player_smart))
+            //        sa = s.ang+(krand()&31)-16;
+            //}
+
+            //if (p >= 0 && j >= 0)
+            //    l = j;
+            //else l = -1;
+
+            //if (numplayers > 1 && g_netClient) return -1;
+
+            //zvel = A_GetShootZvel(zvel);
+            //j = A_InsertSprite(sect,
+            //                   srcvect.x+(sintable[(348+sa+512)&2047]/448),
+            //                   srcvect.y+(sintable[(sa+348)&2047]/448),
+            //                   srcvect.z-(1<<8),atwith,0,14,14,sa,vel,zvel,i,4);
+
+            //sprite[j].extra += (krand()&7);
+            //if (atwith != FREEZEBLAST)
+            //    sprite[j].yvel = l;
+            //else
+            //{
+            //    sprite[j].yvel = g_numFreezeBounces;
+            //    sprite[j].xrepeat >>= 1;
+            //    sprite[j].yrepeat >>= 1;
+            //    sprite[j].zvel -= (2<<4);
+            //}
+
+            //if (p == -1)
+            //{
+            //    if (sprite[i].picnum == BOSS3)
+            //    {
+            //        if (krand()&1)
+            //        {
+            //            sprite[j].x -= MinibossScale(sintable[sa&2047]>>6);
+            //            sprite[j].y -= MinibossScale(sintable[(sa+1024+512)&2047]>>6);
+            //            sprite[j].ang -= MinibossScale(8);
+            //        }
+            //        else
+            //        {
+            //            sprite[j].x += MinibossScale(sintable[sa&2047]>>6);
+            //            sprite[j].y += MinibossScale(sintable[(sa+1024+512)&2047]>>6);
+            //            sprite[j].ang += MinibossScale(4);
+            //        }
+            //        sprite[j].xrepeat = MinibossScale(42);
+            //        sprite[j].yrepeat = MinibossScale(42);
+            //    }
+            //    else if (sprite[i].picnum == BOSS2)
+            //    {
+            //        sprite[j].x -= MinibossScale(sintable[sa&2047]/56);
+            //        sprite[j].y -= MinibossScale(sintable[(sa+1024+512)&2047]/56);
+            //        sprite[j].ang -= MinibossScale(8)+(krand()&255)-128;
+            //        sprite[j].xrepeat = 24;
+            //        sprite[j].yrepeat = 24;
+            //    }
+            //    else if (atwith != FREEZEBLAST)
+            //    {
+            //        sprite[j].xrepeat = 30;
+            //        sprite[j].yrepeat = 30;
+            //        sprite[j].extra >>= 2;
+            //    }
+            //}
+
+            //else if (PWEAPON(0, g_player[p].ps.curr_weapon, WorksLike) == DEVISTATOR_WEAPON)
+            //{
+            //    sprite[j].extra >>= 2;
+            //    sprite[j].ang += 16-(krand()&31);
+            //    sprite[j].zvel += 256-(krand()&511);
+
+            //    if (g_player[p].ps.hbomb_hold_delay)
+            //    {
+            //        sprite[j].x -= sintable[sa&2047]/644;
+            //        sprite[j].y -= sintable[(sa+1024+512)&2047]/644;
+            //    }
+            //    else
+            //    {
+            //        sprite[j].x += sintable[sa&2047]>>8;
+            //        sprite[j].y += sintable[(sa+1024+512)&2047]>>8;
+            //    }
+            //    sprite[j].xrepeat >>= 1;
+            //    sprite[j].yrepeat >>= 1;
+            //}
+
+            //sprite[j].cstat = 128;
+            //if (atwith == RPG)
+            //    sprite[j].clipdist = 4;
+            //else
+            //    sprite[j].clipdist = 40;
+
+            return j;
+
+        case HANDHOLDINGLASER__STATIC:
+        {
+            var/*int32_t */zoff = (p>=0) ? g_player[p].ps.pyoff : 0;
+            if (p >= 0)
+                zvel = (100-ps.horiz-ps.horizoff)*32;
+            else zvel = 0;
+
+            srcvect.z -= zoff;
+            Proj_DoHitscan(i, 0, srcvect, zvel, sa, hit);
+            srcvect.z += zoff;
+
+            j = 0;
+            if (hit.sprite >= 0) break;
+
+            if (hit.wall >= 0 && hit.sect >= 0)
+                if (((hit.pos.x-srcvect.x)*(hit.pos.x-srcvect.x)+(hit.pos.y-srcvect.y)*(hit.pos.y-srcvect.y)) < (290*290))
+                {
+                    // ST_2_UNDERWATER
+                    if (wall[hit.wall].nextsector >= 0)
+                    {
+                        if (sector[wall[hit.wall].nextsector].lotag <= 2 && sector[hit.sect].lotag <= 2)
+                            j = 1;
+                    }
+                    else if (sector[hit.sect].lotag <= 2)
+                        j = 1;
+                }
+
+            if (j == 1)
+            {
+                var/*int32_t */lTripBombControl = (p < 0) ? 0 :
 //#ifdef LUNATIC
 //                    g_player[p].ps.tripbombControl;
 //#else
-//                    Gv_GetVarByLabel("TRIPBOMB_CONTROL", TRIPBOMB_TRIPWIRE, g_player[p].ps.i, p);
+                    Gv_GetVarByLabel("TRIPBOMB_CONTROL", TRIPBOMB_TRIPWIRE, g_player[p].ps.i, p);
 //#endif
-//                k = A_InsertSprite(hit.sect,hit.pos.x,hit.pos.y,hit.pos.z,TRIPBOMB,-16,4,5,sa,0,0,i,6);
-//                if (lTripBombControl & TRIPBOMB_TIMER)
-//                {
+                k = A_InsertSprite(hit.sect,hit.pos.x,hit.pos.y,hit.pos.z,TRIPBOMB,-16,4,5,sa,0,0,i,6);
+                if (lTripBombControl & TRIPBOMB_TIMER)
+                {
 //#ifdef LUNATIC
-//                    int32_t lLifetime = g_player[p].ps.tripbombLifetime;
-//                    int32_t lLifetimeVar = g_player[p].ps.tripbombLifetimeVar;
+//                    var/*int32_t */lLifetime = g_player[p].ps.tripbombLifetime;
+//                    var/*int32_t */lLifetimeVar = g_player[p].ps.tripbombLifetimeVar;
 //#else
-//                    int32_t lLifetime=Gv_GetVarByLabel("STICKYBOMB_LIFETIME", NAM_GRENADE_LIFETIME, g_player[p].ps.i, p);
-//                    int32_t lLifetimeVar=Gv_GetVarByLabel("STICKYBOMB_LIFETIME_VAR", NAM_GRENADE_LIFETIME_VAR, g_player[p].ps.i, p);
+                    var/*int32_t */lLifetime=Gv_GetVarByLabel("STICKYBOMB_LIFETIME", NAM_GRENADE_LIFETIME, g_player[p].ps.i, p);
+                    var/*int32_t */lLifetimeVar=Gv_GetVarByLabel("STICKYBOMB_LIFETIME_VAR", NAM_GRENADE_LIFETIME_VAR, g_player[p].ps.i, p);
 //#endif
-//                    // set timer.  blows up when at zero....
-//                    actor[k].t_data[7]=lLifetime
-//                                       + mulscale(krand(),lLifetimeVar, 14)
-//                                       - lLifetimeVar;
-//                    actor[k].t_data[6]=1;
-//                }
-//                else
-//                    sprite[k].hitag = k;
+                    // set timer.  blows up when at zero....
+                    actor[k].t_data[7]=lLifetime
+                                       + mulscale(krand(),lLifetimeVar, 14)
+                                       - lLifetimeVar;
+                    actor[k].t_data[6]=1;
+                }
+                else
+                    sprite[k].hitag = k;
 
-//                A_PlaySound(LASERTRIP_ONWALL,k);
-//                sprite[k].xvel = -20;
-//                A_SetSprite(k,CLIPMASK0);
-//                sprite[k].cstat = 16;
+                A_PlaySound(LASERTRIP_ONWALL,k);
+                sprite[k].xvel = -20;
+                A_SetSprite(k,CLIPMASK0);
+                sprite[k].cstat = 16;
 
-//                {
-//                    int32_t p2 = wall[hit.wall].point2;
-//                    int32_t a = getangle(wall[hit.wall].x-wall[p2].x, wall[hit.wall].y-wall[p2].y)-512;
-//                    actor[k].t_data[5] = sprite[k].ang = a;
-//                }
-//            }
-//            return j?k:-1;
-//        }
+                {
+                    var/*int32_t */p2 = wall[hit.wall].point2;
+                    var/*int32_t */a = getangle(wall[hit.wall].x-wall[p2].x, wall[hit.wall].y-wall[p2].y)-512;
+                    actor[k].t_data[5] = sprite[k].ang = a;
+                }
+            }
+            return j?k:-1;
+        }
 
-//        case BOUNCEMINE__STATIC:
-//        case MORTER__STATIC:
-//        {
-//            int32_t x;
+        case BOUNCEMINE__STATIC:
+        case MORTER__STATIC:
+        {
+            var/*int32_t */x;
 
-//            if (s.extra >= 0) s.shade = -96;
+            if (s.extra >= 0) s.shade = -96;
 
-//            j = g_player[A_FindPlayer(s, NULL)].ps.i;
-//            x = ldist(&sprite[j],s);
+            j = g_player[A_FindPlayer(s, NULL)].ps.i;
+            x = ldist(sprite[j],s);
 
-//            zvel = -x>>1;
+            zvel = -x>>1;
 
-//            if (zvel < -4096)
-//                zvel = -2048;
-//            vel = x>>4;
+            if (zvel < -4096)
+                zvel = -2048;
+            vel = x>>4;
 
-//            zvel = A_GetShootZvel(zvel);
-//            A_InsertSprite(sect,
-//                           srcvect.x+(sintable[(512+sa+512)&2047]>>8),
-//                           srcvect.y+(sintable[(sa+512)&2047]>>8),
-//                           srcvect.z+(6<<8),atwith,-64,32,32,sa,vel,zvel,i,1);
-//            break;
-//        }
+            zvel = A_GetShootZvel(zvel);
+            A_InsertSprite(sect,
+                           srcvect.x+(sintable[(512+sa+512)&2047]>>8),
+                           srcvect.y+(sintable[(sa+512)&2047]>>8),
+                           srcvect.z+(6<<8),atwith,-64,32,32,sa,vel,zvel,i,1);
+            break;
+        }
 
-//        case GROWSPARK__STATIC:
+        case GROWSPARK__STATIC:
+            todoThrow();
+            //if (p >= 0)
+            //{
+            //    j = GetAutoAimAngle(i, p, atwith, 5<<8, 0+1, &srcvect, 256, &zvel, &sa);
 
-//            if (p >= 0)
-//            {
-//                j = GetAutoAimAngle(i, p, atwith, 5<<8, 0+1, &srcvect, 256, &zvel, &sa);
+            //    if (j < 0)
+            //    {
+            //        sa += 16-(krand()&31);
+            //        zvel = (100-ps.horiz-ps.horizoff)<<5;
+            //        zvel += 128-(krand()&255);
+            //    }
 
-//                if (j < 0)
-//                {
-//                    sa += 16-(krand()&31);
-//                    zvel = (100-ps.horiz-ps.horizoff)<<5;
-//                    zvel += 128-(krand()&255);
-//                }
+            //    srcvect.z -= (2<<8);
+            //}
+            //else
+            //{
+            //    j = A_FindPlayer(s, NULL);
+            //    srcvect.z -= (4<<8);
+            //    hit.pos.x = safeldist(g_player[j].ps.i, s);
+            //    zvel = ((g_player[j].ps.pos.z-srcvect.z) <<8) / hit.pos.x;
+            //    zvel += 128-(krand()&255);
+            //    sa += 32-(krand()&63);
+            //}
 
-//                srcvect.z -= (2<<8);
-//            }
-//            else
-//            {
-//                j = A_FindPlayer(s, NULL);
-//                srcvect.z -= (4<<8);
-//                hit.pos.x = safeldist(g_player[j].ps.i, s);
-//                zvel = ((g_player[j].ps.pos.z-srcvect.z) <<8) / hit.pos.x;
-//                zvel += 128-(krand()&255);
-//                sa += 32-(krand()&63);
-//            }
+            //k = 0;
 
-//            k = 0;
+            ////            RESHOOTGROW:
+            //if (sect < 0) break;
 
-//            //            RESHOOTGROW:
-//            if (sect < 0) break;
+            //Proj_DoHitscan(i, 256+1, &srcvect, zvel, sa, &hit);
 
-//            Proj_DoHitscan(i, 256+1, &srcvect, zvel, sa, &hit);
+            //j = A_InsertSprite(sect,hit.pos.x,hit.pos.y,hit.pos.z,GROWSPARK,-16,28,28,sa,0,0,i,1);
 
-//            j = A_InsertSprite(sect,hit.pos.x,hit.pos.y,hit.pos.z,GROWSPARK,-16,28,28,sa,0,0,i,1);
+            //sprite[j].pal = 2;
+            //sprite[j].cstat |= 130;
+            //sprite[j].xrepeat = sprite[j].yrepeat = 1;
 
-//            sprite[j].pal = 2;
-//            sprite[j].cstat |= 130;
-//            sprite[j].xrepeat = sprite[j].yrepeat = 1;
+            //if (hit.wall == -1 && hit.sprite == -1 && hit.sect >= 0)
+            //{
+            //    if (zvel < 0 && (sector[hit.sect].ceilingstat&1) == 0)
+            //        Sect_DamageCeiling(hit.sect);
+            //}
+            //else if (hit.sprite >= 0) A_DamageObject(hit.sprite,j);
+            //else if (hit.wall >= 0 && wall[hit.wall].picnum != ACCESSSWITCH && wall[hit.wall].picnum != ACCESSSWITCH2)
+            //{
+            //    /*    if(wall[hit.wall].overpicnum == MIRROR && k == 0)
+            //    {
+            //    l = getangle(
+            //    wall[wall[hit.wall].point2].x-wall[hit.wall].x,
+            //    wall[wall[hit.wall].point2].y-wall[hit.wall].y);
 
-//            if (hit.wall == -1 && hit.sprite == -1 && hit.sect >= 0)
-//            {
-//                if (zvel < 0 && (sector[hit.sect].ceilingstat&1) == 0)
-//                    Sect_DamageCeiling(hit.sect);
-//            }
-//            else if (hit.sprite >= 0) A_DamageObject(hit.sprite,j);
-//            else if (hit.wall >= 0 && wall[hit.wall].picnum != ACCESSSWITCH && wall[hit.wall].picnum != ACCESSSWITCH2)
-//            {
-//                /*    if(wall[hit.wall].overpicnum == MIRROR && k == 0)
-//                {
-//                l = getangle(
-//                wall[wall[hit.wall].point2].x-wall[hit.wall].x,
-//                wall[wall[hit.wall].point2].y-wall[hit.wall].y);
+            //    sx = hit.pos.x;
+            //    sy = hit.pos.y;
+            //    srcvect.z = hit.pos.z;
+            //    sect = hit.sect;
+            //    sa = ((l<<1) - sa)&2047;
+            //    sx += sintable[(sa+512)&2047]>>12;
+            //    sy += sintable[sa&2047]>>12;
 
-//                sx = hit.pos.x;
-//                sy = hit.pos.y;
-//                srcvect.z = hit.pos.z;
-//                sect = hit.sect;
-//                sa = ((l<<1) - sa)&2047;
-//                sx += sintable[(sa+512)&2047]>>12;
-//                sy += sintable[sa&2047]>>12;
+            //    k++;
+            //    goto RESHOOTGROW;
+            //    }
+            //    else */
+            //    A_DamageWall(j,hit.wall,&hit.pos,atwith);
+            //}
 
-//                k++;
-//                goto RESHOOTGROW;
-//                }
-//                else */
-//                A_DamageWall(j,hit.wall,&hit.pos,atwith);
-//            }
+            break;
 
-//            break;
+        case SHRINKER__STATIC:todoThrow();
+            //if (s.extra >= 0) s.shade = -96;
+            //if (p >= 0)
+            //{
+            //    j = GetAutoAimAngle(i, p, atwith, 4<<8, 0, &srcvect, 768, &zvel, &sa);
 
-//        case SHRINKER__STATIC:
-//            if (s.extra >= 0) s.shade = -96;
-//            if (p >= 0)
-//            {
-//                j = GetAutoAimAngle(i, p, atwith, 4<<8, 0, &srcvect, 768, &zvel, &sa);
+            //    if (j < 0)
+            //        zvel = (100-ps.horiz-ps.horizoff)*98;
+            //}
+            //else if (s.statnum != STAT_EFFECTOR)
+            //{
+            //    j = A_FindPlayer(s, NULL);
+            //    l = safeldist(g_player[j].ps.i, s);
+            //    zvel = ((g_player[j].ps.opos.z-srcvect.z)*512) / l ;
+            //}
+            //else zvel = 0;
 
-//                if (j < 0)
-//                    zvel = (100-ps.horiz-ps.horizoff)*98;
-//            }
-//            else if (s.statnum != STAT_EFFECTOR)
-//            {
-//                j = A_FindPlayer(s, NULL);
-//                l = safeldist(g_player[j].ps.i, s);
-//                zvel = ((g_player[j].ps.opos.z-srcvect.z)*512) / l ;
-//            }
-//            else zvel = 0;
+            //zvel = A_GetShootZvel(zvel);
+            //j = A_InsertSprite(sect,
+            //                   srcvect.x+(sintable[(512+sa+512)&2047]>>12),
+            //                   srcvect.y+(sintable[(sa+512)&2047]>>12),
+            //                   srcvect.z+(2<<8),SHRINKSPARK,-16,28,28,sa,768,zvel,i,4);
 
-//            zvel = A_GetShootZvel(zvel);
-//            j = A_InsertSprite(sect,
-//                               srcvect.x+(sintable[(512+sa+512)&2047]>>12),
-//                               srcvect.y+(sintable[(sa+512)&2047]>>12),
-//                               srcvect.z+(2<<8),SHRINKSPARK,-16,28,28,sa,768,zvel,i,4);
+            //sprite[j].cstat = 128;
+            //sprite[j].clipdist = 32;
 
-//            sprite[j].cstat = 128;
-//            sprite[j].clipdist = 32;
-
-//            return j;
-//        }
-//    }
+            return j;
+        }
+    }
 
     return -1;
 }
