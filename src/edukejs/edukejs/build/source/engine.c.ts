@@ -8116,8 +8116,8 @@ function loadpalette(): number
     alloc_palookup(0);
 
     transluc = new Uint8Array(256*256);
-    if (palookup[0] == NULL || transluc == NULL)
-        return loadpalette_err("Out of memory in loadpalette()!");
+    //if (palookup[0] == NULL || transluc == NULL)
+    //    return loadpalette_err("Out of memory in loadpalette()!");
 
     globalpalwritten = palookup[0]; globalpal = 0;
     todo("setpalookupaddress(globalpalwritten); ?!");
@@ -12699,96 +12699,99 @@ function/*int32_t */hitscan(/*const vec3_t **/sv: vec3_t, /*int16_t */sectnum: n
 // flags:
 //  1: don't reset walbitmap[] (the bitmap of already dragged vertices)
 //  2: In the editor, do wall[].cstat |= (1<<14) also for the lastwall().
-function dragpoint(/*int16_t*/ pointhighlight:number, /*int32_t */dax:number, /*int32_t */day:number, /*uint8_t */flags:number):number
+function dragpoint(/*int16_t*/ pointhighlight:number, /*int32_t */dax:number, /*int32_t */day:number, /*uint8_t */flags:number):void
 //#ifdef YAX_ENABLE
-{todoThrow();
-//    int32_t i, numyaxwalls=0;
-//    static int16_t yaxwalls[MAXWALLS];
+{
+    var/*int32_t */i:number, numyaxwalls=0;
+    var yaxwalls = new Int16Array(MAXWALLS);
 
-//    uint8_t *const walbitmap = (uint8_t *)tempbuf;
+    var walbitmap = tempbuf;
 
-//    if ((flags&1)==0)
-//        Bmemset(walbitmap, 0, (numwalls+7)>>3);
-//    yaxwalls[numyaxwalls++] = pointhighlight;
+    if ((flags&1)==0)
+        Bmemset(new P(walbitmap), 0, (numwalls+7)>>3);
+    yaxwalls[numyaxwalls++] = pointhighlight;
 
-//    for (i=0; i<numyaxwalls; i++)
-//    {
-//        int32_t clockwise = 0;
-//        int32_t w = yaxwalls[i];
-//        const int32_t tmpstartwall = w;
+    for (i=0; i<numyaxwalls; i++)
+    {
+        var /*int32_t */clockwise = 0;
+        var/*int32_t */w = yaxwalls[i];
+        var/*const int32_t */tmpstartwall = w;
 
-//        int32_t cnt = MAXWALLS;
+        var/*int32_t */cnt = MAXWALLS;
 
-//        while (1)
-//        {
-//            int32_t j, tmpcf;
+        while (1)
+        {
+            var/*int32_t */j:number, tmpcf:number;
 
-//            wall[w].x = dax;
-//            wall[w].y = day;
-//            walbitmap[w>>3] |= (1<<(w&7));
+            wall[w].x = dax;
+            wall[w].y = day;
+            walbitmap[w>>3] |= (1<<(w&7));
 
-//            for (YAX_ITER_WALLS(w, j, tmpcf))
-//            {
-//                if ((walbitmap[j>>3]&(1<<(j&7)))==0)
-//                {
-//                    walbitmap[j>>3] |= (1<<(j&7));
-//                    yaxwalls[numyaxwalls++] = j;
-//                }
-//            }
+            //for (YAX_ITER_WALLS(w, j, tmpcf))
+            for (tmpcf = 0, j = (w); j != -1;
+                j = yax_getnextwall(j, tmpcf),
+                (j == -1 && tmpcf == 0 && (tmpcf = 1) && (j = yax_getnextwall((w), tmpcf))))
+            {
+                if ((walbitmap[j>>3]&(1<<(j&7)))==0)
+                {
+                    walbitmap[j>>3] |= (1<<(j&7));
+                    yaxwalls[numyaxwalls++] = j;
+                }
+            }
 
-//            if (!clockwise)  //search points CCW
-//            {
-//                if (wall[w].nextwall >= 0)
-//                    w = wall[wall[w].nextwall].point2;
-//                else
-//                {
-//                    w = tmpstartwall;
-//                    clockwise = 1;
-//                }
-//            }
+            if (!clockwise)  //search points CCW
+            {
+                if (wall[w].nextwall >= 0)
+                    w = wall[wall[w].nextwall].point2;
+                else
+                {
+                    w = tmpstartwall;
+                    clockwise = 1;
+                }
+            }
 
-//            cnt--;
-//            if (cnt==0)
-//            {
-//                initprintf("dragpoint %d: infloop!\n", pointhighlight);
-//                i = numyaxwalls;
-//                break;
-//            }
+            cnt--;
+            if (cnt==0)
+            {
+                initprintf("dragpoint %d: infloop!\n", pointhighlight);
+                i = numyaxwalls;
+                break;
+            }
 
-//            if (clockwise)
-//            {
-//                int32_t thelastwall = lastwall(w);
-//                if (wall[thelastwall].nextwall >= 0)
-//                    w = wall[thelastwall].nextwall;
-//                else
-//                    break;
-//            }
+            if (clockwise)
+            {
+                var/*int32_t */thelastwall = lastwall(w);
+                if (wall[thelastwall].nextwall >= 0)
+                    w = wall[thelastwall].nextwall;
+                else
+                    break;
+            }
 
-//            if ((walbitmap[w>>3] & (1<<(w&7))))
-//            {
-//                if (clockwise)
-//                    break;
+            if ((walbitmap[w>>3] & (1<<(w&7))))
+            {
+                if (clockwise)
+                    break;
 
-//                w = tmpstartwall;
-//                clockwise = 1;
-//                continue;
-//            }
-//        }
-//    }
+                w = tmpstartwall;
+                clockwise = 1;
+                continue;
+            }
+        }
+    }
 
-//    if (editstatus)
-//    {
-//        int32_t w;
-//        // TODO: extern a separate bitmap instead?
-//        for (w=0; w<numwalls; w++)
-//            if (walbitmap[w>>3] & (1<<(w&7)))
-//            {
-//                wall[w].cstat |= (1<<14);
-//                if (flags&2)
-//                    wall[lastwall(w)].cstat |= (1<<14);
-//            }
-//    }
-//}
+    if (editstatus)
+    {todoThrow();
+        //int32_t w;
+        //// TODO: extern a separate bitmap instead?
+        //for (w=0; w<numwalls; w++)
+        //    if (walbitmap[w>>3] & (1<<(w&7)))
+        //    {
+        //        wall[w].cstat |= (1<<14);
+        //        if (flags&2)
+        //            wall[lastwall(w)].cstat |= (1<<14);
+        //    }
+    }
+}
 //#else
 //{
 //    int16_t cnt, tempshort;
@@ -12843,32 +12846,32 @@ function dragpoint(/*int16_t*/ pointhighlight:number, /*int32_t */dax:number, /*
 //        cnt--;
 //    }
 //    while ((tempshort != pointhighlight) && (cnt > 0));
-}
+//}
 //#endif
 
-////
-//// lastwall
-////
-//int32_t lastwall(int16_t point)
-//{
-//    int32_t i, cnt;
+//
+// lastwall
+//
+function/*int32_t */lastwall(/*int16_t */point:number):number
+{
+    var/*int32_t */i:number, cnt:number;
 
-//    if (point > 0 && wall[point-1].point2 == point)
-//        return point-1;
+    if (point > 0 && wall[point-1].point2 == point)
+        return point-1;
 
-//    i = point;
-//    cnt = MAXWALLS;
-//    do
-//    {
-//        int32_t j = wall[i].point2;
-//        if (j == point) return(i);
-//        i = j;
-//        cnt--;
-//    }
-//    while (cnt > 0);
+    i = point;
+    cnt = MAXWALLS;
+    do
+    {
+        var/*int32_t */j = wall[i].point2;
+        if (j == point) return(i);
+        i = j;
+        cnt--;
+    }
+    while (cnt > 0);
 
-//    return(point);
-//}
+    return(point);
+}
 
 
 //////////// CLIPMOVE //////////

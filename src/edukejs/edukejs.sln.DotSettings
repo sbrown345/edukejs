@@ -3,6 +3,22 @@
 	<s:Boolean x:Key="/Default/CodeEditing/TypingAssist/FormatBlockOnRBrace/@EntryValue">False</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeEditing/TypingAssist/FormatStatementOnSemicolon/@EntryValue">False</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeEditing/TypingAssist/SmartParenthEnabled/@EntryValue">False</s:Boolean>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=34C2C6FB11A8F540ACAA34F002EA7526/@KeyIndexDefined">True</s:Boolean>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=34C2C6FB11A8F540ACAA34F002EA7526/Applicability/=Live/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=34C2C6FB11A8F540ACAA34F002EA7526/Field/=Cfvar/@KeyIndexDefined">True</s:Boolean>
+	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=34C2C6FB11A8F540ACAA34F002EA7526/Field/=Cfvar/Order/@EntryValue">0</s:Int64>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=34C2C6FB11A8F540ACAA34F002EA7526/Field/=Itervar/@KeyIndexDefined">True</s:Boolean>
+	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=34C2C6FB11A8F540ACAA34F002EA7526/Field/=Itervar/Order/@EntryValue">1</s:Int64>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=34C2C6FB11A8F540ACAA34F002EA7526/Field/=Wal/@KeyIndexDefined">True</s:Boolean>
+	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=34C2C6FB11A8F540ACAA34F002EA7526/Field/=Wal/Order/@EntryValue">2</s:Int64>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=34C2C6FB11A8F540ACAA34F002EA7526/Reformat/@EntryValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=34C2C6FB11A8F540ACAA34F002EA7526/Scope/=139FF4CE89E7094686FDA7BF5FFBBE92/@KeyIndexDefined">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=34C2C6FB11A8F540ACAA34F002EA7526/Scope/=139FF4CE89E7094686FDA7BF5FFBBE92/Type/@EntryValue">Everywhere</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=34C2C6FB11A8F540ACAA34F002EA7526/Shortcut/@EntryValue">YAX_ITER_WALLS</s:String>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=34C2C6FB11A8F540ACAA34F002EA7526/ShortenQualifiedReferences/@EntryValue">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=34C2C6FB11A8F540ACAA34F002EA7526/Text/@EntryValue">$Cfvar$=0, $Itervar$=($Wal$); $Itervar$!=-1; &#xD;
+    $Itervar$=yax_getnextwall($Itervar$, $Cfvar$), &#xD;
+        ($Itervar$==-1 &amp;&amp; $Cfvar$==0 &amp;&amp; ($Cfvar$=1) &amp;&amp; ($Itervar$=yax_getnextwall(($Wal$), $Cfvar$)))</s:String>
 	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=389752E601FCA346B36BDFFB846695B0/@KeyIndexDefined">True</s:Boolean>
 	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=389752E601FCA346B36BDFFB846695B0/Applicability/=Live/@EntryIndexedValue">True</s:Boolean>
 	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=389752E601FCA346B36BDFFB846695B0/Description/@EntryValue">duke macro</s:String>

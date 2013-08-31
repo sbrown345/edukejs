@@ -93,8 +93,8 @@ function AC_COUNT(t:Int32Array):number {return t[0]; }  /* the actor's count */
 // * move composite: */
 function AC_MOVE_ID(t: Int32Array): number {return (t)[1];}
 function AC_MOVE_ID_SET(t: Int32Array, v: number): void { (t)[1] = v;}
-//#define AC_ACTION_COUNT(t) ((t)[2])  /* the actor's action count */
-function AC_CURFRAME(t: Int32Array) { return (t)[3]; }  /* the actor's current frame offset */
+function AC_ACTION_COUNT(t: Int32Array):number{return(t)[2];}  /* the actor's action count */
+function AC_CURFRAME(t: Int32Array):number { return (t)[3]; }  /* the actor's current frame offset */
 ///* The ID of the actor's current action. In C-CON, the bytecode offset to the
 // * action composite: */
 function AC_ACTION_ID(t: Int32Array): number {return (t)[4];}

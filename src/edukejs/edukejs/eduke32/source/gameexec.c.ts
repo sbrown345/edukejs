@@ -1197,13 +1197,7 @@ function VM_Execute(/*int32_t */loop: number): void
         g_tw = tw &= 0xFFF;
 
         dlog(DEBUG_VM_EXECUTE, "tw: %i\n", tw);
-        if(tw==4)  {
-            debugger;
-        }
-        if(tw==0)  {
-            debugger;
-            dlogFlush();
-        }
+
         switch (tw)
         {
 //        case CON_REDEFINEQUOTE:
@@ -1231,9 +1225,9 @@ function VM_Execute(/*int32_t */loop: number): void
 //                continue;
 //            }
 
-//        case CON_IFRND:
-//            VM_CONDITIONAL(rnd(script[++insptr] /* *(++insptr)*/ ));
-//            continue;
+        case CON_IFRND:
+            VM_CONDITIONAL(rnd(script[++insptr] /* *(++insptr)*/ ));
+            continue;
 
 //        case CON_IFCANSHOOTTARGET:
 //        {
@@ -3229,15 +3223,15 @@ function VM_Execute(/*int32_t */loop: number): void
             VM_CONDITIONAL(AC_ACTION_ID(vm.g_t) == script[insptr]);
             continue;
 
-//        case CON_IFACTIONCOUNT:
-//            insptr++;
-//            VM_CONDITIONAL(AC_ACTION_COUNT(vm.g_t) >= script[insptr]);
-//            continue;
+        case CON_IFACTIONCOUNT:
+            insptr++;
+            VM_CONDITIONAL(AC_ACTION_COUNT(vm.g_t) >= script[insptr]);
+            continue;
 
-//        case CON_RESETACTIONCOUNT:
-//            insptr++;
-//            AC_ACTION_COUNT(vm.g_t) = 0;
-//            continue;
+        case CON_RESETACTIONCOUNT:
+            insptr++;
+            vm.g_t[2] = 0;//AC_ACTION_COUNT(vm.g_t) = 0;
+            continue;
 
 //        case CON_DEBRIS:
 //            insptr++;
@@ -3266,25 +3260,25 @@ function VM_Execute(/*int32_t */loop: number): void
 //            }
 //            continue;
 
-//        case CON_COUNT:
-//            insptr++;
-//            AC_COUNT(vm.g_t) = (int16_t) script[insptr++];
-//            continue;
+        case CON_COUNT:
+            insptr++;
+            vm.g_t[0] = int16(script[insptr++]);//AC_COUNT(vm.g_t) 
+            continue;
 
-//        case CON_CSTATOR:
-//            insptr++;
-//            vm.g_sp.cstat |= (int16_t) script[insptr++];
-//            continue;
+        case CON_CSTATOR:
+            insptr++;
+            vm.g_sp.cstat |= int16(script[insptr++]);
+            continue;
 
-//        case CON_CLIPDIST:
-//            insptr++;
-//            vm.g_sp.clipdist = (int16_t) script[insptr++];
-//            continue;
+        case CON_CLIPDIST:
+            insptr++;
+            vm.g_sp.clipdist = int16(script[insptr++]);
+            continue;
 
-//        case CON_CSTAT:
-//            insptr++;
-//            vm.g_sp.cstat = (int16_t) script[insptr++];
-//            continue;
+        case CON_CSTAT:
+            insptr++;
+            vm.g_sp.cstat = int16( script[insptr++]);
+            continue;
 
 //        case CON_SAVENN:
 //        case CON_SAVE:
@@ -3362,75 +3356,75 @@ function VM_Execute(/*int32_t */loop: number): void
             vm.g_t[0] = 0;//AC_COUNT(vm.g_t) = 0;
             continue;
 
-//        case CON_ADDINVENTORY:
-//        {
-//            DukePlayer_t *const ps = g_player[vm.g_p].ps;
+        case CON_ADDINVENTORY:
+        {
+            var ps = g_player[vm.g_p].ps;
 
-//            insptr += 2;
-//            switch (*(insptr-1))
-//            {
-//            case GET_STEROIDS:
-//                ps.inv_amount[GET_STEROIDS] = script[insptr];
-//                ps.inven_icon = ICON_STEROIDS;
-//                break;
+            insptr += 2;
+            switch (script[insptr-1])
+            {
+            case GET_STEROIDS:
+                ps.inv_amount[GET_STEROIDS] = script[insptr];
+                ps.inven_icon = ICON_STEROIDS;
+                break;
 
-//            case GET_SHIELD:
-//                ps.inv_amount[GET_SHIELD] += script[insptr];// 100;
-//                if (ps.inv_amount[GET_SHIELD] > ps.max_shield_amount)
-//                    ps.inv_amount[GET_SHIELD] = ps.max_shield_amount;
-//                break;
+            case GET_SHIELD:
+                ps.inv_amount[GET_SHIELD] += script[insptr];// 100;
+                if (ps.inv_amount[GET_SHIELD] > ps.max_shield_amount)
+                    ps.inv_amount[GET_SHIELD] = ps.max_shield_amount;
+                break;
 
-//            case GET_SCUBA:
-//                ps.inv_amount[GET_SCUBA] = script[insptr];// 1600;
-//                ps.inven_icon = ICON_SCUBA;
-//                break;
+            case GET_SCUBA:
+                ps.inv_amount[GET_SCUBA] = script[insptr];// 1600;
+                ps.inven_icon = ICON_SCUBA;
+                break;
 
-//            case GET_HOLODUKE:
-//                ps.inv_amount[GET_HOLODUKE] = script[insptr];// 1600;
-//                ps.inven_icon = ICON_HOLODUKE;
-//                break;
+            case GET_HOLODUKE:
+                ps.inv_amount[GET_HOLODUKE] = script[insptr];// 1600;
+                ps.inven_icon = ICON_HOLODUKE;
+                break;
 
-//            case GET_JETPACK:
-//                ps.inv_amount[GET_JETPACK] = script[insptr];// 1600;
-//                ps.inven_icon = ICON_JETPACK;
-//                break;
+            case GET_JETPACK:
+                ps.inv_amount[GET_JETPACK] = script[insptr];// 1600;
+                ps.inven_icon = ICON_JETPACK;
+                break;
 
-//            case GET_ACCESS:
-//                switch (vm.g_sp.pal)
-//                {
-//                case  0:
-//                    ps.got_access |= 1;
-//                    break;
-//                case 21:
-//                    ps.got_access |= 2;
-//                    break;
-//                case 23:
-//                    ps.got_access |= 4;
-//                    break;
-//                }
-//                break;
+            case GET_ACCESS:
+                switch (vm.g_sp.pal)
+                {
+                case  0:
+                    ps.got_access |= 1;
+                    break;
+                case 21:
+                    ps.got_access |= 2;
+                    break;
+                case 23:
+                    ps.got_access |= 4;
+                    break;
+                }
+                break;
 
-//            case GET_HEATS:
-//                ps.inv_amount[GET_HEATS] = script[insptr];
-//                ps.inven_icon = ICON_HEATS;
-//                break;
+            case GET_HEATS:
+                ps.inv_amount[GET_HEATS] = script[insptr];
+                ps.inven_icon = ICON_HEATS;
+                break;
 
-//            case GET_FIRSTAID:
-//                ps.inven_icon = ICON_FIRSTAID;
-//                ps.inv_amount[GET_FIRSTAID] = script[insptr];
-//                break;
+            case GET_FIRSTAID:
+                ps.inven_icon = ICON_FIRSTAID;
+                ps.inv_amount[GET_FIRSTAID] = script[insptr];
+                break;
 
-//            case GET_BOOTS:
-//                ps.inven_icon = ICON_BOOTS;
-//                ps.inv_amount[GET_BOOTS] = script[insptr];
-//                break;
-//            default:
-//                CON_ERRPRINTF("Invalid inventory ID %d\n", (int32_t)*(insptr-1));
-//                break;
-//            }
-//            insptr++;
-//            continue;
-//        }
+            case GET_BOOTS:
+                ps.inven_icon = ICON_BOOTS;
+                ps.inv_amount[GET_BOOTS] = script[insptr];
+                break;
+            default:
+                CON_ERRPRINTF("Invalid inventory ID %d\n", script[insptr-1]);
+                break;
+            }
+            insptr++;
+            continue;
+        }
 
         case CON_HITRADIUSVAR:
             insptr++;
