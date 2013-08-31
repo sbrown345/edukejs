@@ -3736,171 +3736,181 @@ function polymost_drawrooms(): void
 
     enddrawing();
 }
-//
-//void polymost_drawmaskwall(int32_t damaskwallcnt)
-//{
-//    double dpx[8], dpy[8], dpx2[8], dpy2[8];
-//    float x0, x1, sx0, sy0, sx1, sy1, xp0, yp0, xp1, yp1, oxp0, oyp0, ryp0, ryp1;
-//    float r, t, t0, t1, csy[4], fsy[4];
-//    int32_t i, j, n, n2, z, sectnum, z1, z2, cz[4], fz[4], method;
-//    int32_t m0, m1;
-//    sectortype *sec, *nsec;
-//    walltype *wal, *wal2;
-//
-//    z = maskwall[damaskwallcnt];
-//    wal = &wall[thewall[z]]; wal2 = &wall[wal.point2];
-//    sectnum = thesector[z]; sec = &sector[sectnum];
-//
-////    if (wal.nextsector < 0) return;
-//    // Without MASKWALL_BAD_ACCESS fix:
-//    // wal.nextsector is -1, WGR2 SVN Lochwood Hollow (Til' Death L1)  (or trueror1.map)
-//
-//    nsec = &sector[wal.nextsector];
-//    z1 = max(nsec.ceilingz,sec.ceilingz);
-//    z2 = min(nsec.floorz,sec.floorz);
-//
-//    globalpicnum = wal.overpicnum; if ((uint32_t)globalpicnum >= MAXTILES) globalpicnum = 0;
-//    globvis = globalvisibility;
-//    if (sector[sectnum].visibility != 0) globvis = mulscale4(globvis,  /*(uint8_t)*/ (sector[sectnum].visibility+16));
-//
-//    DO_TILE_ANIM(globalpicnum, (int16_t)thewall[z]+16384);
-//    globalshade = (int32_t)wal.shade;
-//    globalpal = (int32_t)( /*(uint8_t)*/ wal.pal);
-//    globalorientation = (int32_t)wal.cstat;
-//
-//    sx0 = (float)(wal.x-globalposx); sx1 = (float)(wal2.x-globalposx);
-//    sy0 = (float)(wal.y-globalposy); sy1 = (float)(wal2.y-globalposy);
-//    yp0 = sx0*gcosang2 + sy0*gsinang2;
-//    yp1 = sx1*gcosang2 + sy1*gsinang2;
-//    if ((yp0 < SCISDIST) && (yp1 < SCISDIST)) return;
-//    xp0 = sy0*gcosang - sx0*gsinang;
-//    xp1 = sy1*gcosang - sx1*gsinang;
-//
-//    //Clip to close parallel-screen plane
-//    oxp0 = xp0; oyp0 = yp0;
-//    if (yp0 < SCISDIST) { t0 = (SCISDIST-yp0)/(yp1-yp0); xp0 = (xp1-xp0)*t0+xp0; yp0 = SCISDIST; }
-//    else t0 = 0.0;
-//    if (yp1 < SCISDIST) { t1 = (SCISDIST-oyp0)/(yp1-oyp0); xp1 = (xp1-oxp0)*t1+oxp0; yp1 = SCISDIST; }
-//    else { t1 = 1.0; }
-//
-//    m0 = (int32_t)((wal2.x-wal.x)*t0+wal.x);
-//    m1 = (int32_t)((wal2.y-wal.y)*t0+wal.y);
-//    getzsofslope(sectnum,m0,m1,&cz[0],&fz[0]);
-//    getzsofslope(wal.nextsector,m0,m1,&cz[1],&fz[1]);
-//    m0 = (int32_t)((wal2.x-wal.x)*t1+wal.x);
-//    m1 = (int32_t)((wal2.y-wal.y)*t1+wal.y);
-//    getzsofslope(sectnum,m0,m1,&cz[2],&fz[2]);
-//    getzsofslope(wal.nextsector,m0,m1,&cz[3],&fz[3]);
-//
-//    ryp0 = 1.0/yp0; ryp1 = 1.0/yp1;
-//
-//    //Generate screen coordinates for front side of wall
-//    x0 = ghalfx*xp0*ryp0 + ghalfx;
-//    x1 = ghalfx*xp1*ryp1 + ghalfx;
-//    if (x1 <= x0) return;
-//
-//    ryp0 *= gyxscale; ryp1 *= gyxscale;
-//
-//    gdx = (ryp0-ryp1)*gxyaspect / (x0-x1);
-//    gdy = 0;
-//    gdo = ryp0*gxyaspect - gdx*x0;
-//
-//    //gux*x0 + guo = t0*wal.xrepeat*8*yp0
-//    //gux*x1 + guo = t1*wal.xrepeat*8*yp1
-//    gux = (t0*ryp0 - t1*ryp1)*gxyaspect*(float)wal.xrepeat*8.f / (x0-x1);
-//    guo = t0*ryp0*gxyaspect*(float)wal.xrepeat*8.f - gux*x0;
-//    guo += (float)wal.xpanning*gdo;
-//    gux += (float)wal.xpanning*gdx;
-//    guy = 0;
-//
-//    if (!(wal.cstat&4)) i = z1; else i = z2;
-//
-//    // mask
-//    calc_ypanning(i, ryp0, ryp1, x0, x1, wal.ypanning, wal.yrepeat, 0);
-//
-//    if (wal.cstat&8) //xflip
-//    {
-//        t = (float)(wal.xrepeat*8 + wal.xpanning*2);
-//        gux = gdx*t - gux;
-//        guy = gdy*t - guy;
-//        guo = gdo*t - guo;
-//    }
-//    if (wal.cstat&256) { gvx = -gvx; gvy = -gvy; gvo = -gvo; } //yflip
-//
-//    method = 1; pow2xsplit = 1;
-//    if (wal.cstat&128) { if (!(wal.cstat&512)) method = 2; else method = 3; }
-//
-//    calc_and_apply_fog(wal.picnum, wal.shade, sec.visibility, sec.floorpal);
-//
-//    for (i=0; i<2; i++)
-//    {
-//        csy[i] = ((float)(cz[i]-globalposz))*ryp0 + ghoriz;
-//        fsy[i] = ((float)(fz[i]-globalposz))*ryp0 + ghoriz;
-//        csy[i+2] = ((float)(cz[i+2]-globalposz))*ryp1 + ghoriz;
-//        fsy[i+2] = ((float)(fz[i+2]-globalposz))*ryp1 + ghoriz;
-//    }
-//
-//    //Clip 2 quadrilaterals
-//    //               /csy3
-//    //             /   |
-//    // csy0------/----csy2
-//    //   |     /xxxxxxx|
-//    //   |   /xxxxxxxxx|
-//    // csy1/xxxxxxxxxxx|
-//    //   |xxxxxxxxxxx/fsy3
-//    //   |xxxxxxxxx/   |
-//    //   |xxxxxxx/     |
-//    // fsy0----/------fsy2
-//    //   |   /
-//    // fsy1/
-//
-//    dpx[0] = x0; dpy[0] = csy[1];
-//    dpx[1] = x1; dpy[1] = csy[3];
-//    dpx[2] = x1; dpy[2] = fsy[3];
-//    dpx[3] = x0; dpy[3] = fsy[1];
-//    n = 4;
-//
-//    //Clip to (x0,csy[0])-(x1,csy[2])
-//    n2 = 0; t1 = -((dpx[0]-x0)*(csy[2]-csy[0]) - (dpy[0]-csy[0])*(x1-x0));
-//    for (i=0; i<n; i++)
-//    {
-//        j = i+1; if (j >= n) j = 0;
-//
-//        t0 = t1; t1 = -((dpx[j]-x0)*(csy[2]-csy[0]) - (dpy[j]-csy[0])*(x1-x0));
-//        if (t0 >= 0) { dpx2[n2] = dpx[i]; dpy2[n2] = dpy[i]; n2++; }
-//        if ((t0 >= 0) != (t1 >= 0))
-//        {
-//            r = t0/(t0-t1);
-//            dpx2[n2] = (dpx[j]-dpx[i])*r + dpx[i];
-//            dpy2[n2] = (dpy[j]-dpy[i])*r + dpy[i];
-//            n2++;
-//        }
-//    }
-//    if (n2 < 3) return;
-//
-//    //Clip to (x1,fsy[2])-(x0,fsy[0])
-//    n = 0; t1 = -((dpx2[0]-x1)*(fsy[0]-fsy[2]) - (dpy2[0]-fsy[2])*(x0-x1));
-//    for (i=0; i<n2; i++)
-//    {
-//        j = i+1; if (j >= n2) j = 0;
-//
-//        t0 = t1; t1 = -((dpx2[j]-x1)*(fsy[0]-fsy[2]) - (dpy2[j]-fsy[2])*(x0-x1));
-//        if (t0 >= 0) { dpx[n] = dpx2[i]; dpy[n] = dpy2[i]; n++; }
-//        if ((t0 >= 0) != (t1 >= 0))
-//        {
-//            r = t0/(t0-t1);
-//            dpx[n] = (dpx2[j]-dpx2[i])*r + dpx2[i];
-//            dpy[n] = (dpy2[j]-dpy2[i])*r + dpy2[i];
-//            n++;
-//        }
-//    }
-//    if (n < 3) return;
-//
-//    pow2xsplit = 0;
-//    skyclamphack = 0;
-//    alpha = 0.0;
-//    drawpoly(dpx,dpy,n,method);
-//}
+
+var polymost_dmw_dpx = new Float64Array(8), polymost_dmw_dpy = new Float64Array(8), polymost_dmw_dpx2 = new Float64Array(8), polymost_dmw_dpy2 = new Float64Array(8);
+var polymost_csy = new Float64Array(4), polymost_dmw_fsy = new Float64Array(4);
+var polymost_cz = new Int32Array(2), polymost_fz = new Float64Array(4);
+function polymost_drawmaskwall(/*int32_t */damaskwallcnt:number): void 
+{
+    var dpx = polymost_dmw_dpx, dpy = polymost_dmw_dpy, dpx2 = polymost_dmw_dpx2, dpy2 = polymost_dmw_dpy2;
+    var /*float */x0=0.0, x1=0.0, sx0=0.0, sy0=0.0, sx1=0.0, sy1=0.0, xp0=0.0, yp0=0.0, xp1=0.0, yp1=0.0, oxp0=0.0, oyp0=0.0, ryp0=0.0, ryp1=0.0;
+    var/*float */r=0.0, t=0.0, t0=0.0, t1=0.0, csy = polymost_csy, fsy = polymost_dmw_fsy;
+    var /*int32_t */i=0, j=0, n=0, n2=0, z=0, sectnum=0, z1=0, z2=0, cz = polymost_cz, fz = polymost_fz, method=0;
+    var /*int32_t */m0=0, m1=0;
+    var sec:sectortype , nsec:sectortype ;
+    var wal:walltype, wal2:walltype;
+
+    z = maskwall[damaskwallcnt];
+    wal = wall[thewall[z]]; wal2 = wall[wal.point2];
+    sectnum = thesector[z]; sec = sector[sectnum];
+
+//    if (wal.nextsector < 0) return;
+    // Without MASKWALL_BAD_ACCESS fix:
+    // wal.nextsector is -1, WGR2 SVN Lochwood Hollow (Til' Death L1)  (or trueror1.map)
+
+    nsec = sector[wal.nextsector];
+    z1 = max(nsec.ceilingz,sec.ceilingz);
+    z2 = min(nsec.floorz,sec.floorz);
+
+    globalpicnum = wal.overpicnum; if (/*(uint32_t)*/globalpicnum >= MAXTILES) globalpicnum = 0;
+    globvis = globalvisibility;
+    if (sector[sectnum].visibility != 0) globvis = mulscale4(globvis,  /*(uint8_t)*/ (sector[sectnum].visibility+16));
+
+    if (picanm[globalpicnum].sf & PICANM_ANIMTYPE_MASK) globalpicnum += animateoffs(globalpicnum, int16(thewall[z]+16384));//DO_TILE_ANIM(globalpicnum, int16(thewall[z]+16384));
+    globalshade = int32(wal.shade);
+    globalpal = int32( /*(uint8_t)*/ wal.pal);
+    globalorientation = int32(wal.cstat);
+
+    sx0 = /*(float)*/(wal.x-globalposx); sx1 = /*(float)*/(wal2.x-globalposx);
+    sy0 = /*(float)*/(wal.y-globalposy); sy1 = /*(float)*/(wal2.y-globalposy);
+    yp0 = sx0*gcosang2 + sy0*gsinang2;
+    yp1 = sx1*gcosang2 + sy1*gsinang2;
+    if ((yp0 < SCISDIST) && (yp1 < SCISDIST)) return;
+    xp0 = sy0*gcosang - sx0*gsinang;
+    xp1 = sy1*gcosang - sx1*gsinang;
+
+    //Clip to close parallel-screen plane
+    oxp0 = xp0; oyp0 = yp0;
+    if (yp0 < SCISDIST) { t0 = (SCISDIST-yp0)/(yp1-yp0); xp0 = (xp1-xp0)*t0+xp0; yp0 = SCISDIST; }
+    else t0 = 0.0;
+    if (yp1 < SCISDIST) { t1 = (SCISDIST-oyp0)/(yp1-oyp0); xp1 = (xp1-oxp0)*t1+oxp0; yp1 = SCISDIST; }
+    else { t1 = 1.0; }
+
+    m0 = int32((wal2.x-wal.x)*t0+wal.x);
+    m1 = int32((wal2.y-wal.y)*t0+wal.y);
+    var $cz0 = new R(cz[0]);var $fz0 = new R(fz[0]);
+    getzsofslope(sectnum,m0,m1,$cz0,$fz0);
+    cz[0] = $cz0.$;fz[0] = $fz0.$;
+    var $cz1 = new R(cz[1]);var $fz1 = new R(fz[1]);
+    getzsofslope(wal.nextsector,m0,m1,$cz1,$fz1);
+    cz[1] = $cz1.$;fz[1] = $fz1.$;
+    m0 = int32((wal2.x-wal.x)*t1+wal.x);
+    m1 = int32((wal2.y-wal.y)*t1+wal.y);
+    var $cz2 = new R(cz[2]);var $fz2 = new R(fz[2]);
+    getzsofslope(sectnum,m0,m1,$cz2,$fz2);
+    var $cz3 = new R(cz[3]);var $fz3 = new R(fz[3]);
+    getzsofslope(wal.nextsector,m0,m1,$cz3,$fz3);
+    cz[3] = $cz3.$;fz[3] = $fz3.$;
+
+    ryp0 = 1.0/yp0; ryp1 = 1.0/yp1;
+
+    //Generate screen coordinates for front side of wall
+    x0 = ghalfx*xp0*ryp0 + ghalfx;
+    x1 = ghalfx*xp1*ryp1 + ghalfx;
+    if (x1 <= x0) return;
+
+    ryp0 *= gyxscale; ryp1 *= gyxscale;
+
+    gdx = (ryp0-ryp1)*gxyaspect / (x0-x1);
+    gdy = 0;
+    gdo = ryp0*gxyaspect - gdx*x0;
+
+    //gux*x0 + guo = t0*wal.xrepeat*8*yp0
+    //gux*x1 + guo = t1*wal.xrepeat*8*yp1
+    gux = (t0*ryp0 - t1*ryp1)*gxyaspect*/*(float)*/wal.xrepeat*8.0 / (x0-x1);
+    guo = t0*ryp0*gxyaspect*/*(float)*/wal.xrepeat*8.0 - gux*x0;
+    guo += /*(float)*/wal.xpanning*gdo;
+    gux += /*(float)*/wal.xpanning*gdx;
+    guy = 0;
+
+    if (!(wal.cstat&4)) i = z1; else i = z2;
+
+    // mask
+    calc_ypanning(i, ryp0, ryp1, x0, x1, wal.ypanning, wal.yrepeat, 0);
+
+    if (wal.cstat&8) //xflip
+    {
+        t = /*(float)*/(wal.xrepeat*8 + wal.xpanning*2);
+        gux = gdx*t - gux;
+        guy = gdy*t - guy;
+        guo = gdo*t - guo;
+    }
+    if (wal.cstat&256) { gvx = -gvx; gvy = -gvy; gvo = -gvo; } //yflip
+
+    method = 1; pow2xsplit = 1;
+    if (wal.cstat&128) { if (!(wal.cstat&512)) method = 2; else method = 3; }
+
+    calc_and_apply_fog(wal.picnum, wal.shade, sec.visibility, sec.floorpal);
+
+    for (i=0; i<2; i++)
+    {
+        csy[i] = (/*(float)*/(cz[i]-globalposz))*ryp0 + ghoriz;
+        fsy[i] = (/*(float)*/(fz[i]-globalposz))*ryp0 + ghoriz;
+        csy[i+2] = (/*(float)*/(cz[i+2]-globalposz))*ryp1 + ghoriz;
+        fsy[i+2] = (/*(float)*/(fz[i+2]-globalposz))*ryp1 + ghoriz;
+    }
+
+    //Clip 2 quadrilaterals
+    //               /csy3
+    //             /   |
+    // csy0------/----csy2
+    //   |     /xxxxxxx|
+    //   |   /xxxxxxxxx|
+    // csy1/xxxxxxxxxxx|
+    //   |xxxxxxxxxxx/fsy3
+    //   |xxxxxxxxx/   |
+    //   |xxxxxxx/     |
+    // fsy0----/------fsy2
+    //   |   /
+    // fsy1/
+
+    dpx[0] = x0; dpy[0] = csy[1];
+    dpx[1] = x1; dpy[1] = csy[3];
+    dpx[2] = x1; dpy[2] = fsy[3];
+    dpx[3] = x0; dpy[3] = fsy[1];
+    n = 4;
+
+    //Clip to (x0,csy[0])-(x1,csy[2])
+    n2 = 0; t1 = -((dpx[0]-x0)*(csy[2]-csy[0]) - (dpy[0]-csy[0])*(x1-x0));
+    for (i=0; i<n; i++)
+    {
+        j = i+1; if (j >= n) j = 0;
+
+        t0 = t1; t1 = -((dpx[j]-x0)*(csy[2]-csy[0]) - (dpy[j]-csy[0])*(x1-x0));
+        if (t0 >= 0) { dpx2[n2] = dpx[i]; dpy2[n2] = dpy[i]; n2++; }
+        if ((t0 >= 0) != (t1 >= 0))
+        {
+            r = t0/(t0-t1);
+            dpx2[n2] = (dpx[j]-dpx[i])*r + dpx[i];
+            dpy2[n2] = (dpy[j]-dpy[i])*r + dpy[i];
+            n2++;
+        }
+    }
+    if (n2 < 3) return;
+
+    //Clip to (x1,fsy[2])-(x0,fsy[0])
+    n = 0; t1 = -((dpx2[0]-x1)*(fsy[0]-fsy[2]) - (dpy2[0]-fsy[2])*(x0-x1));
+    for (i=0; i<n2; i++)
+    {
+        j = i+1; if (j >= n2) j = 0;
+
+        t0 = t1; t1 = -((dpx2[j]-x1)*(fsy[0]-fsy[2]) - (dpy2[j]-fsy[2])*(x0-x1));
+        if (t0 >= 0) { dpx[n] = dpx2[i]; dpy[n] = dpy2[i]; n++; }
+        if ((t0 >= 0) != (t1 >= 0))
+        {
+            r = t0/(t0-t1);
+            dpx[n] = (dpx2[j]-dpx2[i])*r + dpx2[i];
+            dpy[n] = (dpy2[j]-dpy2[i])*r + dpy2[i];
+            n++;
+        }
+    }
+    if (n < 3) return;
+
+    pow2xsplit = 0;
+    skyclamphack = 0;
+    alpha = 0.0;
+    drawpoly(dpx,dpy,n,method);
+}
 
 var polymost_drawsprite_px = new Float64Array(6), polymost_drawsprite_py = new Float64Array(6);
 var polymost_drawsprite_ft = new Float32Array(4);

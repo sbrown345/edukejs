@@ -34,7 +34,7 @@
 
 //#include <math.h>
 
-//static int32_t curextra=MAXTILES;
+var /*int32_t */curextra=MAXTILES;
 //// nedpool *model_data_pool;
 //// #define MODEL_POOL_SIZE 20971520
 //#define model_data_pool (nedpool *) 0 // take it out of the system pool
@@ -97,7 +97,7 @@ var /*int32_t */nummodelsalloced = 0;
 
 var /*int32_t*/ maxmodelverts = 0, allocmodelverts = 0;
 var /*int32_t*/ maxmodeltris = 0, allocmodeltris = 0;
-//static point3d *vertlist = NULL; //temp array to store interpolated vertices for drawing
+var /*point3d **/vertlist:any[] = NULL; //temp array to store interpolated vertices for drawing
 
 var /*int32_t */allocvbos = 0, curvbo = 0;
 //static GLuint *vertvbos = NULL;
@@ -111,62 +111,66 @@ var /*int32_t */allocvbos = 0, curvbo = 0;
 
 function freevbos(): void
 {
-    todoThrow("freevbos");
-    //var i: number;
+    var i: number;
 
-    //for (i=0; i<nextmodelid; i++)
-    //    if (models[i].mdnum == 3)
-    //    {
-    //        var m: md3model_t = models[i];
-    //        if (m.vbos)
-    //        {
-    //            //            OSD_Printf("freeing model %d vbo\n",i);
-    //            bglDeleteBuffersARB(m.head.numsurfs, m.vbos);
-    //            Bfree(m.vbos);
-    //            m.vbos = NULL;
-    //        }
-    //    }
+    for (i=0; i<nextmodelid; i++)
+        if (models[i].mdnum == 3)
+        {
+            var m = /*(md3model_t *)*/models[i];
+            todoThrow();
+            //if (m.vbos)
+            //{
+            //    //            OSD_Printf("freeing model %d vbo\n",i);
+            //    bglDeleteBuffersARB(m.head.numsurfs, m.vbos);
+            //    Bfree(m.vbos);
+            //    m.vbos = NULL;
+            //}
+        }
 
-    //if (allocvbos)
-    //{
-    //    bglDeleteBuffersARB(allocvbos, indexvbos);
-    //    bglDeleteBuffersARB(allocvbos, vertvbos);
-    //    allocvbos = 0;
-    //}
+    if (allocvbos)
+    {
+        todoThrow();
+        //bglDeleteBuffersARB(allocvbos, indexvbos);
+        //bglDeleteBuffersARB(allocvbos, vertvbos);
+        //allocvbos = 0;
+    }
 }
 
-//void freeallmodels()
-//{
-//    int32_t i;
+function freeallmodels():void
+{
+    var/*int32_t */i:number;
 
-//    if (models)
-//    {
-//        for (i=0; i<nextmodelid; i++) mdfree(models[i]);
-//        Bfree(models); models = NULL;
-//        nummodelsalloced = 0;
-//        nextmodelid = 0;
-//    }
+    if (models)
+    {
+        for (i=0; i<nextmodelid; i++) mdfree(models[i]);
+        models = null;//Bfree(models); models = NULL;
+        nummodelsalloced = 0;
+        nextmodelid = 0;
+    }
 
-//    memset(tile2model,-1,sizeof(tile2model));
-//    curextra=MAXTILES;
+    //memset(tile2model,-1,sizeof(tile2model));
+    for (var j = 0; j < tile2model.length; j++) {
+        tile2model[j].init(-1);
+    }
+    curextra=MAXTILES;
 
-//    if (vertlist)
-//    {
-//        Bfree(vertlist);
-//        vertlist = NULL;
-//        allocmodelverts = maxmodelverts = 0;
-//        allocmodeltris = maxmodeltris = 0;
-//    }
-//    freevbos();
+    if (vertlist)
+    {
+        Bfree(vertlist);
+        vertlist = NULL;
+        allocmodelverts = maxmodelverts = 0;
+        allocmodeltris = maxmodeltris = 0;
+    }
+    freevbos();
 
-//    /*
-//        if (model_data_pool)
-//        {
-//            neddestroypool(model_data_pool);
-//            model_data_pool = NULL;
-//        }
-//    */
-//}
+    /*
+        if (model_data_pool)
+        {
+            neddestroypool(model_data_pool);
+            model_data_pool = NULL;
+        }
+    */
+}
 
 
 //// Skin texture names can be aliased! This is ugly, but at least correct.
@@ -262,13 +266,17 @@ function clearskins(): void
 
 function mdinit(): void 
 {
-    todo("md init");
-//    memsetStruct(hudmem,0,hudtyp,sizeof(hudmem));
+    //memsetStruct(hudmem,0,hudtyp,sizeof(hudmem));
+    for (var i = 0; i < hudmem.length; i++) {
+        for (var j = 0; j < hudmem[i].length; j++) {
+            hudmem[i][j].init();
+        }
+    }
 
-//    freeallmodels();
-////    if (!model_data_pool)
-////        model_data_pool = nedcreatepool(MODEL_POOL_SIZE, 0);
-//    mdinited = 1;
+    freeallmodels();
+//    if (!model_data_pool)
+//        model_data_pool = nedcreatepool(MODEL_POOL_SIZE, 0);
+    mdinited = 1;
 }
 
 //int32_t md_loadmodel(const char *fn)
@@ -2463,8 +2471,8 @@ function mdinit(): void
 //    return 1;
 //}
 
-//static void md3free(md3model_t *m)
-//{
+function md3free(m: any/*md3model_t*/):void
+{todo("md3free");
 //    mdanim_t *anim, *nanim = NULL;
 //    mdskinmap_t *sk, *nsk = NULL;
 //    md3surf_t *s;
@@ -2521,7 +2529,7 @@ function mdinit(): void
 //    }
 
 //    Bfree(m);
-//}
+}
 
 ////---------------------------------------- MD3 LIBRARY ENDS ----------------------------------------
 ////--------------------------------------- VOX LIBRARY BEGINS ---------------------------------------
@@ -3160,14 +3168,15 @@ function mdinit(): void
 //}
 //#endif
 
-//void voxfree(voxmodel_t *m)
-//{
-//    if (!m) return;
-//    if (m.mytex) Bfree(m.mytex);
-//    if (m.quad) Bfree(m.quad);
-//    if (m.texid) Bfree(m.texid);
-//    Bfree(m);
-//}
+function voxfree(m:voxmodel_t):void
+{
+    if (!m) return;
+    todo("voxfree");
+    //if (m.mytex) Bfree(m.mytex);
+    //if (m.quad) Bfree(m.quad);
+    //if (m.texid) Bfree(m.texid);
+    //Bfree(m);
+}
 
 //voxmodel_t *voxload(const char *filnam)
 //{
@@ -3429,11 +3438,11 @@ function /*int32_t */mddraw(tspr:spritetype):number
     return 0;
 }
 
-//void mdfree(mdmodel_t *vm)
-//{
-//    if (vm.mdnum == 1) { voxfree((voxmodel_t *)vm); return; }
-//    if (vm.mdnum == 2 || vm.mdnum == 3) { md3free((md3model_t *)vm); return; }
-//}
+function mdfree(/*mdmodel_t **/vm:mdmodel_t):void
+{
+    if (vm.mdnum == 1) { voxfree(/*(voxmodel_t *)*/vm); return; }
+    if (vm.mdnum == 2 || vm.mdnum == 3) { md3free(/*(md3model_t *)*/vm); return; }
+}
 
 //#endif
 

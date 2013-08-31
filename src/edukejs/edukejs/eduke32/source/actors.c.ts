@@ -1838,7 +1838,7 @@ function G_MoveStandables():void
                     ps.opos.y = ps.pos.y = s.y-(sintable[ps.ang&2047]>>6);
                     ps.opos.z = ps.pos.z = s.z+(2<<8);
 
-                    setsprite(ps.i, /*(vec3_t *)*/ps);
+                    setsprite(ps.i, /*(vec3_t *)*/ps.pos);
                     ps.cursectnum = sprite[ps.i].sectnum;
                 }
             }
@@ -2180,7 +2180,7 @@ function G_MoveStandables():void
             if (s.shade != -32 && s.shade != -33)
             {
                 if (s.xrepeat)
-                    j = (A_IncurDamage(i) >= 0);
+                    j = (A_IncurDamage(i) >= 0)?1:0;
                 else
                     j = 0;
 
@@ -2568,7 +2568,7 @@ for(;;) {
                     {
                         t[0] = 1;
                         t[1] = 1;
-                        t[3] = !t[3];
+                        t[3] = !t[3]?1:0;
                         G_OperateMasterSwitches(s.lotag);
                         G_OperateActivators(s.lotag,p);
                         if (int16(s.hitag) > 0)
@@ -3437,17 +3437,17 @@ function G_MoveWeapons():void
 //        }
 //}
 
-//// Check prevention of teleportation *when alive*. For example, commanders and
-//// octabrains would be transported by SE7 (both water and normal) only if dead.
-//static int32_t A_CheckNonTeleporting(int32_t s)
-//{
-//    int32_t pic = sprite[s].picnum;
+// Check prevention of teleportation *when alive*. For example, commanders and
+// octabrains would be transported by SE7 (both water and normal) only if dead.
+function /*int32_t */A_CheckNonTeleporting(/*int32_t*/ s:number):number
+{
+    var/*int32_t */pic = sprite[s].picnum;
 
-//    if (A_CheckSpriteFlags(s, SPRITE_NOTELEPORT)) return 1;
+    if (A_CheckSpriteFlags(s, SPRITE_NOTELEPORT)) return 1;
 
-//    return (pic == SHARK || pic == COMMANDER || pic == OCTABRAIN
-//                || (pic >= GREENSLIME && pic <= GREENSLIME+7));
-//}
+    return (pic == SHARK || pic == COMMANDER || pic == OCTABRAIN
+                || (pic >= GREENSLIME && pic <= GREENSLIME+7))?1:0;
+}
 
 function G_MoveTransports():void
 {
@@ -6171,7 +6171,7 @@ function G_MoveEffectors():void   //STATNUM 3
                             actor[j].bpos.x = sprite[j].x;
                             actor[j].bpos.y = sprite[j].y;
                         }
-
+                        todoThrow("s-sprite");
                         if (move_rotfixed_sprite(j, s-sprite, t[2])) {
                             var $x = new R(sprite[j].x);
                             var $y = new R(sprite[j].y);
@@ -7757,7 +7757,7 @@ function G_MoveEffectors():void   //STATNUM 3
                     HandleSE31(i, 0, s.z, 1, s.z-sc.floorz);
                 else
                     HandleSE31(i, 0, t[1], 1, t[1]-s.z);
-
+                todoThrow("sc-sector");
                 Yax_SetBunchZs(sc-sector, YAX_FLOOR, sc.floorz);
             }
             break;
@@ -7792,6 +7792,7 @@ function G_MoveEffectors():void   //STATNUM 3
                         else sc.ceilingz += ksgn(t[1]-sc.ceilingz)*sprite[i].yvel;
                     }
 
+                todoThrow("sc-sector");
                     Yax_SetBunchZs(sc-sector, YAX_CEILING, sc.ceilingz);
 
                     break;
@@ -7802,7 +7803,7 @@ function G_MoveEffectors():void   //STATNUM 3
                     if (klabs(sc.ceilingz-s.z) < (sprite[i].yvel<<1))
                     {
                         t[0] = 0;
-                        t[2] = !t[2];
+                        t[2] = !t[2]?1:0;
                         A_CallSound(s.sectnum,i);
                         sc.ceilingz = s.z;
                     }
@@ -7813,12 +7814,13 @@ function G_MoveEffectors():void   //STATNUM 3
                     if (klabs(sc.ceilingz-t[1]) < (sprite[i].yvel<<1))
                     {
                         t[0] = 0;
-                        t[2] = !t[2];
+                        t[2] = !t[2]?1:0;
                         A_CallSound(s.sectnum,i);
                     }
                     else sc.ceilingz -= ksgn(s.z-t[1])*sprite[i].yvel;
                 }
 
+                todoThrow("sc-sector");
                 Yax_SetBunchZs(sc-sector, YAX_CEILING, sc.ceilingz);
             }
             break;

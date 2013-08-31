@@ -1578,12 +1578,16 @@ class tile2model_t
     pal: number;                                                                    // char   
 
     constructor() {
-        this.modelid= 0;                                                            
-        this.skinnum= 0;                                                            
-        this.framenum= 0;   
-        this.smoothduration= 0;                                                     
-        this.next= 0;                                                               
-        this.pal= 0;      
+        this.init();                                                            
+    }
+
+    init(v = 0) {
+        this.modelid= v;                                                            
+        this.skinnum= v;                                                            
+        this.framenum= v;   
+        this.smoothduration= v;                                                     
+        this.next= v;                                                               
+        this.pal= v;      
     }
 } //tile2model_t;
 

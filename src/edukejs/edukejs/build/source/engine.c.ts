@@ -6689,110 +6689,110 @@ function drawsprite(/*int32_t */snum:number):void
 }
 
 
-////
-//// drawmaskwall (internal)
-////
-//static void drawmaskwall(int16_t damaskwallcnt)
-//{
-//    int32_t i, j, k, x, z, sectnum, z1, z2, lx, rx;
-//    sectortype *sec, *nsec;
-//    walltype *wal;
+//
+// drawmaskwall (internal)
+//
+function drawmaskwall(/*int16_t */damaskwallcnt:number):void
+{
+    //int32_t i, j, k, x, z, sectnum, z1, z2, lx, rx;
+    //sectortype *sec, *nsec;
+    //walltype *wal;
 
-//    //============================================================================= //POLYMOST BEGINS
+    //============================================================================= //POLYMOST BEGINS
 //#ifdef USE_OPENGL
-//    if (getrendermode() == REND_POLYMOST) { polymost_drawmaskwall(damaskwallcnt); return; }
+    if (getrendermode() == REND_POLYMOST) { polymost_drawmaskwall(damaskwallcnt); return; }
 //# ifdef POLYMER
-//    if (getrendermode() == REND_POLYMER)
-//    {
-//        bglEnable(GL_ALPHA_TEST);
-//        bglEnable(GL_BLEND);
+    if (getrendermode() == REND_POLYMER)
+    {
+        bglEnable(GL_ALPHA_TEST);
+        bglEnable(GL_BLEND);
 
-//        polymer_drawmaskwall(damaskwallcnt);
+        polymer_drawmaskwall(damaskwallcnt);
 
-//        bglDisable(GL_BLEND);
-//        bglDisable(GL_ALPHA_TEST);
+        bglDisable(GL_BLEND);
+        bglDisable(GL_ALPHA_TEST);
 
-//        return;
-//    }
+        return;
+    }
 //#endif
 //#endif
-//    //============================================================================= //POLYMOST ENDS
+    //============================================================================= //POLYMOST ENDS
+    todoThrow();
+    //z = maskwall[damaskwallcnt];
+    //wal = &wall[thewall[z]];
+    //sectnum = thesector[z]; sec = &sector[sectnum];
+    //nsec = &sector[wal.nextsector];
+    //z1 = max(nsec.ceilingz,sec.ceilingz);
+    //z2 = min(nsec.floorz,sec.floorz);
 
-//    z = maskwall[damaskwallcnt];
-//    wal = &wall[thewall[z]];
-//    sectnum = thesector[z]; sec = &sector[sectnum];
-//    nsec = &sector[wal.nextsector];
-//    z1 = max(nsec.ceilingz,sec.ceilingz);
-//    z2 = min(nsec.floorz,sec.floorz);
+    //wallmost(uwall,z,sectnum,(uint8_t)0);
+    //wallmost(uplc,z,(int32_t)wal.nextsector,(uint8_t)0);
+    //for (x=xb1[z]; x<=xb2[z]; x++)
+    //    if (uplc[x] > uwall[x])
+    //        uwall[x] = uplc[x];
+    //wallmost(dwall,z,sectnum,(uint8_t)1);
+    //wallmost(dplc,z,(int32_t)wal.nextsector,(uint8_t)1);
+    //for (x=xb1[z]; x<=xb2[z]; x++)
+    //    if (dplc[x] < dwall[x])
+    //        dwall[x] = dplc[x];
+    //prepwall(z,wal);
 
-//    wallmost(uwall,z,sectnum,(uint8_t)0);
-//    wallmost(uplc,z,(int32_t)wal.nextsector,(uint8_t)0);
-//    for (x=xb1[z]; x<=xb2[z]; x++)
-//        if (uplc[x] > uwall[x])
-//            uwall[x] = uplc[x];
-//    wallmost(dwall,z,sectnum,(uint8_t)1);
-//    wallmost(dplc,z,(int32_t)wal.nextsector,(uint8_t)1);
-//    for (x=xb1[z]; x<=xb2[z]; x++)
-//        if (dplc[x] < dwall[x])
-//            dwall[x] = dplc[x];
-//    prepwall(z,wal);
+    //setup_globals_wall1(wal, wal.overpicnum);
+    //setup_globals_wall2(wal, sec.visibility, z1, z2);
 
-//    setup_globals_wall1(wal, wal.overpicnum);
-//    setup_globals_wall2(wal, sec.visibility, z1, z2);
+    //for (i=smostwallcnt-1; i>=0; i--)
+    //{
+    //    j = smostwall[i];
+    //    if ((xb1[j] > xb2[z]) || (xb2[j] < xb1[z])) continue;
+    //    if (wallfront(j,z)) continue;
 
-//    for (i=smostwallcnt-1; i>=0; i--)
-//    {
-//        j = smostwall[i];
-//        if ((xb1[j] > xb2[z]) || (xb2[j] < xb1[z])) continue;
-//        if (wallfront(j,z)) continue;
+    //    lx = max(xb1[j],xb1[z]); rx = min(xb2[j],xb2[z]);
 
-//        lx = max(xb1[j],xb1[z]); rx = min(xb2[j],xb2[z]);
+    //    switch (smostwalltype[i])
+    //    {
+    //    case 0:
+    //        if (lx <= rx)
+    //        {
+    //            if ((lx == xb1[z]) && (rx == xb2[z])) return;
+    //            //clearbufbyte(&dwall[lx],(rx-lx+1)*sizeof(dwall[0]),0);
+    //            for (x=lx; x<=rx; x++) dwall[x] = 0;
+    //        }
+    //        break;
+    //    case 1:
+    //        k = smoststart[i] - xb1[j];
+    //        for (x=lx; x<=rx; x++)
+    //            if (smost[k+x] > uwall[x]) uwall[x] = smost[k+x];
+    //        break;
+    //    case 2:
+    //        k = smoststart[i] - xb1[j];
+    //        for (x=lx; x<=rx; x++)
+    //            if (smost[k+x] < dwall[x]) dwall[x] = smost[k+x];
+    //        break;
+    //    }
+    //}
 
-//        switch (smostwalltype[i])
-//        {
-//        case 0:
-//            if (lx <= rx)
-//            {
-//                if ((lx == xb1[z]) && (rx == xb2[z])) return;
-//                //clearbufbyte(&dwall[lx],(rx-lx+1)*sizeof(dwall[0]),0);
-//                for (x=lx; x<=rx; x++) dwall[x] = 0;
-//            }
-//            break;
-//        case 1:
-//            k = smoststart[i] - xb1[j];
-//            for (x=lx; x<=rx; x++)
-//                if (smost[k+x] > uwall[x]) uwall[x] = smost[k+x];
-//            break;
-//        case 2:
-//            k = smoststart[i] - xb1[j];
-//            for (x=lx; x<=rx; x++)
-//                if (smost[k+x] < dwall[x]) dwall[x] = smost[k+x];
-//            break;
-//        }
-//    }
+    ////maskwall
+    //if ((searchit >= 1) && (searchx >= xb1[z]) && (searchx <= xb2[z]))
+    //    if ((searchy >= uwall[searchx]) && (searchy <= dwall[searchx]))
+    //    {
+    //        searchsector = sectnum; searchbottomwall = searchwall = thewall[z];
+    //        searchstat = 4; searchit = 1;
+    //    }
 
-//    //maskwall
-//    if ((searchit >= 1) && (searchx >= xb1[z]) && (searchx <= xb2[z]))
-//        if ((searchy >= uwall[searchx]) && (searchy <= dwall[searchx]))
-//        {
-//            searchsector = sectnum; searchbottomwall = searchwall = thewall[z];
-//            searchstat = 4; searchit = 1;
-//        }
+    //if ((globalorientation&128) == 0)
+    //{
+    //    maskwallscan(xb1[z],xb2[z]);
+    //}
+    //else
+    //{
+    //    if (globalorientation&128)
+    //    {
+    //        if (globalorientation&512) settransreverse(); else settransnormal();
+    //    }
 
-//    if ((globalorientation&128) == 0)
-//    {
-//        maskwallscan(xb1[z],xb2[z]);
-//    }
-//    else
-//    {
-//        if (globalorientation&128)
-//        {
-//            if (globalorientation&512) settransreverse(); else settransnormal();
-//        }
-
-//        transmaskwallscan(xb1[z],xb2[z]);
-//    }
-//}
+    //    transmaskwallscan(xb1[z],xb2[z]);
+    //}
+}
 
 
 ////

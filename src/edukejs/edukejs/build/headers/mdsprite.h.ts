@@ -228,6 +228,9 @@ var models: mdmodel_t[];//EXTERN mdmodel_t **
 class hudtyp{ /*float */xadd: number; yadd: number; zadd: number; /*int16_t */angadd: number; flags:number; fov: number; 
 
     constructor() {
+        this.init()
+    }
+    init() {
         this.xadd = 0;
         this.yadd = 0;
         this.zadd = 0;
