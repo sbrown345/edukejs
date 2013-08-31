@@ -445,20 +445,23 @@ function A_CheckNeedZUpdate(/*int32_t*/ spritenum: number, /*int32_t */changez: 
     {
         var psect=spr.sectnum, slotag=sector[psect].lotag;
         var /*int32_t */othersect: number;
-        todoThrow();
-        //// Non-SE7 water.
-        //// PROJECTILE_CHSECT
-        //if ((changez < 0 && slotag==ST_2_UNDERWATER) || (changez > 0 && slotag==ST_1_ABOVE_WATER))
-        //    if (A_CheckNoSE7Water(spr, sprite[spritenum].sectnum, slotag, &othersect))
-        //    {
-        //        A_Spawn(spritenum, WATERSPLASH2);
-        //        // NOTE: Don't tweak its z position afterwards like with
-        //        // SE7-induced projectile teleportation. It doesn't look good
-        //        // with TROR water.
+        // Non-SE7 water.
+        // PROJECTILE_CHSECT
+        if ((changez < 0 && slotag==ST_2_UNDERWATER) || (changez > 0 && slotag==ST_1_ABOVE_WATER)) {
+            var $othersect = new R(othersect);
+            var result = A_CheckNoSE7Water(spr, sprite[spritenum].sectnum, slotag, $othersect);
+            othersect = $othersect.$;
+            if (result)
+            {
+                A_Spawn(spritenum, WATERSPLASH2);
+                // NOTE: Don't tweak its z position afterwards like with
+                // SE7-induced projectile teleportation. It doesn't look good
+                // with TROR water.
 
-        //        actor[spritenum].flags |= SPRITE_DIDNOSE7WATER;
-        //        return -othersect-1;
-        //    }
+                actor[spritenum].flags |= SPRITE_DIDNOSE7WATER;
+                return -othersect-1;
+            }
+        }
     }
 //#endif
 
@@ -1637,12 +1640,12 @@ function G_MoveStandables():void
     {
         var/*const int32_t */nexti = nextspritestat[i];
 
-        var/*int32_t *const */t = actor[i].t_data[0];
+        var/*int32_t *const */t = actor[i].t_data;
         var s = sprite[i];
         var /*const int32_t */sect = s.sectnum;
 
         if (sect < 0)
-            KILLIT(i);
+            {A_DeleteSprite(i); {i = nexti;continue BOLT;}}
 
         // Rotation-fixed sprites in rotating sectors already have bpos* updated.
         if ((t[7]&(0xffff0000))!=ROTFIXSPR_MAGIC) {
@@ -1678,7 +1681,7 @@ function G_MoveStandables():void
                         s.ang = getangle(vect.x-s.x, vect.y-s.y);
                         setsprite(j, vect);
                         t[0]++;
-                        goto BOLT;
+                        {i = nexti;continue BOLT;}
                     }
                     }
                 }
@@ -1717,7 +1720,7 @@ function G_MoveStandables():void
                         {
                             if (s.owner==-2)
                             {
-                                int32_t p = A_FindPlayer(s, NULL);
+                                var/*int32_t */p = A_FindPlayer(s, NULL);
                                 A_PlaySound(DUKE_GRUNT,g_player[p].ps.i);
                                 if (g_player[p].ps.on_crane == i)
                                     g_player[p].ps.on_crane = -1;
@@ -1759,7 +1762,7 @@ function G_MoveStandables():void
 
                     t[0]++;//Grabbed the sprite
                     t[2]=0;
-                    goto BOLT;
+                    {i = nexti;continue BOLT;}
                 }
             }
             else if (t[0]==4) //Delay before going up
@@ -1813,7 +1816,7 @@ function G_MoveStandables():void
                             g_player[p].ps.on_crane = -1;
                     s.owner = -1;
                     s.picnum = CRANE;
-                    goto BOLT;
+                    {i = nexti;continue BOLT;}
                 }
 
                 if (s.owner >= 0)
@@ -1840,7 +1843,7 @@ function G_MoveStandables():void
                 }
             }
 
-            goto BOLT;
+            {i = nexti;continue BOLT;}
         }
 
         if (sprite[i].picnum >= WATERFOUNTAIN && sprite[i].picnum <= WATERFOUNTAIN+3)
@@ -1870,7 +1873,7 @@ function G_MoveStandables():void
                     else t[0] = 1;
                 }
             }
-            goto BOLT;
+            {i = nexti;continue BOLT;}
         }
 
         if (AFLAMABLE(s.picnum))
@@ -1878,7 +1881,7 @@ function G_MoveStandables():void
             if (actor[i].t_data[0] == 1)
             {
                 actor[i].t_data[1]++;
-                if ((actor[i].t_data[1]&3) > 0) goto BOLT;
+                if ((actor[i].t_data[1]&3) > 0) {i = nexti;continue BOLT;}
 
                 if (s.picnum == TIRE && actor[i].t_data[1] == 32)
                 {
@@ -1889,18 +1892,18 @@ function G_MoveStandables():void
                 else
                 {
                     if (s.shade < 64) s.shade++;
-                    else KILLIT(i);
+                    else {A_DeleteSprite(i); {i = nexti;continue BOLT;}}
                 }
 
                 j = s.xrepeat-(krand()&7);
                 if (j < 10)
-                    KILLIT(i);
+                    {A_DeleteSprite(i); {i = nexti;continue BOLT;}}
 
                 s.xrepeat = j;
 
                 j = s.yrepeat-(krand()&7);
                 if (j < 4)
-                    KILLIT(i);
+                    {A_DeleteSprite(i); {i = nexti;continue BOLT;}}
 
                 s.yrepeat = j;
             }
@@ -1909,7 +1912,7 @@ function G_MoveStandables():void
                 A_Fall(i);
                 actor[i].ceilingz = sector[s.sectnum].ceilingz;
             }
-            goto BOLT;
+            {i = nexti;continue BOLT;}
         }
 
         if (s.picnum == TRIPBOMB)
@@ -1952,9 +1955,9 @@ function G_MoveStandables():void
                             sprite[j].xrepeat = sprite[j].yrepeat = 0;
                     }
 
-                    KILLIT(i);
+                    {A_DeleteSprite(i); {i = nexti;continue BOLT;}}
                 }
-                goto BOLT;
+                {i = nexti;continue BOLT;}
             }
             else
             {
@@ -2082,7 +2085,7 @@ function G_MoveStandables():void
                 break;
             }
 
-            goto BOLT;
+            {i = nexti;continue BOLT;}
         }
 
         if (s.picnum >= CRACK1 && s.picnum <= CRACK4)
@@ -2095,9 +2098,13 @@ function G_MoveStandables():void
                 t[1] = s.ang;
 
                 k = A_IncurDamage(i);
-                if (k < 0)
-                    goto crack_default;
-
+                if (k < 0) {
+                    //goto crack_default
+                    s.cstat = t[0];
+                    s.ang = t[1];
+                    s.extra = 0;
+                    {i = nexti;continue BOLT;}
+                }
                 switch (DYNAMICTILEMAP(k))
                 {
                 case FIREEXT__STATIC:
@@ -2112,18 +2119,18 @@ function G_MoveStandables():void
                                 sprite[j].shade = -32;
                     }
 
-                    goto DETONATE;
+                    todoThrow("goto DETONATE;");
 
-                crack_default:
+                //crack_default:
                 default:
                     s.cstat = t[0];
                     s.ang = t[1];
                     s.extra = 0;
 
-                    goto BOLT;
+                    {i = nexti;continue BOLT;}
                 }
             }
-            goto BOLT;
+            {i = nexti;continue BOLT;}
         }
 
         if (s.picnum == FIREEXT)
@@ -2131,7 +2138,7 @@ function G_MoveStandables():void
             var/*int32_t */k:number;
 
             if (A_IncurDamage(i) < 0)
-                goto BOLT;
+                {i = nexti;continue BOLT;}
 
             for (k=0; k<16; k++)
             {
@@ -2158,14 +2165,14 @@ function G_MoveStandables():void
                 j = A_Spawn(i,EXPLOSION2);
                 A_PlaySound(PIPEBOMB_EXPLODE,j);
 
-                goto DETONATE;
+                todoThrow("goto DETONATE;");
             }
             else
             {
                 A_RadiusDamage(i,g_seenineBlastRadius,10,15,20,25);
-                KILLIT(i);
+                {A_DeleteSprite(i); {i = nexti;continue BOLT;}}
             }
-            goto BOLT;
+            {i = nexti;continue BOLT;}
         }
 
         if (s.picnum == OOZFILTER || s.picnum == SEENINE || s.picnum == SEENINEDEAD || s.picnum == SEENINEDEAD+1)
@@ -2213,7 +2220,7 @@ function G_MoveStandables():void
                             if (s.picnum == OOZFILTER)
                             {
                                 actor[i].t_data[2] = 0;
-                                goto DETONATE;
+                                todoThrow("goto DETONATE;");
                             }
 
                             if (s.picnum != (SEENINEDEAD+1))
@@ -2225,12 +2232,12 @@ function G_MoveStandables():void
                                 else if (s.picnum == SEENINE)
                                     s.picnum = SEENINEDEAD;
                             }
-                            else goto DETONATE;
+                            else todoThrow("goto DETONATE;");
                         }
-                        goto BOLT;
+                        {i = nexti;continue BOLT;}
                     }
 
-DETONATE:
+//DETONATE:
                     g_earthquakeTime = 16;
 
                     for (j = headspritestat[STAT_EFFECTOR]; j >= 0; j = nextspritestat[j])
@@ -2267,10 +2274,10 @@ DETONATE:
                         A_PlaySound(PIPEBOMB_EXPLODE,j);
                     }
 
-                    KILLIT(i);
+                    {A_DeleteSprite(i); {i = nexti;continue BOLT;}}
                 }
             }
-            goto BOLT;
+            {i = nexti;continue BOLT;}
         }
 
         if (s.picnum == MASTERSWITCH)
@@ -2312,10 +2319,10 @@ DETONATE:
                         }
                     }
 
-                    KILLIT(i);
+                    {A_DeleteSprite(i); {i = nexti;continue BOLT;}}
                 }
             }
-            goto BOLT;
+            {i = nexti;continue BOLT;}
         }
 
         switchpicnum = s.picnum;
@@ -2331,7 +2338,7 @@ DETONATE:
         case VIEWSCREEN2__STATIC:
 
             if (s.xrepeat == 0)
-                KILLIT(i);
+                {A_DeleteSprite(i); {i = nexti;continue BOLT;}}
 
             var $x = new R(x);
             A_FindPlayer(s, $x);
@@ -2351,7 +2358,7 @@ DETONATE:
                 walock[TILE_VIEWSCR] = 199;
             }
 
-            goto BOLT;
+            {i = nexti;continue BOLT;}
 
         case TRASH__STATIC:
 
@@ -2363,7 +2370,7 @@ DETONATE:
                 if (klabs(s.xvel) < 48)
                     s.xvel += (krand()&3);
             }
-            else KILLIT(i);
+            else {A_DeleteSprite(i); {i = nexti;continue BOLT;}}
             break;
 
         case SIDEBOLT1__STATIC:
@@ -2373,13 +2380,14 @@ DETONATE:
             var $x = new R(x);
             A_FindPlayer(s, $x);
             x = $x.$;
-            if (x > 20480) goto BOLT;
+            if (x > 20480) {i = nexti;continue BOLT;}
 
 CLEAR_THE_BOLT2:
+for(;;) {
             if (t[2])
             {
                 t[2]--;
-                goto BOLT;
+                {i = nexti;continue BOLT;}
             }
             if ((s.xrepeat|s.yrepeat) == 0)
             {
@@ -2392,10 +2400,11 @@ CLEAR_THE_BOLT2:
                 t[1]=s.yrepeat;
                 t[2] = g_globalRandom&4;
                 s.xrepeat=s.yrepeat=0;
-                goto CLEAR_THE_BOLT2;
+                continue CLEAR_THE_BOLT2;
             }
             s.picnum++;
-
+    break;
+}
             // NOTE: Um, this 'l' was assigned to last at the beginning of this function.
             // SIDEBOLT1 never gets translucent as a consequence, unlike BOLT1.
             if (l&1) s.cstat ^= 2;
@@ -2405,7 +2414,7 @@ CLEAR_THE_BOLT2:
 
             if (s.picnum == SIDEBOLT1+4) s.picnum = SIDEBOLT1;
 
-            goto BOLT;
+            {i = nexti;continue BOLT;}
 
         case BOLT1__STATIC:
             //        case BOLT1+1:
@@ -2414,18 +2423,19 @@ CLEAR_THE_BOLT2:
             var $x = new R(x);
             A_FindPlayer(s, $x);
             x = $x.$;
-            if (x > 20480) goto BOLT;
+            if (x > 20480) {i = nexti;continue BOLT;}
 
             if (t[3] == 0)
                 t[3]=sector[sect].floorshade;
 
 CLEAR_THE_BOLT:
+for(;;) {
             if (t[2])
             {
                 t[2]--;
                 sector[sect].floorshade = 20;
                 sector[sect].ceilingshade = 20;
-                goto BOLT;
+                {i = nexti;continue BOLT;}
             }
             if ((s.xrepeat|s.yrepeat) == 0)
             {
@@ -2438,10 +2448,11 @@ CLEAR_THE_BOLT:
                 t[1]=s.yrepeat;
                 t[2] = g_globalRandom&4;
                 s.xrepeat=s.yrepeat=0;
-                goto CLEAR_THE_BOLT;
+                continue CLEAR_THE_BOLT;
             }
             s.picnum++;
-
+    break;
+}
             l = g_globalRandom&7;
             s.xrepeat=l+8;
 
@@ -2462,7 +2473,7 @@ CLEAR_THE_BOLT:
                 sector[sect].floorshade = 20;
                 sector[sect].ceilingshade = 20;
             }
-            goto BOLT;
+            {i = nexti;continue BOLT;}
 
         case WATERDRIP__STATIC:
 
@@ -2486,7 +2497,7 @@ CLEAR_THE_BOLT:
 
                     if (sprite[s.owner].picnum != WATERDRIP)
                     {
-                        KILLIT(i);
+                        {A_DeleteSprite(i); {i = nexti;continue BOLT;}}
                     }
                     else
                     {
@@ -2497,14 +2508,14 @@ CLEAR_THE_BOLT:
             }
 
 
-            goto BOLT;
+            {i = nexti;continue BOLT;}
 
         case DOORSHOCK__STATIC:
             j = klabs(sector[sect].ceilingz-sector[sect].floorz)>>9;
             s.yrepeat = j+4;
             s.xrepeat = 16;
             s.z = sector[sect].floorz;
-            goto BOLT;
+            {i = nexti;continue BOLT;}
 
         case TOUCHPLATE__STATIC:
             if (t[1] == 1 && int16(s.hitag) >= 0)  //Move the sector floor
@@ -2542,10 +2553,10 @@ CLEAR_THE_BOLT:
                             g_player[p].ps.pos.z -= sector[sect].extra;
                     }
                 }
-                goto BOLT;
+                {i = nexti;continue BOLT;}
             }
 
-            if (t[5] == 1) goto BOLT;
+            if (t[5] == 1) {i = nexti;continue BOLT;}
 
             {
                 var/*int32_t */p = G_CheckPlayerInSector(sect);
@@ -2581,7 +2592,7 @@ CLEAR_THE_BOLT:
                     }
                 }
             }
-            goto BOLT;
+            {i = nexti;continue BOLT;}
 
         case CANWITHSOMETHING__STATIC:
         case CANWITHSOMETHING2__STATIC:
@@ -2597,9 +2608,9 @@ CLEAR_THE_BOLT:
 
                 if (s.lotag) A_Spawn(i,s.lotag);
 
-                KILLIT(i);
+                {A_DeleteSprite(i); {i = nexti;continue BOLT;}}
             }
-            goto BOLT;
+            {i = nexti;continue BOLT;}
 
         case FLOORFLAME__STATIC:
         case FIREBARREL__STATIC:
@@ -2616,14 +2627,14 @@ CLEAR_THE_BOLT:
         case CEILINGSTEAM__STATIC:
         case WATERBUBBLEMAKER__STATIC:
             if (!G_HaveActor(sprite[i].picnum))
-                goto BOLT;
+                {i = nexti;continue BOLT;}
             {                
                 var $x = new R(x);
                 var p = A_FindPlayer(s, $x);
                 x = $x.$;
                 A_Execute(i,p,x);
             }
-            goto BOLT;
+            {i = nexti;continue BOLT;}
         }
 
 //BOLT:
@@ -3724,18 +3735,18 @@ function G_MoveTransports():void
     }
 }
 
-//static int16_t A_FindLocator(int32_t n, int32_t sn)
-//{
-//    int32_t i;
+function/*int16_t */A_FindLocator(/*int32_t */n:number, /*int32_t */sn:number):number
+{
+    var/*int32_t */i:number;
 
-//    for (SPRITES_OF(STAT_LOCATOR, i))
-//    {
-//        if ((sn == -1 || sn == sprite[i].sectnum) && n == sprite[i].lotag)
-//            return i;
-//    }
+    for (i = headspritestat[STAT_LOCATOR]; i >= 0; i = nextspritestat[i])
+    {
+        if ((sn == -1 || sn == sprite[i].sectnum) && n == sprite[i].lotag)
+            return i;
+    }
 
-//    return -1;
-//}
+    return -1;
+}
 
 function G_MoveActors():void
 {
@@ -6862,7 +6873,7 @@ function G_MoveEffectors():void   //STATNUM 3
                 {
                     todoThrow("sc-sector ?");
                     var/*int16_t */cf=!s.owner?1:0, bn=yax_getbunch(sc-sector, cf);
-                    var/*int32_t */jj:number, daz=SECTORFLD(sc-sector,z, cf);
+                    var/*int32_t */jj:number, daz=SECTORFLD(sc-sector,"z", cf);
 
                     if (bn >= 0)
                     {todoThrow();

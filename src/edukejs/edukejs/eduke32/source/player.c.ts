@@ -3271,32 +3271,32 @@ var WeaponPickupSprites = new Int16Array([ KNEE__STATIC, FIRSTGUNSPRITE__STATIC,
         CHAINGUNSPRITE__STATIC, RPGSPRITE__STATIC, HEAVYHBOMB__STATIC, SHRINKERSPRITE__STATIC, DEVISTATORSPRITE__STATIC,
         TRIPBOMBSPRITE__STATIC, FREEZESPRITE__STATIC, HEAVYHBOMB__STATIC, SHRINKERSPRITE__STATIC
                                            ]);
-//// this is used for player deaths
-//void P_DropWeapon(DukePlayer_t *p)
-//{
-//    int32_t snum = sprite[p.i].yvel,
-//            cw = PWEAPON(snum, p.curr_weapon, WorksLike);
+// this is used for player deaths
+function P_DropWeapon(p:DukePlayer_t):void
+{
+    var/*int32_t */snum = sprite[p.i].yvel,
+            cw = PWEAPON(snum, p.curr_weapon, WorksLike);
 
-//    if ((unsigned)cw >= MAX_WEAPONS) return;
+    if (/*(unsigned)*/cw >= MAX_WEAPONS) return;
       
-//    if (krand()&1)
-//        A_Spawn(p.i, WeaponPickupSprites[cw]);
-//    else switch (cw)
-//        {
-//        case RPG_WEAPON:
-//        case HANDBOMB_WEAPON:
-//            A_Spawn(p.i, EXPLOSION2);
-//            break;
-//        }
-//}
+    if (krand()&1)
+        A_Spawn(p.i, WeaponPickupSprites[cw]);
+    else switch (cw)
+        {
+        case RPG_WEAPON:
+        case HANDBOMB_WEAPON:
+            A_Spawn(p.i, EXPLOSION2);
+            break;
+        }
+}
 
-//void P_AddAmmo(int32_t weapon,DukePlayer_t *p,int32_t amount)
-//{
-//    p.ammo_amount[weapon] += amount;
+function P_AddAmmo(/*int32_t */weapon:number,p:DukePlayer_t ,/*int32_t */amount):void 
+{
+    p.ammo_amount[weapon] += amount;
 
-//    if (p.ammo_amount[weapon] > p.max_ammo_amount[weapon])
-//        p.ammo_amount[weapon] = p.max_ammo_amount[weapon];
-//}
+    if (p.ammo_amount[weapon] > p.max_ammo_amount[weapon])
+        p.ammo_amount[weapon] = p.max_ammo_amount[weapon];
+}
 
 function P_AddWeaponNoSwitch(p:DukePlayer_t, /*int32_t */weapon:number):void
 {

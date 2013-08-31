@@ -9575,7 +9575,7 @@ function drawmasks():void
                 }
             }
 
-            todoThrow("drawmaskwall(maskwallcnt);");
+            drawmaskwall(maskwallcnt);
         }
 
         while (spritesortcnt)

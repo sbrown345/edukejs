@@ -287,6 +287,7 @@ function G_DefaultRtsFile(): string
 {
     if (window.DUKE)
         return defaultrtsfilename[GAME_DUKE];
+    todoThrow();
     //else if (WW2GI)
     //    return defaultrtsfilename[GAME_WW2GI];
     //else if (NAPALM)
@@ -1519,22 +1520,22 @@ function G_AddUserQuote(/*const char **/daquote:Uint8Array):void
 //        }
 //}
 
-//int32_t A_CheckInventorySprite(spritetype *s)
-//{
-//    switch (DYNAMICTILEMAP(s.picnum))
-//    {
-//    case FIRSTAID__STATIC:
-//    case STEROIDS__STATIC:
-//    case HEATSENSOR__STATIC:
-//    case BOOTS__STATIC:
-//    case JETPACK__STATIC:
-//    case HOLODUKE__STATIC:
-//    case AIRTANK__STATIC:
-//        return 1;
-//    default:
-//        return 0;
-//    }
-//}
+function/*int32_t */A_CheckInventorySprite(s:spritetype ):number
+{
+    switch (DYNAMICTILEMAP(s.picnum))
+    {
+    case FIRSTAID__STATIC:
+    case STEROIDS__STATIC:
+    case HEATSENSOR__STATIC:
+    case BOOTS__STATIC:
+    case JETPACK__STATIC:
+    case HOLODUKE__STATIC:
+    case AIRTANK__STATIC:
+        return 1;
+    default:
+        return 0;
+    }
+}
 
 //// MYOS* CON commands.
 //LUNATIC_EXTERN void G_DrawTileGeneric(int32_t x, int32_t y, int32_t zoom, int32_t tilenum,
@@ -2761,42 +2762,42 @@ function G_PrintGameQuotes(/*int32_t*/ snum:number):void
 }
 
 function P_DoQuote(/*int32_t*/ q: number, /*DukePlayer_t **/p: DukePlayer_t): void
-{todoThrow("P_DoQuote");
-//    int32_t cq = 0;
+{
+    var/*int32_t */cq = 0;
 
-//    if (ud.fta_on == 0 || q < 0)
-//        return;
+    if (ud.fta_on == 0 || q < 0)
+        return;
 
-//    if (q & MAXQUOTES)
-//    {
-//        cq = 1;
-//        q &= ~MAXQUOTES;
-//    }
+    if (q & MAXQUOTES)
+    {
+        cq = 1;
+        q &= ~MAXQUOTES;
+    }
 
-//    if (ScriptQuotes[q] == NULL)
-//    {
-//        OSD_Printf(OSD_ERROR "%s %d null quote %d\n",__FILE__,__LINE__,q);
-//        return;
-//    }
+    if (ScriptQuotes[q] == NULL)
+    {
+        OSD_Printf(OSD_ERROR + "%s %d null quote %d\n","__FILE__","__LINE__",q);
+        return;
+    }
 
-//    if (p.fta > 0 && q != QUOTE_RESERVED && q != QUOTE_RESERVED2)
-//        if (p.ftq == QUOTE_RESERVED || p.ftq == QUOTE_RESERVED2) return;
+    if (p.fta > 0 && q != QUOTE_RESERVED && q != QUOTE_RESERVED2)
+        if (p.ftq == QUOTE_RESERVED || p.ftq == QUOTE_RESERVED2) return;
 
-//    p.fta = 100;
+    p.fta = 100;
 
-//    if (p.ftq != q)
-//    {
-//        if (p == g_player[screenpeek].ps
-//            && Bstrcmp(ScriptQuotes[q],"")) // avoid printing blank quotes
-//        {
-//            if (cq) OSD_Printf(OSDTEXT_BLUE "%s\n",ScriptQuotes[q]);
-//            else OSD_Printf("%s\n",ScriptQuotes[q]);
-//        }
+    if (p.ftq != q)
+    {
+        if (p == g_player[screenpeek].ps
+            && Bstrcmp(ScriptQuotes[q].toString(),"")) // avoid printing blank quotes
+        {
+            if (cq) OSD_Printf(OSDTEXT_BLUE + "%s\n",ScriptQuotes[q]);
+            else OSD_Printf("%s\n",ScriptQuotes[q]);
+        }
 
-//        p.ftq = q;
-//    }
-//    pub = NUMPAGES;
-//    pus = NUMPAGES;
+        p.ftq = q;
+    }
+    pub = NUMPAGES;
+    pus = NUMPAGES;
 }
 
 

@@ -8305,7 +8305,7 @@ void G_MoveWorld(void)
 
     logHeadspritestat("G_MoveEffectors");
     G_MoveEffectors();        //ST 3
-	exit(0);
+	
     logHeadspritestat("G_MoveStandables");
     G_MoveStandables();       //ST 6
 

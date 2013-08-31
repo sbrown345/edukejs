@@ -87,7 +87,7 @@ var loc = new input_t();
 var SpriteDeletionQueue = new Int16Array(1024),g_spriteDeleteQueuePos: number; //G_EXTERN int16_t 
 var animatesect = new Int16Array(MAXANIMATES);
 var camsprite: number;//G_EXTERN int16_t
-var cyclers = multiDimArray(Int16Array, MAXCYCLERS, 6),g_numCyclers: number; //G_EXTERN int16_t 
+var cyclers = multiDimArray<Int16Array>(Int16Array, MAXCYCLERS, 6),g_numCyclers: number; //G_EXTERN int16_t 
 var g_globalRandom: number;//G_EXTERN int16_t 
 var g_mirrorWall = new Int16Array(64),g_mirrorSector= new Int16Array(64),g_mirrorCount: number; //G_EXTERN int16_t 
 var g_numAnimWalls: number; //G_EXTERN int16_t 

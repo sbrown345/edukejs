@@ -91,6 +91,16 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //#include "common_game.h"
 //#include "input.h"
 
+//sector_inline
+function /*int32_t */G_CheckPlayerInSector(/*int32_t */sect:number):number
+{
+    var/*int32_t */i:number;
+    for (i = 0; i != -1; i = connectpoint2[i])
+        if (/*(unsigned)*/g_player[i].ps.i < MAXSPRITES && sprite[g_player[i].ps.i].sectnum == sect)
+            return i;
+    return -1;
+}
+
 // PRIMITIVE
 
 var /*int32_t */g_haltSoundHack = 0;
@@ -142,48 +152,48 @@ function /*int32_t */A_CallSound(/*int32_t */sn: number,/*int32_t */whatsprite: 
     return -1;
 }
 
-//int32_t G_CheckActivatorMotion(int32_t lotag)
-//{
-//    int32_t i = headspritestat[STAT_ACTIVATOR], j;
-//    spritetype *s;
+function/*int32_t */G_CheckActivatorMotion(/*int32_t */lotag:number):number
+{
+    var/*int32_t */i = headspritestat[STAT_ACTIVATOR], j:number;
+    var s:spritetype;
 
-//    while (i >= 0)
-//    {
-//        if (sprite[i].lotag == lotag)
-//        {
-//            s = &sprite[i];
+    while (i >= 0)
+    {
+        if (sprite[i].lotag == lotag)
+        {
+            s = sprite[i];
 
-//            for (j = g_animateCount-1; j >= 0; j--)
-//                if (s.sectnum == animatesect[j])
-//                    return(1);
+            for (j = g_animateCount-1; j >= 0; j--)
+                if (s.sectnum == animatesect[j])
+                    return(1);
 
-//            j = headspritestat[STAT_EFFECTOR];
-//            while (j >= 0)
-//            {
-//                if (s.sectnum == sprite[j].sectnum)
-//                    switch (sprite[j].lotag)
-//                    {
-//                    case SE_11_SWINGING_DOOR:
-//                    case SE_30_TWO_WAY_TRAIN:
-//                        if (actor[j].t_data[4])
-//                            return(1);
-//                        break;
-//                    case SE_20_STRETCH_BRIDGE:
-//                    case SE_31_FLOOR_RISE_FALL:
-//                    case SE_32_CEILING_RISE_FALL:
-//                    case SE_18_INCREMENTAL_SECTOR_RISE_FALL:
-//                        if (actor[j].t_data[0])
-//                            return(1);
-//                        break;
-//                    }
+            j = headspritestat[STAT_EFFECTOR];
+            while (j >= 0)
+            {
+                if (s.sectnum == sprite[j].sectnum)
+                    switch (sprite[j].lotag)
+                    {
+                    case SE_11_SWINGING_DOOR:
+                    case SE_30_TWO_WAY_TRAIN:
+                        if (actor[j].t_data[4])
+                            return(1);
+                        break;
+                    case SE_20_STRETCH_BRIDGE:
+                    case SE_31_FLOOR_RISE_FALL:
+                    case SE_32_CEILING_RISE_FALL:
+                    case SE_18_INCREMENTAL_SECTOR_RISE_FALL:
+                        if (actor[j].t_data[0])
+                            return(1);
+                        break;
+                    }
 
-//                j = nextspritestat[j];
-//            }
-//        }
-//        i = nextspritestat[i];
-//    }
-//    return(0);
-//}
+                j = nextspritestat[j];
+            }
+        }
+        i = nextspritestat[i];
+    }
+    return(0);
+}
 
 function /*int32_t */CheckDoorTile(/*int32_t */dapic:number):number
 {
@@ -1092,111 +1102,111 @@ function G_OperateRespawns(/*int32_t */low:number):void
 }
 
 function G_OperateActivators(/*int32_t */low:number,/*int32_t */snum:number): void 
-{todoThrow();
-//    int32_t i, j, k;
-//    int16_t *p;
-//    walltype *wal;
+{
+    var /*int32_t */i:number, j:number, k:number;
+    var /*int16_t **/p;
+    var wal:walltype ;
 
-//    for (i=g_numCyclers-1; i>=0; i--)
-//    {
-//        p = &cyclers[i][0];
+    for (i=g_numCyclers-1; i>=0; i--)
+    {
+        p = cyclers[i];
 
-//        if (p[4] == low)
-//        {
-//            p[5] = !p[5];
+        if (p[4] == low)
+        {
+            p[5] = !p[5];
 
-//            sector[p[0]].floorshade = sector[p[0]].ceilingshade = p[3];
-//            wal = &wall[sector[p[0]].wallptr];
-//            for (j=sector[p[0]].wallnum; j > 0; j--,wal++)
-//                wal.shade = p[3];
-//        }
-//    }
+            sector[p[0]].floorshade = sector[p[0]].ceilingshade = p[3];
+            wal = wall[sector[p[0]].wallptr];
+            for (j=sector[p[0]].wallnum; j > 0; j--,wal++)
+                wal.shade = p[3];
+        }
+    }
 
-//    i = headspritestat[STAT_ACTIVATOR];
-//    k = -1;
+    i = headspritestat[STAT_ACTIVATOR];
+    k = -1;
 
-//    while (i >= 0)
-//    {
-//        if (sprite[i].lotag == low)
-//        {
-//            if (sprite[i].picnum == ACTIVATORLOCKED)
-//            {
-//                if (sector[sprite[i].sectnum].lotag&16384)
-//                    sector[sprite[i].sectnum].lotag &= ~16384;
-//                else
-//                    sector[sprite[i].sectnum].lotag |= 16384;
+    while (i >= 0)
+    {
+        if (sprite[i].lotag == low)
+        {
+            if (sprite[i].picnum == ACTIVATORLOCKED)
+            {
+                if (sector[sprite[i].sectnum].lotag&16384)
+                    sector[sprite[i].sectnum].lotag &= ~16384;
+                else
+                    sector[sprite[i].sectnum].lotag |= 16384;
 
-//                if (snum >= 0 && snum < ud.multimode)
-//                {
-//                    if (sector[sprite[i].sectnum].lotag&16384)
-//                        P_DoQuote(QUOTE_LOCKED,g_player[snum].ps);
-//                    else P_DoQuote(QUOTE_UNLOCKED,g_player[snum].ps);
-//                }
-//            }
-//            else
-//            {
-//                switch (sprite[i].hitag)
-//                {
-//                case 0:
-//                    break;
-//                case 1:
-//                    if (sector[sprite[i].sectnum].floorz != sector[sprite[i].sectnum].ceilingz)
-//                    {
-//                        i = nextspritestat[i];
-//                        continue;
-//                    }
-//                    break;
-//                case 2:
-//                    if (sector[sprite[i].sectnum].floorz == sector[sprite[i].sectnum].ceilingz)
-//                    {
-//                        i = nextspritestat[i];
-//                        continue;
-//                    }
-//                    break;
-//                }
+                if (snum >= 0 && snum < ud.multimode)
+                {
+                    if (sector[sprite[i].sectnum].lotag&16384)
+                        P_DoQuote(QUOTE_LOCKED,g_player[snum].ps);
+                    else P_DoQuote(QUOTE_UNLOCKED,g_player[snum].ps);
+                }
+            }
+            else
+            {
+                switch (sprite[i].hitag)
+                {
+                case 0:
+                    break;
+                case 1:
+                    if (sector[sprite[i].sectnum].floorz != sector[sprite[i].sectnum].ceilingz)
+                    {
+                        i = nextspritestat[i];
+                        continue;
+                    }
+                    break;
+                case 2:
+                    if (sector[sprite[i].sectnum].floorz == sector[sprite[i].sectnum].ceilingz)
+                    {
+                        i = nextspritestat[i];
+                        continue;
+                    }
+                    break;
+                }
 
-//                // ST_2_UNDERWATER
-//                if (sector[sprite[i].sectnum].lotag < 3)
-//                {
-//                    j = headspritesect[sprite[i].sectnum];
-//                    while (j >= 0)
-//                    {
-//                        if (sprite[j].statnum == STAT_EFFECTOR) switch (sprite[j].lotag)
-//                            {
-//                            case SE_36_PROJ_SHOOTER:
-//                            case SE_31_FLOOR_RISE_FALL:
-//                            case SE_32_CEILING_RISE_FALL:
-//                            case SE_18_INCREMENTAL_SECTOR_RISE_FALL:
-//                                actor[j].t_data[0] = 1-actor[j].t_data[0];
-//                                A_CallSound(sprite[i].sectnum,j);
-//                                break;
-//                            }
-//                        j = nextspritesect[j];
-//                    }
-//                }
+                // ST_2_UNDERWATER
+                if (sector[sprite[i].sectnum].lotag < 3)
+                {
+                    j = headspritesect[sprite[i].sectnum];
+                    while (j >= 0)
+                    {
+                        if (sprite[j].statnum == STAT_EFFECTOR) switch (sprite[j].lotag)
+                            {
+                            case SE_36_PROJ_SHOOTER:
+                            case SE_31_FLOOR_RISE_FALL:
+                            case SE_32_CEILING_RISE_FALL:
+                            case SE_18_INCREMENTAL_SECTOR_RISE_FALL:
+                                actor[j].t_data[0] = 1-actor[j].t_data[0];
+                                A_CallSound(sprite[i].sectnum,j);
+                                break;
+                            }
+                        j = nextspritesect[j];
+                    }
+                }
 
-//                if (k == -1 && (sector[sprite[i].sectnum].lotag&0xff) == ST_22_SPLITTING_DOOR)
-//                    k = A_CallSound(sprite[i].sectnum,i);
+                if (k == -1 && (sector[sprite[i].sectnum].lotag&0xff) == ST_22_SPLITTING_DOOR)
+                    k = A_CallSound(sprite[i].sectnum,i);
 
-//                G_OperateSectors(sprite[i].sectnum,i);
-//            }
-//        }
-//        i = nextspritestat[i];
-//    }
+                G_OperateSectors(sprite[i].sectnum,i);
+            }
+        }
+        i = nextspritestat[i];
+    }
 
-//    G_OperateRespawns(low);
+    G_OperateRespawns(low);
 }
 
-//void G_OperateMasterSwitches(int32_t low)
-//{
-//    int32_t i = headspritestat[STAT_STANDABLE];
-//    while (i >= 0)
-//    {
-//        if (sprite[i].picnum == MASTERSWITCH && sprite[i].lotag == low && sprite[i].yvel == 0)
-//            sprite[i].yvel = 1;
-//        i = nextspritestat[i];
-//    }
-//}
+function G_OperateMasterSwitches(/*int32_t */low:number):void
+{
+    var/*int32_t */i = headspritestat[STAT_STANDABLE];
+    while (i >= 0)
+    {
+        if (sprite[i].picnum == MASTERSWITCH && sprite[i].lotag == low && sprite[i].yvel == 0)
+            sprite[i].yvel = 1;
+        i = nextspritestat[i];
+    }
+}
 
 //void G_OperateForceFields(int32_t s, int32_t low)
 //{

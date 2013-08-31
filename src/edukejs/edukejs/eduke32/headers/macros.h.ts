@@ -50,7 +50,7 @@ function BIT(shift:number):number {return 1<<(shift);}
 
 function TEST_SYNC_KEY(bits:number, sync_num:number):number {return TEST(bits, BIT(sync_num)); }
 
-//#define AFLAMABLE(X) (X==BOX||X==TREE1||X==TREE2||X==TIRE||X==CONE)
+function AFLAMABLE(X:number):number {return (X==BOX||X==TREE1||X==TREE2||X==TIRE||X==CONE)?1:0;}
 function rnd(X:number):number { return (krand()>>8)>=(255-(X))?1:0; }
 
 //
