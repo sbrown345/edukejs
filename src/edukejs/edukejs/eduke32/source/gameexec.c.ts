@@ -1384,25 +1384,25 @@ function VM_Execute(/*int32_t */loop: number): void
             VM_CONDITIONAL(vm.g_sp.extra <= 0);
             continue;
 
-//        case CON_AI:
-//            insptr++;
-//            //Following changed to use pointersizes
-//            AC_AI_ID(vm.g_t) = script[insptr++]; // Ai
+        case CON_AI:
+            insptr++;
+            //Following changed to use pointersizes
+            vm.g_t[5] = script[insptr++];// AC_AI_ID(vm.g_t) = script[insptr++]; // Ai
 
-//            AC_ACTION_ID(vm.g_t) = *(script + AC_AI_ID(vm.g_t));  // Action
+            vm.g_t[4] = script[AC_AI_ID(vm.g_t)];//AC_ACTION_ID(vm.g_t) = *(script + AC_AI_ID(vm.g_t));  // Action
+            
+            // NOTE: "if" check added in r1155. It used to be a pointer though.
+            if (AC_AI_ID(vm.g_t))
+                vm.g_t[1] = script[AC_AI_ID(vm.g_t) + 1];//AC_MOVE_ID(vm.g_t) = *(script + AC_AI_ID(vm.g_t) + 1);  // move
 
-//            // NOTE: "if" check added in r1155. It used to be a pointer though.
-//            if (AC_AI_ID(vm.g_t))
-//                AC_MOVE_ID(vm.g_t) = *(script + AC_AI_ID(vm.g_t) + 1);  // move
+            vm.g_sp.hitag = script[AC_AI_ID(vm.g_t) + 2];//*(script + AC_AI_ID(vm.g_t) + 2);  // move flags
 
-//            vm.g_sp.hitag = *(script + AC_AI_ID(vm.g_t) + 2);  // move flags
+            vm.g_t[0]/*AC_COUNT(vm.g_t)*/ = vm.g_t[2]/*AC_ACTION_COUNT(vm.g_t)*/= vm.g_t[3]/*AC_CURFRAME(vm.g_t)*/ = 0;
 
-//            AC_COUNT(vm.g_t) = AC_ACTION_COUNT(vm.g_t) = AC_CURFRAME(vm.g_t) = 0;
-
-//            if (!A_CheckEnemySprite(vm.g_sp) || vm.g_sp.extra > 0) // hack
-//                if (vm.g_sp.hitag&random_angle)
-//                    vm.g_sp.ang = krand()&2047;
-//            continue;
+            if (!A_CheckEnemySprite(vm.g_sp) || vm.g_sp.extra > 0) // hack
+                if (vm.g_sp.hitag&random_angle)
+                    vm.g_sp.ang = krand()&2047;
+            continue;
 
         case CON_ACTION:
             insptr++;

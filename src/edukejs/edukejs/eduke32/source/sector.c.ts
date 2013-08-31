@@ -3071,47 +3071,47 @@ function P_HandleSharedKeys(/*int32_t */snum:number): void
 //    }
 }
 
-//int32_t A_CheckHitSprite(int32_t i, int16_t *hitsp)
-//{
-//    hitdata_t hit;
-//    int32_t zoff = 0;
+function /*int32_t */A_CheckHitSprite(/*int32_t */i:number, /*int16_t **/hitsp:R<number>):number
+{
+    var hit:hitdata_t;
+    var/*int32_t */zoff = 0;
 
-//    if (A_CheckEnemySprite(&sprite[i]))
-//        zoff = (42<<8);
-//    else if (sprite[i].picnum == APLAYER)
-//        zoff = (39<<8);
+    if (A_CheckEnemySprite(sprite[i]))
+        zoff = (42<<8);
+    else if (sprite[i].picnum == APLAYER)
+        zoff = (39<<8);
 
-//    sprite[i].z -= zoff;
-//    hitscan((const vec3_t *)&sprite[i],sprite[i].sectnum,
-//            sintable[(sprite[i].ang+512)&2047],
-//            sintable[sprite[i].ang&2047],
-//            0,&hit,CLIPMASK1);
-//    sprite[i].z += zoff;
+    sprite[i].z -= zoff;
+    hitscan(/*(const vec3_t *)&*/new vec3_t(sprite[i].x, sprite[i].y, sprite[i].z) ,sprite[i].sectnum,
+            sintable[(sprite[i].ang+512)&2047],
+            sintable[sprite[i].ang&2047],
+            0,hit,CLIPMASK1);
+    sprite[i].z += zoff;
 
-//    if (hitsp)
-//        *hitsp = hit.sprite;
+    if (hitsp)
+        hitsp.$ = hit.sprite;
 
-//    if (hit.wall >= 0 && (wall[hit.wall].cstat&16) && A_CheckEnemySprite(&sprite[i]))
-//        return 1<<30;
+    if (hit.wall >= 0 && (wall[hit.wall].cstat&16) && A_CheckEnemySprite(sprite[i]))
+        return 1<<30;
 
-//    return FindDistance2D(hit.pos.x-sprite[i].x,hit.pos.y-sprite[i].y);
-//}
+    return FindDistance2D(hit.pos.x-sprite[i].x,hit.pos.y-sprite[i].y);
+}
 
-//static int32_t P_FindWall(DukePlayer_t *p,int16_t *hitw)
-//{
-//    hitdata_t hit;
+function /*int32_t */P_FindWall(p:DukePlayer_t ,/*int16_t **/hitw:R<number>):number
+{
+    var hit:hitdata_t ;
 
-//    hitscan((const vec3_t *)p,p.cursectnum,
-//            sintable[(p.ang+512)&2047],
-//            sintable[p.ang&2047],
-//            0,&hit,CLIPMASK0);
+    hitscan(/*(const vec3_t *)*/p.pos,p.cursectnum,
+            sintable[(p.ang+512)&2047],
+            sintable[p.ang&2047],
+            0,hit,CLIPMASK0);
 
-//    *hitw = hit.wall;
-//    if (hit.wall < 0)
-//        return INT32_MAX;
+    hitw.$ = hit.wall;
+    if (hit.wall < 0)
+        return INT32_MAX;
 
-//    return FindDistance2D(hit.pos.x-p.pos.x,hit.pos.y-p.pos.y);
-//}
+    return FindDistance2D(hit.pos.x-p.pos.x,hit.pos.y-p.pos.y);
+}
 
 //// returns 1 if sprite i should not be considered by neartag
 //static int32_t our_neartag_blacklist(int32_t i)
