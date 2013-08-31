@@ -1105,7 +1105,7 @@ function G_OperateActivators(/*int32_t */low:number,/*int32_t */snum:number): vo
 {
     var /*int32_t */i:number, j:number, k:number;
     var /*int16_t **/p:number;
-    var wal:walltype, walIdx:number ;
+    var wal:walltype, walIdx:number;
 
     for (i=g_numCyclers-1; i>=0; i--)
     {
@@ -1971,7 +1971,7 @@ function A_DamageWall(/*int32_t */spr:number,/*int32_t */dawallnum:number,/*cons
         if (sn < 0) return;
         darkestwall = 0;
 
-        wal = wall[sector[sn].wallptr];
+        walIdx = sector[sn].wallptr; wal = wall[walIdx];
         for (i=sector[sn].wallnum; i > 0; i--,wal=wall[++walIdx])
             if (wal.shade > darkestwall)
                 darkestwall=wal.shade;

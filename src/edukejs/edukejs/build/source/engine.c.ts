@@ -12277,7 +12277,7 @@ function/*int32_t */hitscan(/*const vec3_t **/sv: IVec3, /*int16_t */sectnum: nu
     var /*spritetype **/curspr:number = 0/*NULL*/;
     var/*int32_t */clipspritecnt:number, curidx=-1;
     // tmp: { (int32_t)curidx, (spritetype *)curspr, (!=0 if outer sector) }
-    var /*intptr_t */tmp = new Int32Array(3), /***/tmpptr:Int32Array/*NULL*/;
+    var /*intptr_t */tmp = new Int32Array(3), /***/tmpptr:Int32Array = null/*NULL*/;
 //#ifdef YAX_ENABLE
     var newsv = new vec3_t();
     var/*int32_t */oldhitsect = -1, oldhitsect2 = -2;
@@ -12359,7 +12359,7 @@ restart_grand:
         ////////// Walls //////////
 
         startwall = sec.wallptr; endwall = startwall + sec.wallnum;
-        for (z=startwall,wal=wall[startwall]; z<endwall; z++,wal = wall[++walIdx])
+        for (z=startwall,wal=wall[walIdx = startwall]; z<endwall; z++,wal = wall[++walIdx])
         {
             var /*const int32_t */nextsector = wal.nextsector;
             var wal2 = wall[wal.point2];

@@ -863,28 +863,28 @@ function P_AddWeaponAmmoCommon(ps:DukePlayer_t , /*int32_t */weap:number, /*int3
         P_AddWeaponMaybeSwitch(ps, weap);
 }
 
-//static int32_t VM_AddWeapon(int32_t weap, int32_t amount, DukePlayer_t *ps)
-//{
-//    if (/*(unsigned)*/weap >= MAX_WEAPONS)
-//    {
-//        CON_ERRPRINTF("Invalid weapon ID %d\n", weap);
-//        return 1;
-//    }
+function /*int32_t */VM_AddWeapon(/*int32_t */weap:number, /*int32_t */amount:number, ps:DukePlayer_t):number
+{
+    if (/*(unsigned)*/weap >= MAX_WEAPONS)
+    {
+        CON_ERRPRINTF("Invalid weapon ID %d\n", weap);
+        return 1;
+    }
 
-//    if ((ps.gotweapon & (1 << weap)) == 0)
-//    {
-//        P_AddWeaponMaybeSwitch(ps, weap);
-//    }
-//    else if (ps.ammo_amount[weap] >= ps.max_ammo_amount[weap])
-//    {
-//        vm.g_flags |= VM_NOEXECUTE;
-//        return 2;
-//    }
+    if ((ps.gotweapon & (1 << weap)) == 0)
+    {
+        P_AddWeaponMaybeSwitch(ps, weap);
+    }
+    else if (ps.ammo_amount[weap] >= ps.max_ammo_amount[weap])
+    {
+        vm.g_flags |= VM_NOEXECUTE;
+        return 2;
+    }
 
-//    P_AddWeaponAmmoCommon(ps, weap, amount);
+    P_AddWeaponAmmoCommon(ps, weap, amount);
 
-//    return 0;
-//}
+    return 0;
+}
 //#endif
 
 function VM_Fall(/*int32_t */g_i:number, g_sp:spritetype ):void 
