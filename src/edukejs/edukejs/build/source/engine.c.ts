@@ -2446,7 +2446,7 @@ var coldist = new Uint8Array([0,1,2,3,4,3,2,1]);
 var colscan = new Int32Array(27);
 
 var /*int16_t */clipnum: number, hitwalls = new Int16Array(4);
-//const int32_t hitscangoalx = (1<<29)-1, hitscangoaly = (1<<29)-1;
+var /*int32_t */hitscangoalx = (1<<29)-1, hitscangoaly = (1<<29)-1;
 //#ifdef USE_OPENGL
 //int32_t hitallsprites = 0;
 //#endif
@@ -12019,101 +12019,111 @@ restart_grand:
     return 0;
 }
 
-//static inline void hit_set(hitdata_t *hit, int32_t sectnum, int32_t wallnum, int32_t spritenum,
-//                           int32_t x, int32_t y, int32_t z)
-//{
-//    hit.sect = sectnum;
-//    hit.wall = wallnum;
-//    hit.sprite = spritenum;
-//    hit.pos.x = x;
-//    hit.pos.y = y;
-//    hit.pos.z = z;
-//}
+function hit_set(hit:hitdata_t , /*int32_t */sectnum:number, /*int32_t */wallnum:number, /*int32_t */spritenum:number,
+                           /*int32_t */x:number, /*int32_t */y:number, /*int32_t */z:number):void
+{
+    hit.sect = sectnum;
+    hit.wall = wallnum;
+    hit.sprite = spritenum;
+    hit.pos.x = x;
+    hit.pos.y = y;
+    hit.pos.z = z;
+}
 
-//static int32_t hitscan_hitsectcf=-1;
+var /*int32_t */hitscan_hitsectcf=-1;
 
-//// stat, heinum, z: either ceiling- or floor-
-//// how: -1: behave like ceiling, 1: behave like floor
-//static int32_t hitscan_trysector(const vec3_t *sv, const sectortype *sec, hitdata_t *hit,
-//                                 int32_t vx, int32_t vy, int32_t vz,
-//                                 uint16_t stat, int16_t heinum, int32_t z, int32_t how, const intptr_t *tmp)
-//{
-//    int32_t x1 = INT32_MAX, y1, z1;
-//    int32_t i;
+// stat, heinum, z: either ceiling- or floor-
+// how: -1: behave like ceiling, 1: behave like floor
+function /*int32_t */hitscan_trysector(/*const vec3_t **/sv: IVec3, sec:sectortype, hit:hitdata_t,
+                                 /*int32_t */vx:number, /*int32_t */vy:number, /*int32_t */vz:number,
+                                 /*uint16_t */stat:number, /*int16_t */heinum:number, /*int32_t */z, /*int32_t */how:number, /*const intptr_t **/tmp:number):number
+{
+    var /*int32_t */x1 = INT32_MAX, y1:number, z1:number;
+    var/*int32_t */i:number;
 
-//    if (stat&2)
-//    {
-//        const walltype *const wal = &wall[sec.wallptr];
-//        const walltype *const wal2 = &wall[wal.point2];
-//        int32_t j, dax=wal2.x-wal.x, day=wal2.y-wal.y;
+    if (stat&2)
+    {
+        var wal = wall[sec.wallptr];
+        var wal2 = wall[wal.point2];
+        var/*int32_t */j, dax=wal2.x-wal.x, day=wal2.y-wal.y;
 
-//        i = nsqrtasm(uhypsq(dax,day)); if (i == 0) return 1; //continue;
-//        i = divscale15(heinum,i);
-//        dax *= i; day *= i;
+        i = nsqrtasm(uhypsq(dax,day)); if (i == 0) return 1; //continue;
+        i = divscale15(heinum,i);
+        dax *= i; day *= i;
 
-//        j = (vz<<8)-dmulscale15(dax,vy,-day,vx);
-//        if (j != 0)
-//        {
-//            i = ((z - sv.z)<<8)+dmulscale15(dax,sv.y-wal.y,-day,sv.x-wal.x);
-//            if (((i^j) >= 0) && ((klabs(i)>>1) < klabs(j)))
-//            {
-//                i = divscale30(i,j);
-//                x1 = sv.x + mulscale30(vx,i);
-//                y1 = sv.y + mulscale30(vy,i);
-//                z1 = sv.z + mulscale30(vz,i);
-//            }
-//        }
-//    }
-//    else if ((how*vz > 0) && (how*sv.z <= how*z))
-//    {
-//        z1 = z; i = z1-sv.z;
-//        if ((klabs(i)>>1) < vz*how)
-//        {
-//            i = divscale30(i,vz);
-//            x1 = sv.x + mulscale30(vx,i);
-//            y1 = sv.y + mulscale30(vy,i);
-//        }
-//    }
+        j = (vz<<8)-dmulscale15(dax,vy,-day,vx);
+        if (j != 0)
+        {
+            i = ((z - sv.z)<<8)+dmulscale15(dax,sv.y-wal.y,-day,sv.x-wal.x);
+            if (((i^j) >= 0) && ((klabs(i)>>1) < klabs(j)))
+            {
+                i = divscale30(i,j);
+                x1 = sv.x + mulscale30(vx,i);
+                y1 = sv.y + mulscale30(vy,i);
+                z1 = sv.z + mulscale30(vz,i);
+            }
+        }
+    }
+    else if ((how*vz > 0) && (how*sv.z <= how*z))
+    {
+        z1 = z; i = z1-sv.z;
+        if ((klabs(i)>>1) < vz*how)
+        {
+            i = divscale30(i,vz);
+            x1 = sv.x + mulscale30(vx,i);
+            y1 = sv.y + mulscale30(vy,i);
+        }
+    }
 
-//    if ((x1 != INT32_MAX) && (klabs(x1-sv.x)+klabs(y1-sv.y) < klabs((hit.pos.x)-sv.x)+klabs((hit.pos.y)-sv.y)))
-//    {
-//        if (tmp==NULL)
-//        {
-//            if (inside(x1,y1,sec-sector) == 1)
-//            {
-//                hit_set(hit, sec-sector, -1, -1, x1, y1, z1);
-//                hitscan_hitsectcf = (how+1)>>1;
-//            }
-//        }
-//        else
-//        {
-//            const int32_t curidx=(int32_t)tmp[0];
-//            const spritetype *const curspr=(spritetype *)tmp[1];
-//            const int32_t thislastsec = tmp[2];
+    if ((x1 != INT32_MAX) && (klabs(x1-sv.x)+klabs(y1-sv.y) < klabs((hit.pos.x)-sv.x)+klabs((hit.pos.y)-sv.y)))
+    {
+        if (tmp==NULL)
+        {
+            if (inside(x1,y1,indexOf(sec,sector) /*sec-sector*/) == 1)
+            {
+                hit_set(hit, indexOf(sec,sector) /*sec-sector*/, -1, -1, x1, y1, z1);
+                hitscan_hitsectcf = (how+1)>>1;
+            }
+        }
+        else
+        {
+            var/*const int32_t */curidx=/*(int32_t)*/tmp[0];
+            var curspr=/*(spritetype *)*/tmp[1];
+            var /*const int32_t */thislastsec = tmp[2];
 
-//            if (!thislastsec)
-//            {
-//                if (inside(x1,y1,sec-sector) == 1)
-//                    hit_set(hit, curspr.sectnum, -1, curspr-sprite, x1, y1, z1);
-//            }
+            if (!thislastsec)
+            {
+                if (inside(x1,y1,indexOf(sec,sector) /*sec-sector*/) == 1)
+                    hit_set(hit, curspr.sectnum, -1, indexOf(curspr,sprite) /*curspr-sprite*/, x1, y1, z1);
+            }
 //#ifdef HAVE_CLIPSHAPE_FEATURE
-//            else
-//            {
-//                for (i=clipinfo[curidx].qbeg; i<clipinfo[curidx].qend; i++)
-//                {
-//                    if (inside(x1,y1,sectq[i]) == 1)
-//                    {
-//                        hit_set(hit, curspr.sectnum, -1, curspr-sprite, x1, y1, z1);
-//                        break;
-//                    }
-//                }
-//            }
+            else
+            {
+                for (i=clipinfo[curidx].qbeg; i<clipinfo[curidx].qend; i++)
+                {
+                    if (inside(x1,y1,sectq[i]) == 1)
+                    {
+                        hit_set(hit, curspr.sectnum, -1, indexOf(curspr,sprite) /*curspr-sprite*/, x1, y1, z1);
+                        break;
+                    }
+                }
+            }
 //#endif
-//        }
-//    }
+        }
+    }
 
-//    return 0;
-//}
+    return 0;
+}
+
+function indexOf<T>(e: T, arr: T[]):number {
+    for (var i = 0; i < arr.length; i++) {
+        if(arr[i] == e) {
+            return i;
+        }
+    }
+
+    throw "could not find";
+}
 
 // x1, y1: in/out
 // rest x/y: out
@@ -12213,381 +12223,432 @@ function /*static int32_t */get_floorspr_clipyou(/*int32_t */x1: number, /*int32
     return clipyou;
 }
 
-//// intp: point of currently best (closest) intersection
-//static int32_t try_facespr_intersect(const spritetype *spr, const vec3_t *refpos,
-//                                     int32_t vx, int32_t vy, int32_t vz,
-//                                     vec3_t *intp, int32_t strictly_smaller_than_p)
-//{
-//    const int32_t x1=spr.x, y1=spr.y;
-//    const int32_t xs=refpos.x, ys=refpos.y;
+// intp: point of currently best (closest) intersection
+function /*int32_t */try_facespr_intersect(spr:spritetype, refpos:vec3_t,
+                                     /*int32_t */vx:number, /*int32_t */vy:number, /*int32_t */vz:number,
+                                     /*vec3_t **/intp:IVec3, /*int32_t */strictly_smaller_than_p:number):number
+{
+    var /*const int32_t */x1=spr.x, y1=spr.y;
+    var /*const int32_t */xs=refpos.x, ys=refpos.y;
 
-//    const int32_t topt = vx*(x1-xs) + vy*(y1-ys);
-//    if (topt > 0)
-//    {
-//        const int32_t bot = vx*vx + vy*vy;
-//        if (bot != 0)
-//        {
-//            int32_t i;
-//            const int32_t intz = refpos.z + scale(vz,topt,bot);
-//            const int32_t z1 = spr.z + spriteheightofsptr(spr, &i, 1);
+    var /*const int32_t */topt = vx*(x1-xs) + vy*(y1-ys);
+    if (topt > 0)
+    {
+        var /*const int32_t */bot = vx*vx + vy*vy;
+        if (bot != 0)
+        {
+            var/*int32_t */i:number;
+            var /*const int32_t */intz = refpos.z + scale(vz,topt,bot);
+            var $i = new R(i);
+            var /*const int32_t */z1 = spr.z + spriteheightofsptr(spr, $i, 1);
+            i = $i.$;
 
-//            if (intz >= z1-i && intz <= z1)
-//            {
-//                const int32_t topu = vx*(y1-ys) - vy*(x1-xs);
+            if (intz >= z1-i && intz <= z1)
+            {
+                var /*const int32_t */topu = vx*(y1-ys) - vy*(x1-xs);
 
-//                const int32_t offx = scale(vx,topu,bot);
-//                const int32_t offy = scale(vy,topu,bot);
-//                const int32_t dist = offx*offx + offy*offy;
+                var /*const int32_t*/ offx = scale(vx,topu,bot);
+                var /*const int32_t*/ offy = scale(vy,topu,bot);
+                var /*const int32_t*/ dist = offx*offx + offy*offy;
 
-//                i = tilesizx[spr.picnum]*spr.xrepeat;
-//                if (dist <= mulscale7(i,i))
-//                {
-//                    const int32_t intx = xs + scale(vx,topt,bot);
-//                    const int32_t inty = ys + scale(vy,topt,bot);
+                i = tilesizx[spr.picnum]*spr.xrepeat;
+                if (dist <= mulscale7(i,i))
+                {
+                    var /*const int32_t*/ intx = xs + scale(vx,topt,bot);
+                    var /*const int32_t*/ inty = ys + scale(vy,topt,bot);
 
-//                    if (klabs(intx-xs)+klabs(inty-ys) + strictly_smaller_than_p
-//                            <= klabs(intp.x-xs)+klabs(intp.y-ys))
-//                    {
-//                        intp.x = intx;
-//                        intp.y = inty;
-//                        intp.z = intz;
-//                        return 1;
-//                    }
-//                }
-//            }
-//        }
-//    }
+                    if (klabs(intx-xs)+klabs(inty-ys) + strictly_smaller_than_p
+                            <= klabs(intp.x-xs)+klabs(intp.y-ys))
+                    {
+                        intp.x = intx;
+                        intp.y = inty;
+                        intp.z = intz;
+                        return 1;
+                    }
+                }
+            }
+        }
+    }
 
-//    return 0;
-//}
-////
-//// hitscan
-////
+    return 0;
+}
+//
+// hitscan
+//
 //static int32_t clipsprite_initindex(int32_t curidx, spritetype *curspr, int32_t *clipsectcnt, const vec3_t *vect);
 
-function/*int32_t */hitscan(/*const vec3_t **/sv: vec3_t, /*int16_t */sectnum: number, /*int32_t */vx: number, /*int32_t */vy: number, /*int32_t */vz: number,
+function/*int32_t */hitscan(/*const vec3_t **/sv: IVec3, /*int16_t */sectnum: number, /*int32_t */vx: number, /*int32_t */vy: number, /*int32_t */vz: number,
                 hit: hitdata_t , /*uint32_t */cliptype: number): number
 {
-//    int32_t x1, y1=0, z1=0, x2, y2, intx, inty, intz;
-//    int32_t i, k, daz;
-//    int16_t tempshortcnt, tempshortnum;
+    var/*int32_t */x1:number, y1=0, z1=0, x2:number, y2:number, intx:number, inty:number, intz:number;
+    var/*int32_t */i:number, k:number, daz = new R(0);
+    var/*int16_t */tempshortcnt:number, tempshortnum:number;
 
-//    spritetype *curspr = NULL;
-//    int32_t clipspritecnt, curidx=-1;
-//    // tmp: { (int32_t)curidx, (spritetype *)curspr, (!=0 if outer sector) }
-//    intptr_t tmp[3], *tmpptr=NULL;
+    var /*spritetype **/curspr:number = 0/*NULL*/;
+    var/*int32_t */clipspritecnt:number, curidx=-1;
+    // tmp: { (int32_t)curidx, (spritetype *)curspr, (!=0 if outer sector) }
+    var /*intptr_t */tmp = new Int32Array(3), /***/tmpptr:Int32Array/*NULL*/;
 //#ifdef YAX_ENABLE
-//    vec3_t newsv;
-//    int32_t oldhitsect = -1, oldhitsect2 = -2;
+    var newsv = new vec3_t();
+    var/*int32_t */oldhitsect = -1, oldhitsect2 = -2;
 //#endif
-//    const int32_t dawalclipmask = (cliptype&65535);
-//    const int32_t dasprclipmask = (cliptype>>16);
+    var /*const int32_t */dawalclipmask = (cliptype&65535);
+    var/*const int32_t */dasprclipmask = (cliptype>>16);
 
-//    hit.sect = -1; hit.wall = -1; hit.sprite = -1;
-//    if (sectnum < 0) return(-1);
+    hit.sect = -1; hit.wall = -1; hit.sprite = -1;
+    if (sectnum < 0) return(-1);
 
 //#ifdef YAX_ENABLE
-//restart_grand:
+restart_grand:
+    for(;;) {
 //#endif
-//    hit.pos.x = hitscangoalx; hit.pos.y = hitscangoaly;
+    hit.pos.x = hitscangoalx; hit.pos.y = hitscangoaly;
 
-//    clipsectorlist[0] = sectnum;
-//    tempshortcnt = 0; tempshortnum = 1;
-//    clipspritecnt = clipspritenum = 0;
-//    do
-//    {
-//        const sectortype *sec;
-//        const walltype *wal;
-//        int32_t dasector, z, startwall, endwall;
+    clipsectorlist[0] = sectnum;
+    tempshortcnt = 0; tempshortnum = 1;
+    clipspritecnt = clipspritenum = 0;
+    do
+    {
+        var /*const sectortype **/sec:sectortype;
+        var /*const walltype **/wal:walltype, walIdx:number;
+        var/*int32_t */dasector:number, z:number, startwall:number, endwall:number;
 
 //#ifdef HAVE_CLIPSHAPE_FEATURE
-//        if (tempshortcnt >= tempshortnum)
-//        {
-//            // one bunch of sectors completed, prepare the next
-//            if (!curspr)
-//                mapinfo_set(&origmapinfo, &clipmapinfo);  // replace sector and wall with clip map
+        if (tempshortcnt >= tempshortnum)
+        {
+            // one bunch of sectors completed, prepare the next
+            if (!curspr)
+                mapinfo_set(origmapinfo, clipmapinfo);  // replace sector and wall with clip map
 
-//            curspr = &sprite[clipspritelist[clipspritecnt]];
+            curspr = clipspritelist[clipspritecnt];//sprite[clipspritelist[clipspritecnt]];
 
-//            if (curidx < 0)  // per-sprite init
-//                curidx = pictoidx[curspr.picnum];
-//            else
-//                curidx = clipinfo[curidx].next;
+            if (curidx < 0)  // per-sprite init
+                curidx = pictoidx[sprite[curspr].picnum];
+            else
+                curidx = clipinfo[curidx].next;
 
-//            while (curidx>=0 && (curspr.cstat&32) != (sector[sectq[clipinfo[curidx].qbeg]].hitag&32))
-//                curidx = clipinfo[curidx].next;
+            while (curidx>=0 && (sprite[curspr].cstat&32) != (sector[sectq[clipinfo[curidx].qbeg]].hitag&32))
+                curidx = clipinfo[curidx].next;
 
-//            if (curidx < 0)
-//            {
-//                clipspritecnt++;
-//                continue;
-//            }
+            if (curidx < 0)
+            {
+                clipspritecnt++;
+                continue;
+            }
 
-//            tmp[0] = (intptr_t)curidx;
-//            tmp[1] = (intptr_t)curspr;
-//            tmpptr = tmp;
+            tmp[0] = /*(intptr_t)*/curidx;
+            tmp[1] = /*(intptr_t)*/curspr;
+            tmpptr = tmp;
 
-//            clipsprite_initindex(curidx, curspr, &i, sv);  // &i is dummy
-//            tempshortnum = (int16_t)clipsectnum;
-//            tempshortcnt = 0;
-//        }
+            var $i = new R(i);
+            clipsprite_initindex(curidx, sprite[curspr], $i, sv);  // &i is dummy
+            i = $i.$;
+            tempshortnum = int16(clipsectnum);
+            tempshortcnt = 0;
+        }
 //#endif
-//        dasector = clipsectorlist[tempshortcnt]; sec = &sector[dasector];
+        dasector = clipsectorlist[tempshortcnt]; sec = sector[dasector];
 
-//        i = 1;
+        i = 1;
 //#ifdef HAVE_CLIPSHAPE_FEATURE
-//        if (curspr)
-//        {
-//            if (dasector == sectq[clipinfo[curidx].qend])
-//            {
-//                i = -1;
-//                tmp[2] = 1;
-//            }
-//            else tmp[2] = 0;
-//        }
+        if (curspr)
+        {
+            if (dasector == sectq[clipinfo[curidx].qend])
+            {
+                i = -1;
+                tmp[2] = 1;
+            }
+            else tmp[2] = 0;
+        }
 //#endif
-//        if (hitscan_trysector(sv, sec, hit, vx,vy,vz, sec.ceilingstat, sec.ceilingheinum, sec.ceilingz, -i, tmpptr))
-//            continue;
-//        if (hitscan_trysector(sv, sec, hit, vx,vy,vz, sec.floorstat, sec.floorheinum, sec.floorz, i, tmpptr))
-//            continue;
+        if (hitscan_trysector(sv, sec, hit, vx,vy,vz, sec.ceilingstat, sec.ceilingheinum, sec.ceilingz, -i, tmpptr))
+            continue;
+        if (hitscan_trysector(sv, sec, hit, vx,vy,vz, sec.floorstat, sec.floorheinum, sec.floorz, i, tmpptr))
+            continue;
 
-//        ////////// Walls //////////
+        ////////// Walls //////////
 
-//        startwall = sec.wallptr; endwall = startwall + sec.wallnum;
-//        for (z=startwall,wal=&wall[startwall]; z<endwall; z++,wal++)
-//        {
-//            const int32_t nextsector = wal.nextsector;
-//            const walltype *const wal2 = &wall[wal.point2];
-//            int32_t daz2, zz;
+        startwall = sec.wallptr; endwall = startwall + sec.wallnum;
+        for (z=startwall,wal=wall[startwall]; z<endwall; z++,wal = wall[++walIdx])
+        {
+            var /*const int32_t */nextsector = wal.nextsector;
+            var wal2 = wall[wal.point2];
+            var /*int32_t */daz2 = new R(0), zz:number;
 
-//            if (curspr && nextsector<0) continue;
+            if (curspr && nextsector<0) continue;
 
-//            x1 = wal.x; y1 = wal.y; x2 = wal2.x; y2 = wal2.y;
+            x1 = wal.x; y1 = wal.y; x2 = wal2.x; y2 = wal2.y;
 
-//            if ((int64_t)(x1-sv.x)*(y2-sv.y) < (int64_t)(x2-sv.x)*(y1-sv.y)) continue;
-//            if (rintersect(sv.x,sv.y,sv.z, vx,vy,vz, x1,y1, x2,y2, &intx,&inty,&intz) == -1) continue;
+            if (/*(int64_t)*/(x1-sv.x)*(y2-sv.y) < /*(int64_t)*/(x2-sv.x)*(y1-sv.y)) continue;
+            var $inty = new R(inty);
+            var $intx = new R(intx);
+            var $intz = new R(intz);
+            if (rintersect(sv.x,sv.y,sv.z, vx,vy,vz, x1,y1, x2,y2, $intx,$inty,$intz) == -1) continue;
+            inty = $inty.$;
+            intx = $intx.$;
+            intz = $intz.$;
 
-//            if (klabs(intx-sv.x)+klabs(inty-sv.y) >= klabs((hit.pos.x)-sv.x)+klabs((hit.pos.y)-sv.y))
-//                continue;
 
-//            if (!curspr)
-//            {
-//                if ((nextsector < 0) || (wal.cstat&dawalclipmask))
-//                {
-//                    hit_set(hit, dasector, z, -1, intx, inty, intz);
-//                    continue;
-//                }
+            if (klabs(intx-sv.x)+klabs(inty-sv.y) >= klabs((hit.pos.x)-sv.x)+klabs((hit.pos.y)-sv.y))
+                continue;
 
-//                getzsofslope(nextsector,intx,inty,&daz,&daz2);
-//                if (intz <= daz || intz >= daz2)
-//                {
-//                    hit_set(hit, dasector, z, -1, intx, inty, intz);
-//                    continue;
-//                }
-//            }
+            if (!curspr)
+            {
+                if ((nextsector < 0) || (wal.cstat&dawalclipmask))
+                {
+                    hit_set(hit, dasector, z, -1, intx, inty, intz);
+                    continue;
+                }
+
+                getzsofslope(nextsector,intx,inty,daz,daz2);
+                if (intz <= daz.$ || intz >= daz2.$)
+                {
+                    hit_set(hit, dasector, z, -1, intx, inty, intz);
+                    continue;
+                }
+            }
 //#ifdef HAVE_CLIPSHAPE_FEATURE
-//            else
-//            {
-//                int32_t cz,fz;
+            else
+            {
+                var /*int32_t */cz = new R(0),fz = new R(0);
 
-//                if (wal.cstat&dawalclipmask)
-//                {
-//                    hit_set(hit, curspr.sectnum, -1, curspr-sprite, intx, inty, intz);
-//                    continue;
-//                }
+                if (wal.cstat&dawalclipmask)
+                {
+                    hit_set(hit, curspr.sectnum, -1, indexOf(curspr,sprite) /*curspr-sprite*/, intx, inty, intz);
+                    continue;
+                }
 
-//                getzsofslope(nextsector,intx,inty,&daz,&daz2);
-//                getzsofslope(sectq[clipinfo[curidx].qend],intx,inty,&cz,&fz);
-//                // ceil   cz daz daz2 fz   floor
-//                if ((cz <= intz && intz <= daz) || (daz2 <= intz && intz <= fz))
-//                {
-//                    hit_set(hit, curspr.sectnum, -1, curspr-sprite, intx, inty, intz);
-//                    continue;
-//                }
-//            }
+                getzsofslope(nextsector,intx,inty,daz,daz2);
+                getzsofslope(sectq[clipinfo[curidx].qend],intx,inty,cz,fz);
+                // ceil   cz daz daz2 fz   floor
+                if ((cz.$ <= intz && intz <= daz.$) || (daz2.$ <= intz && intz <= fz.$))
+                {
+                    hit_set(hit, curspr.sectnum, -1, indexOf(curspr,sprite) /*curspr-sprite*/, intx, inty, intz);
+                    continue;
+                }
+            }
 //#endif
-//            for (zz=tempshortnum-1; zz>=0; zz--)
-//                if (clipsectorlist[zz] == nextsector) break;
-//            if (zz < 0) clipsectorlist[tempshortnum++] = nextsector;
-//        }
+            for (zz=tempshortnum-1; zz>=0; zz--)
+                if (clipsectorlist[zz] == nextsector) break;
+            if (zz < 0) clipsectorlist[tempshortnum++] = nextsector;
+        }
 
-//        ////////// Sprites //////////
+        ////////// Sprites //////////
 
-//        if (dasprclipmask==0)
-//            continue;
+        if (dasprclipmask==0)
+            continue;
 
 //#ifdef HAVE_CLIPSHAPE_FEATURE
-//        if (curspr)
-//            continue;
+        if (curspr)
+            continue;
 //#endif
-//        for (z=headspritesect[dasector]; z>=0; z=nextspritesect[z])
-//        {
-//            const spritetype *const spr = &sprite[z];
-//            const int32_t cstat = spr.cstat;
+        for (z=headspritesect[dasector]; z>=0; z=nextspritesect[z])
+        {
+            var spr = sprite[z];
+            var/* int32_t */cstat = spr.cstat;
 //#ifdef USE_OPENGL
-//            if (!hitallsprites)
+            if (!hitallsprites)
 //#endif
-//                if ((cstat&dasprclipmask) == 0)
-//                    continue;
+                if ((cstat&dasprclipmask) == 0)
+                    continue;
 
 //#ifdef HAVE_CLIPSHAPE_FEATURE
-//            // try and see whether this sprite's picnum has sector-like clipping data
-//            i = pictoidx[spr.picnum];
-//            // handle sector-like floor sprites separately
-//            while (i>=0 && (spr.cstat&32) != (clipmapinfo.sector[sectq[clipinfo[i].qbeg]].hitag&32))
-//                i = clipinfo[i].next;
-//            if (i>=0 && clipspritenum<MAXCLIPNUM)
-//            {
-//                clipspritelist[clipspritenum++] = z;
-//                continue;
-//            }
+            // try and see whether this sprite's picnum has sector-like clipping data
+            i = pictoidx[spr.picnum];
+            // handle sector-like floor sprites separately
+            while (i>=0 && (spr.cstat&32) != (clipmapinfo.sector[sectq[clipinfo[i].qbeg]].hitag&32))
+                i = clipinfo[i].next;
+            if (i>=0 && clipspritenum<MAXCLIPNUM)
+            {
+                clipspritelist[clipspritenum++] = z;
+                continue;
+            }
 //#endif
-//            x1 = spr.x; y1 = spr.y; z1 = spr.z;
-//            switch (cstat&48)
-//            {
-//            case 0:
-//            {
-//                if (try_facespr_intersect(spr, sv, vx, vy, vz, &hit.pos, 0))
-//                {
-//                    hit.sect = dasector;
-//                    hit.wall = -1;
-//                    hit.sprite = z;
-//                }
+            x1 = spr.x; y1 = spr.y; z1 = spr.z;
+            switch (cstat&48)
+            {
+            case 0:
+            {
+                if (try_facespr_intersect(spr, sv, vx, vy, vz, hit.pos, 0))
+                {
+                    hit.sect = dasector;
+                    hit.wall = -1;
+                    hit.sprite = z;
+                }
 
-//                break;
-//            }
+                break;
+            }
+                
+            case 16:
+            {
+                var /*int32_t */ucoefup16:number;
+                var /*int32_t */tilenum = spr.picnum;
 
-//            case 16:
-//            {
-//                int32_t ucoefup16;
-//                int32_t tilenum = spr.picnum;
+                var $x1 = new R(x1);
+                var $x2 = new R(x2);
+                var $y1 = new R(y1);
+                var $y2 = new R(y2);
+                get_wallspr_points(spr, $x1, $x2, $y1, $y2);
+                x1 = $x1.$;
+                x2 = $x2.$;
+                x2 = $x2.$;
+                y2 = $y2.$;
 
-//                get_wallspr_points(spr, &x1, &x2, &y1, &y2);
+                if ((cstat&64) != 0)   //back side of 1-way sprite
+                    if (/*(int64_t)*/(x1-sv.x)*(y2-sv.y) < /*(int64_t)*/(x2-sv.x)*(y1-sv.y)) continue;
 
-//                if ((cstat&64) != 0)   //back side of 1-way sprite
-//                    if ((int64_t)(x1-sv.x)*(y2-sv.y) < (int64_t)(x2-sv.x)*(y1-sv.y)) continue;
+                var $intx = new R(intx);
+                var $inty = new R(inty);
+                var $intz = new R(intz);
+                ucoefup16 = rintersect(sv.x,sv.y,sv.z,vx,vy,vz,x1,y1,x2,y2,$intx,$inty,$intz);
+                intx = $intx.$;
+                inty = $inty.$;
+                intz = $intz.$;
+                if (ucoefup16 == -1) continue;
 
-//                ucoefup16 = rintersect(sv.x,sv.y,sv.z,vx,vy,vz,x1,y1,x2,y2,&intx,&inty,&intz);
-//                if (ucoefup16 == -1) continue;
+                if (klabs(intx-sv.x)+klabs(inty-sv.y) > klabs((hit.pos.x)-sv.x)+klabs((hit.pos.y)-sv.y))
+                    continue;
+                var $k = new R(k);
+                daz = spr.z + spriteheightofs(z, $k, 1);
+                k = $k.$;
+                if (intz > daz-k && intz < daz)
+                {
+                    if (picanm[tilenum].sf&PICANM_TEXHITSCAN_BIT)
+                    {
+                        DO_TILE_ANIM(tilenum, 0);
 
-//                if (klabs(intx-sv.x)+klabs(inty-sv.y) > klabs((hit.pos.x)-sv.x)+klabs((hit.pos.y)-sv.y))
-//                    continue;
+                        if (!waloff[tilenum])
+                            loadtile(tilenum);
 
-//                daz = spr.z + spriteheightofs(z, &k, 1);
-//                if (intz > daz-k && intz < daz)
-//                {
-//                    if (picanm[tilenum].sf&PICANM_TEXHITSCAN_BIT)
-//                    {
-//                        DO_TILE_ANIM(tilenum, 0);
+                        if (waloff[tilenum])
+                        {
+                            // daz-intz > 0 && daz-intz < k
+                            var /*int32_t*/ xtex = mulscale16(ucoefup16, tilesizx[tilenum]);
+                            var /*int32_t*/ vcoefup16 = 65536-divscale16(daz-intz, k);
+                            var /*int32_t*/ ytex = mulscale16(vcoefup16, tilesizy[tilenum]);
+                            todoThrow();
+                            //var /*const char **/texel = (char *)(waloff[tilenum] + tilesizy[tilenum]*xtex + ytex);
+                            //if (*texel == 255)
+                            //    continue;
+                        }
+                    }
 
-//                        if (!waloff[tilenum])
-//                            loadtile(tilenum);
+                    hit_set(hit, dasector, -1, z, intx, inty, intz);
+                }
+                break;
+            }
 
-//                        if (waloff[tilenum])
-//                        {
-//                            // daz-intz > 0 && daz-intz < k
-//                            int32_t xtex = mulscale16(ucoefup16, tilesizx[tilenum]);
-//                            int32_t vcoefup16 = 65536-divscale16(daz-intz, k);
-//                            int32_t ytex = mulscale16(vcoefup16, tilesizy[tilenum]);
+            case 32:
+            {
+                var /*int32_t */x3:number, y3:number, x4:number, y4:number, zz:number;
 
-//                            const char *texel = (char *)(waloff[tilenum] + tilesizy[tilenum]*xtex + ytex);
-//                            if (*texel == 255)
-//                                continue;
-//                        }
-//                    }
-
-//                    hit_set(hit, dasector, -1, z, intx, inty, intz);
-//                }
-//                break;
-//            }
-
-//            case 32:
-//            {
-//                int32_t x3, y3, x4, y4, zz;
-
-//                if (vz == 0) continue;
-//                intz = z1;
-//                if (((intz-sv.z)^vz) < 0) continue;
-//                if ((cstat&64) != 0)
-//                    if ((sv.z > intz) == ((cstat&8)==0)) continue;
+                if (vz == 0) continue;
+                intz = z1;
+                if (((intz-sv.z)^vz) < 0) continue;
+                if ((cstat&64) != 0)
+                    if ((sv.z > intz) == ((cstat&8)==0)) continue;
 //#if 1
-//                // Abyss crash prevention code ((intz-sv.z)*zx overflowing a 8-bit word)
-//                // PK: the reason for the crash is not the overflowing (even if it IS a problem;
-//                // signed overflow is undefined behavior in C), but rather the idiv trap when
-//                // the resulting quotient doesn't fit into a *signed* 32-bit integer.
-//                zz = (uint32_t)(intz-sv.z) * vx;
-//                intx = sv.x+scale(zz,1,vz);
-//                zz = (uint32_t)(intz-sv.z) * vy;
-//                inty = sv.y+scale(zz,1,vz);
+                // Abyss crash prevention code ((intz-sv.z)*zx overflowing a 8-bit word)
+                // PK: the reason for the crash is not the overflowing (even if it IS a problem;
+                // signed overflow is undefined behavior in C), but rather the idiv trap when
+                // the resulting quotient doesn't fit into a *signed* 32-bit integer.
+                zz = uint32(intz-sv.z) * vx;
+                intx = sv.x+scale(zz,1,vz);
+                zz = uint32(intz-sv.z) * vy;
+                inty = sv.y+scale(zz,1,vz);
 //#else
 //                intx = sv.x+scale(intz-sv.z,vx,vz);
 //                inty = sv.y+scale(intz-sv.z,vy,vz);
 //#endif
-//                if (klabs(intx-sv.x)+klabs(inty-sv.y) > klabs((hit.pos.x)-sv.x)+klabs((hit.pos.y)-sv.y))
-//                    continue;
+                if (klabs(intx-sv.x)+klabs(inty-sv.y) > klabs((hit.pos.x)-sv.x)+klabs((hit.pos.y)-sv.y))
+                    continue;
+                var $x1 = new R(x1);
+                var $x2 = new R(x2);
+                var $x3 = new R(x3);
+                var $x4 = new R(x4);
+                var $y1 = new R(y1);
+                var $y2 = new R(y2);
+                var $y3 = new R(y3);
+                var $y4 = new R(y4);
+                get_floorspr_points(spr, intx, inty, $x1, $x2, $x3, $x4,
+                                   $y1, $y2, $y3, $y4);
+                x1 = $x1.$;
+                x2 = $x2.$;
+                x3 = $x3.$;
+                x4 = $x4.$;
+                y1 = $y1.$;
+                y2 = $y2.$;
+                y3 = $y3.$;
+                y4 = $y4.$;
 
-//                get_floorspr_points(spr, intx, inty, &x1, &x2, &x3, &x4,
-//                                   &y1, &y2, &y3, &y4);
+                if (get_floorspr_clipyou(x1, x2, x3, x4, y1, y2, y3, y4))
+                {
+                    hit_set(hit, dasector, -1, z, intx, inty, intz);
+                }
 
-//                if (get_floorspr_clipyou(x1, x2, x3, x4, y1, y2, y3, y4))
-//                {
-//                    hit_set(hit, dasector, -1, z, intx, inty, intz);
-//                }
-
-//                break;
-//            }
-//            }
-//        }
-//    }
-//    while (++tempshortcnt < tempshortnum || clipspritecnt < clipspritenum);
+                break;
+            }
+            }
+        }
+    }
+    while (++tempshortcnt < tempshortnum || clipspritecnt < clipspritenum);
 
 //#ifdef HAVE_CLIPSHAPE_FEATURE
-//    if (curspr)
-//        mapinfo_set(NULL, &origmapinfo);
+    if (curspr)
+        mapinfo_set(NULL, origmapinfo);
 //#endif
 
 //#ifdef YAX_ENABLE
-//    if (numyaxbunches == 0 || editstatus)
-//        return 0;
+    if (numyaxbunches == 0 || editstatus)
+        return 0;
 
-//    if (hit.sprite==-1 && hit.wall==-1 && hit.sect!=oldhitsect
-//        && hit.sect != oldhitsect2)  // 'ping-pong' infloop protection
-//    {
-//        if (hit.sect == -1 && oldhitsect >= 0)
-//        {
-//            // this is bad: we didn't hit anything after going through a ceiling/floor
-//            Bmemcpy(&hit.pos, &newsv, sizeof(vec3_t));
-//            hit.sect = oldhitsect;
+    if (hit.sprite==-1 && hit.wall==-1 && hit.sect!=oldhitsect
+        && hit.sect != oldhitsect2)  // 'ping-pong' infloop protection
+    {
+        if (hit.sect == -1 && oldhitsect >= 0)
+        {
+            // this is bad: we didn't hit anything after going through a ceiling/floor
+            //Bmemcpy(&hit.pos, &newsv, sizeof(vec3_t));
+            hit.pos.x = newsv.x;
+            hit.pos.y = newsv.y;
+            hit.pos.z = newsv.z;
+            
+            hit.sect = oldhitsect;
 
-//            return 0;
-//        }
+            return 0;
+        }
 
-//        // 1st, 2nd, ... ceil/floor hit
-//        // hit.sect is >=0 because if oldhitsect's init and check above
-//        if (SECTORFLD(hit.sect,stat, hitscan_hitsectcf)&yax_waltosecmask(dawalclipmask))
-//            return 0;
+        // 1st, 2nd, ... ceil/floor hit
+        // hit.sect is >=0 because if oldhitsect's init and check above
+        if (SECTORFLD(hit.sect,"stat", hitscan_hitsectcf)&yax_waltosecmask(dawalclipmask))
+            return 0;
 
-//        i = yax_getneighborsect(hit.pos.x, hit.pos.y, hit.sect, hitscan_hitsectcf);
-//        if (i >= 0)
-//        {
-//            Bmemcpy(&newsv, &hit.pos, sizeof(vec3_t));
-//            sectnum = i;
-//            sv = &newsv;
+        i = yax_getneighborsect(hit.pos.x, hit.pos.y, hit.sect, hitscan_hitsectcf);
+        if (i >= 0)
+        {
+            //Bmemcpy(&newsv, &hit.pos, sizeof(vec3_t));
+            newsv.x = hit.pos.x;
+            newsv.y = hit.pos.y;
+            newsv.z = hit.pos.z;
+            sectnum = i;
+            sv.x = newsv.x;
+            sv.y = newsv.y;
+            sv.z = newsv.z;
 
-//            oldhitsect2 = oldhitsect;
-//            oldhitsect = hit.sect;
-//            hit.sect = -1;
+            oldhitsect2 = oldhitsect;
+            oldhitsect = hit.sect;
+            hit.sect = -1;
 
-//            // sector-like sprite re-init:
-//            curspr = 0;
-//            curidx = -1;
-//            tmpptr = NULL;
+            // sector-like sprite re-init:
+            curspr = 0;
+            curidx = -1;
+            tmpptr = NULL;
 
-//            goto restart_grand;
-//        }
-//    }
+            continue restart_grand;
+        }
+    }
 //#endif
-
+break;/*restart_grand*/}
     return(0);
 }
 
@@ -13245,7 +13306,7 @@ function /*int32_t */clipmove(pos: IVec3, /*int16_t **/sectnum: R<number>,
                 if (!curspr)
                     objtype = int16(j+32768);
                 else
-                    todoThrow("objtype = (int16_t)(curspr-sprite)+49152;")
+                    todoThrow("objtype = (int16_t)(indexOf(curspr,sprite) /*curspr-sprite*/)+49152;")
 
                 //Add 2 boxes at endpoints
                 bsz = walldist; if (gx < 0) bsz = -bsz;
@@ -14120,7 +14181,7 @@ restart_grand:
             //    getzsofslope(sectq[clipinfo[curidx].qend],pos.x,pos.y,$cz,$fz);
             //    cz = $cz.$;
             //    fz = $fz.$;
-            //    todoThrow("hitwhat = (curspr-sprite)+49152");
+            //    todoThrow("hitwhat = (indexOf(curspr,sprite) /*curspr-sprite*/)+49152");
 
             //    if ((sector[k].ceilingstat&1)==0)
             //    {
@@ -14205,7 +14266,7 @@ restart_grand:
 //#ifdef HAVE_CLIPSHAPE_FEATURE
                 if (curspr)
                 {
-                    todoThrow("var /*int32_t */fz: number,cz: number, hitwhat=(curspr-sprite)+49152");
+                    todoThrow("var /*int32_t */fz: number,cz: number, hitwhat=(indexOf(curspr,sprite) /*curspr-sprite*/)+49152");
                     //var $cz = new R(cz);
                     //var $fz = new R(fz);
                     //getzsofslope(sectq[clipinfo[curidx].qend],pos.x,pos.y,$cz,$fz);

@@ -294,7 +294,7 @@ function/*int32_t */A_FurthestVisiblePoint(/*int32_t*/ iActor:number, ts:spritet
 
     {
         var/*int32_t */d:number, da:number;//, d, cd, ca,tempx,tempy,cx,cy;
-        var/*int32_t */j:number, angincs;
+        var/*int32_t */j:number, angincs:number;
         var s = sprite[iActor];
         var hit:hitdata_t;
 
@@ -480,7 +480,7 @@ function VM_AlterAng(/*int32_t */movflags:number):void
     var /*const int32_t */ticselapsed = (AC_COUNT(vm.g_t))&31;
 
 //#if !defined LUNATIC
-    var /*const intptr_t **/moveptr;
+    var /*const intptr_t **/moveptr:number;
     if (/*(unsigned)*/AC_MOVE_ID(vm.g_t) >= /*(unsigned)*/g_scriptSize-1)
 
     {
@@ -578,21 +578,21 @@ function  VM_FacePlayer(/*int32_t */shr:number):void
     VM_AddAngle(shr, goalang);
 }
 
-//////////// TROR get*zofslope //////////
-//// These rather belong into the engine.
+////////// TROR get*zofslope //////////
+// These rather belong into the engine.
 
-//static int32_t yax_getceilzofslope(int16_t sectnum, int32_t dax, int32_t day)
-//{
+function /*int32_t */yax_getceilzofslope(/*int16_t */sectnum:number, /*int32_t */dax:number, /*int32_t */day:number):number
+{
 //#ifdef YAX_ENABLE
-//    if ((sector[sectnum].ceilingstat&512)==0)
-//    {
-//        int32_t nsect = yax_getneighborsect(dax, day, sectnum, YAX_CEILING);
-//        if (nsect >= 0)
-//            return getceilzofslope(nsect, dax, day);
-//    }
+    if ((sector[sectnum].ceilingstat&512)==0)
+    {
+        var /*int32_t */nsect = yax_getneighborsect(dax, day, sectnum, YAX_CEILING);
+        if (nsect >= 0)
+            return getceilzofslope(nsect, dax, day);
+    }
 //#endif
-//    return getceilzofslope(sectnum, dax, day);
-//}
+    return getceilzofslope(sectnum, dax, day);
+}
 
 //static int32_t yax_getflorzofslope(int16_t sectnum, int32_t dax, int32_t day)
 //{
@@ -1316,7 +1316,7 @@ function VM_Execute(/*int32_t */loop: number): void
         {
             var ps = g_player[vm.g_p].ps;
             var s = sprite[ps.i];
-            var/*int32_t */j;
+            var/*int32_t */j:number;
 
             // select sprite for monster to target
             // if holoduke is on, let them target holoduke first.
@@ -3082,7 +3082,7 @@ function VM_Execute(/*int32_t */loop: number): void
                 var /*int32_t*/ xpivot=Gv_GetVarX(script[insptr++]), ypivot=Gv_GetVarX(script[insptr++]);
                 var /*int32_t*/ x=Gv_GetVarX(script[insptr++]), y=Gv_GetVarX(script[insptr++]), daang=Gv_GetVarX(script[insptr++]);
                 var /*int32_t*/ x2var=script[insptr++], y2var=script[insptr++];
-                var /*int32_t*/ x2, y2;
+                var /*int32_t*/ x2:number, y2:number;
 
                 var $x2 = new R(x2);
                 var $y2 = new R(y2);
@@ -3128,7 +3128,7 @@ function VM_Execute(/*int32_t */loop: number): void
         case CON_GETTIMEDATE:
             insptr++;
             {
-                var /*int32_t */i, vals = new Int32Array(8);
+                var /*int32_t */i:number, vals = new Int32Array(8);
 
                 G_GetTimeDate(vals);
 
@@ -4036,7 +4036,7 @@ function VM_Execute(/*int32_t */loop: number): void
                 // <type> <maxdistvarid> <varid>
                 var /*int32_t*/ lType=script[insptr++], lMaxDist=Gv_GetVarX(script[insptr++]);
                 var /*int32_t*/ lMaxZDist=Gv_GetVarX(script[insptr++]);
-                var /*int32_t*/ lVarID=script[insptr++], lFound=-1, lTemp, lTemp2, j, k=MAXSTATUS-1;
+                var /*int32_t*/ lVarID=script[insptr++], lFound=-1, lTemp:number, lTemp2:number, j:number, k=MAXSTATUS-1;
                 do
                 {
                     j=headspritestat[tw==CON_FINDNEARACTORZVAR?1:k];    // all sprites
@@ -4140,7 +4140,7 @@ function VM_Execute(/*int32_t */loop: number): void
             {
                 // syntax [gs]etplayer[<var>].x <VAR>
                 // <varid> <xxxid> <varid>
-                var/*int32_t */lVar1=script[insptr++], lLabelID=script[insptr++], lParm2 = 0, lVar2;
+                var/*int32_t */lVar1=script[insptr++], lLabelID=script[insptr++], lParm2 = 0, lVar2:number;
                 // HACK: need to have access to labels structure at run-time...
 
                 if (PlayerLabels[lLabelID].flags & LABEL_HASPARM2)
@@ -4157,7 +4157,7 @@ function VM_Execute(/*int32_t */loop: number): void
             {
                 // syntax [gs]etplayer[<var>].x <VAR>
                 // <varid> <xxxid> <varid>
-                var/*int32_t */lVar1=script[insptr++], lLabelID=script[insptr++], lParm2 = 0, lVar2;
+                var/*int32_t */lVar1=script[insptr++], lLabelID=script[insptr++], lParm2 = 0, lVar2:number;
                 // HACK: need to have access to labels structure at run-time...
 
                 if (PlayerLabels[lLabelID].flags & LABEL_HASPARM2)

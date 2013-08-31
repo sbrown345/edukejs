@@ -1104,7 +1104,7 @@ function G_OperateRespawns(/*int32_t */low:number):void
 function G_OperateActivators(/*int32_t */low:number,/*int32_t */snum:number): void 
 {
     var /*int32_t */i:number, j:number, k:number;
-    var /*int16_t **/p;
+    var /*int16_t **/p:number;
     var wal:walltype ;
 
     for (i=g_numCyclers-1; i>=0; i--)
