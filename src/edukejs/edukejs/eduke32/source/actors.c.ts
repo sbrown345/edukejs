@@ -6040,7 +6040,7 @@ function G_MoveEffectors():void   //STATNUM 3
                 // let's at least have a helpful message...
                 Bsprintf(tempbuf,"Could not find any locators in sector %d"+
                          " for SE# 6 or 14 with hitag %d.\n", /*(int)*/t[0], /*(int)*/t[3]);
-                G_GameExit(tempbuf);
+                G_GameExit(tempbuf.toString());
             }
 
             j = ldist(sprite[s.owner],s);
@@ -6175,8 +6175,7 @@ function G_MoveEffectors():void   //STATNUM 3
                             actor[j].bpos.x = sprite[j].x;
                             actor[j].bpos.y = sprite[j].y;
                         }
-                        todoThrow("s-sprite");
-                        if (move_rotfixed_sprite(j, s-sprite, t[2])) {
+                        if (move_rotfixed_sprite(j, indexOf(s,sprite), t[2])) {
                             var $x = new R(sprite[j].x);
                             var $y = new R(sprite[j].y);
                             rotatepoint(s.x,s.y,sprite[j].x,sprite[j].y,q,$x,$y);
@@ -8445,7 +8444,7 @@ function logHeadspritestat(where:string):void {
     if(DEBUG_headspritestat) {
         dlog(DEBUG_headspritestat, where);
         dlog(DEBUG_headspritestat, "\nheadspritestat: ");
-        var last;
+        var last:number;
         for (var i = 0; i < MAXSTATUS; i++) {
             if(headspritestat[i] !== last)
                 dlog(DEBUG_headspritestat, "%i: %i, ", i, headspritestat[0]);

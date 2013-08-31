@@ -306,3 +306,14 @@ var uint8_t = {size:1};
 function wm_setapptitle(title: string) {
     window.document.title = title;
 }
+
+
+function indexOf<T>(e: T, arr: T[]):number {
+    for (var i = 0; i < arr.length; i++) {
+        if(arr[i] == e) {
+            return i;
+        }
+    }
+
+    throw "could not find";
+}

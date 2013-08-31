@@ -1105,7 +1105,7 @@ function G_OperateActivators(/*int32_t */low:number,/*int32_t */snum:number): vo
 {
     var /*int32_t */i:number, j:number, k:number;
     var /*int16_t **/p:number;
-    var wal:walltype ;
+    var wal:walltype, walIdx:number ;
 
     for (i=g_numCyclers-1; i>=0; i--)
     {
@@ -1116,8 +1116,8 @@ function G_OperateActivators(/*int32_t */low:number,/*int32_t */snum:number): vo
             p[5] = !p[5];
 
             sector[p[0]].floorshade = sector[p[0]].ceilingshade = p[3];
-            wal = wall[sector[p[0]].wallptr];
-            for (j=sector[p[0]].wallnum; j > 0; j--,wal++)
+            walIdx = sector[p[0]].wallptr;wal = wall[walIdx];
+            for (j=sector[p[0]].wallnum; j > 0; j--,wal = wall[++walIdx])
                 wal.shade = p[3];
         }
     }
@@ -1236,7 +1236,7 @@ function G_OperateMasterSwitches(/*int32_t */low:number):void
 //}
 
 function /*int32_t */P_ActivateSwitch(/*int32_t */snum:number,/*int32_t */w:number,/*int32_t */switchissprite:number):number
-{todoThrow();
+{todoThrow();return 99999999
 //    int32_t switchpal, switchpicnum;
 //    int32_t i, x, lotag,hitag,picnum,correctdips = 1, numdips = 0;
 //    vec3_t davector;
@@ -3073,7 +3073,7 @@ function P_HandleSharedKeys(/*int32_t */snum:number): void
 
 function /*int32_t */A_CheckHitSprite(/*int32_t */i:number, /*int16_t **/hitsp:R<number>):number
 {
-    var hit:hitdata_t;
+    var hit = new hitdata_t();
     var/*int32_t */zoff = 0;
 
     if (A_CheckEnemySprite(sprite[i]))

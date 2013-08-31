@@ -11583,7 +11583,7 @@ function /*int32_t */clipinsideboxline(/*int32_t */x: number, /*int32_t */y: num
     }
     if (x2 > 0) x2 *= (r-y1); else x2 *= (0-y1);
     if (y2 > 0) y2 *= (0-x1); else y2 *= (r-x1);
-    return((x2 >= y2)<<1)?1:0;
+    return((x2 >= y2?1:0)<<1)?1:0;
 }
 
 
@@ -12036,7 +12036,7 @@ var /*int32_t */hitscan_hitsectcf=-1;
 // how: -1: behave like ceiling, 1: behave like floor
 function /*int32_t */hitscan_trysector(/*const vec3_t **/sv: IVec3, sec:sectortype, hit:hitdata_t,
                                  /*int32_t */vx:number, /*int32_t */vy:number, /*int32_t */vz:number,
-                                 /*uint16_t */stat:number, /*int16_t */heinum:number, /*int32_t */z, /*int32_t */how:number, /*const intptr_t **/tmp:number):number
+                                 /*uint16_t */stat:number, /*int16_t */heinum:number, /*int32_t */z:number, /*int32_t */how:number, /*const intptr_t **/tmp:Int32Array):number
 {
     var /*int32_t */x1 = INT32_MAX, y1:number, z1:number;
     var/*int32_t */i:number;
@@ -12045,7 +12045,7 @@ function /*int32_t */hitscan_trysector(/*const vec3_t **/sv: IVec3, sec:sectorty
     {
         var wal = wall[sec.wallptr];
         var wal2 = wall[wal.point2];
-        var/*int32_t */j, dax=wal2.x-wal.x, day=wal2.y-wal.y;
+        var/*int32_t */j:number, dax=wal2.x-wal.x, day=wal2.y-wal.y;
 
         i = nsqrtasm(uhypsq(dax,day)); if (i == 0) return 1; //continue;
         i = divscale15(heinum,i);
@@ -12113,16 +12113,6 @@ function /*int32_t */hitscan_trysector(/*const vec3_t **/sv: IVec3, sec:sectorty
     }
 
     return 0;
-}
-
-function indexOf<T>(e: T, arr: T[]):number {
-    for (var i = 0; i < arr.length; i++) {
-        if(arr[i] == e) {
-            return i;
-        }
-    }
-
-    throw "could not find";
 }
 
 // x1, y1: in/out
@@ -12201,22 +12191,22 @@ function /*static int32_t */get_floorspr_clipyou(/*int32_t */x1: number, /*int32
 
     if ((y1^y2) < 0)
     {
-        if ((x1^x2) < 0) clipyou ^= (x1*y2 < x2*y1)^(y1<y2);
+        if ((x1^x2) < 0) clipyou ^= ((x1*y2 < x2*y1)?1:0)^((y1<y2)?1:0);
         else if (x1 >= 0) clipyou ^= 1;
     }
     if ((y2^y3) < 0)
     {
-        if ((x2^x3) < 0) clipyou ^= (x2*y3 < x3*y2)^(y2<y3);
+        if ((x2^x3) < 0) clipyou ^= ((x2*y3 < x3*y2)?1:0)^((y2<y3)?1:0);
         else if (x2 >= 0) clipyou ^= 1;
     }
     if ((y3^y4) < 0)
     {
-        if ((x3^x4) < 0) clipyou ^= (x3*y4 < x4*y3)^(y3<y4);
+        if ((x3^x4) < 0) clipyou ^= ((x3*y4 < x4*y3)?1:0)^((y3<y4)?1:0);
         else if (x3 >= 0) clipyou ^= 1;
     }
     if ((y4^y1) < 0)
     {
-        if ((x4^x1) < 0) clipyou ^= (x4*y1 < x1*y4)^(y4<y1);
+        if ((x4^x1) < 0) clipyou ^= ((x4*y1 < x1*y4)?1:0)^((y4<y1)?1:0);
         else if (x4 >= 0) clipyou ^= 1;
     }
 
@@ -12224,7 +12214,7 @@ function /*static int32_t */get_floorspr_clipyou(/*int32_t */x1: number, /*int32
 }
 
 // intp: point of currently best (closest) intersection
-function /*int32_t */try_facespr_intersect(spr:spritetype, refpos:vec3_t,
+function /*int32_t */try_facespr_intersect(spr:spritetype, refpos:IVec3,
                                      /*int32_t */vx:number, /*int32_t */vy:number, /*int32_t */vz:number,
                                      /*vec3_t **/intp:IVec3, /*int32_t */strictly_smaller_than_p:number):number
 {
@@ -12414,7 +12404,7 @@ restart_grand:
 
                 if (wal.cstat&dawalclipmask)
                 {
-                    hit_set(hit, curspr.sectnum, -1, indexOf(curspr,sprite) /*curspr-sprite*/, intx, inty, intz);
+                    hit_set(hit, sprite[curspr].sectnum, -1, curspr/*indexOf(curspr,sprite)*/ /*curspr-sprite*/, intx, inty, intz);
                     continue;
                 }
 
@@ -12423,7 +12413,7 @@ restart_grand:
                 // ceil   cz daz daz2 fz   floor
                 if ((cz.$ <= intz && intz <= daz.$) || (daz2.$ <= intz && intz <= fz.$))
                 {
-                    hit_set(hit, curspr.sectnum, -1, indexOf(curspr,sprite) /*curspr-sprite*/, intx, inty, intz);
+                    hit_set(hit, curspr.sectnum, -1, curspr/*indexOf(curspr,sprite)*/ /*curspr-sprite*/, intx, inty, intz);
                     continue;
                 }
             }
@@ -12509,9 +12499,9 @@ restart_grand:
                 if (klabs(intx-sv.x)+klabs(inty-sv.y) > klabs((hit.pos.x)-sv.x)+klabs((hit.pos.y)-sv.y))
                     continue;
                 var $k = new R(k);
-                daz = spr.z + spriteheightofs(z, $k, 1);
+                daz.$ = spr.z + spriteheightofs(z, $k, 1);
                 k = $k.$;
-                if (intz > daz-k && intz < daz)
+                if (intz > daz.$-k && intz < daz.$)
                 {
                     if (picanm[tilenum].sf&PICANM_TEXHITSCAN_BIT)
                     {
@@ -12524,7 +12514,7 @@ restart_grand:
                         {
                             // daz-intz > 0 && daz-intz < k
                             var /*int32_t*/ xtex = mulscale16(ucoefup16, tilesizx[tilenum]);
-                            var /*int32_t*/ vcoefup16 = 65536-divscale16(daz-intz, k);
+                            var /*int32_t*/ vcoefup16 = 65536-divscale16(daz.$-intz, k);
                             var /*int32_t*/ ytex = mulscale16(vcoefup16, tilesizy[tilenum]);
                             todoThrow();
                             //var /*const char **/texel = (char *)(waloff[tilenum] + tilesizy[tilenum]*xtex + ytex);

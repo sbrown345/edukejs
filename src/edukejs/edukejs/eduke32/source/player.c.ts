@@ -3290,7 +3290,7 @@ function P_DropWeapon(p:DukePlayer_t):void
         }
 }
 
-function P_AddAmmo(/*int32_t */weapon:number,p:DukePlayer_t ,/*int32_t */amount):void 
+function P_AddAmmo(/*int32_t */weapon:number,p:DukePlayer_t ,/*int32_t */amount:number):void 
 {
     p.ammo_amount[weapon] += amount;
 
