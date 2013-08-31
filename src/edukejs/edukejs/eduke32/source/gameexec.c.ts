@@ -1197,6 +1197,9 @@ function VM_Execute(/*int32_t */loop: number): void
         g_tw = tw &= 0xFFF;
 
         dlog(DEBUG_VM_EXECUTE, "tw: %i\n", tw);
+        if(tw==4)  {
+            debugger;
+        }
         if(tw==0)  {
             debugger;
             dlogFlush();

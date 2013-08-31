@@ -8281,6 +8281,7 @@ function do_insertsprite_at_headofsect(/*int16_t*/ spritenum: number, /*int16_t 
 {
     var ohead = headspritesect[sectnum];
 
+    dlog(DEBUG_SPRITESTAT_CHANGE, "do_insertsprite_at_headofsect spritenum %i sectnum %i\n", spritenum, sectnum);
     prevspritesect[spritenum] = -1;
     nextspritesect[spritenum] = ohead;
     if (ohead >= 0)
@@ -8296,6 +8297,7 @@ function do_deletespritesect(/*int16_t*/ deleteme: number): void
     var sectnum = sprite[deleteme].sectnum;
     var prev = prevspritesect[deleteme], next = nextspritesect[deleteme];
 
+    dlog(DEBUG_SPRITESTAT_CHANGE, "do_deletespritesect deleteme %i\n", deleteme);
     if (headspritesect[sectnum] == deleteme)
         headspritesect[sectnum] = next;
     if (prev >= 0)
@@ -8311,6 +8313,7 @@ function do_insertsprite_at_headofstat(/*int16_t*/ spritenum: number, /*int16_t*
 {
     var ohead = headspritestat[statnum];
 
+    dlog(DEBUG_SPRITESTAT_CHANGE, "do_insertsprite_at_headofstat spritenum %i statnum %i\n", spritenum, statnum);
     prevspritestat[spritenum] = -1;
     nextspritestat[spritenum] = ohead;
     if (ohead >= 0)
@@ -8328,6 +8331,7 @@ function insertspritestat(/*int16_t*/ statnum: number): number
     if ((statnum >= MAXSTATUS) || (headspritestat[MAXSTATUS] == -1))
         return(-1);  //list full
 
+    dlog(DEBUG_SPRITESTAT_CHANGE, "insertspritestat statnum %i\n", statnum);
     // remove one sprite from the statnum-freelist
     blanktouse = headspritestat[MAXSTATUS];
     headspritestat[MAXSTATUS] = nextspritestat[blanktouse];
@@ -8349,6 +8353,7 @@ function do_deletespritestat(/*int16_t*/ deleteme: number): void
     var sectnum = sprite[deleteme].statnum;
     var prev = prevspritestat[deleteme], next = nextspritestat[deleteme];
 
+    dlog(DEBUG_SPRITESTAT_CHANGE, "do_deletespritestat deleteme %i\n", deleteme);
     if (headspritestat[sectnum] == deleteme)
         headspritestat[sectnum] = next;
     if (prev >= 0)
@@ -8366,6 +8371,7 @@ function insertsprite(/*int16_t*/ sectnum: number, /*int16_t */statnum: number):
     // TODO: guard against bad sectnum?
     var newspritenum = insertspritestat(statnum);
 
+    dlog(DEBUG_SPRITESTAT_CHANGE, "insertsprite statnum %i\n", statnum);
     if (newspritenum >= 0)
     {
         Bassert(sectnum < MAXSECTORS);
@@ -8389,6 +8395,7 @@ function deletesprite(/*int16_t */spritenum: number): number
     if (sprite[spritenum].statnum == MAXSTATUS)
         return(-1);  // already not in the world
 
+    dlog(DEBUG_SPRITESTAT_CHANGE, "deletesprite spritenum %i\n", spritenum);
     do_deletespritestat(spritenum);
     do_deletespritesect(spritenum);
 
@@ -8416,6 +8423,7 @@ function deletesprite(/*int16_t */spritenum: number): number
 //
 function changespritesect(/*int16_t*/ spritenum: number, /*int16_t*/ newsectnum: number): number
 {
+    dlog(DEBUG_SPRITESTAT_CHANGE, "changespritesect spritenum %i newsectnum %i\n", spritenum, newsectnum);
     // XXX: NOTE: MAXSECTORS is allowed
     if (newsectnum < 0 || newsectnum > MAXSECTORS)
         return(-1);
@@ -8435,6 +8443,7 @@ function changespritesect(/*int16_t*/ spritenum: number, /*int16_t*/ newsectnum:
 //
 function changespritestat(/*int16_t*/ spritenum: number, /*int16_t*/ newstatnum: number): number
 {
+    dlog(DEBUG_SPRITESTAT_CHANGE, "changespritestat spritenum %i newstatnum %i\n", spritenum, newstatnum);
     // XXX: NOTE: MAXSTATUS is allowed
     if (newstatnum < 0 || newstatnum > MAXSTATUS)
         return(-1);

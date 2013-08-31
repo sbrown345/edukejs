@@ -4970,6 +4970,7 @@ int32_t A_Spawn(int32_t j, int32_t pn)
     int32_t i, s, startwall, endwall, sect;
     spritetype *sp;
 
+    dlog(DEBUG_SPAWN, "A_Spawn j:%i, pn: %i\n", j, pn);
     if (j >= 0)
     {
         // spawn from parent sprite <j>
@@ -11855,6 +11856,7 @@ MAIN_LOOP_RESTART:
 
                 clockbeforetic = totalclock;
 
+                logHeadspritestat("G_MoveLoop");
                 if (((ud.show_help == 0 && (g_player[myconnectindex].ps->gm&MODE_MENU) != MODE_MENU) || ud.recstat == 2 || (g_netServer || ud.multimode > 1)) &&
                         (g_player[myconnectindex].ps->gm&MODE_GAME))
                     G_MoveLoop();
@@ -11946,6 +11948,7 @@ GAME_STATIC GAME_INLINE int32_t G_MoveLoop()
 int32_t G_DoMoveThings(void)
 {
 	int32_t i;
+    logHeadspritestat("G_DoMoveThings");
 
     ud.camerasprite = -1;
     lockclock += TICSPERFRAME;

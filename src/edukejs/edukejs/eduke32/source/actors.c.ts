@@ -8403,10 +8403,32 @@ function A_CheckSwitchTile(i: number): number
     return 0;
 }
 
+function logHeadspritestat(where:string):void {
+    if(DEBUG_headspritestat) {
+        dlog(DEBUG_headspritestat, where);
+        dlog(DEBUG_headspritestat, "\nheadspritestat: ");
+        var last;
+        for (var i = 0; i < MAXSTATUS; i++) {
+            if(headspritestat[i] !== last)
+                dlog(DEBUG_headspritestat, "%i: %i, ", i, headspritestat[0]);
+            last = headspritestat[i];
+        }
+
+        dlog(DEBUG_headspritestat, "\nprevspritestat: ");
+        last = null;
+        for (var i = 0; i < MAXSTATUS; i++) {
+            if(prevspritestat[i] !== last)
+                dlog(DEBUG_headspritestat, "%i: %i, ", i, prevspritestat[0]);
+            last = prevspritestat[i];
+        }
+    }
+}
+
 function G_MoveWorld(): void
 {
     var /*int32_t */k = MAXSTATUS-1;
 
+    logHeadspritestat("G_MoveWorld");
     do
     {
         var /*int32_t */i = headspritestat[k];
@@ -8430,23 +8452,33 @@ function G_MoveWorld(): void
         }
     }
     while (k--);
-    todo("MOVE STUFF");todo("MOVE STUFF");todo("MOVE STUFF");
+    
+    logHeadspritestat("G_MoveZombieActors");
     G_MoveZombieActors();     //ST 2
+    logHeadspritestat("G_MoveWeapons");
     G_MoveWeapons();          //ST 4
+    logHeadspritestat("G_MoveTransports");
     G_MoveTransports();       //ST 9
 
+    logHeadspritestat("G_MovePlayers");
     G_MovePlayers();          //ST 10
+    logHeadspritestat("G_MoveFallers");
     G_MoveFallers();          //ST 12
+    logHeadspritestat("G_MoveMisc");
     G_MoveMisc();             //ST 5
 
+    logHeadspritestat("G_MoveActors");
     G_MoveActors();           //ST 1
 
     // XXX: Has to be before effectors, in particular movers?
     // TODO: lights in moving sectors ought to be interpolated
+    logHeadspritestat("G_DoEffectorLights");
     G_DoEffectorLights();
 
+    logHeadspritestat("G_MoveEffectors");
     G_MoveEffectors();        //ST 3
 
+    logHeadspritestat("G_MoveStandables");
     G_MoveStandables();       //ST 6
 
     k = MAXSTATUS-1;

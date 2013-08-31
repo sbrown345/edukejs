@@ -5068,7 +5068,8 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
 {
     var i: number, s: number, startwall: number, endwall: number, sect: number;
     var sp: spritetype; //spritetype *
-
+    
+    dlog(DEBUG_SPAWN, "A_Spawn j:%i, pn: %i\n", j, pn);
     if (j >= 0)
     {
         // spawn from parent sprite <j>
@@ -11843,6 +11844,7 @@ var tempWhile = 0;
                 P_ResetInventory(i);
             }
 
+            logHeadspritestat("G_NewGame");
             G_NewGame(ud.m_volume_number,ud.m_level_number,ud.m_player_skill);
 
             if (G_EnterLevel(MODE_GAME)) G_BackToMenu();
@@ -11974,6 +11976,7 @@ var tempWhile = 0;
 
                 clockbeforetic = totalclock;
                 
+                logHeadspritestat("G_MoveLoop");
                 if (((ud.show_help == 0 && (g_player[myconnectindex].ps.gm&MODE_MENU) != MODE_MENU) || ud.recstat == 2 || (g_netServer || ud.multimode > 1)) &&
                         (g_player[myconnectindex].ps.gm&MODE_GAME))
                     G_MoveLoop();
@@ -12070,6 +12073,7 @@ function /*int32_t*/ G_MoveLoop():number
 function /*int32_t */G_DoMoveThings(): number
 {
     var  /*int32_t */i:number;
+    logHeadspritestat("G_DoMoveThings");
 
     ud.camerasprite = -1;
     lockclock += TICSPERFRAME;

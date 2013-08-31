@@ -162,7 +162,7 @@ function G_HaveActor(/*int32_t */actortile: number): number
 //#ifdef LUNATIC
 //    return El_HaveActor(actortile);
 //#else
-    return g_tile[actortile].execPtr!=NULL?1:0;
+    return g_tile[actortile].execPtr!=0/*NULL*/?1:0;
 //#endif
 }
 

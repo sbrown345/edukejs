@@ -8149,6 +8149,7 @@ void do_insertsprite_at_headofsect(int16_t spritenum, int16_t sectnum)
 {
     int16_t ohead = headspritesect[sectnum];
 
+    dlog(DEBUG_SPRITESTAT_CHANGE, "do_insertsprite_at_headofsect spritenum %i sectnum %i\n", spritenum, sectnum);
     prevspritesect[spritenum] = -1;
     nextspritesect[spritenum] = ohead;
     if (ohead >= 0)
@@ -8164,6 +8165,7 @@ void do_deletespritesect(int16_t deleteme)
     int32_t sectnum = sprite[deleteme].sectnum;
     int32_t prev = prevspritesect[deleteme], next = nextspritesect[deleteme];
 
+    dlog(DEBUG_SPRITESTAT_CHANGE, "do_deletespritesect deleteme %i\n", deleteme);
     if (headspritesect[sectnum] == deleteme)
         headspritesect[sectnum] = next;
     if (prev >= 0)
@@ -8179,6 +8181,7 @@ void do_insertsprite_at_headofstat(int16_t spritenum, int16_t statnum)
 {
     int16_t ohead = headspritestat[statnum];
 
+    dlog(DEBUG_SPRITESTAT_CHANGE, "do_insertsprite_at_headofstat spritenum %i statnum %i\n", spritenum, statnum);
     prevspritestat[spritenum] = -1;
     nextspritestat[spritenum] = ohead;
     if (ohead >= 0)
@@ -8193,6 +8196,7 @@ int32_t insertspritestat(int16_t statnum)
 {
     int16_t blanktouse;
 
+    dlog(DEBUG_SPRITESTAT_CHANGE, "insertspritestat statnum %i\n", statnum);
     if ((statnum >= MAXSTATUS) || (headspritestat[MAXSTATUS] == -1))
         return(-1);  //list full
 
@@ -8217,6 +8221,7 @@ static void do_deletespritestat(int16_t deleteme)
     int32_t sectnum = sprite[deleteme].statnum;
     int32_t prev = prevspritestat[deleteme], next = nextspritestat[deleteme];
 
+    dlog(DEBUG_SPRITESTAT_CHANGE, "do_deletespritestat deleteme %i\n", deleteme);
     if (headspritestat[sectnum] == deleteme)
         headspritestat[sectnum] = next;
     if (prev >= 0)
@@ -8234,6 +8239,7 @@ int32_t insertsprite(int16_t sectnum, int16_t statnum)
     // TODO: guard against bad sectnum?
     int32_t newspritenum = insertspritestat(statnum);
 
+    dlog(DEBUG_SPRITESTAT_CHANGE, "insertsprite statnum %i\n", statnum);
     if (newspritenum >= 0)
     {
         Bassert((unsigned)sectnum < MAXSECTORS);
@@ -8257,6 +8263,7 @@ int32_t deletesprite(int16_t spritenum)
     if (sprite[spritenum].statnum == MAXSTATUS)
         return(-1);  // already not in the world
 
+    dlog(DEBUG_SPRITESTAT_CHANGE, "deletesprite spritenum %i\n", spritenum);
     do_deletespritestat(spritenum);
     do_deletespritesect(spritenum);
 
@@ -8284,6 +8291,7 @@ int32_t deletesprite(int16_t spritenum)
 //
 int32_t changespritesect(int16_t spritenum, int16_t newsectnum)
 {
+    dlog(DEBUG_SPRITESTAT_CHANGE, "changespritesect spritenum %i newsectnum %i\n", spritenum, newsectnum);
     // XXX: NOTE: MAXSECTORS is allowed
     if (newsectnum < 0 || newsectnum > MAXSECTORS)
         return(-1);
@@ -8303,6 +8311,7 @@ int32_t changespritesect(int16_t spritenum, int16_t newsectnum)
 //
 int32_t changespritestat(int16_t spritenum, int16_t newstatnum)
 {
+    dlog(DEBUG_SPRITESTAT_CHANGE, "changespritestat spritenum %i newstatnum %i\n", spritenum, newstatnum);
     // XXX: NOTE: MAXSTATUS is allowed
     if (newstatnum < 0 || newstatnum > MAXSTATUS)
         return(-1);
@@ -17205,4 +17214,25 @@ void dlog(int32_t log, char *format, ...) {
 		vprintf(format, argptr);
 		va_end(argptr);
 	}
+}
+
+void logHeadspritestat(char* where) {
+    if(DEBUG_headspritestat) {
+        dlog(DEBUG_headspritestat, where);
+        int16_t last = -9999;
+		dlog(DEBUG_headspritestat, "\nheadspritestat: ");
+        for (int i = 0; i < MAXSTATUS; i++) {
+            if(headspritestat[i] != last)
+                dlog(DEBUG_headspritestat, "%i: %i, ", i, headspritestat[0]);
+            last = headspritestat[i];
+        }
+
+		dlog(DEBUG_headspritestat, "\nprevspritestat: ");
+        last = -9999;
+        for (int i = 0; i < MAXSTATUS; i++) {
+            if(prevspritestat[i] != last)
+                dlog(DEBUG_headspritestat, "%i: %i, ", i, prevspritestat[0]);
+            last = prevspritestat[i];
+        }
+    }
 }

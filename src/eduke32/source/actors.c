@@ -8253,11 +8253,11 @@ int32_t A_CheckSwitchTile(int32_t i)
 
     return 0;
 }
-
 void G_MoveWorld(void)
 {
     int32_t k = MAXSTATUS-1;
 
+    logHeadspritestat("G_MoveWorld");
     do
     {
         int32_t i = headspritestat[k];
@@ -8281,26 +8281,34 @@ void G_MoveWorld(void)
         }
     }
     while (k--);
+    logHeadspritestat("G_MoveZombieActors");
     G_MoveZombieActors();     //ST 2
+    logHeadspritestat("G_MoveWeapons");
     G_MoveWeapons();          //ST 4
-
+    logHeadspritestat("G_MoveTransports");
     G_MoveTransports();       //ST 9
 
+    logHeadspritestat("G_MovePlayers");
     G_MovePlayers();          //ST 10
-#ifdef DEBUG_TODO
+    logHeadspritestat("G_MoveFallers");
     G_MoveFallers();          //ST 12
+    logHeadspritestat("G_MoveMisc");
     G_MoveMisc();             //ST 5
 
+    logHeadspritestat("G_MoveActors");
     G_MoveActors();           //ST 1
 
     // XXX: Has to be before effectors, in particular movers?
     // TODO: lights in moving sectors ought to be interpolated
+    logHeadspritestat("G_DoEffectorLights");
     G_DoEffectorLights();
 
+    logHeadspritestat("G_MoveEffectors");
     G_MoveEffectors();        //ST 3
-
+	exit(0);
+    logHeadspritestat("G_MoveStandables");
     G_MoveStandables();       //ST 6
-#endif
+
     k = MAXSTATUS-1;
 
     do

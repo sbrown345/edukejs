@@ -1395,7 +1395,6 @@ static inline void pop_nofog(void)
 
 
 // DEBUGGING STUFF TO HELP COMPARE WITH JS PORT
-#define DEBUG_VM_EXECUTE 1
 #define DEBUG_COMPILE 0
 #define DEBUG_KRAND 0
 #define DEBUG_MOSTS 0
@@ -1408,4 +1407,9 @@ static inline void pop_nofog(void)
 #define DEBUG_LOAD_TILE_ART 0
 #define DEBUG_PLAYER_POS 0
 #define DEBUG_GETZRANGE 0
+#define DEBUG_VM_EXECUTE 1
+#define DEBUG_headspritestat 1
+#define DEBUG_SPRITESTAT_CHANGE 1
+#define DEBUG_SPAWN 1
 void dlog(int32_t log, char *format, ...);
+void logHeadspritestat(char* where);
