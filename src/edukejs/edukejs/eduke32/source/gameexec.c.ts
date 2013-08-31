@@ -391,7 +391,7 @@ function A_GetZLimits(/*int32_t */iActor:  number): void
 function A_Fall(/*int32_t*/ iActor: number): void
 {
     var s = sprite[iActor];
-    var hz: number,lz: number,c = g_spriteGravity;
+    var /*int32_t*/ hz: number,lz: number,c = g_spriteGravity;
 //#ifdef YAX_ENABLE
     var fbunch: number;
 //#endif
@@ -400,7 +400,7 @@ function A_Fall(/*int32_t*/ iActor: number): void
     else
     {
         if (G_CheckForSpaceCeiling(s.sectnum) || sector[s.sectnum].lotag == ST_2_UNDERWATER)
-            c = g_spriteGravity/6;
+            c = int32(g_spriteGravity/6);
     }
 
     if (s.statnum == STAT_ACTOR || s.statnum == STAT_PLAYER || s.statnum == STAT_ZOMBIEACTOR || s.statnum == STAT_STANDABLE)
@@ -476,83 +476,83 @@ function /*int32_t */G_GetAngleDelta(/*int32_t */a:number,/*int32_t */na:number)
 }
 
 function VM_AlterAng(/*int32_t */movflags:number):void
-{todoThrow();
-//    const int32_t ticselapsed = (AC_COUNT(vm.g_t))&31;
+{
+    var /*const int32_t */ticselapsed = (AC_COUNT(vm.g_t))&31;
 
-////#if !defined LUNATIC
-//    const intptr_t *moveptr;
-//    if (/*(unsigned)*/AC_MOVE_ID(vm.g_t) >= /*(unsigned)*/g_scriptSize-1)
+//#if !defined LUNATIC
+    var /*const intptr_t **/moveptr;
+    if (/*(unsigned)*/AC_MOVE_ID(vm.g_t) >= /*(unsigned)*/g_scriptSize-1)
 
-//    {
-//        AC_MOVE_ID(vm.g_t) = 0;
-//        OSD_Printf_nowarn(OSD_ERROR "bad moveptr for actor %d (%d)!\n", vm.g_i, TrackerCast(vm.g_sp.picnum));
-//        return;
-//    }
+    {
+        vm.g_t[1] = 0;//AC_MOVE_ID(vm.g_t) = 0;
+        OSD_Printf_nowarn(OSD_ERROR + "bad moveptr for actor %d (%d)!\n", vm.g_i, TrackerCast(vm.g_sp.picnum));
+        return;
+    }
 
-//    moveptr = script + AC_MOVE_ID(vm.g_t);
+    moveptr = AC_MOVE_ID(vm.g_t);//script + AC_MOVE_ID(vm.g_t);
 
-//    vm.g_sp.xvel += (*moveptr - vm.g_sp.xvel)/5;
+    vm.g_sp.xvel += (script[moveptr] - vm.g_sp.xvel)/5;
+    if (vm.g_sp.zvel < 648)
+        vm.g_sp.zvel += int32(((script[moveptr+1]<<4) - vm.g_sp.zvel)/5);
+//#else
+//    vm.g_sp.xvel += int32((actor[vm.g_i].mv.hvel - vm.g_sp.xvel)/5);
 //    if (vm.g_sp.zvel < 648)
-//        vm.g_sp.zvel += int32(((*(moveptr+1)<<4) - vm.g_sp.zvel)/5);
-////#else
-////    vm.g_sp.xvel += int32((actor[vm.g_i].mv.hvel - vm.g_sp.xvel)/5);
-////    if (vm.g_sp.zvel < 648)
-////        vm.g_sp.zvel += int32(((actor[vm.g_i].mv.vvel<<4) - vm.g_sp.zvel)/5);
-////#endif
+//        vm.g_sp.zvel += int32(((actor[vm.g_i].mv.vvel<<4) - vm.g_sp.zvel)/5);
+//#endif
 
-//    if (A_CheckEnemySprite(vm.g_sp) && vm.g_sp.extra <= 0) // hack
-//        return;
+    if (A_CheckEnemySprite(vm.g_sp) && vm.g_sp.extra <= 0) // hack
+        return;
 
-//    if (movflags&seekplayer)
-//    {
-//        int32_t aang = vm.g_sp.ang, angdif, goalang;
-//        int32_t j = g_player[vm.g_p].ps.holoduke_on;
+    if (movflags&seekplayer)
+    {
+        var/*int32_t */aang = vm.g_sp.ang, angdif:number, goalang:number;
+        var/*int32_t */j = g_player[vm.g_p].ps.holoduke_on;
 
-//        // NOTE: looks like 'owner' is set to target sprite ID...
+        // NOTE: looks like 'owner' is set to target sprite ID...
 
-//        if (j >= 0 && cansee(sprite[j].x,sprite[j].y,sprite[j].z,sprite[j].sectnum,vm.g_sp.x,vm.g_sp.y,vm.g_sp.z,vm.g_sp.sectnum))
-//            vm.g_sp.owner = j;
-//        else vm.g_sp.owner = g_player[vm.g_p].ps.i;
+        if (j >= 0 && cansee(sprite[j].x,sprite[j].y,sprite[j].z,sprite[j].sectnum,vm.g_sp.x,vm.g_sp.y,vm.g_sp.z,vm.g_sp.sectnum))
+            vm.g_sp.owner = j;
+        else vm.g_sp.owner = g_player[vm.g_p].ps.i;
 
-//        if (sprite[vm.g_sp.owner].picnum == APLAYER)
-//            goalang = getangle(actor[vm.g_i].lastvx-vm.g_sp.x,actor[vm.g_i].lastvy-vm.g_sp.y);
-//        else
-//            goalang = getangle(sprite[vm.g_sp.owner].x-vm.g_sp.x,sprite[vm.g_sp.owner].y-vm.g_sp.y);
+        if (sprite[vm.g_sp.owner].picnum == APLAYER)
+            goalang = getangle(actor[vm.g_i].lastvx-vm.g_sp.x,actor[vm.g_i].lastvy-vm.g_sp.y);
+        else
+            goalang = getangle(sprite[vm.g_sp.owner].x-vm.g_sp.x,sprite[vm.g_sp.owner].y-vm.g_sp.y);
 
-//        if (vm.g_sp.xvel && vm.g_sp.picnum != DRONE)
-//        {
-//            angdif = G_GetAngleDelta(aang,goalang);
+        if (vm.g_sp.xvel && vm.g_sp.picnum != DRONE)
+        {
+            angdif = G_GetAngleDelta(aang,goalang);
 
-//            if (ticselapsed < 2)
-//            {
-//                if (klabs(angdif) < 256)
-//                {
-//                    j = 128-(krand()&256);
-//                    vm.g_sp.ang += j;
-//                    if (A_GetHitscanRange(vm.g_i) < 844)
-//                        vm.g_sp.ang -= j;
-//                }
-//            }
-//            else if (ticselapsed > 18 && ticselapsed < GAMETICSPERSEC) // choose
-//            {
-//                if (klabs(angdif>>2) < 128) vm.g_sp.ang = goalang;
-//                else vm.g_sp.ang += angdif>>2;
-//            }
-//        }
-//        else vm.g_sp.ang = goalang;
-//    }
+            if (ticselapsed < 2)
+            {
+                if (klabs(angdif) < 256)
+                {
+                    j = 128-(krand()&256);
+                    vm.g_sp.ang += j;
+                    if (A_GetHitscanRange(vm.g_i) < 844)
+                        vm.g_sp.ang -= j;
+                }
+            }
+            else if (ticselapsed > 18 && ticselapsed < GAMETICSPERSEC) // choose
+            {
+                if (klabs(angdif>>2) < 128) vm.g_sp.ang = goalang;
+                else vm.g_sp.ang += angdif>>2;
+            }
+        }
+        else vm.g_sp.ang = goalang;
+    }
 
-//    if (ticselapsed < 1)
-//    {
-//        if (movflags&furthestdir)
-//        {
-//            vm.g_sp.ang = A_GetFurthestAngle(vm.g_i, 2);
-//            vm.g_sp.owner = g_player[vm.g_p].ps.i;
-//        }
+    if (ticselapsed < 1)
+    {
+        if (movflags&furthestdir)
+        {
+            vm.g_sp.ang = A_GetFurthestAngle(vm.g_i, 2);
+            vm.g_sp.owner = g_player[vm.g_p].ps.i;
+        }
 
-//        if (movflags&fleeenemy)
-//            vm.g_sp.ang = A_GetFurthestAngle(vm.g_i, 2);
-//    }
+        if (movflags&fleeenemy)
+            vm.g_sp.ang = A_GetFurthestAngle(vm.g_i, 2);
+    }
 }
 
 function VM_AddAngle(/*int32_t */shr:number, /*int32_t */goalang:number):void
@@ -1819,16 +1819,16 @@ function VM_Execute(/*int32_t */loop: number): void
             VM_Execute(1);
             continue;
 
-//        case CON_MOVE:
-//            insptr++;
-//            AC_COUNT(vm.g_t) = 0;
-//            AC_MOVE_ID(vm.g_t) = script[insptr++];
-//            vm.g_sp.hitag = script[insptr++];
-//            if (A_CheckEnemySprite(vm.g_sp) && vm.g_sp.extra <= 0) // hack
-//                continue;
-//            if (vm.g_sp.hitag&random_angle)
-//                vm.g_sp.ang = krand()&2047;
-//            continue;
+        case CON_MOVE:
+            insptr++;
+            vm.g_t[0] = 0;//AC_COUNT(vm.g_t) = 0;
+            vm.g_t[1] = script[insptr++];// AC_MOVE_ID(vm.g_t) = script[insptr++];
+            vm.g_sp.hitag = script[insptr++];
+            if (A_CheckEnemySprite(vm.g_sp) && vm.g_sp.extra <= 0) // hack
+                continue;
+            if (vm.g_sp.hitag&random_angle)
+                vm.g_sp.ang = krand()&2047;
+            continue;
 
         case CON_ADDWEAPONVAR:
             insptr++;

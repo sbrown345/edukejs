@@ -462,7 +462,7 @@ class spritetype implements ITypeInfo, IVec3
     //    return new vec3_t(this.x, this.y, this.z);
     //}
 
-    x:number; y:number; z:number;         //Tracker(Sprite, int32_t)  
+    private  _x:number; private _y:number; private _z:number;         //Tracker(Sprite, int32_t)  
 
     private _cstat: Uint16Array;
     picnum:number;                            //Tracker(Sprite, int16_t)  
@@ -475,7 +475,12 @@ class spritetype implements ITypeInfo, IVec3
     private _lotag:Uint16Array;private _hitag:Uint16Array;                      //Tracker(Sprite, uint16_t) 
     private _extra:Int16Array;                             //Tracker(Sprite, int16_t)  
 
-
+    get x(): number  { return this._x;}
+    set x(val: number) {assert.int32(val); this._x = val;} 
+    get y(): number  {return this._y;}
+    set y(val: number) {assert.int32(val); this._y = val;} 
+    get z(): number  {return this._z;}
+    set z(val: number) {assert.int32(val); this._z = val;} 
     
     get cstat(): number  {return this._cstat[0];}
     set cstat(val: number) {this._cstat[0] = val;} //Tracker(Sprite, uint16_t)
@@ -1052,7 +1057,7 @@ var faketilesiz = new Int32Array(MAXTILES);
 
 //extern char apptitle[256];
 class palette_t {
-    private _values: Uint8Array;
+    _values: Uint8Array;
 
     constructor(r: number = 0, g: number = 0, b: number = 0, f: number = 0) {
         this._values = new Uint8Array([r, g, b, f]);

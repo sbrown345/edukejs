@@ -15378,46 +15378,46 @@ function getzsofslopeptr(/*const sectortype **/sec: sectortype, /*int32_t */dax:
 }
 
 
-////
-//// alignceilslope
-////
-//void alignceilslope(int16_t dasect, int32_t x, int32_t y, int32_t z)
-//{
-//    const walltype *const wal = &wall[sector[dasect].wallptr];
-//    const int32_t dax = wall[wal.point2].x-wal.x;
-//    const int32_t day = wall[wal.point2].y-wal.y;
+//
+// alignceilslope
+//
+function alignceilslope(/*int16_t*/ dasect:number, /*int32_t */x:number, /*int32_t */y:number, /*int32_t */z:number):void
+{
+    var wal = wall[sector[dasect].wallptr];
+    var /*int32_t */dax = wall[wal.point2].x-wal.x;
+    var /*int32_t */day = wall[wal.point2].y-wal.y;
 
-//    const int32_t i = (y-wal.y)*dax - (x-wal.x)*day;
-//    if (i == 0)
-//        return;
+    var /*int32_t */i = (y-wal.y)*dax - (x-wal.x)*day;
+    if (i == 0)
+        return;
 
-//    sector[dasect].ceilingheinum = scale((z-sector[dasect].ceilingz)<<8,
-//                                         nsqrtasm(uhypsq(dax,day)), i);
-//    if (sector[dasect].ceilingheinum == 0)
-//        sector[dasect].ceilingstat &= ~2;
-//    else sector[dasect].ceilingstat |= 2;
-//}
+    sector[dasect].ceilingheinum = scale((z-sector[dasect].ceilingz)<<8,
+                                         nsqrtasm(uhypsq(dax,day)), i);
+    if (sector[dasect].ceilingheinum == 0)
+        sector[dasect].ceilingstat &= ~2;
+    else sector[dasect].ceilingstat |= 2;
+}
 
 
-////
-//// alignflorslope
-////
-//void alignflorslope(int16_t dasect, int32_t x, int32_t y, int32_t z)
-//{
-//    const walltype *const wal = &wall[sector[dasect].wallptr];
-//    const int32_t dax = wall[wal.point2].x-wal.x;
-//    const int32_t day = wall[wal.point2].y-wal.y;
+//
+// alignflorslope
+//
+function alignflorslope(/*int16_t*/ dasect:number, /*int32_t */x:number, /*int32_t */y:number, /*int32_t */z:number):void
+{
+    var wal = wall[sector[dasect].wallptr];
+    var /*int32_t */dax = wall[wal.point2].x-wal.x;
+    var /*int32_t */day = wall[wal.point2].y-wal.y;
 
-//    const int32_t i = (y-wal.y)*dax - (x-wal.x)*day;
-//    if (i == 0)
-//        return;
+    var/*const int32_t */i = (y-wal.y)*dax - (x-wal.x)*day;
+    if (i == 0)
+        return;
 
-//    sector[dasect].floorheinum = scale((z-sector[dasect].floorz)<<8,
-//                                       nsqrtasm(uhypsq(dax,day)), i);
-//    if (sector[dasect].floorheinum == 0)
-//        sector[dasect].floorstat &= ~2;
-//    else sector[dasect].floorstat |= 2;
-//}
+    sector[dasect].floorheinum = scale((z-sector[dasect].floorz)<<8,
+                                       nsqrtasm(uhypsq(dax,day)), i);
+    if (sector[dasect].floorheinum == 0)
+        sector[dasect].floorstat &= ~2;
+    else sector[dasect].floorstat |= 2;
+}
 
 
 ////

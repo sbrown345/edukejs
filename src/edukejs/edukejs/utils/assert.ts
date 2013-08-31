@@ -196,6 +196,7 @@
     function trackAssert(result, message: any) {
         console.assert(result, message);
         if (!result) {
+            debugger;
             assert.failedCount++;
         }
     }

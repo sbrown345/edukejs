@@ -3521,12 +3521,12 @@ function G_DisplayRest(/*int32_t */smoothratio: number): void
         if (pp.palette == WATERPAL)
         {
             var wp = new palette_t(224, 192, 255, 0);
-            todoThrow("Bmemcpy(&hictinting[MAXPALOOKUPS-1], &wp, sizeof(palette_t));");
+            Bmemcpy(new P(hictinting[MAXPALOOKUPS-1]._values), new P(wp._values), sizeof(wp._values));
         }
         else if (pp.palette == SLIMEPAL)
         {
             var sp  = new palette_t( 208, 255, 192, 0);
-            todoThrow("Bmemcpy(&hictinting[MAXPALOOKUPS-1], &sp, sizeof(palette_t));");
+            Bmemcpy(new P(hictinting[MAXPALOOKUPS-1]._values), new P(sp._values), sizeof(wp._values));
         }
         else
         {

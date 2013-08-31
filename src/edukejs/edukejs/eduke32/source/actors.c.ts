@@ -3347,95 +3347,95 @@ function G_MoveWeapons():void
 }
 
 
-//static int32_t P_Submerge(int32_t j, int32_t p, DukePlayer_t *ps, int32_t sect, int32_t othersect)
-//{
-//    if (ps.on_ground &&
-//        ps.pos.z >= sector[sect].floorz &&
-//        (TEST_SYNC_KEY(g_player[p].sync.bits, SK_CROUCH) || ps.vel.z > 2048))
-////        if( onfloorz && sectlotag == 1 && ps.pos.z > (sector[sect].floorz-(6<<8)) )
-//    {
-//        if (screenpeek == p)
-//        {
-//            FX_StopAllSounds();
-//            S_ClearSoundLocks();
-//        }
+function /*int32_t */P_Submerge(/*int32_t */j:number, /*int32_t */p:number, ps:DukePlayer_t, /*int32_t */sect:number, /*int32_t */othersect:number):number
+{
+    if (ps.on_ground &&
+        ps.pos.z >= sector[sect].floorz &&
+        (TEST_SYNC_KEY(g_player[p].sync.bits, SK_CROUCH) || ps.vel.z > 2048))
+//        if( onfloorz && sectlotag == 1 && ps.pos.z > (sector[sect].floorz-(6<<8)) )
+    {
+        if (screenpeek == p)
+        {
+            FX_StopAllSounds();
+            S_ClearSoundLocks();
+        }
 
-//        if (sprite[ps.i].extra > 0)
-//            A_PlaySound(DUKE_UNDERWATER, j);
+        if (sprite[ps.i].extra > 0)
+            A_PlaySound(DUKE_UNDERWATER, j);
 
-//        ps.opos.z = ps.pos.z = sector[othersect].ceilingz;
-////        ps.vel.x = 4096-(krand()&8192);
-////        ps.vel.y = 4096-(krand()&8192);
+        ps.opos.z = ps.pos.z = sector[othersect].ceilingz;
+//        ps.vel.x = 4096-(krand()&8192);
+//        ps.vel.y = 4096-(krand()&8192);
 
-//        if (TEST_SYNC_KEY(g_player[p].sync.bits, SK_CROUCH))
-//            ps.vel.z += 512;
+        if (TEST_SYNC_KEY(g_player[p].sync.bits, SK_CROUCH))
+            ps.vel.z += 512;
 
-//        return 1;
-//    }
+        return 1;
+    }
 
-//    return 0;
-//}
+    return 0;
+}
 
-//static int32_t P_Emerge(int32_t j, int32_t p, DukePlayer_t *ps, int32_t sect, int32_t othersect)
-//{
-//    // r1449-:
-//    if (ps.pos.z < (sector[sect].ceilingz+1080) && ps.vel.z == 0)
-//        // r1450+, breaks submergible slime in bobsp2:
-////        if (onfloorz && sectlotag == 2 && ps.pos.z <= sector[sect].ceilingz /*&& ps.vel.z == 0*/)
-//    {
-////        if( sprite[j].extra <= 0) break;
-//        if (screenpeek == p)
-//        {
-//            FX_StopAllSounds();
-//            S_ClearSoundLocks();
-//        }
+function /*int32_t */P_Emerge(/*int32_t*/ j:number, /*int32_t */p:number, ps:DukePlayer_t, /*int32_t */sect:number, /*int32_t */othersect:number):number
+{
+    // r1449-:
+    if (ps.pos.z < (sector[sect].ceilingz+1080) && ps.vel.z == 0)
+        // r1450+, breaks submergible slime in bobsp2:
+//        if (onfloorz && sectlotag == 2 && ps.pos.z <= sector[sect].ceilingz /*&& ps.vel.z == 0*/)
+    {
+//        if( sprite[j].extra <= 0) break;
+        if (screenpeek == p)
+        {
+            FX_StopAllSounds();
+            S_ClearSoundLocks();
+        }
 
-//        A_PlaySound(DUKE_GASP, j);
+        A_PlaySound(DUKE_GASP, j);
 
-//        ps.opos.z = ps.pos.z = sector[othersect].floorz;
-//        ps.vel.z = 0;
-////        ps.vel.z += 1024;
+        ps.opos.z = ps.pos.z = sector[othersect].floorz;
+        ps.vel.z = 0;
+//        ps.vel.z += 1024;
 
-//        ps.jumping_toggle = 1;
-//        ps.jumping_counter = 0;
+        ps.jumping_toggle = 1;
+        ps.jumping_counter = 0;
 
-//        return 1;
-//    }
+        return 1;
+    }
 
-//    return 0;
-//}
+    return 0;
+}
 
-//static void P_FinishWaterChange(int32_t j, DukePlayer_t *ps, int32_t sectlotag, int32_t ow, int32_t newsectnum)
-//{
-//    int32_t l;
-//    vec3_t vect;
+function P_FinishWaterChange(/*int32_t */j:number, ps:DukePlayer_t, /*int32_t */sectlotag:number, /*int32_t */ow:number, /*int32_t */newsectnum:number):void
+{
+    var /*int32_t */l:number;
+    var vect = new vec3_t();
 
-//    ps.bobposx = ps.opos.x = ps.pos.x;
-//    ps.bobposy = ps.opos.y = ps.pos.y;
+    ps.bobposx = ps.opos.x = ps.pos.x;
+    ps.bobposy = ps.opos.y = ps.pos.y;
 
-//    if (ow < 0 || sprite[ow].owner != ow)
-//        ps.transporter_hold = -2;
+    if (ow < 0 || sprite[ow].owner != ow)
+        ps.transporter_hold = -2;
 
-//    ps.cursectnum = newsectnum;
-//    changespritesect(j, newsectnum);
+    ps.cursectnum = newsectnum;
+    changespritesect(j, newsectnum);
 
-//    vect.x = ps.pos.x;
-//    vect.y = ps.pos.y;
-//    vect.z = ps.pos.z+PHEIGHT;
-//    setsprite(ps.i, &vect);
+    vect.x = ps.pos.x;
+    vect.y = ps.pos.y;
+    vect.z = ps.pos.z+PHEIGHT;
+    setsprite(ps.i, vect);
 
-//    P_UpdateScreenPal(ps);
+    P_UpdateScreenPal(ps);
 
-//    if ((krand()&255) < 32)
-//        A_Spawn(j, WATERSPLASH2);
+    if ((krand()&255) < 32)
+        A_Spawn(j, WATERSPLASH2);
 
-//    if (sectlotag == ST_1_ABOVE_WATER)
-//        for (l = 0; l < 9; l++)
-//        {
-//            int32_t q = A_Spawn(ps.i,WATERBUBBLE);
-//            sprite[q].z += krand()&16383;
-//        }
-//}
+    if (sectlotag == ST_1_ABOVE_WATER)
+        for (l = 0; l < 9; l++)
+        {
+            var/*int32_t */q = A_Spawn(ps.i,WATERBUBBLE);
+            sprite[q].z += krand()&16383;
+        }
+}
 
 // Check prevention of teleportation *when alive*. For example, commanders and
 // octabrains would be transported by SE7 (both water and normal) only if dead.
@@ -5671,104 +5671,108 @@ function G_MoveMisc():void  // STATNUM 5
 }
 
 
-//// i: SE spritenum
-//static void HandleSE31(int32_t i, int32_t setfloorzp, int32_t zref, int32_t t2val, int32_t movesignexp)
-//{
-//    const spritetype *s = &sprite[i];
-//    sectortype *const sc = &sector[sprite[i].sectnum];
-//    int32_t *const t = actor[i].t_data;
+// i: SE spritenum
+function HandleSE31(/*int32_t */i:number, /*int32_t */setfloorzp:number, /*int32_t */zref:number, /*int32_t */t2val:number, /*int32_t */movesignexp:number):void
+{
+    var s = sprite[i];
+    var sc = sector[sprite[i].sectnum];
+    var t = actor[i].t_data;
 
-//    if (klabs(sc.floorz - zref) < sprite[i].yvel)
-//    {
-//        if (setfloorzp)
-//            sc.floorz = zref;
+    if (klabs(sc.floorz - zref) < sprite[i].yvel)
+    {
+        if (setfloorzp)
+            sc.floorz = zref;
 
-//        t[2] = t2val;
-//        t[0] = 0;
-//        t[3] = s.hitag;
-//        A_CallSound(s.sectnum,i);
-//    }
-//    else
-//    {
-//        int32_t j;
-//        int32_t l = ksgn(movesignexp)*sprite[i].yvel;
+        t[2] = t2val;
+        t[0] = 0;
+        t[3] = s.hitag;
+        A_CallSound(s.sectnum,i);
+    }
+    else
+    {
+        var/*int32_t */j:number;
+        var/*int32_t */l = ksgn(movesignexp)*sprite[i].yvel;
 
-//        sc.floorz += l;
+        sc.floorz += l;
 
-//        for (j = headspritesect[s.sectnum]; j >= 0; j = nextspritesect[j])
-//        {
-//            if (sprite[j].picnum == APLAYER && sprite[j].owner >= 0)
-//                if (g_player[sprite[j].yvel].ps.on_ground == 1)
-//                    g_player[sprite[j].yvel].ps.pos.z += l;
+        for (j = headspritesect[s.sectnum]; j >= 0; j = nextspritesect[j])
+        {
+            if (sprite[j].picnum == APLAYER && sprite[j].owner >= 0)
+                if (g_player[sprite[j].yvel].ps.on_ground == 1)
+                    g_player[sprite[j].yvel].ps.pos.z += l;
 
-//            if (sprite[j].zvel == 0 && sprite[j].statnum != STAT_EFFECTOR && sprite[j].statnum != STAT_PROJECTILE)
-//            {
-//                actor[j].bpos.z = sprite[j].z += l;
-//                actor[j].floorz = sc.floorz;
-//            }
-//        }
-//    }
-//}
+            if (sprite[j].zvel == 0 && sprite[j].statnum != STAT_EFFECTOR && sprite[j].statnum != STAT_PROJECTILE)
+            {
+                actor[j].bpos.z = sprite[j].z += l;
+                actor[j].floorz = sc.floorz;
+            }
+        }
+    }
+}
 
-//// s: SE sprite
-//static void MaybeTrainKillPlayer(const spritetype *s, int32_t dosetopos)
-//{
-//    var/*int32_t*/ p:number;
+// s: SE sprite
+function MaybeTrainKillPlayer(s:spritetype , /*int32_t */dosetopos:number):void
+{
+    var/*int32_t*/ p:number;
 
-//    for (p = 0; p != -1; p = connectpoint2[p])
-//    {
-//        DukePlayer_t *const ps = g_player[p].ps;
+    for (p = 0; p != -1; p = connectpoint2[p])
+    {
+        var ps = g_player[p].ps;
 
-//        if (sprite[ps.i].extra > 0)
-//        {
-//            int16_t k = ps.cursectnum;
+        if (sprite[ps.i].extra > 0)
+        {
+            var/*int16_t */k = ps.cursectnum;
 
-//            updatesector(ps.pos.x,ps.pos.y,&k);
-//            if ((k == -1 && ud.noclip == 0) || (k == s.sectnum && ps.cursectnum != s.sectnum))
-//            {
-//                ps.pos.x = s.x;
-//                ps.pos.y = s.y;
+            var $k = new R(k);
+            updatesector(ps.pos.x,ps.pos.y,$k);
+            k = $k.$;
+            if ((k == -1 && ud.noclip == 0) || (k == s.sectnum && ps.cursectnum != s.sectnum))
+            {
+                ps.pos.x = s.x;
+                ps.pos.y = s.y;
 
-//                if (dosetopos)
-//                {
-//                    ps.opos.x = ps.pos.x;
-//                    ps.opos.y = ps.pos.y;
-//                }
+                if (dosetopos)
+                {
+                    ps.opos.x = ps.pos.x;
+                    ps.opos.y = ps.pos.y;
+                }
 
-//                ps.cursectnum = s.sectnum;
+                ps.cursectnum = s.sectnum;
 
-//                setsprite(ps.i,(vec3_t *)s);
-//                P_QuickKill(ps);
-//            }
-//        }
-//    }
-//}
+                setsprite(ps.i,/*(vec3_t *)*/s);
+                P_QuickKill(ps);
+            }
+        }
+    }
+}
 
-//// i: SE spritenum
-//static void MaybeTrainKillEnemies(int32_t i, int32_t numguts)
-//{
-//    int32_t j = headspritesect[sprite[sprite[i].owner].sectnum];
+// i: SE spritenum
+function MaybeTrainKillEnemies(/*int32_t */i:number, /*int32_t */numguts:number):void
+{
+    var/*int32_t */j = headspritesect[sprite[sprite[i].owner].sectnum];
 
-//    while (j >= 0)
-//    {
-//        const int32_t nextj = nextspritesect[j];
+    while (j >= 0)
+    {
+        var/*const int32_t */nextj = nextspritesect[j];
 
-//        if (sprite[j].extra >= 0 && sprite[j].statnum == STAT_ACTOR && A_CheckEnemySprite(&sprite[j]))
-//        {
-//            int16_t k = sprite[j].sectnum;
+        if (sprite[j].extra >= 0 && sprite[j].statnum == STAT_ACTOR && A_CheckEnemySprite(sprite[j]))
+        {
+            var/*int16_t */k = sprite[j].sectnum;
 
-//            updatesector(sprite[j].x,sprite[j].y,&k);
-//            if (k == sprite[i].sectnum)
-//            {
-//                A_DoGutsDir(j,JIBS6,numguts);
-//                A_PlaySound(SQUISHED,j);
-//                A_DeleteSprite(j);
-//            }
-//        }
+            var $k = new R(k);
+            updatesector(sprite[j].x,sprite[j].y,$k);
+            k = $k.$;
+            if (k == sprite[i].sectnum)
+            {
+                A_DoGutsDir(j,JIBS6,numguts);
+                A_PlaySound(SQUISHED,j);
+                A_DeleteSprite(j);
+            }
+        }
 
-//        j = nextj;
-//    }
-//}
+        j = nextj;
+    }
+}
 
 function G_MoveEffectors():void   //STATNUM 3
 {
@@ -6871,9 +6875,8 @@ function G_MoveEffectors():void   //STATNUM 3
 //#ifdef YAX_ENABLE
                 if (s.ang == 512)
                 {
-                    todoThrow("sc-sector ?");
-                    var/*int16_t */cf=!s.owner?1:0, bn=yax_getbunch(sc-sector, cf);
-                    var/*int32_t */jj:number, daz=SECTORFLD(sc-sector,"z", cf);
+                    var/*int16_t */cf=!s.owner?1:0, bn=yax_getbunch(s.sectnum/*sc-sector*/, cf);
+                    var/*int32_t */jj:number, daz=SECTORFLD(s.sectnum/*sc-sector*/,"z", cf);
 
                     if (bn >= 0)
                     {todoThrow();
@@ -7747,8 +7750,8 @@ function G_MoveEffectors():void   //STATNUM 3
                         HandleSE31(i, 1, s.z, 0, s.z-sc.floorz);
                     else
                         HandleSE31(i, 1, t[1], 0, t[1]-sc.floorz);
-                    debugger; //sc-sector???
-                    todoThrow("Yax_SetBunchZs(sc-sector, YAX_FLOOR, sc.floorz);"); //sc-sector???
+                    
+                    Yax_SetBunchZs(s.sectnum/*sc-sector*/, YAX_FLOOR, sc.floorz);
 
                     break;
                 }
@@ -7757,8 +7760,8 @@ function G_MoveEffectors():void   //STATNUM 3
                     HandleSE31(i, 0, s.z, 1, s.z-sc.floorz);
                 else
                     HandleSE31(i, 0, t[1], 1, t[1]-s.z);
-                todoThrow("sc-sector");
-                Yax_SetBunchZs(sc-sector, YAX_FLOOR, sc.floorz);
+                
+                Yax_SetBunchZs(s.sectnum/*sc-sector*/, YAX_FLOOR, sc.floorz);
             }
             break;
 
@@ -7792,8 +7795,7 @@ function G_MoveEffectors():void   //STATNUM 3
                         else sc.ceilingz += ksgn(t[1]-sc.ceilingz)*sprite[i].yvel;
                     }
 
-                todoThrow("sc-sector");
-                    Yax_SetBunchZs(sc-sector, YAX_CEILING, sc.ceilingz);
+                    Yax_SetBunchZs(s.sectnum/*sc-sector*/, YAX_CEILING, sc.ceilingz);
 
                     break;
                 }
@@ -7820,8 +7822,7 @@ function G_MoveEffectors():void   //STATNUM 3
                     else sc.ceilingz -= ksgn(s.z-t[1])*sprite[i].yvel;
                 }
 
-                todoThrow("sc-sector");
-                Yax_SetBunchZs(sc-sector, YAX_CEILING, sc.ceilingz);
+                Yax_SetBunchZs(s.sectnum/*sc-sector*/, YAX_CEILING, sc.ceilingz);
             }
             break;
 
