@@ -414,7 +414,7 @@ function/*int32_t */G_GetStringLineLength(/*char **/text, /*char **/end, /*int32
 {
     var /*int32_t */length = 0;
 
-    while (text.v() != '\n' && text != end)
+    while (text.v() != '\n' && text != end.v())
     {
         ++length;
 
@@ -428,7 +428,7 @@ function/*int32_t */G_GetStringNumLines(/*const char **/text:string, /*const cha
 {
     var/*int32_t */count = 1;
 
-    while (text.v() != end)
+    while (text.v() != end.v())
     {
         if (text.v() == '\n')
             ++count;
@@ -1165,16 +1165,16 @@ function G_AddCoordsFromRotation(coords:vec2_t, unitDirection:vec2_t, /*int32_t 
                 switch (ang)
                 {
                     case 0:
-                        wrap = (x + (pos.x + xoffset) > ((orientation & 2) ? (320<<16) : ((x2 - USERQUOTE_RIGHTOFFSET)<<16)));
+                        wrap = (x + (pos.x + xoffset) > ((orientation & 2) ? (320<<16) : ((x2 - USERQUOTE_RIGHTOFFSET)<<16)))?1:0;
                         break;
                     case 512:
-                        wrap = (y + (pos.x + xoffset) > ((orientation & 2) ? (200<<16) : ((y2 - USERQUOTE_RIGHTOFFSET)<<16)));
+                        wrap = (y + (pos.x + xoffset) > ((orientation & 2) ? (200<<16) : ((y2 - USERQUOTE_RIGHTOFFSET)<<16)))?1:0;
                         break;
                     case 1024:
-                        wrap = (x - (pos.x + xoffset) < ((orientation & 2) ? 0 : ((x1 + USERQUOTE_RIGHTOFFSET)<<16)));
+                        wrap = (x - (pos.x + xoffset) < ((orientation & 2) ? 0 : ((x1 + USERQUOTE_RIGHTOFFSET)<<16)))?1:0;
                         break;
                     case 1536:
-                        wrap = (y - (pos.x + xoffset) < ((orientation & 2) ? 0 : ((y1 + USERQUOTE_RIGHTOFFSET)<<16)));
+                        wrap = (y - (pos.x + xoffset) < ((orientation & 2) ? 0 : ((y1 + USERQUOTE_RIGHTOFFSET)<<16)))?1:0;
                         break;
                 }
                 if (wrap) // near-CODEDUP "case '\n':"
