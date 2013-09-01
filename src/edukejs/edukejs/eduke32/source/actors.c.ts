@@ -4817,7 +4817,7 @@ function G_MoveActors():void
 
                 if (t[2] == 2)
                 {
-                    var/*int32_t */j:number;
+                    var/*int32_t */_j:number;
 
                     x = s.extra;
                     m = 0;
@@ -4835,8 +4835,8 @@ function G_MoveActors():void
                     }
 
                     A_RadiusDamage(i, m,x>>2,x>>1,x-(x>>2),x);
-                    j = A_Spawn(i,EXPLOSION2);
-                    A_PlaySound(PIPEBOMB_EXPLODE,j);
+                    _j = A_Spawn(i,EXPLOSION2);
+                    A_PlaySound(PIPEBOMB_EXPLODE,_j);
                     if (s.zvel == 0)
                         A_Spawn(i,EXPLOSION2BOT);
                     for (x=0; x<8; x++)
