@@ -3751,7 +3751,7 @@ function PIPEBOMB_CONTROL(snum:number):number {return Gv_GetVarByLabel("PIPEBOMB
 function P_ProcessWeapon(/*int32_t */snum:number):void 
 {
     var p = g_player[snum].ps;
-    var kb = new R(p.kickback_pic);
+    //var kb = new R(p.kickback_pic);
     var /*const int32_t */shrunk = (sprite[p.i].yrepeat < 32)?1:0;
     var /*uint32_t */sb_snum = g_player[snum].sync.bits;
     var /*int32_t */i:number, j:number, k:number;
@@ -3811,7 +3811,7 @@ function P_ProcessWeapon(/*int32_t */snum:number):void
                 {
                     p.ammo_amount[p.curr_weapon]-=
                         p.ammo_amount[p.curr_weapon] % PWEAPON(snum, p.curr_weapon, Clip) ;
-                    (kb.$) = PWEAPON(snum, p.curr_weapon, TotalTime);
+                    (p.kickback_pic) = PWEAPON(snum, p.curr_weapon, TotalTime);
                     sb_snum &= ~BIT(SK_FIRE); // not firing...
                 }
                 return;
@@ -3869,7 +3869,7 @@ function P_ProcessWeapon(/*int32_t */snum:number):void
 
     if (shrunk || p.tipincs || p.access_incs)
         sb_snum &= ~BIT(SK_FIRE);
-    else if (shrunk == 0 && (sb_snum&(1<<2)) && (kb.$) == 0 && p.fist_incs == 0 &&
+    else if (shrunk == 0 && (sb_snum&(1<<2)) && (p.kickback_pic) == 0 && p.fist_incs == 0 &&
              p.last_weapon == -1 && (p.weapon_pos == 0 || p.holster_weapon == 1))
     {
         p.crack_time = 777;
@@ -3898,7 +3898,7 @@ function P_ProcessWeapon(/*int32_t */snum:number):void
                     p.hbomb_hold_delay = 0;
                     if (p.ammo_amount[p.curr_weapon] > 0)
                     {
-                        (kb.$)=1;
+                        (p.kickback_pic)=1;
                         if (PWEAPON(snum, p.curr_weapon, InitialSound) > 0)
                             A_PlaySound(PWEAPON(snum, p.curr_weapon, InitialSound), p.i);
                     }
@@ -3906,7 +3906,7 @@ function P_ProcessWeapon(/*int32_t */snum:number):void
 
                 case HANDREMOTE_WEAPON:
                     p.hbomb_hold_delay = 0;
-                    (kb.$) = 1;
+                    (p.kickback_pic) = 1;
                     if (PWEAPON(snum, p.curr_weapon, InitialSound) > 0)
                         A_PlaySound(PWEAPON(snum, p.curr_weapon, InitialSound), p.i);
                     break;
@@ -3914,7 +3914,7 @@ function P_ProcessWeapon(/*int32_t */snum:number):void
                 case SHOTGUN_WEAPON:
                     if (p.ammo_amount[p.curr_weapon] > 0 && p.random_club_frame == 0)
                     {
-                        (kb.$)=1;
+                        (p.kickback_pic)=1;
                         if (PWEAPON(snum, p.curr_weapon, InitialSound) > 0)
                             A_PlaySound(PWEAPON(snum, p.curr_weapon, InitialSound), p.i);
                     }
@@ -3961,7 +3961,7 @@ function P_ProcessWeapon(/*int32_t */snum:number):void
                                 {
                                     p.pos.z = p.opos.z;
                                     p.vel.z = 0;
-                                    (kb.$) = 1;
+                                    (p.kickback_pic) = 1;
                                     if (PWEAPON(snum, p.curr_weapon, InitialSound) > 0)
                                     {
                                         A_PlaySound(PWEAPON(snum, p.curr_weapon, InitialSound), p.i);
@@ -3978,7 +3978,7 @@ function P_ProcessWeapon(/*int32_t */snum:number):void
                 case RPG_WEAPON:
                     if (p.ammo_amount[p.curr_weapon] > 0)
                     {
-                        (kb.$) = 1;
+                        (p.kickback_pic) = 1;
                         if (PWEAPON(snum, p.curr_weapon, InitialSound) > 0)
                             A_PlaySound(PWEAPON(snum, p.curr_weapon, InitialSound), p.i);
                     }
@@ -3987,7 +3987,7 @@ function P_ProcessWeapon(/*int32_t */snum:number):void
                 case DEVISTATOR_WEAPON:
                     if (p.ammo_amount[p.curr_weapon] > 0)
                     {
-                        (kb.$) = 1;
+                        (p.kickback_pic) = 1;
                         p.hbomb_hold_delay = !p.hbomb_hold_delay?1:0;
                         if (PWEAPON(snum, p.curr_weapon, InitialSound) > 0)
                             A_PlaySound(PWEAPON(snum, p.curr_weapon, InitialSound), p.i);
@@ -3997,7 +3997,7 @@ function P_ProcessWeapon(/*int32_t */snum:number):void
                 case KNEE_WEAPON:
                     if (p.quick_kick == 0)
                     {
-                        (kb.$) = 1;
+                        (p.kickback_pic) = 1;
                         if (PWEAPON(snum, p.curr_weapon, InitialSound) > 0)
                             A_PlaySound(PWEAPON(snum, p.curr_weapon, InitialSound), p.i);
                     }
@@ -4006,17 +4006,17 @@ function P_ProcessWeapon(/*int32_t */snum:number):void
             }
         }
     }
-    else if (kb.$)
+    else if (p.kickback_pic)
     {
         if (PWEAPON(snum, p.curr_weapon, WorksLike) == HANDBOMB_WEAPON)
         {
-            if (PWEAPON(snum, p.curr_weapon, HoldDelay) && ((kb.$) == PWEAPON(snum, p.curr_weapon, FireDelay)) && TEST_SYNC_KEY(sb_snum, SK_FIRE))
+            if (PWEAPON(snum, p.curr_weapon, HoldDelay) && ((p.kickback_pic) == PWEAPON(snum, p.curr_weapon, FireDelay)) && TEST_SYNC_KEY(sb_snum, SK_FIRE))
             {
                 p.rapid_fire_hold = 1;
                 return;
             }
 
-            if (++(kb.$) == PWEAPON(snum, p.curr_weapon, HoldDelay))
+            if (++(p.kickback_pic) == PWEAPON(snum, p.curr_weapon, HoldDelay))
             {
                 p.ammo_amount[p.curr_weapon]--;
 
@@ -4075,11 +4075,11 @@ function P_ProcessWeapon(/*int32_t */snum:number):void
 
                 p.hbomb_on = 1;
             }
-            else if ((kb.$) < PWEAPON(snum, p.curr_weapon, HoldDelay) && TEST_SYNC_KEY(sb_snum, SK_FIRE))
+            else if ((p.kickback_pic) < PWEAPON(snum, p.curr_weapon, HoldDelay) && TEST_SYNC_KEY(sb_snum, SK_FIRE))
                 p.hbomb_hold_delay++;
-            else if ((kb.$) > PWEAPON(snum, p.curr_weapon, TotalTime))
+            else if ((p.kickback_pic) > PWEAPON(snum, p.curr_weapon, TotalTime))
             {
-                (kb.$) = 0;
+                (p.kickback_pic) = 0;
                 p.weapon_pos = WEAPON_POS_RAISE;
                 if (PIPEBOMB_CONTROL(snum) == PIPEBOMB_REMOTE)
                 {
@@ -4091,7 +4091,7 @@ function P_ProcessWeapon(/*int32_t */snum:number):void
         }
         else if (PWEAPON(snum, p.curr_weapon, WorksLike) == HANDREMOTE_WEAPON)
         {
-            if (++(kb.$) == PWEAPON(snum, p.curr_weapon, FireDelay))
+            if (++(p.kickback_pic) == PWEAPON(snum, p.curr_weapon, FireDelay))
             {
                 if (PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_BOMB_TRIGGER)
                     p.hbomb_on = 0;
@@ -4109,9 +4109,9 @@ function P_ProcessWeapon(/*int32_t */snum:number):void
                 }
             }
 
-            if ((kb.$) >= PWEAPON(snum, p.curr_weapon, TotalTime))
+            if ((p.kickback_pic) >= PWEAPON(snum, p.curr_weapon, TotalTime))
             {
-                (kb.$) = 0;
+                (p.kickback_pic) = 0;
                 if ((p.ammo_amount[HANDBOMB_WEAPON] > 0) &&
                         PIPEBOMB_CONTROL(snum) == PIPEBOMB_REMOTE)
                     P_AddWeapon(p,HANDBOMB_WEAPON);
@@ -4121,40 +4121,40 @@ function P_ProcessWeapon(/*int32_t */snum:number):void
         else
         {
             // the basic weapon...
-            (kb.$)++;
+            (p.kickback_pic)++;
 
             if (PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_CHECKATRELOAD)
             {
                 if (PWEAPON(snum, p.curr_weapon, WorksLike) == TRIPBOMB_WEAPON)
                 {
-                    if ((kb.$) >= PWEAPON(snum, p.curr_weapon, TotalTime))
+                    if ((p.kickback_pic) >= PWEAPON(snum, p.curr_weapon, TotalTime))
                     {
-                        (kb.$) = 0;
+                        (p.kickback_pic) = 0;
                         P_CheckWeapon(p);
                         p.weapon_pos = WEAPON_POS_LOWER;
                     }
                 }
-                else if (kb.$ >= PWEAPON(snum, p.curr_weapon, Reload))
+                else if (p.kickback_pic >= PWEAPON(snum, p.curr_weapon, Reload))
                     P_CheckWeapon(p);
             }
-            else if (PWEAPON(snum, p.curr_weapon, WorksLike)!=KNEE_WEAPON && kb.$ >= PWEAPON(snum, p.curr_weapon, FireDelay))
+            else if (PWEAPON(snum, p.curr_weapon, WorksLike)!=KNEE_WEAPON && p.kickback_pic >= PWEAPON(snum, p.curr_weapon, FireDelay))
                 P_CheckWeapon(p);
 
             if (PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_STANDSTILL
-                    && kb.$ < (PWEAPON(snum, p.curr_weapon, FireDelay)+1))
+                    && p.kickback_pic < (PWEAPON(snum, p.curr_weapon, FireDelay)+1))
             {
                 p.pos.z = p.opos.z;
                 p.vel.z = 0;
             }
 
-            if (kb.$ == PWEAPON(snum, p.curr_weapon, Sound2Time))
+            if (p.kickback_pic == PWEAPON(snum, p.curr_weapon, Sound2Time))
                 if (PWEAPON(snum, p.curr_weapon, Sound2Sound) > 0)
                     A_PlaySound(PWEAPON(snum, p.curr_weapon, Sound2Sound),p.i);
 
-            if (kb.$ == PWEAPON(snum, p.curr_weapon, SpawnTime))
+            if (p.kickback_pic == PWEAPON(snum, p.curr_weapon, SpawnTime))
                 P_DoWeaponSpawn(p);
 
-            if ((kb.$) >= PWEAPON(snum, p.curr_weapon, TotalTime))
+            if ((p.kickback_pic) >= PWEAPON(snum, p.curr_weapon, TotalTime))
             {
                 if (/*!(PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_CHECKATRELOAD) && */ p.reloading == 1 ||
                         (PWEAPON(snum, p.curr_weapon, Reload) > PWEAPON(snum, p.curr_weapon, TotalTime) && p.ammo_amount[p.curr_weapon] > 0
@@ -4164,24 +4164,24 @@ function P_ProcessWeapon(/*int32_t */snum:number):void
 
                     p.reloading = 1;
 
-                    if ((kb.$) != (PWEAPON(snum, p.curr_weapon, TotalTime)))
+                    if ((p.kickback_pic) != (PWEAPON(snum, p.curr_weapon, TotalTime)))
                     {
-                        if ((kb.$) == (PWEAPON(snum, p.curr_weapon, TotalTime)+1))
+                        if ((p.kickback_pic) == (PWEAPON(snum, p.curr_weapon, TotalTime)+1))
                         {
                             if (PWEAPON(snum, p.curr_weapon, ReloadSound1) > 0)
                                 A_PlaySound(PWEAPON(snum, p.curr_weapon, ReloadSound1),p.i);
                         }
-                        else if (((kb.$) == (PWEAPON(snum, p.curr_weapon, Reload) - (i/3)) &&
+                        else if (((p.kickback_pic) == (PWEAPON(snum, p.curr_weapon, Reload) - (i/3)) &&
                                   !(PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_RELOAD_TIMING)) ||
-                                 ((kb.$) == (PWEAPON(snum, p.curr_weapon, Reload) - i+4) &&
+                                 ((p.kickback_pic) == (PWEAPON(snum, p.curr_weapon, Reload) - i+4) &&
                                   (PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_RELOAD_TIMING)))
                         {
                             if (PWEAPON(snum, p.curr_weapon, ReloadSound2) > 0)
                                 A_PlaySound(PWEAPON(snum, p.curr_weapon, ReloadSound2),p.i);
                         }
-                        else if ((kb.$) >= (PWEAPON(snum, p.curr_weapon, Reload)))
+                        else if ((p.kickback_pic) >= (PWEAPON(snum, p.curr_weapon, Reload)))
                         {
-                            kb.$=0;
+                            p.kickback_pic=0;
                             p.reloading = 0;
                         }
                     }
@@ -4194,22 +4194,22 @@ function P_ProcessWeapon(/*int32_t */snum:number):void
                         if (TEST_SYNC_KEY(sb_snum, SK_FIRE))
                         {
                             if (PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_RANDOMRESTART)
-                                kb.$ = 1+(krand()&3);
-                            else kb.$=1;
+                                p.kickback_pic = 1+(krand()&3);
+                            else p.kickback_pic=1;
                         }
-                        else kb.$ = 0;
+                        else p.kickback_pic = 0;
                     }
-                    else kb.$ = 0;
+                    else p.kickback_pic = 0;
 
                     if (PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_RESET &&
                             ((PWEAPON(snum, p.curr_weapon, WorksLike) == KNEE_WEAPON)?1:p.ammo_amount[p.curr_weapon] > 0?1:0))
                     {
-                        if (TEST_SYNC_KEY(sb_snum, SK_FIRE)) kb.$ = 1;
-                        else kb.$ = 0;
+                        if (TEST_SYNC_KEY(sb_snum, SK_FIRE)) p.kickback_pic = 1;
+                        else p.kickback_pic = 0;
                     }
                 }
             }
-            else if (kb.$ >= PWEAPON(snum, p.curr_weapon, FireDelay) && (kb.$) < PWEAPON(snum, p.curr_weapon, TotalTime)
+            else if (p.kickback_pic >= PWEAPON(snum, p.curr_weapon, FireDelay) && (p.kickback_pic) < PWEAPON(snum, p.curr_weapon, TotalTime)
                      && ((PWEAPON(snum, p.curr_weapon, WorksLike) == KNEE_WEAPON)?1:p.ammo_amount[p.curr_weapon] > 0?1:0))
             {
                 if (PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_AUTOMATIC)
@@ -4217,10 +4217,10 @@ function P_ProcessWeapon(/*int32_t */snum:number):void
                     if (!(PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_SEMIAUTO))
                     {
                         if (TEST_SYNC_KEY(sb_snum, SK_FIRE) == 0 && PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_RESET)
-                            kb.$ = 0;
+                            p.kickback_pic = 0;
                         if (PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_FIREEVERYTHIRD)
                         {
-                            if (((kb.$)%3) == 0)
+                            if (((p.kickback_pic)%3) == 0)
                             {
                                 P_FireWeapon(p);
                                 P_DoWeaponSpawn(p);
@@ -4233,18 +4233,18 @@ function P_ProcessWeapon(/*int32_t */snum:number):void
                         }
                         else
                         {
-                            if (kb.$ == PWEAPON(snum, p.curr_weapon, FireDelay))
+                            if (p.kickback_pic == PWEAPON(snum, p.curr_weapon, FireDelay))
                             {
                                 P_FireWeapon(p);
                                 //                                P_DoWeaponSpawn(p);
                             }
                         }
                         if (PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_RESET &&
-                                (kb.$) > PWEAPON(snum, p.curr_weapon, TotalTime)-PWEAPON(snum, p.curr_weapon, HoldDelay) &&
+                                (p.kickback_pic) > PWEAPON(snum, p.curr_weapon, TotalTime)-PWEAPON(snum, p.curr_weapon, HoldDelay) &&
                                 ((PWEAPON(snum, p.curr_weapon, WorksLike) == KNEE_WEAPON) || p.ammo_amount[p.curr_weapon] > 0))
                         {
-                            if (TEST_SYNC_KEY(sb_snum, SK_FIRE)) kb.$ = 1;
-                            else kb.$ = 0;
+                            if (TEST_SYNC_KEY(sb_snum, SK_FIRE)) p.kickback_pic = 1;
+                            else p.kickback_pic = 0;
                         }
                     }
                     else
@@ -4256,7 +4256,7 @@ function P_ProcessWeapon(/*int32_t */snum:number):void
                         }
                         else
                         {
-                            if (kb.$ == PWEAPON(snum, p.curr_weapon, FireDelay))
+                            if (p.kickback_pic == PWEAPON(snum, p.curr_weapon, FireDelay))
                             {
                                 P_FireWeapon(p);
                                 //                                P_DoWeaponSpawn(p);
@@ -4264,7 +4264,7 @@ function P_ProcessWeapon(/*int32_t */snum:number):void
                         }
                     }
                 }
-                else if (kb.$ == PWEAPON(snum, p.curr_weapon, FireDelay))
+                else if (p.kickback_pic == PWEAPON(snum, p.curr_weapon, FireDelay))
                     P_FireWeapon(p);
             }
         }
