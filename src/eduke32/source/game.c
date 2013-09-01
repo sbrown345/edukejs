@@ -12077,9 +12077,7 @@ int32_t G_DoMoveThings(void)
             dlog(DEBUG_PLAYER_POS, "b4 process input p pos x:%i y:%i z%i, vel x:%i y:%i, z%i \n", g_player[0].ps->pos.x, g_player[0].ps->pos.y, g_player[0].ps->pos.z, g_player[0].ps->vel.x, g_player[0].ps->vel.y, g_player[0].ps->vel.z);
              P_ProcessInput(i);
             dlog(DEBUG_PLAYER_POS, "after process input p pos x:%i y:%i z%i, vel x:%i y:%i, z%i \n", g_player[0].ps->pos.x, g_player[0].ps->pos.y, g_player[0].ps->pos.z, g_player[0].ps->vel.x, g_player[0].ps->vel.y, g_player[0].ps->vel.z);
-#ifdef DEBUG_TODO
             P_CheckSectors(i);
-#endif
         }
     }
 
