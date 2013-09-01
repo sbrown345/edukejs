@@ -535,7 +535,7 @@ function G_ScreenTextSize( /*int32_t*/  font:number,
     var offset = new vec2_t(); // temporary; holds the last movement made in both directions
 
     var /*int32_t */tile:number;
-    var /*char */t:number;
+    var /*char */t:string;
 
     // set the start and end points depending on direction
     var /*int32_t */iter = (f & TEXT_BACKWARDS) ? -1 : 1; // iteration direction
