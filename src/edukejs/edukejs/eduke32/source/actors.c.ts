@@ -1426,7 +1426,7 @@ function G_MoveFX(): void
             {
                 /*int32_t j =*/ A_Spawn(i,sprite[i].hitag);
                 //                    sprite[j].pal = sprite[i].pal;
-                {A_DeleteSprite(i); continue BOLT;}//KILLIT(i);
+                {A_DeleteSprite(i); {i = nexti; continue BOLT;}}//KILLIT(i);
             }
             else if (sprite[i].extra > (66-13))
                 sprite[i].extra++;
@@ -4135,7 +4135,7 @@ function G_MoveActors():void
                     t[2] = 0;
                 }
                 else actor[i].tempang +=
-                        G_GetAngleDelta(actor[i].tempang,getangle(ps.pos.x-s.x,ps.pos.y-s.y))/3;
+                        int32(G_GetAngleDelta(actor[i].tempang,getangle(ps.pos.x-s.x,ps.pos.y-s.y))/3);
             }
             else if (t[0] == 2 || t[0] == 3)
             {

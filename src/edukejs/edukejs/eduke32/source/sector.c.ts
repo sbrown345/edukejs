@@ -3106,7 +3106,7 @@ function /*int32_t */A_CheckHitSprite(/*int32_t */i:number, /*int16_t **/hitsp:R
 
 function /*int32_t */P_FindWall(p:DukePlayer_t ,/*int16_t **/hitw:R<number>):number
 {
-    var hit:hitdata_t ;
+    var hit = new hitdata_t();
 
     hitscan(/*(const vec3_t *)*/p.pos,p.cursectnum,
             sintable[(p.ang+512)&2047],
@@ -3193,7 +3193,7 @@ function P_CheckSectors(/*int32_t */snum:number):void
         if (klabs(g_player[snum].sync.svel) > 768 || klabs(g_player[snum].sync.fvel) > 768)
         {
             i = -1;
-            goto CLEARCAMERAS;
+            CLEARCAMERAS(); return;
         }
     }
 
@@ -3207,7 +3207,7 @@ function P_CheckSectors(/*int32_t */snum:number):void
             if (p.newowner >= 0)
             {
                 i = -1;
-                goto CLEARCAMERAS;
+                CLEARCAMERAS(); return;
             }
             return;
         }
@@ -3300,7 +3300,9 @@ function P_CheckSectors(/*int32_t */snum:number):void
         if (neartagsprite == -1 && neartagwall == -1)
             if (p.cursectnum >= 0 && sector[p.cursectnum].lotag == 2)
             {
-                oldz = A_CheckHitSprite(p.i,&neartagsprite);
+                var $neartagsprite = new R(neartagsprite);
+                oldz = A_CheckHitSprite(p.i,$neartagsprite);
+                neartagsprite = $neartagsprite.$;
                 if (oldz > 1280) neartagsprite = -1;
             }
 
@@ -3409,25 +3411,27 @@ function P_CheckSectors(/*int32_t */snum:number):void
                 }
             }
 
-//CLEARCAMERAS:
+            function CLEARCAMERAS() {
 
-            if (i < 0)
-                G_ClearCameraView(p);
-            else if (p.newowner >= 0)
-                p.newowner = -1;
+                if (i < 0)
+                    G_ClearCameraView(p);
+                else if (p.newowner >= 0)
+                    p.newowner = -1;
 
-            if (I_EscapeTrigger())
-                I_EscapeTriggerClear();
+                if (I_EscapeTrigger())
+                    I_EscapeTriggerClear();
 
-            return;
+                //return;
             }
+            CLEARCAMERAS(); return;
+        }
         }
 
         if (TEST_SYNC_KEY(g_player[snum].sync.bits, SK_OPEN) == 0) return;
         else if (p.newowner >= 0)
         {
             i = -1;
-            goto CLEARCAMERAS;
+            CLEARCAMERAS(); return;//goto CLEARCAMERAS;
         }
 
         if (neartagwall == -1 && neartagsector == -1 && neartagsprite == -1)
@@ -3450,7 +3454,7 @@ function P_CheckSectors(/*int32_t */snum:number):void
             else if (p.newowner >= 0)
             {
                 i = -1;
-                goto CLEARCAMERAS;
+                CLEARCAMERAS(); return;//goto CLEARCAMERAS;
             }
         }
 
