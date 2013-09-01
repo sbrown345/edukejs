@@ -409,20 +409,20 @@ function P_SetGamePalette(player: DukePlayer_t, palid: number, $set: number): vo
     setbrightness(ud.brightness>>2, palid, $set);
 }
 
-//// get the string length until the next '\n'
-//int32_t G_GetStringLineLength(const char *text, const char *end, const int32_t iter)
-//{
-//    int32_t length = 0;
+// get the string length until the next '\n'
+function/*int32_t */G_GetStringLineLength(/*char **/text, /*char **/end, /*int32_t */iter:number):number
+{
+    var /*int32_t */length = 0;
 
-//    while (*text != '\n' && text != end)
-//    {
-//        ++length;
+    while (text.v() != '\n' && text != end)
+    {
+        ++length;
 
-//        text += iter;
-//    }
+        text.increment(iter);
+    }
 
-//    return length;
-//}
+    return length;
+}
 
 function/*int32_t */G_GetStringNumLines(/*const char **/text:string, /*const char **/end:string, /*int32_t */iter:number):number
 {
@@ -440,7 +440,7 @@ function/*int32_t */G_GetStringNumLines(/*const char **/text:string, /*const cha
 // Note: Neither of these care about TEXT_LINEWRAP. This is intended.
 
 // This function requires you to Bfree() the returned char*.
-function/*char* */G_GetSubString(/*char **/text:Uint8Array, /*char **/end:string, /*int32_t */iter:number, /*int32_t */length:number)
+function/*char* */G_GetSubString(/*char **/text:Uint8Array, /*char **/end:string, /*int32_t */iter:number, /*int32_t */length:number):string
 {todoThrow();
     //var/*char **/line = new Uint8Array(length+1);// (char*)Bmalloc((length+1) * sizeof(char));
     //var/*int32_t */counter = 0;
@@ -528,312 +528,312 @@ function G_ScreenTextSize( /*int32_t*/  font:number,
                         /*int32_t*/  xspace:number, /*int32_t*/  yline:number, /*int32_t*/  xbetween:number, /*int32_t*/  ybetween:number,
                          /*int32_t*/  f:number,
                         /*int32_t*/  x1:number, /*int32_t*/  y1:number, /*int32_t*/  x2:number, /*int32_t*/  y2:number): vec2_t 
-{todoThrow();return new vec2_t();
-    //var size = new vec2_t(); // eventually the return value
-    //var pos = new vec2_t(); // holds the coordinate position as we draw each character tile of the string
-    //var extent = new vec2_t(); // holds the x-width of each character and the greatest y-height of each line
-    //var offset = new vec2_t(); // temporary; holds the last movement made in both directions
+{
+    var size = new vec2_t(); // eventually the return value
+    var pos = new vec2_t(); // holds the coordinate position as we draw each character tile of the string
+    var extent = new vec2_t(); // holds the x-width of each character and the greatest y-height of each line
+    var offset = new vec2_t(); // temporary; holds the last movement made in both directions
 
-    //var /*int32_t */tile:number;
-    //var /*char */t:number;
+    var /*int32_t */tile:number;
+    var /*char */t:number;
 
-    //// set the start and end points depending on direction
-    //var /*int32_t */iter = (f & TEXT_BACKWARDS) ? -1 : 1; // iteration direction
+    // set the start and end points depending on direction
+    var /*int32_t */iter = (f & TEXT_BACKWARDS) ? -1 : 1; // iteration direction
 
-    //var /*const char **/end:string;
-    //var /*const char **/text:string;
+    var /*const char **/end:string;
+    var /*const char **/text:string;
 
-    //if (str == NULL)
-    //    return size;
+    if (str == NULL)
+        return size;
 
-    //end = (f & TEXT_BACKWARDS) ? str-1 : Bstrchr(str,'\0');
-    //text = (f & TEXT_BACKWARDS) ? Bstrchr(str,'\0')-1 : str;
+    end = (f & TEXT_BACKWARDS) ? todoThrow("str-1") : Bstrchr(str,'\0');
+    text = (f & TEXT_BACKWARDS) ? todoThrow("Bstrchr(str,'\0')-1") : str;
 
-    //// optimization: justification in both directions
-    //if ((f & TEXT_XJUSTIFY) && (f & TEXT_YJUSTIFY))
-    //{
-    //    size.x = xbetween;
-    //    size.y = ybetween;
-    //    return size;
-    //}
+    // optimization: justification in both directions
+    if ((f & TEXT_XJUSTIFY) && (f & TEXT_YJUSTIFY))
+    {
+        size.x = xbetween;
+        size.y = ybetween;
+        return size;
+    }
 
-    //// for best results, we promote 320x200 coordinates to full precision before any math
-    //if (!(o & ROTATESPRITE_FULL16))
-    //{
-    //    x <<= 16;
-    //    y <<= 16;
-    //    xspace <<= 16;
-    //    yline <<= 16;
-    //    xbetween <<= 16;
-    //    ybetween <<= 16;
-    //}
-    //// coordinate values should be shifted left by 16
+    // for best results, we promote 320x200 coordinates to full precision before any math
+    if (!(o & ROTATESPRITE_FULL16))
+    {
+        x <<= 16;
+        y <<= 16;
+        xspace <<= 16;
+        yline <<= 16;
+        xbetween <<= 16;
+        ybetween <<= 16;
+    }
+    // coordinate values should be shifted left by 16
 
-    //// handle zooming where applicable
-    //xspace = scale(xspace, z, 65536);
-    //yline = scale(yline, z, 65536);
-    //xbetween = scale(xbetween, z, 65536);
-    //ybetween = scale(ybetween, z, 65536);
-    //// size/width/height/spacing/offset values should be multiplied or scaled by $z, zoom (since 100% is 65536, the same as 1<<16)
+    // handle zooming where applicable
+    xspace = scale(xspace, z, 65536);
+    yline = scale(yline, z, 65536);
+    xbetween = scale(xbetween, z, 65536);
+    ybetween = scale(ybetween, z, 65536);
+    // size/width/height/spacing/offset values should be multiplied or scaled by $z, zoom (since 100% is 65536, the same as 1<<16)
 
-    //// loop through the string
-    //while ((t = *text) && text != end)
-    //{
-    //    // handle escape sequences
-    //    if (t == '^' && Bisdigit(*(text+iter)) && !(f & TEXT_LITERALESCAPE))
-    //    {
-    //        text += iter + iter;
-    //        if (Bisdigit(*text))
-    //            text += iter;
-    //        continue;
-    //    }
+    // loop through the string
+    while ((t = text.v()) && text != end)
+    {
+        // handle escape sequences
+        if (t == '^' && Bisdigit((text.v(iter))) && !(f & TEXT_LITERALESCAPE))
+        {
+            text += iter + iter;
+            if (Bisdigit(text.v()))
+                text += iter;
+            continue;
+        }
 
-    //    // handle case bits
-    //    if (f & TEXT_UPPERCASE)
-    //    {
-    //        if (f & TEXT_INVERTCASE) // optimization...?
-    //        { // v^ important that these two ifs remain separate due to the else below
-    //            if (Bisupper(t))
-    //                t = Btolower(t);
-    //        }
-    //        else if (Bislower(t))
-    //            t = Btoupper(t);
-    //    }
-    //    else if (f & TEXT_INVERTCASE)
-    //    {
-    //        if (Bisupper(t))
-    //            t = Btolower(t);
-    //        else if (Bislower(t))
-    //            t = Btoupper(t);
-    //    }
+        // handle case bits
+        if (f & TEXT_UPPERCASE)
+        {
+            if (f & TEXT_INVERTCASE) // optimization...?
+            { // v^ important that these two ifs remain separate due to the else below
+                if (Bisupper(t))
+                    t = Btolower(t);
+            }
+            else if (Bislower(t))
+                t = Btoupper(t);
+        }
+        else if (f & TEXT_INVERTCASE)
+        {
+            if (Bisupper(t))
+                t = Btolower(t);
+            else if (Bislower(t))
+                t = Btoupper(t);
+        }
 
-    //    // translate the character to a tilenum
-    //    tile = G_GetStringTile(font, &t, f);
+        // translate the character to a tilenum
+        tile = G_GetStringTile(font, t, f);
 
-    //    // reset this here because we haven't printed anything yet this loop
-    //    extent.x = 0;
+        // reset this here because we haven't printed anything yet this loop
+        extent.x = 0;
 
-    //    // reset this here because the act of printing something on this line means that we include the margin above in the total size
-    //    offset.y = 0;
+        // reset this here because the act of printing something on this line means that we include the margin above in the total size
+        offset.y = 0;
 
-    //    // handle each character itself in the context of screen drawing
-    //    switch (t)
-    //    {
-    //        case '\t':
-    //        case ' ':
-    //            // width
-    //            extent.x = xspace;
+        // handle each character itself in the context of screen drawing
+        switch (t)
+        {
+            case '\t':
+            case ' ':
+                // width
+                extent.x = xspace;
 
-    //            if (f & (TEXT_INTERNALSPACE|TEXT_TILESPACE))
-    //            {
-    //                var /*char */space = '.'; // this is subject to change as an implementation detail
-    //                if (f & TEXT_TILESPACE)
-    //                    space = '\x7F'; // tile after '~'
-    //                tile = G_GetStringTile(font, &space, f);
+                if (f & (TEXT_INTERNALSPACE|TEXT_TILESPACE))
+                {
+                    var /*char */space = '.'; // this is subject to change as an implementation detail
+                    if (f & TEXT_TILESPACE)
+                        space = '\x7F'; // tile after '~'
+                    tile = G_GetStringTile(font, space, f);
 
-    //                extent.x += (tilesizx[tile] * z);
-    //            }
+                    extent.x += (tilesizx[tile] * z);
+                }
 
-    //            // prepare the height // near-CODEDUP the other two near-CODEDUPs for this section
-    //            {
-    //                var /*int32_t */tempyextent = yline;
+                // prepare the height // near-CODEDUP the other two near-CODEDUPs for this section
+                {
+                    var /*int32_t */tempyextent = yline;
 
-    //                if (f & (TEXT_INTERNALLINE|TEXT_TILELINE))
-    //                {
-    //                    var /*char */line = 'A'; // this is subject to change as an implementation detail
-    //                    if (f & TEXT_TILELINE)
-    //                        line = '\x7F'; // tile after '~'
-    //                    tile = G_GetStringTile(font, &line, f);
+                    if (f & (TEXT_INTERNALLINE|TEXT_TILELINE))
+                    {
+                        var /*char */line = 'A'; // this is subject to change as an implementation detail
+                        if (f & TEXT_TILELINE)
+                            line = '\x7F'; // tile after '~'
+                        tile = G_GetStringTile(font, line, f);
 
-    //                    tempyextent += tilesizy[tile] * z;
-    //                }
+                        tempyextent += tilesizy[tile] * z;
+                    }
 
-    //                if (tempyextent > extent.y)
-    //                    extent.y = tempyextent;
-    //            }
+                    if (tempyextent > extent.y)
+                        extent.y = tempyextent;
+                }
 
-    //            if (t == '\t')
-    //                extent.x <<= 2; // *= 4
+                if (t == '\t')
+                    extent.x <<= 2; // *= 4
 
-    //            break;
+                break;
 
-    //        case '\n': // near-CODEDUP "if (wrap)"
-    //            // save the position
-    //            if (!(f & TEXT_XOFFSETZERO)) // we want the entire offset to count as the character width
-    //                pos.x -= offset.x;
-    //            if (size.x > pos.x)
-    //                pos.x = size.x;
+            case '\n': // near-CODEDUP "if (wrap)"
+                // save the position
+                if (!(f & TEXT_XOFFSETZERO)) // we want the entire offset to count as the character width
+                    pos.x -= offset.x;
+                if (size.x > pos.x)
+                    pos.x = size.x;
 
-    //            // reset the position
-    //            pos.x = 0;
+                // reset the position
+                pos.x = 0;
 
-    //            // prepare the height
-    //            {
-    //                var /*int32_t */tempyextent = yline;
+                // prepare the height
+                {
+                    var /*int32_t */tempyextent = yline;
 
-    //                if (f & (TEXT_INTERNALLINE|TEXT_TILELINE))
-    //                {
-    //                    var /*char */line = 'A'; // this is subject to change as an implementation detail
-    //                    if (f & TEXT_TILELINE)
-    //                        line = '\x7F'; // tile after '~'
-    //                    tile = G_GetStringTile(font, &line, f);
+                    if (f & (TEXT_INTERNALLINE|TEXT_TILELINE))
+                    {
+                        var /*char */line = 'A'; // this is subject to change as an implementation detail
+                        if (f & TEXT_TILELINE)
+                            line = '\x7F'; // tile after '~'
+                        tile = G_GetStringTile(font, line, f);
 
-    //                    tempyextent += tilesizy[tile] * z;
-    //                }
+                        tempyextent += tilesizy[tile] * z;
+                    }
 
-    //                if (extent.y > tempyextent)
-    //                    tempyextent = extent.y;
-    //            }
+                    if (extent.y > tempyextent)
+                        tempyextent = extent.y;
+                }
 
-    //            // move down the line height
-    //            if (!(f & TEXT_YOFFSETZERO))
-    //                pos.y += extent.y;
+                // move down the line height
+                if (!(f & TEXT_YOFFSETZERO))
+                    pos.y += extent.y;
 
-    //            // reset the current height
-    //            extent.y = 0;
+                // reset the current height
+                extent.y = 0;
 
-    //            // line spacing
-    //            offset.y = (f & TEXT_YJUSTIFY) ? 0 : ybetween; // ternary to prevent overflow
-    //            pos.y += offset.y;
+                // line spacing
+                offset.y = (f & TEXT_YJUSTIFY) ? 0 : ybetween; // ternary to prevent overflow
+                pos.y += offset.y;
 
-    //            break;
+                break;
 
-    //        default:
-    //            // width
-    //            extent.x = tilesizx[tile] * z;
+            default:
+                // width
+                extent.x = tilesizx[tile] * z;
 
-    //            // obnoxious hardcoded functionality from gametext
-    //            if (NUMHACKACTIVE(t, f))
-    //            {
-    //                var /*char */numeral = '0'; // this is subject to change as an implementation detail
-    //                extent.x = (tilesizx[G_GetStringTile(font, &numeral, f)]-1) * z;
-    //            }
+                // obnoxious hardcoded functionality from gametext
+                if (NUMHACKACTIVE(t, f))
+                {
+                    var /*char */numeral = '0'; // this is subject to change as an implementation detail
+                    extent.x = (tilesizx[G_GetStringTile(font, numeral, f)]-1) * z;
+                }
 
-    //            // height
-    //            if ((tilesizy[tile] * z) > extent.y)
-    //                extent.y = (tilesizy[tile] * z);
+                // height
+                if ((tilesizy[tile] * z) > extent.y)
+                    extent.y = (tilesizy[tile] * z);
 
-    //            break;
-    //    }
+                break;
+        }
 
-    //    // incrementing the coordinate counters
-    //    offset.x = 0;
+        // incrementing the coordinate counters
+        offset.x = 0;
 
-    //    // advance the x coordinate
-    //    if (!(f & TEXT_XOFFSETZERO) || NUMHACKACTIVE(t, f))
-    //        offset.x += extent.x;
+        // advance the x coordinate
+        if (!(f & TEXT_XOFFSETZERO) || NUMHACKACTIVE(t, f))
+            offset.x += extent.x;
 
-    //    // account for text spacing
-    //    if (!NUMHACKACTIVE(t, f) // this "if" line ONLY == replicating hardcoded stuff
-    //        && t != '\n'
-    //        && !(f & TEXT_XJUSTIFY)) // to prevent overflow
-    //        offset.x += xbetween;
+        // account for text spacing
+        if (!NUMHACKACTIVE(t, f) // this "if" line ONLY == replicating hardcoded stuff
+            && t != '\n'
+            && !(f & TEXT_XJUSTIFY)) // to prevent overflow
+            offset.x += xbetween;
 
-    //    // line wrapping
-    //    if ((f & TEXT_LINEWRAP) && !(f & TEXT_XRIGHT) && !(f & TEXT_XCENTER) && blockangle % 512 == 0)
-    //    {
-    //        var /*int32_t */wrap = 0;
-    //        var /*const int32_t */ang = blockangle % 2048;
+        // line wrapping
+        if ((f & TEXT_LINEWRAP) && !(f & TEXT_XRIGHT) && !(f & TEXT_XCENTER) && blockangle % 512 == 0)
+        {
+            var /*int32_t */wrap = 0;
+            var /*const int32_t */ang = blockangle % 2048;
 
-    //        // this is the only place in qstrdim where angle actually affects direction, but only in the wrapping measurement
-    //        switch (ang)
-    //        {
-    //            case 0:
-    //                wrap = (x + (pos.x + offset.x) > ((o & 2) ? (320<<16) : ((x2 - USERQUOTE_RIGHTOFFSET)<<16)));
-    //                break;
-    //            case 512:
-    //                wrap = (y + (pos.x + offset.x) > ((o & 2) ? (200<<16) : ((y2 - USERQUOTE_RIGHTOFFSET)<<16)));
-    //                break;
-    //            case 1024:
-    //                wrap = (x - (pos.x + offset.x) < ((o & 2) ? 0 : ((x1 + USERQUOTE_RIGHTOFFSET)<<16)));
-    //                break;
-    //            case 1536:
-    //                wrap = (y - (pos.x + offset.x) < ((o & 2) ? 0 : ((y1 + USERQUOTE_RIGHTOFFSET)<<16)));
-    //                break;
-    //        }
-    //        if (wrap) // near-CODEDUP "case '\n':"
-    //        {
-    //            // save the position
-    //            if (size.x > pos.x)
-    //                pos.x = size.x;
+            // this is the only place in qstrdim where angle actually affects direction, but only in the wrapping measurement
+            switch (ang)
+            {
+                case 0:
+                    wrap = (x + (pos.x + offset.x) > ((o & 2) ? (320<<16) : ((x2 - USERQUOTE_RIGHTOFFSET)<<16)));
+                    break;
+                case 512:
+                    wrap = (y + (pos.x + offset.x) > ((o & 2) ? (200<<16) : ((y2 - USERQUOTE_RIGHTOFFSET)<<16)));
+                    break;
+                case 1024:
+                    wrap = (x - (pos.x + offset.x) < ((o & 2) ? 0 : ((x1 + USERQUOTE_RIGHTOFFSET)<<16)));
+                    break;
+                case 1536:
+                    wrap = (y - (pos.x + offset.x) < ((o & 2) ? 0 : ((y1 + USERQUOTE_RIGHTOFFSET)<<16)));
+                    break;
+            }
+            if (wrap) // near-CODEDUP "case '\n':"
+            {
+                // save the position
+                if (size.x > pos.x)
+                    pos.x = size.x;
 
-    //            // reset the position
-    //            pos.x = 0;
+                // reset the position
+                pos.x = 0;
 
-    //            // prepare the height
-    //            {
-    //                var /*int32_t */tempyextent = yline;
+                // prepare the height
+                {
+                    var /*int32_t */tempyextent = yline;
 
-    //                if (f & (TEXT_INTERNALLINE|TEXT_TILELINE))
-    //                {
-    //                    var /*char */line = 'A'; // this is subject to change as an implementation detail
-    //                    if (f & TEXT_TILELINE)
-    //                        line = '\x7F'; // tile after '~'
-    //                    tile = G_GetStringTile(font, &line, f);
+                    if (f & (TEXT_INTERNALLINE|TEXT_TILELINE))
+                    {
+                        var /*char */line = 'A'; // this is subject to change as an implementation detail
+                        if (f & TEXT_TILELINE)
+                            line = '\x7F'; // tile after '~'
+                        tile = G_GetStringTile(font, line, f);
 
-    //                    tempyextent += tilesizy[tile] * z;
-    //                }
+                        tempyextent += tilesizy[tile] * z;
+                    }
 
-    //                if (tempyextent > extent.y)
-    //                    extent.y = tempyextent;
-    //            }
+                    if (tempyextent > extent.y)
+                        extent.y = tempyextent;
+                }
 
-    //            // move down the line height
-    //            if (!(f & TEXT_YOFFSETZERO))
-    //                pos.y += extent.y;
+                // move down the line height
+                if (!(f & TEXT_YOFFSETZERO))
+                    pos.y += extent.y;
 
-    //            // reset the current height
-    //            extent.y = 0;
+                // reset the current height
+                extent.y = 0;
 
-    //            // line spacing
-    //            offset.y = (f & TEXT_YJUSTIFY) ? 0 : ybetween; // ternary to prevent overflow
-    //            pos.y += offset.y;
-    //        }
-    //        else
-    //            pos.x += offset.x;
-    //    }
-    //    else
-    //        pos.x += offset.x;
+                // line spacing
+                offset.y = (f & TEXT_YJUSTIFY) ? 0 : ybetween; // ternary to prevent overflow
+                pos.y += offset.y;
+            }
+            else
+                pos.x += offset.x;
+        }
+        else
+            pos.x += offset.x;
 
-    //    // save some trouble with calculation in case the line breaks
-    //    if (!(f & TEXT_XOFFSETZERO) || NUMHACKACTIVE(t, f))
-    //        offset.x -= extent.x;
+        // save some trouble with calculation in case the line breaks
+        if (!(f & TEXT_XOFFSETZERO) || NUMHACKACTIVE(t, f))
+            offset.x -= extent.x;
 
-    //    // iterate to the next character in the string
-    //    text += iter;
-    //}
+        // iterate to the next character in the string
+        text += iter;
+    }
 
-    //// calculate final size
-    //if (!(f & TEXT_XOFFSETZERO))
-    //    pos.x -= offset.x;
+    // calculate final size
+    if (!(f & TEXT_XOFFSETZERO))
+        pos.x -= offset.x;
 
-    //if (!(f & TEXT_YOFFSETZERO))
-    //{
-    //    pos.y -= offset.y;
-    //    pos.y += extent.y;
-    //}
-    //else
-    //    pos.y += ybetween;
+    if (!(f & TEXT_YOFFSETZERO))
+    {
+        pos.y -= offset.y;
+        pos.y += extent.y;
+    }
+    else
+        pos.y += ybetween;
 
-    //if (pos.x > size.x)
-    //    size.x = pos.x;
-    //if (pos.y > size.y)
-    //    size.y = pos.y;
+    if (pos.x > size.x)
+        size.x = pos.x;
+    if (pos.y > size.y)
+        size.y = pos.y;
 
-    //// justification where only one of the two directions is set, so we have to iterate
-    //if (f & TEXT_XJUSTIFY)
-    //    size.x = xbetween;
-    //if (f & TEXT_YJUSTIFY)
-    //    size.y = ybetween;
+    // justification where only one of the two directions is set, so we have to iterate
+    if (f & TEXT_XJUSTIFY)
+        size.x = xbetween;
+    if (f & TEXT_YJUSTIFY)
+        size.y = ybetween;
 
-    //// return values in the same manner we receive them
-    //if (!(o & ROTATESPRITE_FULL16))
-    //{
-    //    size.x >>= 16;
-    //    size.y >>= 16;
-    //}
+    // return values in the same manner we receive them
+    if (!(o & ROTATESPRITE_FULL16))
+    {
+        size.x >>= 16;
+        size.y >>= 16;
+    }
 
-    //return size;
+    return size;
 }
 
 function G_AddCoordsFromRotation(coords:vec2_t, unitDirection:vec2_t, /*int32_t */magnitude:number):void
@@ -849,27 +849,27 @@ function G_AddCoordsFromRotation(coords:vec2_t, unitDirection:vec2_t, /*int32_t 
                     /*int32_t*/ xspace:number, /*int32_t*/ yline:number, /*int32_t*/ xbetween:number, /*int32_t*/ ybetween:number, /*int32_t*/ f:number,
                     /*int32_t*/ x1:number, /*int32_t*/ y1:number, /*int32_t*/ x2:number, /*int32_t*/ y2:number): vec2_t
 {
-    var size = new vec2_t( 0, 0, ); // eventually the return value
-    var origin = new vec2_t( 0, 0, ); // where to start, depending on the alignment
-    var pos = new vec2_t( 0, 0, ); // holds the coordinate position as we draw each character tile of the string
-    var extent = new vec2_t( 0, 0, ); // holds the x-width of each character and the greatest y-height of each line
-    var Xdirection = new vec2_t( sintable[(blockangle+512)&2047], sintable[blockangle&2047], );
-    var Ydirection = new vec2_t( sintable[(blockangle+1024)&2047], sintable[(blockangle+512)&2047], );
+    var size = new vec2_t( 0, 0 ); // eventually the return value
+    var origin = new vec2_t( 0, 0 ); // where to start, depending on the alignment
+    var pos = new vec2_t( 0, 0 ); // holds the coordinate position as we draw each character tile of the string
+    var extent = new vec2_t( 0, 0 ); // holds the x-width of each character and the greatest y-height of each line
+    var Xdirection = new vec2_t( sintable[(blockangle+512)&2047], sintable[blockangle&2047] );
+    var Ydirection = new vec2_t( sintable[(blockangle+1024)&2047], sintable[(blockangle+512)&2047] );
 
     var/*int32_t */tile:number;
-    var/*char */t:number;
+    var/*char */t:string;
 
     // set the start and end points depending on direction
     var/*int32_t */iter = (f & TEXT_BACKWARDS) ? -1 : 1; // iteration direction
 
-    const char *end;
-    const char *text;
+    var /*const char **/end:string;
+    var /*const char **/text:string;
 
     if (str == NULL)
         return size;
 
-    end = (f & TEXT_BACKWARDS) ? str-1 : Bstrchr(str,'\0');
-    text = (f & TEXT_BACKWARDS) ? Bstrchr(str,'\0')-1 : str;
+    end = (f & TEXT_BACKWARDS) ? todoThrow("str-1") : Bstrchr(str,'\0');
+    text = (f & TEXT_BACKWARDS) ? todoThrow("Bstrchr(str,'\0')-1") : str;
 
     // for best results, we promote 320x200 coordinates to full precision before any math
     if (!(o & ROTATESPRITE_FULL16))
@@ -930,7 +930,7 @@ function G_AddCoordsFromRotation(coords:vec2_t, unitDirection:vec2_t, /*int32_t 
             if (f & TEXT_XRIGHT)
                 origin.x = -linewidth;
             else if (f & TEXT_XCENTER)
-                origin.x = -(linewidth / 2);
+                origin.x = -int32(linewidth / 2);
         }
 
         if (f & TEXT_YJUSTIFY)
@@ -953,22 +953,22 @@ function G_AddCoordsFromRotation(coords:vec2_t, unitDirection:vec2_t, /*int32_t 
         var/*int32_t */angle = blockangle + charangle;
 
         // handle escape sequences
-        if (t.v() == '^' && Bisdigit(*(text+iter)) && !(f & TEXT_LITERALESCAPE))
+        if (t.v() == '^' && Bisdigit((text.v(iter))) && !(f & TEXT_LITERALESCAPE))
         {
             var /*char */smallbuf = new Uint8Array(4);
 
-            text += iter;
-            smallbuf[0] = *text;
+            text.increment(iter);//text += iter;
+            smallbuf[0] = text.c();
 
-            text += iter;
-            if (Bisdigit(*text))
+            text.increment(iter);
+            if (Bisdigit(text.v()))
             {
-                smallbuf[1] = *text;
-                smallbuf[2] = '\0';
-                text += iter;
+                smallbuf[1] = text.c();
+                smallbuf[2] = '\0'.charCodeAt(0);
+                text.increment(iter);
             }
             else
-                smallbuf[1] = '\0';
+                smallbuf[1] = '\0'.charCodeAt(0);
 
             if (!(f & TEXT_IGNOREESCAPE))
                 pal = Batoi(smallbuf);
@@ -996,7 +996,7 @@ function G_AddCoordsFromRotation(coords:vec2_t, unitDirection:vec2_t, /*int32_t 
         }
 
         // translate the character to a tilenum
-        tile = G_GetStringTile(font, &t, f);
+        tile = G_GetStringTile(font, t, f);
 
         switch (t)
         {
@@ -1038,7 +1038,7 @@ function G_AddCoordsFromRotation(coords:vec2_t, unitDirection:vec2_t, /*int32_t 
                     var/*char */space = '.'; // this is subject to change as an implementation detail
                     if (f & TEXT_TILESPACE)
                         space = '\x7F'; // tile after '~'
-                    tile = G_GetStringTile(font, &space, f);
+                    tile = G_GetStringTile(font, space, f);
 
                     extent.x += (tilesizx[tile] * z);
                 }
@@ -1052,7 +1052,7 @@ function G_AddCoordsFromRotation(coords:vec2_t, unitDirection:vec2_t, /*int32_t 
                         var/*char */line = 'A'; // this is subject to change as an implementation detail
                         if (f & TEXT_TILELINE)
                             line = '\x7F'; // tile after '~'
-                        tile = G_GetStringTile(font, &line, f);
+                        tile = G_GetStringTile(font, line, f);
 
                         tempyextent += tilesizy[tile] * z;
                     }
@@ -1079,7 +1079,7 @@ function G_AddCoordsFromRotation(coords:vec2_t, unitDirection:vec2_t, /*int32_t 
                         var/*char */line = 'A'; // this is subject to change as an implementation detail
                         if (f & TEXT_TILELINE)
                             line = '\x7F'; // tile after '~'
-                        tile = G_GetStringTile(font, &line, f);
+                        tile = G_GetStringTile(font, line, f);
 
                         tempyextent += tilesizy[tile] * z;
                     }
@@ -1101,7 +1101,7 @@ function G_AddCoordsFromRotation(coords:vec2_t, unitDirection:vec2_t, /*int32_t 
                 // near-CODEDUP "alignments"
                 if ((f & TEXT_XJUSTIFY) || (f & TEXT_XRIGHT) || (f & TEXT_XCENTER))
                 {
-                    var/*const */int32_t length = G_GetStringLineLength(text, end, iter);
+                    var/*const int32_t*/ length = G_GetStringLineLength(text, end, iter);
 
                     var/*char **/line = G_GetSubString(text, end, iter, length);
 
@@ -1132,7 +1132,7 @@ function G_AddCoordsFromRotation(coords:vec2_t, unitDirection:vec2_t, /*int32_t 
                 if (NUMHACKACTIVE(t, f))
                 {
                     var/*char */numeral = '0'; // this is subject to change as an implementation detail
-                    extent.x = (tilesizx[G_GetStringTile(font, &numeral, f)]-1) * z;
+                    extent.x = (tilesizx[G_GetStringTile(font, numeral, f)]-1) * z;
                 }
 
                 // height
@@ -1191,7 +1191,7 @@ function G_AddCoordsFromRotation(coords:vec2_t, unitDirection:vec2_t, /*int32_t 
                             var/*char */line = 'A'; // this is subject to change as an implementation detail
                             if (f & TEXT_TILELINE)
                                 line = '\x7F'; // tile after '~'
-                            tile = G_GetStringTile(font, &line, f);
+                            tile = G_GetStringTile(font, line, f);
 
                             tempyextent += tilesizy[tile] * z;
                         }
@@ -1218,7 +1218,7 @@ function G_AddCoordsFromRotation(coords:vec2_t, unitDirection:vec2_t, /*int32_t 
         }
 
         // iterate to the next character in the string
-        text += iter;
+        text.increment(iter);
     }
 
     // return values in the same manner we receive them
@@ -1238,7 +1238,7 @@ function G_AddCoordsFromRotation(coords:vec2_t, unitDirection:vec2_t, /*int32_t 
 //                          int32_t xspace, int32_t yline, int32_t xbetween, int32_t ybetween, const int32_t f,
 //                          const int32_t x1, const int32_t y1, const int32_t x2, const int32_t y2)
 //{
-//    vec2_t size = new vec2_t( 0, 0, ); // eventually the return value
+//    vec2_t size = new vec2_t( 0, 0 ); // eventually the return value
 
 //    if (!(o & ROTATESPRITE_FULL16))
 //    {

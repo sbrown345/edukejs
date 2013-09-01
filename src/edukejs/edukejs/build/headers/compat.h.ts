@@ -597,7 +597,7 @@ var Bstrupr = strupr;
 var Bstrcat = strcat;
 //# define Bstrncat strncat
 var Bstrlen = strlen;
-//# define Bstrchr strchr
+var Bstrchr = strchr;
 var Bstrrchr = strrchr;
 //// XXX: different across 32- and 64-bit archs (e.g.
 //// parsing the decimal representation of 0xffffffff,
@@ -610,9 +610,9 @@ var Bstrrchr = strrchr;
 //# define Bstrtoul strtoul
 //# define Bstrtod strtod
 //# define Bstrstr strstr
-//# define Bislower islower
-//# define Bisupper isupper
-//# define Bisdigit isdigit
+var Bislower = islower;
+var Bisupper = isupper;
+var Bisdigit = isdigit;
 var Btoupper = toupper;
 var Btolower = tolower;
 var Bmemcpy = memcpy;

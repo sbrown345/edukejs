@@ -2420,7 +2420,7 @@ void G_AlignWarpElevators(void)
         if (SLT == SE_17_WARP_ELEVATOR && SS > 16)
         {
             j = headspritestat[STAT_EFFECTOR];
-            while (j >= 0)`
+            while (j >= 0)
             {
                 if ((sprite[j].lotag) == SE_17_WARP_ELEVATOR && i != j &&
                         (SHT) == (sprite[j].hitag))

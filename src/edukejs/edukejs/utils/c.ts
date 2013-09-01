@@ -291,6 +291,14 @@ function toupper(s: string): string {
     return s.toUpperCase();
 }
 
+function islower(s: string): number {
+    return s === s.toLowerCase()?1:0;
+}
+
+function isupper(s: string): number {
+   return s === s.toUpperCase()?1:0;
+}
+
 function isalnum(c: string) : boolean {
     return (c >= "0" && c <= "9")
         || (c >= "A" && c <= "Z")
@@ -299,6 +307,17 @@ function isalnum(c: string) : boolean {
 
 function isdigit(c: string) : number  {
     return (c >= "0" && c <= "9") ?  1 : 0;
+}
+
+function strchr(str:string, character:number) {
+    var newStr = str;
+    newStr.idx = str.indexOf(String.fromCharCode(character));
+    
+    if(newStr.idx == -1) {
+        return null;
+    }
+
+    return newStr;
 }
 
 var uint8_t = {size:1};
@@ -320,16 +339,21 @@ function indexOf<T>(e: T, arr: T[]):number {
 
 interface String {
     idx: number;
-    v();
-    increment(num?);
+    v(offset?):string;
+    c(offset?):string;
+    increment(num?):void;
 }
 
 String.prototype.idx = 0;
 
-String.prototype.v = function(): string {
-    return this[this.idx];
+String.prototype.v = function(offset = 0): string {
+    return this[this.idx + offset];
 };
 
-String.prototype.increment = function(num = 1): string {
-    return this[this.idx];
+String.prototype.c = function(offset = 0): string {
+    return this.charCodeAt(this.idx + offset);
+};
+
+String.prototype.increment = function(num = 1): void {
+    this.idx += num;
 };
