@@ -468,7 +468,7 @@ function A_CheckSpriteFlags(iActor:number, iType:number):number {return((g_tile[
 function A_CheckSpriteTileFlags(iPicnum: number, iType: number): number {return (iPicnum < MAXTILES) && (g_tile[iPicnum].flags & iType) != 0 ? 1 : 0;}
 //#define G_EnterText(x, y, t, dalen, c) _EnterText(0,x,y,t,dalen,c)
 //#define Net_EnterText(x, y, t, dalen, c) _EnterText(1,x,y,t,dalen,c)
-//#define S_StopSound(num) S_StopEnvSound(num, -1)
+function S_StopSound(num:number):void {S_StopEnvSound(num, -1);}
 
 //extern void G_MaybeAllocPlayer(int32_t pnum);
 

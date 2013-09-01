@@ -471,7 +471,7 @@ class spritetype implements ITypeInfo, IVec3
     xrepeat:number; yrepeat:number;                  //Tracker(Sprite, uint8_t)  
     xoffset:number; yoffset:number;                  //Tracker(Sprite, int8_t)   
     _sectnum:Int16Array; statnum:number;                  //Tracker(Sprite, int16_t)  
-    _ang:number; owner:number; private _xvel:Int16Array; private _yvel:Int16Array; private _zvel:Int16Array;      //Tracker(Sprite, int16_t)  
+    _ang:Int16Array; owner:number; private _xvel:Int16Array; private _yvel:Int16Array; private _zvel:Int16Array;      //Tracker(Sprite, int16_t)  
     private _lotag:Uint16Array;private _hitag:Uint16Array;                      //Tracker(Sprite, uint16_t) 
     private _extra:Int16Array;                             //Tracker(Sprite, int16_t)  
 

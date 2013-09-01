@@ -594,18 +594,18 @@ function /*int32_t */yax_getceilzofslope(/*int16_t */sectnum:number, /*int32_t *
     return getceilzofslope(sectnum, dax, day);
 }
 
-//static int32_t yax_getflorzofslope(int16_t sectnum, int32_t dax, int32_t day)
-//{
+function /*int32_t */yax_getflorzofslope(/*int16_t */sectnum:number, /*int32_t */dax:number, /*int32_t */day:number):number
+{
 //#ifdef YAX_ENABLE
-//    if ((sector[sectnum].floorstat&512)==0)
-//    {
-//        int32_t nsect = yax_getneighborsect(dax, day, sectnum, YAX_FLOOR);
-//        if (nsect >= 0)
-//            return getflorzofslope(nsect, dax, day);
-//    }
+    if ((sector[sectnum].floorstat&512)==0)
+    {
+        var/*int32_t */nsect = yax_getneighborsect(dax, day, sectnum, YAX_FLOOR);
+        if (nsect >= 0)
+            return getflorzofslope(nsect, dax, day);
+    }
 //#endif
-//    return getflorzofslope(sectnum, dax, day);
-//}
+    return getflorzofslope(sectnum, dax, day);
+}
 
 ////////////////////
 
@@ -1024,8 +1024,8 @@ function /*int32_t */VM_ResetPlayer(/*int32_t */g_p:number, /*int32_t */g_flags:
     {
         if (g_p == myconnectindex)
         {
-            CAMERADIST = 0;
-            CAMERACLOCK = totalclock;
+            g_cameraDistance = 0;
+            g_cameraClock = totalclock;
         }
 
         if (g_fakeMultiMode)
@@ -4942,7 +4942,7 @@ function VM_Execute(/*int32_t */loop: number): void
             insptr++;
             {
                 var/*int32_t */j = Gv_GetVarX(script[insptr++]);
-                j = (j != Gv_GetVarX(script[insptr++]));
+                j = (j != Gv_GetVarX(script[insptr++]))?1:0;
                 insptr--;
                 VM_CONDITIONAL(j);
             }
@@ -4952,7 +4952,7 @@ function VM_Execute(/*int32_t */loop: number): void
             insptr++;
             {
                 var/*int32_t */j = Gv_GetVarX(script[insptr++]);
-                j = (j == Gv_GetVarX(script[insptr++]));
+                j = (j == Gv_GetVarX(script[insptr++]))?1:0;
                 insptr--;
                 VM_CONDITIONAL(j);
             }
@@ -4962,7 +4962,7 @@ function VM_Execute(/*int32_t */loop: number): void
             insptr++;
             {
                 var/*int32_t */j = Gv_GetVarX(script[insptr++]);
-                j = (j > Gv_GetVarX(script[insptr++]));
+                j = (j > Gv_GetVarX(script[insptr++]))?1:0;
                 insptr--;
                 VM_CONDITIONAL(j);
             }
@@ -4972,7 +4972,7 @@ function VM_Execute(/*int32_t */loop: number): void
             insptr++;
             {
                 var/*int32_t */j = Gv_GetVarX(script[insptr++]);
-                j = (j < Gv_GetVarX(script[insptr++]));
+                j = (j < Gv_GetVarX(script[insptr++]))?1:0;
                 insptr--;
                 VM_CONDITIONAL(j);
             }
@@ -5001,7 +5001,7 @@ function VM_Execute(/*int32_t */loop: number): void
             do
             {
                 insptr=savedinsptr;
-                j = (Gv_GetVarX(script[insptr-1]) != script[insptr]);
+                j = (Gv_GetVarX(script[insptr-1]) != script[insptr])?1:0;
                 VM_CONDITIONAL(j);
             }
             while (j);
@@ -5016,7 +5016,7 @@ function VM_Execute(/*int32_t */loop: number): void
             {
                 insptr=savedinsptr;
                 j = Gv_GetVarX(script[insptr-1]);
-                j = (j != Gv_GetVarX(script[insptr++]));
+                j = (j != Gv_GetVarX(script[insptr++]))?1:0;
                 insptr--;
                 VM_CONDITIONAL(j);
             }
@@ -5728,8 +5728,8 @@ function A_Execute(/*int32_t */iActor:number,/*int32_t */iPlayer:number,/*int32_
 
 //        if (g_player[myconnectindex].ps.over_shoulder_on != 0)
 //        {
-//            CAMERADIST = 0;
-//            CAMERACLOCK = 0;
+//            g_cameraDistance = 0;
+//            g_cameraClock = 0;
 //            g_player[myconnectindex].ps.over_shoulder_on = 1;
 //        }
 

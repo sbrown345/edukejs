@@ -154,24 +154,27 @@ function G_DoInterpolations(/*int32_t*/ smoothratio: number): void       //Stick
     }
 }
 
-//void G_ClearCameraView(DukePlayer_t *ps)
-//{
-//    int32_t k;
+function G_ClearCameraView(ps:DukePlayer_t):void
+{
+    var /*int32_t */k:number;
 
-//    ps.newowner = -1;
+    ps.newowner = -1;
 
-//    ps.pos.x = ps.opos.x;
-//    ps.pos.y = ps.opos.y;
-//    ps.pos.z = ps.opos.z;
-//    ps.ang = ps.oang;
+    ps.pos.x = ps.opos.x;
+    ps.pos.y = ps.opos.y;
+    ps.pos.z = ps.opos.z;
+    ps.ang = ps.oang;
 
-//    updatesector(ps.pos.x, ps.pos.y, &ps.cursectnum);
-//    P_UpdateScreenPal(ps);
+    var $sectnum = new R(ps.cursectnum);
+    updatesector(ps.pos.x, ps.pos.y, $cursectnum);
+    ps.cursectnum = $sectnum.$;
 
-//    for (SPRITES_OF(STAT_ACTOR, k))
-//        if (sprite[k].picnum==CAMERA1)
-//            sprite[k].yvel = 0;
-//}
+    P_UpdateScreenPal(ps);
+
+    for (k = headspritestat[STAT_ACTOR]; k >= 0; k = nextspritestat[k])
+        if (sprite[k].picnum==CAMERA1)
+            sprite[k].yvel = 0;
+}
 
 function A_RadiusDamage(/*int32_t*/ i:number, /*int32_t */r:number, /*int32_t */hp1:number, /*int32_t */hp2:number, /*int32_t */hp3:number, /*int32_t */hp4:number):void
 {todoThrow();

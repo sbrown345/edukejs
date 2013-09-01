@@ -24,6 +24,11 @@
 
 /// <reference path="../../eduke32/source/net.c.ts" />
 
+/// <reference path="../../jmact/headers/keyboard.h.ts" />
+
+/// <reference path="../../jmact/source/keyboard.c.ts" />
+
+
 // "Build Engine & Tools" Copyright (c) 1993-1997 Ken Silverman`
 // Ken Silverman's official web site: "http://www.advsys.net/ken"
 // See the included license file "BUILDLIC.TXT" for license info.

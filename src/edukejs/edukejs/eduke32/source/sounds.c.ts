@@ -807,27 +807,27 @@ function /*void*/ S_StopEnvSound(/*int32_t */num: number, /*int32_t*/ i: number)
 //    while (j >= 0);
 }
 
-//void S_ChangeSoundPitch(int32_t num, int32_t i, int32_t pitchoffset)
-//{
-//    int32_t j;
+function S_ChangeSoundPitch(/*int32_t */num:number, /*int32_t */i:number, /*int32_t */pitchoffset:number):void
+{todoUnimportant();
+    //int32_t j;
 
-//    if ((unsigned)num > (unsigned)g_maxSoundPos || g_sounds[num].num <= 0)
-//        return;
+    //if ((unsigned)num > (unsigned)g_maxSoundPos || g_sounds[num].num <= 0)
+    //    return;
 
-//    for (j=MAXSOUNDINSTANCES-1; j>=0; j--)
-//    {
-//        int32_t voice = g_sounds[num].SoundOwner[j].voice;
+    //for (j=MAXSOUNDINSTANCES-1; j>=0; j--)
+    //{
+    //    int32_t voice = g_sounds[num].SoundOwner[j].voice;
 
-//        if ((i == -1 && voice > FX_Ok) || (i != -1 && g_sounds[num].SoundOwner[j].ow == i))
-//        {
-//            if (i >= 0 && voice <= FX_Ok)
-//                initprintf(OSD_ERROR "S_ChangeSoundPitch(): bad voice %d for sound ID %d index %d!\n", voice, num, j);
-//            else if (voice > FX_Ok && FX_SoundActive(voice))
-//                FX_SetPitch(voice, pitchoffset);
-//            break;
-//        }
-//    }
-//}
+    //    if ((i == -1 && voice > FX_Ok) || (i != -1 && g_sounds[num].SoundOwner[j].ow == i))
+    //    {
+    //        if (i >= 0 && voice <= FX_Ok)
+    //            initprintf(OSD_ERROR "S_ChangeSoundPitch(): bad voice %d for sound ID %d index %d!\n", voice, num, j);
+    //        else if (voice > FX_Ok && FX_SoundActive(voice))
+    //            FX_SetPitch(voice, pitchoffset);
+    //        break;
+    //    }
+    //}
+}
 
 //void S_Update(void)
 //{

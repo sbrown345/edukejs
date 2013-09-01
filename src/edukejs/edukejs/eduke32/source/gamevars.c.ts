@@ -682,7 +682,7 @@ function Gv_GetVar(/*register int32_t */id: number, /*register int32_t */iActor:
 
             //        if (index == vm.g_i) index = vm.g_p;
 
-            //        if ((unsigned)index >= MAXPLAYERS)
+            //        if (/*(unsigned)*/index >= MAXPLAYERS)
             //        {
             //            iPlayer = index;
             //            { badplayer(); return -1;}
@@ -870,7 +870,7 @@ function /*int32_t __fastcall*/ Gv_GetVarX(/*int32_t */id:number):number
 //                    if (ActorLabels[label].flags & LABEL_HASPARM2)
 //                        parm2 = Gv_GetVarX(*insptr++);
 
-//                    if ((unsigned)index >= MAXSPRITES)
+//                    if (/*(unsigned)*/index >= MAXSPRITES)
 //                    {
 //                        id = index;
 //                        goto badsprite;
@@ -887,7 +887,7 @@ function /*int32_t __fastcall*/ Gv_GetVarX(/*int32_t */id:number):number
 
 //                    if (index == vm.g_i) index = vm.g_p;
 
-//                    if ((unsigned)index >= MAXPLAYERS)
+//                    if (/*(unsigned)*/index >= MAXPLAYERS)
 //                    {
 //                        id = index;
 //                        goto badplayer;
@@ -898,7 +898,7 @@ function /*int32_t __fastcall*/ Gv_GetVarX(/*int32_t */id:number):number
 //                    return ((Gv_GetVar(*insptr++, index, vm.g_p) ^ -negateResult) + negateResult);
 //                case 1: //else if (id == g_iSectorVarID)
 //                    if (index == vm.g_i) index = sprite[vm.g_i].sectnum;
-//                    if ((unsigned)index >= MAXSECTORS)
+//                    if (/*(unsigned)*/index >= MAXSECTORS)
 //                    {
 //                        id = index;
 //                        insptr++;
@@ -906,7 +906,7 @@ function /*int32_t __fastcall*/ Gv_GetVarX(/*int32_t */id:number):number
 //                    }
 //                    return ((VM_AccessSectorX(index, *insptr++) ^ -negateResult) + negateResult);
 //                case 2: //else if (id == g_iWallVarID)
-//                    if ((unsigned)index >= MAXWALLS)
+//                    if (/*(unsigned)*/index >= MAXWALLS)
 //                    {
 //                        id = index;
 //                        insptr++;
@@ -929,7 +929,7 @@ function /*int32_t __fastcall*/ Gv_GetVarX(/*int32_t */id:number):number
 //        default:
 //            return ((aGameVars[id].val.lValue ^ -negateResult) + negateResult);
 //        case GAMEVAR_PERPLAYER:
-//            if ((unsigned)vm.g_p >= MAXPLAYERS)
+//            if (/*(unsigned)*/vm.g_p >= MAXPLAYERS)
 //            {
 //                id = vm.g_p;
 //                goto badplayer;
@@ -979,19 +979,20 @@ function /*int32_t __fastcall*/ Gv_GetVarX(/*int32_t */id:number):number
 //    }
 }
 
-//void __fastcall Gv_SetVarX(register int32_t id, register int32_t lValue)
-//{
+function Gv_SetVarX(/*int32_t */id, /*int32_t */lValue):void
+{
+    todoThrow();
 //    switch (aGameVars[id].dwFlags & (GAMEVAR_USER_MASK|GAMEVAR_PTR_MASK))
 //    {
 //    default:
 //        aGameVars[id].val.lValue=lValue;
 //        return;
 //    case GAMEVAR_PERPLAYER:
-//        if ((unsigned)vm.g_p > MAXPLAYERS-1) goto badindex;
+//        if (/*(unsigned)*/vm.g_p > MAXPLAYERS-1)  {badindex() return;}
 //        aGameVars[id].val.plValues[vm.g_p]=lValue;
 //        return;
 //    case GAMEVAR_PERACTOR:
-//        if ((unsigned)vm.g_i > MAXSPRITES-1) goto badindex;
+//        if (/*(unsigned)*/vm.g_i > MAXSPRITES-1) {badindex() return;}
 //        aGameVars[id].val.plValues[vm.g_i]=lValue;
 //        return;
 //    case GAMEVAR_INTPTR:
@@ -1005,12 +1006,15 @@ function /*int32_t __fastcall*/ Gv_GetVarX(/*int32_t */id:number):number
 //        return;
 //    }
 
-//badindex:
+//function badindex() {
 //    CON_ERRPRINTF("Gv_SetVar(): invalid index (%d) for gamevar %s\n",
 //               aGameVars[id].dwFlags & GAMEVAR_PERACTOR ? vm.g_i : vm.g_p,
 //               aGameVars[id].szLabel);
-//    return;
 //}
+//    badindex();
+
+    return;
+}
 
 function Gv_GetVarByLabel(/*const char **/szGameLabel: string, /*int32_t */lDefault: number, /*int32_t*/ iActor: number, /*int32_t*/ iPlayer: number): number
 {

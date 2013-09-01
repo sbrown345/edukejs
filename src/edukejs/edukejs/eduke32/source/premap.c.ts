@@ -712,40 +712,40 @@ function G_UpdateScreenArea(): void
     pus = NUMPAGES;
 }
 
-//void P_RandomSpawnPoint(int32_t snum)
-//{
-//    DukePlayer_t *p = g_player[snum].ps;
-//    int32_t i=snum,j,k;
-//    uint32_t dist,pdist = -1;
+function P_RandomSpawnPoint(/*int32_t */snum:number):void
+{
+    var p = g_player[snum].ps;
+    var/*int32_t */i=snum,j:number,k:number;
+    var /*uint32_t */dist:number,pdist = -1;
 
-//    if ((g_netServer || ud.multimode > 1) && !(GametypeFlags[ud.coop] & GAMETYPE_FIXEDRESPAWN))
-//    {
-//        i = krand()%g_numPlayerSprites;
-//        if (GametypeFlags[ud.coop] & GAMETYPE_TDMSPAWN)
-//        {
-//            for (j=0; j<ud.multimode; j++)
-//            {
-//                if (j != snum && g_player[j].ps.team == p.team && sprite[g_player[j].ps.i].extra > 0)
-//                {
-//                    for (k=0; k<g_numPlayerSprites; k++)
-//                    {
-//                        dist = FindDistance2D(g_player[j].ps.pos.x-g_playerSpawnPoints[k].ox,g_player[j].ps.pos.y-g_playerSpawnPoints[k].oy);
-//                        if (dist < pdist)
-//                            i = k, pdist = dist;
-//                    }
-//                    break;
-//                }
-//            }
-//        }
-//    }
+    if ((g_netServer || ud.multimode > 1) && !(GametypeFlags[ud.coop] & GAMETYPE_FIXEDRESPAWN))
+    {
+        i = krand()%g_numPlayerSprites;
+        if (GametypeFlags[ud.coop] & GAMETYPE_TDMSPAWN)
+        {
+            for (j=0; j<ud.multimode; j++)
+            {
+                if (j != snum && g_player[j].ps.team == p.team && sprite[g_player[j].ps.i].extra > 0)
+                {
+                    for (k=0; k<g_numPlayerSprites; k++)
+                    {
+                        dist = FindDistance2D(g_player[j].ps.pos.x-g_playerSpawnPoints[k].ox,g_player[j].ps.pos.y-g_playerSpawnPoints[k].oy);
+                        if (dist < pdist)
+                            i = k, pdist = dist;
+                    }
+                    break;
+                }
+            }
+        }
+    }
 
-//    p.bobposx = p.opos.x = p.pos.x = g_playerSpawnPoints[i].ox;
-//    p.bobposy = p.opos.y = p.pos.y = g_playerSpawnPoints[i].oy;
-//    p.opos.z = p.pos.z = g_playerSpawnPoints[i].oz;
-//    p.ang = g_playerSpawnPoints[i].oa;
-//    p.cursectnum = g_playerSpawnPoints[i].os;
-//    sprite[p.i].cstat = 1+256;
-//}
+    p.bobposx = p.opos.x = p.pos.x = g_playerSpawnPoints[i].ox;
+    p.bobposy = p.opos.y = p.pos.y = g_playerSpawnPoints[i].oy;
+    p.opos.z = p.pos.z = g_playerSpawnPoints[i].oz;
+    p.ang = g_playerSpawnPoints[i].oa;
+    p.cursectnum = g_playerSpawnPoints[i].os;
+    sprite[p.i].cstat = 1+256;
+}
 
 function P_ResetTintFade(ps: DukePlayer_t): void
 {
@@ -755,74 +755,76 @@ function P_ResetTintFade(ps: DukePlayer_t): void
 //#endif
 }
 
-//void P_ResetPlayer(int32_t snum)
-//{
-//    vec3_t tmpvect;
-//    DukePlayer_t *const pl = g_player[snum].ps;
-//    spritetype *const sp = &sprite[pl.i];
+function P_ResetPlayer(/*int32_t */snum:number):void
+{
+    var tmpvect = new vec3_t();;
+    var pl = g_player[snum].ps;
+    var sp = sprite[pl.i];
 
-//    tmpvect.x = pl.pos.x;
-//    tmpvect.y = pl.pos.y;
-//    tmpvect.z = pl.pos.z+PHEIGHT;
-//    P_RandomSpawnPoint(snum);
-//    sp.x = actor[pl.i].bpos.x = pl.bobposx = pl.opos.x = pl.pos.x;
-//    sp.y = actor[pl.i].bpos.y = pl.bobposy = pl.opos.y = pl.pos.y;
-//    sp.z = actor[pl.i].bpos.y = pl.opos.z =pl.pos.z;
-//    updatesector(pl.pos.x,pl.pos.y,&pl.cursectnum);
-//    setsprite(pl.i,&tmpvect);
-//    sp.cstat = 257;
+    tmpvect.x = pl.pos.x;
+    tmpvect.y = pl.pos.y;
+    tmpvect.z = pl.pos.z+PHEIGHT;
+    P_RandomSpawnPoint(snum);
+    sp.x = actor[pl.i].bpos.x = pl.bobposx = pl.opos.x = pl.pos.x;
+    sp.y = actor[pl.i].bpos.y = pl.bobposy = pl.opos.y = pl.pos.y;
+    sp.z = actor[pl.i].bpos.y = pl.opos.z =pl.pos.z;
+    var $cursectnum = new R(pl.cursectnum);
+    updatesector(pl.pos.x,pl.pos.y,$cursectnum);
+    pl.cursectnum = $cursectnum.$;
+    setsprite(pl.i,tmpvect);
+    sp.cstat = 257;
 
-//    sp.shade = -12;
-//    sp.clipdist = 64;
-//    sp.xrepeat = 42;
-//    sp.yrepeat = 36;
-//    sp.owner = pl.i;
-//    sp.xoffset = 0;
-//    sp.pal = pl.palookup;
+    sp.shade = -12;
+    sp.clipdist = 64;
+    sp.xrepeat = 42;
+    sp.yrepeat = 36;
+    sp.owner = pl.i;
+    sp.xoffset = 0;
+    sp.pal = pl.palookup;
 
-//    pl.last_extra = sp.extra = pl.max_player_health;
-//    pl.wantweaponfire = -1;
-//    pl.horiz = 100;
-//    pl.on_crane = -1;
-//    pl.frag_ps = snum;
-//    pl.horizoff = 0;
-//    pl.opyoff = 0;
-//    pl.wackedbyactor = -1;
-//    pl.inv_amount[GET_SHIELD] = g_startArmorAmount;
-//    pl.dead_flag = 0;
-//    pl.footprintcount = 0;
-//    pl.weapreccnt = 0;
-//    pl.fta = 0;
-//    pl.ftq = 0;
-//    pl.vel.x = pl.vel.y = 0;
-//    pl.rotscrnang = 0;
-//    pl.runspeed = g_playerFriction;
-//    pl.falling_counter = 0;
+    pl.last_extra = sp.extra = pl.max_player_health;
+    pl.wantweaponfire = -1;
+    pl.horiz = 100;
+    pl.on_crane = -1;
+    pl.frag_ps = snum;
+    pl.horizoff = 0;
+    pl.opyoff = 0;
+    pl.wackedbyactor = -1;
+    pl.inv_amount[GET_SHIELD] = g_startArmorAmount;
+    pl.dead_flag = 0;
+    pl.footprintcount = 0;
+    pl.weapreccnt = 0;
+    pl.fta = 0;
+    pl.ftq = 0;
+    pl.vel.x = pl.vel.y = 0;
+    pl.rotscrnang = 0;
+    pl.runspeed = g_playerFriction;
+    pl.falling_counter = 0;
 
-//    P_ResetTintFade(pl);
+    P_ResetTintFade(pl);
 
-//    actor[pl.i].extra = -1;
-//    actor[pl.i].owner = pl.i;
+    actor[pl.i].extra = -1;
+    actor[pl.i].owner = pl.i;
 
-//    actor[pl.i].cgg = 0;
-//    actor[pl.i].movflag = 0;
-//    actor[pl.i].tempang = 0;
-//    actor[pl.i].actorstayput = -1;
-//    actor[pl.i].dispicnum = 0;
-//    actor[pl.i].owner = pl.i;
+    actor[pl.i].cgg = 0;
+    actor[pl.i].movflag = 0;
+    actor[pl.i].tempang = 0;
+    actor[pl.i].actorstayput = -1;
+    actor[pl.i].dispicnum = 0;
+    actor[pl.i].owner = pl.i;
 
-//    actor[pl.i].t_data[4] = 0;
+    actor[pl.i].t_data[4] = 0;
 
-//    P_ResetInventory(snum);
-//    P_ResetWeapons(snum);
+    P_ResetInventory(snum);
+    P_ResetWeapons(snum);
 
-//    pl.reloading = 0;
+    pl.reloading = 0;
 
-//    pl.movement_lock = 0;
+    pl.movement_lock = 0;
 
-//    if (G_HaveEvent(EVENT_RESETPLAYER))
-//        VM_OnEvent(EVENT_RESETPLAYER, pl.i, snum, -1, 0);
-//}
+    if (G_HaveEvent(EVENT_RESETPLAYER))
+        VM_OnEvent(EVENT_RESETPLAYER, pl.i, snum, -1, 0);
+}
 
 function P_ResetStatus(/*int32_t*/ snum: number): void
 {

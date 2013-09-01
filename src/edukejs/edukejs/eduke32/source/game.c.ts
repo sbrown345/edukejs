@@ -65,6 +65,9 @@
 /// <reference path="../../eduke32/source/winbits.c.ts" />
 /// <reference path="../../eduke32/source/winlayer.c.ts" />
 
+/// <reference path="../../jmact/headers/keyboard.h.ts" />
+
+/// <reference path="../../jmact/source/keyboard.c.ts" />
 
 
 //-------------------------------------------------------------------------
@@ -165,7 +168,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //#ifdef LUNATIC
 //camera_t g_camera;
 //#else
-//int32_t g_cameraDistance = 0, g_cameraClock = 0;
+var /*int32_t */g_cameraDistance = 0, g_cameraClock = 0;
 //#endif
 //static int32_t g_quickExit;
 //static int32_t g_commandSetup = 0;

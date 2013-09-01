@@ -63,6 +63,9 @@
 /// <reference path="../../eduke32/source/winbits.c.ts" />
 /// <reference path="../../eduke32/source/winlayer.c.ts" />
 
+/// <reference path="../../jmact/headers/keyboard.h.ts" />
+
+/// <reference path="../../jmact/source/keyboard.c.ts" />
 
 //-------------------------------------------------------------------------
 /*

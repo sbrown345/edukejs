@@ -136,6 +136,7 @@
     <Content Include="jaudiolib\source\fx_man.c.ts" />
     <Content Include="jmact\headers\keyboard.h.ts" />
     <Content Include="jmact\source\control.ts" />
+    <Content Include="jmact\source\keyboard.c.ts" />
     <Content Include="jmact\source\mathutil.c.ts" />
     <Content Include="libs\lightgl.js" />
     <Content Include="libs\lightgl\convert-to-js.html" />

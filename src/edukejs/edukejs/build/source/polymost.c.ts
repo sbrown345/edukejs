@@ -208,7 +208,7 @@ var /*int32_t*/ glpolygonmode = 0;     // 0:GL_FILL,1:GL_LINE,2:GL_POINT //FUK
 var /*int32_t*/ glwidescreen = 0;
 var /*int32_t*/ glprojectionhacks = 1;
 var polymosttext = 0; //static GLuint 
-var glrendmode = REND_POLYMOST;
+glrendmode = REND_POLYMOST;
 
 // This variable, and 'shadeforfullbrightpass' control the drawing of
 // fullbright tiles.  Also see 'fullbrightloadingpass'.
@@ -217,10 +217,10 @@ var fullbrightdrawingpass = 0;//static int32_t
 var /*float */curpolygonoffset=0.0;    // internal polygon offset stack for drawing flat sprites to avoid depth fighting
 //
 // Detail mapping cvar
-var r_detailmapping = 1;//int32_t 
+r_detailmapping = 1;//int32_t 
 //
 // Glow mapping cvar
-var r_glowmapping = 1; //int32_t 
+r_glowmapping = 1; //int32_t 
 //
 //// Vertex Array model drawing cvar
 //int32_t r_vertexarrays = 1;
@@ -233,11 +233,11 @@ var r_glowmapping = 1; //int32_t
 //int32_t r_animsmoothing = 1;
 
 // fullbright cvar
-var r_fullbrights = 1;
+r_fullbrights = 1;
 
 // texture downsizing
-var r_downsize = 0;          //int32_t
-var r_downsizevar = -1;      //int32_t
+r_downsize = 0;          //int32_t
+r_downsizevar = -1;      //int32_t
 //
 // used for fogcalc
 var fogresult = 0.0, fogresult2 = 0.0, fogcol = new Float32Array(4), fogtable = new Float32Array(4*MAXPALOOKUPS); //float 
@@ -246,8 +246,8 @@ var fogresult = 0.0, fogresult2 = 0.0, fogcol = new Float32Array(4), fogtable = 
 var ptempbuf = new Int8Array(MAXWALLSB<<1);
 //
 //// polymost ART sky control
-var /*int32_t*/ r_parallaxskyclamping = 1;
-var /*int32_t*/ r_parallaxskypanning = 0;
+/*int32_t*/ r_parallaxskyclamping = 1;
+/*int32_t*/ r_parallaxskypanning = 0;
 //
 //#define MIN_CACHETIME_PRINT 10
 //
@@ -297,7 +297,7 @@ var /*int32_t*/ r_parallaxskypanning = 0;
 //}
 //
 //#ifdef USE_OPENGL
-var mdtims=0, omdtims=0;//int32_t 
+mdtims=0, omdtims=0;//int32_t 
 var alphahackarray = new Float32Array(MAXTILES);//float 
 var drawingskybox = 0;      //int32_t 
 var hicprecaching = 0;      //int32_t 

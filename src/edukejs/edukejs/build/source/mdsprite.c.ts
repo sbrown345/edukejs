@@ -156,7 +156,7 @@ function freeallmodels():void
 
     if (vertlist)
     {
-        Bfree(vertlist);
+        //Bfree(vertlist);
         vertlist = NULL;
         allocmodelverts = maxmodelverts = 0;
         allocmodeltris = maxmodeltris = 0;
