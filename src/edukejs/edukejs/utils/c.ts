@@ -317,3 +317,19 @@ function indexOf<T>(e: T, arr: T[]):number {
 
     throw "could not find";
 }
+
+interface String {
+    idx: number;
+    v();
+    increment(num?);
+}
+
+String.prototype.idx = 0;
+
+String.prototype.v = function(): string {
+    return this[this.idx];
+};
+
+String.prototype.increment = function(num = 1): string {
+    return this[this.idx];
+};
