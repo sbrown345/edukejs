@@ -4365,18 +4365,18 @@ function getzsofslope_player(/*int16_t */sectnum:number, /*int32_t */dax:number,
 }
 //#endif
 
-//void P_UpdatePosWhenViewingCam(DukePlayer_t *p)
-//{
-//    int32_t i = p.newowner;
+function P_UpdatePosWhenViewingCam(p:DukePlayer_t):void
+{
+    var/*int32_t */i = p.newowner;
 
-//    p.pos.x = sprite[i].x;
-//    p.pos.y = sprite[i].y;
-//    p.pos.z = sprite[i].z;
-//    p.ang =  sprite[i].ang;
-//    p.vel.x = p.vel.y = sprite[p.i].xvel = 0;
-//    p.look_ang = 0;
-//    p.rotscrnang = 0;
-//}
+    p.pos.x = sprite[i].x;
+    p.pos.y = sprite[i].y;
+    p.pos.z = sprite[i].z;
+    p.ang =  sprite[i].ang;
+    p.vel.x = p.vel.y = sprite[p.i].xvel = 0;
+    p.look_ang = 0;
+    p.rotscrnang = 0;
+}
 
 function P_ProcessInput(/*int32_t */snum:number): void
 {
@@ -4641,14 +4641,14 @@ function P_ProcessInput(/*int32_t */snum:number): void
         p.transporter_hold++;
 
     if (p.newowner >= 0)
-    {todoThrow();
-        //P_UpdatePosWhenViewingCam(p);
-        //P_DoCounters(p);
+    {
+        P_UpdatePosWhenViewingCam(p);
+        P_DoCounters(p);
 
-        //if (PWEAPON(0, p.curr_weapon, WorksLike) == HANDREMOTE_WEAPON)
-        //    P_ProcessWeapon(snum);
+        if (PWEAPON(0, p.curr_weapon, WorksLike) == HANDREMOTE_WEAPON)
+            P_ProcessWeapon(snum);
 
-        //return;
+        return;
     }
 
     p.rotscrnang -= (p.rotscrnang>>1);
