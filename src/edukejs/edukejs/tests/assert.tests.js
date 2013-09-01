@@ -4,6 +4,13 @@
 /// <reference path="../libs/webgl-debug.js" />
 /// <reference path="../eduke.js" />
 
+test("isInt", function () {
+    strictEqual(assert.test.isInt(1), true, "1 is an int");
+    strictEqual(assert.test.isInt(1.1), false, "1.1 is not an int");
+    strictEqual(assert.test.isInt("1"), false, "'1' string is not an int");
+    strictEqual(assert.test.isInt({}), false, "object is not an int");
+});
+
 test("isUint8", function () {
     strictEqual(assert.test.isUint8(1), true, "1 is an uint8");
     strictEqual(assert.test.isUint8(1.1), false, "1.1 is not an uint8");
@@ -106,12 +113,12 @@ test("memcmp", function () {
 test("memcpy", function () {
     var dest = new Uint8Array(4);
     var source = new Uint8Array([101,102,103,104]);
-    memcpy(dest.buffer, source.buffer, 4);
+    memcpy(new P(dest.buffer), new P(source.buffer), 4);
     strictEqual(dest.toString(), new Uint8Array([101,102,103,104]).toString(), "array matches");
 
     dest = new Uint8Array(4);
     source = new Uint8Array([101, 102, 103, 104]);
-    memcpy(dest.buffer, source.buffer, 2);
+    memcpy(new P(dest.buffer), new P(source.buffer), 2);
     strictEqual(dest.toString(), new Uint8Array([101,102]).toString(), "array matches when limited to 2");
 });
 

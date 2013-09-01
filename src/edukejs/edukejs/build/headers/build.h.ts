@@ -492,7 +492,7 @@ class spritetype implements ITypeInfo, IVec3
     set sectnum(val: number) {this._sectnum[0] = val;} //Tracker(Sprite, int16_t)
 
     get ang(): number  {return this._ang[0];}
-    set ang(val: number) {assert.int16(val); this._ang[0] = val; }
+    set ang(val: number) {assert.integer(val); this._ang[0] = val; }
 
     get xvel(): number  {return this._xvel[0];}
     set xvel(val: number) {this._xvel[0] = val; }
@@ -1424,12 +1424,12 @@ function getzsofslope(/*int16_t */sectnum: number, /*int32_t */dax: number, /*in
     window["getzsofslopeptr"](sector[sectnum], dax, day, ceilz, florz);
 }
 
-//// Is <wal> a red wall in a safe fashion, i.e. only if consistency invariant
-//// ".nextsector >= 0 iff .nextwall >= 0" holds.
-//static inline int32_t redwallp(const walltype *wal)
-//{
-//    return (wal->nextwall >= 0 && wal->nextsector >= 0);
-//}
+// Is <wal> a red wall in a safe fashion, i.e. only if consistency invariant
+// ".nextsector >= 0 iff .nextwall >= 0" holds.
+function/* int32_t */redwallp(wal:walltype):number
+{
+    return (wal.nextwall >= 0 && wal.nextsector >= 0)?1:0;
+}
 
 //void   alignceilslope(int16_t dasect, int32_t x, int32_t y, int32_t z);
 //void   alignflorslope(int16_t dasect, int32_t x, int32_t y, int32_t z);

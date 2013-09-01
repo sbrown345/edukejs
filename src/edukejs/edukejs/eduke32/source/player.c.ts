@@ -93,7 +93,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //#include "demo.h"
 //#include "enet/enet.h"
 
-var /*int32_t */lastvisinc=0;
+//var /*int32_t */lastvisinc=0; //dupe
 var hudweap = new hudweapon_t();
 
 var /*int32_t */g_snum=0;
@@ -1101,7 +1101,7 @@ function /*int32_t */A_ShootWithZvel(/*int32_t*/ i:number, /*int32_t */atwith:nu
                               !(proj.workslike & PROJECTILE_ACCURATE)?1:0);
             else
                 A_PreFireHitscan(s, srcvect, $zvel, $sa,
-                                 !(proj.workslike & PROJECTILE_ACCURATE));
+                                 !(proj.workslike & PROJECTILE_ACCURATE)?1:0);
 
             zvel = $zvel.$;
             sa = $sa.$;
@@ -1304,7 +1304,7 @@ function /*int32_t */A_ShootWithZvel(/*int32_t*/ i:number, /*int32_t */atwith:nu
             var $sa = new R(sa);
             if (p >= 0) 
                 P_PreFireHitscan(i, p, atwith, srcvect, $zvel, $sa,
-                                 atwith == SHOTSPARK1__STATIC && !WW2GI && !NAM,
+                                 atwith == SHOTSPARK1__STATIC && !window.WW2GI && !window.NAM?1:0,
                                  1);
             else
                 A_PreFireHitscan(s, srcvect, $zvel, $sa, 1);
@@ -3061,7 +3061,7 @@ function P_GetInput(/*int32_t */snum: number): void
             loc.bits |=   1<<SK_JUMP;
         if(tempKeyDown[90]) //m z
             loc.bits |=   1<<SK_CROUCH;
-        if(tempKeyDown[17]) //ctrl
+        //if(tempKeyDown[17]) //ctrl                         //todo: remove test always fire
             loc.bits |=   1<<SK_FIRE;
         if(tempKeyDown[32]) //space
             loc.bits |=   1<<SK_OPEN;
@@ -3070,6 +3070,7 @@ function P_GetInput(/*int32_t */snum: number): void
         if(tempKeyDown[67])//strafe right c
             svel -= 50;
     });
+
 
     //if (G_HaveEvent(EVENT_PROCESSINPUT) || G_HaveEvent(EVENT_TURNLEFT))
     //    loc.extbits |= BUTTON(gamefunc_Turn_Left)<<4;

@@ -5,6 +5,11 @@
     assert = {
         failedCount: 0,
 
+        integer: function (v: number) {
+            assertValue(assert.test.isInt, v);
+            return assert;
+        },
+
         int32: function (v: number) {
             assertValue(assert.test.isInt32, v);
             return assert;
@@ -84,6 +89,9 @@
         test: {
             isString: function (v: string): boolean {
                 return v === null || typeof v === "string";
+            },
+            isInt: function (v: number): boolean {
+                return (!isNaN(v) && Math.floor(v) === v);
             },
             isInt32: function (v: number): boolean {
                 return assert.test.isTypedArrayValue(Int32Array, v);

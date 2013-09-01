@@ -7,7 +7,7 @@ var hardcoded = {
 
 // keep track of things to do
 function todo(reason?: string) {
-    console.log("todo", reason);
+    //console.log("todo", reason);
 }
 
 function todoUnimportant(reason?: string): void {

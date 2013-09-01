@@ -166,7 +166,7 @@ function G_ClearCameraView(ps:DukePlayer_t):void
     ps.ang = ps.oang;
 
     var $sectnum = new R(ps.cursectnum);
-    updatesector(ps.pos.x, ps.pos.y, $cursectnum);
+    updatesector(ps.pos.x, ps.pos.y, $sectnum);
     ps.cursectnum = $sectnum.$;
 
     P_UpdateScreenPal(ps);
@@ -4766,7 +4766,7 @@ function G_MoveActors():void
 
                     j &= (MAXWALLS-1);
 
-                    Bmemcpy(davect, s, sizeof(vec3_t));
+                    davect.copyFrom(s);//Bmemcpy(davect, s, sizeof(vec3_t));
                     A_DamageWall(i,j,davect,s.picnum);
 
                     Proj_BounceOffWall(s, j);

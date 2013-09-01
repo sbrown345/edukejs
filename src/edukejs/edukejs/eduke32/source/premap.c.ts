@@ -1239,7 +1239,7 @@ function prelevel(/*char*/ g: number): void
                 cyclers[g_numCyclers][2] = sprite[i].shade;
                 cyclers[g_numCyclers][3] = sector[sprite[i].sectnum].floorshade;
                 cyclers[g_numCyclers][4] = sprite[i].hitag;
-                cyclers[g_numCyclers][5] = (sprite[i].ang == 1536);
+                cyclers[g_numCyclers][5] = (sprite[i].ang == 1536)?1:0;
                 g_numCyclers++;
                 A_DeleteSprite(i);
                 break;
