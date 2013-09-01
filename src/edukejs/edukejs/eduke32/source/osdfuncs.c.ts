@@ -47,6 +47,7 @@
 /// <reference path="../../eduke32/source/glbuild.c.ts" />
 /// <reference path="../../eduke32/source/global.c.ts" />
 /// <reference path="../../eduke32/source/grpscan.c.ts" />
+/// <reference path="../../eduke32/source/input.c.ts" />
 /// <reference path="../../eduke32/source/menus.c.ts" />
 /// <reference path="../../eduke32/source/namesdyn.c.ts" />
 /// <reference path="../../eduke32/source/net.c.ts" />

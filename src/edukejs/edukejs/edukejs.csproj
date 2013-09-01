@@ -112,6 +112,7 @@
     <Content Include="eduke32\source\glbuild.c.ts" />
     <Content Include="eduke32\source\global.c.ts" />
     <Content Include="eduke32\source\grpscan.c.ts" />
+    <Content Include="eduke32\source\input.c.ts" />
     <Content Include="eduke32\source\menus.c.ts" />
     <Content Include="eduke32\source\music.c.ts" />
     <Content Include="eduke32\source\namesdyn.c.ts" />

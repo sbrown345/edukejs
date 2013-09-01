@@ -3683,11 +3683,11 @@ function polymost_drawrooms(): void
 
         // see engine.c: INPREPAREMIRROR_NO_BUNCHES
         if (numbunches > 0)
-        {todoThrow();
-            //polymost_drawalls(0);
-            //numbunches--;
-            //bunchfirst[0] = bunchfirst[numbunches];
-            //bunchlast[0] = bunchlast[numbunches];
+        {
+            polymost_drawalls(0);
+            numbunches--;
+            bunchfirst[0] = bunchfirst[numbunches];
+            bunchlast[0] = bunchlast[numbunches];
         }
     }
     else

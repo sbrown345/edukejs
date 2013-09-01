@@ -15253,41 +15253,41 @@ function setviewtotile(/*int16_t*/ tilenume: number, /*int32_t */xsiz: number, /
 //    }
 //}
 
-////
-//// preparemirror
-////
-//void preparemirror(int32_t dax, int32_t day, int16_t daang, int16_t dawall,
-//                   int32_t *tposx, int32_t *tposy, int16_t *tang)
-//{
-//    int32_t i;
+//
+// preparemirror
+//
+function preparemirror(/*int32_t*/ dax:number, /*int32_t */day:number, /*int16_t */daang:number, /*int16_t */dawall:number,
+                   /*int32_t **/tposx:R<number>, /*int32_t **/tposy:R<number>, /*int16_t **/tang:R<number>):void
+{
+    var/*int32_t */i:number;
 
-//    const int32_t x = wall[dawall].x, dx = wall[wall[dawall].point2].x-x;
-//    const int32_t y = wall[dawall].y, dy = wall[wall[dawall].point2].y-y;
+    var /*int32_t*/ x = wall[dawall].x, dx = wall[wall[dawall].point2].x-x;
+    var /*int32_t*/ y = wall[dawall].y, dy = wall[wall[dawall].point2].y-y;
 
-//    const int32_t j = dx*dx + dy*dy;
-//    if (j == 0)
-//        return;
+    var/*const int32_t */j = dx*dx + dy*dy;
+    if (j == 0)
+        return;
 
-//    i = ((dax-x)*dx + (day-y)*dy)<<1;
+    i = ((dax-x)*dx + (day-y)*dy)<<1;
 
-//    *tposx = (x<<1) + scale(dx,i,j) - dax;
-//    *tposy = (y<<1) + scale(dy,i,j) - day;
-//    *tang = ((getangle(dx,dy)<<1)-daang)&2047;
+    tposx.$ = (x<<1) + scale(dx,i,j) - dax;
+    tposy.$ = (y<<1) + scale(dy,i,j) - day;
+    tang.$ = ((getangle(dx,dy)<<1)-daang)&2047;
 
-//    inpreparemirror = 1;
-//}
+    inpreparemirror = 1;
+}
 
 
-////
-//// completemirror
-////
-//void completemirror(void)
-//{
+//
+// completemirror
+//
+function completemirror():void
+{
 //#ifdef USE_OPENGL
-//    if (getrendermode() != REND_CLASSIC)
-//        return;
+    if (getrendermode() != REND_CLASSIC)
+        return;
 //#endif
-
+    todoThrow();
 //    // Can't reverse when the world has not yet been drawn from the other side.
 //    if (inpreparemirror) { inpreparemirror = 0; return; }
 
@@ -15308,25 +15308,25 @@ function setviewtotile(/*int16_t*/ tilenume: number, /*int32_t */xsiz: number, /
 //    begindrawing();
 //    {
 //        // Width in pixels (screen x's are inclusive on both sides):
-//        const int32_t width = mirrorsx2-mirrorsx1+1;
+//        var/*const int32_t */width = mirrorsx2-mirrorsx1+1;
 //        // Height in pixels (screen y's are half-open because they come from umost/dmost):
-//        const int32_t height = mirrorsy2-mirrorsy1;
+//        var/*const int32_t */height = mirrorsy2-mirrorsy1;
 
 //        // Address of the mirror wall's top left corner in the source scene:
 //        intptr_t p = frameplace + ylookup[windowy1+mirrorsy1] + windowx1+mirrorsx1;
 
 //        // Offset (wrt p) of a mirror line's left corner in the destination:
 //        // p+destof == frameplace + ylookup[...] + windowx2-mirrorsx2
-//        const int32_t destofs = windowx2-mirrorsx2-windowx1-mirrorsx1;
+//        var/*const int32_t */destofs = windowx2-mirrorsx2-windowx1-mirrorsx1;
 
-//        int32_t y;
+//        var/*int32_t */y:number;
 
 //        for (y=0; y<height; y++)
 //        {
-//#if 0
-//            if ((p-frameplace) + width-1 >= bytesperline*ydim)
-//                printf("oob read: mirrorsx1=%d, mirrorsx2=%d\n", mirrorsx1, mirrorsx2);
-//#endif
+////#if 0
+////            if ((p-frameplace) + width-1 >= bytesperline*ydim)
+////                printf("oob read: mirrorsx1=%d, mirrorsx2=%d\n", mirrorsx1, mirrorsx2);
+////#endif
 //            copybufbyte((void *)p, tempbuf, width);
 //            copybufreverse(&tempbuf[width-1], (void *)(p+destofs+1), width);
 
@@ -15335,7 +15335,7 @@ function setviewtotile(/*int16_t*/ tilenume: number, /*int32_t */xsiz: number, /
 //        }
 //    }
 //    enddrawing();
-//}
+}
 
 
 ////

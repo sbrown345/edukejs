@@ -48,6 +48,8 @@
 /// <reference path="../../eduke32/source/gameexec.c.ts" />
 /// <reference path="../../eduke32/source/global.c.ts" />
 /// <reference path="../../eduke32/source/grpscan.c.ts" />
+/// <reference path="../../eduke32/source/input.c.ts" />
+/// <reference path="../../eduke32/source/input.c.ts" />
 /// <reference path="../../eduke32/source/menus.c.ts" />
 /// <reference path="../../eduke32/source/music.c.ts" />
 /// <reference path="../../eduke32/source/namesdyn.c.ts" />
@@ -4288,74 +4290,79 @@ function G_HandleMirror(/*int32_t*/ x:number, /*int32_t */y:number, /*int32_t */
 //#endif
             return;
         }
-        todoThrow();
-//        for (k=g_mirrorCount-1; k>=0; k--)
-//        {
-//            j = klabs(wall[g_mirrorWall[k]].x - x);
-//            j += klabs(wall[g_mirrorWall[k]].y - y);
-//            if (j < dst) dst = j, i = k;
-//        }
+        for (k=g_mirrorCount-1; k>=0; k--)
+        {
+            j = klabs(wall[g_mirrorWall[k]].x - x);
+            j += klabs(wall[g_mirrorWall[k]].y - y);
+            if (j < dst) dst = j, i = k;
+        }
 
-//        if (wall[g_mirrorWall[i]].overpicnum != MIRROR)
-//        {
-//            // try to find a new mirror wall
+        if (wall[g_mirrorWall[i]].overpicnum != MIRROR)
+        {
+            // try to find a new mirror wall
 
-//            int32_t startwall = sector[g_mirrorSector[i]].wallptr;
-//            int32_t endwall = startwall + sector[g_mirrorSector[i]].wallnum;
+            var /*int32_t */startwall = sector[g_mirrorSector[i]].wallptr;
+            var /*int32_t */endwall = startwall + sector[g_mirrorSector[i]].wallnum;
 
-//            for (k=startwall; k<endwall; k++)
-//            {
-//                j = wall[k].nextwall;
-//                if (j >= 0 && (wall[j].cstat&32) && wall[j].overpicnum==MIRROR)  // cmp. premap.c
-//                {
-//                    g_mirrorWall[i] = j;
-//                    break;
-//                }
-//            }
-//        }
+            for (k=startwall; k<endwall; k++)
+            {
+                j = wall[k].nextwall;
+                if (j >= 0 && (wall[j].cstat&32) && wall[j].overpicnum==MIRROR)  // cmp. premap.c
+                {
+                    g_mirrorWall[i] = j;
+                    break;
+                }
+            }
+        }
 
-//        if (wall[g_mirrorWall[i]].overpicnum == MIRROR)
-//        {
-//            int32_t tposx, tposy;
-//            int16_t tang;
+        if (wall[g_mirrorWall[i]].overpicnum == MIRROR)
+        {
+            var/*int32_t */tposx:number, tposy:number;
+            var/*int16_t */tang:number;
 
-//            preparemirror(x, y, a, g_mirrorWall[i], &tposx, &tposy, &tang);
+            var $tposx = new R(tposx);
+            var $tposy = new R(tposy);
+            var $tang = new R(tang);
+            preparemirror(x, y, a, g_mirrorWall[i], $tposx, $tposy, $tang);
+            tposx = $tposx.$;
+            tposy = $tposy.$;
+            tang = $tang.$;
 
-//            j = g_visibility;
-//            g_visibility = (j>>1) + (j>>2);
+            j = g_visibility;
+            g_visibility = (j>>1) + (j>>2);
 
-//            if (getrendermode() == REND_CLASSIC)
-//            {
-//                int32_t didmirror;
+            if (getrendermode() == REND_CLASSIC)
+            {
+                var/*int32_t */didmirror:number;
 
-//                yax_preparedrawrooms();
-//                didmirror = drawrooms(tposx,tposy,z,tang,horiz,g_mirrorSector[i]+MAXSECTORS);
-//                yax_drawrooms(G_DoSpriteAnimations, g_mirrorSector[i], didmirror, smoothratio);
-//            }
+                yax_preparedrawrooms();
+                didmirror = drawrooms(tposx,tposy,z,tang,horiz,g_mirrorSector[i]+MAXSECTORS);
+                yax_drawrooms(G_DoSpriteAnimations, g_mirrorSector[i], didmirror, smoothratio);
+            }
 //#ifdef USE_OPENGL
-//            else
-//                drawrooms(tposx,tposy,z,tang,horiz,g_mirrorSector[i]+MAXSECTORS);
-//            // XXX: Sprites don't get drawn with TROR/Polymost
+            else
+                drawrooms(tposx,tposy,z,tang,horiz,g_mirrorSector[i]+MAXSECTORS);
+            // XXX: Sprites don't get drawn with TROR/Polymost
 //#endif
-//            display_mirror = 1;
-//            G_DoSpriteAnimations(tposx,tposy,tang,smoothratio);
-//            display_mirror = 0;
+            display_mirror = 1;
+            G_DoSpriteAnimations(tposx,tposy,tang,smoothratio);
+            display_mirror = 0;
 
-//            drawmasks();
-//            completemirror();   //Reverse screen x-wise in this function
-//            g_visibility = j;
-//        }
+            drawmasks();
+            completemirror();   //Reverse screen x-wise in this function
+            g_visibility = j;
+        }
 
-//        if (!g_fakeMultiMode)
-//        {
-//            // HACK for splitscreen mod: this is so that mirrors will be drawn
-//            // from showview commands. Ugly, because we'll attempt do draw mirrors
-//            // each frame then. But it's better than not drawing them, I guess.
-//            // XXX: fix the sequence of setting/clearing this bit. Right now,
-//            // we always draw one frame without drawing the mirror, after which
-//            // the bit gets set and drawn subsequently.
-//            gotpic[MIRROR>>3] &= ~(1<<(MIRROR&7));
-//        }
+        if (!g_fakeMultiMode)
+        {
+            // HACK for splitscreen mod: this is so that mirrors will be drawn
+            // from showview commands. Ugly, because we'll attempt do draw mirrors
+            // each frame then. But it's better than not drawing them, I guess.
+            // XXX: fix the sequence of setting/clearing this bit. Right now,
+            // we always draw one frame without drawing the mirror, after which
+            // the bit gets set and drawn subsequently.
+            gotpic[MIRROR>>3] &= ~(1<<(MIRROR&7));
+        }
     }
 }
 
@@ -7311,7 +7318,7 @@ function G_DoSpriteAnimations(/*int32_t */ourx:number, /*int32_t */oury:number, 
         var/*int32_t */switchpic:number;
         var/*int32_t */curframe:number;
 //#if !defined LUNATIC
-        var/*int32_t */scrofs_action;
+        var/*int32_t */scrofs_action:number;
 //#else
 //        int32_t startframe, viewtype;
 //#endif
