@@ -4542,7 +4542,7 @@ function G_MoveActors():void
             //Check randomly to see of there is an actor near
             if (rnd(32))
             {
-                for (sect = headspritesect[j]; sect >= 0; sect = nextspritesect[sect])
+                for (j = headspritesect[sect]; j >= 0; j = nextspritesect[j])
                 {
                     switch (DYNAMICTILEMAP(sprite[j].picnum))
                     {
