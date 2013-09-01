@@ -2482,10 +2482,10 @@ function P_DisplayWeapon(/*int32_t */snum:number):void
                             i = 0;
                             if (doanim) i = rand()&7;
                             G_DrawWeaponTile(i+weapon_xoffset-4+140-(p.look_ang>>1),i+looking_arc-((p.kickback_pic)>>1)+208-gun_pos,
-                                CHAINGUN+5+((p.kickback_pic-4)/5),gs,o,pal,0);
+                                CHAINGUN+5+int32((p.kickback_pic-4)/5),gs,o,pal,0);
                             if (doanim) i = rand()&7;
                             G_DrawWeaponTile(i+weapon_xoffset-4+184-(p.look_ang>>1),i+looking_arc-((p.kickback_pic)>>1)+208-gun_pos,
-                                CHAINGUN+5+((p.kickback_pic-4)/5),gs,o,pal,0);
+                                CHAINGUN+5+int32((p.kickback_pic-4)/5),gs,o,pal,0);
                         }
 
                         if (p.kickback_pic < PWEAPON(0, CHAINGUN_WEAPON, TotalTime)-4)
@@ -2493,7 +2493,7 @@ function P_DisplayWeapon(/*int32_t */snum:number):void
                             i = 0;
                             if (doanim) i = rand()&7;
                             G_DrawWeaponTile(i+weapon_xoffset-4+162-(p.look_ang>>1),i+looking_arc-((p.kickback_pic)>>1)+208-gun_pos,
-                                CHAINGUN+5+((p.kickback_pic-2)/5),gs,o,pal,0);
+                                CHAINGUN+5+int32((p.kickback_pic-2)/5),gs,o,pal,0);
                             G_DrawWeaponTile(weapon_xoffset+178-(p.look_ang>>1),looking_arc+233-gun_pos,
                                 CHAINGUN+1+((p.kickback_pic)>>1),gs,o,pal,0);
                         }

@@ -177,196 +177,203 @@ function G_ClearCameraView(ps:DukePlayer_t):void
 }
 
 function A_RadiusDamage(/*int32_t*/ i:number, /*int32_t */r:number, /*int32_t */hp1:number, /*int32_t */hp2:number, /*int32_t */hp3:number, /*int32_t */hp4:number):void
-{todoThrow();
-//    int32_t d, q, stati;
-//    const spritetype *const s = &sprite[i];
+{
+    var /*int32_t */d:number, q:number, stati:number;
+    var  s = sprite[i];
 
-//    static const int32_t statlist[] = {
-//        STAT_DEFAULT, STAT_ACTOR, STAT_STANDABLE,
-//        STAT_PLAYER, STAT_FALLER, STAT_ZOMBIEACTOR, STAT_MISC
-//    };
+    var statlist = [
+        STAT_DEFAULT, STAT_ACTOR, STAT_STANDABLE,
+        STAT_PLAYER, STAT_FALLER, STAT_ZOMBIEACTOR, STAT_MISC
+    ];
 
-//    int16_t *const tempshort = (int16_t *)tempbuf;
+    var tempshort = /*(int16_t *)*/tempbuf;
 
-//    if (s.picnum == RPG && s.xrepeat < 11)
-//        goto SKIPWALLCHECK;
+    SKIPWALLCHECK:
+    for(;;) {
+    if (s.picnum == RPG && s.xrepeat < 11)
+        break SKIPWALLCHECK;
 
-//    if (s.picnum != SHRINKSPARK)
-//    {
-//        int32_t sectcnt = 0;
-//        int32_t sectend = 1;
+    if (s.picnum != SHRINKSPARK)
+    {
+        var /*int32_t*/ sectcnt = 0;
+        var /*int32_t*/ sectend = 1;
 
-//        tempshort[0] = s.sectnum;
+        tempshort[0] = s.sectnum;
 
-//        do
-//        {
-//            const walltype *wal;
-//            const int32_t dasect = tempshort[sectcnt++];
-//            const int32_t startwall = sector[dasect].wallptr;
-//            const int32_t endwall = startwall+sector[dasect].wallnum;
-//            int32_t w;
+        do
+        {
+            var wal:walltype, walIdx:number;
+            var /* int32_t*/ dasect = tempshort[sectcnt++];
+            var /* int32_t*/ startwall = sector[dasect].wallptr;
+            var /* int32_t*/ endwall = startwall+sector[dasect].wallnum;
+            var /*int32_t */w:number;
 
-//            if (((sector[dasect].ceilingz-s.z)>>8) < r)
-//            {
-//                const int32_t w2 = wall[startwall].point2;
+            if (((sector[dasect].ceilingz-s.z)>>8) < r)
+            {
+                var/*const int32_t */w2 = wall[startwall].point2;
 
-//                d = klabs(wall[startwall].x-s.x)+klabs(wall[startwall].y-s.y);
-//                if (d < r)
-//                    Sect_DamageCeiling(dasect);
-//                else
-//                {
-//                    d = klabs(wall[wall[w2].point2].x-s.x)+klabs(wall[wall[w2].point2].y-s.y);
-//                    if (d < r)
-//                        Sect_DamageCeiling(dasect);
-//                }
-//            }
+                d = klabs(wall[startwall].x-s.x)+klabs(wall[startwall].y-s.y);
+                if (d < r)
+                    Sect_DamageCeiling(dasect);
+                else
+                {
+                    d = klabs(wall[wall[w2].point2].x-s.x)+klabs(wall[wall[w2].point2].y-s.y);
+                    if (d < r)
+                        Sect_DamageCeiling(dasect);
+                }
+            }
 
-//            for (w=startwall,wal=&wall[startwall]; w<endwall; w++,wal++)
-//                if ((klabs(wal.x-s.x)+klabs(wal.y-s.y)) < r)
-//                {
-//                    int16_t sect = -1;
-//                    const int32_t nextsect = wal.nextsector;
-//                    int32_t x1, y1;
+            for (w=startwall,wal=wall[walIdx=startwall]; w<endwall; w++,wal = wall[++walIdx])
+                if ((klabs(wal.x-s.x)+klabs(wal.y-s.y)) < r)
+                {
+                    var/*int16_t */sect = -1;
+                    var /*const int32_t */nextsect = wal.nextsector;
+                    var/*int32_t */x1:number, y1:number;
 
-//                    if (nextsect >= 0)
-//                    {
-//                        int32_t dasect2;
-//                        for (dasect2=sectend-1; dasect2>=0; dasect2--)
-//                            if (tempshort[dasect2] == nextsect)
-//                                break;
+                    if (nextsect >= 0)
+                    {
+                        var/*int32_t */dasect2:number;
+                        for (dasect2=sectend-1; dasect2>=0; dasect2--)
+                            if (tempshort[dasect2] == nextsect)
+                                break;
 
-//                        if (dasect2 < 0)
-//                            tempshort[sectend++] = nextsect;
-//                    }
+                        if (dasect2 < 0)
+                            tempshort[sectend++] = nextsect;
+                    }
 
-//                    x1 = (((wal.x+wall[wal.point2].x)>>1)+s.x)>>1;
-//                    y1 = (((wal.y+wall[wal.point2].y)>>1)+s.y)>>1;
+                    x1 = (((wal.x+wall[wal.point2].x)>>1)+s.x)>>1;
+                    y1 = (((wal.y+wall[wal.point2].y)>>1)+s.y)>>1;
 
-//                    updatesector(x1,y1,&sect);
+                    var $sect = new R(sect);
+                    updatesector(x1,y1,$sect);
+                    sect = $sect.$;
 
-//                    if (sect >= 0 && cansee(x1,y1,s.z,sect,s.x,s.y,s.z,s.sectnum))
-//                    {
-//                        vec3_t tmpvect = { wal.x, wal.y, s.z };
-//                        A_DamageWall(i, w, &tmpvect, s.picnum);
-//                    }
-//                }
-//        }
-//        while (sectcnt < sectend);
-//    }
+                    if (sect >= 0 && cansee(x1,y1,s.z,sect,s.x,s.y,s.z,s.sectnum))
+                    {
+                        var tmpvect = new vec3_t( wal.x, wal.y, s.z );
+                        A_DamageWall(i, w, tmpvect, s.picnum);
+                    }
+                }
+        }
+        while (sectcnt < sectend);
+    }
 
-//SKIPWALLCHECK:
+        break; //SKIPWALLCHECK:;
+    }
 
-//    q = -(16<<8) + (krand()&((32<<8)-1));
 
-//    for (stati=0; stati<7; stati++)  // TODO: ARRAY_SIZE
-//    {
-//        int32_t j = headspritestat[statlist[stati]];
+    q = -(16<<8) + (krand()&((32<<8)-1));
 
-//        while (j >= 0)
-//        {
-//            const int32_t nextj = nextspritestat[j];
-//            spritetype *const sj = &sprite[j];
+    for (stati=0; stati<7; stati++)  // TODO: ARRAY_SIZE
+    {
+        var/*int32_t */j = headspritestat[statlist[stati]];
 
-//            // DEFAULT, ZOMBIEACTOR, MISC
-//            if (stati == 0 || stati >= 5 || AFLAMABLE(sj.picnum))
-//            {
-//                if (s.picnum != SHRINKSPARK || (sj.cstat&257))
-//                    if (dist(s, sj) < r)
-//                    {
-//                        if (A_CheckEnemySprite(sj) && !cansee(sj.x, sj.y,sj.z+q, sj.sectnum, s.x, s.y, s.z+q, s.sectnum))
-//                            goto BOLT;
-//                        A_DamageObject(j, i);
-//                    }
-//            }
-//            else if (sj.extra >= 0 && sj != s && (sj.picnum == TRIPBOMB || A_CheckEnemySprite(sj) || sj.picnum == QUEBALL || sj.picnum == STRIPEBALL || (sj.cstat&257) || sj.picnum == DUKELYINGDEAD))
-//            {
-//                if (s.picnum == SHRINKSPARK && sj.picnum != SHARK && (j == s.owner || sj.xrepeat < 24))
-//                {
-//                    j = nextj;
-//                    continue;
-//                }
-//                if (s.picnum == MORTER && j == s.owner)
-//                {
-//                    j = nextj;
-//                    continue;
-//                }
+        BOLT:
+        while (j >= 0)
+        {
+            var/*const int32_t */nextj = nextspritestat[j];
+            var sj = sprite[j];
 
-//                if (sj.picnum == APLAYER) sj.z -= PHEIGHT;
-//                d = dist(s, sj);
-//                if (sj.picnum == APLAYER) sj.z += PHEIGHT;
+            // DEFAULT, ZOMBIEACTOR, MISC
+            if (stati == 0 || stati >= 5 || AFLAMABLE(sj.picnum))
+            {
+                if (s.picnum != SHRINKSPARK || (sj.cstat&257))
+                    if (dist(s, sj) < r)
+                    {
+                        if (A_CheckEnemySprite(sj) && !cansee(sj.x, sj.y,sj.z+q, sj.sectnum, s.x, s.y, s.z+q, s.sectnum))
+                            {j = nextj;continue BOLT;}
+                        A_DamageObject(j, i);
+                    }
+            }
+            else if (sj.extra >= 0 && sj != s && (sj.picnum == TRIPBOMB || A_CheckEnemySprite(sj) || sj.picnum == QUEBALL || sj.picnum == STRIPEBALL || (sj.cstat&257) || sj.picnum == DUKELYINGDEAD))
+            {
+                if (s.picnum == SHRINKSPARK && sj.picnum != SHARK && (j == s.owner || sj.xrepeat < 24))
+                {
+                    j = nextj;
+                    continue;
+                }
+                if (s.picnum == MORTER && j == s.owner)
+                {
+                    j = nextj;
+                    continue;
+                }
 
-//                if (d < r && cansee(sj.x, sj.y, sj.z-(8<<8), sj.sectnum, s.x, s.y, s.z-(12<<8), s.sectnum))
-//                {
-//                    actor[j].ang = getangle(sj.x-s.x,sj.y-s.y);
+                if (sj.picnum == APLAYER) sj.z -= PHEIGHT;
+                d = dist(s, sj);
+                if (sj.picnum == APLAYER) sj.z += PHEIGHT;
 
-//                    if (s.picnum == RPG && sj.extra > 0)
-//                        actor[j].picnum = RPG;
-//                    else if (A_CheckSpriteFlags(i,SPRITE_PROJECTILE) && SpriteProjectile[i].workslike & PROJECTILE_RADIUS_PICNUM && sj.extra > 0)
-//                        actor[j].picnum = s.picnum;
-//                    else
-//                    {
-//                        if (s.picnum == SHRINKSPARK)
-//                            actor[j].picnum = SHRINKSPARK;
-//                        else actor[j].picnum = RADIUSEXPLOSION;
-//                    }
+                if (d < r && cansee(sj.x, sj.y, sj.z-(8<<8), sj.sectnum, s.x, s.y, s.z-(12<<8), s.sectnum))
+                {
+                    actor[j].ang = getangle(sj.x-s.x,sj.y-s.y);
 
-//                    if (s.picnum != SHRINKSPARK)
-//                    {
-//                        const int32_t k = r/3;
+                    if (s.picnum == RPG && sj.extra > 0)
+                        actor[j].picnum = RPG;
+                    else if (A_CheckSpriteFlags(i,SPRITE_PROJECTILE) && SpriteProjectile[i].workslike & PROJECTILE_RADIUS_PICNUM && sj.extra > 0)
+                        actor[j].picnum = s.picnum;
+                    else
+                    {
+                        if (s.picnum == SHRINKSPARK)
+                            actor[j].picnum = SHRINKSPARK;
+                        else actor[j].picnum = RADIUSEXPLOSION;
+                    }
 
-//                        if (d < k)
-//                        {
-//                            if (hp4 == hp3) hp4++;
-//                            actor[j].extra = hp3 + (krand()%(hp4-hp3));
-//                        }
-//                        else if (d < k*2)
-//                        {
-//                            if (hp3 == hp2) hp3++;
-//                            actor[j].extra = hp2 + (krand()%(hp3-hp2));
-//                        }
-//                        else if (d < r)
-//                        {
-//                            if (hp2 == hp1) hp2++;
-//                            actor[j].extra = hp1 + (krand()%(hp2-hp1));
-//                        }
+                    if (s.picnum != SHRINKSPARK)
+                    {
+                        var /*const int32_t */k = int32(r/3);
 
-//                        if (sprite[j].picnum != TANK && sprite[j].picnum != ROTATEGUN && sprite[j].picnum != RECON && sprite[j].picnum != BOSS1 &&
-//                            sprite[j].picnum != BOSS2 && sprite[j].picnum != BOSS3 && sprite[j].picnum != BOSS4)
-//                        {
-//                            if (sj.xvel < 0) sj.xvel = 0;
-//                            sj.xvel += (s.extra<<2);
-//                        }
+                        if (d < k)
+                        {
+                            if (hp4 == hp3) hp4++;
+                            actor[j].extra = hp3 + (krand()%(hp4-hp3));
+                        }
+                        else if (d < k*2)
+                        {
+                            if (hp3 == hp2) hp3++;
+                            actor[j].extra = hp2 + (krand()%(hp3-hp2));
+                        }
+                        else if (d < r)
+                        {
+                            if (hp2 == hp1) hp2++;
+                            actor[j].extra = hp1 + (krand()%(hp2-hp1));
+                        }
 
-//                        if (sj.picnum == PODFEM1 || sj.picnum == FEM1 ||
-//                                sj.picnum == FEM2 || sj.picnum == FEM3 ||
-//                                sj.picnum == FEM4 || sj.picnum == FEM5 ||
-//                                sj.picnum == FEM6 || sj.picnum == FEM7 ||
-//                                sj.picnum == FEM8 || sj.picnum == FEM9 ||
-//                                sj.picnum == FEM10 || sj.picnum == STATUE ||
-//                                sj.picnum == STATUEFLASH || sj.picnum == SPACEMARINE || sj.picnum == QUEBALL || sj.picnum == STRIPEBALL)
-//                            A_DamageObject(j, i);
-//                    }
-//                    else if (s.extra == 0) actor[j].extra = 0;
+                        if (sprite[j].picnum != TANK && sprite[j].picnum != ROTATEGUN && sprite[j].picnum != RECON && sprite[j].picnum != BOSS1 &&
+                            sprite[j].picnum != BOSS2 && sprite[j].picnum != BOSS3 && sprite[j].picnum != BOSS4)
+                        {
+                            if (sj.xvel < 0) sj.xvel = 0;
+                            sj.xvel += (s.extra<<2);
+                        }
 
-//                    if (sj.picnum != RADIUSEXPLOSION &&
-//                            s.owner >= 0 && sprite[s.owner].statnum < MAXSTATUS)
-//                    {
-//                        if (sj.picnum == APLAYER)
-//                        {
-//                            DukePlayer_t *ps = g_player[sj.yvel].ps;
+                        if (sj.picnum == PODFEM1 || sj.picnum == FEM1 ||
+                                sj.picnum == FEM2 || sj.picnum == FEM3 ||
+                                sj.picnum == FEM4 || sj.picnum == FEM5 ||
+                                sj.picnum == FEM6 || sj.picnum == FEM7 ||
+                                sj.picnum == FEM8 || sj.picnum == FEM9 ||
+                                sj.picnum == FEM10 || sj.picnum == STATUE ||
+                                sj.picnum == STATUEFLASH || sj.picnum == SPACEMARINE || sj.picnum == QUEBALL || sj.picnum == STRIPEBALL)
+                            A_DamageObject(j, i);
+                    }
+                    else if (s.extra == 0) actor[j].extra = 0;
 
-//                            if (ps.newowner >= 0)
-//                                G_ClearCameraView(ps);
-//                        }
+                    if (sj.picnum != RADIUSEXPLOSION &&
+                            s.owner >= 0 && sprite[s.owner].statnum < MAXSTATUS)
+                    {
+                        if (sj.picnum == APLAYER)
+                        {
+                            var ps = g_player[sj.yvel].ps;
 
-//                        actor[j].owner = s.owner;
-//                    }
-//                }
-//            }
+                            if (ps.newowner >= 0)
+                                G_ClearCameraView(ps);
+                        }
+
+                        actor[j].owner = s.owner;
+                    }
+                }
+            }
 //BOLT:
-//            j = nextj;
-//        }
-//    }
+            j = nextj;
+        }
+    }
 }
 
 // Maybe do a projectile transport via an SE7.
