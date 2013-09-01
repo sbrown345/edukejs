@@ -6709,13 +6709,14 @@ function drawmaskwall(/*int16_t */damaskwallcnt:number):void
 //# ifdef POLYMER
     if (getrendermode() == REND_POLYMER)
     {
-        bglEnable(GL_ALPHA_TEST);
-        bglEnable(GL_BLEND);
+        todoThrow();
+        //bglEnable(GL_ALPHA_TEST);
+        //bglEnable(GL_BLEND);
 
-        polymer_drawmaskwall(damaskwallcnt);
+        //polymer_drawmaskwall(damaskwallcnt);
 
-        bglDisable(GL_BLEND);
-        bglDisable(GL_ALPHA_TEST);
+        //bglDisable(GL_BLEND);
+        //bglDisable(GL_ALPHA_TEST);
 
         return;
     }

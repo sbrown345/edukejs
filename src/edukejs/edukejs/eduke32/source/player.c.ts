@@ -367,7 +367,7 @@ function /*int32_t */A_FindTargetSprite(s:spritetype,/*int32_t */aang:number,/*i
     return j;
 }
 
-function A_SetHitData(/*int32_t */i:number, hit:hitdata_t ):void
+function A_SetHitData(/*int32_t */i:number, hit:hitdata_t):void
 {
     actor[i].t_data[6] = hit.wall;
     actor[i].t_data[7] = hit.sect;
@@ -544,7 +544,7 @@ function P_PreFireHitscan(/*int32_t*/ i:number, /*int32_t */p:number, /*int32_t 
     {
         if (!ps.auto_aim)
         {
-            var hit = new hitdata_t ();
+            var hit = new hitdata_t();
 
             zvel.$ = A_GetShootZvel((100-ps.horiz-ps.horizoff)<<5);
 
@@ -886,7 +886,7 @@ function Proj_HandleKnee(hit:hitdata_t, /*int32_t */i:number, /*int32_t */p:numb
     }
 }
 
-//#define MinibossScale(s) (((s)*sprite[i].yrepeat)/80)
+function MinibossScale(s:number):number {return (int32((s)*sprite[i].yrepeat)/80);}
 function /*int32_t */A_ShootWithZvel(/*int32_t*/ i:number, /*int32_t */atwith:number, /*int32_t */override_zvel:number):number
 {
     var /*int16_t */sa:number;
@@ -1471,7 +1471,7 @@ function /*int32_t */A_ShootWithZvel(/*int32_t*/ i:number, /*int32_t */atwith:nu
                 }
 
                 l = safeldist(g_player[j].ps.i, s);
-                zvel = ((g_player[j].ps.opos.z-srcvect.z)*vel) / l;
+                zvel = int32(((g_player[j].ps.opos.z-srcvect.z)*vel) / l);
 
                 if (A_CheckEnemySprite(s) && (s.hitag&face_player_smart))
                     sa = s.ang+(krand()&31)-16;
@@ -1485,8 +1485,8 @@ function /*int32_t */A_ShootWithZvel(/*int32_t*/ i:number, /*int32_t */atwith:nu
 
             zvel = A_GetShootZvel(zvel);
             j = A_InsertSprite(sect,
-                               srcvect.x+(sintable[(348+sa+512)&2047]/448),
-                               srcvect.y+(sintable[(sa+348)&2047]/448),
+                               srcvect.x+int32(sintable[(348+sa+512)&2047]/448),
+                               srcvect.y+int32(sintable[(sa+348)&2047]/448),
                                srcvect.z-(1<<8),atwith,0,14,14,sa,vel,zvel,i,4);
 
             sprite[j].extra += (krand()&7);
@@ -1521,8 +1521,8 @@ function /*int32_t */A_ShootWithZvel(/*int32_t*/ i:number, /*int32_t */atwith:nu
                 }
                 else if (sprite[i].picnum == BOSS2)
                 {
-                    sprite[j].x -= MinibossScale(sintable[sa&2047]/56);
-                    sprite[j].y -= MinibossScale(sintable[(sa+1024+512)&2047]/56);
+                    sprite[j].x -= MinibossScale(int32(sintable[sa&2047]/56));
+                    sprite[j].y -= MinibossScale(int32(sintable[(sa+1024+512)&2047]/56));
                     sprite[j].ang -= MinibossScale(8)+(krand()&255)-128;
                     sprite[j].xrepeat = 24;
                     sprite[j].yrepeat = 24;
@@ -1543,8 +1543,8 @@ function /*int32_t */A_ShootWithZvel(/*int32_t*/ i:number, /*int32_t */atwith:nu
 
                 if (g_player[p].ps.hbomb_hold_delay)
                 {
-                    sprite[j].x -= sintable[sa&2047]/644;
-                    sprite[j].y -= sintable[(sa+1024+512)&2047]/644;
+                    sprite[j].x -= int32(sintable[sa&2047]/644);
+                    sprite[j].y -= int32(sintable[(sa+1024+512)&2047]/644);
                 }
                 else
                 {
@@ -1634,7 +1634,7 @@ function /*int32_t */A_ShootWithZvel(/*int32_t*/ i:number, /*int32_t */atwith:nu
         case BOUNCEMINE__STATIC:
         case MORTER__STATIC:
         {
-            var/*int32_t */x;
+            var/*int32_t */x:number;
 
             if (s.extra >= 0) s.shade = -96;
 
@@ -3926,7 +3926,7 @@ function P_ProcessWeapon(/*int32_t */snum:number):void
                 case TRIPBOMB_WEAPON:
                     if (p.ammo_amount[p.curr_weapon] > 0)
                     {
-                        var hit:hitdata_t ;
+                        var hit = new hitdata_t();
                         hitscan(/*(const vec3_t *)*/p.pos,
                                 p.cursectnum, sintable[(p.ang+512)&2047],
                                 sintable[p.ang&2047], (100-p.horiz-p.horizoff)*32,
