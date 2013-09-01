@@ -577,14 +577,14 @@ function G_ScreenTextSize( /*int32_t*/  font:number,
     // size/width/height/spacing/offset values should be multiplied or scaled by $z, zoom (since 100% is 65536, the same as 1<<16)
 
     // loop through the string
-    while ((t = text.v()) && text != end)
+    while ((t = text.v()) && text.v() != end.v())
     {
         // handle escape sequences
         if (t == '^' && Bisdigit((text.v(iter))) && !(f & TEXT_LITERALESCAPE))
         {
-            text += iter + iter;
+            text.increment(iter + iter);
             if (Bisdigit(text.v()))
-                text += iter;
+                text.increment(iter);
             continue;
         }
 
@@ -947,7 +947,7 @@ function G_AddCoordsFromRotation(coords:vec2_t, unitDirection:vec2_t, /*int32_t 
     }
 
     // loop through the string
-    while ((t = text.v()) && text != end)
+    while ((t = text.v()) && text.v() != end.v())
     {
         var/*int32_t */orientation = o;
         var/*int32_t */angle = blockangle + charangle;
