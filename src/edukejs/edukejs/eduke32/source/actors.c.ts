@@ -2756,7 +2756,7 @@ function G_WeaponHitCeilingOrFloor(/*int32_t */i:number, s:spritetype, /*int32_t
         j.$ = 16384|s.sectnum;
         s.zvel = -1;
     }
-    else if (s.z > actor[i].floorz + (16<<8)*(sector[s.sectnum].lotag == ST_1_ABOVE_WATER))
+    else if (s.z > actor[i].floorz + (16<<8)*((sector[s.sectnum].lotag == ST_1_ABOVE_WATER)?1:0))
     {
         j.$ = 16384|s.sectnum;
 

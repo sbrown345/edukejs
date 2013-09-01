@@ -12418,7 +12418,7 @@ restart_grand:
                 // ceil   cz daz daz2 fz   floor
                 if ((cz.$ <= intz && intz <= daz.$) || (daz2.$ <= intz && intz <= fz.$))
                 {
-                    hit_set(hit, curspr.sectnum, -1, curspr/*indexOf(curspr,sprite)*/ /*curspr-sprite*/, intx, inty, intz);
+                    hit_set(hit, sprite[curspr].sectnum, -1, curspr/*indexOf(curspr,sprite)*/ /*curspr-sprite*/, intx, inty, intz);
                     continue;
                 }
             }

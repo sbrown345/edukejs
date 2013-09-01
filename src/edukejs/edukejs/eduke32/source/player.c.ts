@@ -622,24 +622,24 @@ function /*int32_t */Proj_DoHitscan(/*int32_t */i:number, /*int32_t */cstatmask:
     return (hit.sect < 0)?1:0;
 }
 
-//static void Proj_DoRandDecalSize(int32_t spritenum, int32_t atwith)
-//{
-//    const projectile_t *const proj = &ProjectileData[atwith];
+function Proj_DoRandDecalSize(/*int32_t */spritenum:number, /*int32_t */atwith:number):void
+{
+    var proj = ProjectileData[atwith];
 
-//    if (proj.workslike & PROJECTILE_RANDDECALSIZE)
-//    {
-//        int32_t wh = (krand()&proj.xrepeat);
-//        if (wh < proj.yrepeat)
-//            wh = proj.yrepeat;
-//        sprite[spritenum].xrepeat = wh;
-//        sprite[spritenum].yrepeat = wh;
-//    }
-//    else
-//    {
-//        sprite[spritenum].xrepeat = proj.xrepeat;
-//        sprite[spritenum].yrepeat = proj.yrepeat;
-//    }
-//}
+    if (proj.workslike & PROJECTILE_RANDDECALSIZE)
+    {
+        var/*int32_t */wh = (krand()&proj.xrepeat);
+        if (wh < proj.yrepeat)
+            wh = proj.yrepeat;
+        sprite[spritenum].xrepeat = wh;
+        sprite[spritenum].yrepeat = wh;
+    }
+    else
+    {
+        sprite[spritenum].xrepeat = proj.xrepeat;
+        sprite[spritenum].yrepeat = proj.yrepeat;
+    }
+}
 
 function /*int32_t*/ SectorContainsSE13(/*int32_t */sectnum:number):number
 {
@@ -662,130 +662,133 @@ function HandleHitWall(hit:hitdata_t ):void
             hit.wall = hitwal.nextwall;
 }
 
-//// Finish shooting hitscan weapon from player <p>. <k> is the inserted SHOTSPARK1.
-//// * <spawnatimpacttile> is passed to Proj_MaybeSpawn()
-//// * <decaltile> and <damagewalltile> are for wall impact
-//// * <damagewalltile> is passed to A_DamageWall()
-//// * <flags> is for decals upon wall impact:
-////    1: handle random decal size (tile <atwith>)
-////    2: set cstat to wall-aligned + random x/y flip
-////
-//// TODO: maybe split into 3 cases (hit neither wall nor sprite, hit sprite, hit wall)?
-//static int32_t P_PostFireHitscan(int32_t p, int32_t k, hitdata_t *hit, int32_t i, int32_t atwith, int32_t zvel,
-//                                 int32_t spawnatimpacttile, int32_t decaltile, int32_t damagewalltile,
-//                                 int32_t flags)
-//{
-//    if (hit.wall == -1 && hit.sprite == -1)
-//    {
-//        if (zvel < 0)
-//        {
-//            if (sector[hit.sect].ceilingstat&1)
-//            {
-//                sprite[k].xrepeat = 0;
-//                sprite[k].yrepeat = 0;
-//                return -1;
-//            }
-//            else
-//                Sect_DamageCeiling(hit.sect);
-//        }
+// Finish shooting hitscan weapon from player <p>. <k> is the inserted SHOTSPARK1.
+// * <spawnatimpacttile> is passed to Proj_MaybeSpawn()
+// * <decaltile> and <damagewalltile> are for wall impact
+// * <damagewalltile> is passed to A_DamageWall()
+// * <flags> is for decals upon wall impact:
+//    1: handle random decal size (tile <atwith>)
+//    2: set cstat to wall-aligned + random x/y flip
+//
+// TODO: maybe split into 3 cases (hit neither wall nor sprite, hit sprite, hit wall)?
+function /*int32_t */P_PostFireHitscan(/*int32_t */p:number, /*int32_t */k:number, /*hitdata_t */hit:hitdata_t, /*int32_t */i:number, /*int32_t */atwith:number, /*int32_t */zvel:number,
+                                 /*int32_t */spawnatimpacttile:number, /*int32_t */decaltile:number, /*int32_t */damagewalltile:number,
+                                 /*int32_t */flags:number)
+{
+    if (hit.wall == -1 && hit.sprite == -1)
+    {
+        if (zvel < 0)
+        {
+            if (sector[hit.sect].ceilingstat&1)
+            {
+                sprite[k].xrepeat = 0;
+                sprite[k].yrepeat = 0;
+                return -1;
+            }
+            else
+                Sect_DamageCeiling(hit.sect);
+        }
 
-//        Proj_MaybeSpawn(k, spawnatimpacttile, hit);
-//    }
-//    else if (hit.sprite >= 0)
-//    {
-//        A_DamageObject(hit.sprite, k);
+        Proj_MaybeSpawn(k, spawnatimpacttile, hit);
+    }
+    else if (hit.sprite >= 0)
+    {
+        A_DamageObject(hit.sprite, k);
 
-//        if (sprite[hit.sprite].picnum == APLAYER &&
-//            (ud.ffire == 1 || (!GTFLAGS(GAMETYPE_PLAYERSFRIENDLY) && GTFLAGS(GAMETYPE_TDM) &&
-//                               g_player[sprite[hit.sprite].yvel].ps.team != g_player[sprite[i].yvel].ps.team)))
-//        {
-//            int32_t l = A_Spawn(k, JIBS6);
-//            sprite[k].xrepeat = sprite[k].yrepeat = 0;
-//            sprite[l].z += (4<<8);
-//            sprite[l].xvel = 16;
-//            sprite[l].xrepeat = sprite[l].yrepeat = 24;
-//            sprite[l].ang += 64-(krand()&127);
-//        }
-//        else
-//        {
-//            Proj_MaybeSpawn(k, spawnatimpacttile, hit);
-//        }
+        if (sprite[hit.sprite].picnum == APLAYER &&
+            (ud.ffire == 1 || (!GTFLAGS(GAMETYPE_PLAYERSFRIENDLY) && GTFLAGS(GAMETYPE_TDM) &&
+                               g_player[sprite[hit.sprite].yvel].ps.team != g_player[sprite[i].yvel].ps.team)))
+        {
+            var/*int32_t */l = A_Spawn(k, JIBS6);
+            sprite[k].xrepeat = sprite[k].yrepeat = 0;
+            sprite[l].z += (4<<8);
+            sprite[l].xvel = 16;
+            sprite[l].xrepeat = sprite[l].yrepeat = 24;
+            sprite[l].ang += 64-(krand()&127);
+        }
+        else
+        {
+            Proj_MaybeSpawn(k, spawnatimpacttile, hit);
+        }
 
-//        if (p >= 0 && CheckShootSwitchTile(sprite[hit.sprite].picnum))
-//        {
-//            P_ActivateSwitch(p, hit.sprite, 1);
-//            return -1;
-//        }
-//    }
-//    else if (hit.wall >= 0)
-//    {
-//        const walltype *const hitwal = &wall[hit.wall];
+        if (p >= 0 && CheckShootSwitchTile(sprite[hit.sprite].picnum))
+        {
+            P_ActivateSwitch(p, hit.sprite, 1);
+            return -1;
+        }
+    }
+    else if (hit.wall >= 0)
+    {
+        SKIPBULLETHOLE:
+        for(;;) {
+            var hitwal = wall[hit.wall];
 
-//        Proj_MaybeSpawn(k, spawnatimpacttile, hit);
+            Proj_MaybeSpawn(k, spawnatimpacttile, hit);
 
-//        if (CheckDoorTile(hitwal.picnum) == 1)
-//            goto SKIPBULLETHOLE;
+            if (CheckDoorTile(hitwal.picnum) == 1)
+                break SKIPBULLETHOLE;
 
-//        if (p >= 0 && CheckShootSwitchTile(hitwal.picnum))
-//        {
-//            P_ActivateSwitch(p, hit.wall, 0);
-//            return -1;
-//        }
+            if (p >= 0 && CheckShootSwitchTile(hitwal.picnum))
+            {
+                P_ActivateSwitch(p, hit.wall, 0);
+                return -1;
+            }
 
-//        if (hitwal.hitag != 0 || (hitwal.nextwall >= 0 && wall[hitwal.nextwall].hitag != 0))
-//            goto SKIPBULLETHOLE;
+            if (hitwal.hitag != 0 || (hitwal.nextwall >= 0 && wall[hitwal.nextwall].hitag != 0))
+                break SKIPBULLETHOLE;
 
-//        if (hit.sect >= 0 && sector[hit.sect].lotag == 0)
-//            if (hitwal.overpicnum != BIGFORCE && (hitwal.cstat&16) == 0)
-//                if ((hitwal.nextsector >= 0 && sector[hitwal.nextsector].lotag == 0) ||
-//                    (hitwal.nextsector == -1 && sector[hit.sect].lotag == 0))
-//                {
-//                    int32_t l;
+            if (hit.sect >= 0 && sector[hit.sect].lotag == 0)
+                if (hitwal.overpicnum != BIGFORCE && (hitwal.cstat&16) == 0)
+                    if ((hitwal.nextsector >= 0 && sector[hitwal.nextsector].lotag == 0) ||
+                        (hitwal.nextsector == -1 && sector[hit.sect].lotag == 0))
+                    {
+                        var/*int32_t */l:number;
 
-//                    if (SectorContainsSE13(hitwal.nextsector))
-//                        goto SKIPBULLETHOLE;
+                        if (SectorContainsSE13(hitwal.nextsector))
+                            break SKIPBULLETHOLE;
 
-//                    for (SPRITES_OF(STAT_MISC, l))
-//                        if (sprite[l].picnum == decaltile)
-//                            if (dist(&sprite[l],&sprite[k]) < (12+(krand()&7)))
-//                                goto SKIPBULLETHOLE;
+                        for (l = headspritestat[STAT_MISC]; l >= 0; l = nextspritestat[l])
+                            if (sprite[l].picnum == decaltile)
+                                if (dist(sprite[l],sprite[k]) < (12+(krand()&7)))
+                                    break SKIPBULLETHOLE;
 
-//                    if (decaltile >= 0)
-//                    {
-//                        l = A_Spawn(k, decaltile);
+                        if (decaltile >= 0)
+                        {
+                            l = A_Spawn(k, decaltile);
 
-//                        if (!A_CheckSpriteFlags(l, SPRITE_DECAL))
-//                            actor[l].flags |= SPRITE_DECAL;
+                            if (!A_CheckSpriteFlags(l, SPRITE_DECAL))
+                                actor[l].flags |= SPRITE_DECAL;
 
-//                        sprite[l].xvel = -1;
-//                        sprite[l].ang = getangle(hitwal.x-wall[hitwal.point2].x,
-//                                                 hitwal.y-wall[hitwal.point2].y)+512;
-//                        if (flags&1)
-//                            Proj_DoRandDecalSize(l, atwith);
+                            sprite[l].xvel = -1;
+                            sprite[l].ang = getangle(hitwal.x-wall[hitwal.point2].x,
+                                                     hitwal.y-wall[hitwal.point2].y)+512;
+                            if (flags&1)
+                                Proj_DoRandDecalSize(l, atwith);
 
-//                        if (flags&2)
-//                            sprite[l].cstat = 16+(krand()&(8+4));
+                            if (flags&2)
+                                sprite[l].cstat = 16+(krand()&(8+4));
 
-//                        sprite[l].x -= sintable[(sprite[l].ang+2560)&2047]>>13;
-//                        sprite[l].y -= sintable[(sprite[l].ang+2048)&2047]>>13;
+                            sprite[l].x -= sintable[(sprite[l].ang+2560)&2047]>>13;
+                            sprite[l].y -= sintable[(sprite[l].ang+2048)&2047]>>13;
 
-//                        A_SetSprite(l, CLIPMASK0);
+                            A_SetSprite(l, CLIPMASK0);
 
-//                        // BULLETHOLE already adds itself to the deletion queue in
-//                        // A_Spawn(). However, some other tiles do as well.
-//                        if (decaltile != BULLETHOLE)
-//                            A_AddToDeleteQueue(l);
-//                    }
-//                }
-
+                            // BULLETHOLE already adds itself to the deletion queue in
+                            // A_Spawn(). However, some other tiles do as well.
+                            if (decaltile != BULLETHOLE)
+                                A_AddToDeleteQueue(l);
+                        }
+                    }
+            break;
+        }
 //SKIPBULLETHOLE:
-//        HandleHitWall(hit);
+        HandleHitWall(hit);
 
-//        A_DamageWall(k, hit.wall, &hit.pos, damagewalltile);
-//    }
+        A_DamageWall(k, hit.wall, hit.pos, damagewalltile);
+    }
 
-//    return 0;
-//}
+    return 0;
+}
 
 // Finish shooting hitscan weapon from actor (sprite <i>).
 function /*int32_t */A_PostFireHitscan(hit:hitdata_t,/* int32_t */i:number, /*int32_t */atwith:number, /*int32_t */sa:number, /*int32_t */extra:number,
@@ -3061,7 +3064,7 @@ function P_GetInput(/*int32_t */snum: number): void
             loc.bits |=   1<<SK_JUMP;
         if(tempKeyDown[90]) //m z
             loc.bits |=   1<<SK_CROUCH;
-        //if(tempKeyDown[17]) //ctrl                         //todo: remove test always fire
+        if(tempKeyDown[17]) //ctrl
             loc.bits |=   1<<SK_FIRE;
         if(tempKeyDown[32]) //space
             loc.bits |=   1<<SK_OPEN;
