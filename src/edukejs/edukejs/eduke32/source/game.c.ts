@@ -3629,7 +3629,7 @@ function G_DisplayRest(/*int32_t */smoothratio: number): void
         if (ud.overhead_on != 2)
         {
             if (pp.newowner >= 0)
-                todoThrow("G_DrawCameraText(pp.newowner);");
+                G_DrawCameraText(pp.newowner);
             else
             {
                 P_DisplayWeapon(screenpeek);
@@ -7311,7 +7311,7 @@ function G_DoSpriteAnimations(/*int32_t */ourx:number, /*int32_t */oury:number, 
         var/*int32_t */switchpic:number;
         var/*int32_t */curframe:number;
 //#if !defined LUNATIC
-        var/*int32_t */scrofs_action:number;
+        var/*int32_t */scrofs_action;
 //#else
 //        int32_t startframe, viewtype;
 //#endif
@@ -7617,7 +7617,7 @@ function G_DoSpriteAnimations(/*int32_t */ourx:number, /*int32_t */oury:number, 
                 l = s.z-actor[g_player[p].ps.i].floorz+(3<<8);
                 // SET_SPRITE_NOT_TSPRITE
                 if (l > 1024 && s.yrepeat > 32 && s.extra > 0)
-                    s.yoffset = /*(int8_t)*/(l/(s.yrepeat<<2));
+                    s.yoffset = int8(l/(s.yrepeat<<2));
                 else s.yoffset=0;
             }
 
