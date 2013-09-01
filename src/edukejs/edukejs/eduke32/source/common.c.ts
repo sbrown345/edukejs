@@ -622,7 +622,7 @@ function /*int32_t */dist(/*const spritetype **/s1:spritetype, /*const spritetyp
 function COMMON_clearbackground(numcols: number, numrows: number)
 {
     assert.argumentsAre.int32(arguments);
-	todo();
+	todo("COMMON_clearbackground");
 //    UNREFERENCED_PARAMETER(numcols);
 
 //# ifdef USE_OPENGL

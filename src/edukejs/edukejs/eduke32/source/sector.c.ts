@@ -3120,351 +3120,365 @@ function /*int32_t */P_FindWall(p:DukePlayer_t ,/*int16_t **/hitw:R<number>):num
     return FindDistance2D(hit.pos.x-p.pos.x,hit.pos.y-p.pos.y);
 }
 
-//// returns 1 if sprite i should not be considered by neartag
-//static int32_t our_neartag_blacklist(int32_t i)
-//{
-//    return sprite[i].picnum >= SECTOREFFECTOR__STATIC && sprite[i].picnum <= GPSPEED__STATIC;
-//}
+// returns 1 if sprite i should not be considered by neartag
+function /*int32_t */our_neartag_blacklist(/*int32_t */i:number):number
+{
+    return sprite[i].picnum >= SECTOREFFECTOR__STATIC && sprite[i].picnum <= GPSPEED__STATIC?1:0;
+}
 
-//void P_CheckSectors(int32_t snum)
-//{
-//    int32_t i = -1,oldz;
-//    DukePlayer_t *p = g_player[snum].ps;
-//    int16_t j,hitscanwall;
+function P_CheckSectors(/*int32_t */snum:number):void
+{
+    var/*int32_t */i = -1,oldz;
+    var p = g_player[snum].ps;
+    var/*int16_t */j:number,hitscanwall:number;
 
-//    if (p.cursectnum > -1)
-//        switch (sector[p.cursectnum].lotag)
-//        {
+    if (p.cursectnum > -1)
+        switch (sector[p.cursectnum].lotag)
+        {
 
-//        case 32767:
-//            sector[p.cursectnum].lotag = 0;
-//            P_DoQuote(QUOTE_FOUND_SECRET,p);
-//            p.secret_rooms++;
-//            return;
-//        case UINT16_MAX:
-//            for (TRAVERSE_CONNECT(i))
-//                g_player[i].ps.gm = MODE_EOL;
-//            sector[p.cursectnum].lotag = 0;
-//            if (ud.from_bonus)
-//            {
-//                ud.level_number = ud.from_bonus;
-//                ud.m_level_number = ud.level_number;
-//                ud.from_bonus = 0;
-//            }
-//            else
-//            {
-//                ud.level_number++;
-//                if (ud.level_number > MAXLEVELS-1)
-//                    ud.level_number = 0;
-//                ud.m_level_number = ud.level_number;
-//            }
-//            return;
-//        case UINT16_MAX-1:
-//            sector[p.cursectnum].lotag = 0;
-//            p.timebeforeexit = GAMETICSPERSEC*8;
-//            p.customexitsound = sector[p.cursectnum].hitag;
-//            return;
-//        default:
-//            if (sector[p.cursectnum].lotag >= 10000 && sector[p.cursectnum].lotag < 16383)
-//            {
-//                if (snum == screenpeek || (GametypeFlags[ud.coop]&GAMETYPE_COOPSOUND))
-//                    A_PlaySound(sector[p.cursectnum].lotag-10000,p.i);
-//                sector[p.cursectnum].lotag = 0;
-//            }
-//            break;
+        case 32767:
+            sector[p.cursectnum].lotag = 0;
+            P_DoQuote(QUOTE_FOUND_SECRET,p);
+            p.secret_rooms++;
+            return;
+        case UINT16_MAX:
+            for (i = 0; i != -1; i = connectpoint2[i])
+                g_player[i].ps.gm = MODE_EOL;
+            sector[p.cursectnum].lotag = 0;
+            if (ud.from_bonus)
+            {
+                ud.level_number = ud.from_bonus;
+                ud.m_level_number = ud.level_number;
+                ud.from_bonus = 0;
+            }
+            else
+            {
+                ud.level_number++;
+                if (ud.level_number > MAXLEVELS-1)
+                    ud.level_number = 0;
+                ud.m_level_number = ud.level_number;
+            }
+            return;
+        case UINT16_MAX-1:
+            sector[p.cursectnum].lotag = 0;
+            p.timebeforeexit = GAMETICSPERSEC*8;
+            p.customexitsound = sector[p.cursectnum].hitag;
+            return;
+        default:
+            if (sector[p.cursectnum].lotag >= 10000 && sector[p.cursectnum].lotag < 16383)
+            {
+                if (snum == screenpeek || (GametypeFlags[ud.coop]&GAMETYPE_COOPSOUND))
+                    A_PlaySound(sector[p.cursectnum].lotag-10000,p.i);
+                sector[p.cursectnum].lotag = 0;
+            }
+            break;
 
-//        }
+        }
 
-//    //After this point the the player effects the map with space
+    //After this point the the player effects the map with space
 
-//    if (p.gm &MODE_TYPE || sprite[p.i].extra <= 0) return;
+    if (p.gm &MODE_TYPE || sprite[p.i].extra <= 0) return;
 
-//    if (TEST_SYNC_KEY(g_player[snum].sync.bits, SK_OPEN))
-//    {
-//        if (VM_OnEvent(EVENT_USE, p.i, snum, -1, 0) != 0)
-//            g_player[snum].sync.bits &= ~BIT(SK_OPEN);
-//    }
+    if (TEST_SYNC_KEY(g_player[snum].sync.bits, SK_OPEN))
+    {
+        if (VM_OnEvent(EVENT_USE, p.i, snum, -1, 0) != 0)
+            g_player[snum].sync.bits &= ~BIT(SK_OPEN);
+    }
 
-//    if (ud.cashman && TEST_SYNC_KEY(g_player[snum].sync.bits, SK_OPEN))
-//        A_SpawnMultiple(p.i, MONEY, 2);
+    if (ud.cashman && TEST_SYNC_KEY(g_player[snum].sync.bits, SK_OPEN))
+        A_SpawnMultiple(p.i, MONEY, 2);
 
-//    if (p.newowner >= 0)
-//    {
-//        if (klabs(g_player[snum].sync.svel) > 768 || klabs(g_player[snum].sync.fvel) > 768)
-//        {
-//            i = -1;
-//            goto CLEARCAMERAS;
-//        }
-//    }
+    if (p.newowner >= 0)
+    {
+        if (klabs(g_player[snum].sync.svel) > 768 || klabs(g_player[snum].sync.fvel) > 768)
+        {
+            i = -1;
+            goto CLEARCAMERAS;
+        }
+    }
 
-//    if (!TEST_SYNC_KEY(g_player[snum].sync.bits, SK_OPEN) && !TEST_SYNC_KEY(g_player[snum].sync.bits, SK_ESCAPE))
-//        p.toggle_key_flag = 0;
-//    else if (!p.toggle_key_flag)
-//    {
+    if (!TEST_SYNC_KEY(g_player[snum].sync.bits, SK_OPEN) && !TEST_SYNC_KEY(g_player[snum].sync.bits, SK_ESCAPE))
+        p.toggle_key_flag = 0;
+    else if (!p.toggle_key_flag)
+    {
 
-//        if (TEST_SYNC_KEY(g_player[snum].sync.bits, SK_ESCAPE))
-//        {
-//            if (p.newowner >= 0)
-//            {
-//                i = -1;
-//                goto CLEARCAMERAS;
-//            }
-//            return;
-//        }
+        if (TEST_SYNC_KEY(g_player[snum].sync.bits, SK_ESCAPE))
+        {
+            if (p.newowner >= 0)
+            {
+                i = -1;
+                goto CLEARCAMERAS;
+            }
+            return;
+        }
 
-//        neartagsprite = -1;
-//        p.toggle_key_flag = 1;
-//        hitscanwall = -1;
+        neartagsprite = -1;
+        p.toggle_key_flag = 1;
+        hitscanwall = -1;
 
-//        i = P_FindWall(p,&hitscanwall);
+        var $hitscanwall = new R(hitscanwall);
+        i = P_FindWall(p,$hitscanwall);
+        hitscanwall = $hitscanwall.$;
 
-//        if (hitscanwall >= 0 && i < 1280 && wall[hitscanwall].overpicnum == MIRROR)
-//            if (wall[hitscanwall].lotag > 0 && !A_CheckSoundPlaying(p.i,wall[hitscanwall].lotag) && snum == screenpeek)
-//            {
-//                A_PlaySound(wall[hitscanwall].lotag,p.i);
-//                return;
-//            }
+        if (hitscanwall >= 0 && i < 1280 && wall[hitscanwall].overpicnum == MIRROR)
+            if (wall[hitscanwall].lotag > 0 && !A_CheckSoundPlaying(p.i,wall[hitscanwall].lotag) && snum == screenpeek)
+            {
+                A_PlaySound(wall[hitscanwall].lotag,p.i);
+                return;
+            }
 
-//        if (hitscanwall >= 0 && (wall[hitscanwall].cstat&16))
-//            switch (wall[hitscanwall].overpicnum)
-//            {
-//            default:
-//                if (wall[hitscanwall].lotag)
-//                    return;
-//            }
+        if (hitscanwall >= 0 && (wall[hitscanwall].cstat&16))
+            switch (wall[hitscanwall].overpicnum)
+            {
+            default:
+                if (wall[hitscanwall].lotag)
+                    return;
+            }
+        var $neartagsector = new R(neartagsector);
+        var $neartagwall = new R(neartagwall);
+        var $neartagsprite = new R(neartagsprite);
+        var $neartaghitdist = new R(neartaghitdist);
+        function nearTagUpdateOriginal() {
+            neartagsector = $neartagsector.$;
+            neartagwall = $neartagwall.$;
+            neartagsprite = $neartagsprite.$;
+            neartaghitdist = $neartaghitdist.$;
+        }
+        if (p.newowner >= 0)
+            neartag(p.opos.x,p.opos.y,p.opos.z,sprite[p.i].sectnum,p.oang,$neartagsector,
+                    $neartagwall,$neartagsprite,$neartaghitdist, 1280, 1, our_neartag_blacklist), nearTagUpdateOriginal();
+        else
+        {
+            neartag(p.pos.x,p.pos.y,p.pos.z,sprite[p.i].sectnum,p.oang,$neartagsector,
+                    $neartagwall,$neartagsprite,$neartaghitdist, 1280, 1, our_neartag_blacklist);
+            nearTagUpdateOriginal();
+            if (neartagsprite == -1 && neartagwall == -1 && neartagsector == -1)
+                neartag(p.pos.x,p.pos.y,p.pos.z+(8<<8),sprite[p.i].sectnum,p.oang,$neartagsector,
+                        $neartagwall,$neartagsprite,$neartaghitdist, 1280, 1, our_neartag_blacklist), nearTagUpdateOriginal();
+            if (neartagsprite == -1 && neartagwall == -1 && neartagsector == -1)
+                neartag(p.pos.x,p.pos.y,p.pos.z+(16<<8),sprite[p.i].sectnum,p.oang,$neartagsector,
+                        $neartagwall,$neartagsprite,$neartaghitdist, 1280, 1, our_neartag_blacklist), nearTagUpdateOriginal();
+            if (neartagsprite == -1 && neartagwall == -1 && neartagsector == -1)
+            {
+                neartag(p.pos.x,p.pos.y,p.pos.z+(16<<8),sprite[p.i].sectnum,p.oang,$neartagsector,
+                        $neartagwall,$neartagsprite,$neartaghitdist, 1280, 3, our_neartag_blacklist), nearTagUpdateOriginal();
+                if (neartagsprite >= 0)
+                {
+                    switch (DYNAMICTILEMAP(sprite[neartagsprite].picnum))
+                    {
+                    case FEM1__STATIC:
+                    case FEM2__STATIC:
+                    case FEM3__STATIC:
+                    case FEM4__STATIC:
+                    case FEM5__STATIC:
+                    case FEM6__STATIC:
+                    case FEM7__STATIC:
+                    case FEM8__STATIC:
+                    case FEM9__STATIC:
+                    case FEM10__STATIC:
+                    case PODFEM1__STATIC:
+                    case NAKED1__STATIC:
+                    case STATUE__STATIC:
+                    case TOUGHGAL__STATIC:
+                        return;
+                    }
+                }
 
-//        if (p.newowner >= 0)
-//            neartag(p.opos.x,p.opos.y,p.opos.z,sprite[p.i].sectnum,p.oang,&neartagsector,
-//                    &neartagwall,&neartagsprite,&neartaghitdist, 1280, 1, our_neartag_blacklist);
-//        else
-//        {
-//            neartag(p.pos.x,p.pos.y,p.pos.z,sprite[p.i].sectnum,p.oang,&neartagsector,
-//                    &neartagwall,&neartagsprite,&neartaghitdist, 1280, 1, our_neartag_blacklist);
-//            if (neartagsprite == -1 && neartagwall == -1 && neartagsector == -1)
-//                neartag(p.pos.x,p.pos.y,p.pos.z+(8<<8),sprite[p.i].sectnum,p.oang,&neartagsector,
-//                        &neartagwall,&neartagsprite,&neartaghitdist, 1280, 1, our_neartag_blacklist);
-//            if (neartagsprite == -1 && neartagwall == -1 && neartagsector == -1)
-//                neartag(p.pos.x,p.pos.y,p.pos.z+(16<<8),sprite[p.i].sectnum,p.oang,&neartagsector,
-//                        &neartagwall,&neartagsprite,&neartaghitdist, 1280, 1, our_neartag_blacklist);
-//            if (neartagsprite == -1 && neartagwall == -1 && neartagsector == -1)
-//            {
-//                neartag(p.pos.x,p.pos.y,p.pos.z+(16<<8),sprite[p.i].sectnum,p.oang,&neartagsector,
-//                        &neartagwall,&neartagsprite,&neartaghitdist, 1280, 3, our_neartag_blacklist);
-//                if (neartagsprite >= 0)
-//                {
-//                    switch (DYNAMICTILEMAP(sprite[neartagsprite].picnum))
-//                    {
-//                    case FEM1__STATIC:
-//                    case FEM2__STATIC:
-//                    case FEM3__STATIC:
-//                    case FEM4__STATIC:
-//                    case FEM5__STATIC:
-//                    case FEM6__STATIC:
-//                    case FEM7__STATIC:
-//                    case FEM8__STATIC:
-//                    case FEM9__STATIC:
-//                    case FEM10__STATIC:
-//                    case PODFEM1__STATIC:
-//                    case NAKED1__STATIC:
-//                    case STATUE__STATIC:
-//                    case TOUGHGAL__STATIC:
-//                        return;
-//                    }
-//                }
+                neartagsprite = -1;
+                neartagwall = -1;
+                neartagsector = -1;
+            }
+        }
 
-//                neartagsprite = -1;
-//                neartagwall = -1;
-//                neartagsector = -1;
-//            }
-//        }
+        if (p.newowner == -1 && neartagsprite == -1 && neartagsector == -1 && neartagwall == -1)
+            if (isanunderoperator(sector[sprite[p.i].sectnum].lotag))
+                neartagsector = sprite[p.i].sectnum;
 
-//        if (p.newowner == -1 && neartagsprite == -1 && neartagsector == -1 && neartagwall == -1)
-//            if (isanunderoperator(sector[sprite[p.i].sectnum].lotag))
-//                neartagsector = sprite[p.i].sectnum;
+        if (neartagsector >= 0 && (sector[neartagsector].lotag&16384))
+            return;
 
-//        if (neartagsector >= 0 && (sector[neartagsector].lotag&16384))
-//            return;
+        if (neartagsprite == -1 && neartagwall == -1)
+            if (p.cursectnum >= 0 && sector[p.cursectnum].lotag == 2)
+            {
+                oldz = A_CheckHitSprite(p.i,&neartagsprite);
+                if (oldz > 1280) neartagsprite = -1;
+            }
 
-//        if (neartagsprite == -1 && neartagwall == -1)
-//            if (p.cursectnum >= 0 && sector[p.cursectnum].lotag == 2)
-//            {
-//                oldz = A_CheckHitSprite(p.i,&neartagsprite);
-//                if (oldz > 1280) neartagsprite = -1;
-//            }
+        if (neartagsprite >= 0)
+        {
+            if (P_ActivateSwitch(snum,neartagsprite,1)) return;
 
-//        if (neartagsprite >= 0)
-//        {
-//            if (P_ActivateSwitch(snum,neartagsprite,1)) return;
+            switch (DYNAMICTILEMAP(sprite[neartagsprite].picnum))
+            {
+            case TOILET__STATIC:
+            case STALL__STATIC:
+                if (p.last_pissed_time == 0)
+                {
+                    if (ud.lockout == 0) A_PlaySound(DUKE_URINATE,p.i);
 
-//            switch (DYNAMICTILEMAP(sprite[neartagsprite].picnum))
-//            {
-//            case TOILET__STATIC:
-//            case STALL__STATIC:
-//                if (p.last_pissed_time == 0)
-//                {
-//                    if (ud.lockout == 0) A_PlaySound(DUKE_URINATE,p.i);
+                    p.last_pissed_time = GAMETICSPERSEC*220;
+                    p.transporter_hold = 29*2;
+                    if (p.holster_weapon == 0)
+                    {
+                        p.holster_weapon = 1;
+                        p.weapon_pos = -1;
+                    }
+                    if (sprite[p.i].extra <= (p.max_player_health-(p.max_player_health/10)))
+                    {
+                        sprite[p.i].extra += p.max_player_health/10;
+                        p.last_extra = sprite[p.i].extra;
+                    }
+                    else if (sprite[p.i].extra < p.max_player_health)
+                        sprite[p.i].extra = p.max_player_health;
+                }
+                else if (!A_CheckSoundPlaying(neartagsprite,FLUSH_TOILET))
+                    A_PlaySound(FLUSH_TOILET,neartagsprite);
+                return;
 
-//                    p.last_pissed_time = GAMETICSPERSEC*220;
-//                    p.transporter_hold = 29*2;
-//                    if (p.holster_weapon == 0)
-//                    {
-//                        p.holster_weapon = 1;
-//                        p.weapon_pos = -1;
-//                    }
-//                    if (sprite[p.i].extra <= (p.max_player_health-(p.max_player_health/10)))
-//                    {
-//                        sprite[p.i].extra += p.max_player_health/10;
-//                        p.last_extra = sprite[p.i].extra;
-//                    }
-//                    else if (sprite[p.i].extra < p.max_player_health)
-//                        sprite[p.i].extra = p.max_player_health;
-//                }
-//                else if (!A_CheckSoundPlaying(neartagsprite,FLUSH_TOILET))
-//                    A_PlaySound(FLUSH_TOILET,neartagsprite);
-//                return;
+            case NUKEBUTTON__STATIC:
+                var $j = new R(j);
+                P_FindWall(p,$j);
+                j = $j.$;
+                if (j >= 0 && wall[j].overpicnum == 0)
+                    if (actor[neartagsprite].t_data[0] == 0)
+                    {
+                        if (ud.noexits && (g_netServer || ud.multimode > 1))
+                        {
+                            // NUKEBUTTON frags the player
+                            actor[p.i].picnum = NUKEBUTTON;
+                            actor[p.i].extra = 250;
+                        }
+                        else
+                        {
+                            actor[neartagsprite].t_data[0] = 1;
+                            sprite[neartagsprite].owner = p.i;
+                            ud.secretlevel =
+                                (p.buttonpalette = sprite[neartagsprite].pal) ? sprite[neartagsprite].lotag : 0;
+                        }
+                    }
+                return;
 
-//            case NUKEBUTTON__STATIC:
-//                P_FindWall(p,&j);
-//                if (j >= 0 && wall[j].overpicnum == 0)
-//                    if (actor[neartagsprite].t_data[0] == 0)
-//                    {
-//                        if (ud.noexits && (g_netServer || ud.multimode > 1))
-//                        {
-//                            // NUKEBUTTON frags the player
-//                            actor[p.i].picnum = NUKEBUTTON;
-//                            actor[p.i].extra = 250;
-//                        }
-//                        else
-//                        {
-//                            actor[neartagsprite].t_data[0] = 1;
-//                            sprite[neartagsprite].owner = p.i;
-//                            ud.secretlevel =
-//                                (p.buttonpalette = sprite[neartagsprite].pal) ? sprite[neartagsprite].lotag : 0;
-//                        }
-//                    }
-//                return;
+            case WATERFOUNTAIN__STATIC:
+                if (actor[neartagsprite].t_data[0] != 1)
+                {
+                    actor[neartagsprite].t_data[0] = 1;
+                    sprite[neartagsprite].owner = p.i;
 
-//            case WATERFOUNTAIN__STATIC:
-//                if (actor[neartagsprite].t_data[0] != 1)
-//                {
-//                    actor[neartagsprite].t_data[0] = 1;
-//                    sprite[neartagsprite].owner = p.i;
+                    if (sprite[p.i].extra < p.max_player_health)
+                    {
+                        sprite[p.i].extra++;
+                        A_PlaySound(DUKE_DRINKING,p.i);
+                    }
+                }
+                return;
 
-//                    if (sprite[p.i].extra < p.max_player_health)
-//                    {
-//                        sprite[p.i].extra++;
-//                        A_PlaySound(DUKE_DRINKING,p.i);
-//                    }
-//                }
-//                return;
+            case PLUG__STATIC:
+                A_PlaySound(SHORT_CIRCUIT,p.i);
+                sprite[p.i].extra -= 2+(krand()&3);
 
-//            case PLUG__STATIC:
-//                A_PlaySound(SHORT_CIRCUIT,p.i);
-//                sprite[p.i].extra -= 2+(krand()&3);
+                P_PalFrom(p, 32, 48,48,64);
+                break;
 
-//                P_PalFrom(p, 32, 48,48,64);
-//                break;
+            case VIEWSCREEN__STATIC:
+            case VIEWSCREEN2__STATIC:
+            {
+                // Try to find a camera sprite for the viewscreen.
+                for (i = headspritestat[STAT_ACTOR]; i >= 0; i = nextspritestat[i])
+                {
+                    if (sprite[i].picnum == CAMERA1 && sprite[i].yvel == 0 && sprite[neartagsprite].hitag == sprite[i].lotag)
+                    {
+                        sprite[i].yvel = 1; //Using this camera
+                        A_PlaySound(MONITOR_ACTIVE,p.i);
 
-//            case VIEWSCREEN__STATIC:
-//            case VIEWSCREEN2__STATIC:
-//            {
-//                // Try to find a camera sprite for the viewscreen.
-//                for (SPRITES_OF(STAT_ACTOR, i))
-//                {
-//                    if (sprite[i].picnum == CAMERA1 && sprite[i].yvel == 0 && sprite[neartagsprite].hitag == sprite[i].lotag)
-//                    {
-//                        sprite[i].yvel = 1; //Using this camera
-//                        A_PlaySound(MONITOR_ACTIVE,p.i);
-
-//                        sprite[neartagsprite].owner = i;
-//                        sprite[neartagsprite].yvel = 1;
+                        sprite[neartagsprite].owner = i;
+                        sprite[neartagsprite].yvel = 1;
 
 
-//                        j = p.cursectnum;
-//                        p.cursectnum = sprite[i].sectnum;
-//                        P_UpdateScreenPal(p);
-//                        p.cursectnum = j;
+                        j = p.cursectnum;
+                        p.cursectnum = sprite[i].sectnum;
+                        P_UpdateScreenPal(p);
+                        p.cursectnum = j;
 
-//                        // parallaxtype = 2;
-//                        p.newowner = i;
+                        // parallaxtype = 2;
+                        p.newowner = i;
 
-//                        P_UpdatePosWhenViewingCam(p);
+                        P_UpdatePosWhenViewingCam(p);
 
-//                        return;
-//                    }
-//                }
-//            }
+                        return;
+                    }
+                }
+            }
 
 //CLEARCAMERAS:
 
-//            if (i < 0)
-//                G_ClearCameraView(p);
-//            else if (p.newowner >= 0)
-//                p.newowner = -1;
+            if (i < 0)
+                G_ClearCameraView(p);
+            else if (p.newowner >= 0)
+                p.newowner = -1;
 
-//            if (I_EscapeTrigger())
-//                I_EscapeTriggerClear();
+            if (I_EscapeTrigger())
+                I_EscapeTriggerClear();
 
-//            return;
-//            }
-//        }
+            return;
+            }
+        }
 
-//        if (TEST_SYNC_KEY(g_player[snum].sync.bits, SK_OPEN) == 0) return;
-//        else if (p.newowner >= 0)
-//        {
-//            i = -1;
-//            goto CLEARCAMERAS;
-//        }
+        if (TEST_SYNC_KEY(g_player[snum].sync.bits, SK_OPEN) == 0) return;
+        else if (p.newowner >= 0)
+        {
+            i = -1;
+            goto CLEARCAMERAS;
+        }
 
-//        if (neartagwall == -1 && neartagsector == -1 && neartagsprite == -1)
-//            if (klabs(A_GetHitscanRange(p.i)) < 512)
-//            {
-//                if ((krand()&255) < 16)
-//                    A_PlaySound(DUKE_SEARCH2,p.i);
-//                else A_PlaySound(DUKE_SEARCH,p.i);
-//                return;
-//            }
+        if (neartagwall == -1 && neartagsector == -1 && neartagsprite == -1)
+            if (klabs(A_GetHitscanRange(p.i)) < 512)
+            {
+                if ((krand()&255) < 16)
+                    A_PlaySound(DUKE_SEARCH2,p.i);
+                else A_PlaySound(DUKE_SEARCH,p.i);
+                return;
+            }
 
-//        if (neartagwall >= 0)
-//        {
-//            if (wall[neartagwall].lotag > 0 && CheckDoorTile(wall[neartagwall].picnum))
-//            {
-//                if (hitscanwall == neartagwall || hitscanwall == -1)
-//                    P_ActivateSwitch(snum,neartagwall,0);
-//                return;
-//            }
-//            else if (p.newowner >= 0)
-//            {
-//                i = -1;
-//                goto CLEARCAMERAS;
-//            }
-//        }
+        if (neartagwall >= 0)
+        {
+            if (wall[neartagwall].lotag > 0 && CheckDoorTile(wall[neartagwall].picnum))
+            {
+                if (hitscanwall == neartagwall || hitscanwall == -1)
+                    P_ActivateSwitch(snum,neartagwall,0);
+                return;
+            }
+            else if (p.newowner >= 0)
+            {
+                i = -1;
+                goto CLEARCAMERAS;
+            }
+        }
 
-//        if (neartagsector >= 0 && (sector[neartagsector].lotag&16384) == 0 && isanearoperator(sector[neartagsector].lotag))
-//        {
-//            i = headspritesect[neartagsector];
-//            while (i >= 0)
-//            {
-//                if (sprite[i].picnum == ACTIVATOR || sprite[i].picnum == MASTERSWITCH)
-//                    return;
-//                i = nextspritesect[i];
-//            }
-//            G_OperateSectors(neartagsector,p.i);
-//        }
-//        else if ((sector[sprite[p.i].sectnum].lotag&16384) == 0)
-//        {
-//            if (isanunderoperator(sector[sprite[p.i].sectnum].lotag))
-//            {
-//                i = headspritesect[sprite[p.i].sectnum];
-//                while (i >= 0)
-//                {
-//                    if (sprite[i].picnum == ACTIVATOR || sprite[i].picnum == MASTERSWITCH) return;
-//                    i = nextspritesect[i];
-//                }
-//                G_OperateSectors(sprite[p.i].sectnum,p.i);
-//            }
-//            else P_ActivateSwitch(snum,neartagwall,0);
-//        }
-//    }
-//}
+        if (neartagsector >= 0 && (sector[neartagsector].lotag&16384) == 0 && isanearoperator(sector[neartagsector].lotag))
+        {
+            i = headspritesect[neartagsector];
+            while (i >= 0)
+            {
+                if (sprite[i].picnum == ACTIVATOR || sprite[i].picnum == MASTERSWITCH)
+                    return;
+                i = nextspritesect[i];
+            }
+            G_OperateSectors(neartagsector,p.i);
+        }
+        else if ((sector[sprite[p.i].sectnum].lotag&16384) == 0)
+        {
+            if (isanunderoperator(sector[sprite[p.i].sectnum].lotag))
+            {
+                i = headspritesect[sprite[p.i].sectnum];
+                while (i >= 0)
+                {
+                    if (sprite[i].picnum == ACTIVATOR || sprite[i].picnum == MASTERSWITCH) return;
+                    i = nextspritesect[i];
+                }
+                G_OperateSectors(sprite[p.i].sectnum,p.i);
+            }
+            else P_ActivateSwitch(snum,neartagwall,0);
+        }
+    }
+}
 

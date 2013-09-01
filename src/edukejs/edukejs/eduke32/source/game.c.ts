@@ -2665,7 +2665,7 @@ function/*int32_t */calc_ybase(/*int32_t */begy:number):number
 // this handles both multiplayer and item pickup message type text
 // both are passed on to gametext
 function G_PrintGameQuotes(/*int32_t*/ snum:number):void 
-{todo();
+{todo("G_PrintGameQuotes");
 //    var i:number, j:number, k:number;
 
 //    var ps = g_player[snum].ps;
@@ -12207,7 +12207,7 @@ function /*int32_t */G_DoMoveThings(): number
             dlog(DEBUG_PLAYER_POS, "b4 process input p pos x:%i y:%i z%i, vel x:%i y:%i, z%i \n", g_player[0].ps.pos.x, g_player[0].ps.pos.y, g_player[0].ps.pos.z, g_player[0].ps.vel.x, g_player[0].ps.vel.y, g_player[0].ps.vel.z);
             P_ProcessInput(i);
             dlog(DEBUG_PLAYER_POS, "after process input p pos x:%i y:%i z%i, vel x:%i y:%i, z%i \n", g_player[0].ps.pos.x, g_player[0].ps.pos.y, g_player[0].ps.pos.z, g_player[0].ps.vel.x, g_player[0].ps.vel.y, g_player[0].ps.vel.z);
-            todo("P_CheckSectors(i);");
+            P_CheckSectors(i);
         }
     }
 

@@ -785,37 +785,37 @@ function A_DoGuts(/*int32_t*/ sp:number, /*int32_t */gtype:number, /*int32_t */n
 //    }
 //}
 
-function/* int32_t */G_ToggleWallInterpolation(/*int32_t */w: number, /*int32_t */doset: number)
+function/* int32_t */G_ToggleWallInterpolation(/*int32_t */w: number, /*int32_t */doset: number):number
 {
-    todo("G_ToggleWallInterpolation");return -0;
-    //if (doset)
-    //{
-    //    return G_SetInterpolation(&wall[w].x)
-    //        || G_SetInterpolation(&wall[w].y);
-    //}
-    //else
-    //{
-    //    G_StopInterpolation(&wall[w].x);
-    //    G_StopInterpolation(&wall[w].y);
-    //    return 0;
-    //}
+    
+    if (doset)
+    {
+        return G_SetInterpolation((new AnimatePtr(wall, w, "x")/* wall[w].x*/))
+            || G_SetInterpolation(new AnimatePtr(wall, w, "y")/* wall[w].y*/);
+    }
+    else
+    {
+        G_StopInterpolation(new AnimatePtr(wall, w, "x")/* wall[w].x*/);
+        G_StopInterpolation(new AnimatePtr(wall, w, "y")/* wall[w].y*/);
+        return 0;
+    }
 }
 
 function Sect_ToggleInterpolation(/*int32_t*/ sectnum: number, /*int32_t */doset: number): void
-{todo("Sect_ToggleInterpolation");
-    //var /*int32_t */k: number, j = sector[sectnum].wallptr, endwall = j+sector[sectnum].wallnum;
+{
+    var /*int32_t */k: number, j = sector[sectnum].wallptr, endwall = j+sector[sectnum].wallnum;
 
-    //for (; j<endwall; j++)
-    //{
-    //    G_ToggleWallInterpolation(j, doset);
+    for (; j<endwall; j++)
+    {
+        G_ToggleWallInterpolation(j, doset);
 
-    //    k = wall[j].nextwall;
-    //    if (k >= 0)
-    //    {
-    //        G_ToggleWallInterpolation(k, doset);
-    //        G_ToggleWallInterpolation(wall[k].point2, doset);
-    //    }
-    //}
+        k = wall[j].nextwall;
+        if (k >= 0)
+        {
+            G_ToggleWallInterpolation(k, doset);
+            G_ToggleWallInterpolation(wall[k].point2, doset);
+        }
+    }
 }
 
 function Sect_SetInterpolation(/*int32_t*/ sectnum: number): void
