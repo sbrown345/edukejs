@@ -1223,7 +1223,7 @@ function VM_Execute(/*int32_t */loop: number): void
                 // <varid> <xxxid> <varid>
                 var/*int32_t */lVar1=script[insptr++], lLabelID=script[insptr++], lVar2=script[insptr++];
 
-                VM_AccessActiveProjectile(tw==CON_SETTHISPROJECTILE,lVar1,lLabelID,lVar2);
+                VM_AccessActiveProjectile(tw==CON_SETTHISPROJECTILE?1:0,lVar1,lLabelID,lVar2);
                 continue;
             }
 

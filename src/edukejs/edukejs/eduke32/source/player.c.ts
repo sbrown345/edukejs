@@ -169,34 +169,34 @@ function P_QuickKill(p: DukePlayer_t): void
         A_DoGuts(p.i,JIBS6,8);
 }
 
-//static void A_DoWaterTracers(int32_t x1,int32_t y1,int32_t z1,int32_t x2,int32_t y2,int32_t z2,int32_t n)
-//{
-//    int32_t i, xv, yv, zv;
-//    int16_t sect = -1;
+function A_DoWaterTracers(/*int32_t*/ x1:number,/*int32t*/ y1:number,/*int32t*/ z1:number,/*int32t*/ x2:number,/*int32t*/ y2:number,/*int32t*/ z2:number,/*int32t*/ n):void
+{
+    var /*int32_t */i:number, xv:number, yv:number, zv:number;
+    var/*int16_t */sect = new R(-1);
 
-//    i = n+1;
-//    xv = (x2-x1)/i;
-//    yv = (y2-y1)/i;
-//    zv = (z2-z1)/i;
+    i = n+1;
+    xv = int32((x2-x1)/i);
+    yv = int32((y2-y1)/i);
+    zv = int32((z2-z1)/i);
 
-//    if ((klabs(x1-x2)+klabs(y1-y2)) < 3084)
-//        return;
+    if ((klabs(x1-x2)+klabs(y1-y2)) < 3084)
+        return;
+    
+    for (i=n; i>0; i--)
+    {
+        x1 += xv;
+        y1 += yv;
+        z1 += zv;
+        updatesector(x1,y1,sect);
+        if (sect.$ < 0)
+            break;
 
-//    for (i=n; i>0; i--)
-//    {
-//        x1 += xv;
-//        y1 += yv;
-//        z1 += zv;
-//        updatesector(x1,y1,&sect);
-//        if (sect < 0)
-//            break;
-
-//        if (sector[sect].lotag == ST_2_UNDERWATER)
-//            A_InsertSprite(sect,x1,y1,z1,WATERBUBBLE,-32,4+(krand()&3),4+(krand()&3),krand()&2047,0,0,g_player[0].ps.i,5);
-//        else
-//            A_InsertSprite(sect,x1,y1,z1,SMALLSMOKE,-32,14,14,0,0,0,g_player[0].ps.i,5);
-//    }
-//}
+        if (sector[sect.$].lotag == ST_2_UNDERWATER)
+            A_InsertSprite(sect.$,x1,y1,z1,WATERBUBBLE,-32,4+(krand()&3),4+(krand()&3),krand()&2047,0,0,g_player[0].ps.i,5);
+        else
+            A_InsertSprite(sect.$,x1,y1,z1,SMALLSMOKE,-32,14,14,0,0,0,g_player[0].ps.i,5);
+    }
+}
 
 //static void A_HitscanProjTrail(const vec3_t *sv, const vec3_t *dv, int32_t ang, int32_t atwith)
 //{

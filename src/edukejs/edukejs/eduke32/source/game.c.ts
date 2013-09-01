@@ -13030,8 +13030,8 @@ function A_SpawnWallGlass(/*int32_t*/ i:number,/*int32_t */wallnum:number,/*int3
     x1 -= ksgn(yv);
     y1 += ksgn(xv);
 
-    xv /= j;
-    yv /= j;
+    xv = int32(xv / j);//xv /= j;
+    yv = int32(yv / j);//yv /= j;
 
     for (j=n; j>0; j--)
     {

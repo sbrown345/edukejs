@@ -1239,7 +1239,7 @@ function /*int32_t */P_ActivateSwitch(/*int32_t */snum:number,/*int32_t */w:numb
 {
     var/*int32_t */switchpal:number, switchpicnum:number;
     var/*int32_t */i:number, x:number, lotag:number,hitag:number,picnum:number,correctdips = 1, numdips = 0;
-    var davector: vec3_t;
+    var davector = new vec3_t();
 
     if (w < 0) return 0;
 
