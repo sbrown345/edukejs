@@ -886,7 +886,7 @@ function Proj_HandleKnee(hit:hitdata_t, /*int32_t */i:number, /*int32_t */p:numb
     }
 }
 
-function MinibossScale(s:number):number {return (int32((s)*sprite[i].yrepeat)/80);}
+function MinibossScale(s:number, i:number):number {return (int32((s)*sprite[i].yrepeat)/80);}
 function /*int32_t */A_ShootWithZvel(/*int32_t*/ i:number, /*int32_t */atwith:number, /*int32_t */override_zvel:number):number
 {
     var /*int16_t */sa:number;
@@ -1216,7 +1216,7 @@ function /*int32_t */A_ShootWithZvel(/*int32_t*/ i:number, /*int32_t */atwith:nu
 
             {
                 var/*int32_t */picnum = sprite[j].picnum;
-                ProjectileData[picnum].copyToSpriteProjectile[j]();//Bmemcpy(&SpriteProjectile[j], &ProjectileData[picnum], sizeof(projectile_t));
+                ProjectileData[picnum].copyTo(SpriteProjectile[j]);//Bmemcpy(&SpriteProjectile[j], &ProjectileData[picnum], sizeof(projectile_t));
             }
 
             return j;
@@ -1418,7 +1418,7 @@ function /*int32_t */A_ShootWithZvel(/*int32_t*/ i:number, /*int32_t */atwith:nu
                 if (sprite[i].picnum == BOSS2)
                 {
                     l = sprite[j].xvel;
-                    sprite[j].xvel = MinibossScale(1024);
+                    sprite[j].xvel = MinibossScale(1024, i);
                     A_SetSprite(j,CLIPMASK0);
                     sprite[j].xvel = l;
                     sprite[j].ang += 128-(krand()&255);
@@ -1463,11 +1463,11 @@ function /*int32_t */A_ShootWithZvel(/*int32_t*/ i:number, /*int32_t */atwith:nu
                 j = A_FindPlayer(s, NULL);
                 sa = getangle(g_player[j].ps.opos.x-srcvect.x,g_player[j].ps.opos.y-srcvect.y);
                 if (sprite[i].picnum == BOSS3)
-                    srcvect.z -= MinibossScale(32<<8);
+                    srcvect.z -= MinibossScale(32<<8, i);
                 else if (sprite[i].picnum == BOSS2)
                 {
                     vel += 128;
-                    srcvect.z += MinibossScale(24<<8);
+                    srcvect.z += MinibossScale(24<<8, i);
                 }
 
                 l = safeldist(g_player[j].ps.i, s);
@@ -1506,24 +1506,24 @@ function /*int32_t */A_ShootWithZvel(/*int32_t*/ i:number, /*int32_t */atwith:nu
                 {
                     if (krand()&1)
                     {
-                        sprite[j].x -= MinibossScale(sintable[sa&2047]>>6);
-                        sprite[j].y -= MinibossScale(sintable[(sa+1024+512)&2047]>>6);
-                        sprite[j].ang -= MinibossScale(8);
+                        sprite[j].x -= MinibossScale(sintable[sa&2047]>>6, i);
+                        sprite[j].y -= MinibossScale(sintable[(sa+1024+512)&2047]>>6, i);
+                        sprite[j].ang -= MinibossScale(8, i);
                     }
                     else
                     {
-                        sprite[j].x += MinibossScale(sintable[sa&2047]>>6);
-                        sprite[j].y += MinibossScale(sintable[(sa+1024+512)&2047]>>6);
-                        sprite[j].ang += MinibossScale(4);
+                        sprite[j].x += MinibossScale(sintable[sa&2047]>>6, i);
+                        sprite[j].y += MinibossScale(sintable[(sa+1024+512)&2047]>>6, i);
+                        sprite[j].ang += MinibossScale(4, i);
                     }
-                    sprite[j].xrepeat = MinibossScale(42);
-                    sprite[j].yrepeat = MinibossScale(42);
+                    sprite[j].xrepeat = MinibossScale(42, i);
+                    sprite[j].yrepeat = MinibossScale(42, i);
                 }
                 else if (sprite[i].picnum == BOSS2)
                 {
-                    sprite[j].x -= MinibossScale(int32(sintable[sa&2047]/56));
-                    sprite[j].y -= MinibossScale(int32(sintable[(sa+1024+512)&2047]/56));
-                    sprite[j].ang -= MinibossScale(8)+(krand()&255)-128;
+                    sprite[j].x -= MinibossScale(int32(sintable[sa&2047]/56), i);
+                    sprite[j].y -= MinibossScale(int32(sintable[(sa+1024+512)&2047]/56), i);
+                    sprite[j].ang -= MinibossScale(8, i)+(krand()&255)-128;
                     sprite[j].xrepeat = 24;
                     sprite[j].yrepeat = 24;
                 }

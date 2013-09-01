@@ -2563,515 +2563,519 @@ function G_AlignWarpElevators(): void
 }
 
 function P_HandleSharedKeys(/*int32_t */snum:number): void
-{todo("P_HandleSharedKeys");
-//    int32_t i, k = 0, dainv;
-//    uint32_t sb_snum = g_player[snum].sync.bits, j;
-//    DukePlayer_t *p = g_player[snum].ps;
+{
+    var/*int32_t */i:number, k = 0, dainv:number;
+    var /*uint32_t */sb_snum = g_player[snum].sync.bits, j:number;
+    var p = g_player[snum].ps;
 
-//    if (p.cheat_phase == 1) return;
+    if (p.cheat_phase == 1) return;
 
-//    // 1<<0  =  jump
-//    // 1<<1  =  crouch
-//    // 1<<2  =  fire
-//    // 1<<3  =  aim up
-//    // 1<<4  =  aim down
-//    // 1<<5  =  run
-//    // 1<<6  =  look left
-//    // 1<<7  =  look right
-//    // 15<<8 = !weapon selection (bits 8-11)
-//    // 1<<12 = !steroids
-//    // 1<<13 =  look up
-//    // 1<<14 =  look down
-//    // 1<<15 = !nightvis
-//    // 1<<16 = !medkit
-//    // 1<<17 =  (multiflag==1) ? changes meaning of bits 18 and 19
-//    // 1<<18 =  centre view
-//    // 1<<19 = !holster weapon
-//    // 1<<20 = !inventory left
-//    // 1<<21 = !pause
-//    // 1<<22 = !quick kick
-//    // 1<<23 =  aim mode
-//    // 1<<24 = !holoduke
-//    // 1<<25 = !jetpack
-//    // 1<<26 =  g_gameQuit
-//    // 1<<27 = !inventory right
-//    // 1<<28 = !turn around
-//    // 1<<29 = !open
-//    // 1<<30 = !inventory
-//    // 1<<31 = !escape
+    // 1<<0  =  jump
+    // 1<<1  =  crouch
+    // 1<<2  =  fire
+    // 1<<3  =  aim up
+    // 1<<4  =  aim down
+    // 1<<5  =  run
+    // 1<<6  =  look left
+    // 1<<7  =  look right
+    // 15<<8 = !weapon selection (bits 8-11)
+    // 1<<12 = !steroids
+    // 1<<13 =  look up
+    // 1<<14 =  look down
+    // 1<<15 = !nightvis
+    // 1<<16 = !medkit
+    // 1<<17 =  (multiflag==1) ? changes meaning of bits 18 and 19
+    // 1<<18 =  centre view
+    // 1<<19 = !holster weapon
+    // 1<<20 = !inventory left
+    // 1<<21 = !pause
+    // 1<<22 = !quick kick
+    // 1<<23 =  aim mode
+    // 1<<24 = !holoduke
+    // 1<<25 = !jetpack
+    // 1<<26 =  g_gameQuit
+    // 1<<27 = !inventory right
+    // 1<<28 = !turn around
+    // 1<<29 = !open
+    // 1<<30 = !inventory
+    // 1<<31 = !escape
 
-//    i = p.aim_mode;
-//    p.aim_mode = (sb_snum>>SK_AIMMODE)&1;
-//    if (p.aim_mode < i)
-//        p.return_to_center = 9;
+    i = p.aim_mode;
+    p.aim_mode = (sb_snum>>SK_AIMMODE)&1;
+    if (p.aim_mode < i)
+        p.return_to_center = 9;
 
-//    if (TEST_SYNC_KEY(sb_snum, SK_QUICK_KICK) && p.quick_kick == 0)
-//        if (p.curr_weapon != KNEE_WEAPON || p.kickback_pic == 0)
-//        {
-//            if (VM_OnEvent(EVENT_QUICKKICK,g_player[snum].ps.i,snum, -1, 0) == 0)
-//            {
-//                p.quick_kick = 14;
-//                if (p.fta == 0 || p.ftq == 80)
-//                    P_DoQuote(QUOTE_MIGHTY_FOOT,p);
-//            }
-//        }
+    if (TEST_SYNC_KEY(sb_snum, SK_QUICK_KICK) && p.quick_kick == 0)
+        if (p.curr_weapon != KNEE_WEAPON || p.kickback_pic == 0)
+        {
+            if (VM_OnEvent(EVENT_QUICKKICK,g_player[snum].ps.i,snum, -1, 0) == 0)
+            {
+                p.quick_kick = 14;
+                if (p.fta == 0 || p.ftq == 80)
+                    P_DoQuote(QUOTE_MIGHTY_FOOT,p);
+            }
+        }
 
-//    j = sb_snum & ((15u<<SK_WEAPON_BITS)|BIT(SK_STEROIDS)|BIT(SK_NIGHTVISION)|BIT(SK_MEDKIT)|BIT(SK_QUICK_KICK)| \
-//                   BIT(SK_HOLSTER)|BIT(SK_INV_LEFT)|BIT(SK_PAUSE)|BIT(SK_HOLODUKE)|BIT(SK_JETPACK)|BIT(SK_INV_RIGHT)| \
-//                   BIT(SK_TURNAROUND)|BIT(SK_OPEN)|BIT(SK_INVENTORY)|BIT(SK_ESCAPE));
-//    sb_snum = j & ~p.interface_toggle_flag;
-//    p.interface_toggle_flag |= sb_snum | ((sb_snum&0xf00)?0xf00:0);
-//    p.interface_toggle_flag &= j | ((j&0xf00)?0xf00:0);
+    j = sb_snum & ((15<<SK_WEAPON_BITS)|BIT(SK_STEROIDS)|BIT(SK_NIGHTVISION)|BIT(SK_MEDKIT)|BIT(SK_QUICK_KICK)| 
+                   BIT(SK_HOLSTER)|BIT(SK_INV_LEFT)|BIT(SK_PAUSE)|BIT(SK_HOLODUKE)|BIT(SK_JETPACK)|BIT(SK_INV_RIGHT)| 
+                   BIT(SK_TURNAROUND)|BIT(SK_OPEN)|BIT(SK_INVENTORY)|BIT(SK_ESCAPE));
+    sb_snum = j & ~p.interface_toggle_flag;
+    p.interface_toggle_flag |= sb_snum | ((sb_snum&0xf00)?0xf00:0);
+    p.interface_toggle_flag &= j | ((j&0xf00)?0xf00:0);
 
-//    if (sb_snum && TEST_SYNC_KEY(sb_snum, SK_MULTIFLAG) == 0)
-//    {
-//        if (TEST_SYNC_KEY(sb_snum, SK_PAUSE))
-//        {
-//            KB_ClearKeyDown(sc_Pause);
-//            if (ud.pause_on)
-//                ud.pause_on = 0;
-//            else ud.pause_on = 1+SHIFTS_IS_PRESSED;
-//            if (ud.pause_on)
-//            {
-//                S_PauseMusic(1);
-//                FX_StopAllSounds();
-//                S_ClearSoundLocks();
-//            }
-//            else
-//            {
-//                if (ud.config.MusicToggle) S_PauseMusic(0);
-//                pub = NUMPAGES;
-//                pus = NUMPAGES;
-//            }
-//        }
+    if (sb_snum && TEST_SYNC_KEY(sb_snum, SK_MULTIFLAG) == 0)
+    {
+        if (TEST_SYNC_KEY(sb_snum, SK_PAUSE))
+        {
+            KB_ClearKeyDown(sc_Pause);
+            if (ud.pause_on)
+                ud.pause_on = 0;
+            else ud.pause_on = 1+SHIFTS_IS_PRESSED();
+            if (ud.pause_on)
+            {
+                S_PauseMusic(1);
+                FX_StopAllSounds();
+                S_ClearSoundLocks();
+            }
+            else
+            {
+                if (ud.config.MusicToggle) S_PauseMusic(0);
+                pub = NUMPAGES;
+                pus = NUMPAGES;
+            }
+        }
 
-//        if (ud.pause_on) return;
+        if (ud.pause_on) return;
 
-//        if (sprite[p.i].extra <= 0) return;		// if dead...
+        if (sprite[p.i].extra <= 0) return;		// if dead...
 
-//        if (TEST_SYNC_KEY(sb_snum, SK_INVENTORY) && p.newowner == -1)	// inventory button generates event for selected item
-//        {
-//            if (VM_OnEvent(EVENT_INVENTORY,g_player[snum].ps.i,snum, -1, 0) == 0)
-//            {
-//                switch (p.inven_icon)
-//                {
-//                case ICON_JETPACK:
-//                    sb_snum |= BIT(SK_JETPACK);
-//                    break;
-//                case ICON_HOLODUKE:
-//                    sb_snum |= BIT(SK_HOLODUKE);
-//                    break;
-//                case ICON_HEATS:
-//                    sb_snum |= BIT(SK_NIGHTVISION);
-//                    break;
-//                case ICON_FIRSTAID:
-//                    sb_snum |= BIT(SK_MEDKIT);
-//                    break;
-//                case ICON_STEROIDS:
-//                    sb_snum |= BIT(SK_STEROIDS);
-//                    break;
-//                }
-//            }
-//        }
+        if (TEST_SYNC_KEY(sb_snum, SK_INVENTORY) && p.newowner == -1)	// inventory button generates event for selected item
+        {
+            if (VM_OnEvent(EVENT_INVENTORY,g_player[snum].ps.i,snum, -1, 0) == 0)
+            {
+                switch (p.inven_icon)
+                {
+                case ICON_JETPACK:
+                    sb_snum |= BIT(SK_JETPACK);
+                    break;
+                case ICON_HOLODUKE:
+                    sb_snum |= BIT(SK_HOLODUKE);
+                    break;
+                case ICON_HEATS:
+                    sb_snum |= BIT(SK_NIGHTVISION);
+                    break;
+                case ICON_FIRSTAID:
+                    sb_snum |= BIT(SK_MEDKIT);
+                    break;
+                case ICON_STEROIDS:
+                    sb_snum |= BIT(SK_STEROIDS);
+                    break;
+                }
+            }
+        }
 
-//        if (TEST_SYNC_KEY(sb_snum, SK_NIGHTVISION))
-//        {
-//            if (VM_OnEvent(EVENT_USENIGHTVISION,g_player[snum].ps.i,snum, -1, 0) == 0
-//                    &&  p.inv_amount[GET_HEATS] > 0)
-//            {
-//                p.heat_on = !p.heat_on?1:0;
-//                P_UpdateScreenPal(p);
-//                p.inven_icon = ICON_HEATS;
-//                A_PlaySound(NITEVISION_ONOFF,p.i);
-//                P_DoQuote(QUOTE_NVG_OFF-!!p.heat_on,p);
-//            }
-//        }
+        if (TEST_SYNC_KEY(sb_snum, SK_NIGHTVISION))
+        {
+            if (VM_OnEvent(EVENT_USENIGHTVISION,g_player[snum].ps.i,snum, -1, 0) == 0
+                    &&  p.inv_amount[GET_HEATS] > 0)
+            {
+                p.heat_on = !p.heat_on?1:0;
+                P_UpdateScreenPal(p);
+                p.inven_icon = ICON_HEATS;
+                A_PlaySound(NITEVISION_ONOFF,p.i);
+                P_DoQuote(QUOTE_NVG_OFF-(!!p.heat_on?1:0),p);
+            }
+        }
 
-//        if (TEST_SYNC_KEY(sb_snum, SK_STEROIDS))
-//        {
-//            if (VM_OnEvent(EVENT_USESTEROIDS,g_player[snum].ps.i,snum, -1, 0) == 0)
-//            {
-//                if (p.inv_amount[GET_STEROIDS] == 400)
-//                {
-//                    p.inv_amount[GET_STEROIDS]--;
-//                    A_PlaySound(DUKE_TAKEPILLS,p.i);
-//                    P_DoQuote(QUOTE_USED_STEROIDS,p);
-//                }
-//                if (p.inv_amount[GET_STEROIDS] > 0)
-//                    p.inven_icon = ICON_STEROIDS;
-//            }
-//            return;		// is there significance to returning?
-//        }
-//        if (p.refresh_inventory)
-//            sb_snum |= BIT(SK_INV_LEFT);   // emulate move left...
+        if (TEST_SYNC_KEY(sb_snum, SK_STEROIDS))
+        {
+            if (VM_OnEvent(EVENT_USESTEROIDS,g_player[snum].ps.i,snum, -1, 0) == 0)
+            {
+                if (p.inv_amount[GET_STEROIDS] == 400)
+                {
+                    p.inv_amount[GET_STEROIDS]--;
+                    A_PlaySound(DUKE_TAKEPILLS,p.i);
+                    P_DoQuote(QUOTE_USED_STEROIDS,p);
+                }
+                if (p.inv_amount[GET_STEROIDS] > 0)
+                    p.inven_icon = ICON_STEROIDS;
+            }
+            return;		// is there significance to returning?
+        }
+        if (p.refresh_inventory)
+            sb_snum |= BIT(SK_INV_LEFT);   // emulate move left...
 
-//        if (p.newowner == -1 && (TEST_SYNC_KEY(sb_snum, SK_INV_LEFT) || TEST_SYNC_KEY(sb_snum, SK_INV_RIGHT)))
-//        {
-//            p.invdisptime = GAMETICSPERSEC*2;
+        if (p.newowner == -1 && (TEST_SYNC_KEY(sb_snum, SK_INV_LEFT) || TEST_SYNC_KEY(sb_snum, SK_INV_RIGHT)))
+        {
+            p.invdisptime = GAMETICSPERSEC*2;
 
-//            if (TEST_SYNC_KEY(sb_snum, SK_INV_RIGHT)) k = 1;
-//            else k = 0;
+            if (TEST_SYNC_KEY(sb_snum, SK_INV_RIGHT)) k = 1;
+            else k = 0;
 
-//            if (p.refresh_inventory) p.refresh_inventory = 0;
-//            dainv = p.inven_icon;
+            if (p.refresh_inventory) p.refresh_inventory = 0;
+            dainv = p.inven_icon;
 
-//            i = 0;
+            i = 0;
 
-//CHECKINV1:
-//            if (i < 9)
-//            {
-//                i++;
+CHECKINV1:
+for(;;) {
+            if (i < 9)
+            {
+                i++;
 
-//                switch (dainv)
-//                {
-//                case ICON_JETPACK:
-//                    if (p.inv_amount[GET_JETPACK] > 0 && i > 1)
-//                        break;
-//                    if (k) dainv++;
-//                    else dainv--;
-//                    goto CHECKINV1;
-//                case ICON_SCUBA:
-//                    if (p.inv_amount[GET_SCUBA] > 0 && i > 1)
-//                        break;
-//                    if (k) dainv++;
-//                    else dainv--;
-//                    goto CHECKINV1;
-//                case ICON_STEROIDS:
-//                    if (p.inv_amount[GET_STEROIDS] > 0 && i > 1)
-//                        break;
-//                    if (k) dainv++;
-//                    else dainv--;
-//                    goto CHECKINV1;
-//                case ICON_HOLODUKE:
-//                    if (p.inv_amount[GET_HOLODUKE] > 0 && i > 1)
-//                        break;
-//                    if (k) dainv++;
-//                    else dainv--;
-//                    goto CHECKINV1;
-//                case ICON_NONE:
-//                case ICON_FIRSTAID:
-//                    if (p.inv_amount[GET_FIRSTAID] > 0 && i > 1)
-//                        break;
-//                    if (k) dainv = 2;
-//                    else dainv = 7;
-//                    goto CHECKINV1;
-//                case ICON_HEATS:
-//                    if (p.inv_amount[GET_HEATS] > 0 && i > 1)
-//                        break;
-//                    if (k) dainv++;
-//                    else dainv--;
-//                    goto CHECKINV1;
-//                case ICON_BOOTS:
-//                    if (p.inv_amount[GET_BOOTS] > 0 && i > 1)
-//                        break;
-//                    if (k) dainv = 1;
-//                    else dainv = 6;
-//                    goto CHECKINV1;
-//                }
-//            }
-//            else dainv = 0;
+                switch (dainv)
+                {
+                case ICON_JETPACK:
+                    if (p.inv_amount[GET_JETPACK] > 0 && i > 1)
+                        break;
+                    if (k) dainv++;
+                    else dainv--;
+                    continue CHECKINV1;
+                case ICON_SCUBA:
+                    if (p.inv_amount[GET_SCUBA] > 0 && i > 1)
+                        break;
+                    if (k) dainv++;
+                    else dainv--;
+                    continue CHECKINV1;
+                case ICON_STEROIDS:
+                    if (p.inv_amount[GET_STEROIDS] > 0 && i > 1)
+                        break;
+                    if (k) dainv++;
+                    else dainv--;
+                    continue CHECKINV1;
+                case ICON_HOLODUKE:
+                    if (p.inv_amount[GET_HOLODUKE] > 0 && i > 1)
+                        break;
+                    if (k) dainv++;
+                    else dainv--;
+                    continue CHECKINV1;
+                case ICON_NONE:
+                case ICON_FIRSTAID:
+                    if (p.inv_amount[GET_FIRSTAID] > 0 && i > 1)
+                        break;
+                    if (k) dainv = 2;
+                    else dainv = 7;
+                    continue CHECKINV1;
+                case ICON_HEATS:
+                    if (p.inv_amount[GET_HEATS] > 0 && i > 1)
+                        break;
+                    if (k) dainv++;
+                    else dainv--;
+                    continue CHECKINV1;
+                case ICON_BOOTS:
+                    if (p.inv_amount[GET_BOOTS] > 0 && i > 1)
+                        break;
+                    if (k) dainv = 1;
+                    else dainv = 6;
+                    continue CHECKINV1;
+                }
+            }
+            else dainv = 0;
 
-//            if (TEST_SYNC_KEY(sb_snum, SK_INV_LEFT))   // Inventory_Left
-//            {
-//                /*Gv_SetVar(g_iReturnVarID,dainv,g_player[snum].ps.i,snum);*/
-//                dainv = VM_OnEvent(EVENT_INVENTORYLEFT,g_player[snum].ps.i,snum, -1, dainv);
-//            }
-//            else if (TEST_SYNC_KEY(sb_snum, SK_INV_RIGHT))   // Inventory_Right
-//            {
-//                /*Gv_SetVar(g_iReturnVarID,dainv,g_player[snum].ps.i,snum);*/
-//                dainv = VM_OnEvent(EVENT_INVENTORYRIGHT,g_player[snum].ps.i,snum, -1, dainv);
-//            }
+    break;
+}
 
-//            if (dainv >= 1)
-//            {
-//                p.inven_icon = dainv;
+            if (TEST_SYNC_KEY(sb_snum, SK_INV_LEFT))   // Inventory_Left
+            {
+                /*Gv_SetVar(g_iReturnVarID,dainv,g_player[snum].ps.i,snum);*/
+                dainv = VM_OnEvent(EVENT_INVENTORYLEFT,g_player[snum].ps.i,snum, -1, dainv);
+            }
+            else if (TEST_SYNC_KEY(sb_snum, SK_INV_RIGHT))   // Inventory_Right
+            {
+                /*Gv_SetVar(g_iReturnVarID,dainv,g_player[snum].ps.i,snum);*/
+                dainv = VM_OnEvent(EVENT_INVENTORYRIGHT,g_player[snum].ps.i,snum, -1, dainv);
+            }
 
-//                if (dainv || p.inv_amount[GET_FIRSTAID])
-//                {
-//                    static const int32_t i[8] = { QUOTE_MEDKIT, QUOTE_STEROIDS, QUOTE_HOLODUKE,
-//                        QUOTE_JETPACK, QUOTE_NVG, QUOTE_SCUBA, QUOTE_BOOTS, 0 };
-//                    if (dainv>=1 && dainv<=9)
-//                        P_DoQuote(i[dainv-1], p);
-//                }
-//            }
-//        }
+            if (dainv >= 1)
+            {
+                p.inven_icon = dainv;
 
-//        j = ((sb_snum&(15<<SK_WEAPON_BITS))>>SK_WEAPON_BITS) - 1;
+                if (dainv || p.inv_amount[GET_FIRSTAID])
+                {
+                    var _i = [ QUOTE_MEDKIT, QUOTE_STEROIDS, QUOTE_HOLODUKE,
+                        QUOTE_JETPACK, QUOTE_NVG, QUOTE_SCUBA, QUOTE_BOOTS, 0 ];
+                    if (dainv>=1 && dainv<=9)
+                        P_DoQuote(_i[dainv-1], p);
+                }
+            }
+        }
 
-//        switch ((int32_t)j)
-//        {
-//        case -1:
-//            break;
-//        default:
-//            j = VM_OnEvent(EVENT_WEAPKEY1+j,p.i,snum, -1, j);
-//            break;
-//        case 10:
-//            j = VM_OnEvent(EVENT_PREVIOUSWEAPON,p.i,snum, -1, j);
-//            break;
-//        case 11:
-//            j = VM_OnEvent(EVENT_NEXTWEAPON,p.i,snum, -1, j);
-//            break;
-//        }
+        j = ((sb_snum&(15<<SK_WEAPON_BITS))>>SK_WEAPON_BITS) - 1;
 
-//        if (p.reloading == 1)
-//            j = -1;
-//        else if ((int32_t)j != -1 && p.kickback_pic == 1 && p.weapon_pos == 1)
-//        {
-//            p.wantweaponfire = j;
-//            p.kickback_pic = 0;
-//        }
-//        if ((int32_t)j != -1 && p.last_pissed_time <= (GAMETICSPERSEC*218) && p.show_empty_weapon == 0 /*&& p.kickback_pic == 0*/ &&
-//                p.quick_kick == 0 && sprite[p.i].xrepeat > 32 && p.access_incs == 0 && p.knee_incs == 0)
-//        {
-//            //            if(  ( p.weapon_pos == 0 || ( p.holster_weapon && p.weapon_pos == WEAPON_POS_LOWER ) ))
-//            {
-//                if (j == 10 || j == 11)
-//                {
-//                    k = p.curr_weapon;
-//                    j = (j == 10 ? -1 : 1);     // JBF: prev (-1) or next (1) weapon choice
-//                    i = 0;
+        switch (int32(j))
+        {
+        case -1:
+            break;
+        default:
+            j = VM_OnEvent(EVENT_WEAPKEY1+j,p.i,snum, -1, j);
+            break;
+        case 10:
+            j = VM_OnEvent(EVENT_PREVIOUSWEAPON,p.i,snum, -1, j);
+            break;
+        case 11:
+            j = VM_OnEvent(EVENT_NEXTWEAPON,p.i,snum, -1, j);
+            break;
+        }
 
-//                    while ((k >= 0 && k < 10) || (PLUTOPAK && k == GROW_WEAPON && (p.subweapon&(1<<GROW_WEAPON))))         // JBF 20040116: so we don't select grower with v1.3d
-//                    {
-//                        if (k == GROW_WEAPON)   // JBF: this is handling next/previous with the grower selected
-//                        {
-//                            if ((int32_t)j == -1)
-//                                k = 5;
-//                            else k = 7;
-//                        }
-//                        else
-//                        {
-//                            k += j;
-//                            if (PLUTOPAK)   // JBF 20040116: so we don't select grower with v1.3d
-//                                if (k == SHRINKER_WEAPON && (p.subweapon&(1<<GROW_WEAPON)))    // JBF: activates grower
-//                                    k = GROW_WEAPON;                            // if enabled
-//                        }
+        if (p.reloading == 1)
+            j = -1;
+        else if (int32(j) != -1 && p.kickback_pic == 1 && p.weapon_pos == 1)
+        {
+            p.wantweaponfire = j;
+            p.kickback_pic = 0;
+        }
+        if (int32(j) != -1 && p.last_pissed_time <= (GAMETICSPERSEC*218) && p.show_empty_weapon == 0 /*&& p.kickback_pic == 0*/ &&
+                p.quick_kick == 0 && sprite[p.i].xrepeat > 32 && p.access_incs == 0 && p.knee_incs == 0)
+        {
+            //            if(  ( p.weapon_pos == 0 || ( p.holster_weapon && p.weapon_pos == WEAPON_POS_LOWER ) ))
+            {
+                if (j == 10 || j == 11)
+                {
+                    k = p.curr_weapon;
+                    j = (j == 10 ? -1 : 1);     // JBF: prev (-1) or next (1) weapon choice
+                    i = 0;
 
-//                        if (k == -1) k = 9;
-//                        else if (k == 10) k = 0;
+                    while ((k >= 0 && k < 10) || (window.PLUTOPAK && k == GROW_WEAPON && (p.subweapon&(1<<GROW_WEAPON))))         // JBF 20040116: so we don't select grower with v1.3d
+                    {
+                        if (k == GROW_WEAPON)   // JBF: this is handling next/previous with the grower selected
+                        {
+                            if (int32(j) == -1)
+                                k = 5;
+                            else k = 7;
+                        }
+                        else
+                        {
+                            k += j;
+                            if (window.PLUTOPAK)   // JBF 20040116: so we don't select grower with v1.3d
+                                if (k == SHRINKER_WEAPON && (p.subweapon&(1<<GROW_WEAPON)))    // JBF: activates grower
+                                    k = GROW_WEAPON;                            // if enabled
+                        }
 
-//                        if ((p.gotweapon & (1<<k)) && p.ammo_amount[k] > 0)
-//                        {
-//                            if (PLUTOPAK)   // JBF 20040116: so we don't select grower with v1.3d
-//                                if (k == SHRINKER_WEAPON && (p.subweapon&(1<<GROW_WEAPON)))
-//                                    k = GROW_WEAPON;
-//                            j = k;
-//                            break;
-//                        }
-//                        else    // JBF: grower with no ammo, but shrinker with ammo, switch to shrink
-//                            if (PLUTOPAK && k == GROW_WEAPON && p.ammo_amount[GROW_WEAPON] == 0 &&
-//                                    (p.gotweapon & (1<<SHRINKER_WEAPON)) && p.ammo_amount[SHRINKER_WEAPON] > 0)   // JBF 20040116: added PLUTOPAK so we don't select grower with v1.3d
-//                            {
-//                                j = SHRINKER_WEAPON;
-//                                p.subweapon &= ~(1<<GROW_WEAPON);
-//                                break;
-//                            }
-//                            else    // JBF: shrinker with no ammo, but grower with ammo, switch to grow
-//                                if (PLUTOPAK && k == SHRINKER_WEAPON && p.ammo_amount[SHRINKER_WEAPON] == 0 &&
-//                                        (p.gotweapon & (1<<SHRINKER_WEAPON)) && p.ammo_amount[GROW_WEAPON] > 0)   // JBF 20040116: added PLUTOPAK so we don't select grower with v1.3d
-//                                {
-//                                    j = GROW_WEAPON;
-//                                    p.subweapon |= (1<<GROW_WEAPON);
-//                                    break;
-//                                }
+                        if (k == -1) k = 9;
+                        else if (k == 10) k = 0;
 
-//                        if (++i == 10) // absolutely no weapons, so use foot
-//                        {
-//                            j = KNEE_WEAPON;
-//                            break;
-//                        }
-//                    }
-//                }
+                        if ((p.gotweapon & (1<<k)) && p.ammo_amount[k] > 0)
+                        {
+                            if (window.PLUTOPAK)   // JBF 20040116: so we don't select grower with v1.3d
+                                if (k == SHRINKER_WEAPON && (p.subweapon&(1<<GROW_WEAPON)))
+                                    k = GROW_WEAPON;
+                            j = k;
+                            break;
+                        }
+                        else    // JBF: grower with no ammo, but shrinker with ammo, switch to shrink
+                            if (window.PLUTOPAK && k == GROW_WEAPON && p.ammo_amount[GROW_WEAPON] == 0 &&
+                                    (p.gotweapon & (1<<SHRINKER_WEAPON)) && p.ammo_amount[SHRINKER_WEAPON] > 0)   // JBF 20040116: added PLUTOPAK so we don't select grower with v1.3d
+                            {
+                                j = SHRINKER_WEAPON;
+                                p.subweapon &= ~(1<<GROW_WEAPON);
+                                break;
+                            }
+                            else    // JBF: shrinker with no ammo, but grower with ammo, switch to grow
+                                if (window.PLUTOPAK && k == SHRINKER_WEAPON && p.ammo_amount[SHRINKER_WEAPON] == 0 &&
+                                        (p.gotweapon & (1<<SHRINKER_WEAPON)) && p.ammo_amount[GROW_WEAPON] > 0)   // JBF 20040116: added PLUTOPAK so we don't select grower with v1.3d
+                                {
+                                    j = GROW_WEAPON;
+                                    p.subweapon |= (1<<GROW_WEAPON);
+                                    break;
+                                }
 
-//                P_SetWeaponGamevars(snum, p);
+                        if (++i == 10) // absolutely no weapons, so use foot
+                        {
+                            j = KNEE_WEAPON;
+                            break;
+                        }
+                    }
+                }
 
-//                j = VM_OnEvent(EVENT_SELECTWEAPON,p.i,snum, -1, j);
+                P_SetWeaponGamevars(snum, p);
 
-//                if ((int32_t)j != -1 && j <= MAX_WEAPONS)
-//                {
-//                    if (j == HANDBOMB_WEAPON && p.ammo_amount[HANDBOMB_WEAPON] == 0)
-//                    {
-//                        k = headspritestat[STAT_ACTOR];
-//                        while (k >= 0)
-//                        {
-//                            if (sprite[k].picnum == HEAVYHBOMB && sprite[k].owner == p.i)
-//                            {
-//                                p.gotweapon |= (1<<HANDBOMB_WEAPON);
-//                                j = HANDREMOTE_WEAPON;
-//                                break;
-//                            }
-//                            k = nextspritestat[k];
-//                        }
-//                    }
+                j = VM_OnEvent(EVENT_SELECTWEAPON,p.i,snum, -1, j);
 
-//                    if (j == SHRINKER_WEAPON && PLUTOPAK)   // JBF 20040116: so we don't select the grower with v1.3d
-//                    {
-//                        if (screenpeek == snum) pus = NUMPAGES;
+                if (int32(j) != -1 && j <= MAX_WEAPONS)
+                {
+                    if (j == HANDBOMB_WEAPON && p.ammo_amount[HANDBOMB_WEAPON] == 0)
+                    {
+                        k = headspritestat[STAT_ACTOR];
+                        while (k >= 0)
+                        {
+                            if (sprite[k].picnum == HEAVYHBOMB && sprite[k].owner == p.i)
+                            {
+                                p.gotweapon |= (1<<HANDBOMB_WEAPON);
+                                j = HANDREMOTE_WEAPON;
+                                break;
+                            }
+                            k = nextspritestat[k];
+                        }
+                    }
 
-//                        if (p.curr_weapon != GROW_WEAPON && p.curr_weapon != SHRINKER_WEAPON)
-//                        {
-//                            if (p.ammo_amount[GROW_WEAPON] > 0)
-//                            {
-//                                if ((p.subweapon&(1<<GROW_WEAPON)) == (1<<GROW_WEAPON))
-//                                    j = GROW_WEAPON;
-//                                else if (p.ammo_amount[SHRINKER_WEAPON] == 0)
-//                                {
-//                                    j = GROW_WEAPON;
-//                                    p.subweapon |= (1<<GROW_WEAPON);
-//                                }
-//                            }
-//                            else if (p.ammo_amount[SHRINKER_WEAPON] > 0)
-//                                p.subweapon &= ~(1<<GROW_WEAPON);
-//                        }
-//                        else if (p.curr_weapon == SHRINKER_WEAPON)
-//                        {
-//                            p.subweapon |= (1<<GROW_WEAPON);
-//                            j = GROW_WEAPON;
-//                        }
-//                        else
-//                            p.subweapon &= ~(1<<GROW_WEAPON);
-//                    }
+                    if (j == SHRINKER_WEAPON && window.PLUTOPAK)   // JBF 20040116: so we don't select the grower with v1.3d
+                    {
+                        if (screenpeek == snum) pus = NUMPAGES;
 
-//                    if (p.holster_weapon)
-//                    {
-//                        sb_snum |= BIT(SK_HOLSTER);
-//                        p.weapon_pos = WEAPON_POS_LOWER;
-//                    }
-//                    else if ((int32_t)j >= 0 && (p.gotweapon & (1<<j)) && (uint32_t)p.curr_weapon != j)
-//                        switch (j)
-//                        {
-//                        case PISTOL_WEAPON:
-//                        case SHOTGUN_WEAPON:
-//                        case CHAINGUN_WEAPON:
-//                        case RPG_WEAPON:
-//                        case DEVISTATOR_WEAPON:
-//                        case FREEZE_WEAPON:
-//                        case GROW_WEAPON:
-//                        case SHRINKER_WEAPON:
-//                            if (p.ammo_amount[j] == 0 && p.show_empty_weapon == 0)
-//                            {
-//                                p.last_full_weapon = p.curr_weapon;
-//                                p.show_empty_weapon = 32;
-//                            }
-//                        case KNEE_WEAPON:
-//                            P_AddWeapon(p, j);
-//                            break;
-//                        case HANDREMOTE_WEAPON:
-//                            if (k >= 0) // Found in list of [1]'s
-//                            {
-//                                p.curr_weapon = j;
-//                                p.last_weapon = -1;
-//                                p.weapon_pos = WEAPON_POS_RAISE;
-//                            }
-//                            break;
-//                        case HANDBOMB_WEAPON:
-//                        case TRIPBOMB_WEAPON:
-//                            if (p.ammo_amount[j] > 0 && (p.gotweapon & (1<<j)))
-//                                P_AddWeapon(p, j);
-//                            break;
-//                        }
-//                }
-//            }
-//        }
+                        if (p.curr_weapon != GROW_WEAPON && p.curr_weapon != SHRINKER_WEAPON)
+                        {
+                            if (p.ammo_amount[GROW_WEAPON] > 0)
+                            {
+                                if ((p.subweapon&(1<<GROW_WEAPON)) == (1<<GROW_WEAPON))
+                                    j = GROW_WEAPON;
+                                else if (p.ammo_amount[SHRINKER_WEAPON] == 0)
+                                {
+                                    j = GROW_WEAPON;
+                                    p.subweapon |= (1<<GROW_WEAPON);
+                                }
+                            }
+                            else if (p.ammo_amount[SHRINKER_WEAPON] > 0)
+                                p.subweapon &= ~(1<<GROW_WEAPON);
+                        }
+                        else if (p.curr_weapon == SHRINKER_WEAPON)
+                        {
+                            p.subweapon |= (1<<GROW_WEAPON);
+                            j = GROW_WEAPON;
+                        }
+                        else
+                            p.subweapon &= ~(1<<GROW_WEAPON);
+                    }
 
-//        if (TEST_SYNC_KEY(sb_snum, SK_HOLODUKE) && p.newowner == -1)
-//        {
-//            if (p.holoduke_on == -1)
-//            {
-//                if (VM_OnEvent(EVENT_HOLODUKEON,g_player[snum].ps.i,snum, -1, 0) == 0)
-//                {
-//                    if (p.inv_amount[GET_HOLODUKE] > 0)
-//                    {
-//                        p.inven_icon = ICON_HOLODUKE;
+                    if (p.holster_weapon)
+                    {
+                        sb_snum |= BIT(SK_HOLSTER);
+                        p.weapon_pos = WEAPON_POS_LOWER;
+                    }
+                    else if (int32(j) >= 0 && (p.gotweapon & (1<<j)) && uint32(p.curr_weapon) != j)
+                        switch (j)
+                        {
+                        case PISTOL_WEAPON:
+                        case SHOTGUN_WEAPON:
+                        case CHAINGUN_WEAPON:
+                        case RPG_WEAPON:
+                        case DEVISTATOR_WEAPON:
+                        case FREEZE_WEAPON:
+                        case GROW_WEAPON:
+                        case SHRINKER_WEAPON:
+                            if (p.ammo_amount[j] == 0 && p.show_empty_weapon == 0)
+                            {
+                                p.last_full_weapon = p.curr_weapon;
+                                p.show_empty_weapon = 32;
+                            }
+                        case KNEE_WEAPON:
+                            P_AddWeapon(p, j);
+                            break;
+                        case HANDREMOTE_WEAPON:
+                            if (k >= 0) // Found in list of [1]'s
+                            {
+                                p.curr_weapon = j;
+                                p.last_weapon = -1;
+                                p.weapon_pos = WEAPON_POS_RAISE;
+                            }
+                            break;
+                        case HANDBOMB_WEAPON:
+                        case TRIPBOMB_WEAPON:
+                            if (p.ammo_amount[j] > 0 && (p.gotweapon & (1<<j)))
+                                P_AddWeapon(p, j);
+                            break;
+                        }
+                }
+            }
+        }
 
-//                        if (p.cursectnum > -1)
-//                        {
-//                            p.holoduke_on = i = A_InsertSprite(p.cursectnum,p.pos.x,p.pos.y,
-//                                                                p.pos.z+(30<<8),APLAYER,-64,0,0,p.ang,0,0,-1,10);
-//                            actor[i].t_data[3] = actor[i].t_data[4] = 0;
-//                            sprite[i].yvel = snum;
-//                            sprite[i].extra = 0;
-//                            P_DoQuote(QUOTE_HOLODUKE_ON,p);
-//                            A_PlaySound(TELEPORTER,p.holoduke_on);
-//                        }
-//                    }
-//                    else P_DoQuote(QUOTE_HOLODUKE_NOT_FOUND,p);
-//                }
-//            }
-//            else
-//            {
-//                if (VM_OnEvent(EVENT_HOLODUKEOFF,g_player[snum].ps.i,snum, -1, 0) == 0)
-//                {
-//                    A_PlaySound(TELEPORTER,p.holoduke_on);
-//                    p.holoduke_on = -1;
-//                    P_DoQuote(QUOTE_HOLODUKE_OFF,p);
-//                }
-//            }
-//        }
+        if (TEST_SYNC_KEY(sb_snum, SK_HOLODUKE) && p.newowner == -1)
+        {
+            if (p.holoduke_on == -1)
+            {
+                if (VM_OnEvent(EVENT_HOLODUKEON,g_player[snum].ps.i,snum, -1, 0) == 0)
+                {
+                    if (p.inv_amount[GET_HOLODUKE] > 0)
+                    {
+                        p.inven_icon = ICON_HOLODUKE;
 
-//        if (TEST_SYNC_KEY(sb_snum, SK_MEDKIT))
-//        {
-//            if (VM_OnEvent(EVENT_USEMEDKIT,g_player[snum].ps.i,snum, -1, 0) == 0)
-//            {
-//                if (p.inv_amount[GET_FIRSTAID] > 0 && sprite[p.i].extra < p.max_player_health)
-//                {
-//                    j = p.max_player_health-sprite[p.i].extra;
+                        if (p.cursectnum > -1)
+                        {
+                            p.holoduke_on = i = A_InsertSprite(p.cursectnum,p.pos.x,p.pos.y,
+                                                                p.pos.z+(30<<8),APLAYER,-64,0,0,p.ang,0,0,-1,10);
+                            actor[i].t_data[3] = actor[i].t_data[4] = 0;
+                            sprite[i].yvel = snum;
+                            sprite[i].extra = 0;
+                            P_DoQuote(QUOTE_HOLODUKE_ON,p);
+                            A_PlaySound(TELEPORTER,p.holoduke_on);
+                        }
+                    }
+                    else P_DoQuote(QUOTE_HOLODUKE_NOT_FOUND,p);
+                }
+            }
+            else
+            {
+                if (VM_OnEvent(EVENT_HOLODUKEOFF,g_player[snum].ps.i,snum, -1, 0) == 0)
+                {
+                    A_PlaySound(TELEPORTER,p.holoduke_on);
+                    p.holoduke_on = -1;
+                    P_DoQuote(QUOTE_HOLODUKE_OFF,p);
+                }
+            }
+        }
 
-//                    if ((uint32_t)p.inv_amount[GET_FIRSTAID] > j)
-//                    {
-//                        p.inv_amount[GET_FIRSTAID] -= j;
-//                        sprite[p.i].extra = p.max_player_health;
-//                        p.inven_icon = ICON_FIRSTAID;
-//                    }
-//                    else
-//                    {
-//                        sprite[p.i].extra += p.inv_amount[GET_FIRSTAID];
-//                        p.inv_amount[GET_FIRSTAID] = 0;
-//                        P_SelectNextInvItem(p);
-//                    }
-//                    A_PlaySound(DUKE_USEMEDKIT,p.i);
-//                }
-//            }
-//        }
+        if (TEST_SYNC_KEY(sb_snum, SK_MEDKIT))
+        {
+            if (VM_OnEvent(EVENT_USEMEDKIT,g_player[snum].ps.i,snum, -1, 0) == 0)
+            {
+                if (p.inv_amount[GET_FIRSTAID] > 0 && sprite[p.i].extra < p.max_player_health)
+                {
+                    j = p.max_player_health-sprite[p.i].extra;
 
-//        if (p.newowner == -1 && TEST_SYNC_KEY(sb_snum, SK_JETPACK))
-//        {
-//            if (VM_OnEvent(EVENT_USEJETPACK,g_player[snum].ps.i,snum, -1, 0) == 0)
-//            {
-//                if (p.inv_amount[GET_JETPACK] > 0)
-//                {
-//                    p.jetpack_on = !p.jetpack_on?1:0;
-//                    if (p.jetpack_on)
-//                    {
-//                        p.inven_icon = ICON_JETPACK;
-//                        if (p.scream_voice > FX_Ok)
-//                        {
-//                            FX_StopSound(p.scream_voice);
-//                            p.scream_voice = -1;
-//                        }
+                    if (uint32(p.inv_amount[GET_FIRSTAID]) > j)
+                    {
+                        p.inv_amount[GET_FIRSTAID] -= j;
+                        sprite[p.i].extra = p.max_player_health;
+                        p.inven_icon = ICON_FIRSTAID;
+                    }
+                    else
+                    {
+                        sprite[p.i].extra += p.inv_amount[GET_FIRSTAID];
+                        p.inv_amount[GET_FIRSTAID] = 0;
+                        P_SelectNextInvItem(p);
+                    }
+                    A_PlaySound(DUKE_USEMEDKIT,p.i);
+                }
+            }
+        }
 
-//                        A_PlaySound(DUKE_JETPACK_ON,p.i);
+        if (p.newowner == -1 && TEST_SYNC_KEY(sb_snum, SK_JETPACK))
+        {
+            if (VM_OnEvent(EVENT_USEJETPACK,g_player[snum].ps.i,snum, -1, 0) == 0)
+            {
+                if (p.inv_amount[GET_JETPACK] > 0)
+                {
+                    p.jetpack_on = !p.jetpack_on?1:0;
+                    if (p.jetpack_on)
+                    {
+                        p.inven_icon = ICON_JETPACK;
+                        if (p.scream_voice > FX_Ok)
+                        {
+                            FX_StopSound(p.scream_voice);
+                            p.scream_voice = -1;
+                        }
 
-//                        P_DoQuote(QUOTE_JETPACK_ON,p);
-//                    }
-//                    else
-//                    {
-//                        p.hard_landing = 0;
-//                        p.vel.z = 0;
-//                        A_PlaySound(DUKE_JETPACK_OFF,p.i);
-//                        S_StopEnvSound(DUKE_JETPACK_IDLE,p.i);
-//                        S_StopEnvSound(DUKE_JETPACK_ON,p.i);
-//                        P_DoQuote(QUOTE_JETPACK_OFF,p);
-//                    }
-//                }
-//                else P_DoQuote(QUOTE_JETPACK_NOT_FOUND,p);
-//            }
-//        }
+                        A_PlaySound(DUKE_JETPACK_ON,p.i);
 
-//        if (TEST_SYNC_KEY(sb_snum, SK_TURNAROUND) && p.one_eighty_count == 0)
-//            if (VM_OnEvent(EVENT_TURNAROUND,p.i,snum, -1, 0) == 0)
-//                p.one_eighty_count = -1024;
-//    }
+                        P_DoQuote(QUOTE_JETPACK_ON,p);
+                    }
+                    else
+                    {
+                        p.hard_landing = 0;
+                        p.vel.z = 0;
+                        A_PlaySound(DUKE_JETPACK_OFF,p.i);
+                        S_StopEnvSound(DUKE_JETPACK_IDLE,p.i);
+                        S_StopEnvSound(DUKE_JETPACK_ON,p.i);
+                        P_DoQuote(QUOTE_JETPACK_OFF,p);
+                    }
+                }
+                else P_DoQuote(QUOTE_JETPACK_NOT_FOUND,p);
+            }
+        }
+
+        if (TEST_SYNC_KEY(sb_snum, SK_TURNAROUND) && p.one_eighty_count == 0)
+            if (VM_OnEvent(EVENT_TURNAROUND,p.i,snum, -1, 0) == 0)
+                p.one_eighty_count = -1024;
+    }
 }
 
 function /*int32_t */A_CheckHitSprite(/*int32_t */i:number, /*int16_t **/hitsp:R<number>):number
