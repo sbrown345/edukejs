@@ -4650,242 +4650,247 @@ function G_MoveActors():void
 
         case HEAVYHBOMB__STATIC:
         {
-            todoThrow();
-//            var/*int32_t */p:number;
-//            var ps:DukePlayer_t;
+            var/*int32_t */p:number;
+            var ps:DukePlayer_t;
+            var gotoDETONATEB = false;
+            if ((s.cstat&32768))
+            {
+                t[2]--;
+                if (t[2] <= 0)
+                {
+                    A_PlaySound(TELEPORTER,i);
+                    A_Spawn(i,TRANSPORTERSTAR);
+                    s.cstat = 257;
+                }
+                {i = nexti; continue BOLT;}
+            }
 
-//            if ((s.cstat&32768))
-//            {
-//                t[2]--;
-//                if (t[2] <= 0)
-//                {
-//                    A_PlaySound(TELEPORTER,i);
-//                    A_Spawn(i,TRANSPORTERSTAR);
-//                    s.cstat = 257;
-//                }
-//                {i = nexti; continue BOLT;}
-//            }
+            var $x = new R(x);
+            p = A_FindPlayer(s,$x);
+            x = $x.$;
+            ps = g_player[p].ps;
 
-//            var $x = new R(x);
-//            p = A_FindPlayer(s,$x);
-//            x = $x.$;
-//            ps = g_player[p].ps;
+            if (x < 1220) s.cstat &= ~257;
+            else s.cstat |= 257;
 
-//            if (x < 1220) s.cstat &= ~257;
-//            else s.cstat |= 257;
+            if (t[3] == 0)
+            {
+                if (A_IncurDamage(i) >= 0)
+                {
+                    t[3] = 1;
+                    t[2] = 0;
+                    l = 0;
+                    s.xvel = 0;
+                    gotoDETONATEB = true;
+                }
+            }
 
-//            if (t[3] == 0)
-//            {
-//                if (A_IncurDamage(i) >= 0)
-//                {
-//                    t[3] = 1;
-//                    t[2] = 0;
-//                    l = 0;
-//                    s.xvel = 0;
-//                    goto DETONATEB;
-//                }
-//            }
+            if(!gotoDETONATEB) 
+            {
+                if (s.picnum != BOUNCEMINE)
+                {
+                    A_Fall(i);
 
-//            if (s.picnum != BOUNCEMINE)
-//            {
-//                A_Fall(i);
+                    if ((sector[sect].lotag != ST_1_ABOVE_WATER || actor[i].floorz != sector[sect].floorz) && s.z >= actor[i].floorz-(ZOFFSET) && s.yvel < 3)
+                    {
+                        if (s.yvel > 0 || (s.yvel == 0 && actor[i].floorz == sector[sect].floorz))
+                            A_PlaySound(PIPEBOMB_BOUNCE,i);
+                        s.zvel = -((4-s.yvel)<<8);
+                        if (sector[s.sectnum].lotag == ST_2_UNDERWATER)
+                            s.zvel >>= 2;
+                        s.yvel++;
+                    }
+                    if (s.z < actor[i].ceilingz)   // && sector[sect].lotag != ST_2_UNDERWATER )
+                    {
+                        s.z = actor[i].ceilingz+(3<<8);
+                        s.zvel = 0;
+                    }
+                }
 
-//                if ((sector[sect].lotag != ST_1_ABOVE_WATER || actor[i].floorz != sector[sect].floorz) && s.z >= actor[i].floorz-(ZOFFSET) && s.yvel < 3)
-//                {
-//                    if (s.yvel > 0 || (s.yvel == 0 && actor[i].floorz == sector[sect].floorz))
-//                        A_PlaySound(PIPEBOMB_BOUNCE,i);
-//                    s.zvel = -((4-s.yvel)<<8);
-//                    if (sector[s.sectnum].lotag == ST_2_UNDERWATER)
-//                        s.zvel >>= 2;
-//                    s.yvel++;
-//                }
-//                if (s.z < actor[i].ceilingz)   // && sector[sect].lotag != ST_2_UNDERWATER )
-//                {
-//                    s.z = actor[i].ceilingz+(3<<8);
-//                    s.zvel = 0;
-//                }
-//            }
+                {
+                    var tmpvect = new vec3_t();
 
-//            {
-//                vec3_t tmpvect;
+                    tmpvect.x = (s.xvel*(sintable[(s.ang+512)&2047]))>>14;
+                    tmpvect.y = (s.xvel*(sintable[s.ang&2047]))>>14;
+                    tmpvect.z = s.zvel;
+                    j = A_MoveSprite(i,tmpvect,CLIPMASK0);
+                }
 
-//                tmpvect.x = (s.xvel*(sintable[(s.ang+512)&2047]))>>14;
-//                tmpvect.y = (s.xvel*(sintable[s.ang&2047]))>>14;
-//                tmpvect.z = s.zvel;
-//                j = A_MoveSprite(i,&tmpvect,CLIPMASK0);
-//            }
+                actor[i].movflag = j;
 
-//            actor[i].movflag = j;
+                if (sector[sprite[i].sectnum].lotag == ST_1_ABOVE_WATER && s.zvel == 0 && actor[i].floorz == sector[sect].floorz)
+                {
+                    s.z += (32<<8);
+                    if (t[5] == 0)
+                    {
+                        t[5] = 1;
+                        A_Spawn(i,WATERSPLASH2);
+                    }
+                }
+                else t[5] = 0;
 
-//            if (sector[sprite[i].sectnum].lotag == ST_1_ABOVE_WATER && s.zvel == 0 && actor[i].floorz == sector[sect].floorz)
-//            {
-//                s.z += (32<<8);
-//                if (t[5] == 0)
-//                {
-//                    t[5] = 1;
-//                    A_Spawn(i,WATERSPLASH2);
-//                }
-//            }
-//            else t[5] = 0;
+                if (t[3] == 0 && (s.picnum == BOUNCEMINE || s.picnum == MORTER) && (j || x < 844))
+                {
+                    t[3] = 1;
+                    t[2] = 0;
+                    l = 0;
+                    s.xvel = 0;
+                    gotoDETONATEB = true;
+                }
 
-//            if (t[3] == 0 && (s.picnum == BOUNCEMINE || s.picnum == MORTER) && (j || x < 844))
-//            {
-//                t[3] = 1;
-//                t[2] = 0;
-//                l = 0;
-//                s.xvel = 0;
-//                goto DETONATEB;
-//            }
+            }
 
-//            if (sprite[s.owner].picnum == APLAYER)
-//                l = sprite[s.owner].yvel;
-//            else l = -1;
+            if(!gotoDETONATEB) 
+            {
+                if (sprite[s.owner].picnum == APLAYER)
+                    l = sprite[s.owner].yvel;
+                else l = -1;
 
-//            if (s.xvel > 0)
-//            {
-//                s.xvel -= 5;
-//                if (sector[sect].lotag == ST_2_UNDERWATER)
-//                    s.xvel -= 10;
+                if (s.xvel > 0)
+                {
+                    s.xvel -= 5;
+                    if (sector[sect].lotag == ST_2_UNDERWATER)
+                        s.xvel -= 10;
 
-//                if (s.xvel < 0)
-//                    s.xvel = 0;
-//                if (s.xvel&8) s.cstat ^= 4;
-//            }
+                    if (s.xvel < 0)
+                        s.xvel = 0;
+                    if (s.xvel&8) s.cstat ^= 4;
+                }
 
-//            if ((j&49152) == 32768)
-//            {
-//                vec3_t davect;
+                if ((j&49152) == 32768)
+                {
+                    var davect = new vec3_t();
 
-//                j &= (MAXWALLS-1);
+                    j &= (MAXWALLS-1);
 
-//                Bmemcpy(&davect, s, sizeof(vec3_t));
-//                A_DamageWall(i,j,&davect,s.picnum);
+                    Bmemcpy(davect, s, sizeof(vec3_t));
+                    A_DamageWall(i,j,davect,s.picnum);
 
-//                Proj_BounceOffWall(s, j);
-//                s.xvel >>= 1;
-//            }
-
+                    Proj_BounceOffWall(s, j);
+                    s.xvel >>= 1;
+                }
+            }
 //DETONATEB:
-//            // Pipebomb control set to timer? (see player.c)
-//            if (s.picnum == HEAVYHBOMB && t[6] == 1)
-//            {
-//                /*                if(s.extra >= 1)
-//                                {
-//                                    s.extra--;
-//                                }
+            // Pipebomb control set to timer? (see player.c)
+            if (s.picnum == HEAVYHBOMB && t[6] == 1)
+            {
+                /*                if(s.extra >= 1)
+                                {
+                                    s.extra--;
+                                }
 
-//                                if(s.extra <= 0)
-//                                    s.lotag=911;
-//                */
+                                if(s.extra <= 0)
+                                    s.lotag=911;
+                */
 
-//                if (t[7] > 0)
-//                    t[7]--;
+                if (t[7] > 0)
+                    t[7]--;
 
-//                if (t[7] == 0)
-//                    t[6] = 3;
-//            }
+                if (t[7] == 0)
+                    t[6] = 3;
+            }
 
-//            if ((l >= 0 && g_player[l].ps.hbomb_on == 0 && t[6] == 2) || t[3] == 1)
-//                t[6] = 3;
+            if ((l >= 0 && g_player[l].ps.hbomb_on == 0 && t[6] == 2) || t[3] == 1)
+                t[6] = 3;
 
-//            if (t[6] == 3)
-//            {
-//                t[2]++;
+            if (t[6] == 3)
+            {
+                t[2]++;
 
-//                if (t[2] == 2)
-//                {
-//                    int32_t j;
+                if (t[2] == 2)
+                {
+                    var/*int32_t */j:number;
 
-//                    x = s.extra;
-//                    m = 0;
-//                    switch (DYNAMICTILEMAP(s.picnum))
-//                    {
-//                    case HEAVYHBOMB__STATIC:
-//                        m = g_pipebombBlastRadius;
-//                        break;
-//                    case MORTER__STATIC:
-//                        m = g_morterBlastRadius;
-//                        break;
-//                    case BOUNCEMINE__STATIC:
-//                        m = g_bouncemineBlastRadius;
-//                        break;
-//                    }
+                    x = s.extra;
+                    m = 0;
+                    switch (DYNAMICTILEMAP(s.picnum))
+                    {
+                    case HEAVYHBOMB__STATIC:
+                        m = g_pipebombBlastRadius;
+                        break;
+                    case MORTER__STATIC:
+                        m = g_morterBlastRadius;
+                        break;
+                    case BOUNCEMINE__STATIC:
+                        m = g_bouncemineBlastRadius;
+                        break;
+                    }
 
-//                    A_RadiusDamage(i, m,x>>2,x>>1,x-(x>>2),x);
-//                    j = A_Spawn(i,EXPLOSION2);
-//                    A_PlaySound(PIPEBOMB_EXPLODE,j);
-//                    if (s.zvel == 0)
-//                        A_Spawn(i,EXPLOSION2BOT);
-//                    for (x=0; x<8; x++)
-//                        RANDOMSCRAP(s, i);
-//                }
+                    A_RadiusDamage(i, m,x>>2,x>>1,x-(x>>2),x);
+                    j = A_Spawn(i,EXPLOSION2);
+                    A_PlaySound(PIPEBOMB_EXPLODE,j);
+                    if (s.zvel == 0)
+                        A_Spawn(i,EXPLOSION2BOT);
+                    for (x=0; x<8; x++)
+                        RANDOMSCRAP(s, i);
+                }
 
-//                if (s.yrepeat)
-//                {
-//                    s.yrepeat = 0;
-//                    {i = nexti; continue BOLT;}
-//                }
+                if (s.yrepeat)
+                {
+                    s.yrepeat = 0;
+                    {i = nexti; continue BOLT;}
+                }
 
-//                if (t[2] > 20)
-//                {
-//                    if (s.owner != i || ud.respawn_items == 0)
-//                    {
-//                        { A_DeleteSprite(i); {i = nexti; continue BOLT;} }
-//                    }
-//                    else
-//                    {
-//                        t[2] = g_itemRespawnTime;
-//                        A_Spawn(i,RESPAWNMARKERRED);
-//                        s.cstat = 32768;
-//                        s.yrepeat = 9;
-//                        {i = nexti; continue BOLT;}
-//                    }
-//                }
-//            }
-//            else if (s.picnum == HEAVYHBOMB && x < 788 && t[0] > 7 && s.xvel == 0)
-//                if (cansee(s.x,s.y,s.z-(8<<8),s.sectnum,ps.pos.x,ps.pos.y,ps.pos.z,ps.cursectnum))
-//                    if (ps.ammo_amount[HANDBOMB_WEAPON] < ps.max_ammo_amount[HANDBOMB_WEAPON])
-//                    {
-//                        if ((GametypeFlags[ud.coop] & GAMETYPE_WEAPSTAY) && s.owner == i)
-//                        {
-//                            for (j=0; j<ps.weapreccnt; j++)
-//                                if (ps.weaprecs[j] == s.picnum)
-//                                    {i = nexti; continue BOLT;}
+                if (t[2] > 20)
+                {
+                    if (s.owner != i || ud.respawn_items == 0)
+                    {
+                        { A_DeleteSprite(i); {i = nexti; continue BOLT;} }
+                    }
+                    else
+                    {
+                        t[2] = g_itemRespawnTime;
+                        A_Spawn(i,RESPAWNMARKERRED);
+                        s.cstat = 32768;
+                        s.yrepeat = 9;
+                        {i = nexti; continue BOLT;}
+                    }
+                }
+            }
+            else if (s.picnum == HEAVYHBOMB && x < 788 && t[0] > 7 && s.xvel == 0)
+                if (cansee(s.x,s.y,s.z-(8<<8),s.sectnum,ps.pos.x,ps.pos.y,ps.pos.z,ps.cursectnum))
+                    if (ps.ammo_amount[HANDBOMB_WEAPON] < ps.max_ammo_amount[HANDBOMB_WEAPON])
+                    {
+                        if ((GametypeFlags[ud.coop] & GAMETYPE_WEAPSTAY) && s.owner == i)
+                        {
+                            for (j=0; j<ps.weapreccnt; j++)
+                                if (ps.weaprecs[j] == s.picnum)
+                                    {i = nexti; continue BOLT;}
 
-//                            if (ps.weapreccnt < MAX_WEAPONS)
-//                                ps.weaprecs[ps.weapreccnt++] = s.picnum;
-//                        }
+                            if (ps.weapreccnt < MAX_WEAPONS)
+                                ps.weaprecs[ps.weapreccnt++] = s.picnum;
+                        }
 
-//                        P_AddAmmo(HANDBOMB_WEAPON,ps,1);
-//                        A_PlaySound(DUKE_GET,ps.i);
+                        P_AddAmmo(HANDBOMB_WEAPON,ps,1);
+                        A_PlaySound(DUKE_GET,ps.i);
 
-//                        if ((ps.gotweapon & (1<<HANDBOMB_WEAPON)) == 0 || s.owner == ps.i)
-//                        {
-//                            /* P_AddWeapon(ps,HANDBOMB_WEAPON); */
-//                            if (!(ps.weaponswitch & 1) && PWEAPON(0, ps.curr_weapon, WorksLike) != HANDREMOTE_WEAPON)
-//                                P_AddWeaponNoSwitch(ps,HANDBOMB_WEAPON);
-//                            else P_AddWeapon(ps,HANDBOMB_WEAPON);
-//                        }
+                        if ((ps.gotweapon & (1<<HANDBOMB_WEAPON)) == 0 || s.owner == ps.i)
+                        {
+                            /* P_AddWeapon(ps,HANDBOMB_WEAPON); */
+                            if (!(ps.weaponswitch & 1) && PWEAPON(0, ps.curr_weapon, WorksLike) != HANDREMOTE_WEAPON)
+                                P_AddWeaponNoSwitch(ps,HANDBOMB_WEAPON);
+                            else P_AddWeapon(ps,HANDBOMB_WEAPON);
+                        }
 
-//                        if (sprite[s.owner].picnum != APLAYER)
-//                            P_PalFrom(ps, 32, 0,32,0);
+                        if (sprite[s.owner].picnum != APLAYER)
+                            P_PalFrom(ps, 32, 0,32,0);
 
-//                        if (s.owner != i || ud.respawn_items == 0)
-//                        {
-//                            if (s.owner == i && (GametypeFlags[ud.coop] & GAMETYPE_WEAPSTAY))
-//                                {i = nexti; continue BOLT;}
-//                            { A_DeleteSprite(i); {i = nexti; continue BOLT;} }
-//                        }
-//                        else
-//                        {
-//                            t[2] = g_itemRespawnTime;
-//                            A_Spawn(i,RESPAWNMARKERRED);
-//                            s.cstat = 32768;
-//                        }
-//                    }
+                        if (s.owner != i || ud.respawn_items == 0)
+                        {
+                            if (s.owner == i && (GametypeFlags[ud.coop] & GAMETYPE_WEAPSTAY))
+                                {i = nexti; continue BOLT;}
+                            { A_DeleteSprite(i); {i = nexti; continue BOLT;} }
+                        }
+                        else
+                        {
+                            t[2] = g_itemRespawnTime;
+                            A_Spawn(i,RESPAWNMARKERRED);
+                            s.cstat = 32768;
+                        }
+                    }
 
-//            if (t[0] < 8) t[0]++;
-//            {i = nexti; continue BOLT;}
+            if (t[0] < 8) t[0]++;
+            {i = nexti; continue BOLT;}
         }
 
         case REACTORBURNT__STATIC:

@@ -888,7 +888,7 @@ function /*int32_t */A_ShootWithZvel(/*int32_t*/ i:number, /*int32_t */atwith:nu
 {
     var /*int16_t */sa:number;
     var/*int32_t */j:number, k=-1, l:number;
-    var/*int32_t */vel:number, zvel = 0;
+    var/*int32_t */vel:number, zvel:number = 0;
     var hit = new hitdata_t() ;
     var srcvect = new vec3_t ();
     var s = sprite[i];
@@ -1090,128 +1090,133 @@ function /*int32_t */A_ShootWithZvel(/*int32_t*/ i:number, /*int32_t */atwith:nu
         }
 
         if (proj.workslike & PROJECTILE_HITSCAN)
-        {todoThrow();
-            //if (s.extra >= 0) s.shade = proj.shade;
+        {
+            if (s.extra >= 0) s.shade = proj.shade;
 
-            //if (p >= 0)
-            //    P_PreFireHitscan(i, p, atwith, srcvect, &zvel, &sa,
-            //                  proj.workslike & PROJECTILE_ACCURATE_AUTOAIM,
-            //                  !(proj.workslike & PROJECTILE_ACCURATE));
-            //else
-            //    A_PreFireHitscan(s, &srcvect, &zvel, &sa,
-            //                     !(proj.workslike & PROJECTILE_ACCURATE));
+            var $zvel = new R(zvel);
+            var $sa = new R(sa);
+            if (p >= 0)
+                P_PreFireHitscan(i, p, atwith, srcvect, $zvel, $sa,
+                              proj.workslike & PROJECTILE_ACCURATE_AUTOAIM,
+                              !(proj.workslike & PROJECTILE_ACCURATE)?1:0);
+            else
+                A_PreFireHitscan(s, srcvect, $zvel, $sa,
+                                 !(proj.workslike & PROJECTILE_ACCURATE));
 
-            //if (Proj_DoHitscan(i, (proj.cstat >= 0) ? proj.cstat : 256+1,
-            //                   &srcvect, zvel, sa, hit))
-            //    return -1;
+            zvel = $zvel.$;
+            sa = $sa.$;
 
-            //if (proj.range > 0 && klabs(srcvect.x-hit.pos.x)+klabs(srcvect.y-hit.pos.y) > proj.range)
-            //    return -1;
+            if (Proj_DoHitscan(i, (proj.cstat >= 0) ? proj.cstat : 256+1,
+                               srcvect, zvel, sa, hit))
+                return -1;
 
-            //if (proj.trail >= 0)
-            //    A_HitscanProjTrail(&srcvect,&hit.pos,sa,atwith);
+            if (proj.range > 0 && klabs(srcvect.x-hit.pos.x)+klabs(srcvect.y-hit.pos.y) > proj.range)
+                return -1;
 
-            //if (proj.workslike & PROJECTILE_WATERBUBBLES)
-            //{
-            //    if ((krand()&15) == 0 && sector[hit.sect].lotag == ST_2_UNDERWATER)
-            //        A_DoWaterTracers(hit.pos.x,hit.pos.y,hit.pos.z,
-            //                         srcvect.x,srcvect.y,srcvect.z,8-(ud.multimode>>1));
-            //}
+            if (proj.trail >= 0)
+                A_HitscanProjTrail(srcvect,hit.pos,sa,atwith);
 
-            //if (p >= 0)
-            //{
-            //    k = Proj_InsertShotspark(&hit, i, atwith, 10, sa, Proj_GetExtra(atwith));
+            if (proj.workslike & PROJECTILE_WATERBUBBLES)
+            {
+                if ((krand()&15) == 0 && sector[hit.sect].lotag == ST_2_UNDERWATER)
+                    A_DoWaterTracers(hit.pos.x,hit.pos.y,hit.pos.z,
+                                     srcvect.x,srcvect.y,srcvect.z,8-(ud.multimode>>1));
+            }
 
-            //    if (P_PostFireHitscan(p, k, &hit, i, atwith, zvel,
-            //                          atwith, proj.decal, atwith, 1+2) < 0)
-            //        return -1;
-            //}
-            //else
-            //{
-            //    k = A_PostFireHitscan(&hit, i, atwith, sa, Proj_GetExtra(atwith),
-            //                          atwith, atwith);
-            //}
+            if (p >= 0)
+            {
+                k = Proj_InsertShotspark(hit, i, atwith, 10, sa, Proj_GetExtra(atwith));
 
-            //if ((krand()&255) < 4 && proj.isound >= 0)
-            //    S_PlaySound3D(proj.isound, k, &hit.pos);
+                if (P_PostFireHitscan(p, k, hit, i, atwith, zvel,
+                                      atwith, proj.decal, atwith, 1+2) < 0)
+                    return -1;
+            }
+            else
+            {
+                k = A_PostFireHitscan(hit, i, atwith, sa, Proj_GetExtra(atwith),
+                                      atwith, atwith);
+            }
+
+            if ((krand()&255) < 4 && proj.isound >= 0)
+                S_PlaySound3D(proj.isound, k, hit.pos);
 
             return -1;
         }
 
         if (proj.workslike & PROJECTILE_RPG)
-        {todoThrow();
-        //    if (s.extra >= 0) s.shade = proj.shade;
+        {
+            if (s.extra >= 0) s.shade = proj.shade;
 
-        //    vel = proj.vel;
+            vel = proj.vel;
 
-        //    j = -1;
+            j = -1;
 
-        //    if (p >= 0)
-        //    {
+            if (p >= 0)
+            {
                 var $zvel = new R(zvel);
                 var $sa = new R(sa);
-        //        j = GetAutoAimAngle(i, p, atwith, 8<<8, 0+2, &srcvect, vel, &zvel, &sa);
+                j = GetAutoAimAngle(i, p, atwith, 8<<8, 0+2, srcvect, vel, $zvel, $sa);
                 zvel = $zvel.$;
                 sa = $sa.$;
 
-        //        if (j < 0)
-        //            zvel = (100-ps.horiz-ps.horizoff)*(proj.vel/8);
+                if (j < 0)
+                    zvel = (100-ps.horiz-ps.horizoff)*(proj.vel/8);
 
-        //        if (proj.sound >= 0)
-        //            A_PlaySound(proj.sound,i);
-        //    }
-        //    else
-        //    {
-        //        if (!(proj.workslike & PROJECTILE_NOAIM))
-        //        {
-        //            j = A_FindPlayer(s, NULL);
-        //            sa = getangle(g_player[j].ps.opos.x-srcvect.x,g_player[j].ps.opos.y-srcvect.y);
+                if (proj.sound >= 0)
+                    A_PlaySound(proj.sound,i);
+            }
+            else
+            {
+                if (!(proj.workslike & PROJECTILE_NOAIM))
+                {
+                    j = A_FindPlayer(s, NULL);
+                    sa = getangle(g_player[j].ps.opos.x-srcvect.x,g_player[j].ps.opos.y-srcvect.y);
 
-        //            l = safeldist(g_player[j].ps.i, s);
-        //            zvel = ((g_player[j].ps.opos.z-srcvect.z)*vel) / l;
+                    l = safeldist(g_player[j].ps.i, s);
+                    zvel = ((g_player[j].ps.opos.z-srcvect.z)*vel) / l;
 
-        //            if (A_CheckEnemySprite(s) && (s.hitag&face_player_smart))
-        //                sa = s.ang+(krand()&31)-16;
-        //        }
-        //    }
+                    if (A_CheckEnemySprite(s) && (s.hitag&face_player_smart))
+                        sa = s.ang+(krand()&31)-16;
+                }
+            }
 
-        //    if (p >= 0 && j >= 0)
-        //        l = j;
-        //    else l = -1;
+            if (p >= 0 && j >= 0)
+                l = j;
+            else l = -1;
 
-        //    if (numplayers > 1 && g_netClient) return -1;
+            if (numplayers > 1 && g_netClient) return -1;
 
-        //    zvel = A_GetShootZvel(zvel);
-        //    j = A_InsertSprite(sect,
-        //                       srcvect.x+(sintable[(348+sa+512)&2047]/proj.offset),
-        //                       srcvect.y+(sintable[(sa+348)&2047]/proj.offset),
-        //                       srcvect.z-(1<<8),atwith,0,14,14,sa,vel,zvel,i,4);
+            zvel = A_GetShootZvel(zvel);
+            j = A_InsertSprite(sect,
+                               srcvect.x+int32(sintable[(348+sa+512)&2047]/proj.offset),
+                               srcvect.y+int32(sintable[(sa+348)&2047]/proj.offset),
+                               srcvect.z-(1<<8),atwith,0,14,14,sa,vel,zvel,i,4);
 
-        //    sprite[j].xrepeat=proj.xrepeat;
-        //    sprite[j].yrepeat=proj.yrepeat;
+            sprite[j].xrepeat=proj.xrepeat;
+            sprite[j].yrepeat=proj.yrepeat;
 
-        //    if (proj.extra_rand > 0)
-        //        sprite[j].extra += (krand()&proj.extra_rand);
-        //    if (!(proj.workslike & PROJECTILE_BOUNCESOFFWALLS))
-        //        sprite[j].yvel = l;
-        //    else
-        //    {
-        //        if (proj.bounces >= 1) sprite[j].yvel = proj.bounces;
-        //        else sprite[j].yvel = g_numFreezeBounces;
-        //        sprite[j].zvel -= (2<<4);
-        //    }
+            if (proj.extra_rand > 0)
+                sprite[j].extra += (krand()&proj.extra_rand);
+            if (!(proj.workslike & PROJECTILE_BOUNCESOFFWALLS))
+                sprite[j].yvel = l;
+            else
+            {
+                if (proj.bounces >= 1) sprite[j].yvel = proj.bounces;
+                else sprite[j].yvel = g_numFreezeBounces;
+                sprite[j].zvel -= (2<<4);
+            }
 
-        //    if (proj.cstat >= 0) sprite[j].cstat = proj.cstat;
-        //    else sprite[j].cstat = 128;
-        //    if (proj.clipdist != 255) sprite[j].clipdist = proj.clipdist;
-        //    else sprite[j].clipdist = 40;
+            if (proj.cstat >= 0) sprite[j].cstat = proj.cstat;
+            else sprite[j].cstat = 128;
+            if (proj.clipdist != 255) sprite[j].clipdist = proj.clipdist;
+            else sprite[j].clipdist = 40;
 
-        //    {
-        //        var/*int32_t */picnum = sprite[j].picnum;
-        //        Bmemcpy(&SpriteProjectile[j], &ProjectileData[picnum], sizeof(projectile_t));
-        //    }
+            {
+                var/*int32_t */picnum = sprite[j].picnum;
+                ProjectileData[picnum].copyToSpriteProjectile[j]();//Bmemcpy(&SpriteProjectile[j], &ProjectileData[picnum], sizeof(projectile_t));
+            }
 
-        //    return j;
+            return j;
         }
 
     }
@@ -1428,130 +1433,130 @@ function /*int32_t */A_ShootWithZvel(/*int32_t*/ i:number, /*int32_t */atwith:nu
 
         case FREEZEBLAST__STATIC:
             srcvect.z += (3<<8);
-        case RPG__STATIC:todoThrow();
-            //// XXX: "CODEDUP"
-            //if (s.extra >= 0) s.shade = -96;
+        case RPG__STATIC:
+            // XXX: "CODEDUP"
+            if (s.extra >= 0) s.shade = -96;
 
-            //vel = 644;
+            vel = 644;
 
-            //j = -1;
+            j = -1;
 
-            //if (p >= 0)
-            //{
+            if (p >= 0)
+            {
                 var $zvel = new R(zvel);
                 var $sa = new R(sa);
-            //    j = GetAutoAimAngle(i, p, atwith, 8<<8, 0+2, &srcvect, vel, &zvel, &sa);
+                j = GetAutoAimAngle(i, p, atwith, 8<<8, 0+2, srcvect, vel, $zvel, $sa);
                 zvel = $zvel.$;
                 sa = $sa.$;
 
-            //    if (j < 0)
-            //        zvel = (100-ps.horiz-ps.horizoff)*81;
+                if (j < 0)
+                    zvel = (100-ps.horiz-ps.horizoff)*81;
 
-            //    if (atwith == RPG)
-            //        A_PlaySound(RPG_SHOOT,i);
-            //}
-            //else
-            //{
-            //    j = A_FindPlayer(s, NULL);
-            //    sa = getangle(g_player[j].ps.opos.x-srcvect.x,g_player[j].ps.opos.y-srcvect.y);
-            //    if (sprite[i].picnum == BOSS3)
-            //        srcvect.z -= MinibossScale(32<<8);
-            //    else if (sprite[i].picnum == BOSS2)
-            //    {
-            //        vel += 128;
-            //        srcvect.z += MinibossScale(24<<8);
-            //    }
+                if (atwith == RPG)
+                    A_PlaySound(RPG_SHOOT,i);
+            }
+            else
+            {
+                j = A_FindPlayer(s, NULL);
+                sa = getangle(g_player[j].ps.opos.x-srcvect.x,g_player[j].ps.opos.y-srcvect.y);
+                if (sprite[i].picnum == BOSS3)
+                    srcvect.z -= MinibossScale(32<<8);
+                else if (sprite[i].picnum == BOSS2)
+                {
+                    vel += 128;
+                    srcvect.z += MinibossScale(24<<8);
+                }
 
-            //    l = safeldist(g_player[j].ps.i, s);
-            //    zvel = ((g_player[j].ps.opos.z-srcvect.z)*vel) / l;
+                l = safeldist(g_player[j].ps.i, s);
+                zvel = ((g_player[j].ps.opos.z-srcvect.z)*vel) / l;
 
-            //    if (A_CheckEnemySprite(s) && (s.hitag&face_player_smart))
-            //        sa = s.ang+(krand()&31)-16;
-            //}
+                if (A_CheckEnemySprite(s) && (s.hitag&face_player_smart))
+                    sa = s.ang+(krand()&31)-16;
+            }
 
-            //if (p >= 0 && j >= 0)
-            //    l = j;
-            //else l = -1;
+            if (p >= 0 && j >= 0)
+                l = j;
+            else l = -1;
 
-            //if (numplayers > 1 && g_netClient) return -1;
+            if (numplayers > 1 && g_netClient) return -1;
 
-            //zvel = A_GetShootZvel(zvel);
-            //j = A_InsertSprite(sect,
-            //                   srcvect.x+(sintable[(348+sa+512)&2047]/448),
-            //                   srcvect.y+(sintable[(sa+348)&2047]/448),
-            //                   srcvect.z-(1<<8),atwith,0,14,14,sa,vel,zvel,i,4);
+            zvel = A_GetShootZvel(zvel);
+            j = A_InsertSprite(sect,
+                               srcvect.x+(sintable[(348+sa+512)&2047]/448),
+                               srcvect.y+(sintable[(sa+348)&2047]/448),
+                               srcvect.z-(1<<8),atwith,0,14,14,sa,vel,zvel,i,4);
 
-            //sprite[j].extra += (krand()&7);
-            //if (atwith != FREEZEBLAST)
-            //    sprite[j].yvel = l;
-            //else
-            //{
-            //    sprite[j].yvel = g_numFreezeBounces;
-            //    sprite[j].xrepeat >>= 1;
-            //    sprite[j].yrepeat >>= 1;
-            //    sprite[j].zvel -= (2<<4);
-            //}
+            sprite[j].extra += (krand()&7);
+            if (atwith != FREEZEBLAST)
+                sprite[j].yvel = l;
+            else
+            {
+                sprite[j].yvel = g_numFreezeBounces;
+                sprite[j].xrepeat >>= 1;
+                sprite[j].yrepeat >>= 1;
+                sprite[j].zvel -= (2<<4);
+            }
 
-            //if (p == -1)
-            //{
-            //    if (sprite[i].picnum == BOSS3)
-            //    {
-            //        if (krand()&1)
-            //        {
-            //            sprite[j].x -= MinibossScale(sintable[sa&2047]>>6);
-            //            sprite[j].y -= MinibossScale(sintable[(sa+1024+512)&2047]>>6);
-            //            sprite[j].ang -= MinibossScale(8);
-            //        }
-            //        else
-            //        {
-            //            sprite[j].x += MinibossScale(sintable[sa&2047]>>6);
-            //            sprite[j].y += MinibossScale(sintable[(sa+1024+512)&2047]>>6);
-            //            sprite[j].ang += MinibossScale(4);
-            //        }
-            //        sprite[j].xrepeat = MinibossScale(42);
-            //        sprite[j].yrepeat = MinibossScale(42);
-            //    }
-            //    else if (sprite[i].picnum == BOSS2)
-            //    {
-            //        sprite[j].x -= MinibossScale(sintable[sa&2047]/56);
-            //        sprite[j].y -= MinibossScale(sintable[(sa+1024+512)&2047]/56);
-            //        sprite[j].ang -= MinibossScale(8)+(krand()&255)-128;
-            //        sprite[j].xrepeat = 24;
-            //        sprite[j].yrepeat = 24;
-            //    }
-            //    else if (atwith != FREEZEBLAST)
-            //    {
-            //        sprite[j].xrepeat = 30;
-            //        sprite[j].yrepeat = 30;
-            //        sprite[j].extra >>= 2;
-            //    }
-            //}
+            if (p == -1)
+            {
+                if (sprite[i].picnum == BOSS3)
+                {
+                    if (krand()&1)
+                    {
+                        sprite[j].x -= MinibossScale(sintable[sa&2047]>>6);
+                        sprite[j].y -= MinibossScale(sintable[(sa+1024+512)&2047]>>6);
+                        sprite[j].ang -= MinibossScale(8);
+                    }
+                    else
+                    {
+                        sprite[j].x += MinibossScale(sintable[sa&2047]>>6);
+                        sprite[j].y += MinibossScale(sintable[(sa+1024+512)&2047]>>6);
+                        sprite[j].ang += MinibossScale(4);
+                    }
+                    sprite[j].xrepeat = MinibossScale(42);
+                    sprite[j].yrepeat = MinibossScale(42);
+                }
+                else if (sprite[i].picnum == BOSS2)
+                {
+                    sprite[j].x -= MinibossScale(sintable[sa&2047]/56);
+                    sprite[j].y -= MinibossScale(sintable[(sa+1024+512)&2047]/56);
+                    sprite[j].ang -= MinibossScale(8)+(krand()&255)-128;
+                    sprite[j].xrepeat = 24;
+                    sprite[j].yrepeat = 24;
+                }
+                else if (atwith != FREEZEBLAST)
+                {
+                    sprite[j].xrepeat = 30;
+                    sprite[j].yrepeat = 30;
+                    sprite[j].extra >>= 2;
+                }
+            }
 
-            //else if (PWEAPON(0, g_player[p].ps.curr_weapon, WorksLike) == DEVISTATOR_WEAPON)
-            //{
-            //    sprite[j].extra >>= 2;
-            //    sprite[j].ang += 16-(krand()&31);
-            //    sprite[j].zvel += 256-(krand()&511);
+            else if (PWEAPON(0, g_player[p].ps.curr_weapon, WorksLike) == DEVISTATOR_WEAPON)
+            {
+                sprite[j].extra >>= 2;
+                sprite[j].ang += 16-(krand()&31);
+                sprite[j].zvel += 256-(krand()&511);
 
-            //    if (g_player[p].ps.hbomb_hold_delay)
-            //    {
-            //        sprite[j].x -= sintable[sa&2047]/644;
-            //        sprite[j].y -= sintable[(sa+1024+512)&2047]/644;
-            //    }
-            //    else
-            //    {
-            //        sprite[j].x += sintable[sa&2047]>>8;
-            //        sprite[j].y += sintable[(sa+1024+512)&2047]>>8;
-            //    }
-            //    sprite[j].xrepeat >>= 1;
-            //    sprite[j].yrepeat >>= 1;
-            //}
+                if (g_player[p].ps.hbomb_hold_delay)
+                {
+                    sprite[j].x -= sintable[sa&2047]/644;
+                    sprite[j].y -= sintable[(sa+1024+512)&2047]/644;
+                }
+                else
+                {
+                    sprite[j].x += sintable[sa&2047]>>8;
+                    sprite[j].y += sintable[(sa+1024+512)&2047]>>8;
+                }
+                sprite[j].xrepeat >>= 1;
+                sprite[j].yrepeat >>= 1;
+            }
 
-            //sprite[j].cstat = 128;
-            //if (atwith == RPG)
-            //    sprite[j].clipdist = 4;
-            //else
-            //    sprite[j].clipdist = 40;
+            sprite[j].cstat = 128;
+            if (atwith == RPG)
+                sprite[j].clipdist = 4;
+            else
+                sprite[j].clipdist = 40;
 
             return j;
 

@@ -5077,114 +5077,114 @@ function VM_Execute(/*int32_t */loop: number): void
             VM_CONDITIONAL(sprite[g_player[vm.g_p].ps.i].extra < script[insptr]);
             continue;
 
-//        case CON_IFPINVENTORY:
-//            insptr++;
-//            {
-//                var/*int32_t */j = 0;
-//                DukePlayer_t *const ps = g_player[vm.g_p].ps;
+        case CON_IFPINVENTORY:
+            insptr++;
+            {
+                var/*int32_t */j = 0;
+                var ps = g_player[vm.g_p].ps;
 
-//                switch (script[insptr++])
-//                {
-//                case GET_STEROIDS:
-//                    if (ps.inv_amount[GET_STEROIDS] != script[insptr])
-//                        j = 1;
-//                    break;
-//                case GET_SHIELD:
-//                    if (ps.inv_amount[GET_SHIELD] != ps.max_shield_amount)
-//                        j = 1;
-//                    break;
-//                case GET_SCUBA:
-//                    if (ps.inv_amount[GET_SCUBA] != script[insptr]) j = 1;
-//                    break;
-//                case GET_HOLODUKE:
-//                    if (ps.inv_amount[GET_HOLODUKE] != script[insptr]) j = 1;
-//                    break;
-//                case GET_JETPACK:
-//                    if (ps.inv_amount[GET_JETPACK] != script[insptr]) j = 1;
-//                    break;
-//                case GET_ACCESS:
-//                    switch (vm.g_sp.pal)
-//                    {
-//                    case  0:
-//                        if (ps.got_access&1) j = 1;
-//                        break;
-//                    case 21:
-//                        if (ps.got_access&2) j = 1;
-//                        break;
-//                    case 23:
-//                        if (ps.got_access&4) j = 1;
-//                        break;
-//                    }
-//                    break;
-//                case GET_HEATS:
-//                    if (ps.inv_amount[GET_HEATS] != script[insptr]) j = 1;
-//                    break;
-//                case GET_FIRSTAID:
-//                    if (ps.inv_amount[GET_FIRSTAID] != script[insptr]) j = 1;
-//                    break;
-//                case GET_BOOTS:
-//                    if (ps.inv_amount[GET_BOOTS] != script[insptr]) j = 1;
-//                    break;
-//                default:
-//                    CON_ERRPRINTF("invalid inventory ID: %d\n", (int32_t)script[insptr-1]);
-//                }
+                switch (script[insptr++])
+                {
+                case GET_STEROIDS:
+                    if (ps.inv_amount[GET_STEROIDS] != script[insptr])
+                        j = 1;
+                    break;
+                case GET_SHIELD:
+                    if (ps.inv_amount[GET_SHIELD] != ps.max_shield_amount)
+                        j = 1;
+                    break;
+                case GET_SCUBA:
+                    if (ps.inv_amount[GET_SCUBA] != script[insptr]) j = 1;
+                    break;
+                case GET_HOLODUKE:
+                    if (ps.inv_amount[GET_HOLODUKE] != script[insptr]) j = 1;
+                    break;
+                case GET_JETPACK:
+                    if (ps.inv_amount[GET_JETPACK] != script[insptr]) j = 1;
+                    break;
+                case GET_ACCESS:
+                    switch (vm.g_sp.pal)
+                    {
+                    case  0:
+                        if (ps.got_access&1) j = 1;
+                        break;
+                    case 21:
+                        if (ps.got_access&2) j = 1;
+                        break;
+                    case 23:
+                        if (ps.got_access&4) j = 1;
+                        break;
+                    }
+                    break;
+                case GET_HEATS:
+                    if (ps.inv_amount[GET_HEATS] != script[insptr]) j = 1;
+                    break;
+                case GET_FIRSTAID:
+                    if (ps.inv_amount[GET_FIRSTAID] != script[insptr]) j = 1;
+                    break;
+                case GET_BOOTS:
+                    if (ps.inv_amount[GET_BOOTS] != script[insptr]) j = 1;
+                    break;
+                default:
+                    CON_ERRPRINTF("invalid inventory ID: %d\n", /*(int32_t)*/script[insptr-1]);
+                }
 
-//                VM_CONDITIONAL(j);
-//                continue;
-//            }
+                VM_CONDITIONAL(j);
+                continue;
+            }
 
-//        case CON_PSTOMP:
-//            insptr++;
-//            {
-//                DukePlayer_t *const ps = g_player[vm.g_p].ps;
+        case CON_PSTOMP:
+            insptr++;
+            {
+                var ps = g_player[vm.g_p].ps;
 
-//                if (ps.knee_incs == 0 && sprite[ps.i].xrepeat >= 40)
-//                    if (cansee(vm.g_sp.x,vm.g_sp.y,vm.g_sp.z-(4<<8),vm.g_sp.sectnum,ps.pos.x,
-//                               ps.pos.y,ps.pos.z+(16<<8),sprite[ps.i].sectnum))
-//                    {
-//                        var/*int32_t */j = playerswhenstarted-1;
+                if (ps.knee_incs == 0 && sprite[ps.i].xrepeat >= 40)
+                    if (cansee(vm.g_sp.x,vm.g_sp.y,vm.g_sp.z-(4<<8),vm.g_sp.sectnum,ps.pos.x,
+                               ps.pos.y,ps.pos.z+(16<<8),sprite[ps.i].sectnum))
+                    {
+                        var/*int32_t */j = playerswhenstarted-1;
 
-//                        for (; j>=0; j--)
-//                        {
-//                            if (g_player[j].ps.actorsqu == vm.g_i)
-//                                break;
-//                        }
+                        for (; j>=0; j--)
+                        {
+                            if (g_player[j].ps.actorsqu == vm.g_i)
+                                break;
+                        }
 
-//                        if (j == -1)
-//                        {
-//                            ps.knee_incs = 1;
-//                            if (ps.weapon_pos == 0)
-//                                ps.weapon_pos = -1;
-//                            ps.actorsqu = vm.g_i;
-//                        }
-//                    }
+                        if (j == -1)
+                        {
+                            ps.knee_incs = 1;
+                            if (ps.weapon_pos == 0)
+                                ps.weapon_pos = -1;
+                            ps.actorsqu = vm.g_i;
+                        }
+                    }
 
-//                continue;
-//            }
+                continue;
+            }
 
-//        case CON_IFAWAYFROMWALL:
-//        {
-//            int16_t s1=vm.g_sp.sectnum;
-//            var/*int32_t */j = 0;
+        case CON_IFAWAYFROMWALL:
+        {
+            var/*int16_t */s1=new R(vm.g_sp.sectnum);
+            var/*int32_t */j = 0;
 
-//            updatesector(vm.g_sp.x+108,vm.g_sp.y+108,&s1);
-//            if (s1 == vm.g_sp.sectnum)
-//            {
-//                updatesector(vm.g_sp.x-108,vm.g_sp.y-108,&s1);
-//                if (s1 == vm.g_sp.sectnum)
-//                {
-//                    updatesector(vm.g_sp.x+108,vm.g_sp.y-108,&s1);
-//                    if (s1 == vm.g_sp.sectnum)
-//                    {
-//                        updatesector(vm.g_sp.x-108,vm.g_sp.y+108,&s1);
-//                        if (s1 == vm.g_sp.sectnum)
-//                            j = 1;
-//                    }
-//                }
-//            }
-//            VM_CONDITIONAL(j);
-//        }
-//        continue;
+            updatesector(vm.g_sp.x+108,vm.g_sp.y+108,s1);
+            if (s1.$ == vm.g_sp.sectnum)
+            {
+                updatesector(vm.g_sp.x-108,vm.g_sp.y-108,s1);
+                if (s1.$ == vm.g_sp.sectnum)
+                {
+                    updatesector(vm.g_sp.x+108,vm.g_sp.y-108,s1);
+                    if (s1.$ == vm.g_sp.sectnum)
+                    {
+                        updatesector(vm.g_sp.x-108,vm.g_sp.y+108,s1);
+                        if (s1.$ == vm.g_sp.sectnum)
+                            j = 1;
+                    }
+                }
+            }
+            VM_CONDITIONAL(j);
+        }
+        continue;
 
         case CON_QUOTE:
             insptr++;

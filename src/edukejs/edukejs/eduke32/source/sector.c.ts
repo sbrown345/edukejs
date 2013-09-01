@@ -1208,32 +1208,32 @@ function G_OperateMasterSwitches(/*int32_t */low:number):void
     }
 }
 
-//void G_OperateForceFields(int32_t s, int32_t low)
-//{
-//    int32_t i, p=g_numAnimWalls;
+function G_OperateForceFields(/*int32_t*/ s:number, /*int32_t */low:number):void
+{
+    var/*int32_t */i:number, p=g_numAnimWalls;
 
-//    for (; p>=0; p--)
-//    {
-//        i = animwall[p].wallnum;
+    for (; p>=0; p--)
+    {
+        i = animwall[p].wallnum;
 
-//        if (low == wall[i].lotag || low == -1)
-//            if (((wall[i].overpicnum >= W_FORCEFIELD) && (wall[i].overpicnum <= W_FORCEFIELD+2))
-//                    || (wall[i].overpicnum == BIGFORCE))
-//            {
-//                animwall[p].tag = 0;
+        if (low == wall[i].lotag || low == -1)
+            if (((wall[i].overpicnum >= W_FORCEFIELD) && (wall[i].overpicnum <= W_FORCEFIELD+2))
+                    || (wall[i].overpicnum == BIGFORCE))
+            {
+                animwall[p].tag = 0;
 
-//                if (wall[i].cstat)
-//                {
-//                    wall[i].cstat   = 0;
+                if (wall[i].cstat)
+                {
+                    wall[i].cstat   = 0;
 
-//                    if (s >= 0 && sprite[s].picnum == SECTOREFFECTOR && sprite[s].lotag == SE_30_TWO_WAY_TRAIN)
-//                        wall[i].lotag = 0;
-//                }
-//                else
-//                    wall[i].cstat = 85;
-//            }
-//    }
-//}
+                    if (s >= 0 && sprite[s].picnum == SECTOREFFECTOR && sprite[s].lotag == SE_30_TWO_WAY_TRAIN)
+                        wall[i].lotag = 0;
+                }
+                else
+                    wall[i].cstat = 85;
+            }
+    }
+}
 
 function /*int32_t */P_ActivateSwitch(/*int32_t */snum:number,/*int32_t */w:number,/*int32_t */switchissprite:number):number
 {todoThrow();return 99999999
@@ -1992,78 +1992,78 @@ function A_DamageWall(/*int32_t */spr:number,/*int32_t */dawallnum:number,/*cons
     }
 }
 
-//int32_t Sect_DamageCeiling(int32_t sn)
-//{
-//    int32_t i, j;
+function /*int32_t */Sect_DamageCeiling(/*int32_t */sn:number):number
+{
+    var/*int32_t */i:number, j:number;
 
-//    switch (DYNAMICTILEMAP(sector[sn].ceilingpicnum))
-//    {
-//    case WALLLIGHT1__STATIC:
-//    case WALLLIGHT2__STATIC:
-//    case WALLLIGHT3__STATIC:
-//    case WALLLIGHT4__STATIC:
-//    case TECHLIGHT2__STATIC:
-//    case TECHLIGHT4__STATIC:
+    switch (DYNAMICTILEMAP(sector[sn].ceilingpicnum))
+    {
+    case WALLLIGHT1__STATIC:
+    case WALLLIGHT2__STATIC:
+    case WALLLIGHT3__STATIC:
+    case WALLLIGHT4__STATIC:
+    case TECHLIGHT2__STATIC:
+    case TECHLIGHT4__STATIC:
 
-//        A_SpawnCeilingGlass(g_player[myconnectindex].ps.i,sn,10);
-//        A_PlaySound(GLASS_BREAKING,g_player[screenpeek].ps.i);
+        A_SpawnCeilingGlass(g_player[myconnectindex].ps.i,sn,10);
+        A_PlaySound(GLASS_BREAKING,g_player[screenpeek].ps.i);
 
-//        if (sector[sn].ceilingpicnum == WALLLIGHT1)
-//            sector[sn].ceilingpicnum = WALLLIGHTBUST1;
+        if (sector[sn].ceilingpicnum == WALLLIGHT1)
+            sector[sn].ceilingpicnum = WALLLIGHTBUST1;
 
-//        if (sector[sn].ceilingpicnum == WALLLIGHT2)
-//            sector[sn].ceilingpicnum = WALLLIGHTBUST2;
+        if (sector[sn].ceilingpicnum == WALLLIGHT2)
+            sector[sn].ceilingpicnum = WALLLIGHTBUST2;
 
-//        if (sector[sn].ceilingpicnum == WALLLIGHT3)
-//            sector[sn].ceilingpicnum = WALLLIGHTBUST3;
+        if (sector[sn].ceilingpicnum == WALLLIGHT3)
+            sector[sn].ceilingpicnum = WALLLIGHTBUST3;
 
-//        if (sector[sn].ceilingpicnum == WALLLIGHT4)
-//            sector[sn].ceilingpicnum = WALLLIGHTBUST4;
+        if (sector[sn].ceilingpicnum == WALLLIGHT4)
+            sector[sn].ceilingpicnum = WALLLIGHTBUST4;
 
-//        if (sector[sn].ceilingpicnum == TECHLIGHT2)
-//            sector[sn].ceilingpicnum = TECHLIGHTBUST2;
+        if (sector[sn].ceilingpicnum == TECHLIGHT2)
+            sector[sn].ceilingpicnum = TECHLIGHTBUST2;
 
-//        if (sector[sn].ceilingpicnum == TECHLIGHT4)
-//            sector[sn].ceilingpicnum = TECHLIGHTBUST4;
+        if (sector[sn].ceilingpicnum == TECHLIGHT4)
+            sector[sn].ceilingpicnum = TECHLIGHTBUST4;
 
 
-//        if (!sector[sn].hitag)
-//        {
-//            i = headspritesect[sn];
-//            while (i >= 0)
-//            {
-//                if (sprite[i].picnum == SECTOREFFECTOR && sprite[i].lotag == SE_12_LIGHT_SWITCH)
-//                {
-//                    j = headspritestat[STAT_EFFECTOR];
-//                    while (j >= 0)
-//                    {
-//                        if (sprite[j].hitag == sprite[i].hitag)
-//                            actor[j].t_data[3] = 1;
-//                        j = nextspritestat[j];
-//                    }
-//                    break;
-//                }
-//                i = nextspritesect[i];
-//            }
-//        }
+        if (!sector[sn].hitag)
+        {
+            i = headspritesect[sn];
+            while (i >= 0)
+            {
+                if (sprite[i].picnum == SECTOREFFECTOR && sprite[i].lotag == SE_12_LIGHT_SWITCH)
+                {
+                    j = headspritestat[STAT_EFFECTOR];
+                    while (j >= 0)
+                    {
+                        if (sprite[j].hitag == sprite[i].hitag)
+                            actor[j].t_data[3] = 1;
+                        j = nextspritestat[j];
+                    }
+                    break;
+                }
+                i = nextspritesect[i];
+            }
+        }
 
-//        i = headspritestat[STAT_EFFECTOR];
-//        j = krand()&1;
-//        while (i >= 0)
-//        {
-//            if (sprite[i].hitag == (sector[sn].hitag) && sprite[i].lotag == SE_3_RANDOM_LIGHTS_AFTER_SHOT_OUT)
-//            {
-//                actor[i].t_data[2] = j;
-//                actor[i].t_data[4] = 1;
-//            }
-//            i = nextspritestat[i];
-//        }
+        i = headspritestat[STAT_EFFECTOR];
+        j = krand()&1;
+        while (i >= 0)
+        {
+            if (sprite[i].hitag == (sector[sn].hitag) && sprite[i].lotag == SE_3_RANDOM_LIGHTS_AFTER_SHOT_OUT)
+            {
+                actor[i].t_data[2] = j;
+                actor[i].t_data[4] = 1;
+            }
+            i = nextspritestat[i];
+        }
 
-//        return 1;
-//    }
+        return 1;
+    }
 
-//    return 0;
-//}
+    return 0;
+}
 
 // hard coded props... :(
 function A_DamageObject(/*int32_t */i:number,/*int32_t */sn:number):void

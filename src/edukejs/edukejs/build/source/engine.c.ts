@@ -9360,7 +9360,7 @@ function drawmasks():void
         {
             var/* int32_t */xp = dmulscale6(ys,cosglobalang,-xs,singlobalang);
 
-            if (mulscale24(labs(xp+yp),xdimen) >= yp)
+            if (mulscale24(int32(labs(xp+yp)),xdimen) >= yp)
                 todoThrow("goto killsprite;");
 
             spritesx[i] = scale(xp+yp,xdimen<<7,yp);
@@ -12650,7 +12650,7 @@ function neartag(/*int32_t*/ xs:number, /*int32_t*/ ys:number, /*int32_t */zs:nu
              /*int16_t **/neartagsprite:R<number>, /*int32_t **/neartaghitdist:R<number>, /*int32_t */neartagrange:number, /*uint8_t */tagsearch:number,
              blacklist_sprite_func: any/*(number) => ():number*/ /*int32_t (*blacklist_sprite_func)(int32_t)*/):void
 {
-    var/*int16_t */tempshortcnt, tempshortnum;
+    var/*int16_t */tempshortcnt:number, tempshortnum:number;
 
     var/*const int32_t */vx = mulscale14(sintable[(ange+2560)&2047],neartagrange);
     var/*const int32_t */vy = mulscale14(sintable[(ange+2048)&2047],neartagrange);

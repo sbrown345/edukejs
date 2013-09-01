@@ -5955,7 +5955,7 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
                     sp.z -= (18<<8);
                 }
                 else sp.z -= (13<<8);
-                todoThrow("sp.ang = getangle(g_player[0].ps.pos.x-sp.x,g_player[0].ps.pos.y-sp.y);");                
+                sp.ang = getangle(g_player[0].ps.pos.x-sp.x,g_player[0].ps.pos.y-sp.y);
                 sp.xvel = 48-(krand()&31);
                 A_SetSprite(i,CLIPMASK0);
             }
@@ -7833,7 +7833,7 @@ skip:
                     {
                         var newt = tsprite[spritesortcnt];
 
-                        todoThrow("newt.copyFrom(t);//Bmemcpy(newt, t, sizeof(spritetype));");
+                        ITypeInfoCopier(newt, t, spritetype.typeInfo);//Bmemcpy(newt, t, sizeof(spritetype));");
 
                         newt.statnum = TSPR_TEMP;
 
@@ -12960,28 +12960,28 @@ function /*int32_t */G_DoMoveThings(): number
 //    while (1);
 //}
 
-//static void G_DrawCameraText(int16_t i)
-//{
-//    char flipbits;
-//    int32_t x , y;
+function G_DrawCameraText(/*int16_t*/ i:number):void
+{
+    var /*char */flipbits:number;
+    var /*int32_t */x:number, y:number;
 
-//    if (!actor[i].t_data[0])
-//    {
-//        rotatesprite_win(24<<16,33<<16,65536,0,CAMCORNER,0,0,2);
-//        rotatesprite_win((320-26)<<16,34<<16,65536,0,CAMCORNER+1,0,0,2);
-//        rotatesprite_win(22<<16,163<<16,65536,512,CAMCORNER+1,0,0,2+4);
-//        rotatesprite_win((310-10)<<16,163<<16,65536,512,CAMCORNER+1,0,0,2);
-//        if (totalclock&16)
-//            rotatesprite_win(46<<16,32<<16,65536,0,CAMLIGHT,0,0,2);
-//    }
-//    else
-//    {
-//        flipbits = (totalclock<<1)&48;
-//        for (x=0; x<394; x+=64)
-//            for (y=0; y<200; y+=64)
-//                rotatesprite_win(x<<16,y<<16,65536,0,STATIC,0,0,2+flipbits);
-//    }
-//}
+    if (!actor[i].t_data[0])
+    {
+        rotatesprite_win(24<<16,33<<16,65536,0,CAMCORNER,0,0,2);
+        rotatesprite_win((320-26)<<16,34<<16,65536,0,CAMCORNER+1,0,0,2);
+        rotatesprite_win(22<<16,163<<16,65536,512,CAMCORNER+1,0,0,2+4);
+        rotatesprite_win((310-10)<<16,163<<16,65536,512,CAMCORNER+1,0,0,2);
+        if (totalclock&16)
+            rotatesprite_win(46<<16,32<<16,65536,0,CAMLIGHT,0,0,2);
+    }
+    else
+    {
+        flipbits = (totalclock<<1)&48;
+        for (x=0; x<394; x+=64)
+            for (y=0; y<200; y+=64)
+                rotatesprite_win(x<<16,y<<16,65536,0,STATIC,0,0,2+flipbits);
+    }
+}
 
 //#if 0
 //void vglass(int32_t x,int32_t y,short a,short wn,short n)
@@ -12999,126 +12999,128 @@ function /*int32_t */G_DoMoveThings(): number
 //#endif
 
 function A_SpawnWallGlass(/*int32_t*/ i:number,/*int32_t */wallnum:number,/*int32_t */n:number):void
-{todoThrow();
-    //int32_t j, xv, yv, z, x1, y1;
-    //int16_t sect;
-    //int32_t a;
+{
+    var /*int32_t*/ j:number, xv:number, yv:number, z:number, x1:number, y1:number;
+    var /*int16_t*/ sect:number;
+    var /*int32_t*/ a:number;
 
-    //sect = -1;
+    sect = -1;
 
-    //if (wallnum < 0)
-    //{
-    //    for (j=n-1; j >= 0 ; j--)
-    //    {
-    //        a = sprite[i].ang-256+(krand()&511)+1024;
-    //        A_InsertSprite(sprite[i].sectnum,sprite[i].x,sprite[i].y,sprite[i].z,GLASSPIECES+(j%3),-32,36,36,a,32+(krand()&63),1024-(krand()&1023),i,5);
-    //    }
-    //    return;
-    //}
+    if (wallnum < 0)
+    {
+        for (j=n-1; j >= 0 ; j--)
+        {
+            a = sprite[i].ang-256+(krand()&511)+1024;
+            A_InsertSprite(sprite[i].sectnum,sprite[i].x,sprite[i].y,sprite[i].z,GLASSPIECES+(j%3),-32,36,36,a,32+(krand()&63),1024-(krand()&1023),i,5);
+        }
+        return;
+    }
 
-    //j = n+1;
+    j = n+1;
 
-    //x1 = wall[wallnum].x;
-    //y1 = wall[wallnum].y;
+    x1 = wall[wallnum].x;
+    y1 = wall[wallnum].y;
 
-    //xv = wall[wall[wallnum].point2].x-x1;
-    //yv = wall[wall[wallnum].point2].y-y1;
+    xv = wall[wall[wallnum].point2].x-x1;
+    yv = wall[wall[wallnum].point2].y-y1;
 
-    //x1 -= ksgn(yv);
-    //y1 += ksgn(xv);
+    x1 -= ksgn(yv);
+    y1 += ksgn(xv);
 
-    //xv /= j;
-    //yv /= j;
+    xv /= j;
+    yv /= j;
 
-    //for (j=n; j>0; j--)
-    //{
-    //    x1 += xv;
-    //    y1 += yv;
-
-    //    updatesector(x1,y1,&sect);
-    //    if (sect >= 0)
-    //    {
-    //        z = sector[sect].floorz-(krand()&(klabs(sector[sect].ceilingz-sector[sect].floorz)));
-    //        if (z < -(32<<8) || z > (32<<8))
-    //            z = sprite[i].z-(32<<8)+(krand()&((64<<8)-1));
-    //        a = sprite[i].ang-1024;
-    //        A_InsertSprite(sprite[i].sectnum,x1,y1,z,GLASSPIECES+(j%3),-32,36,36,a,32+(krand()&63),-(krand()&1023),i,5);
-    //    }
-    //}
+    for (j=n; j>0; j--)
+    {
+        x1 += xv;
+        y1 += yv;
+        var $sect = new R(sect);
+        updatesector(x1,y1,$sect);
+        sect = $sect.$;
+        if (sect >= 0)
+        {
+            z = sector[sect].floorz-(krand()&(klabs(sector[sect].ceilingz-sector[sect].floorz)));
+            if (z < -(32<<8) || z > (32<<8))
+                z = sprite[i].z-(32<<8)+(krand()&((64<<8)-1));
+            a = sprite[i].ang-1024;
+            A_InsertSprite(sprite[i].sectnum,x1,y1,z,GLASSPIECES+(j%3),-32,36,36,a,32+(krand()&63),-(krand()&1023),i,5);
+        }
+    }
 }
 
-//void A_SpawnGlass(int32_t i,int32_t n)
-//{
-//    for (; n>0; n--)
-//    {
-//        int32_t k = A_InsertSprite(sprite[i].sectnum,sprite[i].x,sprite[i].y,sprite[i].z-((krand()&16)<<8),GLASSPIECES+(n%3),
-//                                   krand()&15,36,36,krand()&2047,32+(krand()&63),-512-(krand()&2047),i,5);
-//        sprite[k].pal = sprite[i].pal;
-//    }
-//}
+function A_SpawnGlass(/*int32_t */i:number,/*int32_t*/ n:number): void
+{
+    for (; n>0; n--)
+    {
+        var /*int32_t */k = A_InsertSprite(sprite[i].sectnum,sprite[i].x,sprite[i].y,sprite[i].z-((krand()&16)<<8),GLASSPIECES+(n%3),
+                                   krand()&15,36,36,krand()&2047,32+(krand()&63),-512-(krand()&2047),i,5);
+        sprite[k].pal = sprite[i].pal;
+    }
+}
 
-//void A_SpawnCeilingGlass(int32_t i,int32_t sectnum,int32_t n)
-//{
-//    int32_t j, xv, yv, z, x1, y1, a,s;
-//    int32_t startwall = sector[sectnum].wallptr;
-//    int32_t endwall = startwall+sector[sectnum].wallnum;
+function A_SpawnCeilingGlass(/*int32_t*/ i:number,/*int32_t */sectnum:number,/*int32_t */n:number):void
+{
+    var /*int32_t*/ j:number, xv:number, yv:number, z:number, x1:number, y1:number, a:number,s:number;
+    var /*int32_t*/ startwall = sector[sectnum].wallptr;
+    var /*int32_t*/ endwall = startwall+sector[sectnum].wallnum;
 
-//    for (s=startwall; s<(endwall-1); s++)
-//    {
-//        x1 = wall[s].x;
-//        y1 = wall[s].y;
+    for (s=startwall; s<(endwall-1); s++)
+    {
+        x1 = wall[s].x;
+        y1 = wall[s].y;
 
-//        xv = (wall[s+1].x-x1)/(n+1);
-//        yv = (wall[s+1].y-y1)/(n+1);
+        xv = int32((wall[s+1].x-x1)/(n+1));
+        yv = int32((wall[s+1].y-y1)/(n+1));
 
-//        for (j=n; j>0; j--)
-//        {
-//            x1 += xv;
-//            y1 += yv;
-//            a = krand()&2047;
-//            z = sector[sectnum].ceilingz+((krand()&15)<<8);
-//            A_InsertSprite(sectnum,x1,y1,z,GLASSPIECES+(j%3),-32,36,36,a,(krand()&31),0,i,5);
-//        }
-//    }
-//}
+        for (j=n; j>0; j--)
+        {
+            x1 += xv;
+            y1 += yv;
+            a = krand()&2047;
+            z = sector[sectnum].ceilingz+((krand()&15)<<8);
+            A_InsertSprite(sectnum,x1,y1,z,GLASSPIECES+(j%3),-32,36,36,a,(krand()&31),0,i,5);
+        }
+    }
+}
 
 function A_SpawnRandomGlass(/*int32_t*/ i:number,/*int32_t*/ wallnum:number,/*int32_t*/ n:number):void
-{todoThrow();
-//    int32_t j, xv, yv, z, x1, y1;
-//    int16_t sect = -1;
-//    int32_t a, k;
+{
+    var /*int32_t*/ j:number, xv:number, yv:number, z:number, x1:number, y1: number;
+    var /*int16_t*/ sect = -1;
+    var /*int32_t*/ a:number, k:number;
 
-//    if (wallnum < 0)
-//    {
-//        for (j=n-1; j >= 0 ; j--)
-//        {
-//            a = krand()&2047;
-//            k = A_InsertSprite(sprite[i].sectnum,sprite[i].x,sprite[i].y,sprite[i].z-(krand()&(63<<8)),GLASSPIECES+(j%3),-32,36,36,a,32+(krand()&63),1024-(krand()&2047),i,5);
-//            sprite[k].pal = krand()&15;
-//        }
-//        return;
-//    }
+    if (wallnum < 0)
+    {
+        for (j=n-1; j >= 0 ; j--)
+        {
+            a = krand()&2047;
+            k = A_InsertSprite(sprite[i].sectnum,sprite[i].x,sprite[i].y,sprite[i].z-(krand()&(63<<8)),GLASSPIECES+(j%3),-32,36,36,a,32+(krand()&63),1024-(krand()&2047),i,5);
+            sprite[k].pal = krand()&15;
+        }
+        return;
+    }
 
-//    j = n+1;
-//    x1 = wall[wallnum].x;
-//    y1 = wall[wallnum].y;
+    j = n+1;
+    x1 = wall[wallnum].x;
+    y1 = wall[wallnum].y;
 
-//    xv = (wall[wall[wallnum].point2].x-wall[wallnum].x)/j;
-//    yv = (wall[wall[wallnum].point2].y-wall[wallnum].y)/j;
+    xv = (wall[wall[wallnum].point2].x-wall[wallnum].x)/j;
+    yv = (wall[wall[wallnum].point2].y-wall[wallnum].y)/j;
 
-//    for (j=n; j>0; j--)
-//    {
-//        x1 += xv;
-//        y1 += yv;
-
-//        updatesector(x1,y1,&sect);
-//        z = sector[sect].floorz-(krand()&(klabs(sector[sect].ceilingz-sector[sect].floorz)));
-//        if (z < -(32<<8) || z > (32<<8))
-//            z = sprite[i].z-(32<<8)+(krand()&((64<<8)-1));
-//        a = sprite[i].ang-1024;
-//        k = A_InsertSprite(sprite[i].sectnum,x1,y1,z,GLASSPIECES+(j%3),-32,36,36,a,32+(krand()&63),-(krand()&2047),i,5);
-//        sprite[k].pal = krand()&7;
-//    }
+    for (j=n; j>0; j--)
+    {
+        x1 += xv;
+        y1 += yv;
+        var $sect = new R(sect);
+        updatesector(x1,y1,$sect);
+        sect = $sect.$;
+        z = sector[sect].floorz-(krand()&(klabs(sector[sect].ceilingz-sector[sect].floorz)));
+        if (z < -(32<<8) || z > (32<<8))
+            z = sprite[i].z-(32<<8)+(krand()&((64<<8)-1));
+        a = sprite[i].ang-1024;
+        k = A_InsertSprite(sprite[i].sectnum,x1,y1,z,GLASSPIECES+(j%3),-32,36,36,a,32+(krand()&63),-(krand()&2047),i,5);
+        sprite[k].pal = krand()&7;
+    }
 }
 
 //static void G_SetupGameButtons(void)
