@@ -5294,7 +5294,7 @@ function menutext_(x: number, y: number, s: number, p: number,t: string, bits: n
 //    if ((g_player[myconnectindex].ps->gm&MODE_MENU) != MODE_MENU)
 //    {
 //        G_UpdateScreenArea();
-//        CAMERACLOCK = totalclock;
-//        CAMERADIST = 65536;
+//        g_cameraClock = totalclock;
+//        g_cameraDistance = 65536;
 //    }
 //}

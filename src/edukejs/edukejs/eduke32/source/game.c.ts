@@ -3737,8 +3737,8 @@ function G_DisplayRest(/*int32_t */smoothratio: number): void
     //        {
     //            ready2send = 1;
     //            totalclock = ototalclock;
-    //            CAMERACLOCK = totalclock;
-    //            CAMERADIST = 65536;
+    //            g_cameraClock = totalclock;
+    //            g_cameraDistance = 65536;
     //        }
     //        walock[TILE_SAVESHOT] = 199;
     //        G_UpdateScreenArea();
@@ -3986,14 +3986,14 @@ var applied:number;
 //        }
 //        if (klabs(n.x) > klabs(n.y)) i = divscale16(hx,n.x);
 //        else i = divscale16(hy,n.y);
-//        if (i < CAMERADIST) CAMERADIST = i;
+//        if (i < g_cameraDistance) g_cameraDistance = i;
 //    }
-//    vect.x += mulscale16(n.x,CAMERADIST);
-//    vect.y += mulscale16(n.y,CAMERADIST);
-//    vect.z += mulscale16(n.z,CAMERADIST);
+//    vect.x += mulscale16(n.x,g_cameraDistance);
+//    vect.y += mulscale16(n.y,g_cameraDistance);
+//    vect.z += mulscale16(n.z,g_cameraDistance);
 
-//    CAMERADIST = min(CAMERADIST+((totalclock-CAMERACLOCK)<<10),65536);
-//    CAMERACLOCK = totalclock;
+//    g_cameraDistance = min(g_cameraDistance+((totalclock-g_cameraClock)<<10),65536);
+//    g_cameraClock = totalclock;
 
 //    updatesectorz(vect.x,vect.y,vect.z,vsectnum);
 
@@ -8336,8 +8336,8 @@ function G_DoCheats(): void
 //                    else
 //                    {
 //                        g_player[myconnectindex].ps.over_shoulder_on = 1;
-//                        CAMERADIST = 0;
-//                        CAMERACLOCK = totalclock;
+//                        g_cameraDistance = 0;
+//                        g_cameraClock = totalclock;
 //                    }
 ////                    P_DoQuote(QUOTE_CHEATS_DISABLED,g_player[myconnectindex].ps);
 //                    end_cheat();
@@ -8949,8 +8949,8 @@ function G_HandleLocalKeys(): void
 //            else
 //            {
 //                g_player[myconnectindex].ps.over_shoulder_on = 1;
-//                CAMERADIST = 0;
-//                CAMERACLOCK = totalclock;
+//                g_cameraDistance = 0;
+//                g_cameraClock = totalclock;
 //            }
 //            P_DoQuote(QUOTE_VIEW_MODE_OFF+g_player[myconnectindex].ps.over_shoulder_on,g_player[myconnectindex].ps);
 //        }
