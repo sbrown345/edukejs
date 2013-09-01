@@ -7629,7 +7629,7 @@ function G_DoSpriteAnimations(/*int32_t */ourx:number, /*int32_t */oury:number, 
                 var aplayer_scr = g_tile[APLAYER].execPtr;
                 // [0]=strength, [1]=actionofs, [2]=moveofs
 
-                scrofs_action = aplayer_scr[1];
+                scrofs_action = script[aplayer_scr + 1];//scrofs_action = aplayer_scr[1];
 //#endif
                 curframe = 0;
             }
