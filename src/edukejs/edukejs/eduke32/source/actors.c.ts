@@ -2133,8 +2133,8 @@ function G_MoveStandables():void
                             if (sprite[j].shade != -32)
                                 sprite[j].shade = -32;
                     }
-
-                    todoThrow("goto DETONATE;");
+                    DETONATE();
+                    {A_DeleteSprite(i); {i = nexti;continue BOLT;}}
 
                 //crack_default:
                 default:
@@ -2180,7 +2180,8 @@ function G_MoveStandables():void
                 j = A_Spawn(i,EXPLOSION2);
                 A_PlaySound(PIPEBOMB_EXPLODE,j);
 
-                todoThrow("goto DETONATE;");
+                DETONATE();
+                {A_DeleteSprite(i); {i = nexti;continue BOLT;}}
             }
             else
             {
@@ -2235,7 +2236,8 @@ function G_MoveStandables():void
                             if (s.picnum == OOZFILTER)
                             {
                                 actor[i].t_data[2] = 0;
-                                todoThrow("goto DETONATE;");
+                                DETONATE();
+                                {A_DeleteSprite(i); {i = nexti;continue BOLT;}}
                             }
 
                             if (s.picnum != (SEENINEDEAD+1))
@@ -2247,12 +2249,15 @@ function G_MoveStandables():void
                                 else if (s.picnum == SEENINE)
                                     s.picnum = SEENINEDEAD;
                             }
-                            else todoThrow("goto DETONATE;");
+                            else{
+                                DETONATE();
+                                {A_DeleteSprite(i); {i = nexti;continue BOLT;}}
+                            }
                         }
                         {i = nexti;continue BOLT;}
                     }
 
-//DETONATE:
+function DETONATE() {
                     g_earthquakeTime = 16;
 
                     for (j = headspritestat[STAT_EFFECTOR]; j >= 0; j = nextspritestat[j])
@@ -2288,7 +2293,8 @@ function G_MoveStandables():void
                         A_RadiusDamage(i,g_seenineBlastRadius,x>>2, x-(x>>1),x-(x>>2), x);
                         A_PlaySound(PIPEBOMB_EXPLODE,j);
                     }
-
+}
+                    DETONATE();
                     {A_DeleteSprite(i); {i = nexti;continue BOLT;}}
                 }
             }
