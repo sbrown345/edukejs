@@ -340,7 +340,7 @@ function indexOf<T>(e: T, arr: T[]):number {
 interface String {
     idx: number;
     v(offset?):string;
-    c(offset?):string;
+    c(offset?):number;
     increment(num?):void;
 }
 
@@ -350,7 +350,7 @@ String.prototype.v = function(offset = 0): string {
     return this[this.idx + offset];
 };
 
-String.prototype.c = function(offset = 0): string {
+String.prototype.c = function(offset = 0): number {
     return this.charCodeAt(this.idx + offset);
 };
 

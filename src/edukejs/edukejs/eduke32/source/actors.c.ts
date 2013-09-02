@@ -1619,7 +1619,7 @@ function G_MoveFallers():void
                 else
                 {
                     if (G_CheckForSpaceCeiling(s.sectnum))
-                        x = g_spriteGravity/6;
+                        x = int32(g_spriteGravity/6);
                     else
                         x = g_spriteGravity;
                 }

@@ -440,7 +440,7 @@ function/*int32_t */G_GetStringNumLines(/*const char **/text:string, /*const cha
 // Note: Neither of these care about TEXT_LINEWRAP. This is intended.
 
 // This function requires you to Bfree() the returned char*.
-function/*char* */G_GetSubString(/*char **/text:Uint8Array, /*char **/end:string, /*int32_t */iter:number, /*int32_t */length:number):string
+function/*char* */G_GetSubString(/*char **/text:string, /*char **/end:string, /*int32_t */iter:number, /*int32_t */length:number):string
 {todoThrow();
     //var/*char **/line = new Uint8Array(length+1);// (char*)Bmalloc((length+1) * sizeof(char));
     //var/*int32_t */counter = 0;
@@ -546,7 +546,7 @@ function G_ScreenTextSize( /*int32_t*/  font:number,
     if (str == NULL)
         return size;
 
-    end = (f & TEXT_BACKWARDS) ? todoThrow("str-1") : Bstrchr(str,'\0');
+    end = (f & TEXT_BACKWARDS) ? todoThrow("str-1") : Bstrchr(str,'\0'.charCodeAt(0));
     text = (f & TEXT_BACKWARDS) ? todoThrow("Bstrchr(str,'\0')-1") : str;
 
     // optimization: justification in both directions
@@ -739,16 +739,16 @@ function G_ScreenTextSize( /*int32_t*/  font:number,
             switch (ang)
             {
                 case 0:
-                    wrap = (x + (pos.x + offset.x) > ((o & 2) ? (320<<16) : ((x2 - USERQUOTE_RIGHTOFFSET)<<16)));
+                    wrap = (x + (pos.x + offset.x) > ((o & 2) ? (320<<16) : ((x2 - USERQUOTE_RIGHTOFFSET)<<16)))?1:0;
                     break;
                 case 512:
-                    wrap = (y + (pos.x + offset.x) > ((o & 2) ? (200<<16) : ((y2 - USERQUOTE_RIGHTOFFSET)<<16)));
+                    wrap = (y + (pos.x + offset.x) > ((o & 2) ? (200<<16) : ((y2 - USERQUOTE_RIGHTOFFSET)<<16)))?1:0;
                     break;
                 case 1024:
-                    wrap = (x - (pos.x + offset.x) < ((o & 2) ? 0 : ((x1 + USERQUOTE_RIGHTOFFSET)<<16)));
+                    wrap = (x - (pos.x + offset.x) < ((o & 2) ? 0 : ((x1 + USERQUOTE_RIGHTOFFSET)<<16)))?1:0;
                     break;
                 case 1536:
-                    wrap = (y - (pos.x + offset.x) < ((o & 2) ? 0 : ((y1 + USERQUOTE_RIGHTOFFSET)<<16)));
+                    wrap = (y - (pos.x + offset.x) < ((o & 2) ? 0 : ((y1 + USERQUOTE_RIGHTOFFSET)<<16)))?1:0;
                     break;
             }
             if (wrap) // near-CODEDUP "case '\n':"
@@ -868,7 +868,7 @@ function G_AddCoordsFromRotation(coords:vec2_t, unitDirection:vec2_t, /*int32_t 
     if (str == NULL)
         return size;
 
-    end = (f & TEXT_BACKWARDS) ? todoThrow("str-1") : Bstrchr(str,'\0');
+    end = (f & TEXT_BACKWARDS) ? todoThrow("str-1") : Bstrchr(str,'\0'.charCodeAt(0));
     text = (f & TEXT_BACKWARDS) ? todoThrow("Bstrchr(str,'\0')-1") : str;
 
     // for best results, we promote 320x200 coordinates to full precision before any math

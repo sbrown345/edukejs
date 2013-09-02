@@ -13,7 +13,7 @@ function todo(reason?: string) {
 function todoUnimportant(reason?: string): void {
 }
 
-function todoThrow(message : string = ""): void {
+function todoThrow(message : string = ""): any {
     debugger;
     console.error("todo \n" + message);
     throw "!";
