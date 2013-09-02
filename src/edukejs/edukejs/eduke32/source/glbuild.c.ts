@@ -42,6 +42,8 @@ var gl: WebGLRenderingContext = DEBUG_WEBGL_UTIL ? WebGLDebugUtils.makeDebugCont
 //var gl: WebGLRenderingContext= GL.create({});
 if(document.body /*qunit*/)
     document.body.appendChild(gl.canvas);
+//gl.canvas.width = document.documentElement.clientWidth - 5;
+//gl.canvas.height = document.documentElement.clientHeight - 5;
 gl.canvas.width = 1024;
 gl.canvas.height = 768;
 

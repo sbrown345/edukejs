@@ -243,6 +243,11 @@ function CONFIG_SetDefaults()
     ud.config.scripthandle = -1;
     ud.config.ScreenWidth = 1024;
     ud.config.ScreenHeight = 768;
+    tempHC(() => {
+        ud.config.ScreenWidth = gl.canvas.width;
+        ud.config.ScreenHeight = gl.canvas.height;
+    });
+
     ud.config.ScreenMode = 0;
 //#ifdef USE_OPENGL
     ud.config.ScreenBPP = 32;

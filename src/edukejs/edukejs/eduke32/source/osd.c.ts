@@ -1526,7 +1526,6 @@ function OSD_ResizeDisplay(w: number, h: number): void
     osdhead = 0;
     osdeditwinstart = 0;
     osdeditwinend = editlinewidth();
-    assert.run("OSD_ResizeDisplay editlinewidth", editlinewidth() == 109);
     white = -1;
 }
 

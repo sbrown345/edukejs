@@ -1734,8 +1734,8 @@ function checkvideomode(/*int32_t *x, int32_t *y, int32_t c, int32_t fs, int32_t
 
     tempHC(() => {
         nearest = 29;
-        validmode[nearest].xdim = 1024;
-        validmode[nearest].ydim = 768;
+        validmode[nearest].xdim = gl.canvas.width;
+        validmode[nearest].ydim = gl.canvas.height;
         validmode[nearest].bpp = 32;
         validmode[nearest].fs = 0;
         validmode[nearest].extra = -1;
