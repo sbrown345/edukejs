@@ -3089,7 +3089,7 @@ function G_MoveWeapons():void
                 q = A_InsertSprite(s.sectnum,
                     s.x+((k*sintable[(s.ang+512)&2047])>>9),
                     s.y+((k*sintable[s.ang&2047])>>9),
-                    s.z+((k*ksgn(s.zvel))*klabs(s.zvel/12)),TONGUE,-40+(k<<1),
+                    s.z+((k*ksgn(s.zvel))*klabs(int32(s.zvel/12))),TONGUE,-40+(k<<1),
                     8,8,0,0,0,i,5);
                 sprite[q].cstat = 128;
                 sprite[q].pal = 8;
@@ -3097,7 +3097,7 @@ function G_MoveWeapons():void
             q = A_InsertSprite(s.sectnum,
                 s.x+((k*sintable[(s.ang+512)&2047])>>9),
                 s.y+((k*sintable[s.ang&2047])>>9),
-                s.z+((k*ksgn(s.zvel))*klabs(s.zvel/12)),INNERJAW,-40,
+                s.z+((k*ksgn(s.zvel))*klabs(int32(s.zvel/12))),INNERJAW,-40,
                 32,32,0,0,0,i,5);
             sprite[q].cstat = 128;
             if (actor[i].t_data[1] > 512 && actor[i].t_data[1] < (1024))
@@ -5582,7 +5582,7 @@ function G_MoveMisc():void  // STATNUM 5
                         t[0]++;
                         t[0] &= 3;
                     }
-                    if (s.zvel < 128) s.zvel += (g_spriteGravity/13); // 8
+                    if (s.zvel < 128) s.zvel += int32(g_spriteGravity/13); // 8
                     else s.zvel -= 64;
                     if (s.xvel > 0)
                         s.xvel -= 4;
@@ -5597,7 +5597,7 @@ function G_MoveMisc():void  // STATNUM 5
                         t[0]++;
                         t[0] &= 3;
                     }
-                    if (s.zvel < 512) s.zvel += (g_spriteGravity/3); // 52;
+                    if (s.zvel < 512) s.zvel += int32(g_spriteGravity/3); // 52;
                     if (s.xvel > 0)
                         s.xvel --;
                     //                else { A_DeleteSprite(i); {i = nexti; continue BOLT;} }
@@ -7639,7 +7639,7 @@ function G_MoveEffectors():void   //STATNUM 3
                             ud.camerasprite = i;
                             t[0] = 999;
                             s.ang += G_GetAngleDelta(s.ang,getangle(ps.pos.x-s.x,ps.pos.y-s.y))>>3;
-                            sprite[i].yvel = 100+((s.z-ps.pos.z)/257);
+                            sprite[i].yvel = 100+int32((s.z-ps.pos.z)/257);
 
                         }
                         else if (t[0] == 999)

@@ -442,7 +442,7 @@ function/* int32_t */G_GetTeamPalette(/*int32_t*/ team: number): number
 {
     var pal = new Uint8Array([3, 10, 11, 12]);
 
-    if (team >= (sizeof(pal)/sizeof(pal[0])))
+    if (team >= pal.length/*(sizeof(pal)/sizeof(pal[0]))*/)
         return 0;
 
     return pal[team];

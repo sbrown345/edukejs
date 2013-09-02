@@ -981,7 +981,7 @@ function /*int32_t __fastcall*/ Gv_GetVarX(/*int32_t */id:number):number
 //    }
 }
 
-function Gv_SetVarX(/*int32_t */id, /*int32_t */lValue):void
+function Gv_SetVarX(/*int32_t */id:number, /*int32_t */lValue:number):void
 {
     todoThrow();
 //    switch (aGameVars[id].dwFlags & (GAMEVAR_USER_MASK|GAMEVAR_PTR_MASK))

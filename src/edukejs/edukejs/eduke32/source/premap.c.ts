@@ -619,10 +619,10 @@ function G_CacheMapData(): void
         if ((j&7) == 0)
             G_HandleAsync();
 
-        if (bpp > 8 && totalclock - tc > TICRATE/4)
+        if (bpp > 8 && totalclock - tc > int32(TICRATE/4))
         {
             /*Bsprintf(tempbuf,"%d resources remaining\n",g_precacheCount-pc+1);*/
-            tc = min(100,100*pc/g_precacheCount);
+            tc = min(100,int32(100*pc/g_precacheCount));
             Bsprintf(tempbuf,"Loaded %d%% (%d/%d textures)\n",tc,pc,g_precacheCount);
             G_DoLoadScreen(tempbuf.toString(), tc);
             tc = totalclock;
@@ -1943,7 +1943,7 @@ function G_EnterLevel(g: number): number
         if (level != MAXLEVELS*MAXVOLUMES)
         {
             level &= MAXLEVELS-1;
-            volume = (volume - level) / MAXLEVELS;
+            volume = int32((volume - level) / MAXLEVELS);
 
             ud.level_number = ud.m_level_number = level;
             ud.volume_number = ud.m_volume_number = volume;

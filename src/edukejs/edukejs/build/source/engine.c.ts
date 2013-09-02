@@ -7973,7 +7973,7 @@ function calcbritable(): void
     }
 }
 
-var BANG2RAD = (PI/1024.0);
+var BANG2RAD = PI/1024.0;
 
 var tablesloaded = 0;
 function loadtables(): number
@@ -11213,8 +11213,8 @@ function loadpics(filename: string, askedsize: number): number
         var fil: number;
 
         artfilename[7] = (tilefilei%10)+48;
-        artfilename[6] = ((tilefilei/10)%10)+48;
-        artfilename[5] = ((tilefilei/100)%10)+48;
+        artfilename[6] = (int32(tilefilei/10)%10)+48;
+        artfilename[5] = (int32(tilefilei/100)%10)+48;
 
         if ((fil = kopen4load(artfilename.toString(),0)) != -1)
         {
@@ -11356,8 +11356,8 @@ function loadtile(tilenume: number): void
         artfilplc = 0;
         
         artfilename[7] = (i%10)+48;
-        artfilename[6] = ((i/10)%10)+48;
-        artfilename[5] = ((i/100)%10)+48;
+        artfilename[6] = (int32(i/10)%10)+48;
+        artfilename[5] = (int32(i/100)%10)+48;
         artfil = kopen4load(artfilename.toString(),0);
         faketimerhandler();
     }

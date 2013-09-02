@@ -603,7 +603,7 @@ var Bstrrchr = strrchr;
 //// parsing the decimal representation of 0xffffffff,
 //// 4294967295 -- long is signed, so strtol would
 //// return LONG_MAX (== 0x7fffffff on 32-bit archs))
-//# define Batoi(str) ((int32_t)strtol(str, NULL, 10))
+function Batoi(str:string):number { return int32(strtol(str/*, NULL, 10*/)); }
 //# define Batol(str) (strtol(str, NULL, 10))
 //# define Batof(str) (strtod(str, NULL))
 //# define Bstrtol strtol

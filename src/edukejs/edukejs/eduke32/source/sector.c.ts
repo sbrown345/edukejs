@@ -671,8 +671,8 @@ function G_OperateSectors(/*int32_t */sn:number, /*int32_t */ii:number):void
             dax += wall[i].x;
             day += wall[i].y;
         }
-        dax /= (endwall-startwall+1);
-        day /= (endwall-startwall+1);
+        dax = int32(dax / (endwall-startwall+1));
+        day = int32(day / (endwall-startwall+1));
 
         //find any points with either same x or same y coordinate
         //  as center (dax, day) - should be 2 points found.
@@ -3130,7 +3130,7 @@ function /*int32_t */our_neartag_blacklist(/*int32_t */i:number):number
 
 function P_CheckSectors(/*int32_t */snum:number):void
 {
-    var/*int32_t */i = -1,oldz;
+    var/*int32_t */i = -1,oldz:number;
     var p = g_player[snum].ps;
     var/*int16_t */j:number,hitscanwall:number;
 
@@ -3327,9 +3327,9 @@ function P_CheckSectors(/*int32_t */snum:number):void
                         p.holster_weapon = 1;
                         p.weapon_pos = -1;
                     }
-                    if (sprite[p.i].extra <= (p.max_player_health-(p.max_player_health/10)))
+                    if (sprite[p.i].extra <= (p.max_player_health-int32(p.max_player_health/10)))
                     {
-                        sprite[p.i].extra += p.max_player_health/10;
+                        sprite[p.i].extra += int32(p.max_player_health/10);
                         p.last_extra = sprite[p.i].extra;
                     }
                     else if (sprite[p.i].extra < p.max_player_health)

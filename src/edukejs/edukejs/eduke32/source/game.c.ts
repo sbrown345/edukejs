@@ -5891,7 +5891,7 @@ function A_Spawn(/*int32_t*/ j: number, /*int32_t*/ pn: number): number
             sp.xrepeat = sp.yrepeat = 0;
             sp.cstat = 32768;
             if ((!g_netServer && ud.multimode < 2) ||
-                    ((GametypeFlags[ud.coop] & GAMETYPE_COOPSPAWN)/GAMETYPE_COOPSPAWN) != sp.lotag)
+                    int32((GametypeFlags[ud.coop] & GAMETYPE_COOPSPAWN)/GAMETYPE_COOPSPAWN) != sp.lotag)
                 changespritestat(i,STAT_MISC);
             else
                 changespritestat(i,STAT_PLAYER);
@@ -13118,8 +13118,8 @@ function A_SpawnRandomGlass(/*int32_t*/ i:number,/*int32_t*/ wallnum:number,/*in
     x1 = wall[wallnum].x;
     y1 = wall[wallnum].y;
 
-    xv = (wall[wall[wallnum].point2].x-wall[wallnum].x)/j;
-    yv = (wall[wall[wallnum].point2].y-wall[wallnum].y)/j;
+    xv = int32((wall[wall[wallnum].point2].x-wall[wallnum].x)/j);
+    yv = int32((wall[wall[wallnum].point2].y-wall[wallnum].y)/j);
 
     for (j=n; j>0; j--)
     {

@@ -823,7 +823,7 @@ function P_AddWeaponMaybeSwitch(ps:DukePlayer_t, /*int32_t */weap:number):void
     if ((ps.weaponswitch & 1) && (ps.weaponswitch & 4))
     {
         var /*int32_t */snum = sprite[ps.i].yvel;
-        var/*int32_t */i, w, new_wchoice = -1, curr_wchoice = -1;
+        var/*int32_t */i:number, w:number, new_wchoice = -1, curr_wchoice = -1;
 
         for (i=0; i<10 && (new_wchoice < 0 || curr_wchoice < 0); i++)
         {
@@ -894,7 +894,7 @@ function VM_Fall(/*int32_t */g_i:number, g_sp:spritetype ):void
     g_sp.xoffset = g_sp.yoffset = 0;
 
     if (G_CheckForSpaceCeiling(g_sp.sectnum) || sector[g_sp.sectnum].lotag == ST_2_UNDERWATER)
-        grav = g_spriteGravity/6;
+        grav = int32(g_spriteGravity/6);
     else if (G_CheckForSpaceFloor(g_sp.sectnum))
         grav = 0;
 

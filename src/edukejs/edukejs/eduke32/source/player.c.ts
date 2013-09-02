@@ -171,7 +171,7 @@ function P_QuickKill(p: DukePlayer_t): void
         A_DoGuts(p.i,JIBS6,8);
 }
 
-function A_DoWaterTracers(/*int32_t*/ x1:number,/*int32t*/ y1:number,/*int32t*/ z1:number,/*int32t*/ x2:number,/*int32t*/ y2:number,/*int32t*/ z2:number,/*int32t*/ n):void
+function A_DoWaterTracers(/*int32_t*/ x1:number,/*int32t*/ y1:number,/*int32t*/ z1:number,/*int32t*/ x2:number,/*int32t*/ y2:number,/*int32t*/ z2:number,/*int32t*/ n:number):void
 {
     var /*int32_t */i:number, xv:number, yv:number, zv:number;
     var/*int16_t */sect = new R(-1);
@@ -1165,7 +1165,7 @@ function /*int32_t */A_ShootWithZvel(/*int32_t*/ i:number, /*int32_t */atwith:nu
                 sa = $sa.$;
 
                 if (j < 0)
-                    zvel = (100-ps.horiz-ps.horizoff)*(proj.vel/8);
+                    zvel = (100-ps.horiz-ps.horizoff)*int32(proj.vel/8);
 
                 if (proj.sound >= 0)
                     A_PlaySound(proj.sound,i);
@@ -1178,7 +1178,7 @@ function /*int32_t */A_ShootWithZvel(/*int32_t*/ i:number, /*int32_t */atwith:nu
                     sa = getangle(g_player[j].ps.opos.x-srcvect.x,g_player[j].ps.opos.y-srcvect.y);
 
                     l = safeldist(g_player[j].ps.i, s);
-                    zvel = ((g_player[j].ps.opos.z-srcvect.z)*vel) / l;
+                    zvel = int32(((g_player[j].ps.opos.z-srcvect.z)*vel) / l);
 
                     if (A_CheckEnemySprite(s) && (s.hitag&face_player_smart))
                         sa = s.ang+(krand()&31)-16;
@@ -1747,7 +1747,7 @@ function /*int32_t */A_ShootWithZvel(/*int32_t*/ i:number, /*int32_t */atwith:nu
             {
                 j = A_FindPlayer(s, NULL);
                 l = safeldist(g_player[j].ps.i, s);
-                zvel = ((g_player[j].ps.opos.z-srcvect.z)*512) / l ;
+                zvel = int32(((g_player[j].ps.opos.z-srcvect.z)*512) / l);
             }
             else zvel = 0;
 
@@ -2174,13 +2174,13 @@ function/*int32_t*/ P_DisplayAccess(/*int32_t*/ gs:number,/*int32_t */snum:numbe
         -16
     ]);
 
-    var looking_arc:number, p = 0;
+    var /*int32_t*/looking_arc:number, p = 0;
     var ps = g_player[snum].ps;
 
     if (ps.access_incs == 0 || ps.access_incs >= ARRAY_SIZE(access_y) || sprite[ps.i].extra <= 0)
         return 0;
 
-    looking_arc = access_y[ps.access_incs] + klabs(ps.look_ang)/9 -
+    looking_arc = access_y[ps.access_incs] + int32(klabs(ps.look_ang)/9) -
                   (ps.hard_landing<<3);
 
     if (ps.access_spritenum >= 0)
@@ -4176,7 +4176,7 @@ function P_ProcessWeapon(/*int32_t */snum:number):void
                             if (PWEAPON(snum, p.curr_weapon, ReloadSound1) > 0)
                                 A_PlaySound(PWEAPON(snum, p.curr_weapon, ReloadSound1),p.i);
                         }
-                        else if (((p.kickback_pic) == (PWEAPON(snum, p.curr_weapon, Reload) - (i/3)) &&
+                        else if (((p.kickback_pic) == (PWEAPON(snum, p.curr_weapon, Reload) - int32(i/3)) &&
                                   !(PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_RELOAD_TIMING)) ||
                                  ((p.kickback_pic) == (PWEAPON(snum, p.curr_weapon, Reload) - i+4) &&
                                   (PWEAPON(snum, p.curr_weapon, Flags) & WEAPON_RELOAD_TIMING)))

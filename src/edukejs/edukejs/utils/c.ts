@@ -291,6 +291,20 @@ function toupper(s: string): string {
     return s.toUpperCase();
 }
 
+function atoi(s: string): number {
+    todoThrow();
+    var i = parseInt(s, 10);
+    if(isNaN(i)) todoThrow("invalid number"); 
+    return int32(i);
+}
+
+function strtol(s: string): number {
+    todoThrow();
+    var i = parseInt(s, 10);
+    if(isNaN(i)) todoThrow("invalid number"); 
+    return i;
+}
+
 function islower(s: string): number {
     return s === s.toLowerCase()?1:0;
 }
@@ -339,21 +353,21 @@ function indexOf<T>(e: T, arr: T[]):number {
 
 interface String {
     idx: number;
-    v(offset?):string;
-    c(offset?):number;
-    increment(num?):void;
+    v(offset?:number):string;
+    c(offset?:number):number;
+    increment(num?:number):void;
 }
 
 String.prototype.idx = 0;
 
-String.prototype.v = function(offset = 0): string {
+String.prototype.v = function(offset:number = 0): string {
     return this[this.idx + offset];
 };
 
-String.prototype.c = function(offset = 0): number {
+String.prototype.c = function(offset:number = 0): number {
     return this.charCodeAt(this.idx + offset);
 };
 
-String.prototype.increment = function(num = 1): void {
+String.prototype.increment = function(num:number = 1): void {
     this.idx += num;
 };

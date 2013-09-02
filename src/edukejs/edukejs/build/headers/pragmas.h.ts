@@ -2415,7 +2415,7 @@ function clearbufbyte(buffer: Uint8Array /*or other array with BYTES_PER_ELEMENT
 //static inline int32_t divmod(int32_t a, int32_t b) { uint32_t _a=(uint32_t)a, _b=(uint32_t)b; dmval = _a%_b; return _a/_b; }
 //static inline int32_t moddiv(int32_t a, int32_t b) { uint32_t _a=(uint32_t)a, _b=(uint32_t)b; dmval = _a/_b; return _a%_b; }
 
-function klabs(a: number): number { if (a < 0) return -a; return a; }
+function klabs(a: number): number { assert.int32(a); if (a < 0) return -a; return a; }
 function /*int32_t */ksgn(/*int32_t */a:number):number  { if (a > 0) return 1; if (a < 0) return -1; return 0; }
 
 //static inline int32_t umin(int32_t a, int32_t b) { if ((uint32_t)a < (uint32_t)b) return a; return b; }
@@ -2425,7 +2425,7 @@ function /*int32_t */ksgn(/*int32_t */a:number):number  { if (a > 0) return 1; i
 
 //static inline int32_t sqr(int32_t eax) { return (eax) * (eax); }
 //static inline int32_t scale(int32_t eax, int32_t edx, int32_t ecx) { return dw((qw(eax) * qw(edx)) / qw(ecx)); }
-function scale(input1: number, input2: number, input3: number): number {return (input1 * input2 / input3) | 0;}
+function scale(input1: number, input2: number, input3: number): number { assert.argumentsAre.int32(arguments); return (input1 * input2 / input3) | 0;}
 //static inline int32_t mulscale(int32_t eax, int32_t edx, int32_t ecx) { return dw((qw(eax) * qw(edx)) >> by(ecx)); }
 //static inline int32_t dmulscale(int32_t eax, int32_t edx, int32_t esi, int32_t edi, int32_t ecx) { return dw(((qw(eax) * qw(edx)) + (qw(esi) * qw(edi))) >> by(ecx)); }
 
