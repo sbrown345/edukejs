@@ -11722,7 +11722,7 @@ function /*int32_t */spriteheightofsptr(/*const spritetype **/spr: spritetype, /
 //
 // setsprite
 //
-function /*int32_t */setsprite(/*int16_t*/ spritenum: number, /*const vec3_t **/newpos: IVec3)
+function /*int32_t */setsprite(/*int16_t*/ spritenum: number, /*const vec3_t **/newpos: IVec3):number
 {
     var tempsectnum = sprite[spritenum].sectnum;
 
@@ -11741,7 +11741,7 @@ function /*int32_t */setsprite(/*int16_t*/ spritenum: number, /*const vec3_t **/
     return(0);
 }
 
-function /*int32_t */ setspritez(/*int16_t */spritenum: number, /*const vec3_t **/newpos: IVec3)
+function /*int32_t */ setspritez(/*int16_t */spritenum: number, /*const vec3_t **/newpos: IVec3):number
 {
     var /*int16_t*/ tempsectnum = sprite[spritenum].sectnum;
 
@@ -11766,7 +11766,7 @@ function /*int32_t */ setspritez(/*int16_t */spritenum: number, /*const vec3_t *
 //
 // -1: ceiling or up
 //  1: floor or down
-function /*int32_t */nextsectorneighborz(/*int16_t*/ sectnum:number, /*int32_t */thez:number, /*int16_t */topbottom:number, /*int16_t */direction:number)
+function /*int32_t */nextsectorneighborz(/*int16_t*/ sectnum:number, /*int32_t */thez:number, /*int16_t */topbottom:number, /*int16_t */direction:number):number
 {
     var/*int32_t */nextz = (direction==1) ? INT32_MAX : INT32_MIN;
     var /*int32_t */sectortouse = -1;
