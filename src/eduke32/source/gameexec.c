@@ -67,7 +67,7 @@ GAMEEXEC_STATIC void VM_Execute(int32_t loop);
 #endif
 
 #define VM_CONDITIONAL(xxx) { if ((xxx) || ((insptr = (intptr_t *)*(insptr+1)) && (((*insptr) & 0xfff) == CON_ELSE))) \
-{ insptr += 2; VM_Execute(0); } }
+{ dlog(DEBUG_VM_CONDITIONAL, "VM_CONDITIONAL true\n"); insptr += 2; VM_Execute(0); } }
 
 void VM_ScriptInfo(void)
 {

@@ -62,8 +62,6 @@
 /// <reference path="../../eduke32/source/soundsdyn.c.ts" />
 /// <reference path="../../eduke32/source/winbits.c.ts" />
 /// <reference path="../../eduke32/source/winlayer.c.ts" />
-/// <reference path="../../eduke32/source/winbits.c.ts" />
-/// <reference path="../../eduke32/source/winlayer.c.ts" />
 
 
 //-------------------------------------------------------------------------
@@ -891,6 +889,7 @@ function Proj_HandleKnee(hit:hitdata_t, /*int32_t */i:number, /*int32_t */p:numb
 function MinibossScale(s:number, i:number):number {return (int32((s)*sprite[i].yrepeat)/80);}
 function /*int32_t */A_ShootWithZvel(/*int32_t*/ i:number, /*int32_t */atwith:number, /*int32_t */override_zvel:number):number
 {
+    assert.argumentsAre.int32(arguments);
     var /*int16_t */sa:number;
     var/*int32_t */j:number, k=-1, l:number;
     var/*int32_t */vel:number, zvel:number = 0;
@@ -3046,6 +3045,10 @@ function P_GetInput(/*int32_t */snum: number): void
     //loc.extbits |= (BUTTON(gamefunc_Move_Backward) || (vel < 0))<<1;
     //loc.extbits |= (BUTTON(gamefunc_Strafe_Left) || (svel > 0))<<2;
     //loc.extbits |= (BUTTON(gamefunc_Strafe_Right) || (svel < 0))<<3;
+
+    tempHC(function() {
+    //loc.bits |=   1<<SK_FIRE;
+    });
 
     tempHC(function() {
         loc.bits = 0;

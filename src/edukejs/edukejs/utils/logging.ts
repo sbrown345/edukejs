@@ -17,10 +17,12 @@ var DEBUG_SCRIPT_CHANGE = false;
 var DEBUG_LOAD_TILE_ART = false;
 var DEBUG_PLAYER_POS = false;
 var DEBUG_GETZRANGE = false;
-var DEBUG_VM_EXECUTE = false;
-var DEBUG_headspritestat = false;
-var DEBUG_SPRITESTAT_CHANGE = false;
-var DEBUG_SPAWN = false;
+var DEBUG_VM_EXECUTE = true;
+var DEBUG_headspritestat = true;
+var DEBUG_SPRITESTAT_CHANGE = true;
+var DEBUG_SPAWN = true;
+var DEBUG_INITPRINTF = false; // e.g. log -condebug to file          //broken, doesn't work...
+var DEBUG_VM_CONDITIONAL = true;
 
 var dlog = function (log: boolean, format: string, ...args: any[]) {
     if(!log || SKIP_ALL_LOGGING) return;

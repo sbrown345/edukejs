@@ -5267,7 +5267,7 @@ function C_ParseCommand(loop: number): number
         case CON_IFPLAYERSL:
             {
                 var offset: number;
-                var lastScriptPtr = (g_scriptPtr-/*&script[0]*/ 0 -1);
+                var lastScriptPtr = (g_scriptPtr-/*&script[0]*/0-1);
 
                 g_ifElseAborted = 0;
 

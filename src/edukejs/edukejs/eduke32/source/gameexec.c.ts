@@ -67,7 +67,7 @@ var g_currentEventExec = -1;
 //#endif
 
 function VM_CONDITIONAL(xxx:any):void { if ((xxx) || ((insptr = /*(intptr_t *)**/script[insptr+1]) && (((script[insptr]) & 0xfff) == CON_ELSE))) 
-{ insptr += 2; VM_Execute(0); } }
+{ dlog(DEBUG_VM_CONDITIONAL, "VM_CONDITIONAL true\n"); insptr += 2; VM_Execute(0); } }
 function VM_ScriptInfo (): void 
 {
 //#if !defined LUNATIC
