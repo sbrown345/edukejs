@@ -13006,7 +13006,7 @@ function G_DrawCameraText(/*int16_t*/ i:number):void
 //    sect = wall[wn].nextsector;
 //    if (sect == -1) return;
 //    zincs = (sector[sect].floorz-sector[sect].ceilingz) / n | 0;
-
+//krands:!
 //    for (z = sector[sect].ceilingz; z < sector[sect].floorz; z += zincs)
 //        A_InsertSprite(sect,x,y,z-(krand()&8191),GLASSPIECES+(z&(krand()%3)),-32,36,36,a+128-(krand()&255),16+(krand()&31),0,-1,5);
 //}
@@ -13025,7 +13025,8 @@ function A_SpawnWallGlass(/*int32_t*/ i:number,/*int32_t */wallnum:number,/*int3
         for (j=n-1; j >= 0 ; j--)
         {
             a = sprite[i].ang-256+(krand()&511)+1024;
-            A_InsertSprite(sprite[i].sectnum,sprite[i].x,sprite[i].y,sprite[i].z,GLASSPIECES+(j%3),-32,36,36,a,32+(krand()&63),1024-(krand()&1023),i,5);
+            var krands = getKrands(2);
+            A_InsertSprite(sprite[i].sectnum,sprite[i].x,sprite[i].y,sprite[i].z,GLASSPIECES+(j%3),-32,36,36,a,32+(krands.pop()&63),1024-(krands.pop()&1023),i,5);
         }
         return;
     }
@@ -13057,7 +13058,8 @@ function A_SpawnWallGlass(/*int32_t*/ i:number,/*int32_t */wallnum:number,/*int3
             if (z < -(32<<8) || z > (32<<8))
                 z = sprite[i].z-(32<<8)+(krand()&((64<<8)-1));
             a = sprite[i].ang-1024;
-            A_InsertSprite(sprite[i].sectnum,x1,y1,z,GLASSPIECES+(j%3),-32,36,36,a,32+(krand()&63),-(krand()&1023),i,5);
+            var krands = getKrands(2);
+            A_InsertSprite(sprite[i].sectnum,x1,y1,z,GLASSPIECES+(j%3),-32,36,36,a,32+(krands.pop()&63),-(krands.pop()&1023),i,5);
         }
     }
 }
@@ -13066,8 +13068,9 @@ function A_SpawnGlass(/*int32_t */i:number,/*int32_t*/ n:number): void
 {
     for (; n>0; n--)
     {
-        var /*int32_t */k = A_InsertSprite(sprite[i].sectnum,sprite[i].x,sprite[i].y,sprite[i].z-((krand()&16)<<8),GLASSPIECES+(n%3),
-                                   krand()&15,36,36,krand()&2047,32+(krand()&63),-512-(krand()&2047),i,5);
+        var krands = getKrands(5);
+        var /*int32_t */k = A_InsertSprite(sprite[i].sectnum,sprite[i].x,sprite[i].y,sprite[i].z-((krands.pop()&16)<<8),GLASSPIECES+(n%3),
+                                   krands.pop()&15,36,36,krands.pop()&2047,32+(krands.pop()&63),-512-(krands.pop()&2047),i,5);
         sprite[k].pal = sprite[i].pal;
     }
 }
@@ -13108,7 +13111,8 @@ function A_SpawnRandomGlass(/*int32_t*/ i:number,/*int32_t*/ wallnum:number,/*in
         for (j=n-1; j >= 0 ; j--)
         {
             a = krand()&2047;
-            k = A_InsertSprite(sprite[i].sectnum,sprite[i].x,sprite[i].y,sprite[i].z-(krand()&(63<<8)),GLASSPIECES+(j%3),-32,36,36,a,32+(krand()&63),1024-(krand()&2047),i,5);
+            var krands = getKrands(3);
+            k = A_InsertSprite(sprite[i].sectnum,sprite[i].x,sprite[i].y,sprite[i].z-(krands.pop()&(63<<8)),GLASSPIECES+(j%3),-32,36,36,a,32+(krands.pop()&63),1024-(krands.pop()&2047),i,5);
             sprite[k].pal = krand()&15;
         }
         return;
@@ -13132,7 +13136,8 @@ function A_SpawnRandomGlass(/*int32_t*/ i:number,/*int32_t*/ wallnum:number,/*in
         if (z < -(32<<8) || z > (32<<8))
             z = sprite[i].z-(32<<8)+(krand()&((64<<8)-1));
         a = sprite[i].ang-1024;
-        k = A_InsertSprite(sprite[i].sectnum,x1,y1,z,GLASSPIECES+(j%3),-32,36,36,a,32+(krand()&63),-(krand()&2047),i,5);
+        var krands = getKrands(2);
+        k = A_InsertSprite(sprite[i].sectnum,x1,y1,z,GLASSPIECES+(j%3),-32,36,36,a,32+(krands.pop()&63),-(krands.pop()&2047),i,5);
         sprite[k].pal = krand()&7;
     }
 }

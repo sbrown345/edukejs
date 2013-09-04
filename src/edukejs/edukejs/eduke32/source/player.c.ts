@@ -192,7 +192,10 @@ function A_DoWaterTracers(/*int32_t*/ x1:number,/*int32t*/ y1:number,/*int32t*/ 
             break;
 
         if (sector[sect.$].lotag == ST_2_UNDERWATER)
-            A_InsertSprite(sect.$,x1,y1,z1,WATERBUBBLE,-32,4+(krand()&3),4+(krand()&3),krand()&2047,0,0,g_player[0].ps.i,5);
+        {
+            var krands = getKrands(3);
+            A_InsertSprite(sect.$,x1,y1,z1,WATERBUBBLE,-32,4+(krands.pop()&3),4+(krands.pop()&3),krands.pop()&2047,0,0,g_player[0].ps.i,5);
+        }
         else
             A_InsertSprite(sect.$,x1,y1,z1,SMALLSMOKE,-32,14,14,0,0,0,g_player[0].ps.i,5);
     }
@@ -3660,7 +3663,8 @@ function P_FragPlayer(/*int32_t */snum:number):void
         p.pos.z -= (16<<8);
         s.z -= (16<<8);
 
-        p.dead_flag = (512-((krand()&1)<<10)+(krand()&255)-512)&2047;
+        var krands = getKrands(2);
+        p.dead_flag = (512-((krands.pop()&1)<<10)+(krands.pop()&255)-512)&2047;
         if (p.dead_flag == 0)
             p.dead_flag++;
 //#ifndef NETCODE_DISABLE

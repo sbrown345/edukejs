@@ -14064,6 +14064,14 @@ function/*int32_t*/ krand(): number
 //    return ((uint32_t)randomseed)>>16;
 }
 
+function getKrands(count) {
+    var krands = [];
+    for (var i = 0; i < count; i++) {
+        krands[i] = krand();
+    }
+    return krands;
+}
+
 function mul32(n: number, m: number): number {
     n = n | 0;
     m = m | 0;

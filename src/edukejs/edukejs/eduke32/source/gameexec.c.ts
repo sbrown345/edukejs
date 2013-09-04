@@ -3267,11 +3267,12 @@ function VM_Execute(/*int32_t */loop: number): void
                             _s = 0;
                         else _s = (krand()%3);
 
+                        var krands = getKrands(8);
                         l = A_InsertSprite(vm.g_sp.sectnum,
-                                           vm.g_sp.x+(krand()&255)-128,vm.g_sp.y+(krand()&255)-128,vm.g_sp.z-(8<<8)-(krand()&8191),
-                                           dnum+_s,vm.g_sp.shade,32+(krand()&15),32+(krand()&15),
-                                           krand()&2047,(krand()&127)+32,
-                                           -(krand()&2047),vm.g_i,5);
+                                           vm.g_sp.x+(krands.pop()&255)-128,vm.g_sp.y+(krands.pop()&255)-128,vm.g_sp.z-(8<<8)-(krands.pop()&8191),
+                                           dnum+_s,vm.g_sp.shade,32+(krands.pop()&15),32+(krands.pop()&15),
+                                           krands.pop()&2047,(krands.pop()&127)+32,
+                                           -(krands.pop()&2047),vm.g_i,5);
                         if (vm.g_sp.picnum == BLIMP && dnum == SCRAP1)
                             sprite[l].yvel = BlimpSpawnSprites[j%14];
                         else sprite[l].yvel = -1;

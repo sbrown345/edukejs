@@ -2163,7 +2163,8 @@ function A_DamageObject(/*int32_t */i:number,/*int32_t */sn:number):void
         if (rpg == 1)
             for (k=64; k>0; k--)
             {
-                j = A_InsertSprite(sprite[i].sectnum,sprite[i].x,sprite[i].y,sprite[i].z-(krand()%(48<<8)),SCRAP3+(krand()&3),-8,48,48,krand()&2047,(krand()&63)+64,-(krand()&4095)-(sprite[i].zvel>>2),i,5);
+                var krands = getKrands(5);
+                j = A_InsertSprite(sprite[i].sectnum,sprite[i].x,sprite[i].y,sprite[i].z-(krands.pop()%(48<<8)),SCRAP3+(krands.pop()&3),-8,48,48,krands.pop()&2047,(krands.pop()&63)+64,-(krands.pop()&4095)-(sprite[i].zvel>>2),i,5);
                 sprite[j].pal = 8;
             }
         //        case CACTUSBROKE:
@@ -2176,7 +2177,8 @@ function A_DamageObject(/*int32_t */i:number,/*int32_t */sn:number):void
         case HEAVYHBOMB__STATIC:
             for (k=64; k>0; k--)
             {
-                j = A_InsertSprite(sprite[i].sectnum,sprite[i].x,sprite[i].y,sprite[i].z-(krand()%(48<<8)),SCRAP3+(krand()&3),-8,48,48,krand()&2047,(krand()&63)+64,-(krand()&4095)-(sprite[i].zvel>>2),i,5);
+                var krands = getKrands(5);
+                j = A_InsertSprite(sprite[i].sectnum,sprite[i].x,sprite[i].y,sprite[i].z-(krands.pop()%(48<<8)),SCRAP3+(krands.pop()&3),-8,48,48,krands.pop()&2047,(krands.pop()&63)+64,-(krands.pop()&4095)-(sprite[i].zvel>>2),i,5);
                 sprite[j].pal = 8;
             }
 
@@ -2191,7 +2193,8 @@ function A_DamageObject(/*int32_t */i:number,/*int32_t */sn:number):void
     case HANGLIGHT__STATIC:
     case GENERICPOLE2__STATIC:
         for (k=6; k>0; k--)
-            A_InsertSprite(sprite[i].sectnum,sprite[i].x,sprite[i].y,sprite[i].z-(8<<8),SCRAP1+(krand()&15),-8,48,48,krand()&2047,(krand()&63)+64,-(krand()&4095)-(sprite[i].zvel>>2),i,5);
+           var krands = getKrands(4);
+            A_InsertSprite(sprite[i].sectnum,sprite[i].x,sprite[i].y,sprite[i].z-(8<<8),SCRAP1+(krands.pop()&15),-8,48,48,krands.pop()&2047,(krands.pop()&63)+64,-(krands.pop()&4095)-(sprite[i].zvel>>2),i,5);
         A_PlaySound(GLASS_HEAVYBREAK,i);
         A_DeleteSprite(i);
         break;
@@ -2221,9 +2224,11 @@ function A_DamageObject(/*int32_t */i:number,/*int32_t */sn:number):void
     case ANTENNA__STATIC:
         if (sprite[sn].extra != G_InitialActorStrength(SHOTSPARK1))
         {
-            for (j=15; j>0; j--)
-                A_InsertSprite(sprite[i].sectnum,sprite[i].x,sprite[i].y,sector[sprite[i].sectnum].floorz-(12<<8)-(j<<9),SCRAP1+(krand()&15),-8,64,64,
-                               krand()&2047,(krand()&127)+64,-(krand()&511)-256,i,5);
+            for (j=15; j>0; j--) {
+                var krands = getKrands(4);
+                A_InsertSprite(sprite[i].sectnum,sprite[i].x,sprite[i].y,sector[sprite[i].sectnum].floorz-(12<<8)-(j<<9),SCRAP1+(krands.pop()&15),-8,64,64,
+                               krands.pop()&2047,(krands.pop()&127)+64,-(krands.pop()&511)-256,i,5);
+            }
             A_Spawn(i,EXPLOSION2);
             A_DeleteSprite(i);
         }

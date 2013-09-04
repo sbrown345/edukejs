@@ -722,7 +722,8 @@ function A_SpawnMultiple(/*int32_t */sp:number, /*int32_t */pic:number, /*int32_
 
     for (; n>0; n--)
     {
-        j = A_InsertSprite(s.sectnum,s.x,s.y,s.z-(krand()%(47<<8)),pic,-32,8,8,krand()&2047,0,0,sp,5);
+        var krands = getKrands(2);
+        j = A_InsertSprite(s.sectnum,s.x,s.y,s.z-(krands.pop()%(47<<8)),pic,-32,8,8,krands.pop()&2047,0,0,sp,5);
         A_Spawn(-1, j);
         sprite[j].cstat = krand()&12;
     }
@@ -750,7 +751,8 @@ function A_DoGuts(/*int32_t*/ sp:number, /*int32_t */gtype:number, /*int32_t */n
     for (j=n; j>0; j--)
     {
         a = krand()&2047;
-        i = A_InsertSprite(s.sectnum,s.x+(krand()&255)-128,s.y+(krand()&255)-128,gutz-(krand()&8191),gtype,-32,sx,sy,a,48+(krand()&31),-512-(krand()&2047),sp,5);
+        var krands = getKrands(5);
+        i = A_InsertSprite(s.sectnum,s.x+(krands.pop()&255)-128,s.y+(krands.pop()&255)-128,gutz-(krands.pop()&8191),gtype,-32,sx,sy,a,48+(krands.pop()&31),-512-(krands.pop()&2047),sp,5);
         if (sprite[i].picnum == JIBS2)
         {
             sprite[i].xrepeat >>= 2;
@@ -1011,16 +1013,14 @@ function G_MoveZombieActors(): void
                             continue;
                         }
                         
-                        var krand1 = krand();
-                        var krand2 = krand();
-                        j = cansee(sx,sy,s.z-(krand2%(52<<8)),s.sectnum, px,py,
-                                   g_player[p].ps.opos.z-(krand1%(32<<8)),g_player[p].ps.cursectnum);
+                        var krands = getKrands(2);
+                        j = cansee(sx,sy,s.z-(krands.pop()%(52<<8)),s.sectnum, px,py,
+                                   g_player[p].ps.opos.z-(krands.pop()%(32<<8)),g_player[p].ps.cursectnum);
                     }
                     else {
-                        var krand1 = krand();
-                        var krand2 = krand();
-                        j = cansee(s.x,s.y,s.z-((krand2&31)<<8),s.sectnum, g_player[p].ps.opos.x,g_player[p].ps.opos.y,
-                                   g_player[p].ps.opos.z-((krand1&31)<<8), g_player[p].ps.cursectnum);
+                        var krands = getKrands(2);
+                        j = cansee(s.x,s.y,s.z-((krands.pop()&31)<<8),s.sectnum, g_player[p].ps.opos.x,g_player[p].ps.opos.y,
+                                   g_player[p].ps.opos.z-((krands.pop()&31)<<8), g_player[p].ps.cursectnum);
                     }
                     dlog(DEBUG_MOVE_ZOMBIE_ACTORS, "G_MoveZombieActors j: %i\n,", j);
                     if (j)
@@ -2163,7 +2163,8 @@ function G_MoveStandables():void
 
             for (k=0; k<16; k++)
             {
-                j = A_InsertSprite(sprite[i].sectnum,sprite[i].x,sprite[i].y,sprite[i].z-(krand()%(48<<8)),SCRAP3+(krand()&3),-8,48,48,krand()&2047,(krand()&63)+64,-(krand()&4095)-(sprite[i].zvel>>2),i,5);
+                var krands = getKrands(5);
+                j = A_InsertSprite(sprite[i].sectnum,sprite[i].x,sprite[i].y,sprite[i].z-(krands.pop()%(48<<8)),SCRAP3+(krands.pop()&3),-8,48,48,krands.pop()&2047,(krands.pop()&63)+64,-(krands.pop()&4095)-(sprite[i].zvel>>2),i,5);
                 sprite[j].pal = 2;
             }
 
@@ -4342,7 +4343,8 @@ function G_MoveActors():void
                     if (j == FREEZEBLAST) {i = nexti; continue BOLT;}
                     for (j=16; j >= 0 ; j--)
                     {
-                        var/*int32_t */k = A_InsertSprite(sprite[i].sectnum,sprite[i].x,sprite[i].y,sprite[i].z,GLASSPIECES+(j%3),-32,36,36,krand()&2047,32+(krand()&63),1024-(krand()&1023),i,5);
+                        var krands = getKrands(3);
+                        var/*int32_t */k = A_InsertSprite(sprite[i].sectnum,sprite[i].x,sprite[i].y,sprite[i].z,GLASSPIECES+(j%3),-32,36,36,krands.pop()&2047,32+(krands.pop()&63),1024-(krands.pop()&1023),i,5);
                         sprite[k].pal = 1;
                     }
                     A_PlaySound(GLASS_BREAKING,i);
@@ -4379,7 +4381,8 @@ function G_MoveActors():void
                     {
                         for (x=0; x<8; x++)
                         {
-                            j = A_InsertSprite(sect,s.x,s.y,s.z-(8<<8),SCRAP3+(krand()&3),-8,48,48,krand()&2047,(krand()&63)+64,-(krand()&4095)-(s.zvel>>2),i,5);
+                            var krands = getKrands(4);
+                            j = A_InsertSprite(sect,s.x,s.y,s.z-(8<<8),SCRAP3+(krands.pop()&3),-8,48,48,krands.pop()&2047,(krands.pop()&63)+64,-(krands.pop()&4095)-(s.zvel>>2),i,5);
                             sprite[j].pal = 6;
                         }
 
@@ -4478,7 +4481,8 @@ function G_MoveActors():void
 
                 for (x=0; x<8; x++)
                 {
-                    j = A_InsertSprite(sect,s.x,s.y,s.z-(8<<8),SCRAP3+(krand()&3),-8,48,48,krand()&2047,(krand()&63)+64,-(krand()&4095)-(s.zvel>>2),i,5);
+                    var krands = getKrands(4);
+                    j = A_InsertSprite(sect,s.x,s.y,s.z-(8<<8),SCRAP3+(krands.pop()&3),-8,48,48,krands.pop()&2047,(krands.pop()&63)+64,-(krands.pop()&4095)-(s.zvel>>2),i,5);
                     sprite[j].pal = 6;
                 }
                 t[0] = -3;
