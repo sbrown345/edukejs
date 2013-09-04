@@ -891,6 +891,7 @@ ACTOR_STATIC void G_MoveZombieActors(void)
                 {
                     if (A_CheckEnemySprite(s))
                     {
+                        dlog(DEBUG_MOVE_ZOMBIE_ACTORS, "A_CheckEnemySprite TRUE\n");
                         const int32_t px = g_player[p].ps->opos.x+64-(krand()&127);
                         const int32_t py = g_player[p].ps->opos.y+64-(krand()&127);
                         int32_t sx, sy;
@@ -918,6 +919,7 @@ ACTOR_STATIC void G_MoveZombieActors(void)
                         j = cansee(s->x,s->y,s->z-((krand()&31)<<8),s->sectnum, g_player[p].ps->opos.x,g_player[p].ps->opos.y,
                                    g_player[p].ps->opos.z-((krand()&31)<<8), g_player[p].ps->cursectnum);
 
+                    dlog(DEBUG_MOVE_ZOMBIE_ACTORS, "G_MoveZombieActors j: %i\n,", j);
                     if (j)
                     {
                         switch (DYNAMICTILEMAP(s->picnum))

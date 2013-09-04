@@ -1155,13 +1155,19 @@ GAMEEXEC_STATIC void VM_Execute(int32_t loop)
 {
     register int32_t tw = *insptr;
 
+    dlog(DEBUG_VM_EXECUTE, "VM_Execute tw: %i\n", tw);
     // jump directly into the loop, saving us from the checks during the first iteration
     goto skip_check;
 
     while (loop)
     {
-        if (vm.g_flags & (VM_RETURN|VM_KILL|VM_NOEXECUTE))
+        dlog(DEBUG_VM_EXECUTE, "loop b4 skip_check tw: %i, instptr: %i\n", tw, *insptr);
+
+        if (vm.g_flags & (VM_RETURN|VM_KILL|VM_NOEXECUTE)) 
+		{
+            dlog(DEBUG_VM_EXECUTE, "VM_return flags: %i insptr: %i\n", tw, *insptr);
             return;
+		}
 
         tw = *insptr;
 
@@ -1172,7 +1178,7 @@ skip_check:
         g_errorLineNum = tw>>12;
         g_tw = tw &= 0xFFF;
 
-        dlog(DEBUG_VM_EXECUTE, "tw: %i\n", tw);
+        dlog(DEBUG_VM_EXECUTE, "loop tw: %i, instptr: %i\n", tw, *insptr);
         switch (tw)
         {
         case CON_REDEFINEQUOTE:

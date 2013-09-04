@@ -1412,5 +1412,7 @@ static inline void pop_nofog(void)
 #define DEBUG_SPRITESTAT_CHANGE 1
 #define DEBUG_SPAWN 1
 #define DEBUG_VM_CONDITIONAL 1
+#define DEBUG_MOVE_ZOMBIE_ACTORS 1
+#define DEBUG_CANSEE 1
 void dlog(int32_t log, char *format, ...);
 void logHeadspritestat(char* where);

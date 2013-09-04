@@ -11619,6 +11619,7 @@ int32_t cansee(int32_t x1, int32_t y1, int32_t z1, int16_t sect1, int32_t x2, in
     int16_t pendingsectnum;
     vec3_t pendingvec;
 
+    dlog(DEBUG_CANSEE, "cansee x1: %i, y1: %i, z1: %i, sect1: %i, x2: %i, y2: %i, z2: %i, sect2: %i\n", x1, y1, z1, sect1, x2, y2, z2, sect2);
     // Negative sectnums can happen, for example if the player is using noclip.
     // MAXSECTORS can happen from C-CON, e.g. canseespr with a sprite not in
     // the game world.
@@ -11663,6 +11664,8 @@ restart_grand:
             int32_t x, y, z, nexts, t, bot;
             int32_t cfz[2];
 
+			dlog(DEBUG_CANSEE, "cansee wal.point2: %i, x31: %i\n", wal->point2, x31);
+			int16_t point2 = wal->point2;
             bot = y21*x34-x21*y34; if (bot <= 0) continue;
             // XXX: OVERFLOW
             t = y21*x31-x21*y31; if ((unsigned)t >= (unsigned)bot) continue;
@@ -17234,5 +17237,6 @@ void logHeadspritestat(char* where) {
                 dlog(DEBUG_headspritestat, "%i: %i, ", i, prevspritestat[0]);
             last = prevspritestat[i];
         }
+		dlog(DEBUG_headspritestat, "\n");
     }
 }
