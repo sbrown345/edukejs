@@ -986,6 +986,7 @@ function G_MoveZombieActors(): void
                 {
                     if (A_CheckEnemySprite(s))
                     {
+                        dlog(DEBUG_MOVE_ZOMBIE_ACTORS, "A_CheckEnemySprite TRUE\n");
                         var /*const int32_t*/ px = g_player[p].ps.opos.x+64-(krand()&127);
                         var /*const int32_t*/ py = g_player[p].ps.opos.y+64-(krand()&127);
                         var /*int32_t*/ sx:number, sy:number;
@@ -1009,14 +1010,19 @@ function G_MoveZombieActors(): void
                             i = nexti;
                             continue;
                         }
-
-                        j = cansee(sx,sy,s.z-(krand()%(52<<8)),s.sectnum, px,py,
-                                   g_player[p].ps.opos.z-(krand()%(32<<8)),g_player[p].ps.cursectnum);
+                        
+                        var krand1 = krand();
+                        var krand2 = krand();
+                        j = cansee(sx,sy,s.z-(krand2%(52<<8)),s.sectnum, px,py,
+                                   g_player[p].ps.opos.z-(krand1%(32<<8)),g_player[p].ps.cursectnum);
                     }
-                    else
-                        j = cansee(s.x,s.y,s.z-((krand()&31)<<8),s.sectnum, g_player[p].ps.opos.x,g_player[p].ps.opos.y,
-                                   g_player[p].ps.opos.z-((krand()&31)<<8), g_player[p].ps.cursectnum);
-
+                    else {
+                        var krand1 = krand();
+                        var krand2 = krand();
+                        j = cansee(s.x,s.y,s.z-((krand2&31)<<8),s.sectnum, g_player[p].ps.opos.x,g_player[p].ps.opos.y,
+                                   g_player[p].ps.opos.z-((krand1&31)<<8), g_player[p].ps.cursectnum);
+                    }
+                    dlog(DEBUG_MOVE_ZOMBIE_ACTORS, "G_MoveZombieActors j: %i\n,", j);
                     if (j)
                     {
                         switch (DYNAMICTILEMAP(s.picnum))
@@ -8487,6 +8493,7 @@ function logHeadspritestat(where:string):void {
                 dlog(DEBUG_headspritestat, "%i: %i, ", i, prevspritestat[0]);
             last = prevspritestat[i];
         }
+		dlog(DEBUG_headspritestat, "\n");
     }
 }
 

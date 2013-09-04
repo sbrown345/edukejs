@@ -699,8 +699,8 @@ var initprintf = function(f: string, ...args: any[])  {
     args.unshift(f.trim());
     console.log.apply(console, args);
     
-    args.unshift(DEBUG_INITPRINTF);
-    dlog.apply(args);
+    //args.unshift(DEBUG_INITPRINTF);
+    //dlog.apply(args);
 };
 //void initprintf(const char *f, ...)
 //{

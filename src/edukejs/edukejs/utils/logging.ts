@@ -23,6 +23,8 @@ var DEBUG_SPRITESTAT_CHANGE = true;
 var DEBUG_SPAWN = true;
 var DEBUG_INITPRINTF = false; // e.g. log -condebug to file          //broken, doesn't work...
 var DEBUG_VM_CONDITIONAL = true;
+var DEBUG_MOVE_ZOMBIE_ACTORS = true;
+var DEBUG_CANSEE = true;
 
 var dlog = function (log: boolean, format: string, ...args: any[]) {
     if(!log || SKIP_ALL_LOGGING) return;

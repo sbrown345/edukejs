@@ -11820,10 +11820,12 @@ function /*int32_t */cansee(/*int32_t*/ x1:number, /*int32_t*/ y1:number, /*int3
     var /*int16_t */pendingsectnum:number;
     var pendingvec: vec3_t ;
 
+    dlog(DEBUG_CANSEE, "cansee x1: %i, y1: %i, z1: %i, sect1: %i, x2: %i, y2: %i, z2: %i, sect2: %i\n", x1, y1, z1, sect1, x2, y2, z2, sect2);
+
     // Negative sectnums can happen, for example if the player is using noclip.
     // MAXSECTORS can happen from C-CON, e.g. canseespr with a sprite not in
     // the game world.
-    if (/*(unsigned)*/sect1 >= MAXSECTORS || /*(unsigned)*/sect2 >= MAXSECTORS)
+    if (unsigned(sect1) >= MAXSECTORS || unsigned(sect2) >= MAXSECTORS)
         return 0;
 
     pendingvec = new vec3_t();//Bmemset(&pendingvec, 0, sizeof(vec3_t));  // compiler-happy
@@ -11880,11 +11882,13 @@ restart_grand:
             var /*int32_t */x:number, y:number, z:number, nexts:number, t:number, bot:number;
             var cfz = new Int32Array(2);
 
+            dlog(DEBUG_CANSEE, "cansee wal.point2: %i, x31: %i\n", wal.point2, x31);
+            if(wal.point2 == 1271 &&  x31 == -119)  debugger;
             bot = y21*x34-x21*y34; if (bot <= 0) continue;
             // XXX: OVERFLOW
-            t = y21*x31-x21*y31; if (/*(unsigned)*/t >= /*(unsigned)*/bot) continue;
+            t = y21*x31-x21*y31; if (unsigned(t) >= unsigned(bot)) continue;
             t = y31*x34-x31*y34;
-            if (/*(unsigned)*/t >= /*(unsigned)*/bot)
+            if (unsigned(t) >= unsigned(bot))
             {
 //#ifdef YAX_ENABLE
                 if (t >= bot)
@@ -11899,7 +11903,7 @@ restart_grand:
                                 continue;
                             frac = divscale24(z1-cfz1[cf], (z1-z2)-(cfz1[cf]-cfz2[cf]));
 
-                            if (/*(unsigned)*/frac >= (1<<24))
+                            if (unsigned(frac) >= (1<<24))
                                 continue;
 
                             x = x1 + mulscale24(x21,frac);
@@ -11959,7 +11963,7 @@ restart_grand:
                         frac = divscale24(z1-cfz1[cf], (z1-z)-(cfz1[cf]-cfz[cf]));
                         t = mulscale24(t, frac);
 
-                        if (/*(unsigned)*/t < (1<<24))
+                        if (unsigned(t) < (1<<24))
                         {
                             x = x1 + mulscale24(x21,t);
                             y = y1 + mulscale24(y21,t);
