@@ -30,8 +30,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 //#define ALT_IS_PRESSED ( KB_KeyPressed( sc_RightAlt ) || KB_KeyPressed( sc_LeftAlt ) )
 function SHIFTS_IS_PRESSED():number {return KB_KeyPressed( sc_RightShift ) || KB_KeyPressed( sc_LeftShift ) ;}
-function RANDOMSCRAP(s:spritetype,i:number):void {A_InsertSprite(s.sectnum,s.x+(krand()&255)-128,s.y+(krand()&255)-128,s.z-(8<<8)-(krand()&8191),
-    SCRAP6+(krand()&15),-8,48,48,krand()&2047,(krand()&63)+64,-512-(krand()&2047),i,5);}
+function RANDOMSCRAP(s:spritetype,i:number):void {
+    var krands = [krand(), krand(), krand(), krand(), krand(), krand(), krand()];
+    
+    A_InsertSprite(s.sectnum,s.x+(krands[6]&255)-128,s.y+(krands[5]&255)-128,s.z-(8<<8)-(krands[4]&8191),
+    SCRAP6+(krands[3]&15),-8,48,48,krands[2]&2047,(krands[1]&63)+64,-512-(krands[0]&2047),i,5);
+}
 
 function GTFLAGS(x: number) {return GametypeFlags[ud.coop] & x;}
 
