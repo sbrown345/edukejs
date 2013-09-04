@@ -11883,7 +11883,6 @@ restart_grand:
             var cfz = new Int32Array(2);
 
             dlog(DEBUG_CANSEE, "cansee wal.point2: %i, x31: %i\n", wal.point2, x31);
-            if(wal.point2 == 1271 &&  x31 == -119)  debugger;
             bot = y21*x34-x21*y34; if (bot <= 0) continue;
             // XXX: OVERFLOW
             t = y21*x31-x21*y31; if (unsigned(t) >= unsigned(bot)) continue;

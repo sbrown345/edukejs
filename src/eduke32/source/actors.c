@@ -5615,6 +5615,7 @@ static void MaybeTrainKillEnemies(int32_t i, int32_t numguts)
     }
 }
 
+static int G_MoveEffectors_count = 0;
 ACTOR_STATIC void G_MoveEffectors(void)   //STATNUM 3
 {
     walltype *wal;
@@ -5623,6 +5624,7 @@ ACTOR_STATIC void G_MoveEffectors(void)   //STATNUM 3
 
     fricxv = fricyv = 0;
 
+    dlog(DEBUG_MOVE_EFFECTORS, "G_MoveEffectors %i\n", G_MoveEffectors_count++);
     while (i >= 0)
     {
         const int32_t nexti = nextspritestat[i];

@@ -5809,6 +5809,7 @@ function MaybeTrainKillEnemies(/*int32_t */i:number, /*int32_t */numguts:number)
     }
 }
 
+var G_MoveEffectors_count = 0;
 function G_MoveEffectors():void   //STATNUM 3
 {
     var wal: walltype, walIdx:number;
@@ -5816,7 +5817,8 @@ function G_MoveEffectors():void   //STATNUM 3
     var /*int32_t */i = headspritestat[STAT_EFFECTOR];
 
     fricxv = fricyv = 0;
-
+    if(G_MoveEffectors_count==210)debugger;
+    dlog(DEBUG_MOVE_EFFECTORS, "G_MoveEffectors %i\n", G_MoveEffectors_count++);
     BOLT:
     while (i >= 0)
     {
@@ -7862,7 +7864,7 @@ function G_MoveEffectors():void   //STATNUM 3
 
         case SE_33_QUAKE_DEBRIS:
             if (g_earthquakeTime > 0 && (krand()&7) == 0)
-                RANDOMSCRAP;
+                RANDOMSCRAP(s, i);
             break;
 
         case SE_36_PROJ_SHOOTER:

@@ -2205,7 +2205,7 @@ function A_DamageObject(/*int32_t */i:number,/*int32_t */sn:number):void
 
         A_PlaySound(GLASS_HEAVYBREAK,i);
         s = sprite[i];
-        for (j=16; j>0; j--) RANDOMSCRAP;
+        for (j=16; j>0; j--) RANDOMSCRAP(s, i);
 
         break;
     case WATERFOUNTAIN__STATIC:
@@ -2442,7 +2442,7 @@ function A_DamageObject(/*int32_t */i:number,/*int32_t */sn:number):void
     case TRIPODCAMERA__STATIC:
         A_PlaySound(GLASS_HEAVYBREAK,i);
         s = sprite[i];
-        for (j=16; j>0; j--) RANDOMSCRAP;
+        for (j=16; j>0; j--) RANDOMSCRAP(s, i);
         A_DeleteSprite(i);
         break;
     case PLAYERONWATER__STATIC:
