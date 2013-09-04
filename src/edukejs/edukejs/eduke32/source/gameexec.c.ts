@@ -1179,14 +1179,20 @@ function VM_Execute(/*int32_t */loop: number): void
 {
    var tw = script[insptr];
 
+    dlog(DEBUG_VM_EXECUTE, "VM_Execute tw: %i\n", tw);
     // jump directly into the loop, saving us from the checks during the first iteration
     var skip_check = true;
 
-    while (loop)
+    while (loop || skip_check)
     {
         if(!skip_check) {
-            if (vm.g_flags & (VM_RETURN|VM_KILL|VM_NOEXECUTE))
+            dlog(DEBUG_VM_EXECUTE, "loop b4 skip_check tw: %i, instptr: %i\n", tw, script[insptr]);
+
+            if (vm.g_flags & (VM_RETURN|VM_KILL|VM_NOEXECUTE)) 
+            {
+                dlog(DEBUG_VM_EXECUTE, "VM_return flags: %i insptr: %i\n", tw, script[insptr]);
                 return;
+            }
 
             tw = script[insptr];
         }
@@ -1198,7 +1204,7 @@ function VM_Execute(/*int32_t */loop: number): void
         g_errorLineNum = tw>>12;
         g_tw = tw &= 0xFFF;
 
-        dlog(DEBUG_VM_EXECUTE, "tw: %i\n", tw);
+        dlog(DEBUG_VM_EXECUTE, "loop tw: %i, instptr: %i\n", tw, script[insptr]);
 
         switch (tw)
         {
