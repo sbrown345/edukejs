@@ -1557,7 +1557,9 @@ function /*int32_t */inittimer(/*int32_t */tickspersecond: number): number
     usertimercallback = NULL;
 
     //msperhitick = 1000.0 / (double)gethitickspersec();
-    tempHC(()=> { msperhitick = 1000; });    
+    tempHC(()=> { msperhitick = 1000; });
+
+    dlog(DEBUG_TIMER, "inittimer timerticspersec: %i, win_timerfreq: %i, timerlastsample: %i\n", timerticspersec, win_timerfreq, timerlastsample);
 
     return 0;
 }
@@ -1589,12 +1591,11 @@ function sampletimer(): void
     //i = Date.now();//QueryPerformanceCounter((LARGE_INTEGER *)&i);
     tempHC(()=> { i = sampletimerDebug += 10000; });
     n = int32(int32(i*timerticspersec / win_timerfreq) - timerlastsample);
-
     if (n <= 0) return;
 
     totalclock += n;
     timerlastsample += n;
-
+    dlog(DEBUG_TIMER, "sampletimer totalclock: %i \n", totalclock);
     if (usertimercallback) for (; n>0; n--) usertimercallback();
 }
 

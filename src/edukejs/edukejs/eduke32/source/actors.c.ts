@@ -106,10 +106,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 var /*int32_t */otherp:number;
 
+var G_SetInterpolation_count = 0;
 function G_SetInterpolation(/*int32_t * */posptr: AnimatePtr): number
 {
     var /*int32_t */i=g_numInterpolations-1;
-
+    if(G_SetInterpolation_count== 348)debugger
+    dlog(DEBUG_ANIMATIONS,  "G_SetInterpolation %i\n", G_SetInterpolation_count++);
     if (g_numInterpolations >= MAXINTERPOLATIONS)
         return 1;
 
@@ -123,7 +125,7 @@ function G_SetInterpolation(/*int32_t * */posptr: AnimatePtr): number
     curipos[g_numInterpolations] = posptr;
     oldipos[g_numInterpolations] = posptr.getValue();
     g_numInterpolations++;
-    dlog(DEBUG_ANIMATIONS,  "G_SetInterpolation g_numInterpolations: %i\n", g_numInterpolations);
+    dlog(DEBUG_ANIMATIONS,  "G_SetInterpolation g_numInterpolations: %i, *posptr: %i \n", g_numInterpolations, posptr.getValue());
     return 0;
 }
 
@@ -154,11 +156,13 @@ function G_DoInterpolations(/*int32_t*/ smoothratio: number): void       //Stick
     for (; i>=0; i--)
     {
         bakipos[i] = curipos[i].getValue();
+        dlog(DEBUG_ANIMATIONS,  "G_DoInterpolations i: %i. *curipos[i]: %i\n", i, curipos[i].getValue());
         odelta = ndelta;
         ndelta = curipos[i].getValue()-oldipos[i];
+        dlog(DEBUG_ANIMATIONS,  "odelta: %i ndelta: %i, smoothratio: %i\n", odelta, ndelta, smoothratio);
         if (odelta != ndelta) j = mulscale16(ndelta,smoothratio);
         curipos[i].setValue(oldipos[i]+j);
-        dlog(DEBUG_ANIMATIONS,  "G_DoInterpolations oldipos[i]+j: %i\n", oldipos[i]+j);
+        dlog(DEBUG_ANIMATIONS,  "G_DoInterpolations oldipos[i]+j: %i, j: %i\n", oldipos[i]+j, j);
     }
 }
 
@@ -972,7 +976,6 @@ var G_MoveZombieActors_count = 0;
 function G_MoveZombieActors(): void
 {
     var/*int32_t */i = headspritestat[STAT_ZOMBIEACTOR], j:number;
-    if(G_MoveZombieActors_count== 25)debugger//bug shown in log involving A_CheckEnemySprite 
     dlog(DEBUG_MOVE_ZOMBIE_ACTORS, "G_MoveZombieActors %i\n,", G_MoveZombieActors_count++);
     while (i >= 0)
     {

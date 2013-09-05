@@ -4468,6 +4468,7 @@ function G_DrawRooms(/*int32_t*/ snum: number, /*int32_t */smoothratio: number):
         setaspect_new();
     }
 
+	dlog(DEBUG_ANIMATIONS, "g_player[snum].ps.on_crane: %i\n", g_player[snum].ps.on_crane);
     if (ud.pause_on || g_player[snum].ps.on_crane > -1)
         smoothratio = 65536;
     else
@@ -4477,6 +4478,7 @@ function G_DrawRooms(/*int32_t*/ snum: number, /*int32_t */smoothratio: number):
 
     ud.camerasect = p.cursectnum;
 
+	dlog(DEBUG_ANIMATIONS, "smoothratio: %i\n", smoothratio);
     G_DoInterpolations(smoothratio);
     G_AnimateCamSprite();
        
@@ -12063,7 +12065,7 @@ var tempWhile = 0;
         dlog(DEBUG_PLAYER_POS, "p pos x:%i y:%i z:%i, vel x:%i y:%i, z:%i \n", g_player[0].ps.pos.x, g_player[0].ps.pos.y, g_player[0].ps.pos.z, g_player[0].ps.vel.x, g_player[0].ps.vel.y, g_player[0].ps.vel.z);
 
         if(1)
-        if(tempWhile++ < 10)
+        if(tempWhile++ < 100)
             requestAnimationFrame(main_loop); // todo: async code for stuff like logo animations
         else 
             dlogFlush();

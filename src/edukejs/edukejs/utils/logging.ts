@@ -28,6 +28,7 @@ var DEBUG_CANSEE = true;
 var DEBUG_MOVE_EFFECTORS = true;
 var DEBUG_MOVE_STANDABLES = true;
 var DEBUG_ANIMATIONS = true;
+var DEBUG_TIMER = true;
 
 var dlog = function (log: boolean, format: string, ...args: any[]) {
     if(!log || SKIP_ALL_LOGGING) return;

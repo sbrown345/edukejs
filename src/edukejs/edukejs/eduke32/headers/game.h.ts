@@ -465,7 +465,7 @@ function gametextpal(x: number,y: number,t: string,s: number,p: number): number 
 //#define gametextpalbits(x,y,t,s,p,dabits) G_PrintGameText(0,STARTALPHANUM, x,y,t,s,p,dabits,0, 0, xdim-1, ydim-1, 65536)
 function A_CheckSpriteFlags(iActor:number, iType:number):number {return((g_tile[sprite[iActor].picnum].flags^actor[iActor].flags) & iType) != 0 ? 1:0;}
 //// (unsigned)iPicnum check: AMC TC Rusty Nails, bayonet MG alt. fire, iPicnum == -1 (via aplWeaponShoots)
-function A_CheckSpriteTileFlags(iPicnum: number, iType: number): number {return (iPicnum < MAXTILES) && (g_tile[iPicnum].flags & iType) != 0 ? 1 : 0;}
+function A_CheckSpriteTileFlags(iPicnum: number, iType: number): number {return ((iPicnum < MAXTILES) && (g_tile[iPicnum].flags & iType) != 0) ? 1 : 0;}
 //#define G_EnterText(x, y, t, dalen, c) _EnterText(0,x,y,t,dalen,c)
 //#define Net_EnterText(x, y, t, dalen, c) _EnterText(1,x,y,t,dalen,c)
 function S_StopSound(num:number):void {S_StopEnvSound(num, -1);}
@@ -480,7 +480,8 @@ function G_HandleAsync()
 
 function /* int32_t */calc_smoothratio(/*int32_t */totalclk: number, /*int32_t */ototalclk: number): number
 {
-    return clamp((totalclk-ototalclk)*(65536/TICSPERFRAME), 0, 65536);
+	dlog(DEBUG_ANIMATIONS, "totalclk: %i, ototalclk: %i \n", totalclk, ototalclk);
+    return clamp(Math.imul((totalclk-ototalclk), (65536/TICSPERFRAME)), 0, 65536);
 }
 
 //// sector effector lotags

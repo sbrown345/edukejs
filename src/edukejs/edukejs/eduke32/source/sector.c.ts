@@ -440,7 +440,7 @@ function /*int32_t */GetAnimationGoal(/*const int32_t **/animptr: AnimatePtr):nu
     var /*int32_t */i = g_animateCount-1;
 
     for (; i>=0; i--)
-        if (animptr == animateptr[i])
+        if (animptr.equals(animateptr[i]))
             return i;
     return -1;
 }

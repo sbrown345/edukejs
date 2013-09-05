@@ -14064,8 +14064,8 @@ function/*int32_t*/ krand(): number
 //    return ((uint32_t)randomseed)>>16;
 }
 
-function getKrands(count) {
-    var krands = [];
+function getKrands(count:number):number[] {
+    var krands = new Array<number>(count);
     for (var i = 0; i < count; i++) {
         krands[i] = krand();
     }
