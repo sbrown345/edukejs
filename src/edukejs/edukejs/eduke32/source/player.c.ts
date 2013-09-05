@@ -4712,7 +4712,7 @@ function P_ProcessInput(/*int32_t */snum:number): void
     if (p.on_ground)
         p.bobcounter += sprite[p.i].xvel>>1;
 
-    if (ud.noclip == 0 && (/*(uint16_t)*/p.cursectnum >= MAXSECTORS || sector[p.cursectnum].floorpicnum == MIRROR))
+    if (ud.noclip == 0 && (uint16(p.cursectnum) >= MAXSECTORS || sector[p.cursectnum].floorpicnum == MIRROR))
     {
         p.pos.x = p.opos.x;
         p.pos.y = p.opos.y;

@@ -36,6 +36,12 @@ var int16 = function (v: number): number {
     return int16ConvertArray[0];
 };
 
+var uint16ConvertArray = new Uint16Array(1);
+var uint16 = function (v: number): number {
+   uint16ConvertArray[0] = v;
+    return uint16ConvertArray[0];
+};
+
 var float32ConvertArray = new Float32Array(1);
 var float32 = function (v: number): number {
    float32ConvertArray[0] = v;
