@@ -38,10 +38,12 @@ extern int32_t g_noEnemies;
 
 int32_t otherp;
 
+static int32_t G_SetInterpolation_count = 0;
 int32_t G_SetInterpolation(int32_t *posptr)
 {
     int32_t i=g_numInterpolations-1;
 
+    dlog(DEBUG_ANIMATIONS,  "G_SetInterpolation %i\n", G_SetInterpolation_count++);
     if (g_numInterpolations >= MAXINTERPOLATIONS)
         return 1;
 
