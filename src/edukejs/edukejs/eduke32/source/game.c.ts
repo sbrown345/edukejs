@@ -12060,10 +12060,10 @@ var tempWhile = 0;
         if (g_player[myconnectindex].ps.gm&MODE_DEMO)
             todoThrow("goto MAIN_LOOP_RESTART;");
 
-        dlog(DEBUG_PLAYER_POS, "p pos x:%i y:%i z%i, vel x:%i y:%i, z%i \n", g_player[0].ps.pos.x, g_player[0].ps.pos.y, g_player[0].ps.pos.z, g_player[0].ps.vel.x, g_player[0].ps.vel.y, g_player[0].ps.vel.z);
+        dlog(DEBUG_PLAYER_POS, "p pos x:%i y:%i z:%i, vel x:%i y:%i, z:%i \n", g_player[0].ps.pos.x, g_player[0].ps.pos.y, g_player[0].ps.pos.z, g_player[0].ps.vel.x, g_player[0].ps.vel.y, g_player[0].ps.vel.z);
 
         if(1)
-        if(tempWhile++ < 300)
+        if(tempWhile++ < 10)
             requestAnimationFrame(main_loop); // todo: async code for stuff like logo animations
         else 
             dlogFlush();
@@ -12215,9 +12215,9 @@ function /*int32_t */G_DoMoveThings(): number
 
         if (ud.pause_on == 0)
         {
-            dlog(DEBUG_PLAYER_POS, "b4 process input p pos x:%i y:%i z%i, vel x:%i y:%i, z%i \n", g_player[0].ps.pos.x, g_player[0].ps.pos.y, g_player[0].ps.pos.z, g_player[0].ps.vel.x, g_player[0].ps.vel.y, g_player[0].ps.vel.z);
+            dlog(DEBUG_PLAYER_POS, "b4 process input p pos x:%i y:%i z:%i, vel x:%i y:%i, z:%i \n", g_player[0].ps.pos.x, g_player[0].ps.pos.y, g_player[0].ps.pos.z, g_player[0].ps.vel.x, g_player[0].ps.vel.y, g_player[0].ps.vel.z);
             P_ProcessInput(i);
-            dlog(DEBUG_PLAYER_POS, "after process input p pos x:%i y:%i z%i, vel x:%i y:%i, z%i \n", g_player[0].ps.pos.x, g_player[0].ps.pos.y, g_player[0].ps.pos.z, g_player[0].ps.vel.x, g_player[0].ps.vel.y, g_player[0].ps.vel.z);
+            dlog(DEBUG_PLAYER_POS, "after process input p pos x:%i y:%i z:%i, vel x:%i y:%i, z:%i \n", g_player[0].ps.pos.x, g_player[0].ps.pos.y, g_player[0].ps.pos.z, g_player[0].ps.vel.x, g_player[0].ps.vel.y, g_player[0].ps.vel.z);
             P_CheckSectors(i);
         }
     }

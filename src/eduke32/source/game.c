@@ -11925,12 +11925,12 @@ skipframe:
         if (g_player[myconnectindex].ps->gm&MODE_DEMO)
             goto MAIN_LOOP_RESTART;
 
-        dlog(DEBUG_PLAYER_POS, "p pos x:%i y:%i z%i, vel x:%i y:%i, z%i \n", g_player[0].ps->pos.x, g_player[0].ps->pos.y, g_player[0].ps->pos.z, g_player[0].ps->vel.x, g_player[0].ps->vel.y, g_player[0].ps->vel.z);
+        dlog(DEBUG_PLAYER_POS, "p pos x:%i y:%i z:%i, vel x:%i y:%i, z:%i \n", g_player[0].ps->pos.x, g_player[0].ps->pos.y, g_player[0].ps->pos.z, g_player[0].ps->vel.x, g_player[0].ps->vel.y, g_player[0].ps->vel.z);
     }
 #ifdef DEBUG_TODO
 	while (1);
 #else
-    while (tempWhile++ < 300/*26*/);
+    while (tempWhile++ < 10/*26*/);
 	exit(0);//temp
 #endif
 
@@ -12074,9 +12074,9 @@ int32_t G_DoMoveThings(void)
 
         if (ud.pause_on == 0)
         { 
-            dlog(DEBUG_PLAYER_POS, "b4 process input p pos x:%i y:%i z%i, vel x:%i y:%i, z%i \n", g_player[0].ps->pos.x, g_player[0].ps->pos.y, g_player[0].ps->pos.z, g_player[0].ps->vel.x, g_player[0].ps->vel.y, g_player[0].ps->vel.z);
+            dlog(DEBUG_PLAYER_POS, "b4 process input p pos x:%i y:%i z:%i, vel x:%i y:%i, z:%i \n", g_player[0].ps->pos.x, g_player[0].ps->pos.y, g_player[0].ps->pos.z, g_player[0].ps->vel.x, g_player[0].ps->vel.y, g_player[0].ps->vel.z);
              P_ProcessInput(i);
-            dlog(DEBUG_PLAYER_POS, "after process input p pos x:%i y:%i z%i, vel x:%i y:%i, z%i \n", g_player[0].ps->pos.x, g_player[0].ps->pos.y, g_player[0].ps->pos.z, g_player[0].ps->vel.x, g_player[0].ps->vel.y, g_player[0].ps->vel.z);
+            dlog(DEBUG_PLAYER_POS, "after process input p pos x:%i y:%i z:%i, vel x:%i y:%i, z:%i \n", g_player[0].ps->pos.x, g_player[0].ps->pos.y, g_player[0].ps->pos.z, g_player[0].ps->vel.x, g_player[0].ps->vel.y, g_player[0].ps->vel.z);
             P_CheckSectors(i);
         }
     }

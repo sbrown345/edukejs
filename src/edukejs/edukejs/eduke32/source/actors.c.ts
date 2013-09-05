@@ -114,12 +114,16 @@ function G_SetInterpolation(/*int32_t * */posptr: AnimatePtr): number
         return 1;
 
     for (; i>=0; i--)
-        if (curipos[i].equals(posptr))
+        if (curipos[i].equals(posptr)) 
+        {
+            dlog(DEBUG_ANIMATIONS,  "G_SetInterpolation return\n");
             return 0;
+        }
 
     curipos[g_numInterpolations] = posptr;
     oldipos[g_numInterpolations] = posptr.getValue();
     g_numInterpolations++;
+    dlog(DEBUG_ANIMATIONS,  "G_SetInterpolation g_numInterpolations: %i\n", g_numInterpolations);
     return 0;
 }
 
@@ -128,9 +132,10 @@ function G_StopInterpolation(/*int32_t **/posptr: AnimatePtr):void
     var/*int32_t */i=g_numInterpolations-1;
 
     for (; i>=startofdynamicinterpolations; i--)
-        if (curipos[i] == posptr)
+        if (curipos[i].equals(posptr))
         {
             g_numInterpolations--;
+            dlog(DEBUG_ANIMATIONS,  "G_StopInterpolation g_numInterpolations: %i\n", g_numInterpolations);
             oldipos[i] = oldipos[g_numInterpolations];
             bakipos[i] = bakipos[g_numInterpolations];
             curipos[i] = curipos[g_numInterpolations];
@@ -153,6 +158,7 @@ function G_DoInterpolations(/*int32_t*/ smoothratio: number): void       //Stick
         ndelta = curipos[i].getValue()-oldipos[i];
         if (odelta != ndelta) j = mulscale16(ndelta,smoothratio);
         curipos[i].setValue(oldipos[i]+j);
+        dlog(DEBUG_ANIMATIONS,  "G_DoInterpolations oldipos[i]+j: %i\n", oldipos[i]+j);
     }
 }
 
@@ -962,10 +968,12 @@ function G_AddGameLight(/*int32_t*/ radius:number, /*int32_t */srcsprite:number,
 }
 
 // sleeping monsters, etc
+var G_MoveZombieActors_count = 0;
 function G_MoveZombieActors(): void
 {
     var/*int32_t */i = headspritestat[STAT_ZOMBIEACTOR], j:number;
-
+    if(G_MoveZombieActors_count== 25)debugger//bug shown in log involving A_CheckEnemySprite 
+    dlog(DEBUG_MOVE_ZOMBIE_ACTORS, "G_MoveZombieActors %i\n,", G_MoveZombieActors_count++);
     while (i >= 0)
     {
         var /*const int32_t */nexti = nextspritestat[i];
@@ -979,6 +987,7 @@ function G_MoveZombieActors(): void
         var /*int16_t*/ ssect = s.sectnum;
         var /*int16_t*/ psect = s.sectnum;
 
+        dlog(DEBUG_MOVE_ZOMBIE_ACTORS, "i: %i, x: %i, actor[i].timetosleep: %i, extra: %i\n",i,x,actor[i].timetosleep,sprite[g_player[p].ps.i].extra);
         if (sprite[g_player[p].ps.i].extra > 0)
         {
             if (x < 30000)
@@ -1665,6 +1674,7 @@ function G_MoveStandables():void
         var s = sprite[i];
         var /*const int32_t */sect = s.sectnum;
 
+        dlog(DEBUG_MOVE_STANDABLES, "i: %i, sect: %i, picnum: %i\n", i,sect,sprite[i].picnum);
         if (sect < 0)
             {A_DeleteSprite(i); {i = nexti;continue BOLT;}}
 
@@ -1798,6 +1808,7 @@ function G_MoveStandables():void
                     if ((sector[sect].floorz-s.z) > 8192)
                         s.picnum++;
 
+                dlog(DEBUG_MOVE_STANDABLES, "s.z a: %i\n", s.z);
                 if (s.z < msx[t[4]+2])
                 {
                     t[0]++;
@@ -1805,6 +1816,7 @@ function G_MoveStandables():void
                 }
                 else
                     s.z -= (1024+512);
+                dlog(DEBUG_MOVE_STANDABLES, "s.z b: %i\n", s.z);
             }
             else if (t[0]==6)
             {
@@ -2043,6 +2055,7 @@ function G_MoveStandables():void
                         s.x += sintable[(actor[i].t_data[5]+512)&2047]>>4;
                         s.y += sintable[(actor[i].t_data[5])&2047]>>4;
 
+                        dlog(DEBUG_MOVE_STANDABLES, "x: %i, s.x: %i, s.y: %i, j: %i\n", x, s.x, s.y, j);
                         if (x < 1024)
                         {
                             sprite[j].xrepeat = x>>5;
@@ -2228,7 +2241,7 @@ function G_MoveStandables():void
                     {
                         s.lotag -= 3;
                         if (int16(s.lotag) <= 0)
-                            s.lotag = /*(uint16_t)*/(-99);
+                            s.lotag = uint16(-99);
                     }
                     else
                         s.shade = -33;
@@ -2359,7 +2372,8 @@ function DETONATE() {
             switchpicnum = SIDEBOLT1;
         else if (switchpicnum > BOLT1 && switchpicnum <= BOLT1+3)
             switchpicnum = BOLT1;
-
+        
+        dlog(DEBUG_MOVE_STANDABLES, "switchpicnum: %i\n", switchpicnum);
         switch (DYNAMICTILEMAP(switchpicnum))
         {
         case VIEWSCREEN__STATIC:
@@ -8590,6 +8604,9 @@ function G_MoveWorld(): void
     }
     while (k--);
 
+    logHeadspritestat("G_DoSectorAnimations");
     G_DoSectorAnimations();
+    logHeadspritestat("G_MoveFX");
     G_MoveFX();              //ST 11
+    logHeadspritestat("G_MoveFX end");
 }

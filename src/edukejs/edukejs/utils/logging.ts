@@ -15,8 +15,8 @@ var DEBUG_POLYMOST_DRAWALLS_DOMOSTS_DETAIL = false;
 var DEBUG_PALETTE = false;
 var DEBUG_SCRIPT_CHANGE = false;
 var DEBUG_LOAD_TILE_ART = false;
-var DEBUG_PLAYER_POS = false;
-var DEBUG_GETZRANGE = false;
+var DEBUG_PLAYER_POS = true;
+var DEBUG_GETZRANGE = true;
 var DEBUG_VM_EXECUTE = true;
 var DEBUG_headspritestat = true;
 var DEBUG_SPRITESTAT_CHANGE = true;
@@ -26,6 +26,8 @@ var DEBUG_VM_CONDITIONAL = true;
 var DEBUG_MOVE_ZOMBIE_ACTORS = true;
 var DEBUG_CANSEE = true;
 var DEBUG_MOVE_EFFECTORS = true;
+var DEBUG_MOVE_STANDABLES = true;
+var DEBUG_ANIMATIONS = true;
 
 var dlog = function (log: boolean, format: string, ...args: any[]) {
     if(!log || SKIP_ALL_LOGGING) return;

@@ -1405,8 +1405,8 @@ static inline void pop_nofog(void)
 #define DEBUG_POLYMOST_DRAWALLS_DOMOSTS_DETAIL 0
 #define DEBUG_PALETTE 0
 #define DEBUG_LOAD_TILE_ART 0
-#define DEBUG_PLAYER_POS 0
-#define DEBUG_GETZRANGE 0
+#define DEBUG_PLAYER_POS 1
+#define DEBUG_GETZRANGE 1
 #define DEBUG_VM_EXECUTE 1
 #define DEBUG_headspritestat 1
 #define DEBUG_SPRITESTAT_CHANGE 1
@@ -1415,5 +1415,7 @@ static inline void pop_nofog(void)
 #define DEBUG_MOVE_ZOMBIE_ACTORS 1
 #define DEBUG_CANSEE 1
 #define DEBUG_MOVE_EFFECTORS 1
+#define DEBUG_MOVE_STANDABLES 1
+#define DEBUG_ANIMATIONS 1
 void dlog(int32_t log, char *format, ...);
 void logHeadspritestat(char* where);

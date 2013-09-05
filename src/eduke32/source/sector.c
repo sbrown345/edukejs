@@ -232,10 +232,12 @@ int32_t __fastcall A_FindPlayer(const spritetype *s, int32_t *d)
     }
 }
 
+static int G_DoSectorAnimations_count = 0;
 void G_DoSectorAnimations(void)
 {
     int32_t i, j, a, p, v, dasect;
 
+    dlog(DEBUG_ANIMATIONS,  "G_DoSectorAnimations %i\n", G_DoSectorAnimations_count++);
     for (i=g_animateCount-1; i>=0; i--)
     {
         a = *animateptr[i];
@@ -252,16 +254,23 @@ void G_DoSectorAnimations(void)
             if (animateptr[i] == &sector[animatesect[i]].floorz)
                 for (j=headspritesect[dasect]; j>=0; j=nextspritesect[j])
                     if (sprite[j].statnum != STAT_EFFECTOR)
+					{
                         actor[j].bpos.z = sprite[j].z;
+                        dlog(DEBUG_ANIMATIONS,  "actor[j].bpos.z: %i\n", actor[j].bpos.z);
+					}
 
             g_animateCount--;
+            dlog(DEBUG_ANIMATIONS,  "g_animateCount %i\n", g_animateCount);
             animateptr[i] = animateptr[g_animateCount];
             animategoal[i] = animategoal[g_animateCount];
             animatevel[i] = animatevel[g_animateCount];
             animatesect[i] = animatesect[g_animateCount];
             if (sector[animatesect[i]].lotag == ST_18_ELEVATOR_DOWN || sector[animatesect[i]].lotag == ST_19_ELEVATOR_UP)
                 if (animateptr[i] == &sector[animatesect[i]].ceilingz)
+				{
+                    dlog(DEBUG_ANIMATIONS,  "continue\n", i);
                     continue;
+				}
 
             if ((sector[dasect].lotag&0xff) != ST_22_SPLITTING_DOOR)
                 A_CallSound(dasect,-1);
@@ -278,8 +287,11 @@ void G_DoSectorAnimations(void)
             a = max(a+v,animategoal[i]);
         }
 
+        dlog(DEBUG_ANIMATIONS,  "a: %i\n", a);
+
         if (animateptr[i] == &sector[animatesect[i]].floorz)
         {
+            dlog(DEBUG_ANIMATIONS,  "animateptr[i] == sector[animatesect[i]].floorz, i: %i\n", i);
             for (TRAVERSE_CONNECT(p))
                 if (g_player[p].ps->cursectnum == dasect)
                     if ((sector[dasect].floorz-g_player[p].ps->pos.z) < (64<<8))
@@ -289,6 +301,7 @@ void G_DoSectorAnimations(void)
                             g_player[p].ps->vel.z = 0;
                             if (p == myconnectindex)
                             {
+                                dlog(DEBUG_ANIMATIONS,  "my.z: %i\n", i);
                                 my.z += v;
                                 myvel.z = 0;
                             }
@@ -300,6 +313,7 @@ void G_DoSectorAnimations(void)
                     actor[j].bpos.z = sprite[j].z;
                     sprite[j].z += v;
                     actor[j].floorz = sector[dasect].floorz+v;
+                    dlog(DEBUG_ANIMATIONS,  "actor[j].bpos.z: %i, sprite[j].z: %i, actor[j].floorz: %i\n", actor[j].bpos.z, sprite[j].z, actor[j].floorz);
                 }
         }
 
