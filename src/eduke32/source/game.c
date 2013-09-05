@@ -3825,7 +3825,7 @@ void G_DisplayRest(int32_t smoothratio)
         if (ud.show_help == 0 && g_showShareware > 0 && (g_player[myconnectindex].ps->gm&MODE_MENU) == 0)
             rotatesprite_fs((320-50)<<16,9<<16,65536L,0,BETAVERSION,0,0,2+8+16+128);
     }
-
+#ifdef TODO_DEBUG
     if (!Demo_IsProfiling())
     {
         if (g_player[myconnectindex].ps->gm&MODE_TYPE)
@@ -3833,7 +3833,7 @@ void G_DisplayRest(int32_t smoothratio)
         else
             M_DisplayMenus();
     }
-
+#endif
     {
         static int32_t applied = 0;
 
@@ -4364,7 +4364,7 @@ void G_DrawRooms(int32_t snum, int32_t smoothratio)
         newaspect_enable = 1;
         setaspect_new();
     }
-
+	dlog(DEBUG_ANIMATIONS, "g_player[snum].ps.on_crane: %i\n", g_player[snum].ps->on_crane);
     if (ud.pause_on || g_player[snum].ps->on_crane > -1)
         smoothratio = 65536;
     else
@@ -4374,6 +4374,7 @@ void G_DrawRooms(int32_t snum, int32_t smoothratio)
 
     CAMERA(sect) = p->cursectnum;
 
+	dlog(DEBUG_ANIMATIONS, "smoothratio: %i\n", smoothratio);
     G_DoInterpolations(smoothratio);
     G_AnimateCamSprite();
 
@@ -11930,7 +11931,7 @@ skipframe:
 #ifdef DEBUG_TODO
 	while (1);
 #else
-    while (tempWhile++ < 10/*26*/);
+    while (tempWhile++ < 100/*26*/);
 	exit(0);//temp
 #endif
 

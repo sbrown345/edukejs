@@ -419,6 +419,7 @@ static inline void G_HandleAsync(void)
 
 static inline int32_t calc_smoothratio(int32_t totalclk, int32_t ototalclk)
 {
+	dlog(DEBUG_ANIMATIONS, "totalclk: %i, ototalclk: %i \n", totalclk, ototalclk);
     return clamp((totalclk-ototalclk)*(65536/TICSPERFRAME), 0, 65536);
 }
 

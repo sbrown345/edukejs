@@ -57,7 +57,7 @@ int32_t G_SetInterpolation(int32_t *posptr)
     curipos[g_numInterpolations] = posptr;
     oldipos[g_numInterpolations] = *posptr;
     g_numInterpolations++;
-    dlog(DEBUG_ANIMATIONS,  "G_SetInterpolation g_numInterpolations: %i\n", g_numInterpolations);
+    dlog(DEBUG_ANIMATIONS,  "G_SetInterpolation g_numInterpolations: %i, *posptr: %i \n", g_numInterpolations, *posptr);
     return 0;
 }
 
@@ -87,11 +87,13 @@ void G_DoInterpolations(int32_t smoothratio)       //Stick at beginning of draws
     for (; i>=0; i--)
     {
         bakipos[i] = *curipos[i];
+        dlog(DEBUG_ANIMATIONS,  "G_DoInterpolations i: %i. *curipos[i]: %i\n", i, *curipos[i]);
         odelta = ndelta;
         ndelta = (*curipos[i])-oldipos[i];
+        dlog(DEBUG_ANIMATIONS,  "odelta: %i ndelta: %i, smoothratio: %i\n", odelta, ndelta, smoothratio);
         if (odelta != ndelta) j = mulscale16(ndelta,smoothratio);
         *curipos[i] = oldipos[i]+j;
-        dlog(DEBUG_ANIMATIONS,  "G_DoInterpolations oldipos[i]+j: %i\n", oldipos[i]+j);
+        dlog(DEBUG_ANIMATIONS,  "G_DoInterpolations oldipos[i]+j: %i, j: %i\n", oldipos[i]+j, j);
     }
 }
 

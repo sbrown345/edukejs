@@ -1484,6 +1484,7 @@ int32_t inittimer(int32_t tickspersecond)
 #else
 	msperhitick = 1000;
 #endif
+    dlog(DEBUG_TIMER, "inittimer timerticspersec: %i, win_timerfreq: %i, timerlastsample: %i\n", timerticspersec, win_timerfreq, timerlastsample);
 
     return 0;
 }
@@ -1517,12 +1518,13 @@ void sampletimer(void)
 #else
 	i = sampletimerDebug += 10000;
 #endif
+	
     n = (int32_t)((i*timerticspersec / win_timerfreq) - timerlastsample);
     if (n <= 0) return;
 
     totalclock += n;
     timerlastsample += n;
-
+    dlog(DEBUG_TIMER, "sampletimer totalclock: %i \n", totalclock);
     if (usertimercallback) for (; n>0; n--) usertimercallback();
 }
 
