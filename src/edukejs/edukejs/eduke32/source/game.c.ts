@@ -10690,46 +10690,46 @@ function G_LoadExtraPalettes(): void
     kclose(fp);
 }
 
-//#define SETBGFLAG(Tilenum) g_tile[Tilenum].flags |= SPRITE_HARDCODED_BADGUY
+function SETBGFLAG(Tilenum:number):void {g_tile[Tilenum].flags |= SPRITE_HARDCODED_BADGUY;}
 
-//// Has to be after setting the dynamic names (e.g. SHARK).
-//static void A_InitEnemyFlags(void)
-//{
-//    int32_t i;
+// Has to be after setting the dynamic names (e.g. SHARK).
+function A_InitEnemyFlags():void
+{
+    var/*int32_t */i:number;
 
-//    for (i=GREENSLIME; i<=GREENSLIME+7; i++)
-//        SETBGFLAG(i);
+    for (i=GREENSLIME; i<=GREENSLIME+7; i++)
+        SETBGFLAG(i);
 
-//    SETBGFLAG(SHARK);
-//    SETBGFLAG(RECON);
-//    SETBGFLAG(DRONE);
-//    SETBGFLAG(LIZTROOPONTOILET);
-//    SETBGFLAG(LIZTROOPJUSTSIT);
-//    SETBGFLAG(LIZTROOPSTAYPUT);
-//    SETBGFLAG(LIZTROOPSHOOT);
-//    SETBGFLAG(LIZTROOPJETPACK);
-//    SETBGFLAG(LIZTROOPDUCKING);
-//    SETBGFLAG(LIZTROOPRUNNING);
-//    SETBGFLAG(LIZTROOP);
-//    SETBGFLAG(OCTABRAIN);
-//    SETBGFLAG(COMMANDER);
-//    SETBGFLAG(COMMANDERSTAYPUT);
-//    SETBGFLAG(PIGCOP);
-//    SETBGFLAG(EGG);
-//    SETBGFLAG(PIGCOPSTAYPUT);
-//    SETBGFLAG(PIGCOPDIVE);
-//    SETBGFLAG(LIZMAN);
-//    SETBGFLAG(LIZMANSPITTING);
-//    SETBGFLAG(LIZMANFEEDING);
-//    SETBGFLAG(LIZMANJUMP);
-//    SETBGFLAG(ORGANTIC);
-//    SETBGFLAG(BOSS1);
-//    SETBGFLAG(BOSS2);
-//    SETBGFLAG(BOSS3);
-//    SETBGFLAG(BOSS4);
-//    SETBGFLAG(RAT);
-//    SETBGFLAG(ROTATEGUN);
-//}
+    SETBGFLAG(SHARK);
+    SETBGFLAG(RECON);
+    SETBGFLAG(DRONE);
+    SETBGFLAG(LIZTROOPONTOILET);
+    SETBGFLAG(LIZTROOPJUSTSIT);
+    SETBGFLAG(LIZTROOPSTAYPUT);
+    SETBGFLAG(LIZTROOPSHOOT);
+    SETBGFLAG(LIZTROOPJETPACK);
+    SETBGFLAG(LIZTROOPDUCKING);
+    SETBGFLAG(LIZTROOPRUNNING);
+    SETBGFLAG(LIZTROOP);
+    SETBGFLAG(OCTABRAIN);
+    SETBGFLAG(COMMANDER);
+    SETBGFLAG(COMMANDERSTAYPUT);
+    SETBGFLAG(PIGCOP);
+    SETBGFLAG(EGG);
+    SETBGFLAG(PIGCOPSTAYPUT);
+    SETBGFLAG(PIGCOPDIVE);
+    SETBGFLAG(LIZMAN);
+    SETBGFLAG(LIZMANSPITTING);
+    SETBGFLAG(LIZMANFEEDING);
+    SETBGFLAG(LIZMANJUMP);
+    SETBGFLAG(ORGANTIC);
+    SETBGFLAG(BOSS1);
+    SETBGFLAG(BOSS2);
+    SETBGFLAG(BOSS3);
+    SETBGFLAG(BOSS4);
+    SETBGFLAG(RAT);
+    SETBGFLAG(ROTATEGUN);
+}
 //#undef SETBGFLAG
 
 //extern int32_t startwin_run(void);
@@ -10783,12 +10783,12 @@ function G_LoadExtraPalettes(): void
 //}
 //#endif
 
-//// Throw in everything here that needs to be called after a Lua game state
-//// recreation (or on initial startup in a non-Lunatic build.)
-//void G_PostCreateGameState(void)
-//{
-//    A_InitEnemyFlags();
-//}
+// Throw in everything here that needs to be called after a Lua game state
+// recreation (or on initial startup in a non-Lunatic build.)
+function G_PostCreateGameState():void
+{
+    A_InitEnemyFlags();
+}
 
 function G_Startup() : void
 {
@@ -10822,8 +10822,8 @@ function G_Startup() : void
     todo("G_InitDynamicSounds();");
     
     // These depend on having the dynamic tile and/or sound mappings set up:
-    todo("Gv_FinalizeWeaponDefaults();");
-    todo("G_PostCreateGameState();");
+    Gv_FinalizeWeaponDefaults();
+    G_PostCreateGameState();
 
     if (g_netServer || ud.multimode > 1) todo("G_CheckGametype();");
 

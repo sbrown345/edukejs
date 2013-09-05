@@ -989,7 +989,7 @@ function G_MoveZombieActors(): void
 
         var /*int16_t*/ ssect = s.sectnum;
         var /*int16_t*/ psect = s.sectnum;
-
+        
         dlog(DEBUG_MOVE_ZOMBIE_ACTORS, "i: %i, x: %i, actor[i].timetosleep: %i, extra: %i\n",i,x,actor[i].timetosleep,sprite[g_player[p].ps.i].extra);
         if (sprite[g_player[p].ps.i].extra > 0)
         {

@@ -10699,8 +10699,9 @@ static void G_Startup(void)
 #endif
 
     G_InitDynamicTiles();
+#ifdef DEBUG_TODO
     G_InitDynamicSounds();
-
+#endif
     // These depend on having the dynamic tile and/or sound mappings set up:
     Gv_FinalizeWeaponDefaults();
     G_PostCreateGameState();

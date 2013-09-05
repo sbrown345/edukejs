@@ -1233,44 +1233,44 @@ var  weapondefaults: weapondata_t[] /*[MAX_WEAPONS] */= [
     )
 ];
 
-//// KEEPINSYNC with what is contained above
-//// XXX: ugly
-//static int32_t G_StaticToDynamicTile(int32_t tile)
-//{
-//    switch (tile)
-//    {
-//    case CHAINGUN__STATIC: return CHAINGUN;
-//    case FREEZEBLAST__STATIC: return FREEZEBLAST;
-//    case GROWSPARK__STATIC: return GROWSPARK;
-//    case HANDHOLDINGLASER__STATIC: return HANDHOLDINGLASER;
-//    case HEAVYHBOMB__STATIC: return HEAVYHBOMB;
-//    case KNEE__STATIC: return KNEE;
-//    case RPG__STATIC: return RPG;
-//    case SHELL__STATIC: return SHELL;
-//    case SHOTGUNSHELL__STATIC: return SHOTGUNSHELL;
-//    case SHOTGUN__STATIC: return SHOTGUN;
-//    case SHOTSPARK1__STATIC: return SHOTSPARK1;
-//    case SHRINKER__STATIC: return SHRINKER;
-//    default: return tile;
-//    }
-//}
-//static int32_t G_StaticToDynamicSound(int32_t sound)
-//{
-//    switch (sound)
-//    {
-//    case CAT_FIRE__STATIC: return CAT_FIRE;
-//    case CHAINGUN_FIRE__STATIC: return CHAINGUN_FIRE;
-//    case EJECT_CLIP__STATIC: return EJECT_CLIP;
-//    case EXPANDERSHOOT__STATIC: return EXPANDERSHOOT;
-//    case INSERT_CLIP__STATIC: return INSERT_CLIP;
-//    case PISTOL_FIRE__STATIC: return PISTOL_FIRE;
-//    case SELECT_WEAPON__STATIC: return SELECT_WEAPON;
-//    case SHOTGUN_FIRE__STATIC: return SHOTGUN_FIRE;
-//    case SHOTGUN_COCK__STATIC: return SHOTGUN_COCK;
-//    case SHRINKER_FIRE__STATIC: return SHRINKER_FIRE;
-//    default: return sound;
-//    }
-//}
+// KEEPINSYNC with what is contained above
+// XXX: ugly
+function /*int32_t */G_StaticToDynamicTile(/*int32_t*/ tile:number):number
+{
+    switch (tile)
+    {
+    case CHAINGUN__STATIC: return CHAINGUN;
+    case FREEZEBLAST__STATIC: return FREEZEBLAST;
+    case GROWSPARK__STATIC: return GROWSPARK;
+    case HANDHOLDINGLASER__STATIC: return HANDHOLDINGLASER;
+    case HEAVYHBOMB__STATIC: return HEAVYHBOMB;
+    case KNEE__STATIC: return KNEE;
+    case RPG__STATIC: return RPG;
+    case SHELL__STATIC: return SHELL;
+    case SHOTGUNSHELL__STATIC: return SHOTGUNSHELL;
+    case SHOTGUN__STATIC: return SHOTGUN;
+    case SHOTSPARK1__STATIC: return SHOTSPARK1;
+    case SHRINKER__STATIC: return SHRINKER;
+    default: return tile;
+    }
+}
+function /*int32_t */G_StaticToDynamicSound(/*int32_t*/ sound:number):number
+{
+    switch (sound)
+    {
+    case CAT_FIRE__STATIC: return CAT_FIRE;
+    case CHAINGUN_FIRE__STATIC: return CHAINGUN_FIRE;
+    case EJECT_CLIP__STATIC: return EJECT_CLIP;
+    case EXPANDERSHOOT__STATIC: return EXPANDERSHOOT;
+    case INSERT_CLIP__STATIC: return INSERT_CLIP;
+    case PISTOL_FIRE__STATIC: return PISTOL_FIRE;
+    case SELECT_WEAPON__STATIC: return SELECT_WEAPON;
+    case SHOTGUN_FIRE__STATIC: return SHOTGUN_FIRE;
+    case SHOTGUN_COCK__STATIC: return SHOTGUN_COCK;
+    case SHRINKER_FIRE__STATIC: return SHRINKER_FIRE;
+    default: return sound;
+    }
+}
 
 //// Initialize WEAPONx_* gamevars. Since for Lunatic, they reside on the C side,
 //// they're set directly. In C-CON, a new CON variable is defined together with
@@ -1302,36 +1302,36 @@ function ADDWEAPONVAR(Weapidx: number, Membname: string): void {
 // Finish a default weapon member after CON translation. If it was not
 // overridden from CON itself (see example at g_weaponOverridden[]), we set
 // both the weapondefaults[] entry (probably dead by now) and the live value.
-////function FINISH_WEAPON_DEFAULT_X(What, i, Membname) { do {  
-////    if (!g_weaponOverridden[i].Membname) 
-////    { 
-////        weapondefaults[i].Membname = G_StaticToDynamic##What(weapondefaults[i].Membname); 
-////        POSTADDWEAPONVAR(i, Membname); 
-////    } 
-////} while (0) }
+function FINISH_WEAPON_DEFAULT_X(What:string, i:number, Membname:string):void { 
+    if (!g_weaponOverridden[i][Membname]) 
+    { 
+        weapondefaults[i][Membname] = window["G_StaticToDynamic" + What](weapondefaults[i][Membname]); 
+        //POSTADDWEAPONVAR(i, Membname); 
+    } 
+}
 
-////function FINISH_WEAPON_DEFAULT_TILE(i, Membname) {FINISH_WEAPON_DEFAULT_X(Tile, i, Membname);}
-////function FINISH_WEAPON_DEFAULT_SOUND(i, Membname) {FINISH_WEAPON_DEFAULT_X(Sound, i, Membname);}
+function FINISH_WEAPON_DEFAULT_TILE(i:number, Membname:string):void {FINISH_WEAPON_DEFAULT_X("Tile", i, Membname);}
+function FINISH_WEAPON_DEFAULT_SOUND(i:number, Membname:string):void {FINISH_WEAPON_DEFAULT_X("Sound", i, Membname);}
 
-////// Process the dynamic {tile,sound} mappings after CON has been translated.
-////// We cannot do this before, because the dynamic maps are not yet set up then.
-////function Gv_FinalizeWeaponDefaults(): void
-////{
-////    var i: number;
+// Process the dynamic {tile,sound} mappings after CON has been translated.
+// We cannot do this before, because the dynamic maps are not yet set up then.
+function Gv_FinalizeWeaponDefaults(): void
+{
+    var i: number;
 
-////    for (i=0; i<MAX_WEAPONS; i++)
-////    {
-////        FINISH_WEAPON_DEFAULT_TILE(i, Shoots);
-////        FINISH_WEAPON_DEFAULT_TILE(i, Spawn);
+    for (i=0; i<MAX_WEAPONS; i++)
+    {
+        FINISH_WEAPON_DEFAULT_TILE(i, Shoots);
+        FINISH_WEAPON_DEFAULT_TILE(i, Spawn);
 
-////        FINISH_WEAPON_DEFAULT_SOUND(i, InitialSound);
-////        FINISH_WEAPON_DEFAULT_SOUND(i, FireSound);
-////        FINISH_WEAPON_DEFAULT_SOUND(i, ReloadSound1);
-////        FINISH_WEAPON_DEFAULT_SOUND(i, Sound2Sound);
-////        FINISH_WEAPON_DEFAULT_SOUND(i, ReloadSound2);
-////        FINISH_WEAPON_DEFAULT_SOUND(i, SelectSound);
-////    }
-////}
+        FINISH_WEAPON_DEFAULT_SOUND(i, InitialSound);
+        FINISH_WEAPON_DEFAULT_SOUND(i, FireSound);
+        FINISH_WEAPON_DEFAULT_SOUND(i, ReloadSound1);
+        FINISH_WEAPON_DEFAULT_SOUND(i, Sound2Sound);
+        FINISH_WEAPON_DEFAULT_SOUND(i, ReloadSound2);
+        FINISH_WEAPON_DEFAULT_SOUND(i, SelectSound);
+    }
+}
 //#undef FINISH_WEAPON_DEFAULT_SOUND
 //#undef FINISH_WEAPON_DEFAULT_TILE
 //#undef FINISH_WEAPON_DEFAULT_X
