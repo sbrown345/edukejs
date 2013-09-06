@@ -684,7 +684,7 @@ function Gv_GetVar(/*register int32_t */id: number, /*register int32_t */iActor:
 
             //        if (index == vm.g_i) index = vm.g_p;
 
-            //        if (/*(unsigned)*/index >= MAXPLAYERS)
+            //        if (unsigned(index) >= MAXPLAYERS)
             //        {
             //            iPlayer = index;
             //            { badplayer(); return -1;}
@@ -769,7 +769,7 @@ function wtf(){
 
 function Gv_SetVar(/*int32_t */id:number, /*int32_t */lValue:number, /*int32_t */iActor:number, /*int32_t */iPlayer:number):void 
 {
-    if (/*(unsigned)*/id >= /*(unsigned)*/g_gameVarCount) {badvarid();return;}
+    if (unsigned(id) >= unsigned(g_gameVarCount)) {badvarid();return;}
 
     //Bsprintf(g_szBuf,"SGVI: %d (\"%s\") to %d for %d %d",id,aGameVars[id].szLabel,lValue,iActor,iPlayer);
     //AddLog(g_szBuf);
@@ -872,7 +872,7 @@ function /*int32_t __fastcall*/ Gv_GetVarX(/*int32_t */id:number):number
 //                    if (ActorLabels[label].flags & LABEL_HASPARM2)
 //                        parm2 = Gv_GetVarX(*insptr++);
 
-//                    if (/*(unsigned)*/index >= MAXSPRITES)
+//                    if (unsigned(index) >= MAXSPRITES)
 //                    {
 //                        id = index;
 //                        goto badsprite;
@@ -889,7 +889,7 @@ function /*int32_t __fastcall*/ Gv_GetVarX(/*int32_t */id:number):number
 
 //                    if (index == vm.g_i) index = vm.g_p;
 
-//                    if (/*(unsigned)*/index >= MAXPLAYERS)
+//                    if (unsigned(index) >= MAXPLAYERS)
 //                    {
 //                        id = index;
 //                        goto badplayer;
@@ -900,7 +900,7 @@ function /*int32_t __fastcall*/ Gv_GetVarX(/*int32_t */id:number):number
 //                    return ((Gv_GetVar(*insptr++, index, vm.g_p) ^ -negateResult) + negateResult);
 //                case 1: //else if (id == g_iSectorVarID)
 //                    if (index == vm.g_i) index = sprite[vm.g_i].sectnum;
-//                    if (/*(unsigned)*/index >= MAXSECTORS)
+//                    if (unsigned(index) >= MAXSECTORS)
 //                    {
 //                        id = index;
 //                        insptr++;
@@ -908,7 +908,7 @@ function /*int32_t __fastcall*/ Gv_GetVarX(/*int32_t */id:number):number
 //                    }
 //                    return ((VM_AccessSectorX(index, *insptr++) ^ -negateResult) + negateResult);
 //                case 2: //else if (id == g_iWallVarID)
-//                    if (/*(unsigned)*/index >= MAXWALLS)
+//                    if (unsigned(index) >= MAXWALLS)
 //                    {
 //                        id = index;
 //                        insptr++;
@@ -931,7 +931,7 @@ function /*int32_t __fastcall*/ Gv_GetVarX(/*int32_t */id:number):number
 //        default:
 //            return ((aGameVars[id].val.lValue ^ -negateResult) + negateResult);
 //        case GAMEVAR_PERPLAYER:
-//            if (/*(unsigned)*/vm.g_p >= MAXPLAYERS)
+//            if (unsigned(vm.g_p) >= MAXPLAYERS)
 //            {
 //                id = vm.g_p;
 //                goto badplayer;
@@ -990,11 +990,11 @@ function Gv_SetVarX(/*int32_t */id:number, /*int32_t */lValue:number):void
 //        aGameVars[id].val.lValue=lValue;
 //        return;
 //    case GAMEVAR_PERPLAYER:
-//        if (/*(unsigned)*/vm.g_p > MAXPLAYERS-1)  {badindex() return;}
+//        if (unsigned(vm.g_p) > MAXPLAYERS-1)  {badindex() return;}
 //        aGameVars[id].val.plValues[vm.g_p]=lValue;
 //        return;
 //    case GAMEVAR_PERACTOR:
-//        if (/*(unsigned)*/vm.g_i > MAXSPRITES-1) {badindex() return;}
+//        if (unsigned(vm.g_i) > MAXSPRITES-1) {badindex() return;}
 //        aGameVars[id].val.plValues[vm.g_i]=lValue;
 //        return;
 //    case GAMEVAR_INTPTR:

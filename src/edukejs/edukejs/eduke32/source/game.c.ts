@@ -2171,7 +2171,7 @@ function G_DrawStatusBar(/*int32_t */snum:number):void
             {
                 var /*const int32_t */orient = 10+16+permbit+256;
 
-                i = (/*(unsigned)*/p.inven_icon < ICON_MAX) ? item_icons[p.inven_icon] : -1;
+                i = (unsigned(p.inven_icon) < ICON_MAX) ? item_icons[p.inven_icon] : -1;
                 if (i >= 0)
                 {
                     if (getrendermode() >= REND_POLYMOST && althud_shadows)
@@ -2253,7 +2253,7 @@ function G_DrawStatusBar(/*int32_t */snum:number):void
             {
 //                orient |= permbit;
 
-                i = (/*(unsigned)*/p.inven_icon < ICON_MAX) ? item_icons[p.inven_icon] : -1;
+                i = (unsigned(p.inven_icon) < ICON_MAX) ? item_icons[p.inven_icon] : -1;
                 if (i >= 0)
                     rotatesprite_fs(sbarx(231-o), yofssh+sbary(200-21), sb16, 0, i, 0, 0, orient);
 
@@ -2494,7 +2494,7 @@ function G_DrawStatusBar(/*int32_t */snum:number):void
 
             if (u&(2048+4096))
             {
-                i = (/*(unsigned)*/p.inven_icon < ICON_MAX) ? item_icons[p.inven_icon] : -1;
+                i = (unsigned(p.inven_icon) < ICON_MAX) ? item_icons[p.inven_icon] : -1;
                 // XXX: i < 0?
                 rotatesprite_fs(sbarx(231-o),sbary(SBY+13),sb16,0,i,0,0,10+16+permbit);
                 minitext(292-30-o,SBY+24,"%",6,10+16+permbit + ROTATESPRITE_MAX);
@@ -5008,7 +5008,7 @@ if(DEBUGGINGAIDS) {
     actor[i].bpos.y = s.y; 
     actor[i].bpos.z = s.z;
 
-    if (/*(unsigned)*/s_ow < MAXSPRITES)
+    if (unsigned(s_ow) < MAXSPRITES)
     {
         actor[i].picnum = sprite[s_ow].picnum;
         actor[i].floorz = actor[s_ow].floorz;
@@ -7177,7 +7177,7 @@ function G_DoEventAnimSprites(/*int32_t */j:number):void
     if (display_mirror)
         tsprite[j].statnum = TSPR_MIRROR;
 
-    if (/*(unsigned)*/ow < MAXSPRITES && spriteext[ow].flags & SPREXT_TSPRACCESS)
+    if (unsigned(ow) < MAXSPRITES && spriteext[ow].flags & SPREXT_TSPRACCESS)
     {
         spriteext[ow].tspr = tsprite[j];
         VM_OnEvent(EVENT_ANIMATESPRITES, ow, myconnectindex, -1, 0);
@@ -7734,7 +7734,7 @@ function G_DoSpriteAnimations(/*int32_t */ourx:number, /*int32_t */oury:number, 
         if (G_HaveActor(s.picnum))
         {
 //#if !defined LUNATIC
-            if (/*(unsigned)*/scrofs_action + 2 >= /*(unsigned)*/g_scriptSize)
+            if (unsigned(scrofs_action) + 2 >= unsigned(g_scriptSize))
                 todoThrow("goto skip;");
 
             l = script[scrofs_action + 2];

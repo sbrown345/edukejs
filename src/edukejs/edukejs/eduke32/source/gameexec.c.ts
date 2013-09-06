@@ -481,7 +481,7 @@ function VM_AlterAng(/*int32_t */movflags:number):void
 
 //#if !defined LUNATIC
     var /*const intptr_t **/moveptr:number;
-    if (/*(unsigned)*/AC_MOVE_ID(vm.g_t) >= /*(unsigned)*/g_scriptSize-1)
+    if (unsigned(AC_MOVE_ID(vm.g_t)) >= unsigned(g_scriptSize-1))
 
     {
         vm.g_t[1] = 0;//AC_MOVE_ID(vm.g_t) = 0;
@@ -665,7 +665,7 @@ function VM_Move():void
     }
 //dead:
 //#if !defined LUNATIC
-    if (/*(unsigned)*/AC_MOVE_ID(vm.g_t) >= /*(unsigned)*/g_scriptSize-1)
+    if (unsigned(AC_MOVE_ID(vm.g_t)) >= unsigned(g_scriptSize-1))
     {
         vm.g_t[1] = 0;// AC_MOVE_ID(vm.g_t) = 0;
         OSD_Printf_nowarn(OSD_ERROR + "clearing bad moveptr for actor %d (%d)\n", vm.g_i, TrackerCast(vm.g_sp.picnum));
@@ -865,7 +865,7 @@ function P_AddWeaponAmmoCommon(ps:DukePlayer_t , /*int32_t */weap:number, /*int3
 
 function /*int32_t */VM_AddWeapon(/*int32_t */weap:number, /*int32_t */amount:number, ps:DukePlayer_t):number
 {
-    if (/*(unsigned)*/weap >= MAX_WEAPONS)
+    if (unsigned(weap) >= MAX_WEAPONS)
     {
         CON_ERRPRINTF("Invalid weapon ID %d\n", weap);
         return 1;
@@ -947,7 +947,7 @@ function VM_Fall(/*int32_t */g_i:number, g_sp:spritetype ):void
             var $newsect = new R(newsect);
             pushmove(/*(vec3_t *)*/g_sp, $newsect, 128, 4<<8, 4<<8, CLIPMASK0);
             newsect = $newsect.$;
-            if (/*(unsigned)*/newsect < MAXSECTORS)
+            if (unsigned(newsect) < MAXSECTORS)
                 changespritesect(g_i, newsect);
 
             A_PlaySound(THUD, g_i);
@@ -983,7 +983,7 @@ function VM_Fall(/*int32_t */g_i:number, g_sp:spritetype ):void
             if ((g_sp.hitag & jumptoplayer) ||
                 (G_HaveActor(g_sp.picnum) &&
 //#if !defined LUNATIC
-                /* (unsigned)*/moveScriptOfs < /*(unsigned)*/g_scriptSize-1 && script[moveScriptOfs + 1]
+                unsigned(moveScriptOfs) < unsigned(g_scriptSize)-1 && script[moveScriptOfs + 1]
 //#else
 //                 actor[g_i].mv.vvel != 0
 //#endif
@@ -1078,7 +1078,7 @@ function /*int32_t */VM_ResetPlayer(/*int32_t */g_p:number, /*int32_t */g_flags:
 
 //int32_t G_StartTrack(int32_t level)
 //{
-//    if (/*(unsigned)*/level < MAXLEVELS)
+//    if (unsigned(level) < MAXLEVELS)
 //    {
 //        int32_t musicIndex = MAXLEVELS*ud.volume_number + level;
 
@@ -1497,7 +1497,7 @@ function VM_Execute(/*int32_t */loop: number): void
 
         case CON_MIKESND:
             insptr++;
-            if ((/*(unsigned)*/vm.g_sp.yvel >= MAXSOUNDS))
+            if ((unsigned(vm.g_sp.yvel) >= MAXSOUNDS))
             {
                 CON_ERRPRINTF("Invalid sound %d\n", TrackerCast(vm.g_sp.yvel));
                 insptr++;
@@ -1549,7 +1549,7 @@ function VM_Execute(/*int32_t */loop: number): void
             continue;
 
         case CON_SOUNDONCE:
-            if ((/*(unsigned)*/script[++insptr] /* *(++insptr)*/  >= MAXSOUNDS))
+            if ((unsigned(script[++insptr]) /* *(++insptr)*/  >= MAXSOUNDS))
             {
                 CON_ERRPRINTF("Invalid sound %d\n", /*(int32_t)*/script[insptr++]);
                 continue;
@@ -1563,7 +1563,7 @@ function VM_Execute(/*int32_t */loop: number): void
             {
                 var/*int32_t */i = Gv_GetVarX(script[insptr++]), j = Gv_GetVarX(script[insptr++]);
 
-                if ((/*(unsigned)*/j >= MAXSOUNDS))
+                if ((unsigned(j) >= MAXSOUNDS))
                 {
                     CON_ERRPRINTF("Invalid sound %d\n", j);
                     insptr++;
@@ -1575,7 +1575,7 @@ function VM_Execute(/*int32_t */loop: number): void
             continue;
 
         case CON_IFSOUND:
-            if ((/*(unsigned)*/script[++insptr] /* *(++insptr)*/  >= MAXSOUNDS))
+            if ((unsigned(script[++insptr]) /* *(++insptr)*/  >= MAXSOUNDS))
             {
                 CON_ERRPRINTF("Invalid sound %d\n", /*(int32_t)*/script[insptr]);
                 insptr++;
@@ -1586,7 +1586,7 @@ function VM_Execute(/*int32_t */loop: number): void
             continue;
 
         case CON_STOPSOUND:
-            if ((/*(unsigned)*/script[++insptr] /* *(++insptr)*/  >= MAXSOUNDS))
+            if ((unsigned(script[++insptr]) /* *(++insptr)*/  >= MAXSOUNDS))
             {
                 CON_ERRPRINTF("Invalid sound %d\n", /*(int32_t)*/script[insptr]);
                 insptr++;
@@ -1631,7 +1631,7 @@ function VM_Execute(/*int32_t */loop: number): void
             }
 
         case CON_GLOBALSOUND:
-            if ((/*(unsigned)*/script[++insptr] /* *(++insptr)*/  >= MAXSOUNDS))
+            if ((unsigned(script[++insptr]) /* *(++insptr)*/  >= MAXSOUNDS))
             {
                 CON_ERRPRINTF("Invalid sound %d\n", /*(int32_t)*/script[insptr]);
                 insptr++;
@@ -1645,7 +1645,7 @@ function VM_Execute(/*int32_t */loop: number): void
             continue;
 
         case CON_SOUND:
-            if (/*(unsigned)*/script[++insptr] /* *(++insptr)*/  >= MAXSOUNDS)
+            if (unsigned(script[++insptr]) /* *(++insptr)*/  >= MAXSOUNDS)
             {
                 CON_ERRPRINTF("Invalid sound %d\n", /*(int32_t)*/script[insptr]);
                 insptr++;
@@ -1680,7 +1680,7 @@ function VM_Execute(/*int32_t */loop: number): void
                 var/*int32_t */weap=script[insptr++], amount=script[insptr++];
                 var ps = g_player[vm.g_p].ps;
 
-                if (/*(unsigned)*/weap >= MAX_WEAPONS)
+                if (unsigned(weap) >= MAX_WEAPONS)
                 {
                     CON_ERRPRINTF("Invalid weapon ID %d\n", weap);
                     break;
@@ -1862,22 +1862,22 @@ function VM_Execute(/*int32_t */loop: number): void
                 switch (tw)
                 {
                 case CON_ACTIVATEBYSECTOR:
-                    if (/*(unsigned)*/var1 >= /*(unsigned)*/numsectors) {CON_ERRPRINTF("Invalid sector %d\n", var1); break;}
+                    if (unsigned(var1) >= unsigned(numsectors)) {CON_ERRPRINTF("Invalid sector %d\n", var1); break;}
                     G_ActivateBySector(var1, var2);
                     break;
                 case CON_OPERATESECTORS:
-                    if (/*(unsigned)*/var1 >= /*(unsigned)*/numsectors) {CON_ERRPRINTF("Invalid sector %d\n", var1); break;}
+                    if (unsigned(var1) >= unsigned(numsectors)) {CON_ERRPRINTF("Invalid sector %d\n", var1); break;}
                     G_OperateSectors(var1, var2);
                     break;
                 case CON_OPERATEACTIVATORS:
-                    if (/*(unsigned)*/var2>=/*(unsigned)*/playerswhenstarted) {CON_ERRPRINTF("Invalid player %d\n", var2); break;}
+                    if (unsigned(var2)>=unsigned(playerswhenstarted)) {CON_ERRPRINTF("Invalid player %d\n", var2); break;}
                     G_OperateActivators(var1, var2);
                     break;
                 case CON_SETASPECT:
                     setaspect(var1, var2);
                     break;
                 case CON_SSP:
-                    if (/*(unsigned)*/var1 >= MAXSPRITES) { CON_ERRPRINTF("Invalid sprite %d\n", var1); break;}
+                    if (unsigned(var1) >= MAXSPRITES) { CON_ERRPRINTF("Invalid sprite %d\n", var1); break;}
                     A_SetSprite(var1, var2);
                     break;
                 }
@@ -1889,9 +1889,9 @@ function VM_Execute(/*int32_t */loop: number): void
             {
                 var/*int32_t */lVar1 = Gv_GetVarX(script[insptr++]), lVar2 = Gv_GetVarX(script[insptr++]), res:number;
 
-                if (/*(unsigned)*/lVar1 >= MAXSPRITES || /*(unsigned)*/lVar2 >= MAXSPRITES)
+                if (unsigned(lVar1) >= MAXSPRITES || unsigned(lVar2) >= MAXSPRITES)
                 {
-                    CON_ERRPRINTF("Invalid sprite %d\n", /*(unsigned)*/lVar1 >= MAXSPRITES ? lVar1 : lVar2);
+                    CON_ERRPRINTF("Invalid sprite %d\n", unsigned(lVar1) >= MAXSPRITES ? lVar1 : lVar2);
                     res=0;
                 }
                 else res=cansee(sprite[lVar1].x,sprite[lVar1].y,sprite[lVar1].z,sprite[lVar1].sectnum,
@@ -1959,7 +1959,7 @@ function VM_Execute(/*int32_t */loop: number): void
 
 //                if (tilenum < 0 || tilenum+255 >= MAXTILES)
 //                    CON_ERRPRINTF("invalid base tilenum %d\n", tilenum);
-//                else if (/*(unsigned)*/q >= MAXQUOTES)
+//                else if (unsigned(q) >= MAXQUOTES)
 //                    CON_ERRPRINTF("invalid quote ID %d\n", q);
 //                else if ((ScriptQuotes[q] == NULL))
 //                    CON_ERRPRINTF("null quote %d\n", q);
@@ -1976,7 +1976,7 @@ function VM_Execute(/*int32_t */loop: number): void
             {
                 var/*int32_t */i=script[insptr++];
                 var/*int32_t */j=Gv_GetVarX(script[insptr++]);
-                if (/*(unsigned)*/j > MAXSTATUS)
+                if (unsigned(j) > MAXSTATUS)
                 {
                     CON_ERRPRINTF("invalid status list %d\n", j);
                     continue;
@@ -1990,7 +1990,7 @@ function VM_Execute(/*int32_t */loop: number): void
             {
                 var/*int32_t */i=script[insptr++];
                 var/*int32_t */j=Gv_GetVarX(script[insptr++]);
-                if (/*(unsigned)*/j >= MAXSPRITES)
+                if (unsigned(j) >= MAXSPRITES)
                 {
                     CON_ERRPRINTF("invalid sprite ID %d\n", j);
                     continue;
@@ -2004,7 +2004,7 @@ function VM_Execute(/*int32_t */loop: number): void
             {
                 var/*int32_t */i=script[insptr++];
                 var/*int32_t */j=Gv_GetVarX(script[insptr++]);
-                if (/*(unsigned)*/j >= MAXSPRITES)
+                if (unsigned(j) >= MAXSPRITES)
                 {
                     CON_ERRPRINTF("invalid sprite ID %d\n", j);
                     continue;
@@ -2018,7 +2018,7 @@ function VM_Execute(/*int32_t */loop: number): void
             {
                 var/*int32_t */i=script[insptr++];
                 var/*int32_t */j=Gv_GetVarX(script[insptr++]);
-                if (/*(unsigned)*/j >= /*(unsigned)*/numsectors)
+                if (unsigned(j) >= unsigned(numsectors))
                 {
                     CON_ERRPRINTF("invalid sector %d\n", j);
                     continue;
@@ -2032,7 +2032,7 @@ function VM_Execute(/*int32_t */loop: number): void
             {
                 var/*int32_t */i=script[insptr++];
                 var/*int32_t */j=Gv_GetVarX(script[insptr++]);
-                if (/*(unsigned)*/j >= MAXSPRITES)
+                if (unsigned(j) >= MAXSPRITES)
                 {
                     CON_ERRPRINTF("invalid sprite ID %d\n", j);
                     continue;
@@ -2046,7 +2046,7 @@ function VM_Execute(/*int32_t */loop: number): void
             {
                 var/*int32_t */i=script[insptr++];
                 var/*int32_t */j=Gv_GetVarX(script[insptr++]);
-                if (/*(unsigned)*/j >= MAXSPRITES)
+                if (unsigned(j) >= MAXSPRITES)
                 {
                     CON_ERRPRINTF("invalid sprite ID %d\n", j);
                     continue;
@@ -2062,7 +2062,7 @@ function VM_Execute(/*int32_t */loop: number): void
                         f = Gv_GetVarX(script[insptr++]);
                 var/*int32_t */j = Gv_GetVarX(script[insptr++]);
 
-                if (/*(unsigned)*/i >= MAXQUOTES)
+                if (unsigned(i) >= MAXQUOTES)
                 {
                     CON_ERRPRINTF("invalid quote ID %d\n", i);
                     continue;
@@ -2072,7 +2072,7 @@ function VM_Execute(/*int32_t */loop: number): void
                     CON_ERRPRINTF("null quote %d\n", i);
                     continue;
                 }
-                else if (/*(unsigned)*/f >= NUMGAMEFUNCTIONS)
+                else if (unsigned(f) >= NUMGAMEFUNCTIONS)
                 {
                     CON_ERRPRINTF("invalid function %d\n", f);
                     continue;
@@ -2104,7 +2104,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //                int32_t st = Gv_GetVarX(script[insptr++]);
 //                int32_t ln = Gv_GetVarX(script[insptr++]);
 
-//                if (/*(unsigned)*/q1>=MAXQUOTES)
+//                if (unsigned(q1)>=MAXQUOTES)
 //                {
 //                    CON_ERRPRINTF("invalid quote ID %d\n", q1);
 //                    continue;
@@ -2114,7 +2114,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //                    CON_ERRPRINTF("null quote %d\n", q1);
 //                    continue;
 //                }
-//                if (/*(unsigned)*/q2>=MAXQUOTES)
+//                if (unsigned(q2)>=MAXQUOTES)
 //                {
 //                    CON_ERRPRINTF("invalid quote ID %d\n", q2);
 //                    continue;
@@ -2213,12 +2213,12 @@ function VM_Execute(/*int32_t */loop: number): void
 //                        Bstrcpy(ScriptQuotes[i],ScriptQuotes[j]);
 //                    break;
 //                case CON_CHANGESPRITESECT:
-//                    if (/*(unsigned)*/i >= MAXSPRITES)
+//                    if (unsigned(i) >= MAXSPRITES)
 //                    {
 //                        CON_ERRPRINTF("Invalid sprite %d\n", i);
 //                        break;
 //                    }
-//                    if (/*(unsigned)*/j >= /*(unsigned)*/numsectors)
+//                    if (unsigned(j) >= unsigned(numsectors))
 //                    {
 //                        CON_ERRPRINTF("Invalid sector %d\n", j);
 //                        break;
@@ -2239,12 +2239,12 @@ function VM_Execute(/*int32_t */loop: number): void
 //                var/*int32_t */i = Gv_GetVarX(script[insptr++]);
 //                var/*int32_t */j = Gv_GetVarX(script[insptr++]);
 
-//                if (/*(unsigned)*/i >= MAXSPRITES)
+//                if (unsigned(i) >= MAXSPRITES)
 //                {
 //                    CON_ERRPRINTF("Invalid sprite: %d\n", i);
 //                    continue;
 //                }
-//                if (/*(unsigned)*/j >= MAXSTATUS)
+//                if (unsigned(j) >= MAXSTATUS)
 //                {
 //                    CON_ERRPRINTF("Invalid statnum: %d\n", j);
 //                    continue;
@@ -2446,7 +2446,7 @@ function VM_Execute(/*int32_t */loop: number): void
             {
                 var /*int32_t */distvar = script[insptr++], xvar = Gv_GetVarX(script[insptr++]), yvar = Gv_GetVarX(script[insptr++]);
 
-                if (/*(unsigned)*/xvar >= MAXSPRITES || /*(unsigned)*/yvar >= MAXSPRITES)
+                if (unsigned(xvar) >= MAXSPRITES || unsigned(yvar) >= MAXSPRITES)
                 {
                     CON_ERRPRINTF("invalid sprite\n");
                     continue;
@@ -2461,7 +2461,7 @@ function VM_Execute(/*int32_t */loop: number): void
             {
                 var/*int32_t */distvar = script[insptr++], xvar = Gv_GetVarX(script[insptr++]), yvar = Gv_GetVarX(script[insptr++]);
 
-                if (/*(unsigned)*/xvar >= MAXSPRITES || /*(unsigned)*/yvar >= MAXSPRITES)
+                if (unsigned(xvar) >= MAXSPRITES || unsigned(yvar) >= MAXSPRITES)
                 {
                     CON_ERRPRINTF("invalid sprite\n");
                     continue;
@@ -2519,7 +2519,7 @@ function VM_Execute(/*int32_t */loop: number): void
             {
                 var/*int32_t */lIn=Gv_GetVarX(script[insptr++]);
                 var/*int32_t */j:number;
-                if (/*(unsigned)*/vm.g_sp.sectnum >= /*(unsigned)*/numsectors)
+                if (unsigned(vm.g_sp.sectnum) >= unsigned(numsectors))
                 {
                     CON_ERRPRINTF("Invalid sector %d\n", TrackerCast(vm.g_sp.sectnum));
                     continue;
@@ -2549,7 +2549,7 @@ function VM_Execute(/*int32_t */loop: number): void
             {
                 var/*int32_t */j:number;
 
-                if (/*(unsigned)*/vm.g_sp.sectnum >= /*(unsigned)*/numsectors)
+                if (unsigned(vm.g_sp.sectnum) >= unsigned(numsectors))
                 {
                     CON_ERRPRINTF("Invalid sector %d\n", TrackerCast(vm.g_sp.sectnum));
                     insptr++;
@@ -2585,7 +2585,7 @@ function VM_Execute(/*int32_t */loop: number): void
                 var/*const int32_t */zvel = (tw == CON_ESHOOT) ?
                     SHOOT_HARDCODED_ZVEL : int16(Gv_GetVarX(script[insptr++]));
 
-                if (/*(unsigned)*/vm.g_sp.sectnum >= /*(unsigned)*/numsectors)
+                if (unsigned(vm.g_sp.sectnum) >= unsigned(numsectors))
                 {
                     CON_ERRPRINTF("Invalid sector %d\n", TrackerCast(vm.g_sp.sectnum));
                     insptr++;
@@ -2605,7 +2605,7 @@ function VM_Execute(/*int32_t */loop: number): void
             {
                 var/*int32_t */j=Gv_GetVarX(script[insptr++]);
 
-                if (/*(unsigned)*/vm.g_sp.sectnum >= /*(unsigned)*/numsectors)
+                if (unsigned(vm.g_sp.sectnum) >= unsigned(numsectors))
                 {
                     CON_ERRPRINTF("Invalid sector %d\n", TrackerCast(vm.g_sp.sectnum));
                     continue;
@@ -2624,7 +2624,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //                const int32_t zvel = (int16_t)Gv_GetVarX(script[insptr++]);
 //                var/*int32_t */j=Gv_GetVarX(script[insptr++]);
 
-//                if (/*(unsigned)*/vm.g_sp.sectnum >= /*(unsigned)*/numsectors)
+//                if (unsigned(vm.g_sp.sectnum) >= unsigned(numsectors))
 //                {
 //                    CON_ERRPRINTF("Invalid sector %d\n", TrackerCast(vm.g_sp.sectnum));
 //                    continue;
@@ -2735,7 +2735,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //                    continue;
 //                }
 
-//                if (/*(unsigned)*/sect >= /*(unsigned)*/numsectors)
+//                if (unsigned(sect) >= unsigned(numsectors))
 //                {
 //                    CON_ERRPRINTF("Invalid sector %d\n", sect);
 //                    continue;
@@ -2764,7 +2764,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //                    y<<=16;
 //                }
 
-//                if (/*(unsigned)*/tilenum >= MAXTILES)
+//                if (unsigned(tilenum) >= MAXTILES)
 //                {
 //                    CON_ERRPRINTF("invalid tilenum %d\n", tilenum);
 //                    continue;
@@ -2800,7 +2800,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //                    continue;
 //                }
 
-//                if (/*(unsigned)*/q >= MAXQUOTES)
+//                if (unsigned(q) >= MAXQUOTES)
 //                {
 //                    CON_ERRPRINTF("invalid quote ID %d\n", q);
 //                    continue;
@@ -2847,7 +2847,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //                int32_t x=Gv_GetVarX(script[insptr++]), y=Gv_GetVarX(script[insptr++]), q=Gv_GetVarX(script[insptr++]);
 //                int32_t shade=Gv_GetVarX(script[insptr++]), pal=Gv_GetVarX(script[insptr++]);
 
-//                if (/*(unsigned)*/q >= MAXQUOTES)
+//                if (unsigned(q) >= MAXQUOTES)
 //                {
 //                    CON_ERRPRINTF("invalid quote ID %d\n", q);
 //                    continue;
@@ -2884,7 +2884,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //                    continue;
 //                }
 
-//                if (/*(unsigned)*/q >= MAXQUOTES)
+//                if (unsigned(q) >= MAXQUOTES)
 //                {
 //                    CON_ERRPRINTF("invalid quote ID %d\n", q);
 //                    continue;
@@ -2923,7 +2923,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //                    int32_t ceilz, ceilhit, florz, florhit;
 
 
-//                    if (/*(unsigned)*/sectnum >= /*(unsigned)*/numsectors)
+//                    if (unsigned(sectnum) >= unsigned(numsectors))
 //                    {
 //                        CON_ERRPRINTF("Invalid sector %d\n", sectnum);
 //                        continue;
@@ -2943,7 +2943,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //            {
 //                int32_t sectnum = Gv_GetVarX(script[insptr++]);
 
-//                if (/*(unsigned)*/sectnum >= /*(unsigned)*/numsectors)
+//                if (unsigned(sectnum) >= unsigned(numsectors))
 //                {
 //                    CON_ERRPRINTF("Invalid sector %d\n", sectnum);
 //                    continue;
@@ -3014,7 +3014,7 @@ function VM_Execute(/*int32_t */loop: number): void
                 vect.z = z;
                 sectnum = Gv_GetVarX(sectnumvar);
 
-                if (/*(unsigned)*/sectnum >= /*(unsigned)*/numsectors)
+                if (unsigned(sectnum) >= unsigned(numsectors))
                 {
                     CON_ERRPRINTF("Invalid sector %d\n", sectnum);
                     Gv_SetVarX(retvar, 0);
@@ -3048,7 +3048,7 @@ function VM_Execute(/*int32_t */loop: number): void
                     var /*int32_t*/ hitsectvar=script[insptr++], hitwallvar=script[insptr++], hitspritevar=script[insptr++];
                     var /*int32_t*/ hitxvar=script[insptr++], hityvar=script[insptr++], hitzvar=script[insptr++], cliptype=Gv_GetVarX(script[insptr++]);
 
-                    if (/*(unsigned)*/sectnum >= /*(unsigned)*/numsectors)
+                    if (unsigned(sectnum) >= unsigned(numsectors))
                     {
                         CON_ERRPRINTF("Invalid sector %d\n", sectnum);
                         continue;
@@ -3072,7 +3072,7 @@ function VM_Execute(/*int32_t */loop: number): void
                 var /*int32_t*/ x2=Gv_GetVarX(script[insptr++]), y2=Gv_GetVarX(script[insptr++]), z2=Gv_GetVarX(script[insptr++]);
                 var /*int32_t*/ sect2=Gv_GetVarX(script[insptr++]), rvar=script[insptr++];
 
-                if (/*(unsigned)*/sect1 >= /*(unsigned)*/numsectors || /*(unsigned)*/sect2 >= /*(unsigned)*/numsectors)
+                if (unsigned(sect1) >= unsigned(numsectors) || unsigned(sect2) >= unsigned(numsectors))
                 {
                     CON_ERRPRINTF("Invalid sector\n");
                     Gv_SetVarX(rvar, 0);
@@ -3116,7 +3116,7 @@ function VM_Execute(/*int32_t */loop: number): void
 //                int32_t neartagsectorvar=script[insptr++], neartagwallvar=script[insptr++], neartagspritevar=script[insptr++], neartaghitdistvar=script[insptr++];
 //                int32_t neartagrange=Gv_GetVarX(script[insptr++]), tagsearch=Gv_GetVarX(script[insptr++]);
 
-//                if (/*(unsigned)*/sectnum >= /*(unsigned)*/numsectors)
+//                if (unsigned(sectnum) >= unsigned(numsectors))
 //                {
 //                    CON_ERRPRINTF("Invalid sector %d\n", sectnum);
 //                    continue;
@@ -3157,7 +3157,7 @@ function VM_Execute(/*int32_t */loop: number): void
 
                 if (tw == CON_SETSPRITE)
                 {
-                    if (/*(unsigned)*/spritenum >= MAXSPRITES)
+                    if (unsigned(spritenum) >= MAXSPRITES)
                     {
                         CON_ERRPRINTF("invalid sprite ID %d\n", spritenum);
                         continue;
@@ -3169,7 +3169,7 @@ function VM_Execute(/*int32_t */loop: number): void
                 {
                     var/*int32_t */cliptype = Gv_GetVarX(script[insptr++]);
 
-                    if (/*(unsigned)*/spritenum >= MAXSPRITES)
+                    if (unsigned(spritenum) >= MAXSPRITES)
                     {
                         CON_ERRPRINTF("invalid sprite ID %d\n", spritenum);
                         insptr++;
@@ -3185,7 +3185,7 @@ function VM_Execute(/*int32_t */loop: number): void
             insptr++;
             {
                 var/*int32_t */sectnum = Gv_GetVarX(script[insptr++]), x = Gv_GetVarX(script[insptr++]), y = Gv_GetVarX(script[insptr++]);
-                if (/*(unsigned)*/sectnum >= /*(unsigned)*/numsectors)
+                if (unsigned(sectnum) >= unsigned(numsectors))
                 {
                     CON_ERRPRINTF("Invalid sector %d\n", sectnum);
                     insptr++;
@@ -3221,7 +3221,7 @@ function VM_Execute(/*int32_t */loop: number): void
 
         case CON_SPAWN:
             insptr++;
-            if (/*(unsigned)*/vm.g_sp.sectnum >= MAXSECTORS)
+            if (unsigned(vm.g_sp.sectnum) >= MAXSECTORS)
             {
                 insptr++;
                 continue;
@@ -3260,7 +3260,7 @@ function VM_Execute(/*int32_t */loop: number): void
                 var/*int32_t */dnum = script[insptr++];
                 var/*int32_t */_s:number, l:number, j:number;
 
-                if (/*(unsigned)*/vm.g_sp.sectnum < MAXSECTORS)
+                if (unsigned(vm.g_sp.sectnum) < MAXSECTORS)
                     for (j=(script[insptr])-1; j>=0; j--)
                     {
                         if (vm.g_sp.picnum == BLIMP && dnum == SCRAP1)
@@ -3559,7 +3559,7 @@ function VM_Execute(/*int32_t */loop: number): void
             insptr++;
             {
                 var /*int32_t */j = Gv_GetVarX(script[insptr++]);
-                if (/*(unsigned)*/j >= MAXVOLUMES*MAXLEVELS)
+                if (unsigned(j) >= MAXVOLUMES*MAXLEVELS)
                 {
                     CON_ERRPRINTF("Invalid map number: %d\n", j);
                     continue;
@@ -3671,7 +3671,7 @@ function VM_Execute(/*int32_t */loop: number): void
 
         case CON_PALFROM:
             insptr++;
-            if (/*(unsigned)*/vm.g_p >= /*(unsigned)*/playerswhenstarted)
+            if (unsigned(vm.g_p) >= unsigned(playerswhenstarted))
             {
                 CON_ERRPRINTF("invalid player ID %d\n", vm.g_p);
                 insptr += 4;
@@ -4241,7 +4241,7 @@ function VM_Execute(/*int32_t */loop: number): void
                 var/*int32_t */lSprite=Gv_GetVarX(script[insptr++]), lVar1=script[insptr++];
                 var/*int32_t */lVar2=script[insptr++];
 
-                if (/*(unsigned)*/lSprite >= MAXSPRITES)
+                if (unsigned(lSprite) >= MAXSPRITES)
                 {
                     CON_ERRPRINTF("invalid sprite ID %d\n", lSprite);
                     if (lVar1 == MAXGAMEVARS || lVar1 & ((MAXGAMEVARS<<2)|(MAXGAMEVARS<<3))) insptr++;
@@ -4271,7 +4271,7 @@ function VM_Execute(/*int32_t */loop: number): void
                 {
                     var/*int32_t */lVar1=script[insptr++], lVar2=script[insptr++];
 
-                    if (/*(unsigned)*/iPlayer >= /*(unsigned)*/playerswhenstarted)
+                    if (unsigned(iPlayer) >= unsigned(playerswhenstarted))
                     {
                         CON_ERRPRINTF("invalid player ID %d\n", iPlayer);
                         if (lVar1 == MAXGAMEVARS || lVar1 & ((MAXGAMEVARS<<2)|(MAXGAMEVARS<<3))) insptr++;
@@ -4367,7 +4367,7 @@ function VM_Execute(/*int32_t */loop: number): void
 
                 insptr++;
 
-                if (/*(unsigned)*/j >= /*(unsigned)*/playerswhenstarted)
+                if (unsigned(j) >= unsigned(playerswhenstarted))
                 {
                     CON_ERRPRINTF("Invalid player ID %d\n", j);
                     continue;
@@ -4690,7 +4690,7 @@ function VM_Execute(/*int32_t */loop: number): void
             insptr++;
             {
                 var/*int32_t */j=Gv_GetVarX(script[insptr++]);
-                if (/*(unsigned)*/j>=MAX_WEAPONS)
+                if (unsigned(j)>=MAX_WEAPONS)
                 {
                     CON_ERRPRINTF("Invalid weapon ID %d\n", j);
                     insptr++;
@@ -4704,7 +4704,7 @@ function VM_Execute(/*int32_t */loop: number): void
             insptr++;
             {
                 var/*int32_t */j=Gv_GetVarX(script[insptr++]);
-                if (/*(unsigned)*/j>=MAX_WEAPONS)
+                if (unsigned(j)>=MAX_WEAPONS)
                 {
                     CON_ERRPRINTF("Invalid weapon ID %d\n", j);
                     insptr++;
@@ -5196,7 +5196,7 @@ function VM_Execute(/*int32_t */loop: number): void
         case CON_QUOTE:
             insptr++;
 
-            if (/*(unsigned)*/(script[insptr]) >= MAXQUOTES)
+            if (unsigned(script[insptr]) >= MAXQUOTES)
             {
                 CON_ERRPRINTF("invalid quote ID %d\n", /*(int32_t)*/(script[insptr]));
                 insptr++;
@@ -5210,7 +5210,7 @@ function VM_Execute(/*int32_t */loop: number): void
                 continue;
             }
 
-            if (/*(unsigned)*/vm.g_p >= MAXPLAYERS)
+            if (unsigned(vm.g_p) >= MAXPLAYERS)
             {
                 CON_ERRPRINTF("bad player for quote %d: (%d)\n", /*(int32_t)*/script[insptr],vm.g_p);
                 insptr++;
@@ -5225,7 +5225,7 @@ function VM_Execute(/*int32_t */loop: number): void
             {
                 var/*int32_t */i=Gv_GetVarX(script[insptr++]);
 
-                if (/*(unsigned)*/i >= MAXQUOTES)
+                if (unsigned(i) >= MAXQUOTES)
                 {
                     CON_ERRPRINTF("invalid quote ID %d\n", i);
                     insptr++;
@@ -5246,7 +5246,7 @@ function VM_Execute(/*int32_t */loop: number): void
             {
                 var/*int32_t */i=Gv_GetVarX(script[insptr++]);
 
-                if (/*(unsigned)*/i >= MAXQUOTES)
+                if (unsigned(i) >= MAXQUOTES)
                 {
                     CON_ERRPRINTF("invalid quote ID %d\n", i);
                     insptr++;
@@ -5414,7 +5414,7 @@ function A_Execute(/*int32_t */iActor:number,/*int32_t */iPlayer:number,/*int32_
 
     vm.copyFrom(tempvm);// Bmemcpy(&vm, &tempvm, sizeof(vmstate_t));
 
-    if (/*(unsigned)*/vm.g_sp.sectnum >= MAXSECTORS)
+    if (unsigned(vm.g_sp.sectnum) >= MAXSECTORS)
     {
         if (A_CheckEnemySprite(vm.g_sp))
             g_player[vm.g_p].ps.actors_killed++;
@@ -5428,7 +5428,7 @@ function A_Execute(/*int32_t */iActor:number,/*int32_t */iPlayer:number,/*int32_
     /* Helixhorned: let's do away with intptr_t's... */
 //#if !defined LUNATIC
     actionofs = AC_ACTION_ID(vm.g_t);
-    actionptr = (((actionofs!=0 && actionofs+4)?1:0) < /*(unsigned)*/g_scriptSize) ?
+    actionptr = (((actionofs!=0 && actionofs+4)?1:0) < unsigned(g_scriptSize)) ?
         script.subarray(actionofs) : NULL;
 
     if (actionptr != NULL)

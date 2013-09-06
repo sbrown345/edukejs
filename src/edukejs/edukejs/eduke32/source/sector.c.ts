@@ -98,7 +98,7 @@ function /*int32_t */G_CheckPlayerInSector(/*int32_t */sect:number):number
 {
     var/*int32_t */i:number;
     for (i = 0; i != -1; i = connectpoint2[i])
-        if (/*(unsigned)*/g_player[i].ps.i < MAXSPRITES && sprite[g_player[i].ps.i].sectnum == sect)
+        if (unsigned(g_player[i].ps.i) < MAXSPRITES && sprite[g_player[i].ps.i].sectnum == sect)
             return i;
     return -1;
 }
@@ -324,7 +324,7 @@ function G_DoSectorAnimations():void
             // This fixes a bug where wall or floor sprites contained in
             // elevator sectors (ST 16-19) would jitter vertically after the
             // elevator had stopped.
-            if (animateptr[i] == sector[animatesect[i]].floorz)
+            if (animateptr[i].getValue() == sector[animatesect[i]].floorz)
                 for (j=headspritesect[dasect]; j>=0; j=nextspritesect[j])
                     if (sprite[j].statnum != STAT_EFFECTOR) 
                     {
@@ -339,7 +339,7 @@ function G_DoSectorAnimations():void
             animatevel[i] = animatevel[g_animateCount];
             animatesect[i] = animatesect[g_animateCount];
             if (sector[animatesect[i]].lotag == ST_18_ELEVATOR_DOWN || sector[animatesect[i]].lotag == ST_19_ELEVATOR_UP)
-                if (animateptr[i] == sector[animatesect[i]].ceilingz) 
+                if (animateptr[i].getValue() == sector[animatesect[i]].ceilingz) 
                 {
                     dlog(DEBUG_ANIMATIONS,  "continue\n", i);
                     continue;
@@ -2509,7 +2509,7 @@ function A_DamageObject(/*int32_t */i:number,/*int32_t */sn:number):void
                         var $j = new R(j);
                         pushmove(/*(vec3_t *)&*/sprite[i],$j,128,(4<<8),(4<<8),CLIPMASK0);
                         j = $j.$;
-                        if (j != sprite[i].sectnum && /*(unsigned)*/j < MAXSECTORS)
+                        if (j != sprite[i].sectnum && unsigned(j) < MAXSECTORS)
                             changespritesect(i,j);
                     }
                 }

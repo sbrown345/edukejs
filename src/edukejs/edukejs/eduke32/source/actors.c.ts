@@ -1487,7 +1487,7 @@ function G_MoveFX(): void
                     actor[i].t_data[0] = 0;
                 }
             }
-            else if (s.lotag < 999 && /*(unsigned)*/sector[s.sectnum].lotag < 9 &&  // ST_9_SLIDING_ST_DOOR
+            else if (s.lotag < 999 && unsigned(sector[s.sectnum].lotag) < 9 &&  // ST_9_SLIDING_ST_DOOR
                          ud.config.AmbienceToggle && sector[sprite[i].sectnum].floorz != sector[sprite[i].sectnum].ceilingz)
             {
                 if (g_sounds[s.lotag].m&2)
@@ -1550,7 +1550,7 @@ function G_MoveFX(): void
                         for (p = 0; p != -1; p = connectpoint2[p])
                             if (p == myconnectindex && g_player[p].ps.cursectnum == s.sectnum)
                             {
-                                S_PlaySound(s.lotag + /*(unsigned)*/g_globalRandom % (s.hitag+1));
+                                S_PlaySound(s.lotag + unsigned(g_globalRandom) % (s.hitag+1));
                                 actor[i].t_data[4] = GAMETICSPERSEC*40 + g_globalRandom%(GAMETICSPERSEC*40);
                             }
                     }

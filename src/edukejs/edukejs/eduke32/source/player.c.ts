@@ -401,7 +401,7 @@ function /*int32_t */GetAutoAimAngle(/*int32_t */i:number, /*int32_t */p:number,
 {
     var /*int32_t */j = -1;
 
-    Bassert(/*(unsigned)*/p < MAXPLAYERS);
+    Bassert(unsigned(p) < MAXPLAYERS);
 
 //#ifdef LUNATIC
 //    g_player[p].ps.autoaimang = AUTO_AIM_ANGLE;
@@ -2004,7 +2004,7 @@ function/* int32_t */P_DisplayKnuckles(/*int32_t*/ gs:number,/*int32_t */snum:nu
 
     var ps = g_player[snum].ps;
 
-    if (ps.knuckle_incs == 0 || /*(unsigned)*/ (ps.knuckle_incs>>1) >= ARRAY_SIZE(knuckle_frames) || sprite[ps.i].extra <= 0)
+    if (ps.knuckle_incs == 0 || unsigned(ps.knuckle_incs>>1) >= ARRAY_SIZE(knuckle_frames) || sprite[ps.i].extra <= 0)
         return 0;
 
     looking_arc = int32(klabs(ps.look_ang)/9);
@@ -2028,7 +2028,7 @@ function P_SetWeaponGamevars(/*int32_t */snum:number, p:DukePlayer_t ):void
 //#else
     Gv_SetVar(g_iWeaponVarID, p.curr_weapon, p.i, snum);
     Gv_SetVar(g_iWorksLikeVarID,
-              (/*(unsigned)*/p.curr_weapon < MAX_WEAPONS) ? PWEAPON(snum, p.curr_weapon, WorksLike) : -1,
+              (unsigned(p.curr_weapon) < MAX_WEAPONS) ? PWEAPON(snum, p.curr_weapon, WorksLike) : -1,
               p.i, snum);
 //#endif
 }
@@ -3330,7 +3330,7 @@ function P_DropWeapon(p:DukePlayer_t):void
     var/*int32_t */snum = sprite[p.i].yvel,
             cw = PWEAPON(snum, p.curr_weapon, WorksLike);
 
-    if (/*(unsigned)*/cw >= MAX_WEAPONS) return;
+    if (unsigned(cw) >= MAX_WEAPONS) return;
       
     if (krand()&1)
         A_Spawn(p.i, WeaponPickupSprites[cw]);
