@@ -324,7 +324,7 @@ function G_DoSectorAnimations():void
             // This fixes a bug where wall or floor sprites contained in
             // elevator sectors (ST 16-19) would jitter vertically after the
             // elevator had stopped.
-            if (animateptr[i].getValue() == sector[animatesect[i]].floorz)
+            if (animateptr[i].equals(new AnimatePtr(sector, animatesect[i], "floorz")))
                 for (j=headspritesect[dasect]; j>=0; j=nextspritesect[j])
                     if (sprite[j].statnum != STAT_EFFECTOR) 
                     {
