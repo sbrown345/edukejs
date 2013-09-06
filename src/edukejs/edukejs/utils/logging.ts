@@ -31,6 +31,8 @@ var DEBUG_ANIMATIONS = true;
 var DEBUG_TIMER = true;
 var DEBUG_INSERT_SPRITE = true;
 var DEBUG_VARS = true;
+var DEBUG_HIT = true;
+var DEBUG_SPRITE = true;
 
 var dlog = function (log: boolean, format: string, ...args: any[]) {
     if(!log || SKIP_ALL_LOGGING) return;

@@ -542,6 +542,7 @@ static int32_t Proj_DoHitscan(int32_t i, int32_t cstatmask,
 {
     spritetype *const s = &sprite[i];
 
+	dlog(DEBUG_HIT, "Proj_DoHitscan i: %i, cstatmask: %i, srcvect: %i, %i, %i, zvel: %i, sa: %i\n", i, cstatmask, srcvect->x,srcvect->y,srcvect->z, zvel, sa);
     s->cstat &= ~cstatmask;
 
     zvel = A_GetShootZvel(zvel);
@@ -550,9 +551,9 @@ static int32_t Proj_DoHitscan(int32_t i, int32_t cstatmask,
             sintable[(sa+512)&2047],
             sintable[sa&2047],
             zvel<<6, hit, CLIPMASK1);
-
     s->cstat |= cstatmask;
 
+	dlog(DEBUG_HIT, "Proj_DoHitscan zvel: %i, s.cstat: %i, hit: %i, %i, %i\n", zvel, s->cstat, hit->pos.x,hit->pos.y,hit->pos.z);
     return (hit->sect < 0);
 }
 

@@ -324,6 +324,7 @@ static int32_t Proj_MaybeDoTransport(int32_t spritenum, int32_t i, int32_t fromu
 
         spr->x += (otherse->x-SX);
         spr->y += (otherse->y-SY);
+		dlog(DEBUG_SPRITE, "Proj_MaybeDoTransport x: %i, y: %i\n", spr->x, spr->y);
         if (!fromunderp)  // above->below
             spr->z = sector[otherse->sectnum].ceilingz - daz + sector[sprite[i].sectnum].floorz;
         else  // below->above
@@ -417,6 +418,7 @@ int32_t A_MoveSprite(int32_t spritenum, const vec3_t *change, uint32_t cliptype)
     const int32_t oldx = spr->x, oldy = spr->y;
 //    const int32_t osectnum = spr->sectnum;
 
+    dlog(DEBUG_SPRITE, "A_MoveSprite spritenum:%i, change: %i, %i, %i, cliptype: %u\n", spritenum, change->x, change->y, change->z, cliptype);
     if (spr->statnum == STAT_MISC || (bg && spr->xrepeat < 4))
     {
         spr->x += change->x;

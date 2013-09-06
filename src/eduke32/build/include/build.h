@@ -1420,5 +1420,7 @@ static inline void pop_nofog(void)
 #define DEBUG_TIMER 1
 #define DEBUG_INSERT_SPRITE 1
 #define DEBUG_VARS 1
+#define DEBUG_HIT 1
+#define DEBUG_SPRITE 1
 void dlog(int32_t log, char *format, ...);
 void logHeadspritestat(char* where);

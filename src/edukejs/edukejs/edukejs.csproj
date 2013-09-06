@@ -139,12 +139,14 @@
     <Content Include="jmact\source\control.ts" />
     <Content Include="jmact\source\keyboard.c.ts" />
     <Content Include="jmact\source\mathutil.c.ts" />
+    <TypeScriptCompile Include="libs\long.ts" />
     <Content Include="libs\lightgl.js" />
     <Content Include="libs\lightgl\convert-to-js.html" />
     <Content Include="libs\lightgl\Copy of test-from-trace.html" />
     <Content Include="libs\lightgl\test-from-trace.html" />
     <Content Include="libs\lightgl\test.html" />
     <Content Include="libs\lightgl\immediatemode.html" />
+    <Content Include="libs\long.js" />
     <Content Include="libs\sprintf.ts" />
     <Content Include="libs\sprintf.d.ts" />
     <Content Include="libs\webgl-debug.js" />

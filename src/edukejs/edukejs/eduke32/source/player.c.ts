@@ -611,6 +611,7 @@ function /*int32_t */Proj_DoHitscan(/*int32_t */i:number, /*int32_t */cstatmask:
 {
     var s = sprite[i];
 
+	dlog(DEBUG_HIT, "Proj_DoHitscan i: %i, cstatmask: %i, srcvect: %i, %i, %i, zvel: %i, sa: %i\n", i, cstatmask, srcvect.x,srcvect.y,srcvect.z, zvel, sa);
     s.cstat &= ~cstatmask;
 
     zvel = A_GetShootZvel(zvel);
@@ -621,6 +622,7 @@ function /*int32_t */Proj_DoHitscan(/*int32_t */i:number, /*int32_t */cstatmask:
             zvel<<6, hit, CLIPMASK1);
 
     s.cstat |= cstatmask;
+	dlog(DEBUG_HIT, "Proj_DoHitscan zvel: %i, s.cstat: %i, hit: %i, %i, %i\n", zvel, s.cstat, hit.pos.x,hit.pos.y,hit.pos.z);
 
     return (hit.sect < 0)?1:0;
 }
@@ -4390,7 +4392,7 @@ function P_UpdatePosWhenViewingCam(p:DukePlayer_t):void
 }
 
 function P_ProcessInput(/*int32_t */snum:number): void
-{if(G_DoSectorAnimations_count==24)debugger
+{
     var p = g_player[snum].ps;
     var s = sprite[p.i];
 

@@ -6,6 +6,8 @@
 /// <reference path="../../utils/todo.ts" />
 /// <reference path="../../utils/types.ts" />
 
+/// <reference path="../../libs/long.ts" />
+
 /// <reference path="../../build/headers/baselayer.h.ts" />
 /// <reference path="../../build/headers/build.h.ts" />
 /// <reference path="../../build/headers/compat.h.ts" />
@@ -8517,11 +8519,11 @@ function /*int32_t */rintersect(/*int32_t*/ x1:number, /*int32_t*/ y1:number, /*
 {
     //p1 towards p2 is a ray
     var /*int64_t */topt=0, topu=0, t=0;
-
+    
     var /*const int64_t*/ vx=vx_, vy=vy_;
     var /*const int64_t*/ x34=x3-x4, y34=y3-y4;
     var /*const int64_t*/ bot = vx*y34 - vy*x34;
-
+    dlog(DEBUG_HIT, "rintersect x1: %i, y1: %i, z1: %i, vx_: %i, vy_: %i, vz: %i, x3: %i, y3: %i, x4: %i, y4\n",  x1, y1, z1, vx_, vy_, vz, x3, y3, x4, y4);
     if (bot == 0)
         return -1;
 
@@ -8537,15 +8539,19 @@ function /*int32_t */rintersect(/*int32_t*/ x1:number, /*int32_t*/ y1:number, /*
         topt = x31*y34 - y31*x34; if (topt > 0) return -1;
         topu = vx*y31 - vy*x31; if (topu > 0 || topu <= bot) return -1;
     }
-
-    t = Math.floor((topt<<16)/bot);
+    
+    var toptLong = goog.math.Long.fromNumber(topt);
+    t = Math.floor(toptLong.shiftLeft(16).toNumber() / bot);//t = (topt<<16)/bot;
+    dlog(DEBUG_HIT, "rintersect t: %i, topt: %i, topu: %i, bot: %i\n", t, topt, topu, bot);
     intx.$ = x1 + ((vx*t)>>16);
     inty.$ = y1 + ((vy*t)>>16);
     intz.$ = z1 + ((vz*t)>>16);
     
-    t = Math.floor((topu<<16)/bot);
+    var topuLong =  goog.math.Long.fromNumber(topu);
+    t = Math.floor(topuLong.shiftLeft(16).toNumber() / bot);//t = (topu<<16)/bot;
     Bassert(unsigned(t < 65536 ? 1:0));
 
+    dlog(DEBUG_HIT, "rintersect t: %i\n", t);
     return t;
 }
 
@@ -12146,6 +12152,8 @@ function /*static void */get_wallspr_points(/*const spritetype **/spr: spritetyp
     l = tilesizx[tilenum];
     k = (l>>1)+xoff;
 
+    dlog(DEBUG_HIT, "get_wallspr_points dax: %i, day: %i, l: %i, k: %i\n", dax, day, l, k);
+
     x1.$ -= mulscale16(dax,k);
     x2.$ = x1.$ + mulscale16(dax,l);
 
@@ -12294,6 +12302,8 @@ function/*int32_t */hitscan(/*const vec3_t **/sv: IVec3, /*int16_t */sectnum: nu
     var /*const int32_t */dawalclipmask = (cliptype&65535);
     var/*const int32_t */dasprclipmask = (cliptype>>16);
 
+    dlog(DEBUG_HIT, "hitscan: sectnum: %i, vx: %i, vy: %i, vz: %i\n", sectnum, vx, vy, vz);
+
     hit.sect = -1; hit.wall = -1; hit.sprite = -1;
     if (sectnum < 0) return(-1);
 
@@ -12313,6 +12323,7 @@ restart_grand:
         var/*int32_t */dasector:number, z:number, startwall:number, endwall:number;
 
 //#ifdef HAVE_CLIPSHAPE_FEATURE
+        dlog(DEBUG_HIT, "tempshortcnt: %i, tempshortnum: %i\n", tempshortcnt, tempshortnum);
         if (tempshortcnt >= tempshortnum)
         {
             // one bunch of sectors completed, prepare the next
@@ -12329,6 +12340,7 @@ restart_grand:
             while (curidx>=0 && (sprite[curspr].cstat&32) != (sector[sectq[clipinfo[curidx].qbeg]].hitag&32))
                 curidx = clipinfo[curidx].next;
 
+            dlog(DEBUG_HIT, "curidx: %i\n", curidx);
             if (curidx < 0)
             {
                 clipspritecnt++;
@@ -12348,6 +12360,7 @@ restart_grand:
 //#endif
         dasector = clipsectorlist[tempshortcnt]; sec = sector[dasector];
 
+        dlog(DEBUG_HIT, "dasector: %i\n", dasector);
         i = 1;
 //#ifdef HAVE_CLIPSHAPE_FEATURE
         if (curspr)
@@ -12370,6 +12383,7 @@ restart_grand:
         startwall = sec.wallptr; endwall = startwall + sec.wallnum;
         for (z=startwall,wal=wall[walIdx = startwall]; z<endwall; z++,wal = wall[++walIdx])
         {
+			dlog(DEBUG_HIT, "walls z: %i\n", z);
             var /*const int32_t */nextsector = wal.nextsector;
             var wal2 = wall[wal.point2];
             var /*int32_t */daz2 = new R(0), zz:number;
@@ -12388,6 +12402,7 @@ restart_grand:
             intz = $intz.$;
 
 
+			dlog(DEBUG_HIT, "walls inty: %i, intx: %i, intz: %i\n", inty, intx, intz);
             if (klabs(intx-sv.x)+klabs(inty-sv.y) >= klabs((hit.pos.x)-sv.x)+klabs((hit.pos.y)-sv.y))
                 continue;
 
@@ -12464,6 +12479,7 @@ restart_grand:
             }
 //#endif
             x1 = spr.x; y1 = spr.y; z1 = spr.z;
+            dlog(DEBUG_HIT, "cstat&48: %i, x1: %i, y1: %i, z1: %i\n", cstat&48, x1, y1, x1);
             switch (cstat&48)
             {
             case 0:
@@ -13078,6 +13094,7 @@ var /*int32_t */clipmove_warned=0;
 
 function addclipline(/*int32_t*/ dax1: number, /*int32_t*/ day1: number, /*int32_t*/ dax2: number, /*int32_t*/ day2: number, /*int32_t*/ daoval: number): void 
 {
+    dlog(DEBUG_SPRITE, "addclipline dax1: %i day1: %i, dax2: %i, day2: %i, daoval: %i\n", dax1, day1, dax2, day2, daoval);
     if (clipnum < MAXCLIPNUM)
     {
         clipit[clipnum].x1 = dax1; clipit[clipnum].y1 = day1;
@@ -13144,6 +13161,7 @@ function /*int32_t */clipmove(pos: IVec3, /*int16_t **/sectnum: R<number>,
     if ((xvect|yvect) == 0 || sectnum.$ < 0)
         return 0;
 
+    dlog(DEBUG_SPRITE, "clipmove xmin: %i, xmax: %i, ymin: %i, ymax: %i\n", xmin, xmax, ymin, ymax);
     clipmove_warned = 0;
     clipnum = 0;
 
@@ -13152,6 +13170,7 @@ function /*int32_t */clipmove(pos: IVec3, /*int16_t **/sectnum: R<number>,
     clipspritecnt = 0; clipspritenum = 0;
     do
     {
+        dlog(DEBUG_SPRITE, "clipmove clipspritecnt: %i\n", clipspritecnt);
         var wal: walltype, walIdx = 0;
         var sec: sectortype;
         var /*int32_t*/ dasect: number, startwall: number, endwall: number;
@@ -13222,6 +13241,7 @@ function /*int32_t */clipmove(pos: IVec3, /*int16_t **/sectnum: R<number>,
             if (dy > 0) day = dy*(xmax-x1); else day = dy*(xmin-x1);
             if (dax >= day) continue;
 
+            dlog(DEBUG_SPRITE, "j: %i, dx: %i, day: %i\n", j, dx, day);
 //#ifdef HAVE_CLIPSHAPE_FEATURE
             if (curspr)
             {

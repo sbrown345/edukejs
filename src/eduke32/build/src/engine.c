@@ -8383,7 +8383,7 @@ static int32_t rintersect(int32_t x1, int32_t y1, int32_t z1,
     const int64_t vx=vx_, vy=vy_;
     const int64_t x34=x3-x4, y34=y3-y4;
     const int64_t bot = vx*y34 - vy*x34;
-
+    dlog(DEBUG_HIT, "rintersect x1: %i, y1: %i, z1: %i, vx_: %i, vy_: %i, vz: %i, x3: %i, y3: %i, x4: %i, y4\n",  x1, y1, z1, vx_, vy_, vz, x3, y3, x4, y4);
     if (bot == 0)
         return -1;
 
@@ -8401,6 +8401,7 @@ static int32_t rintersect(int32_t x1, int32_t y1, int32_t z1,
     }
 
     t = (topt<<16)/bot;
+    dlog(DEBUG_HIT, "rintersect t: %i, topt: %i, topu: %i, bot: %i\n", t, topt, topu, bot);
     *intx = x1 + ((vx*t)>>16);
     *inty = y1 + ((vy*t)>>16);
     *intz = z1 + ((vz*t)>>16);
@@ -8408,6 +8409,7 @@ static int32_t rintersect(int32_t x1, int32_t y1, int32_t z1,
     t = (topu<<16)/bot;
     Bassert((unsigned)t < 65536);
 
+    dlog(DEBUG_HIT, "rintersect t: %i\n", t);
     return t;
 }
 
@@ -11908,6 +11910,8 @@ static void get_wallspr_points(const spritetype *spr, int32_t *x1, int32_t *x2,
     l = tilesizx[tilenum];
     k = (l>>1)+xoff;
 
+    dlog(DEBUG_HIT, "get_wallspr_points dax: %i, day: %i, l: %i, k: %i\n", dax, day, l, k);
+
     *x1 -= mulscale16(dax,k);
     *x2 = *x1 + mulscale16(dax,l);
 
@@ -12054,6 +12058,8 @@ int32_t hitscan(const vec3_t *sv, int16_t sectnum, int32_t vx, int32_t vy, int32
     const int32_t dawalclipmask = (cliptype&65535);
     const int32_t dasprclipmask = (cliptype>>16);
 
+    dlog(DEBUG_HIT, "hitscan: sectnum: %i, vx: %i, vy: %i, vz: %i\n", sectnum, vx, vy, vz);
+
     hit->sect = -1; hit->wall = -1; hit->sprite = -1;
     if (sectnum < 0) return(-1);
 
@@ -12072,6 +12078,7 @@ restart_grand:
         int32_t dasector, z, startwall, endwall;
 
 #ifdef HAVE_CLIPSHAPE_FEATURE
+        dlog(DEBUG_HIT, "tempshortcnt: %i, tempshortnum: %i\n", tempshortcnt, tempshortnum);
         if (tempshortcnt >= tempshortnum)
         {
             // one bunch of sectors completed, prepare the next
@@ -12088,6 +12095,7 @@ restart_grand:
             while (curidx>=0 && (curspr->cstat&32) != (sector[sectq[clipinfo[curidx].qbeg]].CM_CSTAT&32))
                 curidx = clipinfo[curidx].next;
 
+            dlog(DEBUG_HIT, "curidx: %i\n", curidx);
             if (curidx < 0)
             {
                 clipspritecnt++;
@@ -12105,6 +12113,7 @@ restart_grand:
 #endif
         dasector = clipsectorlist[tempshortcnt]; sec = &sector[dasector];
 
+        dlog(DEBUG_HIT, "dasector: %i\n", dasector);
         i = 1;
 #ifdef HAVE_CLIPSHAPE_FEATURE
         if (curspr)
@@ -12127,6 +12136,7 @@ restart_grand:
         startwall = sec->wallptr; endwall = startwall + sec->wallnum;
         for (z=startwall,wal=&wall[startwall]; z<endwall; z++,wal++)
         {
+			dlog(DEBUG_HIT, "walls z: %i\n", z);
             const int32_t nextsector = wal->nextsector;
             const walltype *const wal2 = &wall[wal->point2];
             int32_t daz2, zz;
@@ -12138,6 +12148,7 @@ restart_grand:
             if ((int64_t)(x1-sv->x)*(y2-sv->y) < (int64_t)(x2-sv->x)*(y1-sv->y)) continue;
             if (rintersect(sv->x,sv->y,sv->z, vx,vy,vz, x1,y1, x2,y2, &intx,&inty,&intz) == -1) continue;
 
+			dlog(DEBUG_HIT, "walls inty: %i, intx: %i, intz: %i\n", inty, intx, intz);
             if (klabs(intx-sv->x)+klabs(inty-sv->y) >= klabs((hit->pos.x)-sv->x)+klabs((hit->pos.y)-sv->y))
                 continue;
 
@@ -12214,6 +12225,7 @@ restart_grand:
             }
 #endif
             x1 = spr->x; y1 = spr->y; z1 = spr->z;
+            dlog(DEBUG_HIT, "cstat&48: %i, x1: %i, y1: %i, z1: %i\n", cstat&48, x1, y1, x1);
             switch (cstat&48)
             {
             case 0:
@@ -12778,6 +12790,7 @@ static int32_t clipmove_warned=0;
 
 static void addclipline(int32_t dax1, int32_t day1, int32_t dax2, int32_t day2, int32_t daoval)
 {
+    dlog(DEBUG_SPRITE, "addclipline dax1: %i day1: %i, dax2: %i, day2: %i, daoval: %i\n", dax1, day1, dax2, day2, daoval);
     if (clipnum < MAXCLIPNUM)
     {
         clipit[clipnum].x1 = dax1; clipit[clipnum].y1 = day1;
@@ -12844,6 +12857,7 @@ int32_t clipmove(vec3_t *pos, int16_t *sectnum,
     if ((xvect|yvect) == 0 || *sectnum < 0)
         return 0;
 
+    dlog(DEBUG_SPRITE, "clipmove xmin: %i, xmax: %i, ymin: %i, ymax: %i\n", xmin, xmax, ymin, ymax);
     clipmove_warned = 0;
     clipnum = 0;
 
@@ -12852,6 +12866,7 @@ int32_t clipmove(vec3_t *pos, int16_t *sectnum,
     clipspritecnt = 0; clipspritenum = 0;
     do
     {
+        dlog(DEBUG_SPRITE, "clipmove clipspritecnt: %i\n", clipspritecnt);
         const walltype *wal;
         const sectortype *sec;
         int32_t dasect, startwall, endwall;
@@ -12920,6 +12935,7 @@ int32_t clipmove(vec3_t *pos, int16_t *sectnum,
             if (dy > 0) day = dy*(xmax-x1); else day = dy*(xmin-x1);
             if (dax >= day) continue;
 
+            dlog(DEBUG_SPRITE, "j: %i, dx: %i, day: %i\n", j, dx, day);
 #ifdef HAVE_CLIPSHAPE_FEATURE
             if (curspr)
             {
