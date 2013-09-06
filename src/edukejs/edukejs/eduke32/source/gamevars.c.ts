@@ -769,6 +769,8 @@ function wtf(){
 
 function Gv_SetVar(/*int32_t */id:number, /*int32_t */lValue:number, /*int32_t */iActor:number, /*int32_t */iPlayer:number):void 
 {
+    dlog(DEBUG_VARS,"SGVI: %d (\"%s\") to %d for %d %d\n",id,aGameVars[id].szLabel,lValue,iActor,iPlayer);
+
     if (unsigned(id) >= unsigned(g_gameVarCount)) {badvarid();return;}
 
     //Bsprintf(g_szBuf,"SGVI: %d (\"%s\") to %d for %d %d",id,aGameVars[id].szLabel,lValue,iActor,iPlayer);
@@ -780,12 +782,12 @@ function Gv_SetVar(/*int32_t */id:number, /*int32_t */lValue:number, /*int32_t *
         aGameVars[id].val.lValue=lValue;
         return;
     case GAMEVAR_PERPLAYER:
-        if (iPlayer > MAXPLAYERS-1) {badindex();return;}
+        if (unsigned(iPlayer) > MAXPLAYERS-1) {badindex();return;}
         // for the current player
         aGameVars[id].val.plValues[iPlayer]=lValue;
         return;
     case GAMEVAR_PERACTOR:
-        if (iActor > MAXSPRITES-1) {badindex();return;}
+        if (unsigned(iActor) > MAXSPRITES-1) {badindex();return;}
         aGameVars[id].val.plValues[iActor]=lValue;
         return;
     case GAMEVAR_INTPTR:

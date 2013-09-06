@@ -709,7 +709,9 @@ wtf:
 
 void __fastcall Gv_SetVar(register int32_t id, register int32_t lValue, register int32_t iActor, register int32_t iPlayer)
 {
-    if ((unsigned)id >= (unsigned)g_gameVarCount) goto badvarid;
+    dlog(DEBUG_VARS,"SGVI: %d (\"%s\") to %d for %d %d\n",id,aGameVars[id].szLabel,lValue,iActor,iPlayer);
+    
+	if ((unsigned)id >= (unsigned)g_gameVarCount) goto badvarid;
 
     //Bsprintf(g_szBuf,"SGVI: %d (\"%s\") to %d for %d %d",id,aGameVars[id].szLabel,lValue,iActor,iPlayer);
     //AddLog(g_szBuf);

@@ -108,7 +108,7 @@ function /*int32_t */G_CheckPlayerInSector(/*int32_t */sect:number):number
 var /*int32_t */g_haltSoundHack = 0;
 
 // this function activates a sector's MUSICANDSFX sprite
-function /*int32_t */A_CallSound(/*int32_t */sn: number,/*int32_t */whatsprite: number)
+function /*int32_t */A_CallSound(/*int32_t */sn: number,/*int32_t */whatsprite: number):number
 {
     var /*int32_t */i: number;
 
@@ -244,7 +244,7 @@ function/*int32_t */isanunderoperator(/*int32_t */lotag:number):number
     return 0;
 }
 
-function /*int32_t */isanearoperator(/*int32_t */lotag:number)
+function /*int32_t */isanearoperator(/*int32_t */lotag:number):number
 {
     switch (lotag&0xff)
     {
@@ -309,7 +309,7 @@ var G_DoSectorAnimations_count = 0;
 function G_DoSectorAnimations():void
 {
     var /*int32_t */i:number, j:number, a:number, p:number, v:number, dasect:number;
-
+    if(G_DoSectorAnimations_count== 24)debugger;
     dlog(DEBUG_ANIMATIONS,  "G_DoSectorAnimations %i\n", G_DoSectorAnimations_count++);
     for (i=g_animateCount-1; i>=0; i--)
     {
@@ -317,6 +317,7 @@ function G_DoSectorAnimations():void
         v = animatevel[i]*TICSPERFRAME;
         dasect = animatesect[i];
 
+        dlog(DEBUG_ANIMATIONS,  "a: %i, v: %i\n", a, v);
         if (a == animategoal[i])
         {
             G_StopInterpolation(animateptr[i]);
@@ -382,10 +383,11 @@ function G_DoSectorAnimations():void
             for (j=headspritesect[dasect]; j>=0; j=nextspritesect[j])
                 if (sprite[j].statnum != STAT_EFFECTOR)
                 {
+                    dlog(DEBUG_ANIMATIONS,  "b4 j: %i, actor[j].bpos.z: %i, sprite[j].z: %i, actor[j].floorz: %i\n", j, actor[j].bpos.z, sprite[j].z, actor[j].floorz);
                     actor[j].bpos.z = sprite[j].z;
                     sprite[j].z += v;
                     actor[j].floorz = sector[dasect].floorz+v;
-                    dlog(DEBUG_ANIMATIONS,  "actor[j].bpos.z: %i, sprite[j].z: %i, actor[j].floorz: %i\n", actor[j].bpos.z, sprite[j].z, actor[j].floorz);
+                    dlog(DEBUG_ANIMATIONS,  "j: %i, actor[j].bpos.z: %i, sprite[j].z: %i, actor[j].floorz: %i\n", j, actor[j].bpos.z, sprite[j].z, actor[j].floorz);
                 }
         }
 
@@ -445,7 +447,7 @@ function /*int32_t */GetAnimationGoal(/*const int32_t **/animptr: AnimatePtr):nu
     return -1;
 }
 
-function /*int32_t */SetAnimation(/*int32_t */animsect:number,/*int32_t **/animptr: AnimatePtr, /*int32_t */thegoal:number, /*int32_t */thevel:number)
+function /*int32_t */SetAnimation(/*int32_t */animsect:number,/*int32_t **/animptr: AnimatePtr, /*int32_t */thegoal:number, /*int32_t */thevel:number):number
 {
     var /*int32_t */i = 0, j = g_animateCount;
 

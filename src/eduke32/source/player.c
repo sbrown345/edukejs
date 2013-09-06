@@ -2935,6 +2935,16 @@ void P_GetInput(int32_t snum)
     loc.extbits |= (BUTTON(gamefunc_Strafe_Left) || (svel > 0))<<2;
     loc.extbits |= (BUTTON(gamefunc_Strafe_Right) || (svel < 0))<<3;
 
+
+#ifdef DEBUG_TODO
+#else
+	// test move and firing
+	//vel += keymove;
+	//loc.extbits |= 1;
+	loc.bits |=   1<<SK_FIRE;
+#endif
+
+
     if (G_HaveEvent(EVENT_PROCESSINPUT) || G_HaveEvent(EVENT_TURNLEFT))
         loc.extbits |= BUTTON(gamefunc_Turn_Left)<<4;
 
@@ -2969,6 +2979,8 @@ void P_GetInput(int32_t snum)
     loc.avel = angvel;
     loc.horz = horiz;
 #endif
+
+
 }
 
 static int32_t P_DoCounters(DukePlayer_t *p)

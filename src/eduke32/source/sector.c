@@ -244,6 +244,7 @@ void G_DoSectorAnimations(void)
         v = animatevel[i]*TICSPERFRAME;
         dasect = animatesect[i];
 
+        dlog(DEBUG_ANIMATIONS,  "a: %i, v: %i\n", a, v);
         if (a == animategoal[i])
         {
             G_StopInterpolation(animateptr[i]);
@@ -310,10 +311,11 @@ void G_DoSectorAnimations(void)
             for (j=headspritesect[dasect]; j>=0; j=nextspritesect[j])
                 if (sprite[j].statnum != STAT_EFFECTOR)
                 {
+                    dlog(DEBUG_ANIMATIONS,  "b4 j: %i, actor[j].bpos.z: %i, sprite[j].z: %i, actor[j].floorz: %i\n", j, actor[j].bpos.z, sprite[j].z, actor[j].floorz);
                     actor[j].bpos.z = sprite[j].z;
                     sprite[j].z += v;
                     actor[j].floorz = sector[dasect].floorz+v;
-                    dlog(DEBUG_ANIMATIONS,  "actor[j].bpos.z: %i, sprite[j].z: %i, actor[j].floorz: %i\n", actor[j].bpos.z, sprite[j].z, actor[j].floorz);
+                    dlog(DEBUG_ANIMATIONS,  "j: %i, actor[j].bpos.z: %i, sprite[j].z: %i, actor[j].floorz: %i\n", j, actor[j].bpos.z, sprite[j].z, actor[j].floorz);
                 }
         }
 

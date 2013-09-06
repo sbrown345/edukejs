@@ -4852,6 +4852,9 @@ int32_t A_InsertSprite(int32_t whatsect,int32_t s_x,int32_t s_y,int32_t s_z,int3
     spritetype *s;
     spritetype spr_temp;
 
+    dlog(DEBUG_INSERT_SPRITE, "A_InsertSprite whatsect: %i, s_x: %i, s_y: %i, s_z: %i, s_pn: %i,  s_s: %i, s_xr: %i, s_yr: %i, s_a: %i, s_ve: %i, s_zv: %i, ,s_ow: %i, s_ss: %i\n",
+		whatsect, s_x, s_y, s_z, s_pn, s_s, s_xr, s_yr, s_a, s_ve, s_zv, s_ow, s_ss);
+
     // NetAlloc
     if (Net_IsRelevantStat(s_ss))
     {

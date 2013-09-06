@@ -4958,6 +4958,9 @@ function A_InsertSprite(whatsect:number,s_x:number,s_y:number,s_z:number,s_pn:nu
                        s_xr:number,s_yr:number,s_a:number,s_ve:number,s_zv:number,s_ow:number,s_ss:number): number
 {
     assert.argumentsAre.int32(arguments);
+    dlog(DEBUG_INSERT_SPRITE, "A_InsertSprite whatsect: %i, s_x: %i, s_y: %i, s_z: %i, s_pn: %i,  s_s: %i, s_xr: %i, s_yr: %i, s_a: %i, s_ve: %i, s_zv: %i, ,s_ow: %i, s_ss: %i\n",
+		whatsect, s_x, s_y, s_z, s_pn, s_s, s_xr, s_yr, s_a, s_ve, s_zv, s_ow, s_ss);
+
     var p: number;
     var i: number;
     var s: spritetype;

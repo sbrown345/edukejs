@@ -3049,9 +3049,6 @@ function P_GetInput(/*int32_t */snum: number): void
     //loc.extbits |= (BUTTON(gamefunc_Strafe_Left) || (svel > 0))<<2;
     //loc.extbits |= (BUTTON(gamefunc_Strafe_Right) || (svel < 0))<<3;
 
-    tempHC(function() {
-    //loc.bits |=   1<<SK_FIRE;
-    });
 
     tempHC(function() {
         loc.bits = 0;
@@ -3081,7 +3078,12 @@ function P_GetInput(/*int32_t */snum: number): void
         if(tempKeyDown[67])//strafe right c
             svel -= 50;
     });
-
+    
+    tempHC(function() {
+	    //vel += keymove;
+	    //loc.extbits |= 1;
+	    loc.bits |=   1<<SK_FIRE;
+    });
 
     //if (G_HaveEvent(EVENT_PROCESSINPUT) || G_HaveEvent(EVENT_TURNLEFT))
     //    loc.extbits |= BUTTON(gamefunc_Turn_Left)<<4;
@@ -4388,7 +4390,7 @@ function P_UpdatePosWhenViewingCam(p:DukePlayer_t):void
 }
 
 function P_ProcessInput(/*int32_t */snum:number): void
-{
+{if(G_DoSectorAnimations_count==24)debugger
     var p = g_player[snum].ps;
     var s = sprite[p.i];
 
