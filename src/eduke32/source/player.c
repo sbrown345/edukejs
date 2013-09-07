@@ -2947,8 +2947,8 @@ void P_GetInput(int32_t snum)
 #ifdef DEBUG_TODO
 #else
 	// test move and firing
-	//vel += keymove;
-	//loc.extbits |= 1;
+	vel += keymove;
+	loc.extbits |= 1;
 	loc.bits |=   1<<SK_FIRE;
 #endif
 
