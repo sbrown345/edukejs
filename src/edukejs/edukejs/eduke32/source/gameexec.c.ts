@@ -1175,6 +1175,7 @@ function /*int32_t */VM_ResetPlayer(/*int32_t */g_p:number, /*int32_t */g_flags:
 //}
 
 //#if !defined LUNATIC
+var vm_exec_loop_count = 0;
 function VM_Execute(/*int32_t */loop: number): void
 {
    var tw = script[insptr];
@@ -1204,8 +1205,8 @@ function VM_Execute(/*int32_t */loop: number): void
         g_errorLineNum = tw>>12;
         g_tw = tw &= 0xFFF;
         
-        dlog(DEBUG_VM_EXECUTE, "loop tw: %i, *instptr: %i, insptr: %i\n", tw, script[insptr], insptr);
-
+        vm_exec_loop_count++;
+        dlog(DEBUG_VM_EXECUTE, "loop vm_exec_loop_count: %i, tw: %i, *instptr: %i, insptr: %i\n",vm_exec_loop_count ,tw, script[insptr], insptr);
         switch (tw)
         {
         case CON_REDEFINEQUOTE:
@@ -3464,7 +3465,7 @@ function VM_Execute(/*int32_t */loop: number): void
             continue;
 
         case CON_IFP:
-        {
+        {if(vm_exec_loop_count== 12163)debugger
             var /*int32_t */l = script[++insptr] /* *(++insptr)*/ ;
             var/*int32_t */j = 0;
             var ps = g_player[vm.g_p].ps;

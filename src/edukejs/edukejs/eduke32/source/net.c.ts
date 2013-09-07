@@ -35,8 +35,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //#include "quicklz.h"
 //#include "crc32.h"
 
-var g_netServer = NULL;    ////ENetHost *
-var g_netClient = NULL;    ////ENetHost *
+var g_netServer = 0/*NULL*/;    ////ENetHost *
+var g_netClient = 0/*NULL*/;    ////ENetHost *
 //ENetPeer *g_netClientPeer = NULL;
 //enet_uint16 g_netPort = 23513;
 //int32_t g_netDisconnect = 0;

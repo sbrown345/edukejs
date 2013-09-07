@@ -1151,6 +1151,7 @@ LUNATIC_EXTERN void G_ShowView(int32_t x, int32_t y, int32_t z, int32_t a, int32
 }
 
 #if !defined LUNATIC
+static int32_t vm_exec_loop_count = 0;
 GAMEEXEC_STATIC void VM_Execute(int32_t loop)
 {
     register int32_t tw = *insptr;
@@ -1178,7 +1179,8 @@ skip_check:
         g_errorLineNum = tw>>12;
         g_tw = tw &= 0xFFF;
 
-        dlog(DEBUG_VM_EXECUTE, "loop tw: %i, *instptr: %i, insptr: %i\n", tw, *insptr, insptr-script);
+        vm_exec_loop_count++;
+        dlog(DEBUG_VM_EXECUTE, "loop vm_exec_loop_count: %i, tw: %i, *instptr: %i, insptr: %i\n", vm_exec_loop_count, tw, *insptr, insptr-script);
         switch (tw)
         {
         case CON_REDEFINEQUOTE:
