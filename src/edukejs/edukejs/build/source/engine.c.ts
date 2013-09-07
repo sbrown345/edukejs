@@ -12574,9 +12574,9 @@ restart_grand:
                 // PK: the reason for the crash is not the overflowing (even if it IS a problem;
                 // signed overflow is undefined behavior in C), but rather the idiv trap when
                 // the resulting quotient doesn't fit into a *signed* 32-bit integer.
-                zz = uint32(intz-sv.z) * vx;
+                zz = int32(uint32(intz-sv.z) * vx);
                 intx = sv.x+scale(zz,1,vz);
-                zz = uint32(intz-sv.z) * vy;
+                zz = int32(uint32(intz-sv.z) * vy);
                 inty = sv.y+scale(zz,1,vz);
 //#else
 //                intx = sv.x+scale(intz-sv.z,vx,vz);
