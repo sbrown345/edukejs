@@ -481,6 +481,7 @@ function VM_AlterAng(/*int32_t */movflags:number):void
 
 //#if !defined LUNATIC
     var /*const intptr_t **/moveptr:number;
+	dlog(DEBUG_VM_EXECUTE, "VM_AlterAng movflags: %i\n", movflags);
     if (unsigned(AC_MOVE_ID(vm.g_t)) >= unsigned(g_scriptSize-1))
 
     {
@@ -491,7 +492,9 @@ function VM_AlterAng(/*int32_t */movflags:number):void
 
     moveptr = AC_MOVE_ID(vm.g_t);//script + AC_MOVE_ID(vm.g_t);
 
-    vm.g_sp.xvel += (script[moveptr] - vm.g_sp.xvel)/5;
+	dlog(DEBUG_VM_EXECUTE, "VM_AlterAng *moveptr: %i, vm.g_t[0]: %i\n", script[moveptr], vm.g_t[0]);
+	dlog(DEBUG_VM_EXECUTE, "*moveptr - vm.g_sp->xvel: %i, \n",  script[moveptr] - vm.g_sp.xvel);
+    vm.g_sp.xvel += int32((script[moveptr] - vm.g_sp.xvel)/5);
     if (vm.g_sp.zvel < 648)
         vm.g_sp.zvel += int32(((script[moveptr+1]<<4) - vm.g_sp.zvel)/5);
 //#else
@@ -799,6 +802,7 @@ function VM_Move():void
             }
         }
 
+		dlog(DEBUG_VM_EXECUTE, "VM_Move angdif: %i, daxvel:%i, vm.g_sp->zvel: %i\n", angdif, daxvel, vm.g_sp.zvel);
         {
             var tmpvect = new vec3_t( (daxvel*(sintable[(angdif+512)&2047]))>>14,
                                (daxvel*(sintable[angdif&2047]))>>14,
@@ -3465,7 +3469,7 @@ function VM_Execute(/*int32_t */loop: number): void
             continue;
 
         case CON_IFP:
-        {if(vm_exec_loop_count== 12163)debugger
+        {
             var /*int32_t */l = script[++insptr] /* *(++insptr)*/ ;
             var/*int32_t */j = 0;
             var ps = g_player[vm.g_p].ps;

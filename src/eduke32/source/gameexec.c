@@ -459,6 +459,7 @@ GAMEEXEC_STATIC void VM_AlterAng(int32_t movflags)
 
 #if !defined LUNATIC
     const intptr_t *moveptr;
+	dlog(DEBUG_VM_EXECUTE, "VM_AlterAng movflags: %i\n", movflags);
     if ((unsigned)AC_MOVE_ID(vm.g_t) >= (unsigned)g_scriptSize-1)
 
     {
@@ -469,6 +470,8 @@ GAMEEXEC_STATIC void VM_AlterAng(int32_t movflags)
 
     moveptr = script + AC_MOVE_ID(vm.g_t);
 
+	dlog(DEBUG_VM_EXECUTE, "VM_AlterAng *moveptr: %i, vm.g_t[0]: %i\n", *moveptr, vm.g_t[0]);
+	dlog(DEBUG_VM_EXECUTE, "*moveptr - vm.g_sp->xvel: %i, \n",  *moveptr - vm.g_sp->xvel);
     vm.g_sp->xvel += (*moveptr - vm.g_sp->xvel)/5;
     if (vm.g_sp->zvel < 648)
         vm.g_sp->zvel += ((*(moveptr+1)<<4) - vm.g_sp->zvel)/5;
@@ -777,6 +780,7 @@ dead:
             }
         }
 
+		dlog(DEBUG_VM_EXECUTE, "VM_Move angdif: %i, daxvel:%i, vm.g_sp->zvel: %i\n", angdif, daxvel, (int16_t)vm.g_sp->zvel);
         {
             vec3_t tmpvect = { (daxvel*(sintable[(angdif+512)&2047]))>>14,
                                (daxvel*(sintable[angdif&2047]))>>14,
