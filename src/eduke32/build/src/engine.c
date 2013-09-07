@@ -17242,6 +17242,17 @@ void dlog(int32_t log, char *format, ...) {
 	}
 }
 
+void logSprite(char* where) {
+    if(DEBUG_SPRITE) {
+        dlog(DEBUG_SPRITE, where);
+		dlog(DEBUG_SPRITE, "\nDEBUG_SPRITE: ");
+        for (int i = 0; i < Numsprites; i++) {
+			dlog(DEBUG_SPRITE, "(%i: x:%i y:%i z:%i, vel: %i %i %i, %i)\n", i, sprite[i].x, sprite[i].y, sprite[i].z,  sprite[i].xvel, sprite[i].yvel, sprite[i].zvel, sprite[i].cstat);
+        }
+		dlog(DEBUG_SPRITE, "\n");
+    }
+}
+
 void logHeadspritestat(char* where) {
     if(DEBUG_headspritestat) {
         dlog(DEBUG_headspritestat, where);

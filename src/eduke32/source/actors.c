@@ -8363,4 +8363,6 @@ void G_MoveWorld(void)
     logHeadspritestat("G_MoveFX");
     G_MoveFX();               //ST 11
     logHeadspritestat("G_MoveFX end");
+
+    logSprite("EO G_MoveWorld");
 }

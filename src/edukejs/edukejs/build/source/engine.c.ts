@@ -13100,7 +13100,7 @@ function/*int32_t */clipsprite_initindex(/*int32_t*/ curidx: number, curspr: spr
 var /*int32_t */clipmove_warned=0;
 
 function addclipline(/*int32_t*/ dax1: number, /*int32_t*/ day1: number, /*int32_t*/ dax2: number, /*int32_t*/ day2: number, /*int32_t*/ daoval: number): void 
-{if(daoval==49429)debugger
+{
     dlog(DEBUG_SPRITE, "addclipline dax1: %i day1: %i, dax2: %i, day2: %i, daoval: %i\n", dax1, day1, dax2, day2, daoval);
     if (clipnum < MAXCLIPNUM)
     {

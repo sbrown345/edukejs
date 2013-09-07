@@ -309,7 +309,7 @@ var G_DoSectorAnimations_count = 0;
 function G_DoSectorAnimations():void
 {
     var /*int32_t */i:number, j:number, a:number, p:number, v:number, dasect:number;
-    if(G_DoSectorAnimations_count== 24)debugger;
+    
     dlog(DEBUG_ANIMATIONS,  "G_DoSectorAnimations %i\n", G_DoSectorAnimations_count++);
     for (i=g_animateCount-1; i>=0; i--)
     {

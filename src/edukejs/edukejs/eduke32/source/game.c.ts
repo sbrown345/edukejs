@@ -4960,7 +4960,7 @@ function A_InsertSprite(whatsect:number,s_x:number,s_y:number,s_z:number,s_pn:nu
     assert.argumentsAre.int32(arguments);
     dlog(DEBUG_INSERT_SPRITE, "A_InsertSprite whatsect: %i, s_x: %i, s_y: %i, s_z: %i, s_pn: %i,  s_s: %i, s_xr: %i, s_yr: %i, s_a: %i, s_ve: %i, s_zv: %i, ,s_ow: %i, s_ss: %i\n",
 		whatsect, s_x, s_y, s_z, s_pn, s_s, s_xr, s_yr, s_a, s_ve, s_zv, s_ow, s_ss);
-
+    if(s_z== -7520)debugger
     var p: number;
     var i: number;
     var s: spritetype;
@@ -12068,7 +12068,7 @@ var tempWhile = 0;
         dlog(DEBUG_PLAYER_POS, "p pos x:%i y:%i z:%i, vel x:%i y:%i, z:%i \n", g_player[0].ps.pos.x, g_player[0].ps.pos.y, g_player[0].ps.pos.z, g_player[0].ps.vel.x, g_player[0].ps.vel.y, g_player[0].ps.vel.z);
 
         if(1)
-        if(tempWhile++ < 100)
+        if(tempWhile++ < 160)
             requestAnimationFrame(main_loop); // todo: async code for stuff like logo animations
         else 
             dlogFlush();

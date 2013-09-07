@@ -905,7 +905,7 @@ function /*int32_t */A_ShootWithZvel(/*int32_t*/ i:number, /*int32_t */atwith:nu
 
     var/*int32_t */p = (s.picnum == APLAYER) ? s.yvel : -1;
     var ps = p >= 0 ? g_player[p].ps : NULL;
-
+    dlog(DEBUG_A_SHOOTZVEL, "i: %i, atwith: %i, override_zvel: %i\n", i, atwith, override_zvel);
     if (override_zvel != SHOOT_HARDCODED_ZVEL)
     {
         g_overrideShootZvel = 1;
@@ -931,6 +931,7 @@ function /*int32_t */A_ShootWithZvel(/*int32_t*/ i:number, /*int32_t */atwith:nu
         srcvect.x = s.x;
         srcvect.y = s.y;
         srcvect.z -= (((s.yrepeat*tilesizy[s.picnum])<<1)-(4<<8));
+		dlog(DEBUG_A_SHOOTZVEL, "srcvect.z: %i, ((s.yrepeat*tilesizy[s.picnum])<<1)-(4<<8): %i\n",srcvect.z, ((s.yrepeat*tilesizy[s.picnum])<<1)-(4<<8));
 
         if (s.picnum != ROTATEGUN)
         {
@@ -941,8 +942,10 @@ function /*int32_t */A_ShootWithZvel(/*int32_t*/ i:number, /*int32_t */atwith:nu
                 srcvect.x += (sintable[(sa+1024+96)&2047]>>7);
                 srcvect.y += (sintable[(sa+512+96)&2047]>>7);
             }
+			dlog(DEBUG_A_SHOOTZVEL, "s->picnum != ROTATEGUN srcvect: %i, %i,%i\n", srcvect.x, srcvect.y, srcvect.z);
         }
 
+        dlog(DEBUG_A_SHOOTZVEL, "srcvect: %i, %i,%i\n", srcvect.x, srcvect.y, srcvect.z);
 //#ifdef POLYMER
         if (atwith >= 0)
             switch (DYNAMICTILEMAP(atwith))
@@ -1231,6 +1234,7 @@ function /*int32_t */A_ShootWithZvel(/*int32_t*/ i:number, /*int32_t */atwith:nu
     }
     else if (atwith >= 0)
     {
+        dlog(DEBUG_COOLEXPLOSION1__STATIC, "COOLEXPLOSION1__STATIC atwith %i\n", atwith);
         switch (DYNAMICTILEMAP(atwith))
         {
         case BLOODSPLAT1__STATIC:
@@ -1355,7 +1359,7 @@ function /*int32_t */A_ShootWithZvel(/*int32_t*/ i:number, /*int32_t */atwith:nu
             var/*int32_t */tsiz:number;
 
             if (s.extra >= 0) s.shade = -96;
-
+            dlog(DEBUG_COOLEXPLOSION1__STATIC, "COOLEXPLOSION1__STATIC 1 srcvect.z %i\n", srcvect.z);
             if (atwith == SPIT) vel = 292;
             else
             {
@@ -1372,6 +1376,7 @@ function /*int32_t */A_ShootWithZvel(/*int32_t*/ i:number, /*int32_t */atwith:nu
                 }
             }
 
+            dlog(1, "COOLEXPLOSION1__STATIC 2 srcvect.z %i\n", srcvect.z);
             if (p >= 0)
             {
                 var $zvel = new R(zvel);
@@ -1398,6 +1403,7 @@ function /*int32_t */A_ShootWithZvel(/*int32_t*/ i:number, /*int32_t */atwith:nu
             {
                 tsiz = 18;
                 srcvect.z -= (10<<8);
+				dlog(1, "COOLEXPLOSION1__STATIC 3 srcvect.z %i\n", srcvect.z);
             }
             else if (p >= 0)
                 tsiz = 7;

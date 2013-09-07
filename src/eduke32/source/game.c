@@ -11935,7 +11935,7 @@ skipframe:
 #ifdef DEBUG_TODO
 	while (1);
 #else
-    while (tempWhile++ < 100/*26*/);
+    while (tempWhile++ < 160/*26*/);
 	exit(0);//temp
 #endif
 

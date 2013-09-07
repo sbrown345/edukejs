@@ -8500,6 +8500,17 @@ function A_CheckSwitchTile(i: number): number
     return 0;
 }
 
+function logSprite(where:string):void {
+    if(DEBUG_SPRITE) {
+        dlog(DEBUG_SPRITE, where);
+		dlog(DEBUG_SPRITE, "\nDEBUG_SPRITE: ");
+        for (var i = 0; i < Numsprites; i++) {
+			dlog(DEBUG_SPRITE, "(%i: x:%i y:%i z:%i, vel: %i %i %i, %i)\n", i, sprite[i].x, sprite[i].y, sprite[i].z,  sprite[i].xvel, sprite[i].yvel, sprite[i].zvel, sprite[i].cstat);
+        }
+		dlog(DEBUG_SPRITE, "\n");
+    }
+}
+
 function logHeadspritestat(where:string):void {
     if(DEBUG_headspritestat) {
         dlog(DEBUG_headspritestat, where);
@@ -8614,4 +8625,6 @@ function G_MoveWorld(): void
     logHeadspritestat("G_MoveFX");
     G_MoveFX();              //ST 11
     logHeadspritestat("G_MoveFX end");
+
+    logSprite("EO G_MoveWorld");
 }

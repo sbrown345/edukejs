@@ -1405,10 +1405,10 @@ static inline void pop_nofog(void)
 #define DEBUG_POLYMOST_DRAWALLS_DOMOSTS_DETAIL 0
 #define DEBUG_PALETTE 0
 #define DEBUG_LOAD_TILE_ART 0
-#define DEBUG_PLAYER_POS 1
+#define DEBUG_PLAYER_POS 0
 #define DEBUG_GETZRANGE 1
 #define DEBUG_VM_EXECUTE 1
-#define DEBUG_headspritestat 1
+#define DEBUG_headspritestat 0
 #define DEBUG_SPRITESTAT_CHANGE 1
 #define DEBUG_SPAWN 1
 #define DEBUG_VM_CONDITIONAL 1
@@ -1416,11 +1416,14 @@ static inline void pop_nofog(void)
 #define DEBUG_CANSEE 1
 #define DEBUG_MOVE_EFFECTORS 1
 #define DEBUG_MOVE_STANDABLES 1
-#define DEBUG_ANIMATIONS 1
+#define DEBUG_ANIMATIONS 0
 #define DEBUG_TIMER 1
 #define DEBUG_INSERT_SPRITE 1
 #define DEBUG_VARS 1
 #define DEBUG_HIT 1
 #define DEBUG_SPRITE 1
+#define DEBUG_COOLEXPLOSION1__STATIC 1
+#define DEBUG_A_SHOOTZVEL 1
 void dlog(int32_t log, char *format, ...);
 void logHeadspritestat(char* where);
+void logSprite(char* where);
