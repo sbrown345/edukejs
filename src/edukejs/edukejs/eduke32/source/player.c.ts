@@ -930,6 +930,7 @@ function /*int32_t */A_ShootWithZvel(/*int32_t*/ i:number, /*int32_t */atwith:nu
         //Bmemcpy(&srcvect,s,sizeof(vec3_t));
         srcvect.x = s.x;
         srcvect.y = s.y;
+        srcvect.z = s.z;
         srcvect.z -= (((s.yrepeat*tilesizy[s.picnum])<<1)-(4<<8));
 		dlog(DEBUG_A_SHOOTZVEL, "srcvect.z: %i, ((s.yrepeat*tilesizy[s.picnum])<<1)-(4<<8): %i\n",srcvect.z, ((s.yrepeat*tilesizy[s.picnum])<<1)-(4<<8));
 
