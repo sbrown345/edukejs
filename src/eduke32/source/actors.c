@@ -896,7 +896,7 @@ ACTOR_STATIC void G_MoveZombieActors(void)
         int16_t ssect = s->sectnum;
         int16_t psect = s->sectnum;
 
-        dlog(DEBUG_MOVE_ZOMBIE_ACTORS, "i: %i, x: %i, actor[i].timetosleep: %i, extra: %i\n",i,x,actor[i].timetosleep,sprite[g_player[p].ps->i].extra);
+        dlog(DEBUG_MOVE_ZOMBIE_ACTORS, "i: %i, x: %i, actor[i].timetosleep: %i, extra: %i\n",i,x,(int16_t)actor[i].timetosleep,(int16_t)sprite[g_player[p].ps->i].extra);
         if (sprite[g_player[p].ps->i].extra > 0)
         {
             if (x < 30000)
