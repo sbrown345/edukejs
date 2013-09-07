@@ -1363,7 +1363,7 @@ function Net_IsRelevantStat(/*int32_t */stat: number): number
 {
     var statIndex: number;
 
-    if (g_netServer == NULL && g_netClient == NULL)
+    if (g_netServer == 0/*NULL */&& g_netClient == 0/*NULL*/)
     {
         return 0;
     }

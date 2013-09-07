@@ -3,7 +3,7 @@
 /// <reference path="../../utils/todo.ts" />
 /// <reference path="../../utils/types.ts" />
 
-/// <reference path="../../jmact/source/control.ts" />
+/// <reference path="../../jmact/source/control.c.ts" />
 /// <reference path="../../jmact/source/mathutil.c.ts" />
 
 /// <reference path="../../build/headers/baselayer.h.ts" />
@@ -12162,7 +12162,7 @@ function /*int32_t */G_DoMoveThings(): number
 
     if (g_netServer || g_netClient)
         randomseed = ticrandomseed;
-
+    debugger
     for (i = 0; i != -1; i = connectpoint2[i])
         g_player[i].sync.copyFrom(inputfifo[(g_netServer && myconnectindex == i)?1:0][i]);
         //Bmemcpy(g_player[i].sync, &inputfifo[(g_netServer && myconnectindex == i)][i],

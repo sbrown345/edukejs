@@ -3009,7 +3009,7 @@ function P_GetInput(/*int32_t */snum: number): void
 //    if (BUTTON(gamefunc_Jump) && p.on_ground)
 //        g_emuJumpTics = 4;
 
-//    loc.bits = (g_emuJumpTics > 0 || BUTTON(gamefunc_Jump))<<SK_JUMP;
+    loc.bits = (g_emuJumpTics > 0 || BUTTON(gamefunc_Jump))<<SK_JUMP;
 
 //    if (g_emuJumpTics > 0)
 //        g_emuJumpTics--;
@@ -3018,11 +3018,12 @@ function P_GetInput(/*int32_t */snum: number): void
 //    loc.bits |=   BUTTON(gamefunc_Fire)<<SK_FIRE;
 //    loc.bits |= (BUTTON(gamefunc_Aim_Up) || (BUTTON(gamefunc_Dpad_Aiming) && vel > 0))<<SK_AIM_UP;
 //    loc.bits |= (BUTTON(gamefunc_Aim_Down) || (BUTTON(gamefunc_Dpad_Aiming) && vel < 0))<<SK_AIM_DOWN;
-//    if (ud.runkey_mode) loc.bits |= (ud.auto_run | BUTTON(gamefunc_Run))<<SK_RUN;
-//    else loc.bits |= (BUTTON(gamefunc_Run) ^ ud.auto_run)<<SK_RUN;
+    //if (ud.runkey_mode) loc.bits |= (ud.auto_run | BUTTON(gamefunc_Run))<<SK_RUN;
+    //else loc.bits |= (BUTTON(gamefunc_Run) ^ ud.auto_run)<<SK_RUN;
+    tempHC(function() {loc.bits |= 0^1<<SK_RUN;/*remove this after uncommenting line above*/}); 
 //    loc.bits |=   BUTTON(gamefunc_Look_Left)<<SK_LOOK_LEFT;
 //    loc.bits |=   BUTTON(gamefunc_Look_Right)<<SK_LOOK_RIGHT;
-//    loc.bits |=   j<<SK_WEAPON_BITS;
+    loc.bits |=   j<<SK_WEAPON_BITS;
 //    loc.bits |=   BUTTON(gamefunc_Steroids)<<SK_STEROIDS;
 //    loc.bits |=   BUTTON(gamefunc_Look_Up)<<SK_LOOK_UP;
 //    loc.bits |=   BUTTON(gamefunc_Look_Down)<<SK_LOOK_DOWN;
@@ -3033,10 +3034,10 @@ function P_GetInput(/*int32_t */snum: number): void
 //    loc.bits |= (BUTTON(gamefunc_Inventory_Left) || (BUTTON(gamefunc_Dpad_Select) && (svel > 0 || angvel < 0))) <<SK_INV_LEFT;
 //    loc.bits |=   KB_KeyPressed(sc_Pause)<<SK_PAUSE;
 //    loc.bits |=   BUTTON(gamefunc_Quick_Kick)<<SK_QUICK_KICK;
-//    loc.bits |=   g_myAimMode<<SK_AIMMODE;
+    loc.bits |=   g_myAimMode<<SK_AIMMODE;
 //    loc.bits |=   BUTTON(gamefunc_Holo_Duke)<<SK_HOLODUKE;
 //    loc.bits |=   BUTTON(gamefunc_Jetpack)<<SK_JETPACK;
-//    loc.bits |= (g_gameQuit<<SK_GAMEQUIT);
+    loc.bits |= (g_gameQuit<<SK_GAMEQUIT);
 //    loc.bits |= (BUTTON(gamefunc_Inventory_Right) || (BUTTON(gamefunc_Dpad_Select) && (svel < 0 || angvel > 0))) <<SK_INV_RIGHT;
 //    loc.bits |=   BUTTON(gamefunc_TurnAround)<<SK_TURNAROUND;
 //    loc.bits |=   BUTTON(gamefunc_Open)<<SK_OPEN;
@@ -3060,7 +3061,6 @@ function P_GetInput(/*int32_t */snum: number): void
 
 
     tempHC(function() {
-        loc.bits = 0;
         //if(tempKeyDown[38] || tempKeyDown[40] || tempKeyDown[37] || tempKeyDown[39] )debugger;
         if(tempKeyDown[38])//up
             vel += 100;

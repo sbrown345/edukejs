@@ -174,7 +174,10 @@ class DukeStatus_t {
 }// DukeStatus_t;
 
 class input_t {
-    bits: number; // 4b uint32_t
+    get bits(): number  {return this._bits[0];}
+    set bits(val: number) {this._bits[0] = val;  if(val===4)debugger }
+
+    _bits: Uint32Array; // 4b uint32_t
     fvel: number; svel: number; // 4b int16_t
     avel: number; horz: number; // 2b int8_t
     extbits: number; filler: number; // 2b int8_t
@@ -184,14 +187,14 @@ class input_t {
     }
 
     init() {
-        this.bits = 0; // 4b uint32_t
+        this._bits = new Uint32Array(1); // 4b uint32_t
         this.fvel = 0, this.svel = 0; // 4b int16_t
         this.avel = 0, this.horz = 0; // 2b int8_t
         this.extbits = 0, this.filler = 0; // 2b int8_t
     }
 
     copyFrom(v: input_t) {
-        this.bits = v.bits; // 4b uint32_t
+        this._bits[0] = v._bits[0]; // 4b uint32_t
         this.fvel = v.fvel, this.svel = v.svel; // 4b int16_t
         this.avel = v.avel, this.horz = v.horz; // 2b int8_t
         this.extbits = v.extbits, this.filler = v.filler; // 2b int8_t

@@ -22,7 +22,7 @@
 //int32_t CONTROL_JoystickEnabled = FALSE;
 //int32_t CONTROL_MousePresent = FALSE;
 //int32_t CONTROL_MouseEnabled = FALSE;
-//uint64_t  CONTROL_ButtonState = 0;
+var /*uint64_t  */CONTROL_ButtonState = 0;
 //uint64_t  CONTROL_ButtonHeldState = 0;
 
 //// static int32_t CONTROL_UserInputDelay = -1;
