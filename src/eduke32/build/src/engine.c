@@ -17247,7 +17247,7 @@ void logSprite(char* where) {
         dlog(DEBUG_SPRITE, where);
 		dlog(DEBUG_SPRITE, "\nDEBUG_SPRITE: ");
         for (int i = 0; i < Numsprites; i++) {
-			dlog(DEBUG_SPRITE, "(%i: x:%i y:%i z:%i, vel: %i %i %i, %i)\n", i, sprite[i].x, sprite[i].y, sprite[i].z,  sprite[i].xvel, sprite[i].yvel, sprite[i].zvel, sprite[i].cstat);
+			dlog(DEBUG_SPRITE, "(%i: x:%i y:%i z:%i, vel: %i %i %i, %i)\n", i, sprite[i].x, sprite[i].y, sprite[i].z,  (int16_t)sprite[i].xvel, (int16_t)sprite[i].yvel, (int16_t)sprite[i].zvel, sprite[i].cstat);
         }
 		dlog(DEBUG_SPRITE, "\n");
     }

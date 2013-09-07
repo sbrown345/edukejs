@@ -137,6 +137,7 @@
     <Content Include="jaudiolib\source\fx_man.c.ts" />
     <Content Include="jmact\headers\control.h.ts" />
     <Content Include="jmact\headers\keyboard.h.ts" />
+    <Content Include="jmact\source\control.c.ts" />
     <Content Include="jmact\source\keyboard.c.ts" />
     <Content Include="jmact\source\mathutil.c.ts" />
     <TypeScriptCompile Include="libs\long.ts" />
@@ -291,7 +292,6 @@
     <TypeScriptCompile Include="C:\dev\edukejs\src\edukejs\edukejs\\jaudiolib\source\fx_man.c.ts" />
     <TypeScriptCompile Include="C:\dev\edukejs\src\edukejs\edukejs\\jmact\headers\control.h.ts" />
     <TypeScriptCompile Include="C:\dev\edukejs\src\edukejs\edukejs\\jmact\headers\keyboard.h.ts" />
-    <TypeScriptCompile Include="C:\dev\edukejs\src\edukejs\edukejs\\jmact\source\control.ts" />
     <TypeScriptCompile Include="C:\dev\edukejs\src\edukejs\edukejs\\jmact\source\keyboard.c.ts" />
     <TypeScriptCompile Include="C:\dev\edukejs\src\edukejs\edukejs\\jmact\source\mathutil.c.ts" />
     <TypeScriptCompile Include="C:\dev\edukejs\src\edukejs\edukejs\\libs\long.ts" />
