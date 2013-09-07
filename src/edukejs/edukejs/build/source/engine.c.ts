@@ -8526,7 +8526,7 @@ function /*int32_t */rintersect(/*int32_t*/ x1:number, /*int32_t*/ y1:number, /*
     dlog(DEBUG_HIT, "rintersect x1: %i, y1: %i, z1: %i, vx_: %i, vy_: %i, vz: %i, x3: %i, y3: %i, x4: %i, y4, bot: %i\n",  x1, y1, z1, vx_, vy_, vz, x3, y3, x4, y4, bot);
     if (bot == 0)
         return -1;
-    if(y3== 30709)debugger
+    
     if (bot >= 0)
     {
         var /*int64_t */x31=x3-x1, y31 = y3-y1;
@@ -8541,7 +8541,7 @@ function /*int32_t */rintersect(/*int32_t*/ x1:number, /*int32_t*/ y1:number, /*
         topu = vx*y31 - vy*x31;  dlog(DEBUG_HIT, "!(bot >= 0) topu: %i\n", topu);if (topu > 0 || topu <= bot) return -1;
     }
     
-        debugger
+        
     var toptLong = goog.math.Long.fromNumber(topt);
     t = Math.floor(toptLong.shiftLeft(16).toNumber() / bot);//t = (topt<<16)/bot;
     dlog(DEBUG_HIT, "rintersect t: %ld\n", t);
@@ -12519,8 +12519,6 @@ restart_grand:
                 if ((cstat&64) != 0)   //back side of 1-way sprite
                     if (/*(int64_t)*/(x1-sv.x)*(y2-sv.y) < /*(int64_t)*/(x2-sv.x)*(y1-sv.y)) continue;
 
-				dlog(DEBUG_HIT, "get_wallspr_points after x1: %i, x2: %i, y1: %i, y2: %i\n", x1,x2,y1,y2);
-
                 var $intx = new R(intx);
                 var $inty = new R(inty);
                 var $intz = new R(intz);
@@ -13102,7 +13100,7 @@ function/*int32_t */clipsprite_initindex(/*int32_t*/ curidx: number, curspr: spr
 var /*int32_t */clipmove_warned=0;
 
 function addclipline(/*int32_t*/ dax1: number, /*int32_t*/ day1: number, /*int32_t*/ dax2: number, /*int32_t*/ day2: number, /*int32_t*/ daoval: number): void 
-{
+{if(daoval==49429)debugger
     dlog(DEBUG_SPRITE, "addclipline dax1: %i day1: %i, dax2: %i, day2: %i, daoval: %i\n", dax1, day1, dax2, day2, daoval);
     if (clipnum < MAXCLIPNUM)
     {
@@ -13400,9 +13398,9 @@ function /*int32_t */clipmove(pos: IVec3, /*int16_t **/sectnum: R<number>,
                     {
                         var /*int32_t */bsz: number;
                         bsz = (spr.clipdist<<2)+walldist; if (gx < 0) bsz = -bsz;
-                        addclipline(x1-bsz,y1-bsz,x1-bsz,y1+bsz,int16(j+49152));
+                        addclipline(x1-bsz,y1-bsz,x1-bsz,y1+bsz,int16(j)+49152);
                         bsz = (spr.clipdist<<2)+walldist; if (gy < 0) bsz = -bsz;
-                        addclipline(x1+bsz,y1-bsz,x1-bsz,y1-bsz,int16(j+49152));
+                        addclipline(x1+bsz,y1-bsz,x1-bsz,y1-bsz,int16(j)+49152);
                     }
                 }
                 break;
@@ -13433,19 +13431,19 @@ function /*int32_t */clipmove(pos: IVec3, /*int16_t **/sectnum: R<number>,
 
                         if ((x1-(pos.x))*(y2-(pos.y)) >= (x2-(pos.x))*(y1-(pos.y)))   //Front
                         {
-                            addclipline(x1+dax,y1+day,x2+day,y2-dax,int16(j+49152));
+                            addclipline(x1+dax,y1+day,x2+day,y2-dax,int16(j)+49152);
                         }
                         else
                         {
                             if ((cstat&64) != 0) continue;
-                            addclipline(x2-dax,y2-day,x1-day,y1+dax,int16(j+49152));
+                            addclipline(x2-dax,y2-day,x1-day,y1+dax,int16(j)+49152);
                         }
 
                         //Side blocker
                         if ((x2-x1)*((pos.x)-x1) + (y2-y1)*((pos.y)-y1) < 0)
-                            addclipline(x1-day,y1+dax,x1+dax,y1+day,int16(j+49152)); 
+                            addclipline(x1-day,y1+dax,x1+dax,y1+day,int16(j)+49152); 
                         else if ((x1-x2)*((pos.x)-x2) + (y1-y2)*((pos.y)-y2) < 0)
-                            addclipline(x2+day,y2-dax,x2-dax,y2-day,int16(j+49152));
+                            addclipline(x2+day,y2-dax,x2-dax,y2-day,int16(j)+49152);
                     }
                 }
                 break;
@@ -13489,23 +13487,23 @@ function /*int32_t */clipmove(pos: IVec3, /*int16_t **/sectnum: R<number>,
                     if ((rxi[0]-(pos.x))*(ryi[1]-(pos.y)) < (rxi[1]-(pos.x))*(ryi[0]-(pos.y)))
                     {
                         if (clipinsideboxline(cx,cy,rxi[1],ryi[1],rxi[0],ryi[0],rad) != 0)
-                            addclipline(rxi[1]-day,ryi[1]+dax,rxi[0]+dax,ryi[0]+day,int16(j+49152));
+                            addclipline(rxi[1]-day,ryi[1]+dax,rxi[0]+dax,ryi[0]+day,int16(j)+49152);
                     }
                     else if ((rxi[2]-(pos.x))*(ryi[3]-(pos.y)) < (rxi[3]-(pos.x))*(ryi[2]-(pos.y)))
                     {
                         if (clipinsideboxline(cx,cy,rxi[3],ryi[3],rxi[2],ryi[2],rad) != 0)
-                            addclipline(rxi[3]+day,ryi[3]-dax,rxi[2]-dax,ryi[2]-day,int16(j+49152));
+                            addclipline(rxi[3]+day,ryi[3]-dax,rxi[2]-dax,ryi[2]-day,int16(j)+49152);
                     }
 
                     if ((rxi[1]-(pos.x))*(ryi[2]-(pos.y)) < (rxi[2]-(pos.x))*(ryi[1]-(pos.y)))
                     {
                         if (clipinsideboxline(cx,cy,rxi[2],ryi[2],rxi[1],ryi[1],rad) != 0)
-                            addclipline(rxi[2]-dax,ryi[2]-day,rxi[1]-day,ryi[1]+dax,int16(j+49152));
+                            addclipline(rxi[2]-dax,ryi[2]-day,rxi[1]-day,ryi[1]+dax,int16(j)+49152);
                     }
                     else if ((rxi[3]-(pos.x))*(ryi[0]-(pos.y)) < (rxi[0]-(pos.x))*(ryi[3]-(pos.y)))
                     {
                         if (clipinsideboxline(cx,cy,rxi[0],ryi[0],rxi[3],ryi[3],rad) != 0)
-                            addclipline(rxi[0]+dax,ryi[0]+day,rxi[3]+day,ryi[3]-dax,int16(j+49152));
+                            addclipline(rxi[0]+dax,ryi[0]+day,rxi[3]+day,ryi[3]-dax,int16(j)+49152);
                     }
                 }
                 break;

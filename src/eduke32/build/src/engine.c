@@ -12257,8 +12257,6 @@ restart_grand:
                 if ((cstat&64) != 0)   //back side of 1-way sprite
                     if ((int64_t)(x1-sv->x)*(y2-sv->y) < (int64_t)(x2-sv->x)*(y1-sv->y)) continue;
 
-				dlog(DEBUG_HIT, "get_wallspr_points after x1: %i, x2: %i, y1: %i, y2: %i\n", x1,x2,y1,y2);
-
                 ucoefup16 = rintersect(sv->x,sv->y,sv->z,vx,vy,vz,x1,y1,x2,y2,&intx,&inty,&intz);
                 if (ucoefup16 == -1) continue;
 
