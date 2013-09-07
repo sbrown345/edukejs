@@ -1178,7 +1178,7 @@ skip_check:
         g_errorLineNum = tw>>12;
         g_tw = tw &= 0xFFF;
 
-        dlog(DEBUG_VM_EXECUTE, "loop tw: %i, instptr: %i\n", tw, *insptr);
+        dlog(DEBUG_VM_EXECUTE, "loop tw: %i, *instptr: %i, insptr: %i\n", tw, *insptr, insptr-script);
         switch (tw)
         {
         case CON_REDEFINEQUOTE:
@@ -1783,6 +1783,7 @@ skip_check:
             intptr_t *tempscrptr=insptr+2;
 
             insptr = (intptr_t *) *(insptr+1);
+			dlog(DEBUG_VM_EXECUTE, "CON_STATE insptr: %i\n",insptr- script);
             VM_Execute(1);
             insptr = tempscrptr;
         }
@@ -3473,6 +3474,7 @@ nullquote:
                 else
                     j = 0;
             }
+			dlog(DEBUG_VM_EXECUTE, "CON_IFP s: %i, j: %i, *insptr: %i, *insptr+1: %i\n", s, j, *insptr, ((intptr_t *)*(insptr+1))-script);
             VM_CONDITIONAL((intptr_t) j);
         }
         continue;

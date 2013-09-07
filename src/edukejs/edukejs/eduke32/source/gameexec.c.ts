@@ -1203,8 +1203,8 @@ function VM_Execute(/*int32_t */loop: number): void
 
         g_errorLineNum = tw>>12;
         g_tw = tw &= 0xFFF;
-
-        dlog(DEBUG_VM_EXECUTE, "loop tw: %i, instptr: %i\n", tw, script[insptr]);
+        
+        dlog(DEBUG_VM_EXECUTE, "loop tw: %i, *instptr: %i, insptr: %i\n", tw, script[insptr], insptr);
 
         switch (tw)
         {
@@ -1815,6 +1815,7 @@ function VM_Execute(/*int32_t */loop: number): void
             var /*intptr_t **/tempscrptr=insptr+2;
 
             insptr = script[insptr+1];
+			dlog(DEBUG_VM_EXECUTE, "CON_STATE insptr: %i\n", insptr);
             VM_Execute(1);
             insptr = tempscrptr;
         }
@@ -3514,6 +3515,7 @@ function VM_Execute(/*int32_t */loop: number): void
                 else
                     j = 0;
             }
+			dlog(DEBUG_VM_EXECUTE, "CON_IFP s: %i, j: %i, *insptr: %i, *insptr+1: %i\n", _s, j, script[insptr], script[insptr+1]);
             VM_CONDITIONAL(/*(intptr_t)*/ j);
         }
         continue;
