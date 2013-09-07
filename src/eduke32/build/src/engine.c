@@ -8383,25 +8383,29 @@ static int32_t rintersect(int32_t x1, int32_t y1, int32_t z1,
     const int64_t vx=vx_, vy=vy_;
     const int64_t x34=x3-x4, y34=y3-y4;
     const int64_t bot = vx*y34 - vy*x34;
-    dlog(DEBUG_HIT, "rintersect x1: %i, y1: %i, z1: %i, vx_: %i, vy_: %i, vz: %i, x3: %i, y3: %i, x4: %i, y4\n",  x1, y1, z1, vx_, vy_, vz, x3, y3, x4, y4);
+    dlog(DEBUG_HIT, "rintersect x1: %i, y1: %i, z1: %i, vx_: %i, vy_: %i, vz: %i, x3: %i, y3: %i, x4: %i, y4, bot: %i\n",  x1, y1, z1, vx_, vy_, vz, x3, y3, x4, y4, bot);
     if (bot == 0)
         return -1;
 
     if (bot >= 0)
     {
         int64_t x31=x3-x1, y31 = y3-y1;
-        topt = x31*y34 - y31*x34; if (topt < 0) return -1;
-        topu = vx*y31 - vy*x31; if (topu < 0 || topu >= bot) return -1;
+        topt = x31*y34 - y31*x34; dlog(DEBUG_HIT, "bot >= 0 topt: %ld\n", topt);if (topt < 0) return -1;
+        topu = vx*y31 - vy*x31; dlog(DEBUG_HIT, "bot >= 0 topu: %ld\n", topu);if (topu < 0 || topu >= bot) return -1;
     }
     else
     {
         int32_t x31=x3-x1, y31=y3-y1;
-        topt = x31*y34 - y31*x34; if (topt > 0) return -1;
-        topu = vx*y31 - vy*x31; if (topu > 0 || topu <= bot) return -1;
+         dlog(DEBUG_HIT, "x31: %ld, y31: %ld\n", x31, y31);
+        topt = x31*y34 - y31*x34; dlog(DEBUG_HIT, "!(bot >= 0) topt: %ld\n", topt);if (topt > 0) return -1;
+        topu = vx*y31 - vy*x31;dlog(DEBUG_HIT, "!(bot >= 0) topu: %ld\n", topu); if (topu > 0 || topu <= bot) return -1;
     }
 
     t = (topt<<16)/bot;
-    dlog(DEBUG_HIT, "rintersect t: %i, topt: %i, topu: %i, bot: %i\n", t, topt, topu, bot);
+    dlog(DEBUG_HIT, "rintersect t: %ld\n", t);
+    dlog(DEBUG_HIT, "topt: %ld\n", topt);
+    dlog(DEBUG_HIT, "topu: %ld\n", topu);
+    dlog(DEBUG_HIT, "bot: %ld\n", bot);
     *intx = x1 + ((vx*t)>>16);
     *inty = y1 + ((vy*t)>>16);
     *intz = z1 + ((vz*t)>>16);
@@ -8409,7 +8413,8 @@ static int32_t rintersect(int32_t x1, int32_t y1, int32_t z1,
     t = (topu<<16)/bot;
     Bassert((unsigned)t < 65536);
 
-    dlog(DEBUG_HIT, "rintersect t: %i\n", t);
+    dlog(DEBUG_HIT, "rintersect t: %ld\n", t);
+    dlog(DEBUG_HIT, "rintersect int32 t: %i, intx: %i, inty: %i, intz: %i\n", (int32_t)t, *intx, *inty, *intz);
     return t;
 }
 
@@ -11917,6 +11922,8 @@ static void get_wallspr_points(const spritetype *spr, int32_t *x1, int32_t *x2,
 
     *y1 -= mulscale16(day,k);
     *y2 = *y1 + mulscale16(day,l);
+
+    dlog(DEBUG_HIT, "get_wallspr_points x1: %i, x2: %i, y1: %i, y2: %i\n", *x1,*x2,*y1,*y2);
 }
 
 // x1, y1: in/out
@@ -12249,6 +12256,8 @@ restart_grand:
 
                 if ((cstat&64) != 0)   //back side of 1-way sprite
                     if ((int64_t)(x1-sv->x)*(y2-sv->y) < (int64_t)(x2-sv->x)*(y1-sv->y)) continue;
+
+				dlog(DEBUG_HIT, "get_wallspr_points after x1: %i, x2: %i, y1: %i, y2: %i\n", x1,x2,y1,y2);
 
                 ucoefup16 = rintersect(sv->x,sv->y,sv->z,vx,vy,vz,x1,y1,x2,y2,&intx,&inty,&intz);
                 if (ucoefup16 == -1) continue;

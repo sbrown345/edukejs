@@ -6,6 +6,7 @@ declare module goog
         interface Long 
         {
             shiftLeft(numBits: number): Long;
+            shiftRight(numBits: number): Long;
             toNumber(): number;
         }
 

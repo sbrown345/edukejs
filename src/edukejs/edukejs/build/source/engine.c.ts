@@ -8523,36 +8523,42 @@ function /*int32_t */rintersect(/*int32_t*/ x1:number, /*int32_t*/ y1:number, /*
     var /*const int64_t*/ vx=vx_, vy=vy_;
     var /*const int64_t*/ x34=x3-x4, y34=y3-y4;
     var /*const int64_t*/ bot = vx*y34 - vy*x34;
-    dlog(DEBUG_HIT, "rintersect x1: %i, y1: %i, z1: %i, vx_: %i, vy_: %i, vz: %i, x3: %i, y3: %i, x4: %i, y4\n",  x1, y1, z1, vx_, vy_, vz, x3, y3, x4, y4);
+    dlog(DEBUG_HIT, "rintersect x1: %i, y1: %i, z1: %i, vx_: %i, vy_: %i, vz: %i, x3: %i, y3: %i, x4: %i, y4, bot: %i\n",  x1, y1, z1, vx_, vy_, vz, x3, y3, x4, y4, bot);
     if (bot == 0)
         return -1;
-
+    if(y3== 30709)debugger
     if (bot >= 0)
     {
         var /*int64_t */x31=x3-x1, y31 = y3-y1;
-        topt = x31*y34 - y31*x34; if (topt < 0) return -1;
-        topu = vx*y31 - vy*x31; if (topu < 0 || topu >= bot) return -1;
+        topt = x31*y34 - y31*x34; dlog(DEBUG_HIT, "bot >= 0 topt: %i\n", topt); if (topt < 0) return -1;
+        topu = vx*y31 - vy*x31; dlog(DEBUG_HIT, "bot >= 0 topu: %i\n", topu);if (topu < 0 || topu >= bot) return -1;
     }
     else
     {
         var /*int32_t */x31=x3-x1, y31=y3-y1;
-        topt = x31*y34 - y31*x34; if (topt > 0) return -1;
-        topu = vx*y31 - vy*x31; if (topu > 0 || topu <= bot) return -1;
+         dlog(DEBUG_HIT, "x31: %i, y31: %i\n", x31, y31);
+        topt = x31*y34 - y31*x34; dlog(DEBUG_HIT, "!(bot >= 0) topt: %i\n", topt);if (topt > 0) return -1;
+        topu = vx*y31 - vy*x31;  dlog(DEBUG_HIT, "!(bot >= 0) topu: %i\n", topu);if (topu > 0 || topu <= bot) return -1;
     }
     
+        debugger
     var toptLong = goog.math.Long.fromNumber(topt);
     t = Math.floor(toptLong.shiftLeft(16).toNumber() / bot);//t = (topt<<16)/bot;
-    dlog(DEBUG_HIT, "rintersect t: %i, topt: %i, topu: %i, bot: %i\n", t, topt, topu, bot);
-    intx.$ = x1 + ((vx*t)>>16);
-    inty.$ = y1 + ((vy*t)>>16);
-    intz.$ = z1 + ((vz*t)>>16);
-    
+    dlog(DEBUG_HIT, "rintersect t: %ld\n", t);
+    dlog(DEBUG_HIT, "topt: %ld\n", topt);
+    dlog(DEBUG_HIT, "topu: %ld\n", topu);
+    dlog(DEBUG_HIT, "bot: %ld\n", bot);
+    intx.$ = int32(x1 + ( goog.math.Long.fromNumber(vx*t).shiftRight(16).toNumber()));//x1 + ((vx*t)>>16); // todo: can use use Math.pow instead of math.Long?
+    inty.$ = int32(y1 + ( goog.math.Long.fromNumber(vy*t).shiftRight(16).toNumber()));//y1 + ((vy*t)>>16);
+    intz.$ = int32(z1 + ( goog.math.Long.fromNumber(vz*t).shiftRight(16).toNumber()));//z1 + ((vz*t)>>16);
+                              
     var topuLong =  goog.math.Long.fromNumber(topu);
     t = Math.floor(topuLong.shiftLeft(16).toNumber() / bot);//t = (topu<<16)/bot;
     Bassert(unsigned(t < 65536 ? 1:0));
 
     dlog(DEBUG_HIT, "rintersect t: %i\n", t);
-    return t;
+    dlog(DEBUG_HIT, "rintersect int32 t: %i, intx: %i, inty: %i, intz: %i\n", int32(t), intx.$, inty.$, intz.$);
+    return int32(t);
 }
 
 //int32_t rayintersect(int32_t x1, int32_t y1, int32_t z1, int32_t vx, int32_t vy, int32_t vz, int32_t x3,
@@ -12159,6 +12165,7 @@ function /*static void */get_wallspr_points(/*const spritetype **/spr: spritetyp
 
     y1.$ -= mulscale16(day,k);
     y2.$ = y1.$ + mulscale16(day,l);
+    dlog(DEBUG_HIT, "get_wallspr_points x1: %i, x2: %i, y1: %i, y2: %i\n", x1.$,x2.$,y1.$,y2.$);
 }
 
 // x1, y1: in/out
@@ -12506,11 +12513,13 @@ restart_grand:
                 get_wallspr_points(spr, $x1, $x2, $y1, $y2);
                 x1 = $x1.$;
                 x2 = $x2.$;
-                x2 = $x2.$;
+                y1 = $y1.$;
                 y2 = $y2.$;
 
                 if ((cstat&64) != 0)   //back side of 1-way sprite
                     if (/*(int64_t)*/(x1-sv.x)*(y2-sv.y) < /*(int64_t)*/(x2-sv.x)*(y1-sv.y)) continue;
+
+				dlog(DEBUG_HIT, "get_wallspr_points after x1: %i, x2: %i, y1: %i, y2: %i\n", x1,x2,y1,y2);
 
                 var $intx = new R(intx);
                 var $inty = new R(inty);
