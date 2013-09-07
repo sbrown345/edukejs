@@ -3,6 +3,10 @@
 /// <reference path="../../utils/todo.ts" />
 /// <reference path="../../utils/types.ts" />
 
+/// <reference path="../../jmact/headers/control.h.ts" />
+
+/// <reference path="../../jmact/source/control.c.ts" />
+
 /// <reference path="../../build/headers/baselayer.h.ts" />
 /// <reference path="../../build/headers/build.h.ts" />
 /// <reference path="../../build/headers/cache1d.h.ts" />

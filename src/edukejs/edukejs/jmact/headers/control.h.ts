@@ -46,7 +46,7 @@ Modifications for JonoF's port by Jonathon Fowler (jf@jonof.id.au)
 
 //#define MAXGAMEBUTTONS      64
 
-function BUTTON(x):number {return (CONTROL_ButtonState>> (/*(uint64_t)*/(x)) ) & 1;}
+function BUTTON(x:number):number {return (CONTROL_ButtonState>> (/*(uint64_t)*/(x)) ) & 1;}
 //#define BUTTONHELD(x) ((CONTROL_ButtonHeldState>> ((uint64_t)(x)) ) & 1)
 
 //#define BUTTONJUSTPRESSED(x) \
