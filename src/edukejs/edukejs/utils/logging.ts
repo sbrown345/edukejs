@@ -13,8 +13,7 @@ var DEBUG_POLYMOST_DRAWALLS_SCANSECTOR = false;
 var DEBUG_POLYMOST_DRAWALLS_DOMOSTS_DETAIL = false;
 //DEBUG_MOSTS = DEBUG_POLYMOST_DRAWALLS = DEBUG_POLYMOST_DRAWALLS_SCANSECTOR = DEBUG_POLYMOST_DRAWALLS_DOMOSTS_DETAIL = true; // todo!
 var DEBUG_SCRIPT_CHANGE = false;
-var DEBUG_LOAD_TILE_ART = true;
-var DEBUG_PALETTE = true;
+var DEBUG_PALETTE = false;
 var DEBUG_PLAYER_POS = false;
 var DEBUG_GETZRANGE = false;
 var DEBUG_VM_EXECUTE = false;
@@ -36,6 +35,10 @@ var DEBUG_SPRITE = false;
 var DEBUG_COOLEXPLOSION1__STATIC = false;
 var DEBUG_A_SHOOTZVEL = false;
 var DEBUG_DAMAGE = false;
+
+//engine_priv.h
+var DEBUG_LOAD_TILE_ART = false;
+var DEBUG_TEXTURE = true;
 
 var dlog = function (log: boolean, format: string, ...args: any[]) {
     if(!log || SKIP_ALL_LOGGING) return;

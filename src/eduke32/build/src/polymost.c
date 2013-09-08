@@ -745,6 +745,7 @@ void uploadtexture(int32_t doalloc, int32_t xsiz, int32_t ysiz, int32_t intexfmt
 
     dameth &= ~(8192|4096);
 
+    dlog(DEBUG_TEXTURE, "uploadtexture doalloc: %i, xsiz: %i, ysiz: %i, intexfmt: %i, texfmt: %i, tsizx: %i, tsizy: %i, dameth: %i\n", doalloc, xsiz, ysiz, intexfmt, texfmt, tsizx, tsizy, dameth);
     if (gltexmaxsize <= 0)
     {
         GLint i = 0;
@@ -882,6 +883,7 @@ int32_t gloadtile_art(int32_t dapic, int32_t dapal, int32_t dashade, int32_t dam
 
     static int32_t fullbrightloadingpass = 0;
 
+    dlog(DEBUG_TEXTURE, "gloadtile_art dapic: %i, dapal: %i, dashade: %i, dameth: %i, doalloc: %i\n",  dapic, dapal, dashade, dameth, doalloc);
     int32_t tsizx = tilesizx[dapic];
     int32_t tsizy = tilesizy[dapic];
 

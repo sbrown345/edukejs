@@ -801,7 +801,7 @@ function uploadtexture(doalloc: number, xsiz: number, ysiz: number, intexfmt: nu
     var nocompress = (dameth&4096)?1:0;              //int32_t
 
     dameth &= ~(8192|4096);
-
+    dlog(DEBUG_TEXTURE, "uploadtexture doalloc: %i, xsiz: %i, ysiz: %i, intexfmt: %i, texfmt: %i, tsizx: %i, tsizy: %i, dameth: %i\n", doalloc, xsiz, ysiz, intexfmt, texfmt, tsizx, tsizy, dameth);
     if (gltexmaxsize <= 0)
     {
         var i = 0;
@@ -937,7 +937,8 @@ function gloadtile_art(dapic: number, dapal: number, dashade: number, dameth: nu
     var hasalpha = 0, hasfullbright = 0;//char
 
     //static int32_t fullbrightloadingpass = 0;
-
+    console.log("gloadtile_art %i", tempWhile);
+    dlog(DEBUG_TEXTURE, "gloadtile_art dapic: %i, dapal: %i, dashade: %i, dameth: %i, doalloc: %i\n",  dapic, dapal, dashade, dameth, doalloc);
     var tsizx = tilesizx[dapic];//int32_t 
     var tsizy = tilesizy[dapic];//int32_t 
 
