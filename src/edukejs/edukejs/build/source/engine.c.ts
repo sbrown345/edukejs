@@ -11892,8 +11892,7 @@ restart_grand:
             var /*const int32_t */y31 = wal.y-y1, y34 = wal.y-wal2.y;
 
             var /*int32_t */x:number, y:number, z:number, nexts:number, t:number, bot:number;
-            var cfz = new Int32Array(2);
-
+            var cfz = new Int32Array(2);  
             dlog(DEBUG_CANSEE, "cansee wal.point2: %i, x31: %i\n", wal.point2, x31);
             bot = y21*x34-x21*y34; if (bot <= 0) continue;
             // XXX: OVERFLOW

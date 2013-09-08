@@ -1215,7 +1215,7 @@ function VM_Execute(/*int32_t */loop: number): void
         for (var gt = 0; gt < 9 ; dlog(DEBUG_VM_EXECUTE, "%i:%i, ",gt, vm.g_t[gt++])){};
         dlog(DEBUG_VM_EXECUTE, "\n");
 
-        if(vm_exec_loop_count>=39)debugger
+        
         switch (tw)
         {
         case CON_REDEFINEQUOTE:

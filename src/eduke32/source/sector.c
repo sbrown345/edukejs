@@ -1971,7 +1971,7 @@ void A_DamageObject(int32_t i,int32_t sn)
     {
         return;
     }
-
+	dlog(DEBUG_DAMAGE, "A_DamageObject i: %i, sn: %i\n", i, sn);
 //    int32_t switchpicnum = PN;
 
     i &= (MAXSPRITES-1);

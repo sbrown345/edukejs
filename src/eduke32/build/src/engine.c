@@ -11672,7 +11672,7 @@ restart_grand:
             int32_t cfz[2];
 
 			dlog(DEBUG_CANSEE, "cansee wal.point2: %i, x31: %i\n", wal->point2, x31);
-			int16_t point2 = wal->point2;
+
             bot = y21*x34-x21*y34; if (bot <= 0) continue;
             // XXX: OVERFLOW
             t = y21*x31-x21*y31; if ((unsigned)t >= (unsigned)bot) continue;

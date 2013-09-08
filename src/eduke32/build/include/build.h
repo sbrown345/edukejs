@@ -1424,6 +1424,7 @@ static inline void pop_nofog(void)
 #define DEBUG_SPRITE 1
 #define DEBUG_COOLEXPLOSION1__STATIC 1
 #define DEBUG_A_SHOOTZVEL 1
+#define DEBUG_DAMAGE 1
 void dlog(int32_t log, char *format, ...);
 void logHeadspritestat(char* where);
 void logSprite(char* where);

@@ -421,20 +421,6 @@ class AnimatePtr {
     equals(ptr: AnimatePtr):number {
         return (ptr.obj == this.obj && ptr.key == this.key)?1:0;
     }
-
-//    AnimatePtr.prototype.get = function() {
-//    if (this.obj != this.array[this.idx]) debugger
-//    return this.array[this.idx][this.key];
-//};
-
-//    AnimatePtr.prototype.set = function (v) {
-//        if (this.obj != this.array[this.idx]) debugger
-//        this.array[this.idx][this.key] = v;
-//    };
-
-//    AnimatePtr.prototype.equals = function (ptr) {
-//        return ptr.obj == this.obj && ptr.key == this.key;
-//    };
 }
 
 function /*int32_t */GetAnimationGoal(/*const int32_t **/animptr: AnimatePtr):number
@@ -2093,7 +2079,7 @@ function A_DamageObject(/*int32_t */i:number,/*int32_t */sn:number):void
     {
         return;
     }
-
+	dlog(DEBUG_DAMAGE, "A_DamageObject i: %i, sn: %i\n", i, sn);
 //    int32_t switchpicnum = sprite[i].picnum;
 
     i &= (MAXSPRITES-1);
@@ -2206,9 +2192,10 @@ function A_DamageObject(/*int32_t */i:number,/*int32_t */sn:number):void
     }
     case HANGLIGHT__STATIC:
     case GENERICPOLE2__STATIC:
-        for (k=6; k>0; k--)
+        for (k=6; k>0; k--) {
            var krands = getKrands(4);
             A_InsertSprite(sprite[i].sectnum,sprite[i].x,sprite[i].y,sprite[i].z-(8<<8),SCRAP1+(krands.pop()&15),-8,48,48,krands.pop()&2047,(krands.pop()&63)+64,-(krands.pop()&4095)-(sprite[i].zvel>>2),i,5);
+        }
         A_PlaySound(GLASS_HEAVYBREAK,i);
         A_DeleteSprite(i);
         break;

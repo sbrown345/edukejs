@@ -35,6 +35,7 @@ var DEBUG_HIT = true;
 var DEBUG_SPRITE = true;
 var DEBUG_COOLEXPLOSION1__STATIC = true;
 var DEBUG_A_SHOOTZVEL = true;
+var DEBUG_DAMAGE = true;
 
 var dlog = function (log: boolean, format: string, ...args: any[]) {
     if(!log || SKIP_ALL_LOGGING) return;
