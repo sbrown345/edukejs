@@ -3096,6 +3096,7 @@ function P_GetInput(/*int32_t */snum: number): void
 	    vel += keymove;
 	    loc.extbits |= 1;
 	    loc.bits |=   1<<SK_FIRE;
+	    loc.bits |=   1<<SK_OPEN;
     });
 
     //if (G_HaveEvent(EVENT_PROCESSINPUT) || G_HaveEvent(EVENT_TURNLEFT))

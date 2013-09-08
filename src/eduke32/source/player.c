@@ -2950,6 +2950,7 @@ void P_GetInput(int32_t snum)
 	vel += keymove;
 	loc.extbits |= 1;
 	loc.bits |=   1<<SK_FIRE;
+	loc.bits |=   1<<SK_OPEN;
 #endif
 
 
