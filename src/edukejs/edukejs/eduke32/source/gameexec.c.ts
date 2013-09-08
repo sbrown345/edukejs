@@ -1211,6 +1211,11 @@ function VM_Execute(/*int32_t */loop: number): void
         
         vm_exec_loop_count++;
         dlog(DEBUG_VM_EXECUTE, "loop vm_exec_loop_count: %i, tw: %i, *instptr: %i, insptr: %i\n",vm_exec_loop_count ,tw, script[insptr], insptr);
+        dlog(DEBUG_VM_EXECUTE, "vm.g_t: ");
+        for (var gt = 0; gt < 9 ; dlog(DEBUG_VM_EXECUTE, "%i:%i, ",gt, vm.g_t[gt++])){};
+        dlog(DEBUG_VM_EXECUTE, "\n");
+
+        if(vm_exec_loop_count>=39)debugger
         switch (tw)
         {
         case CON_REDEFINEQUOTE:
@@ -5435,7 +5440,7 @@ function A_Execute(/*int32_t */iActor:number,/*int32_t */iPlayer:number,/*int32_
     /* Helixhorned: let's do away with intptr_t's... */
 //#if !defined LUNATIC
     actionofs = AC_ACTION_ID(vm.g_t);
-    actionptr = (((actionofs!=0 && actionofs+4)?1:0) < unsigned(g_scriptSize)) ?
+    actionptr = (actionofs!=0 && actionofs+4 < unsigned(g_scriptSize)) ?
         script.subarray(actionofs) : NULL;
 
     if (actionptr != NULL)
