@@ -198,7 +198,7 @@ function A_RadiusDamage(/*int32_t*/ i:number, /*int32_t */r:number, /*int32_t */
         STAT_PLAYER, STAT_FALLER, STAT_ZOMBIEACTOR, STAT_MISC
     ];
 
-    var tempshort = /*(int16_t *)*/tempbuf;
+    var tempshort = new Int16Array(tempbuf.buffer);
 
     SKIPWALLCHECK:
     for(;;) {
