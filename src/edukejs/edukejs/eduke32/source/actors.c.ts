@@ -5840,7 +5840,7 @@ function G_MoveEffectors():void   //STATNUM 3
     var /*int32_t */i = headspritestat[STAT_EFFECTOR];
 
     fricxv = fricyv = 0;
-    if(G_MoveEffectors_count ==187)debugger
+    
     dlog(DEBUG_MOVE_EFFECTORS, "G_MoveEffectors %i\n", G_MoveEffectors_count++);
     BOLT:
     while (i >= 0)

@@ -12068,7 +12068,7 @@ var tempWhile = 0;
         dlog(DEBUG_PLAYER_POS, "p pos x:%i y:%i z:%i, vel x:%i y:%i, z:%i \n", g_player[0].ps.pos.x, g_player[0].ps.pos.y, g_player[0].ps.pos.z, g_player[0].ps.vel.x, g_player[0].ps.vel.y, g_player[0].ps.vel.z);
 
         if(1)
-        if(tempWhile++ < 30)
+        if(tempWhile++ < 20)
             requestAnimationFrame(main_loop); // todo: async code for stuff like logo animations
         else 
             dlogFlush();
@@ -12162,7 +12162,7 @@ function /*int32_t */G_DoMoveThings(): number
 
     if (g_netServer || g_netClient)
         randomseed = ticrandomseed;
-    debugger
+    
     for (i = 0; i != -1; i = connectpoint2[i])
         g_player[i].sync.copyFrom(inputfifo[(g_netServer && myconnectindex == i)?1:0][i]);
         //Bmemcpy(g_player[i].sync, &inputfifo[(g_netServer && myconnectindex == i)][i],

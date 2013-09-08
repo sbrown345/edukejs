@@ -12138,6 +12138,7 @@ function /*int32_t */hitscan_trysector(/*const vec3_t **/sv: IVec3, sec:sectorty
 
 // x1, y1: in/out
 // rest x/y: out
+var get_wallspr_points_count = 0;
 function /*static void */get_wallspr_points(/*const spritetype **/spr: spritetype, /*int32_t */ x1: R<number>, /*int32_t */x2: R<number>,
                               /*int32_t */ y1: R<number>, /*int32_t **/y2: R<number>): void
 {
@@ -12158,7 +12159,9 @@ function /*static void */get_wallspr_points(/*const spritetype **/spr: spritetyp
     l = tilesizx[tilenum];
     k = (l>>1)+xoff;
 
-    dlog(DEBUG_HIT, "get_wallspr_points dax: %i, day: %i, l: %i, k: %i\n", dax, day, l, k);
+    dlog(DEBUG_HIT, "get_wallspr_points dax: %i, day: %i, l: %i, k: %i, count: %i\n", dax, day, l, k, get_wallspr_points_count);
+    if(get_wallspr_points_count==1356)debugger;
+	get_wallspr_points_count++;
 
     x1.$ -= mulscale16(dax,k);
     x2.$ = x1.$ + mulscale16(dax,l);
@@ -12192,7 +12195,9 @@ function get_floorspr_points(spr:  spritetype, /*int32_t*/ px:number, /*int32_t*
         xoff = -xoff;
     if (spr.cstat&8)
         yoff = -yoff;
-
+    debugger
+	dlog(DEBUG_GETZRANGE,  "get_floorspr_points (1) x1:%i, y1:%i\n", x1.$,y1.$);
+	dlog(DEBUG_GETZRANGE,  "get_floorspr_points spr.ang: %i, xspan: %i, yspan: %i, xoff: %i, yoff: %i, xrepeat: %i, yrepeat: %i \n", spr.ang, xspan, yspan, xoff, yoff, xrepeat, yrepeat);
     dax = ((xspan>>1)+xoff)*xrepeat;
     day = ((yspan>>1)+yoff)*yrepeat;
 
@@ -12203,9 +12208,11 @@ function get_floorspr_points(spr:  spritetype, /*int32_t*/ px:number, /*int32_t*
     x2.$ = x1.$ - mulscale16(sinang,l);
     y2.$ = y1.$ + mulscale16(cosang,l);
     
-    l = xspan*xrepeat;
+    l = yspan*yrepeat;
     k = -mulscale16(cosang,l); x3.$ = x2.$+k; x4.$ = x1.$+k;
+	dlog(DEBUG_GETZRANGE,  "l: %i, k: %i \n", l, k);
     k = -mulscale16(sinang,l); y3.$ = y2.$+k; y4.$ = y1.$+k;
+	dlog(DEBUG_GETZRANGE,  "get_floorspr_points (2) k: %i, x1:%i,x2:%i,x3:%i,x4:%i,y1:%i,y2:%i,y3:%i,y4:%i \n", k, x1.$,x2.$,x3.$,x4.$,y1.$,y2.$,y3.$,y4.$);
 }
 
 function /*static int32_t */get_floorspr_clipyou(/*int32_t */x1: number, /*int32_t */x2: number, /*int32_t */x3: number, /*int32_t */x4: number,
@@ -12213,6 +12220,7 @@ function /*static int32_t */get_floorspr_clipyou(/*int32_t */x1: number, /*int32
 {
     var /*int32_t */clipyou = 0;
 
+	dlog(DEBUG_GETZRANGE,  "get_floorspr_clipyou x1:%i,x2:%i,x3:%i,x4:%i,y1:%i,y2:%i,y3:%i,y4:%i \n", x1,x2,x3,x4,y1,y2,y3,y4);
     if ((y1^y2) < 0)
     {
         if ((x1^x2) < 0) clipyou ^= ((x1*y2 < x2*y1)?1:0)^((y1<y2)?1:0);
@@ -12233,6 +12241,7 @@ function /*static int32_t */get_floorspr_clipyou(/*int32_t */x1: number, /*int32
         if ((x4^x1) < 0) clipyou ^= ((x4*y1 < x1*y4)?1:0)^((y4<y1)?1:0);
         else if (x4 >= 0) clipyou ^= 1;
     }
+	dlog(DEBUG_GETZRANGE,  "get_floorspr_clipyou: %i \n", clipyou);
 
     return clipyou;
 }
@@ -14139,6 +14148,7 @@ function mul32(n: number, m: number): number {
     var /*const int32_t */ dawalclipmask = (cliptype&65535);
     var /*const int32_t */ dasprclipmask = (cliptype>>16);
 
+	dlog(DEBUG_GETZRANGE,  "getzrange start pos: %i %i %i, sectnum: %i, walldist: %i, cliptype: %u\n", pos.x, pos.y, pos.z, sectnum, walldist, cliptype);
     if (sectnum < 0)
     {
         ceilz.$ = INT32_MIN; ceilhit.$ = -1;
@@ -14148,6 +14158,7 @@ function mul32(n: number, m: number): number {
 
     getzsofslope(sectnum,pos.x,pos.y,ceilz,florz);
     ceilhit.$ = sectnum+16384; florhit.$ = sectnum+16384;
+	dlog(DEBUG_GETZRANGE,  "getzrange *ceilhit (1): %i\n", ceilhit.$);
 
 //#ifdef YAX_ENABLE
     origclipsectorlist[0] = sectnum;
@@ -14350,6 +14361,7 @@ restart_grand:
                         if (mcf!=YAX_CEILING && fb < 0)
 //#endif
                         florz.$ = daz2, florhit.$ = k+16384; 
+					dlog(DEBUG_GETZRANGE,  "getzrange *ceilhit (2): %i, daz: %i, daz2: %i\n", ceilhit.$, daz, daz2);
                 }
             }
         }
@@ -14387,7 +14399,7 @@ restart_grand:
 //#endif
                 x1 = spr.x; y1 = spr.y;
 
-                dlog(DEBUG_GETZRANGE,  "getzrange sprites x1: %i, y1: %i\n", x1, y1);
+                dlog(DEBUG_GETZRANGE,  "getzrange sprites x1: %i, y1: %i, cstat&48: %i\n", x1, y1, cstat&48);
                 switch (cstat&48)
                 {
                 case 0:
@@ -14422,6 +14434,7 @@ restart_grand:
                         k = $k.$;
                         daz2 = daz-k;
                         clipyou = 1;
+						dlog(DEBUG_GETZRANGE,  "getzrange clipinsideboxline true clipyou = 1\n");
                     }
                     break;
                 }
@@ -14464,6 +14477,7 @@ restart_grand:
                 }
                 }
 
+				dlog(DEBUG_GETZRANGE,  "getzrange clipyou: %i, pos->z: %i, daz: %i, *ceilz: %i, yax_getbunch(clipsectorlist[i], YAX_CEILING): %i \n", clipyou, pos.z, daz, ceilz.$, yax_getbunch(clipsectorlist[i], YAX_CEILING));
                 if (clipyou != 0)
                 {
                     if ((pos.z > daz) && (daz > ceilz.$
@@ -14474,6 +14488,8 @@ restart_grand:
                     {
                         ceilz.$ = daz;
                         ceilhit.$ = j+49152;
+                        if(ceilhit.$==49704)debugger;
+						dlog(DEBUG_GETZRANGE,  "getzrange *ceilhit (3): %i\n", ceilhit.$);
                     }
 
                     if ((pos.z < daz2) && (daz2 < florz.$
@@ -14534,8 +14550,11 @@ restart_grand:
                         {
                             clipsectorlist[clipsectnum++] = j;
                             daz = getceilzofslope(j, pos.x,pos.y);
-                            if (!didchange || daz > ceilz.$)
+                            if (!didchange || daz > ceilz.$) 
+                            {
                                 didchange=1, ceilhit.$ = j+16384, ceilz.$ = daz;
+						        dlog(DEBUG_GETZRANGE,  "getzrange *ceilhit (4): %i\n", ceilhit.$);
+                            }
                         }
                 }
 
