@@ -110,7 +110,7 @@ var G_SetInterpolation_count = 0;
 function G_SetInterpolation(/*int32_t * */posptr: AnimatePtr): number
 {
     var /*int32_t */i=g_numInterpolations-1;
-    if(G_SetInterpolation_count== 348)debugger
+    
     dlog(DEBUG_ANIMATIONS,  "G_SetInterpolation %i\n", G_SetInterpolation_count++);
     if (g_numInterpolations >= MAXINTERPOLATIONS)
         return 1;

@@ -12858,6 +12858,7 @@ int32_t clipmove(vec3_t *pos, int16_t *sectnum,
     //Extra walldist for sprites on sector lines
     const int32_t gx=goalx-(pos->x), gy=goaly-(pos->y);
     const int32_t rad = nsqrtasm(uhypsq(gx,gy)) + MAXCLIPDIST+walldist + 8;
+    dlog(DEBUG_SPRITE, "clipmove rad: %i, cx: %i, cy: %i, dawalclipmask: %i\n", rad, cx, cy, dawalclipmask);
     const int32_t xmin = cx-rad, ymin = cy-rad;
     const int32_t xmax = cx+rad, ymax = cy+rad;
 
