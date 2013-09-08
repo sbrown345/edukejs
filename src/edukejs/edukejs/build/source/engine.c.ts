@@ -12159,7 +12159,6 @@ function /*static void */get_wallspr_points(/*const spritetype **/spr: spritetyp
     k = (l>>1)+xoff;
 
     dlog(DEBUG_HIT, "get_wallspr_points dax: %i, day: %i, l: %i, k: %i, count: %i\n", dax, day, l, k, get_wallspr_points_count);
-    if(get_wallspr_points_count==1356)debugger;
 	get_wallspr_points_count++;
 
     x1.$ -= mulscale16(dax,k);
@@ -14487,7 +14486,6 @@ restart_grand:
                     {
                         ceilz.$ = daz;
                         ceilhit.$ = j+49152;
-                        if(ceilhit.$==49704)debugger;
 						dlog(DEBUG_GETZRANGE,  "getzrange *ceilhit (3): %i\n", ceilhit.$);
                     }
 
