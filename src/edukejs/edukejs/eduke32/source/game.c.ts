@@ -11980,7 +11980,7 @@ var tempWhile = 0;
             avg.horz += loc.horz;
             avg.bits |= loc.bits;
             avg.extbits |= loc.extbits;
-
+            
             inputfifo[0][myconnectindex].copyFrom(avg);// Bmemcpy(&inputfifo[0][myconnectindex], &avg, sizeof(input_t));
             avg.init();
 
@@ -12162,7 +12162,7 @@ function /*int32_t */G_DoMoveThings(): number
 
     if (g_netServer || g_netClient)
         randomseed = ticrandomseed;
-    
+    debugger
     for (i = 0; i != -1; i = connectpoint2[i])
         g_player[i].sync.copyFrom(inputfifo[(g_netServer && myconnectindex == i)?1:0][i]);
         //Bmemcpy(g_player[i].sync, &inputfifo[(g_netServer && myconnectindex == i)][i],
@@ -12220,7 +12220,9 @@ function /*int32_t */G_DoMoveThings(): number
 
         if (ud.pause_on == 0)
         {
-            dlog(DEBUG_PLAYER_POS, "b4 process input p pos x:%i y:%i z:%i, vel x:%i y:%i, z:%i \n", g_player[0].ps.pos.x, g_player[0].ps.pos.y, g_player[0].ps.pos.z, g_player[0].ps.vel.x, g_player[0].ps.vel.y, g_player[0].ps.vel.z);
+            dlog(DEBUG_PLAYER_POS, "b4 process input p pos x:%i y:%i z:%i, vel x:%i y:%i, z:%i , sync.fvel: %i, svel: %i, avel: %i\n", 
+                g_player[0].ps.pos.x, g_player[0].ps.pos.y, g_player[0].ps.pos.z, g_player[0].ps.vel.x, g_player[0].ps.vel.y, g_player[0].ps.vel.z, 
+                g_player[0].sync.fvel, g_player[0].sync.svel, g_player[0].sync.avel);
             P_ProcessInput(i);
             dlog(DEBUG_PLAYER_POS, "after process input p pos x:%i y:%i z:%i, vel x:%i y:%i, z:%i \n", g_player[0].ps.pos.x, g_player[0].ps.pos.y, g_player[0].ps.pos.z, g_player[0].ps.vel.x, g_player[0].ps.vel.y, g_player[0].ps.vel.z);
             P_CheckSectors(i);

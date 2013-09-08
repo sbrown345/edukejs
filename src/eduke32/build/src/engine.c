@@ -12842,6 +12842,7 @@ int32_t clipmove(vec3_t *pos, int16_t *sectnum,
     int32_t dax, day;
     int32_t hitwall, cnt, retval=0;
 
+    dlog(DEBUG_SPRITE, "clipmove pos: %i %i %i, sectnum: %i, xvect: %i, yvect: %i, walldist: %i, ceildist: %i, flordist: %i, cliptype: %i\n", pos->x, pos->y, pos->z, *sectnum, xvect, yvect, walldist, ceildist, flordist, cliptype);
     spritetype *curspr=NULL;  // non-NULL when handling sprite with sector-like clipping
     int32_t curidx=-1, clipsectcnt, clipspritecnt;
 

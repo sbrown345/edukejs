@@ -13146,6 +13146,7 @@ function /*int32_t */clipmove(pos: IVec3, /*int16_t **/sectnum: R<number>,
     var /*int32_t*/ dax:number, day:number;
     var /*int32_t*/ hitwall:number, cnt:number, retval=0;
 
+    dlog(DEBUG_SPRITE, "clipmove pos: %i %i %i, sectnum: %i, xvect: %i, yvect: %i, walldist: %i, ceildist: %i, flordist: %i, cliptype: %i\n", pos.x, pos.y, pos.z, sectnum.$, xvect, yvect, walldist, ceildist, flordist, cliptype);
     var curspr: spritetype =NULL;  // non-NULL when handling sprite with sector-like clipping
     var /*int32_t */curidx=-1, clipsectcnt: number, clipspritecnt: number;
 
@@ -13162,6 +13163,7 @@ function /*int32_t */clipmove(pos: IVec3, /*int16_t **/sectnum: R<number>,
     //Extra walldist for sprites on sector lines
     var /*const int32_t*/ gx=goalx-(pos.x), gy=goaly-(pos.y);
     var /*const int32_t*/ rad = nsqrtasm(uhypsq(gx,gy)) + MAXCLIPDIST+walldist + 8;
+    dlog(DEBUG_SPRITE, "clipmove rad: %i, cx: %i, cy: %i, dawalclipmask: %i\n", rad, cx, cy, dawalclipmask);
     var /*const int32_t*/ xmin = cx-rad, ymin = cy-rad;
     var /*const int32_t*/ xmax = cx+rad, ymax = cy+rad;
 

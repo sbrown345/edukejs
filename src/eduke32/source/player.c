@@ -5067,8 +5067,10 @@ void P_ProcessInput(int32_t snum)
         if (p->jetpack_on == 0 && p->inv_amount[GET_STEROIDS] > 0 && p->inv_amount[GET_STEROIDS] < 400)
             doubvel <<= 1;
 
+		dlog(DEBUG_PLAYER_POS, "process_input p.vel.x: %i, p.vel.y: %i, g_player[snum].sync.fvel: %i, doubvel: %i\n", p->vel.x, p->vel.y, g_player[snum].dsync->fvel, doubvel);
         p->vel.x += ((g_player[snum].sync->fvel*doubvel)<<6);
         p->vel.y += ((g_player[snum].sync->svel*doubvel)<<6);
+		dlog(DEBUG_PLAYER_POS, "process_input after sync p.vel.x: %i, p.vel.y: %i\n", p->vel.x, p->vel.y);
 
         j = 0;
 
@@ -5080,6 +5082,7 @@ void P_ProcessInput(int32_t snum)
         p->vel.x = mulscale16(p->vel.x,p->runspeed-j);
         p->vel.y = mulscale16(p->vel.y,p->runspeed-j);
 
+		dlog(DEBUG_PLAYER_POS, "process_input after mulscale16 p.vel.x: %i, p.vel.y: %i\n", p->vel.x, p->vel.y);
         if (klabs(p->vel.x) < 2048 && klabs(p->vel.y) < 2048)
             p->vel.x = p->vel.y = 0;
 

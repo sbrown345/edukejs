@@ -101,15 +101,24 @@ function BUTTON(x:number):number {return (CONTROL_ButtonState>> (/*(uint64_t)*/(
 //   direction dir;
 //   } UserInput;
 
-//typedef struct
-//   {
-//   int32_t     dx;
-//   int32_t     dy;
-//   int32_t     dz;
-//   int32_t     dyaw;
-//   int32_t     dpitch;
-//   int32_t     droll;
-//   } ControlInfo;
+class ControlInfo
+{
+    dx:number;            //   int32_t   
+    dy:number;            //   int32_t   
+    dz:number;            //   int32_t   
+    dyaw:number;          //   int32_t   
+    dpitch:number;        //   int32_t   
+    droll:number;         //   int32_t  
+    
+    constructor() {
+        this.dx=0;    
+        this.dy=0;    
+        this.dz=0;    
+        this.dyaw=0;  
+        this.dpitch=0;
+        this.droll=0;
+    } 
+};
 
 //typedef enum
 //   {

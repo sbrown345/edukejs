@@ -2808,7 +2808,7 @@ var /*int32_t*/ lastcontroltime = 0;
 function P_GetInput(/*int32_t */snum: number): void
 {todo("P_GetInput");
     var /*int32_t */j:number, daang:number;
-    //static ControlInfo info[2];
+    var info:ControlInfo[] = [new ControlInfo(), new ControlInfo()];
     //static int32_t turnheldtime; //MED
     //static int32_t lastcontroltime; //MED
 
@@ -2894,35 +2894,35 @@ function P_GetInput(/*int32_t */snum: number): void
 //    tics = totalclock-lastcontroltime;
 //    lastcontroltime = totalclock;
 
-//    //    running = BUTTON(gamefunc_Run)|ud.auto_run;
-//    // JBF: Run key behaviour is selectable
-//    if (ud.runkey_mode)
-//        running = BUTTON(gamefunc_Run)|ud.auto_run; // classic
-//    else
-//        running = ud.auto_run^BUTTON(gamefunc_Run); // modern
+    //    running = BUTTON(gamefunc_Run)|ud.auto_run;
+    // JBF: Run key behaviour is selectable
+    if (ud.runkey_mode)
+        running = BUTTON(gamefunc_Run)|ud.auto_run; // classic
+    else
+        running = ud.auto_run^BUTTON(gamefunc_Run); // modern
 
     svel = vel = angvel = horiz = 0;
 
-//    if (BUTTON(gamefunc_Strafe))
-//    {
-//        svel = -(info[0].dyaw+info[1].dyaw)/8;
-//        info[1].dyaw = (info[1].dyaw+info[0].dyaw) % 8;
-//    }
-//    else
-//    {
-//        angvel = (info[0].dyaw+info[1].dyaw)/64;
-//        info[1].dyaw = (info[1].dyaw+info[0].dyaw) % 64;
-//    }
+    if (BUTTON(gamefunc_Strafe))
+    {
+        svel = int32(-(info[0].dyaw+info[1].dyaw)/8);
+        info[1].dyaw = (info[1].dyaw+info[0].dyaw) % 8;
+    }
+    else
+    {
+        angvel = (info[0].dyaw+info[1].dyaw)/64;
+        info[1].dyaw = (info[1].dyaw+info[0].dyaw) % 64;
+    }
 
-//    if (ud.mouseflip)
-//        horiz = -(info[0].dpitch+info[1].dpitch)/(314-128);
-//    else horiz = (info[0].dpitch+info[1].dpitch)/(314-128);
+    if (ud.mouseflip)
+        horiz = -int32((info[0].dpitch+info[1].dpitch)/(314-128));
+    else horiz = int32((info[0].dpitch+info[1].dpitch)/(314-128));
 
-//    info[1].dpitch = (info[1].dpitch+info[0].dpitch) % (314-128);
+    info[1].dpitch = (info[1].dpitch+info[0].dpitch) % (314-128);
 
-//    svel -= info[0].dx;
-//    info[1].dz = info[0].dz % (1<<6);
-//    vel = -info[0].dz>>6;
+    svel -= info[0].dx;
+    info[1].dz = info[0].dz % (1<<6);
+    vel = -info[0].dz>>6;
 
 //     OSD_Printf("running: %d\n", running);
     if (running)
@@ -3125,7 +3125,7 @@ function P_GetInput(/*int32_t */snum: number): void
 
     momx += fricxv;
     momy += fricyv;
-
+    
     loc.fvel = momx;
     loc.svel = momy;
 
@@ -5229,9 +5229,11 @@ function P_ProcessInput(/*int32_t */snum:number): void
 
         if (p.jetpack_on == 0 && p.inv_amount[GET_STEROIDS] > 0 && p.inv_amount[GET_STEROIDS] < 400)
             doubvel <<= 1;
-
+        
+		dlog(DEBUG_PLAYER_POS, "process_input p.vel.x: %i, p.vel.y: %i, g_player[snum].sync.fvel: %i, doubvel: %i\n", p.vel.x, p.vel.y, g_player[snum].sync.fvel, doubvel);
         p.vel.x += ((g_player[snum].sync.fvel*doubvel)<<6);
         p.vel.y += ((g_player[snum].sync.svel*doubvel)<<6);
+		dlog(DEBUG_PLAYER_POS, "process_input after sync p.vel.x: %i, p.vel.y: %i\n", p.vel.x, p.vel.y);
 
         j = 0;
 
@@ -5243,6 +5245,7 @@ function P_ProcessInput(/*int32_t */snum:number): void
         p.vel.x = mulscale16(p.vel.x,p.runspeed-j);
         p.vel.y = mulscale16(p.vel.y,p.runspeed-j);
 
+		dlog(DEBUG_PLAYER_POS, "process_input after mulscale16 p.vel.x: %i, p.vel.y: %i\n", p.vel.x, p.vel.y);
         if (klabs(p.vel.x) < 2048 && klabs(p.vel.y) < 2048)
             p.vel.x = p.vel.y = 0;
 
