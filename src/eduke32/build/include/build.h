@@ -1409,7 +1409,7 @@ static inline void pop_nofog(void)
 #define DEBUG_GETZRANGE 1
 #define DEBUG_VM_EXECUTE 1
 #define DEBUG_headspritestat 0
-#define DEBUG_SPRITESTAT_CHANGE 1
+#define DEBUG_SPRITESTAT_CHANGE 0
 #define DEBUG_SPAWN 1
 #define DEBUG_VM_CONDITIONAL 1
 #define DEBUG_MOVE_ZOMBIE_ACTORS 1

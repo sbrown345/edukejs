@@ -1185,7 +1185,10 @@ skip_check:
 
         vm_exec_loop_count++;
         dlog(DEBUG_VM_EXECUTE, "loop vm_exec_loop_count: %i, tw: %i, *instptr: %i, insptr: %i\n", vm_exec_loop_count, tw, *insptr, insptr-script);
-        switch (tw)
+        dlog(DEBUG_VM_EXECUTE, "vm.g_t: ");
+		for (int gt = 0; gt < 9 ; dlog(DEBUG_VM_EXECUTE, "%i:%i, ",gt, vm.g_t[gt++])){};
+        dlog(DEBUG_VM_EXECUTE, "\n");
+		switch (tw)
         {
         case CON_REDEFINEQUOTE:
             insptr++;

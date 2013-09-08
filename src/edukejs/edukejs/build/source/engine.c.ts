@@ -12195,7 +12195,7 @@ function get_floorspr_points(spr:  spritetype, /*int32_t*/ px:number, /*int32_t*
         xoff = -xoff;
     if (spr.cstat&8)
         yoff = -yoff;
-    debugger
+    
 	dlog(DEBUG_GETZRANGE,  "get_floorspr_points (1) x1:%i, y1:%i\n", x1.$,y1.$);
 	dlog(DEBUG_GETZRANGE,  "get_floorspr_points spr.ang: %i, xspan: %i, yspan: %i, xoff: %i, yoff: %i, xrepeat: %i, yrepeat: %i \n", spr.ang, xspan, yspan, xoff, yoff, xrepeat, yrepeat);
     dax = ((xspan>>1)+xoff)*xrepeat;
