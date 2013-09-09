@@ -692,7 +692,6 @@ static void fixtransparency(int32_t dapicnum, coltype *dapic, int32_t daxsiz, in
                             int32_t daxsiz2, int32_t daysiz2, int32_t dameth)
 {
 	
-#ifdef DEBUG_GL_SIMPLE_OFF
     coltype *wpptr;
     int32_t j, x, y, r, g, b, dox, doy, naxsiz2;
 
@@ -733,7 +732,6 @@ static void fixtransparency(int32_t dapicnum, coltype *dapic, int32_t daxsiz, in
             }
         }
     }
-#endif
 }
 
 void uploadtexture(int32_t doalloc, int32_t xsiz, int32_t ysiz, int32_t intexfmt, int32_t texfmt, coltype *pic, int32_t tsizx, int32_t tsizy, int32_t dameth)
@@ -859,14 +857,11 @@ static void texture_setup(int32_t dameth)
         bglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, glanisotropy);
     }
 
-#endif
     if (!(dameth&4))
     {
-#ifdef DEBUG_GL_SIMPLE_OFF
         bglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, !tile_is_sky(dapic) ? GL_REPEAT:
                          (glinfo.clamptoedge?GL_CLAMP_TO_EDGE:GL_CLAMP));
         bglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-#endif
     }
     else
     {
@@ -874,6 +869,7 @@ static void texture_setup(int32_t dameth)
         bglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, glinfo.clamptoedge?GL_CLAMP_TO_EDGE:GL_CLAMP);
         bglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, glinfo.clamptoedge?GL_CLAMP_TO_EDGE:GL_CLAMP);
     }
+#endif
 }
 
 int32_t gloadtile_art(int32_t dapic, int32_t dapal, int32_t dashade, int32_t dameth, pthtyp *pth, int32_t doalloc)
