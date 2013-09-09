@@ -1,7 +1,7 @@
 ﻿var LOG_TO_CONSOLE = false;
 var SKIP_ALL_LOGGING = false;
 
-var DEBUG_APPEND_TEXTURES_TO_BODY = false;
+var DEBUG_APPEND_TEXTURES_TO_BODY = true;
 var DEBUG_WEBGL_UTIL = false;
 var DEBUG_COMPILE = false;
 var DEBUG_KRAND = false;

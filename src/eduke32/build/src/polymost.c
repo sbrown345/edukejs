@@ -852,7 +852,6 @@ static void texture_setup(int32_t dameth)
     gltexfiltermode = clamp(gltexfiltermode, 0, NUMGLFILTERMODES-1);
     bglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, glfiltermodes[gltexfiltermode].mag);
     bglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, glfiltermodes[gltexfiltermode].min);
-
     if (glinfo.maxanisotropy > 1.0)
     {
         if (glanisotropy <= 0 || glanisotropy > glinfo.maxanisotropy)
@@ -860,11 +859,14 @@ static void texture_setup(int32_t dameth)
         bglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, glanisotropy);
     }
 
+#endif
     if (!(dameth&4))
     {
+#ifdef DEBUG_GL_SIMPLE_OFF
         bglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, !tile_is_sky(dapic) ? GL_REPEAT:
                          (glinfo.clamptoedge?GL_CLAMP_TO_EDGE:GL_CLAMP));
         bglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+#endif
     }
     else
     {
@@ -872,7 +874,6 @@ static void texture_setup(int32_t dameth)
         bglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, glinfo.clamptoedge?GL_CLAMP_TO_EDGE:GL_CLAMP);
         bglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, glinfo.clamptoedge?GL_CLAMP_TO_EDGE:GL_CLAMP);
     }
-#endif
 }
 
 int32_t gloadtile_art(int32_t dapic, int32_t dapal, int32_t dashade, int32_t dameth, pthtyp *pth, int32_t doalloc)
@@ -977,8 +978,9 @@ int32_t gloadtile_art(int32_t dapic, int32_t dapal, int32_t dashade, int32_t dam
     }
 
     dlog(DEBUG_LOAD_TILE_ART, "wpptr end load\n");
-    if (doalloc) 
+    if (doalloc) {
 		bglGenTextures(1,(GLuint *)&pth->glpic); //# of textures (make OpenGL allocate structure)
+	}
     bglBindTexture(GL_TEXTURE_2D,pth->glpic);
 
 	#ifdef DEBUG_GL_SIMPLE_OFF
@@ -1518,7 +1520,7 @@ void drawpoly(double *dpx, double *dpy, int32_t n, int32_t method)
                 al=alphahackarray[globalpicnum];
             if (!waloff[globalpicnum]) al = 0.0;	// invalid textures ignore the alpha cutoff settings
             bglEnable(GL_BLEND);
-            bglEnable(GL_ALPHA_TEST);
+            //bglEnable(GL_ALPHA_TEST);
             bglAlphaFunc(GL_GREATER,al);
         }
 

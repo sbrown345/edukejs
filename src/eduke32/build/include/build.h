@@ -1426,6 +1426,7 @@ static inline void pop_nofog(void)
 
 #define DEBUG_LOAD_TILE_ART 0
 #define DEBUG_PALETTE 0
+#define DEBUG_TEXTURE 1
 
 void dlog(int32_t log, char *format, ...);
 void logHeadspritestat(char* where);

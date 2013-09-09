@@ -56,7 +56,7 @@ function texcache_fetch(dapicnum: number, dapalnum: number, dashade: number, dam
     j = (dapicnum&(GLTEXCACHEADSIZ-1));
     
     if (getrendermode() != REND_POLYMOST || !r_usetileshades) dashade = 0;
-
+    dlog(DEBUG_TEXTURE, "texcache_fetch dapicnum: %i, dapalnum: %i, dashade: %i, dameth: %i\n", dapicnum, dapalnum, dashade, dameth);
     si = usehightile ? hicfindsubst(dapicnum,dapalnum,drawingskybox) : NULL;
 
     if (!si)

@@ -201,16 +201,23 @@ var bglGenTextures = function(/*GLsizei (int)*/ n: number, /*GLuint **/textures:
 var bglBindTexture =  gl.bindTexture.bind(gl);//bglBindTextureProcPtr 
 var bglTexImage2D = function(target: number, level: number, internalformat: number, width: number, height: number, border: number, format: number, type: number, pixels: ArrayBufferView) {
     if(DEBUG_APPEND_TEXTURES_TO_BODY) {
-        var can = <HTMLCanvasElement>document.createElement("canvas"),
-	      ctx = can.getContext('2d');
-          can.height = width;
-          can.width = height;  
-        var img = ctx.createImageData(width, height);
-        for (var i=0; i<img.data.length; i++) {
-            img.data[i] = pixels[i];
+        if(level < 2) {
+            var can = <HTMLCanvasElement>document.createElement("canvas"),
+	          ctx = can.getContext('2d');
+              can.width = width;   
+              can.height = height;
+            var img = ctx.createImageData(width, height);
+            for (var i=0; i<img.data.length; i++) {
+                img.data[i] = pixels[i];
+            }
+            ctx.putImageData(img, 0, 0);
+            var text ="target: " + target + ", level: " + level+ ", internalformat: " + internalformat+ ", width: " + width+ ", height: " + height+ ", border: " + border+ ", format: " + format+ ", type: " + type;
+            //console.log(text);
+            //console.image(can.toDataURL());
+
+            can.title = text;
+            document.body.appendChild(can);
         }
-        ctx.putImageData(img, 0, 0);
-        document.body.appendChild(can);
 
         //http://stackoverflow.com/questions/3792027/webgl-and-the-power-of-two-problem
         //resize: http://www.khronos.org/webgl/wiki/WebGL_and_OpenGL_Differences#Non-Power_of_Two_Texture_Support
@@ -221,7 +228,6 @@ var bglTexImage2D = function(target: number, level: number, internalformat: numb
 
     gl.texImage2D.call(gl, target, level, internalformat, width, height, border, format, type, pixels);
 };
-
 
 //bglTexImage2DProcPtr 
 //bglTexImage3DProcPtr bglTexImage3D;
