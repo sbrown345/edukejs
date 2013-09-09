@@ -750,47 +750,46 @@ function resizeglcheck(): void
 function fixtransparency(dapicnum: number, dapic: coltype[], daxsiz: number, daysiz: number,
                             daxsiz2: number, daysiz2: number, dameth: number): void
 {
-    todo("fixtransparency");
-//    coltype *wpptr;
-//    int32_t j, x, y, r, g, b, dox, doy, naxsiz2;
-//
-//    UNREFERENCED_PARAMETER(dapicnum);
-//
-//    dox = daxsiz2-1; doy = daysiz2-1;
-//    if (dameth&4) { dox = min(dox,daxsiz); doy = min(doy,daysiz); }
-//    else { daxsiz = daxsiz2; daysiz = daysiz2; } //Make repeating textures duplicate top/left parts
-//
-//    daxsiz--; daysiz--; naxsiz2 = -daxsiz2; //Hacks for optimization inside loop
-//
-//    //Set transparent pixels to average color of neighboring opaque pixels
-//    //Doing this makes bilinear filtering look much better for masked textures (I.E. sprites)
-//    for (y=doy; y>=0; y--)
-//    {
-//        wpptr = &dapic[y*daxsiz2+dox];
-//        for (x=dox; x>=0; x--,wpptr--)
-//        {
-//            if (wpptr.a) continue;
-//
-//            r = g = b = j = 0;
-//            if ((x>     0) && (wpptr[     -1].a)) { r += wpptr[     -1].r; g += wpptr[     -1].g; b += wpptr[     -1].b; j++; }
-//            if ((x<daxsiz) && (wpptr[     +1].a)) { r += wpptr[     +1].r; g += wpptr[     +1].g; b += wpptr[     +1].b; j++; }
-//            if ((y>     0) && (wpptr[naxsiz2].a)) { r += wpptr[naxsiz2].r; g += wpptr[naxsiz2].g; b += wpptr[naxsiz2].b; j++; }
-//            if ((y<daysiz) && (wpptr[daxsiz2].a)) { r += wpptr[daxsiz2].r; g += wpptr[daxsiz2].g; b += wpptr[daxsiz2].b; j++; }
-//            switch (j)
-//            {
-//            case 1:
-//                wpptr.r =   r            ; wpptr.g =   g            ; wpptr.b =   b            ; break;
-//            case 2:
-//                wpptr.r = ((r   +  1)>>1); wpptr.g = ((g   +  1)>>1); wpptr.b = ((b   +  1)>>1); break;
-//            case 3:
-//                wpptr.r = ((r*85+128)>>8); wpptr.g = ((g*85+128)>>8); wpptr.b = ((b*85+128)>>8); break;
-//            case 4:
-//                wpptr.r = ((r   +  2)>>2); wpptr.g = ((g   +  2)>>2); wpptr.b = ((b   +  2)>>2); break;
-//            default:
-//                break;
-//            }
-//        }
-//    }
+    var wpptr:coltype[], i:number;
+    var/*int32_t */j:number, x:number, y:number, r:number, g:number, b:number, dox:number, doy:number, naxsiz2:number;
+
+    //UNREFERENCED_PARAMETER(dapicnum);
+
+    dox = daxsiz2-1; doy = daysiz2-1;
+    if (dameth&4) { dox = min(dox,daxsiz); doy = min(doy,daysiz); }
+    else { daxsiz = daxsiz2; daysiz = daysiz2; } //Make repeating textures duplicate top/left parts
+
+    daxsiz--; daysiz--; naxsiz2 = -daxsiz2; //Hacks for optimization inside loop
+
+    //Set transparent pixels to average color of neighboring opaque pixels
+    //Doing this makes bilinear filtering look much better for masked textures (I.E. sprites)
+    for (y=doy; y>=0; y--)
+    {
+        wpptr = dapic, i = y*daxsiz2+dox;
+        for (x=dox; x>=0; x--,i--)
+        {
+            if (wpptr[i].a) continue;
+
+            r = g = b = j = 0;
+            if ((x>     0) && (wpptr[i+     -1].a)) { r += wpptr[i+     -1].r; g += wpptr[i+     -1].g; b += wpptr[i+     -1].b; j++; }
+            if ((x<daxsiz) && (wpptr[i+     +1].a)) { r += wpptr[i+     +1].r; g += wpptr[i+     +1].g; b += wpptr[i+     +1].b; j++; }
+            if ((y>     0) && (wpptr[i+naxsiz2].a)) { r += wpptr[i+naxsiz2].r; g += wpptr[i+naxsiz2].g; b += wpptr[i+naxsiz2].b; j++; }
+            if ((y<daysiz) && (wpptr[i+daxsiz2].a)) { r += wpptr[i+daxsiz2].r; g += wpptr[i+daxsiz2].g; b += wpptr[i+daxsiz2].b; j++; }
+            switch (j)
+            {
+            case 1:
+                wpptr[i].r =   r            ; wpptr[i].g =   g            ; wpptr[i].b =   b            ; break;
+            case 2:
+                wpptr[i].r = ((r   +  1)>>1); wpptr[i].g = ((g   +  1)>>1); wpptr[i].b = ((b   +  1)>>1); break;
+            case 3:
+                wpptr[i].r = ((r*85+128)>>8); wpptr[i].g = ((g*85+128)>>8); wpptr[i].b = ((b*85+128)>>8); break;
+            case 4:
+                wpptr[i].r = ((r   +  2)>>2); wpptr[i].g = ((g   +  2)>>2); wpptr[i].b = ((b   +  2)>>2); break;
+            default:
+                break;
+            }
+        }
+    }
 }
 //
 function uploadtexture(doalloc: number, xsiz: number, ysiz: number, intexfmt: number, texfmt: number, pic: coltype[], tsizx: number, tsizy: number, dameth: number): void 
