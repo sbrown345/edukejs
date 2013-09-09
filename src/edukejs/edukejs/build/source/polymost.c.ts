@@ -1573,7 +1573,7 @@ function drawpoly(dpx: Float64Array, dpy: Float64Array, /*int32_t*/ n:number, /*
                 al=alphahackarray[globalpicnum];
             if (!waloff[globalpicnum]) al = 0.0;	// invalid textures ignore the alpha cutoff settings
             bglEnable(GL_BLEND);
-            todoUnimportant("bglEnable(GL_ALPHA_TEST);");
+            tempHC(() => {gl.blendFunc( gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA /*fix transparent textures*/ );}); //bglEnable(GL_ALPHA_TEST);            
             bglAlphaFunc(GL_GREATER,al);
         }
 
@@ -1778,7 +1778,7 @@ function drawpoly(dpx: Float64Array, dpy: Float64Array, /*int32_t*/ n:number, /*
                 {
                     j = GL_TEXTURE0_ARB;
                     while (j <= texunits)
-                        todo("bglMultiTexCoord2dARB(j++, uu[i]*r*ox2,vv[i]*r*oy2);");
+                        todoThrow("bglMultiTexCoord2dARB(j++, uu[i]*r*ox2,vv[i]*r*oy2);");
                 }
                 else
                     bglTexCoord2d(uu[i]*r*ox2,vv[i]*r*oy2);
