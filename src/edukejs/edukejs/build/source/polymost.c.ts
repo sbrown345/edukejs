@@ -1014,9 +1014,8 @@ function gloadtile_art(dapic: number, dapal: number, dashade: number, dameth: nu
                 }
 
                 if (dacol != 255)
-                {
-                    var p = palookup[dapal].subarray(dashade<<8); //char *p = (char *)(palookup[dapal])+(int32_t)(dashade<<8);
-                    dacol = p[dacol];
+                {                               
+                    dacol = palookup[dapal][(dashade<<8) + dacol];
                 }
                 else
                 {
