@@ -3093,6 +3093,8 @@ function P_GetInput(/*int32_t */snum: number): void
     });
     
     tempHC(function() {
+        if(!DEBUG_FORCE_INPUT) return
+
 	    vel += keymove;
 	    loc.extbits |= 1;
 	    loc.bits |=   1<<SK_FIRE;

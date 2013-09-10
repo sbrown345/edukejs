@@ -1,44 +1,53 @@
-﻿var LOG_TO_CONSOLE = false;
-var SKIP_ALL_LOGGING = false;
+﻿var DEBUG_MODE = false;
 
-var DEBUG_APPEND_TEXTURES_TO_BODY = true;
-var DEBUG_WEBGL_UTIL = false;
-var DEBUG_COMPILE = false;
-var DEBUG_KRAND = false;
-var DEBUG_MOSTS = false;
-var DEBUG_POLY = false;
-var DEBUG_DRAW_ROOMS = false;
-var DEBUG_POLYMOST_DRAWALLS = false;
-var DEBUG_POLYMOST_DRAWALLS_SCANSECTOR = false;
-var DEBUG_POLYMOST_DRAWALLS_DOMOSTS_DETAIL = false;
+function isDebugMode(v: bool):bool {
+    return DEBUG_MODE && v;
+}
+
+var LOG_TO_CONSOLE = isDebugMode(false);
+var SKIP_ALL_LOGGING = isDebugMode(false);
+
+var DEBUG_APPEND_TEXTURES_TO_BODY = isDebugMode(false);
+var DEBUG_WEBGL_UTIL = isDebugMode(false);
+var DEBUG_COMPILE = isDebugMode(false);
+var DEBUG_KRAND = isDebugMode(false);
+var DEBUG_MOSTS = isDebugMode(false);
+var DEBUG_POLY = isDebugMode(false);
+var DEBUG_DRAW_ROOMS = isDebugMode(false);
+var DEBUG_POLYMOST_DRAWALLS = isDebugMode(false);
+var DEBUG_POLYMOST_DRAWALLS_SCANSECTOR = isDebugMode(false);
+var DEBUG_POLYMOST_DRAWALLS_DOMOSTS_DETAIL = isDebugMode(false);
 //DEBUG_MOSTS = DEBUG_POLYMOST_DRAWALLS = DEBUG_POLYMOST_DRAWALLS_SCANSECTOR = DEBUG_POLYMOST_DRAWALLS_DOMOSTS_DETAIL = true; // todo!
-var DEBUG_SCRIPT_CHANGE = false;
-var DEBUG_PALETTE = false;
-var DEBUG_PLAYER_POS = false;
-var DEBUG_GETZRANGE = false;
-var DEBUG_VM_EXECUTE = false;
-var DEBUG_headspritestat = false;
-var DEBUG_SPRITESTAT_CHANGE = false;
-var DEBUG_SPAWN = false;
-var DEBUG_INITPRINTF = false; // e.g. log -condebug to file          //broken, doesn't work...
-var DEBUG_VM_CONDITIONAL = false;
-var DEBUG_MOVE_ZOMBIE_ACTORS = false;
-var DEBUG_CANSEE = false;
-var DEBUG_MOVE_EFFECTORS = false;
-var DEBUG_MOVE_STANDABLES = false;
-var DEBUG_ANIMATIONS = false;
-var DEBUG_TIMER = false;
-var DEBUG_INSERT_SPRITE = false;
-var DEBUG_VARS = false;
-var DEBUG_HIT = false;
-var DEBUG_SPRITE = false;
-var DEBUG_COOLEXPLOSION1__STATIC = false;
-var DEBUG_A_SHOOTZVEL = false;
-var DEBUG_DAMAGE = false;
+var DEBUG_SCRIPT_CHANGE = isDebugMode(false);
+var DEBUG_PALETTE = isDebugMode(false);
+var DEBUG_PLAYER_POS = isDebugMode(false);
+var DEBUG_GETZRANGE = isDebugMode(false);
+var DEBUG_VM_EXECUTE = isDebugMode(false);
+var DEBUG_headspritestat = isDebugMode(false);
+var DEBUG_SPRITESTAT_CHANGE = isDebugMode(false);
+var DEBUG_SPAWN = isDebugMode(false);
+var DEBUG_INITPRINTF = isDebugMode(false); // e.g. log -condebug to file          //broken, doesn't work...
+var DEBUG_VM_CONDITIONAL = isDebugMode(false);
+var DEBUG_MOVE_ZOMBIE_ACTORS = isDebugMode(false);
+var DEBUG_CANSEE = isDebugMode(false);
+var DEBUG_MOVE_EFFECTORS = isDebugMode(false);
+var DEBUG_MOVE_STANDABLES = isDebugMode(false);
+var DEBUG_ANIMATIONS = isDebugMode(false);
+var DEBUG_TIMER = isDebugMode(false);
+var DEBUG_INSERT_SPRITE = isDebugMode(false);
+var DEBUG_VARS = isDebugMode(false);
+var DEBUG_HIT = isDebugMode(false);
+var DEBUG_SPRITE = isDebugMode(false);
+var DEBUG_COOLEXPLOSION1__STATIC = isDebugMode(false);
+var DEBUG_A_SHOOTZVEL = isDebugMode(false);
+var DEBUG_DAMAGE = isDebugMode(false);
+var DEBUG_FORCE_INPUT = isDebugMode(false);
+var DEBUG_MAX_FRAMES = 144;
+var DEBUG_MAX_FRAMES_EXIT = isDebugMode(false);
 
 //engine_priv.h
-var DEBUG_LOAD_TILE_ART = false;
-var DEBUG_TEXTURE = true;
+var DEBUG_LOAD_TILE_ART = isDebugMode(false);
+var DEBUG_TEXTURE = isDebugMode(false);
 
 var dlog = function (log: boolean, format: string, ...args: any[]) {
     if(!log || SKIP_ALL_LOGGING) return;

@@ -1516,7 +1516,7 @@ void drawpoly(double *dpx, double *dpy, int32_t n, int32_t method)
                 al=alphahackarray[globalpicnum];
             if (!waloff[globalpicnum]) al = 0.0;	// invalid textures ignore the alpha cutoff settings
             bglEnable(GL_BLEND);
-            //bglEnable(GL_ALPHA_TEST);
+            bglEnable(GL_ALPHA_TEST);
             bglAlphaFunc(GL_GREATER,al);
         }
 
