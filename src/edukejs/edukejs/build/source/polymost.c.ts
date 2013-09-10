@@ -4314,8 +4314,8 @@ function polymost_drawsprite(/*int32_t*/ snum:number):void
         guo =  /*(double)*/ ft[0]*gdo; gvo =  /*(double)*/ ft[1]*gdo;
         guo +=  /*(double)*/ (ft[2]/262144.0-gux)*ghalfx;
         gvo -=  /*(double)*/ (ft[3]/262144.0+gvx)*ghalfx;
-        f = 4.0//*(float)*/tspr.xrepeat; gux *= f; guy *= f; guo *= f;
-        f =-4.0//*(float)*/tspr.yrepeat; gvx *= f; gvy *= f; gvo *= f;
+        f = 4.0/tspr.xrepeat; gux *= f; guy *= f; guo *= f;
+        f =-4.0/tspr.yrepeat; gvx *= f; gvy *= f; gvo *= f;
         if (globalorientation&4)
         {
             gux = (/*(float)*/tsizx)*gdx - gux;
