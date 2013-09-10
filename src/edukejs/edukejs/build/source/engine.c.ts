@@ -11402,7 +11402,7 @@ function loadtile(tilenume: number): void
     if (!waloff[tilenume])
     {
         walock[tilenume] = 199;
-        waloff[tilenume] = new ArrayBuffer(dasiz);//allocache(waloff[tilenume],dasiz,walock[tilenume]);
+        waloff[tilenume] = new Uint8Array(dasiz);//allocache(waloff[tilenume],dasiz,walock[tilenume]);
     }
 
     if (artfilplc != tilefileoffs[tilenume])
@@ -11411,7 +11411,7 @@ function loadtile(tilenume: number): void
         faketimerhandler();
     }
     
-    kread(artfil, new Ptr(new Uint8Array(waloff[tilenume]))/*(char *)waloff[tilenume]*/, dasiz);
+    kread(artfil, new Ptr(waloff[tilenume])/*(char *)waloff[tilenume]*/, dasiz);
     faketimerhandler();
     artfilplc = tilefileoffs[tilenume]+dasiz;
 

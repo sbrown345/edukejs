@@ -1022,7 +1022,7 @@ class picanm_t implements ITypeInfo {
     public static size = 4;   
 }
 var picanm: picanm_t[] = newStructArray(picanm_t, MAXTILES);
-var waloff: ArrayBuffer[] = new Array(MAXTILES);  // stores pointers to cache  -- SA //EXTERN intptr_t 
+var waloff: Uint8Array[] = new Array(MAXTILES);  // stores pointers to cache  -- SA //EXTERN intptr_t 
 
 //EXTERN int32_t windowpos, windowx, windowy;
 

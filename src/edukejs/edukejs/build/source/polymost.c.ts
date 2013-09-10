@@ -988,7 +988,7 @@ function gloadtile_art(dapic: number, dapal: number, dashade: number, dameth: nu
                     { wpptr.r = wpptr.g = wpptr.b = wpptr.a = 0; continue; }
                 if (x < tsizx) x2 = x; else x2 = x-tsizx;
 
-                dacol = new Uint8Array(waloff[dapic])[x2*tsizy+y2];//*(char *)(waloff[dapic]+x2*tsizy+y2);
+                dacol = waloff[dapic][x2*tsizy+y2];//*(char *)(waloff[dapic]+x2*tsizy+y2);
                 assert.run("gloadtile_art dacol", dacol ==129);
                 if (!fullbrightloadingpass)
                 {
