@@ -820,15 +820,15 @@ function uploadtexture(doalloc: number, xsiz: number, ysiz: number, intexfmt: nu
     if (hi && !nocompress) js = r_downsize;
 
     
-    OSD_Printf("Uploading %dx%d %s as %s\n", xsiz,ysiz,
-            (texfmt==GL_RGBA?"GL_RGBA":
-             texfmt==GL_RGB?"GL_RGB" : "other" /*:
-            texfmt==GL_BGR?"GL_BGR":
-             texfmt==GL_BGRA?"GL_BGRA":"other"*/),
-            (intexfmt==GL_RGBA?"GL_RGBA":
-             intexfmt==GL_RGB?"GL_RGB":"other" /*:
-             intexfmt==GL_COMPRESSED_RGBA_ARB?"GL_COMPRESSED_RGBA_ARB":
-             intexfmt==GL_COMPRESSED_RGB_ARB?"GL_COMPRESSED_RGB_ARB":"other")*/));
+    //OSD_Printf("Uploading %dx%d %s as %s\n", xsiz,ysiz,
+    //        (texfmt==GL_RGBA?"GL_RGBA":
+    //         texfmt==GL_RGB?"GL_RGB" : "other" /*:
+    //        texfmt==GL_BGR?"GL_BGR":
+    //         texfmt==GL_BGRA?"GL_BGRA":"other"*/),
+    //        (intexfmt==GL_RGBA?"GL_RGBA":
+    //         intexfmt==GL_RGB?"GL_RGB":"other" /*:
+    //         intexfmt==GL_COMPRESSED_RGBA_ARB?"GL_COMPRESSED_RGBA_ARB":
+    //         intexfmt==GL_COMPRESSED_RGB_ARB?"GL_COMPRESSED_RGB_ARB":"other")*/));
     
 
     if (js == 0)
@@ -936,7 +936,6 @@ function gloadtile_art(dapic: number, dapal: number, dashade: number, dameth: nu
     var hasalpha = 0, hasfullbright = 0;//char
 
     //static int32_t fullbrightloadingpass = 0;
-    console.log("gloadtile_art %i", tempWhile);
     dlog(DEBUG_TEXTURE, "gloadtile_art dapic: %i, dapal: %i, dashade: %i, dameth: %i, doalloc: %i\n",  dapic, dapal, dashade, dameth, doalloc);
     var tsizx = tilesizx[dapic];//int32_t 
     var tsizy = tilesizy[dapic];//int32_t 
