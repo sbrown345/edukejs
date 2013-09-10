@@ -1605,18 +1605,20 @@ function sampletimer(): void
 //
 var /*static uint32_t */tempTotalTicks = 0;
 function getticks() : number //uint32_t
-{
-    //todo("getticks, test number");
-    //var i = Timer.getPlatformTicks();
-    //return (i * (1000) / win_timerfreq) | 0;
+{    
+    if(DEBUG_FIXED_TIMER) {
+	    tempTotalTicks+=10;
+	    return tempTotalTicks;
+    }
+
+    todo("getticks, test number");
+    var i = Timer.getPlatformTicks();
+    return (i * (1000) / win_timerfreq) | 0;
 
     //var i;
     //if (win_timerfreq == 0) return 0;
     //QueryPerformanceCounter((LARGE_INTEGER *)&i);
     //return (uint32_t)(i*longlong(1000)/win_timerfreq);
-    
-	tempTotalTicks+=10;
-	return tempTotalTicks;
 }
 
 var Timer = { 

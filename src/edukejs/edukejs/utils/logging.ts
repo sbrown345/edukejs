@@ -4,8 +4,8 @@ function isDebugMode(v: bool):bool {
     return DEBUG_MODE && v;
 }
 
-var LOG_TO_CONSOLE = isDebugMode(false);
-var SKIP_ALL_LOGGING = isDebugMode(false);
+var LOG_TO_CONSOLE = false;
+var SKIP_ALL_LOGGING = true;
 
 var DEBUG_APPEND_TEXTURES_TO_BODY = isDebugMode(false);
 var DEBUG_WEBGL_UTIL = isDebugMode(false);
@@ -17,7 +17,6 @@ var DEBUG_DRAW_ROOMS = isDebugMode(false);
 var DEBUG_POLYMOST_DRAWALLS = isDebugMode(false);
 var DEBUG_POLYMOST_DRAWALLS_SCANSECTOR = isDebugMode(false);
 var DEBUG_POLYMOST_DRAWALLS_DOMOSTS_DETAIL = isDebugMode(false);
-//DEBUG_MOSTS = DEBUG_POLYMOST_DRAWALLS = DEBUG_POLYMOST_DRAWALLS_SCANSECTOR = DEBUG_POLYMOST_DRAWALLS_DOMOSTS_DETAIL = true; // todo!
 var DEBUG_SCRIPT_CHANGE = isDebugMode(false);
 var DEBUG_PALETTE = isDebugMode(false);
 var DEBUG_PLAYER_POS = isDebugMode(false);
@@ -26,7 +25,7 @@ var DEBUG_VM_EXECUTE = isDebugMode(false);
 var DEBUG_headspritestat = isDebugMode(false);
 var DEBUG_SPRITESTAT_CHANGE = isDebugMode(false);
 var DEBUG_SPAWN = isDebugMode(false);
-var DEBUG_INITPRINTF = isDebugMode(false); // e.g. log -condebug to file          //broken, doesn't work...
+var DEBUG_INITPRINTF = isDebugMode(false); // e.g. log -condebug to file          //broken
 var DEBUG_VM_CONDITIONAL = isDebugMode(false);
 var DEBUG_MOVE_ZOMBIE_ACTORS = isDebugMode(false);
 var DEBUG_CANSEE = isDebugMode(false);
@@ -44,6 +43,7 @@ var DEBUG_DAMAGE = isDebugMode(false);
 var DEBUG_FORCE_INPUT = isDebugMode(false);
 var DEBUG_MAX_FRAMES = 144;
 var DEBUG_MAX_FRAMES_EXIT = isDebugMode(false);
+var DEBUG_FIXED_TIMER = isDebugMode(false);
 
 //engine_priv.h
 var DEBUG_LOAD_TILE_ART = isDebugMode(false);
@@ -66,6 +66,10 @@ var dlog = function (log: boolean, format: string, ...args: any[]) {
         dlogOutput[dlogOutput.length-1].push(text);
     }
 };
+
+if(SKIP_ALL_LOGGING) {
+    dlog = function() {};
+}
 
 var dlogConcat = function (arr) {
     var s, len, i;
