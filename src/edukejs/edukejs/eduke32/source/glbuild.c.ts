@@ -47,7 +47,7 @@ if(document.body /*qunit*/)
 gl.canvas.width = 1024;
 gl.canvas.height = 768;
 
-
+// set non-existent enums negative
 var GL_TEXTURE0_ARB = gl.TEXTURE0;
 var GL_COLOR_BUFFER_BIT = gl.COLOR_BUFFER_BIT;
 var GL_DEPTH_BUFFER_BIT = gl.DEPTH_BUFFER_BIT;
@@ -67,7 +67,7 @@ var GL_TEXTURE_WRAP_T = gl.TEXTURE_WRAP_T;
 var GL_REPEAT = gl.REPEAT;
 var GL_CLAMP_TO_EDGE = gl.CLAMP_TO_EDGE;
 var GL_CLAMP: number = null; //off
-var GL_FOG = -99999; //todo!?
+var GL_FOG = -99999; 
 var GL_UNSIGNED_BYTE = gl.UNSIGNED_BYTE;
 var GL_MAX_TEXTURE_SIZE = gl.MAX_TEXTURE_SIZE;
 var GL_ALWAYS = gl.ALWAYS;
@@ -100,8 +100,15 @@ var bglAlphaFunc = function (arg1:any,arg2:any) {todoUnimportant("alphaFunc");}/
 //bglFrontFaceProcPtr bglFrontFace;
 var bglPolygonOffset = gl.polygonOffset.bind(gl); //bglPolygonOffsetProcPtr 
 //bglPolygonModeProcPtr bglPolygonMode;
-var bglEnable = gl.enable.bind(gl);//bglEnableProcPtr bglEnable;
-var bglDisable = gl.disable.bind(gl);//bglDisableProcPtr ;
+
+var bglEnable = function(v) {
+    if(v < 0) return; // manually set values to negative
+    gl.enable.call(gl, v);
+}; 
+var bglDisable = function(v) {
+    if(v < 0) return; // manually set values to negative
+    gl.disable.call(gl, v);
+}; 
 //bglGetDoublevProcPtr bglGetDoublev;
 //bglGetFloatvProcPtr bglGetFloatv;
 var bglGetIntegerv = gl.getParameter.bind(gl); //bglGetIntegervProcPtr 
