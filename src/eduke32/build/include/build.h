@@ -1395,38 +1395,47 @@ static inline void pop_nofog(void)
 
 
 // DEBUGGING STUFF TO HELP COMPARE WITH JS PORT
-#define DEBUG_COMPILE 0
-#define DEBUG_KRAND 0
-#define DEBUG_MOSTS 0
-#define DEBUG_POLY 0
-#define DEBUG_DRAW_ROOMS 0
-#define DEBUG_POLYMOST_DRAWALLS 0
-#define DEBUG_POLYMOST_DRAWALLS_SCANSECTOR 0
-#define DEBUG_POLYMOST_DRAWALLS_DOMOSTS_DETAIL 0
-#define DEBUG_PLAYER_POS 0
-#define DEBUG_GETZRANGE 0
-#define DEBUG_VM_EXECUTE 0
-#define DEBUG_headspritestat 0
-#define DEBUG_SPRITESTAT_CHANGE 0
-#define DEBUG_SPAWN 0
-#define DEBUG_VM_CONDITIONAL 0
-#define DEBUG_MOVE_ZOMBIE_ACTORS 0
-#define DEBUG_CANSEE 0
-#define DEBUG_MOVE_EFFECTORS 0
-#define DEBUG_MOVE_STANDABLES 0
-#define DEBUG_ANIMATIONS 0
-#define DEBUG_TIMER 0
-#define DEBUG_INSERT_SPRITE 0
-#define DEBUG_VARS 0
-#define DEBUG_HIT 0
-#define DEBUG_SPRITE 0
-#define DEBUG_COOLEXPLOSION1__STATIC 0
-#define DEBUG_A_SHOOTZVEL 0
-#define DEBUG_DAMAGE 0
+#define DEBUG_MODE 0
 
-#define DEBUG_LOAD_TILE_ART 0
-#define DEBUG_PALETTE 0
-#define DEBUG_TEXTURE 1
+//is debug mode
+#define isd(v) DEBUG_MODE && v
+
+#define DEBUG_COMPILE isd(0)
+#define DEBUG_KRAND isd(0)
+#define DEBUG_MOSTS isd(0)
+#define DEBUG_POLY isd(0)
+#define DEBUG_DRAW_ROOMS isd(0)
+#define DEBUG_POLYMOST_DRAWALLS isd(0)
+#define DEBUG_POLYMOST_DRAWALLS_SCANSECTOR isd(0)
+#define DEBUG_POLYMOST_DRAWALLS_DOMOSTS_DETAIL isd(0)
+#define DEBUG_PLAYER_POS isd(0)
+#define DEBUG_GETZRANGE isd(0)
+#define DEBUG_VM_EXECUTE isd(0)
+#define DEBUG_headspritestat isd(0)
+#define DEBUG_SPRITESTAT_CHANGE isd(0)
+#define DEBUG_SPAWN isd(0)
+#define DEBUG_VM_CONDITIONAL isd(0)
+#define DEBUG_MOVE_ZOMBIE_ACTORS isd(0)
+#define DEBUG_CANSEE isd(0)
+#define DEBUG_MOVE_EFFECTORS isd(0)
+#define DEBUG_MOVE_STANDABLES isd(0)
+#define DEBUG_ANIMATIONS isd(0)
+#define DEBUG_TIMER isd(0)
+#define DEBUG_INSERT_SPRITE isd(0)
+#define DEBUG_VARS isd(0)
+#define DEBUG_HIT isd(0)
+#define DEBUG_SPRITE isd(0)
+#define DEBUG_COOLEXPLOSION1__STATIC isd(0)
+#define DEBUG_A_SHOOTZVEL isd(0)
+#define DEBUG_DAMAGE isd(0)
+#define DEBUG_FORCE_INPUT isd(0)
+#define DEBUG_MAX_FRAMES 144
+#define DEBUG_MAX_FRAMES_EXIT isd(0)
+#define DEBUG_FIXED_TIMER isd(0)
+
+#define DEBUG_LOAD_TILE_ART isd(0)
+#define DEBUG_PALETTE isd(0)
+#define DEBUG_TEXTURE isd(1)
 
 void dlog(int32_t log, char *format, ...);
 void logHeadspritestat(char* where);

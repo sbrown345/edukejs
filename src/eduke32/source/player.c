@@ -2946,15 +2946,18 @@ void P_GetInput(int32_t snum)
 
 #ifdef DEBUG_TODO
 #else
-// test move and firing
-	vel += keymove;
-	loc.extbits |= 1;
-	loc.bits |=   1<<SK_FIRE;
-	//loc.bits |=   1<<SK_OPEN;
+	if(DEBUG_FORCE_INPUT)  
+	{
+		// test move and firing
+		vel += keymove;
+		loc.extbits |= 1;
+		loc.bits |=   1<<SK_FIRE;
+		//loc.bits |=   1<<SK_OPEN;
 
-     //   angvel += 10;
-     //   loc.bits |=   1<<SK_JUMP;
-	horiz -= 20;//look down
+		//   angvel += 10;
+		//   loc.bits |=   1<<SK_JUMP;
+		horiz -= 20;//look down
+	}
 #endif
 
 

@@ -3093,16 +3093,17 @@ function P_GetInput(/*int32_t */snum: number): void
     });
     
     tempHC(function() {
-        if(!DEBUG_FORCE_INPUT) return
+        if(DEBUG_FORCE_INPUT) 
+        {
+	        vel += keymove;
+	        loc.extbits |= 1;
+	        loc.bits |=   1<<SK_FIRE;
+	        //loc.bits |=   1<<SK_OPEN;
 
-	    vel += keymove;
-	    loc.extbits |= 1;
-	    loc.bits |=   1<<SK_FIRE;
-	    //loc.bits |=   1<<SK_OPEN;
-
-        //angvel += 10;
-        //loc.bits |=   1<<SK_JUMP;
-        horiz -= 20;//look down
+            //angvel += 10;
+            //loc.bits |=   1<<SK_JUMP;
+            horiz -= 20;//look down
+        }
     });
 
     //if (G_HaveEvent(EVENT_PROCESSINPUT) || G_HaveEvent(EVENT_TURNLEFT))

@@ -1534,13 +1534,16 @@ void sampletimer(void)
 //
 static uint32_t tempTotalTicks = 0;
 uint32_t getticks(void)
-{
-    //int64_t i;
-    //if (win_timerfreq == 0) return 0;
-    //QueryPerformanceCounter((LARGE_INTEGER *)&i);
-    //return (uint32_t)(i*longlong(1000)/win_timerfreq);
-	tempTotalTicks+=10;
-	return tempTotalTicks;
+{	
+	if(DEBUG_FIXED_TIMER) {
+		tempTotalTicks+=10;
+		return tempTotalTicks;
+	}
+
+    int64_t i;
+    if (win_timerfreq == 0) return 0;
+    QueryPerformanceCounter((LARGE_INTEGER *)&i);
+    return (uint32_t)(i*longlong(1000)/win_timerfreq);
 }
 
 // high-resolution timers for profiling

@@ -102,9 +102,9 @@ var ptrMemory: PtrVal[] = [];
 var ptrMemoryMap = {};
 
 function regIntptr_t(evalSrc: string): number {
-    if(typeof ptrMemoryMap[evalSrc] !== "undefined") {
-        console.warn("already registered " + evalSrc);
-    }
+    //if(typeof ptrMemoryMap[evalSrc] !== "undefined") {
+    //    console.warn("already registered " + evalSrc);
+    //}
 
     var offset = 10000;
     var location = offset + (ptrMemoryCount++);

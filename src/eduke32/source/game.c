@@ -11932,13 +11932,8 @@ skipframe:
 
         dlog(DEBUG_PLAYER_POS, "p pos x:%i y:%i z:%i, vel x:%i y:%i, z:%i \n", g_player[0].ps->pos.x, g_player[0].ps->pos.y, g_player[0].ps->pos.z, g_player[0].ps->vel.x, g_player[0].ps->vel.y, g_player[0].ps->vel.z);
     }
-//#ifdef DEBUG_TODO
-//	while (1);
-//#else
-    while (tempWhile++ < 144);
-	exit(0);//temp
-//#endif
-
+    while (!DEBUG_MAX_FRAMES_EXIT || (tempWhile++ < DEBUG_MAX_FRAMES));
+	
     G_GameExit(" ");
     return 0;  // not reached (duh)
 }

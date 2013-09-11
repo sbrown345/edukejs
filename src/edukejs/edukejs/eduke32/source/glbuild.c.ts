@@ -44,8 +44,8 @@ if(document.body /*qunit*/)
     document.body.appendChild(gl.canvas);
 //gl.canvas.width = document.documentElement.clientWidth - 5;
 //gl.canvas.height = document.documentElement.clientHeight - 5;
-gl.canvas.width = 1024;
-gl.canvas.height = 768;
+gl.canvas.width = 1200;
+gl.canvas.height = 800;
 
 // set non-existent enums negative
 var GL_TEXTURE0_ARB = gl.TEXTURE0;
