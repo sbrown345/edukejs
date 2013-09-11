@@ -7340,14 +7340,9 @@ function dorotspr_handle_bit2(sxptr: R<number>, syptr: R<number>, z: R<number> ,
             sy = (ydim<<15)+32768 + mulscale16(normyofs, zoomsc);
         }
 
-        assert.run("dorotspr_handle_bit2 sx", sx == 33587200);
-        assert.run("dorotspr_handle_bit2 sy", sy == 25198592);
-        assert.run("dorotspr_handle_bit2 zoomsc", zoomsc == 251657);
-
         sxptr.$ = sx;
         syptr.$ = sy;
         z.$ = mulscale16(z.$, zoomsc);
-        assert.run("dorotspr_handle_bit2 z.$", z.$ == 251657);
 
         ret_yxaspect.$ = ouryxaspect;
         ret_xyaspect.$ = ourxyaspect;
