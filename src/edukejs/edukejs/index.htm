@@ -2,45 +2,89 @@
 <!DOCTYPE html>
 
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <meta charset="utf-8" />
-    <title>EDukeJS</title>
-    <style>body{margin:0;}</style>
-</head>
-<body>
-    <script src="libs/long.js"></script>
-    <script src="libs/webgl-debug.js"></script>
-    <script src="libs/lightgl.js"></script>
-    <script src="libs/polyfills.js"></script>
-    <script src="eduke.js"></script>
-
-    <script>
+    <head>
+        <meta charset="utf-8" />
+        <title>EDukeJS</title>
+        <style>body{margin:0;}</style>
+    </head>
+    <body>
+        <script src="libs/long.js"></script>
+        <script src="libs/webgl-debug.js"></script>
+        <script src="libs/lightgl.js"></script>
+        <script src="libs/polyfills.js"></script>
+        <script src="eduke.js"></script>
+        <div>
+            <a href="?E1L1">E1L1</a>
+            <a href="?E1L2">E1L2</a>
+            <a href="?E1L3">E1L3</a>
+            <a href="?E1L4">E1L4</a>
+            <a href="?E1L5">E1L5</a>
+            <a href="?E1L6">E1L6</a>
+            <a href="?E1L7">E1L7</a>
+            <br>
+            <a href="?E2L1">E2L1</a>
+            <a href="?E2L2">E2L2</a>
+            <a href="?E2L3">E2L3</a>
+            <a href="?E2L4">E2L4</a>
+            <a href="?E2L5">E2L5</a>
+            <a href="?E2L6">E2L6</a>
+            <a href="?E2L7">E2L7</a>
+            <a href="?E2L8">E2L8</a>
+            <a href="?E2L9">E2L9</a>
+            <a href="?E2L10">E1210</a>
+            <a href="?E2L11">E1211</a>
+            <br>
+            <a href="?E3L1">E3L1</a>
+            <a href="?E3L2">E3L2</a>
+            <a href="?E3L3">E3L3</a>
+            <a href="?E3L4">E3L4</a>
+            <a href="?E3L5">E3L5</a>
+            <a href="?E3L6">E3L6</a>
+            <a href="?E3L7">E3L7</a>
+            <a href="?E3L8">E3L8</a>
+            <a href="?E3L9">E3L9</a>
+            <a href="?E3L10">E3L10</a>
+            <a href="?E3L11">E3L11</a>
+            <br>
+            <a href="?E4L1">E4L1</a>
+            <a href="?E4L2">E4L2</a>
+            <a href="?E4L3">E4L3</a>
+            <a href="?E4L4">E4L4</a>
+            <a href="?E4L5">E4L5</a>
+            <a href="?E4L6">E4L6</a>
+            <a href="?E4L7">E4L7</a>
+            <a href="?E4L8">E4L8</a>
+            <a href="?E4L9">E4L9</a>
+            <a href="?E4L10">E4L10</a>
+            <a href="?E4L11">E4L11</a>
+        </div>
+        <script>
         // async: https://github.com/AndrewGaspar/Async-Await-Proposal-for-TypeScript/tree/master/Code-Generation
 
-        path("index.htm");
+            path("index.htm");
 
-        var xhr = new XMLHttpRequest();
-        xhr.open('GET', 'DUKE3D.GRP', true);
-        xhr.responseType = 'arraybuffer';
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', 'DUKE3D.GRP', true);
+            xhr.responseType = 'arraybuffer';
 
-        xhr.onload = function (e) {
-            loadGame(new Uint8Array(this.response));
-        };
+            xhr.onload = function (e) {
+                loadGame(new Uint8Array(this.response));
+            };
 
-        xhr.send();
+            xhr.send();
 
-        function loadGame(grpData) {
-            path("index.htm loaded grp");
+            function loadGame(grpData) {
+                path("index.htm loaded grp");
 
-            if(grpData.length != hardcoded.grpSize) {
-                throw "Incorrect file size for " + (shareware ? "demo" : "full") + " grp";
-            }
+                if(grpData.length != hardcoded.grpSize) {
+                    throw "Incorrect file size for " + (shareware ? "demo" : "full") + " grp";
+                }
             
-            fileHandles[4] = new Ptr(grpData);
-            var commandLine = "-nosetup -map ";
-            commandLine += window.location.search ? window.location.search.substr(1) + ".MAP" : "E1L1.MAP";
-            WinMain(null, null, commandLine, 10);
-        }
-    </script>
-</body>
+                fileHandles[4] = new Ptr(grpData);
+                var commandLine = "-nosetup -map ";
+                commandLine += window.location.search ? window.location.search.substr(1) + ".MAP" : "E1L1.MAP";
+                WinMain(null, null, commandLine, 10);
+            }
+        </script>
+    </body>
 </html>
