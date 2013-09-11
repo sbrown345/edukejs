@@ -830,7 +830,6 @@ function uploadtexture(doalloc: number, xsiz: number, ysiz: number, intexfmt: nu
     //         intexfmt==GL_COMPRESSED_RGBA_ARB?"GL_COMPRESSED_RGBA_ARB":
     //         intexfmt==GL_COMPRESSED_RGB_ARB?"GL_COMPRESSED_RGB_ARB":"other")*/));
     
-    console.time("texImage stuff");
     if (js == 0)
     {
         if (doalloc&1)
@@ -838,7 +837,6 @@ function uploadtexture(doalloc: number, xsiz: number, ysiz: number, intexfmt: nu
         else
             bglTexSubImage2D(GL_TEXTURE_2D,0,0,0,xsiz,ysiz,texfmt,GL_UNSIGNED_BYTE,coltypeArrayToBuffer(pic)); //overwrite old texture
     }
-    console.timeEnd("texImage stuff");
 
 //#if 0
 //    gluBuild2DMipmaps(GL_TEXTURE_2D,GL_RGBA8,xsiz,ysiz,texfmt,GL_UNSIGNED_BYTE,pic); //Needs C++ to link?
@@ -2453,7 +2451,6 @@ function /*static void */calc_ypanning(/*int32_t*/ refposz:number, /*double*/ ry
 
 function polymost_drawalls(/*int32_t */bunch: number): void
 {
-    console.time("polymost_drawalls");
     var sec: sectortype, nextsec: sectortype;
     var wal: walltype, wal2: walltype, nwal: walltype;
     var /*double*/ ox=0.0, oy=0.0, oz=0.0, dd = new Float64Array(3), vv = new Float64Array(3);
@@ -3258,7 +3255,6 @@ function polymost_drawalls(/*int32_t */bunch: number): void
                 polymost_scansector(nextsectnum);
             }
     }
-    console.timeEnd("polymost_drawalls");
 }
 
 function /*static int32_t */polymost_bunchfront(/*int32_t */b1: number, /*int32_t */b2: number)
