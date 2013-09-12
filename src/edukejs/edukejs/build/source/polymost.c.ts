@@ -1765,6 +1765,7 @@ function drawpoly(dpx: Float64Array, dpy: Float64Array, /*int32_t*/ n:number, /*
         }
         else
         {
+            // todo: webgl slow part, e.g. on E4L10
             ox2 *= hackscx; oy2 *= hackscy;
             bglBegin(GL_TRIANGLE_FAN);
             for (i=0; i<n; i++)
