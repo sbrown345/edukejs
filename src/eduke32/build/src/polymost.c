@@ -979,9 +979,7 @@ int32_t gloadtile_art(int32_t dapic, int32_t dapal, int32_t dashade, int32_t dam
 	}
     bglBindTexture(GL_TEXTURE_2D,pth->glpic);
 
-	#ifdef DEBUG_GL_SIMPLE_OFF
     fixtransparency(dapic, pic,tsizx,tsizy,xsiz,ysiz,dameth);
-	#endif
 
 	#ifdef DEBUG_GL_SIMPLE_OFF
 	#else
