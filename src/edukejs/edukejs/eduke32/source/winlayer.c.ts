@@ -2762,6 +2762,18 @@ function SetupOpenGL(width: number, height: number, bitspp: number): number
     glinfo.clamptoedge = 1;
 
     todo("May need stuff in SetupOpenGL");
+    tempHC(function() {
+        glinfo.texnpot = 1;
+        glinfo.depthtex = 1;
+        glinfo.shadow = 1;
+        glinfo.fbos = 1;
+        glinfo.rect = 1;
+        glinfo.multitex = 1;
+        glinfo.vbos = 1;
+        glinfo.occlusionqueries  = 1;
+        glinfo.glsl = 1;
+    });
+
     //todoThrow();
 //    PIXELFORMATDESCRIPTOR pfd =
 //    {
