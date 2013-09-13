@@ -808,6 +808,7 @@ int32_t             polymer_init(void)
 
 void                polymer_uninit(void)
 {
+#ifdef DEBUG_GL_SIMPLE_OFF
     int32_t         i, j;
 
     if (prtess)
@@ -838,6 +839,7 @@ void                polymer_uninit(void)
         }        
         i++;
     }
+#endif
 }
 
 void                polymer_setaspect(int32_t ang)
@@ -895,6 +897,7 @@ void                polymer_glinit(void)
 
 void                polymer_resetlights(void)
 {
+#ifdef DEBUG_GL_SIMPLE_OFF	
     int32_t         i;
     _prsector       *s;
     _prwall         *w;
@@ -943,6 +946,7 @@ void                polymer_resetlights(void)
 
     if (!loadmaphack(NULL))
         OSD_Printf("polymer_resetlights: reloaded maphack\n");
+#endif
 }
 
 void                polymer_loadboard(void)
@@ -2160,6 +2164,7 @@ static void         polymer_animatesprites(void)
 
 static void         polymer_freeboard(void)
 {
+#ifdef DEBUG_GL_SIMPLE_OFF
     int32_t         i;
 
     i = 0;
@@ -2255,6 +2260,7 @@ static void         polymer_freeboard(void)
 
         i++;
     }
+#endif
 }
 
 // SECTORS

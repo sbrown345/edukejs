@@ -2663,6 +2663,21 @@ static void UninitOpenGL(void)
 //
 static int32_t SetupOpenGL(int32_t width, int32_t height, int32_t bitspp)
 {
+
+#ifdef DEBUG_GL_SIMPLE_OFF
+#else
+	// for polymer
+	glinfo.texnpot = 1;
+    glinfo.depthtex = 1;
+    glinfo.shadow = 1;
+    glinfo.fbos = 1;
+    glinfo.rect = 1;
+    glinfo.multitex = 1;
+    glinfo.vbos = 1;
+    glinfo.occlusionqueries  = 1;
+    glinfo.glsl = 1;
+#endif
+
     PIXELFORMATDESCRIPTOR pfd =
     {
         sizeof(PIXELFORMATDESCRIPTOR),
