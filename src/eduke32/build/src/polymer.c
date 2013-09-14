@@ -2292,12 +2292,12 @@ static int32_t      polymer_initsector(int16_t sectnum)
         return (0);
     }
 
-#ifdef DEBUG_GL_SIMPLE_OFF
     bglGenBuffersARB(1, &s->floor.vbo);
     bglGenBuffersARB(1, &s->ceil.vbo);
     bglGenBuffersARB(1, &s->floor.ivbo);
     bglGenBuffersARB(1, &s->ceil.ivbo);
 
+#ifdef DEBUG_GL_SIMPLE_OFF
     bglBindBufferARB(GL_ARRAY_BUFFER_ARB, s->floor.vbo);
     bglBufferDataARB(GL_ARRAY_BUFFER_ARB, sec->wallnum * sizeof(GLfloat) * 5, NULL, mapvbousage);
 
@@ -2508,7 +2508,7 @@ attributes:
         bglBufferSubDataARB(GL_ARRAY_BUFFER_ARB, 0, sec->wallnum * sizeof(GLfloat) * 5, s->floor.buffer);
         bglBindBufferARB(GL_ARRAY_BUFFER_ARB, s->ceil.vbo);
         bglBufferSubDataARB(GL_ARRAY_BUFFER_ARB, 0, sec->wallnum * sizeof(GLfloat) * 5, s->ceil.buffer);
-        bglBindBufferARB(GL_ARRAY_BUFFER_ARB, 0);
+		bglBindBufferARB(GL_ARRAY_BUFFER_ARB, 0);
     }
 
     if ((!s->flags.empty) && (!s->flags.invalidtex) &&
@@ -2557,6 +2557,7 @@ attributes:
 
 finish:
 
+#ifdef DEBUG_GL_SIMPLE_OFF
     if (needfloor)
     {
         polymer_buildfloor(sectnum);
@@ -2577,13 +2578,13 @@ finish:
             bglBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, 0);
         }
     }
-
     if (wallinvalidate)
     {
-        s->invalidid++;
-        polymer_computeplane(&s->floor);
-        polymer_computeplane(&s->ceil);
+        //s->invalidid++;
+        //polymer_computeplane(&s->floor);
+        //polymer_computeplane(&s->ceil);
     }
+#endif
 
     s->flags.empty = 0;
     s->flags.uptodate = 1;
@@ -2804,7 +2805,7 @@ static int32_t      polymer_initwall(int16_t wallnum)
     bglGenBuffersARB(1, &w->over.vbo);
     bglGenBuffersARB(1, &w->mask.vbo);
     bglGenBuffersARB(1, &w->stuffvbo);
-
+#ifdef DEBUG_GL_SIMPLE_OFF
     bglBindBufferARB(GL_ARRAY_BUFFER_ARB, w->wall.vbo);
     bglBufferDataARB(GL_ARRAY_BUFFER_ARB, 4 * sizeof(GLfloat) * 5, NULL, mapvbousage);
 
@@ -2818,7 +2819,7 @@ static int32_t      polymer_initwall(int16_t wallnum)
     bglBufferDataARB(GL_ARRAY_BUFFER_ARB, 8 * sizeof(GLfloat) * 5, NULL, mapvbousage);
 
     bglBindBufferARB(GL_ARRAY_BUFFER_ARB, 0);
-
+#endif
     w->flags.empty = 1;
 
     prwalls[wallnum] = w;
@@ -3239,6 +3240,7 @@ static void         polymer_updatewall(int16_t wallnum)
 
     if ((pr_vbos > 0))
     {
+#ifdef DEBUG_GL_SIMPLE_OFF
         bglBindBufferARB(GL_ARRAY_BUFFER_ARB, w->wall.vbo);
         bglBufferSubDataARB(GL_ARRAY_BUFFER_ARB, 0, 4 * sizeof(GLfloat) * 5, w->wall.buffer);
         bglBindBufferARB(GL_ARRAY_BUFFER_ARB, w->over.vbo);
@@ -3250,6 +3252,7 @@ static void         polymer_updatewall(int16_t wallnum)
         bglBufferSubDataARB(GL_ARRAY_BUFFER_ARB, 0, 4 * sizeof(GLfloat) * 5, w->bigportal);
         bglBufferSubDataARB(GL_ARRAY_BUFFER_ARB, 4 * sizeof(GLfloat) * 5, 4 * sizeof(GLfloat) * 3, w->cap);
         bglBindBufferARB(GL_ARRAY_BUFFER_ARB, 0);
+#endif
     }
 
     w->flags.empty = 0;

@@ -2289,7 +2289,7 @@ function polymer_freeboard():void
 }
 
 // SECTORS
-function /*static int32_t*/      polymer_initsector(/*int16_t */sectnum):number
+function /*static int32_t*/      polymer_initsector(/*int16_t */sectnum:number):number
 {
     var sec:sectortype;
     var s:_prsector;
@@ -2995,55 +2995,55 @@ function polymer_updatewall(/*int16_t */wallnum:number): void
         xref = 0;
 
     if (wal.nextsector < 0 || wal.nextsector >= numsectors)
-    {todoThrow();
-        //Bmemcpy(w.wall.buffer, &s.floor.buffer[(wallnum - sec.wallptr) * 5],  /*sizeof(GLfloat)*/ 4 * 3);
-        //Bmemcpy(&w.wall.buffer[5], &s.floor.buffer[(wal.point2 - sec.wallptr) * 5],  /*sizeof(GLfloat)*/ 4 * 3);
-        //Bmemcpy(&w.wall.buffer[10], &s.ceil.buffer[(wal.point2 - sec.wallptr) * 5],  /*sizeof(GLfloat)*/ 4 * 3);
-        //Bmemcpy(&w.wall.buffer[15], &s.ceil.buffer[(wallnum - sec.wallptr) * 5],  /*sizeof(GLfloat)*/ 4 * 3);
+    {
+        Bmemcpy(new P(w.wall.buffer, 0), new P(s.floor.buffer, (wallnum - sec.wallptr) * 5),  /*sizeof(GLfloat)*/ 4 * 3);
+        Bmemcpy(new P(w.wall.buffer, 5), new P(s.floor.buffer,(wal.point2 - sec.wallptr) * 5),  /*sizeof(GLfloat)*/ 4 * 3);
+        Bmemcpy(new P(w.wall.buffer,10), new P(s.ceil.buffer,(wal.point2 - sec.wallptr) * 5),  /*sizeof(GLfloat)*/ 4 * 3);
+        Bmemcpy(new P(w.wall.buffer,15), new P(s.ceil.buffer,(wallnum - sec.wallptr) * 5),  /*sizeof(GLfloat)*/ 4 * 3);
 
-        //if (wal.nextsector < 0)
-        //    curpicnum = wallpicnum;
-        //else
-        //    curpicnum = walloverpicnum;
+        if (wal.nextsector < 0)
+            curpicnum = wallpicnum;
+        else
+            curpicnum = walloverpicnum;
 
-        //polymer_getbuildmaterial(&w.wall.material, curpicnum, wal.pal, wal.shade, sec.visibility, 0);
+        polymer_getbuildmaterial(w.wall.material, curpicnum, wal.pal, wal.shade, sec.visibility, 0);
 
-        //if (wal.cstat & 4)
-        //    yref = sec.floorz;
-        //else
-        //    yref = sec.ceilingz;
+        if (wal.cstat & 4)
+            yref = sec.floorz;
+        else
+            yref = sec.ceilingz;
 
-        //if ((wal.cstat & 32) && (wal.nextsector >= 0))
-        //{
-        //    if ((!(wal.cstat & 2) && (wal.cstat & 4)) || ((wal.cstat & 2) && (wall[nwallnum].cstat & 4)))
-        //        yref = sec.ceilingz;
-        //    else
-        //        yref = nsec.floorz;
-        //}
+        if ((wal.cstat & 32) && (wal.nextsector >= 0))
+        {
+            if ((!(wal.cstat & 2) && (wal.cstat & 4)) || ((wal.cstat & 2) && (wall[nwallnum].cstat & 4)))
+                yref = sec.ceilingz;
+            else
+                yref = nsec.floorz;
+        }
 
-        //if (wal.ypanning)
-        //    // white
-        //    ypancoef = calc_ypancoef(wal.ypanning, curpicnum, !(wal.cstat & 4));
-        //else
-        //    ypancoef = 0;
+        if (wal.ypanning)
+            // white
+            ypancoef = calc_ypancoef(wal.ypanning, curpicnum, !(wal.cstat & 4)?1:0);
+        else
+            ypancoef = 0;
 
-        //i = 0;
-        //while (i < 4)
-        //{
-        //    if ((i == 0) || (i == 3))
-        //        dist =   /*(float)*/  xref;
-        //    else
-        //        dist =   /*(float)*/  (xref == 0);
+        i = 0;
+        while (i < 4)
+        {
+            if ((i == 0) || (i == 3))
+                dist =   /*(float)*/  xref;
+            else
+                dist =   /*(float)*/  (xref == 0)?1:0;
 
-        //    w.wall.buffer[(i * 5) + 3] = ((dist * 8.0 * wal.xrepeat) + wal.xpanning) /   /*(float)*/  (tilesizx[curpicnum]);
-        //    w.wall.buffer[(i * 5) + 4] = (-  /*(float)*/  (yref + (w.wall.buffer[(i * 5) + 1] * 16)) / ((tilesizy[curpicnum] * 2048.0) /   /*(float)*/  (wal.yrepeat))) + ypancoef;
+            w.wall.buffer[(i * 5) + 3] = ((dist * 8.0 * wal.xrepeat) + wal.xpanning) /   /*(float)*/  (tilesizx[curpicnum]);
+            w.wall.buffer[(i * 5) + 4] = (-  /*(float)*/  (yref + (w.wall.buffer[(i * 5) + 1] * 16)) / ((tilesizy[curpicnum] * 2048.0) /   /*(float)*/  (wal.yrepeat))) + ypancoef;
 
-        //    if (wal.cstat & 256) w.wall.buffer[(i * 5) + 4] = -w.wall.buffer[(i * 5) + 4];
+            if (wal.cstat & 256) w.wall.buffer[(i * 5) + 4] = -w.wall.buffer[(i * 5) + 4];
 
-        //    i++;
-        //}
+            i++;
+        }
 
-        //w.underover |= 1;
+        w.underover |= 1;
     }
     else
     {
@@ -3054,234 +3054,233 @@ function polymer_updatewall(/*int16_t */wallnum:number): void
             underwall = 1;
 
         if ((underwall) || (wal.cstat & 16) || (wal.cstat & 32))
-        {todoThrow();
-            //var/*int32_t */refwall:number;
+        {
+            var/*int32_t */refwall:number;
 
-            //if (s.floor.buffer[((wallnum - sec.wallptr) * 5) + 1] < ns.floor.buffer[((nnwallnum - nsec.wallptr) * 5) + 1])
-            //    Bmemcpy(w.wall.buffer, &s.floor.buffer[(wallnum - sec.wallptr) * 5],  /*sizeof(GLfloat)*/ 4 * 3);
-            //else
-            //    Bmemcpy(w.wall.buffer, &ns.floor.buffer[(nnwallnum - nsec.wallptr) * 5],  /*sizeof(GLfloat)*/ 4 * 3);
-            //Bmemcpy(&w.wall.buffer[5], &s.floor.buffer[(wal.point2 - sec.wallptr) * 5],  /*sizeof(GLfloat)*/ 4 * 3);
-            //Bmemcpy(&w.wall.buffer[10], &ns.floor.buffer[(nwallnum - nsec.wallptr) * 5],  /*sizeof(GLfloat)*/ 4 * 3);
-            //Bmemcpy(&w.wall.buffer[15], &ns.floor.buffer[(nnwallnum - nsec.wallptr) * 5],  /*sizeof(GLfloat)*/ 4 * 3);
+            if (s.floor.buffer[((wallnum - sec.wallptr) * 5) + 1] < ns.floor.buffer[((nnwallnum - nsec.wallptr) * 5) + 1])
+                Bmemcpy(new P(w.wall.buffer), new P(s.floor.buffer,(wallnum - sec.wallptr) * 5),  /*sizeof(GLfloat)*/ 4 * 3);
+            else
+                Bmemcpy(new P(w.wall.buffer), new P(ns.floor.buffer,(nnwallnum - nsec.wallptr) * 5),  /*sizeof(GLfloat)*/ 4 * 3);
+            Bmemcpy(new P(w.wall.buffer,5),  new P(s.floor.buffer ,(wal.point2 - sec.wallptr) * 5),  /*sizeof(GLfloat)*/ 4 * 3);
+            Bmemcpy(new P(w.wall.buffer,10), new P(ns.floor.buffer,(nwallnum - nsec.wallptr) * 5 ),  /*sizeof(GLfloat)*/ 4 * 3);
+            Bmemcpy(new P(w.wall.buffer,15), new P(ns.floor.buffer,(nnwallnum - nsec.wallptr) * 5),  /*sizeof(GLfloat)*/ 4 * 3);
 
-            //if (wal.cstat & 2)
-            //    refwall = nwallnum;
-            //else
-            //    refwall = wallnum;
+            if (wal.cstat & 2)
+                refwall = nwallnum;
+            else
+                refwall = wallnum;
 
-            //curpicnum = (wal.cstat & 2) ? nwallpicnum : wallpicnum;
-            //curpal = wall[refwall].pal;
-            //curshade = wall[refwall].shade;
-            //curxpanning = wall[refwall].xpanning;
-            //curypanning = wall[refwall].ypanning;
+            curpicnum = (wal.cstat & 2) ? nwallpicnum : wallpicnum;
+            curpal = wall[refwall].pal;
+            curshade = wall[refwall].shade;
+            curxpanning = wall[refwall].xpanning;
+            curypanning = wall[refwall].ypanning;
 
-            //polymer_getbuildmaterial(w.wall.material, curpicnum, curpal, curshade, sec.visibility, 0);
+            polymer_getbuildmaterial(w.wall.material, curpicnum, curpal, curshade, sec.visibility, 0);
 
-            //if (!(wall[refwall].cstat&4))
-            //    yref = nsec.floorz;
-            //else
-            //    yref = sec.ceilingz;
+            if (!(wall[refwall].cstat&4))
+                yref = nsec.floorz;
+            else
+                yref = sec.ceilingz;
 
-            //if (curypanning)
-            //    // under
-            //    ypancoef = calc_ypancoef(curypanning, curpicnum, !(wall[refwall].cstat & 4));
-            //else
-            //    ypancoef = 0;
+            if (curypanning)
+                // under
+                ypancoef = calc_ypancoef(curypanning, curpicnum, !(wall[refwall].cstat & 4)?1:0);
+            else
+                ypancoef = 0;
 
-            //i = 0;
-            //while (i < 4)
-            //{
-            //    if ((i == 0) || (i == 3))
-            //        dist =   /*(float)*/  xref;
-            //    else
-            //        dist =   /*(float)*/  (xref == 0);
+            i = 0;
+            while (i < 4)
+            {
+                if ((i == 0) || (i == 3))
+                    dist =   /*(float)*/  xref;
+                else
+                    dist =   /*(float)*/  (xref == 0)?1:0;
 
-            //    w.wall.buffer[(i * 5) + 3] = ((dist * 8.0 * wal.xrepeat) + curxpanning) /   /*(float)*/  (tilesizx[curpicnum]);
-            //    w.wall.buffer[(i * 5) + 4] = (-  /*(float)*/  (yref + (w.wall.buffer[(i * 5) + 1] * 16)) / ((tilesizy[curpicnum] * 2048.0) /   /*(float)*/  (wal.yrepeat))) + ypancoef;
+                w.wall.buffer[(i * 5) + 3] = ((dist * 8.0 * wal.xrepeat) + curxpanning) /   /*(float)*/  (tilesizx[curpicnum]);
+                w.wall.buffer[(i * 5) + 4] = (-  /*(float)*/  (yref + (w.wall.buffer[(i * 5) + 1] * 16)) / ((tilesizy[curpicnum] * 2048.0) /   /*(float)*/  (wal.yrepeat))) + ypancoef;
 
-            //    if ((!(wal.cstat & 2) && (wal.cstat & 256)) ||
-            //        ((wal.cstat & 2) && (wall[nwallnum].cstat & 256)))
-            //        w.wall.buffer[(i * 5) + 4] = -w.wall.buffer[(i * 5) + 4];
+                if ((!(wal.cstat & 2) && (wal.cstat & 256)) ||
+                    ((wal.cstat & 2) && (wall[nwallnum].cstat & 256)))
+                    w.wall.buffer[(i * 5) + 4] = -w.wall.buffer[(i * 5) + 4];
 
-            //    i++;
-            //}
+                i++;
+            }
 
-            //if (underwall)
-            //    w.underover |= 1;
+            if (underwall)
+                w.underover |= 1;
 
-            //Bmemcpy(w.mask.buffer, &w.wall.buffer[15],  /*sizeof(GLfloat)*/ 4 * 5);
-            //Bmemcpy(&w.mask.buffer[5], &w.wall.buffer[10],  /*sizeof(GLfloat)*/ 4 * 5);
+            Bmemcpy(new P(w.mask.buffer,0), new P(w.wall.buffer,15),  /*sizeof(GLfloat)*/ 4 * 5);
+            Bmemcpy(new P(w.mask.buffer,5), new P(w.wall.buffer,10),  /*sizeof(GLfloat)*/ 4 * 5);
         }
         else
-        {debugger
+        {
             Bmemcpy(new P(w.mask.buffer), new P(s.floor.buffer, (wallnum - sec.wallptr) * 5),  /*sizeof(GLfloat)*/ 4 * 5);
             Bmemcpy(new P(w.mask.buffer, 5), new P(s.floor.buffer, (wal.point2 - sec.wallptr) * 5),  /*sizeof(GLfloat)*/ 4 * 5);
         }
 
-    todoThrow()
-    //    if ((s.ceil.buffer[((wallnum - sec.wallptr) * 5) + 1] > ns.ceil.buffer[((nnwallnum - nsec.wallptr) * 5) + 1]) ||
-    //        (s.ceil.buffer[((wal.point2 - sec.wallptr) * 5) + 1] > ns.ceil.buffer[((nwallnum - nsec.wallptr) * 5) + 1]))
-    //        overwall = 1;
+        if ((s.ceil.buffer[((wallnum - sec.wallptr) * 5) + 1] > ns.ceil.buffer[((nnwallnum - nsec.wallptr) * 5) + 1]) ||
+            (s.ceil.buffer[((wal.point2 - sec.wallptr) * 5) + 1] > ns.ceil.buffer[((nwallnum - nsec.wallptr) * 5) + 1]))
+            overwall = 1;
 
-    //    if ((overwall) || (wal.cstat & 16) || (wal.cstat & 32))
-    //    {
-    //        if (w.over.buffer == NULL) {
-    //            w.over.buffer = new Float32Array(4*5);//(GLfloat *)Bmalloc(4 *  /*sizeof(GLfloat)*/ 4 * 5);
-    //            w.over.vertcount = 4;
-    //        }
+        if ((overwall) || (wal.cstat & 16) || (wal.cstat & 32))
+        {
+            if (w.over.buffer == NULL) {
+                w.over.buffer = new Float32Array(4*5);//(GLfloat *)Bmalloc(4 *  /*sizeof(GLfloat)*/ 4 * 5);
+                w.over.vertcount = 4;
+            }
 
-    //        Bmemcpy(w.over.buffer, &ns.ceil.buffer[(nnwallnum - nsec.wallptr) * 5],  /*sizeof(GLfloat)*/ 4 * 3);
-    //        Bmemcpy(&w.over.buffer[5], &ns.ceil.buffer[(nwallnum - nsec.wallptr) * 5],  /*sizeof(GLfloat)*/ 4 * 3);
-    //        if (s.ceil.buffer[((wal.point2 - sec.wallptr) * 5) + 1] > ns.ceil.buffer[((nwallnum - nsec.wallptr) * 5) + 1])
-    //            Bmemcpy(&w.over.buffer[10], &s.ceil.buffer[(wal.point2 - sec.wallptr) * 5],  /*sizeof(GLfloat)*/ 4 * 3);
-    //        else
-    //            Bmemcpy(&w.over.buffer[10], &ns.ceil.buffer[(nwallnum - nsec.wallptr) * 5],  /*sizeof(GLfloat)*/ 4 * 3);
-    //        Bmemcpy(&w.over.buffer[15], &s.ceil.buffer[(wallnum - sec.wallptr) * 5],  /*sizeof(GLfloat)*/ 4 * 3);
+            Bmemcpy(new P(w.over.buffer), new P(ns.ceil.buffer, (nnwallnum - nsec.wallptr) * 5),  /*sizeof(GLfloat)*/ 4 * 3);
+            Bmemcpy(new P(w.over.buffer, 5), new P(ns.ceil.buffer, (nwallnum - nsec.wallptr) * 5),  /*sizeof(GLfloat)*/ 4 * 3);
+            if (s.ceil.buffer[((wal.point2 - sec.wallptr) * 5) + 1] > ns.ceil.buffer[((nwallnum - nsec.wallptr) * 5) + 1])
+                Bmemcpy(new P(w.over.buffer, 10), new P(s.ceil.buffer, (wal.point2 - sec.wallptr) * 5),  /*sizeof(GLfloat)*/ 4 * 3);
+            else
+                Bmemcpy(new P(w.over.buffer, 10), new P(ns.ceil.buffer, (nwallnum - nsec.wallptr) * 5),  /*sizeof(GLfloat)*/ 4 * 3);
+            Bmemcpy(new P(w.over.buffer, 15), new P(s.ceil.buffer, (wallnum - sec.wallptr) * 5),  /*sizeof(GLfloat)*/ 4 * 3);
 
-    //        if ((wal.cstat & 16) || (wal.overpicnum == 0))
-    //            curpicnum = wallpicnum;
-    //        else
-    //            curpicnum = wallpicnum;
+            if ((wal.cstat & 16) || (wal.overpicnum == 0))
+                curpicnum = wallpicnum;
+            else
+                curpicnum = wallpicnum;
 
-    //        polymer_getbuildmaterial(&w.over.material, curpicnum, wal.pal, wal.shade, sec.visibility, 0);
+            polymer_getbuildmaterial(w.over.material, curpicnum, wal.pal, wal.shade, sec.visibility, 0);
 
-    //        if ((wal.cstat & 16) || (wal.cstat & 32))
-    //        {
-    //            // mask
-    //            polymer_getbuildmaterial(&w.mask.material, walloverpicnum, wal.pal, wal.shade, sec.visibility, 0);
+            if ((wal.cstat & 16) || (wal.cstat & 32))
+            {
+                // mask
+                polymer_getbuildmaterial(w.mask.material, walloverpicnum, wal.pal, wal.shade, sec.visibility, 0);
 
-    //            if (wal.cstat & 128)
-    //            {
-    //                if (wal.cstat & 512)
-    //                    w.mask.material.diffusemodulation[3] = 0x55;
-    //                else
-    //                    w.mask.material.diffusemodulation[3] = 0xAA;
-    //            }
-    //        }
+                if (wal.cstat & 128)
+                {
+                    if (wal.cstat & 512)
+                        w.mask.material.diffusemodulation[3] = 0x55;
+                    else
+                        w.mask.material.diffusemodulation[3] = 0xAA;
+                }
+            }
 
-    //        if (wal.cstat & 4)
-    //            yref = sec.ceilingz;
-    //        else
-    //            yref = nsec.ceilingz;
+            if (wal.cstat & 4)
+                yref = sec.ceilingz;
+            else
+                yref = nsec.ceilingz;
 
-    //        if (wal.ypanning)
-    //            // over
-    //            ypancoef = calc_ypancoef(wal.ypanning, curpicnum, wal.cstat & 4);
-    //        else
-    //            ypancoef = 0;
+            if (wal.ypanning)
+                // over
+                ypancoef = calc_ypancoef(wal.ypanning, curpicnum, wal.cstat & 4);
+            else
+                ypancoef = 0;
 
-    //        i = 0;
-    //        while (i < 4)
-    //        {
-    //            if ((i == 0) || (i == 3))
-    //                dist =   /*(float)*/  xref;
-    //            else
-    //                dist =   /*(float)*/  (xref == 0);
+            i = 0;
+            while (i < 4)
+            {
+                if ((i == 0) || (i == 3))
+                    dist =   /*(float)*/  xref;
+                else
+                    dist =   /*(float)*/  (xref == 0)?1:0;
 
-    //            w.over.buffer[(i * 5) + 3] = ((dist * 8.0 * wal.xrepeat) + wal.xpanning) /   /*(float)*/  (tilesizx[curpicnum]);
-    //            w.over.buffer[(i * 5) + 4] = (-  /*(float)*/  (yref + (w.over.buffer[(i * 5) + 1] * 16)) / ((tilesizy[curpicnum] * 2048.0) /   /*(float)*/  (wal.yrepeat))) + ypancoef;
+                w.over.buffer[(i * 5) + 3] = ((dist * 8.0 * wal.xrepeat) + wal.xpanning) /   /*(float)*/  (tilesizx[curpicnum]);
+                w.over.buffer[(i * 5) + 4] = (-  /*(float)*/  (yref + (w.over.buffer[(i * 5) + 1] * 16)) / ((tilesizy[curpicnum] * 2048.0) /   /*(float)*/  (wal.yrepeat))) + ypancoef;
 
-    //            if (wal.cstat & 256) w.over.buffer[(i * 5) + 4] = -w.over.buffer[(i * 5) + 4];
+                if (wal.cstat & 256) w.over.buffer[(i * 5) + 4] = -w.over.buffer[(i * 5) + 4];
 
-    //            i++;
-    //        }
+                i++;
+            }
 
-    //        if (overwall)
-    //            w.underover |= 2;
+            if (overwall)
+                w.underover |= 2;
 
-    //        Bmemcpy(&w.mask.buffer[10], &w.over.buffer[5],  /*sizeof(GLfloat)*/ 4 * 5);
-    //        Bmemcpy(&w.mask.buffer[15], &w.over.buffer[0],  /*sizeof(GLfloat)*/ 4 * 5);
+            Bmemcpy(new P(w.mask.buffer, 10), new P(w.over.buffer, 5),  /*sizeof(GLfloat)*/ 4 * 5);
+            Bmemcpy(new P(w.mask.buffer, 15), new P(w.over.buffer, 0),  /*sizeof(GLfloat)*/ 4 * 5);
 
-    //        if ((wal.cstat & 16) || (wal.cstat & 32))
-    //        {
-    //            // mask wall pass
-    //            if (wal.cstat & 4)
-    //                yref = min(sec.floorz, nsec.floorz);
-    //            else
-    //                yref = max(sec.ceilingz, nsec.ceilingz);
+            if ((wal.cstat & 16) || (wal.cstat & 32))
+            {
+                // mask wall pass
+                if (wal.cstat & 4)
+                    yref = min(sec.floorz, nsec.floorz);
+                else
+                    yref = max(sec.ceilingz, nsec.ceilingz);
 
-    //            if (wal.cstat & 32)
-    //            {
-    //                if ((!(wal.cstat & 2) && (wal.cstat & 4)) || ((wal.cstat & 2) && (wall[nwallnum].cstat & 4)))
-    //                    yref = sec.ceilingz;
-    //                else
-    //                    yref = nsec.ceilingz;
-    //            }
+                if (wal.cstat & 32)
+                {
+                    if ((!(wal.cstat & 2) && (wal.cstat & 4)) || ((wal.cstat & 2) && (wall[nwallnum].cstat & 4)))
+                        yref = sec.ceilingz;
+                    else
+                        yref = nsec.ceilingz;
+                }
 
-    //            curpicnum = walloverpicnum;
+                curpicnum = walloverpicnum;
 
-    //            if (wal.ypanning)
-    //                // mask
-    //                ypancoef = calc_ypancoef(wal.ypanning, curpicnum, 0);
-    //            else
-    //                ypancoef = 0;
+                if (wal.ypanning)
+                    // mask
+                    ypancoef = calc_ypancoef(wal.ypanning, curpicnum, 0);
+                else
+                    ypancoef = 0;
 
-    //            i = 0;
-    //            while (i < 4)
-    //            {
-    //                if ((i == 0) || (i == 3))
-    //                    dist =   /*(float)*/  xref;
-    //                else
-    //                    dist =   /*(float)*/  (xref == 0);
+                i = 0;
+                while (i < 4)
+                {
+                    if ((i == 0) || (i == 3))
+                        dist =   /*(float)*/  xref;
+                    else
+                        dist =   /*(float)*/  (xref == 0)?1:0;
 
-    //                w.mask.buffer[(i * 5) + 3] = ((dist * 8.0 * wal.xrepeat) + wal.xpanning) /   /*(float)*/  (tilesizx[curpicnum]);
-    //                w.mask.buffer[(i * 5) + 4] = (-  /*(float)*/  (yref + (w.mask.buffer[(i * 5) + 1] * 16)) / ((tilesizy[curpicnum] * 2048.0) /   /*(float)*/  (wal.yrepeat))) + ypancoef;
+                    w.mask.buffer[(i * 5) + 3] = ((dist * 8.0 * wal.xrepeat) + wal.xpanning) /   /*(float)*/  (tilesizx[curpicnum]);
+                    w.mask.buffer[(i * 5) + 4] = (-  /*(float)*/  (yref + (w.mask.buffer[(i * 5) + 1] * 16)) / ((tilesizy[curpicnum] * 2048.0) /   /*(float)*/  (wal.yrepeat))) + ypancoef;
 
-    //                if (wal.cstat & 256) w.mask.buffer[(i * 5) + 4] = -w.mask.buffer[(i * 5) + 4];
+                    if (wal.cstat & 256) w.mask.buffer[(i * 5) + 4] = -w.mask.buffer[(i * 5) + 4];
 
-    //                i++;
-    //            }
-    //        }
-    //    }
-    //    else
-    //    {
-    //        Bmemcpy(&w.mask.buffer[10], &s.ceil.buffer[(wal.point2 - sec.wallptr) * 5],  /*sizeof(GLfloat)*/ 4 * 5);
-    //        Bmemcpy(&w.mask.buffer[15], &s.ceil.buffer[(wallnum - sec.wallptr) * 5],  /*sizeof(GLfloat)*/ 4 * 5);
-    //    }
+                    i++;
+                }
+            }
+        }
+        else
+        {
+            Bmemcpy(new P(w.mask.buffer, 10), new P(s.ceil.buffer, (wal.point2 - sec.wallptr) * 5),  /*sizeof(GLfloat)*/ 4 * 5);
+            Bmemcpy(new P(w.mask.buffer, 15), new P(s.ceil.buffer, (wallnum - sec.wallptr) * 5),  /*sizeof(GLfloat)*/ 4 * 5);
+        }
     }
 
-    //if (wal.nextsector < 0)
-    //    Bmemcpy(w.mask.buffer, w.wall.buffer,  /*sizeof(GLfloat)*/ 4 * 4 * 5);
+    if (wal.nextsector < 0)
+        Bmemcpy(new P(w.mask.buffer), new P(w.wall.buffer),  /*sizeof(GLfloat)*/ 4 * 4 * 5);
 
-    //Bmemcpy(w.bigportal, &s.floor.buffer[(wallnum - sec.wallptr) * 5],  /*sizeof(GLfloat)*/ 4 * 3);
-    //Bmemcpy(&w.bigportal[5], &s.floor.buffer[(wal.point2 - sec.wallptr) * 5],  /*sizeof(GLfloat)*/ 4 * 3);
-    //Bmemcpy(&w.bigportal[10], &s.ceil.buffer[(wal.point2 - sec.wallptr) * 5],  /*sizeof(GLfloat)*/ 4 * 3);
-    //Bmemcpy(&w.bigportal[15], &s.ceil.buffer[(wallnum - sec.wallptr) * 5],  /*sizeof(GLfloat)*/ 4 * 3);
+    Bmemcpy(new P(w.bigportal),    new P(s.floor.buffer,(wallnum - sec.wallptr) * 5),  /*sizeof(GLfloat)*/ 4 * 3);
+    Bmemcpy(new P(w.bigportal,5),  new P(s.floor.buffer,(wal.point2 - sec.wallptr) * 5),  /*sizeof(GLfloat)*/ 4 * 3);
+    Bmemcpy(new P(w.bigportal,10), new P(s.ceil.buffer,(wal.point2 - sec.wallptr) * 5),  /*sizeof(GLfloat)*/ 4 * 3);
+    Bmemcpy(new P(w.bigportal,15), new P(s.ceil.buffer, (wallnum - sec.wallptr) * 5),  /*sizeof(GLfloat)*/ 4 * 3);
 
-    //Bmemcpy(&w.cap[0], &s.ceil.buffer[(wallnum - sec.wallptr) * 5],  /*sizeof(GLfloat)*/ 4 * 3);
-    //Bmemcpy(&w.cap[3], &s.ceil.buffer[(wal.point2 - sec.wallptr) * 5],  /*sizeof(GLfloat)*/ 4 * 3);
-    //Bmemcpy(&w.cap[6], &s.ceil.buffer[(wal.point2 - sec.wallptr) * 5],  /*sizeof(GLfloat)*/ 4 * 3);
-    //Bmemcpy(&w.cap[9], &s.ceil.buffer[(wallnum - sec.wallptr) * 5],  /*sizeof(GLfloat)*/ 4 * 3);
-    //w.cap[7] += 1048576; // this number is the result of 1048574 + 2
-    //w.cap[10] += 1048576; // this one is arbitrary
+    Bmemcpy(new P(w.cap,0), new P(s.ceil.buffer,(wallnum - sec.wallptr) * 5),  /*sizeof(GLfloat)*/ 4 * 3);
+    Bmemcpy(new P(w.cap,3), new P(s.ceil.buffer,(wal.point2 - sec.wallptr) * 5),  /*sizeof(GLfloat)*/ 4 * 3);
+    Bmemcpy(new P(w.cap,6), new P(s.ceil.buffer,(wal.point2 - sec.wallptr) * 5),  /*sizeof(GLfloat)*/ 4 * 3);
+    Bmemcpy(new P(w.cap,9), new P(s.ceil.buffer,(wallnum - sec.wallptr) * 5),  /*sizeof(GLfloat)*/ 4 * 3);
+    w.cap[7] += 1048576; // this number is the result of 1048574 + 2
+    w.cap[10] += 1048576; // this one is arbitrary
 
-    //if (w.underover & 1)
-    //    polymer_computeplane(&w.wall);
-    //if (w.underover & 2)
-    //    polymer_computeplane(&w.over);
-    //polymer_computeplane(&w.mask);
+    if (w.underover & 1)
+        polymer_computeplane(w.wall);
+    if (w.underover & 2)
+        polymer_computeplane(w.over);
+    polymer_computeplane(w.mask);
 
-    //if ((pr_vbos > 0))
-    //{
-    //    bglBindBufferARB(GL_ARRAY_BUFFER_ARB, w.wall.vbo);
-    //    bglBufferSubDataARB(GL_ARRAY_BUFFER_ARB, 0, 4 *  /*sizeof(GLfloat)*/ 4 * 5, w.wall.buffer);
-    //    bglBindBufferARB(GL_ARRAY_BUFFER_ARB, w.over.vbo);
-    //    if (w.over.buffer)
-    //        bglBufferSubDataARB(GL_ARRAY_BUFFER_ARB, 0, 4 *  /*sizeof(GLfloat)*/ 4 * 5, w.over.buffer);
-    //    bglBindBufferARB(GL_ARRAY_BUFFER_ARB, w.mask.vbo);
-    //    bglBufferSubDataARB(GL_ARRAY_BUFFER_ARB, 0, 4 *  /*sizeof(GLfloat)*/ 4 * 5, w.mask.buffer);
-    //    bglBindBufferARB(GL_ARRAY_BUFFER_ARB, w.stuffvbo);
-    //    bglBufferSubDataARB(GL_ARRAY_BUFFER_ARB, 0, 4 *  /*sizeof(GLfloat)*/ 4 * 5, w.bigportal);
-    //    bglBufferSubDataARB(GL_ARRAY_BUFFER_ARB, 4 *  /*sizeof(GLfloat)*/ 4 * 5, 4 *  /*sizeof(GLfloat)*/ 4 * 3, w.cap);
-    //    bglBindBufferARB(GL_ARRAY_BUFFER_ARB, 0);
-    //}
+    if ((pr_vbos > 0))
+    {todo("buffer stuff");
+        //bglBindBufferARB(GL_ARRAY_BUFFER_ARB, w.wall.vbo);
+        //bglBufferSubDataARB(GL_ARRAY_BUFFER_ARB, 0, 4 *  /*sizeof(GLfloat)*/ 4 * 5, w.wall.buffer);
+        //bglBindBufferARB(GL_ARRAY_BUFFER_ARB, w.over.vbo);
+        //if (w.over.buffer)
+        //    bglBufferSubDataARB(GL_ARRAY_BUFFER_ARB, 0, 4 *  /*sizeof(GLfloat)*/ 4 * 5, w.over.buffer);
+        //bglBindBufferARB(GL_ARRAY_BUFFER_ARB, w.mask.vbo);
+        //bglBufferSubDataARB(GL_ARRAY_BUFFER_ARB, 0, 4 *  /*sizeof(GLfloat)*/ 4 * 5, w.mask.buffer);
+        //bglBindBufferARB(GL_ARRAY_BUFFER_ARB, w.stuffvbo);
+        //bglBufferSubDataARB(GL_ARRAY_BUFFER_ARB, 0, 4 *  /*sizeof(GLfloat)*/ 4 * 5, w.bigportal);
+        //bglBufferSubDataARB(GL_ARRAY_BUFFER_ARB, 4 *  /*sizeof(GLfloat)*/ 4 * 5, 4 *  /*sizeof(GLfloat)*/ 4 * 3, w.cap);
+        //bglBindBufferARB(GL_ARRAY_BUFFER_ARB, 0);
+    }
 
-    //w.flags.empty = 0;
-    //w.flags.uptodate = 1;
-    //w.flags.invalidtex = 0;
+    w.flags.empty = 0;
+    w.flags.uptodate = 1;
+    w.flags.invalidtex = 0;
 
-    //if (pr_verbosity >= 3) OSD_Printf("PR : Updated wall %i.\n", wallnum);
+    if (pr_verbosity >= 3) OSD_Printf("PR : Updated wall %i.\n", wallnum);
 }
 
 //static void         polymer_drawwall(int16_t sectnum, int16_t wallnum)
@@ -3383,91 +3382,93 @@ function polymer_updatewall(/*int16_t */wallnum:number): void
 //    if (pr_verbosity >= 3) OSD_Printf("PR : Finished drawing wall %i...\n", wallnum);
 //}
 
-//// HSR
-//static void         polymer_computeplane(_prplane* p)
-//{
-//    GLfloat         vec1[5], vec2[5], norm, r;// BxN[3], NxT[3], TxB[3];
-//    int32_t         i;
-//    GLfloat*        buffer;
-//    GLfloat*        plane;
+// HSR
+function polymer_computeplane(p:_prplane):void
+{
+    var vec1 = new Array(5), vec2 = new Array(5), norm = 0.0, r = 0.0;// BxN[3], NxT[3], TxB[3];
+    var/*int32_t         */i:number;
+    var /*GLfloat*        */buffer:Float32Array;
+    var /*GLfloat*        */plane:Float32Array;
 
-//    if (p.indices && (p.indicescount < 3))
-//        return; // corrupt sector (E3L4, I'm looking at you)
+    if (p.indices && (p.indicescount < 3))
+        return; // corrupt sector (E3L4, I'm looking at you)
 
-//    buffer = p.buffer;
-//    plane = p.plane;
+    buffer = p.buffer;
+    plane = p.plane;
 
-//    i = 0;
-//    do
-//    {
-//        vec1[0] = buffer[(INDICE(1)) + 0] - buffer[(INDICE(0)) + 0]; //x1
-//        vec1[1] = buffer[(INDICE(1)) + 1] - buffer[(INDICE(0)) + 1]; //y1
-//        vec1[2] = buffer[(INDICE(1)) + 2] - buffer[(INDICE(0)) + 2]; //z1
-//        vec1[3] = buffer[(INDICE(1)) + 3] - buffer[(INDICE(0)) + 3]; //s1
-//        vec1[4] = buffer[(INDICE(1)) + 4] - buffer[(INDICE(0)) + 4]; //t1
+    i = 0;
+    do
+    {
+        vec1[0] = buffer[(INDICE(1)) + 0] - buffer[(INDICE(0)) + 0]; //x1
+        vec1[1] = buffer[(INDICE(1)) + 1] - buffer[(INDICE(0)) + 1]; //y1
+        vec1[2] = buffer[(INDICE(1)) + 2] - buffer[(INDICE(0)) + 2]; //z1
+        vec1[3] = buffer[(INDICE(1)) + 3] - buffer[(INDICE(0)) + 3]; //s1
+        vec1[4] = buffer[(INDICE(1)) + 4] - buffer[(INDICE(0)) + 4]; //t1
 
-//        vec2[0] = buffer[(INDICE(2)) + 0] - buffer[(INDICE(1)) + 0]; //x2
-//        vec2[1] = buffer[(INDICE(2)) + 1] - buffer[(INDICE(1)) + 1]; //y2
-//        vec2[2] = buffer[(INDICE(2)) + 2] - buffer[(INDICE(1)) + 2]; //z2
-//        vec2[3] = buffer[(INDICE(2)) + 3] - buffer[(INDICE(1)) + 3]; //s2
-//        vec2[4] = buffer[(INDICE(2)) + 4] - buffer[(INDICE(1)) + 4]; //t2
+        vec2[0] = buffer[(INDICE(2)) + 0] - buffer[(INDICE(1)) + 0]; //x2
+        vec2[1] = buffer[(INDICE(2)) + 1] - buffer[(INDICE(1)) + 1]; //y2
+        vec2[2] = buffer[(INDICE(2)) + 2] - buffer[(INDICE(1)) + 2]; //z2
+        vec2[3] = buffer[(INDICE(2)) + 3] - buffer[(INDICE(1)) + 3]; //s2
+        vec2[4] = buffer[(INDICE(2)) + 4] - buffer[(INDICE(1)) + 4]; //t2
 
-//        polymer_crossproduct(vec2, vec1, plane);
+        polymer_crossproduct(vec2, vec1, plane);
 
-//        norm = plane[0] * plane[0] + plane[1] * plane[1] + plane[2] * plane[2];
+        norm = plane[0] * plane[0] + plane[1] * plane[1] + plane[2] * plane[2];
 
-//        // hack to work around a precision issue with slopes
-//        if (norm >= 15000)
-//        {
-//            float tangent[3][3];
-//            double det;
+        // hack to work around a precision issue with slopes
+        if (norm >= 15000)
+        {
+            var /*float */tangent = [new Array<number>(3),new Array<number>(3),new Array<number>(3)];// [3][3];
+            var /*double */det:number;
 
-//            // normalize the normal/plane equation and calculate its plane norm
-//            norm = -sqrt(norm);
-//            norm = 1.0 / norm;
-//            plane[0] *= norm;
-//            plane[1] *= norm;
-//            plane[2] *= norm;
-//            plane[3] = -(plane[0] * buffer[0] + plane[1] * buffer[1] + plane[2] * buffer[2]);
+            // normalize the normal/plane equation and calculate its plane norm
+            norm = -sqrt(norm);
+            norm = 1.0 / norm;
+            plane[0] *= norm;
+            plane[1] *= norm;
+            plane[2] *= norm;
+            plane[3] = -(plane[0] * buffer[0] + plane[1] * buffer[1] + plane[2] * buffer[2]);
 
-//            // calculate T and B
-//            r = 1.0 / (vec1[3] * vec2[4] - vec2[3] * vec1[4]);
+            // calculate T and B
+            r = 1.0 / (vec1[3] * vec2[4] - vec2[3] * vec1[4]);
 
-//            // tangent
-//            tangent[0][0] = (vec2[4] * vec1[0] - vec1[4] * vec2[0]) * r;
-//            tangent[0][1] = (vec2[4] * vec1[1] - vec1[4] * vec2[1]) * r;
-//            tangent[0][2] = (vec2[4] * vec1[2] - vec1[4] * vec2[2]) * r;
+            // tangent
+            tangent[0][0] = (vec2[4] * vec1[0] - vec1[4] * vec2[0]) * r;
+            tangent[0][1] = (vec2[4] * vec1[1] - vec1[4] * vec2[1]) * r;
+            tangent[0][2] = (vec2[4] * vec1[2] - vec1[4] * vec2[2]) * r;
 
-//            polymer_normalize(&tangent[0][0]);
+            polymer_normalize(tangent[0]);
 
-//            // bitangent
-//            tangent[1][0] = (vec1[3] * vec2[0] - vec2[3] * vec1[0]) * r;
-//            tangent[1][1] = (vec1[3] * vec2[1] - vec2[3] * vec1[1]) * r;
-//            tangent[1][2] = (vec1[3] * vec2[2] - vec2[3] * vec1[2]) * r;
+            // bitangent
+            tangent[1][0] = (vec1[3] * vec2[0] - vec2[3] * vec1[0]) * r;
+            tangent[1][1] = (vec1[3] * vec2[1] - vec2[3] * vec1[1]) * r;
+            tangent[1][2] = (vec1[3] * vec2[2] - vec2[3] * vec1[2]) * r;
 
-//            polymer_normalize(&tangent[1][0]);
+            polymer_normalize(tangent[1]);
 
-//            // normal
-//            tangent[2][0] = plane[0];
-//            tangent[2][1] = plane[1];
-//            tangent[2][2] = plane[2];
+            // normal
+            tangent[2][0] = plane[0];
+            tangent[2][1] = plane[1];
+            tangent[2][2] = plane[2];
 
-//            INVERT_3X3(p.tbn, det, tangent);
+            INVERT_3X3(p.tbn, det, tangent);
 
-//            break;
-//        }
-//        i+= (p.indices) ? 3 : 1;
-//    }
-//    while ((p.indices && i < p.indicescount) || 
-//          (!p.indices && i < p.vertcount));
-//}
+            break;
+        }
+        i+= (p.indices) ? 3 : 1;
+    }
+    while ((p.indices && i < p.indicescount) || 
+          (!p.indices && i < p.vertcount));
 
-//static inline void  polymer_crossproduct(GLfloat* in_a, GLfloat* in_b, GLfloat* out)
-//{
-//    out[0] = in_a[1] * in_b[2] - in_a[2] * in_b[1];
-//    out[1] = in_a[2] * in_b[0] - in_a[0] * in_b[2];
-//    out[2] = in_a[0] * in_b[1] - in_a[1] * in_b[0];
-//}
+    function INDICE(n:number):number { return (p.indices) ? (p.indices[(i+n)%p.indicescount]*5) : (((i+n)%p.vertcount)*5) ? 1 : 0;}
+}
+
+function polymer_crossproduct(in_a:Float32Array, in_b:Float32Array, out:Float32Array):void
+{
+    out[0] = in_a[1] * in_b[2] - in_a[2] * in_b[1];
+    out[1] = in_a[2] * in_b[0] - in_a[0] * in_b[2];
+    out[2] = in_a[0] * in_b[1] - in_a[1] * in_b[0];
+}
 
 function polymer_transformpoint(/*const float* */inpos:Float32Array, pos:Float32Array, matrix:Float32Array):void
 {
@@ -3485,18 +3486,18 @@ function polymer_transformpoint(/*const float* */inpos:Float32Array, pos:Float32
                       + matrix[14];
 }
 
-//static inline void  polymer_normalize(float* vec)
-//{
-//    double norm;
+function polymer_normalize(vec:Float32Array)
+{
+    var /*double */norm:number;
 
-//    norm = vec[0] * vec[0] + vec[1] * vec[1] + vec[2] * vec[2];
+    norm = vec[0] * vec[0] + vec[1] * vec[1] + vec[2] * vec[2];
 
-//    norm = sqrt(norm);
-//    norm = 1.0 / norm;
-//    vec[0] *= norm;
-//    vec[1] *= norm;
-//    vec[2] *= norm;
-//}
+    norm = sqrt(norm);
+    norm = 1.0 / norm;
+    vec[0] *= norm;
+    vec[1] *= norm;
+    vec[2] *= norm;
+}
 
 //static inline void  polymer_pokesector(int16_t sectnum)
 //{

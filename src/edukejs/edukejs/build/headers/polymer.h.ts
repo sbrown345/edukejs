@@ -597,7 +597,7 @@ class /*s_prhighpalookup */_prhighpalookup{
 //// DEBUG OUTPUT
 //void PR_CALLBACK    polymer_debugoutputcallback(GLenum source,GLenum type,GLuint id,GLenum severity,GLsizei length,const GLchar *message,GLvoid *userParam);
 
-//#define INDICE(n) ((p->indices) ? (p->indices[(i+n)%p->indicescount]*5) : (((i+n)%p->vertcount)*5))
+//function INDICE(n:number):number { return (p.indices) ? (p.indices[(i+n)%p.indicescount]*5) : (((i+n)%p.vertcount)*5)} //moved to func
 
 //#define SWITCH_CULL_DIRECTION { culledface = (culledface == GL_FRONT) ? GL_BACK : GL_FRONT; bglCullFace(culledface); }
 
@@ -625,12 +625,13 @@ class /*s_prhighpalookup */_prhighpalookup{
 // * Computes determinant of matrix m, returning d
 // */
 
-//#define DETERMINANT_3X3(d,m)                    \
-//{                                \
-//   d = m[0][0] * (m[1][1]*m[2][2] - m[1][2] * m[2][1]);        \
-//   d -= m[0][1] * (m[1][0]*m[2][2] - m[1][2] * m[2][0]);    \
-//   d += m[0][2] * (m[1][0]*m[2][1] - m[1][1] * m[2][0]);    \
-//}
+function DETERMINANT_3X3(m:number[][]):number           
+{                                
+   var d = m[0][0] * (m[1][1]*m[2][2] - m[1][2] * m[2][1]);        
+   d -= m[0][1] * (m[1][0]*m[2][2] - m[1][2] * m[2][0]);    
+   d += m[0][2] * (m[1][0]*m[2][1] - m[1][1] * m[2][0]);    
+  return d;
+}
 
 ///* ========================================================== */
 ///* i,j,th cofactor of a 4x4 matrix
@@ -680,26 +681,26 @@ class /*s_prhighpalookup */_prhighpalookup{
 //   d += m[0][3] * cofac;                    \
 //}
 
-///* ========================================================== */
-///* compute adjoint of matrix and scale
-// *
-// * Computes adjoint of matrix m, scales it by s, returning a
-// */
+/* ========================================================== */
+/* compute adjoint of matrix and scale
+ *
+ * Computes adjoint of matrix m, scales it by s, returning a
+ */
 
-//#define SCALE_ADJOINT_3X3(a,s,m)                \
-//{                                \
-//   a[0][0] = (s) * (m[1][1] * m[2][2] - m[1][2] * m[2][1]);    \
-//   a[1][0] = (s) * (m[1][2] * m[2][0] - m[1][0] * m[2][2]);    \
-//   a[2][0] = (s) * (m[1][0] * m[2][1] - m[1][1] * m[2][0]);    \
-//                                \
-//   a[0][1] = (s) * (m[0][2] * m[2][1] - m[0][1] * m[2][2]);    \
-//   a[1][1] = (s) * (m[0][0] * m[2][2] - m[0][2] * m[2][0]);    \
-//   a[2][1] = (s) * (m[0][1] * m[2][0] - m[0][0] * m[2][1]);    \
-//                                \
-//   a[0][2] = (s) * (m[0][1] * m[1][2] - m[0][2] * m[1][1]);    \
-//   a[1][2] = (s) * (m[0][2] * m[1][0] - m[0][0] * m[1][2]);    \
-//   a[2][2] = (s) * (m[0][0] * m[1][1] - m[0][1] * m[1][0]);    \
-//}
+function SCALE_ADJOINT_3X3(a:number[][],s:number,m:number[][]):void
+{                                
+   a[0][0] = (s) * (m[1][1] * m[2][2] - m[1][2] * m[2][1]);    
+   a[1][0] = (s) * (m[1][2] * m[2][0] - m[1][0] * m[2][2]);   
+   a[2][0] = (s) * (m[1][0] * m[2][1] - m[1][1] * m[2][0]);    
+                                
+   a[0][1] = (s) * (m[0][2] * m[2][1] - m[0][1] * m[2][2]);    
+   a[1][1] = (s) * (m[0][0] * m[2][2] - m[0][2] * m[2][0]);   
+   a[2][1] = (s) * (m[0][1] * m[2][0] - m[0][0] * m[2][1]);    
+                                
+   a[0][2] = (s) * (m[0][1] * m[1][2] - m[0][2] * m[1][1]);    
+   a[1][2] = (s) * (m[0][2] * m[1][0] - m[0][0] * m[1][2]);   
+   a[2][2] = (s) * (m[0][0] * m[1][1] - m[0][1] * m[1][0]);    
+}
 
 ///* ========================================================== */
 ///* compute adjoint of matrix and scale
@@ -726,13 +727,13 @@ class /*s_prhighpalookup */_prhighpalookup{
 // * inverse b
 // */
 
-//#define INVERT_3X3(b,det,a)            \
-//{                        \
-//   double tmp;                    \
-//   DETERMINANT_3X3 (det, a);            \
-//   tmp = 1.0 / (det);                \
-//   SCALE_ADJOINT_3X3 (b, tmp, a);        \
-//}
+function INVERT_3X3(b,det,a):void
+{                        
+   var/*double */tmp;                    
+   det = DETERMINANT_3X3 (a);            
+   tmp = 1.0 / (det);                
+   SCALE_ADJOINT_3X3 (b, tmp, a);        
+}
 
 ///* ========================================================== */
 ///* inverse of matrix 
