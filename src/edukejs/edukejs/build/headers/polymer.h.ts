@@ -276,13 +276,21 @@ class /*s_prrograminfo*/  _prprograminfo{
 //                                                   PR_HIGHPALOOKUP_DIM * \
 //                                                   PR_HIGHPALOOKUP_DIM)
 
-//typedef struct      s_prprogrambit {
-//    int32_t         bit;
-//    const char*           vert_def;
-//    const char*           vert_prog;
-//    const char*           frag_def;
-//    const char*           frag_prog;
-//}                   _prprogrambit;
+class  /*s_prprogrambit*/ _prprogrambit {
+    bit:number;//int32_t         
+    vert_def:string;          //const char*           
+    vert_prog:string;         //const char*           
+    frag_def:string;          //const char*           
+    frag_prog:string;         //const char*           
+
+    constructor(bit: number, vert_def:string, vert_prog:string, frag_def:string, frag_prog:string) {
+        this.bit = bit;
+        this.vert_def = vert_def;
+        this.vert_prog = vert_prog;
+        this.frag_def = frag_def;
+        this.frag_prog = frag_prog;
+    }
+}
 
 //#include "prlights.h"
 

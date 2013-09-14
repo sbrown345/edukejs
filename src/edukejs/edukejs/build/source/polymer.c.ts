@@ -202,489 +202,489 @@ var /*int32_t         */curlight=0;
 //    0.5, 0.5, 0.5, 1.0
 //};
 
-//// MATERIALS
-//_prprogrambit   prprogrambits[PR_BIT_COUNT] = {
-//    {
-//        1 << PR_BIT_HEADER,
-//        // vert_def
-//        "#version 120\n"
-//        "#extension GL_ARB_texture_rectangle : enable\n"
-//        "\n",
-//        // vert_prog
-//        "",
-//        // frag_def
-//        "#version 120\n"
-//        "#extension GL_ARB_texture_rectangle : enable\n"
-//        "\n",
-//        // frag_prog
-//        "",
-//    },
-//    {
-//        1 << PR_BIT_ANIM_INTERPOLATION,
-//        // vert_def
-//        "attribute vec4 nextFrameData;\n"
-//        "attribute vec4 nextFrameNormal;\n"
-//        "uniform float frameProgress;\n"
-//        "\n",
-//        // vert_prog
-//        "  vec4 currentFramePosition;\n"
-//        "  vec4 nextFramePosition;\n"
-//        "\n"
-//        "  currentFramePosition = curVertex * (1.0 - frameProgress);\n"
-//        "  nextFramePosition = nextFrameData * frameProgress;\n"
-//        "  curVertex = currentFramePosition + nextFramePosition;\n"
-//        "\n"
-//        "  currentFramePosition = vec4(curNormal, 1.0) * (1.0 - frameProgress);\n"
-//        "  nextFramePosition = nextFrameNormal * frameProgress;\n"
-//        "  curNormal = vec3(currentFramePosition + nextFramePosition);\n"
-//        "\n",
-//        // frag_def
-//        "",
-//        // frag_prog
-//        "",
-//    },
-//    {
-//        1 << PR_BIT_LIGHTING_PASS,
-//        // vert_def
-//        "",
-//        // vert_prog
-//        "",
-//        // frag_def
-//        "",
-//        // frag_prog
-//        "  isLightingPass = 1;\n"
-//        "  result = vec4(0.0, 0.0, 0.0, 1.0);\n"
-//        "\n",
-//    },
-//    {
-//        1 << PR_BIT_NORMAL_MAP,
-//        // vert_def
-//        "attribute vec3 T;\n"
-//        "attribute vec3 B;\n"
-//        "attribute vec3 N;\n"
-//        "uniform vec3 eyePosition;\n"
-//        "varying vec3 tangentSpaceEyeVec;\n"
-//        "\n",
-//        // vert_prog
-//        "  TBN = mat3(T, B, N);\n"
-//        "  tangentSpaceEyeVec = eyePosition - vec3(curVertex);\n"
-//        "  tangentSpaceEyeVec = TBN * tangentSpaceEyeVec;\n"
-//        "\n"
-//        "  isNormalMapped = 1;\n"
-//        "\n",
-//        // frag_def
-//        "uniform sampler2D normalMap;\n"
-//        "uniform vec2 normalBias;\n"
-//        "varying vec3 tangentSpaceEyeVec;\n"
-//        "\n",
-//        // frag_prog
-//        "  vec4 normalStep;\n"
-//        "  float biasedHeight;\n"
-//        "\n"
-//        "  eyeVec = normalize(tangentSpaceEyeVec);\n"
-//        "\n"
-//        "  for (int i = 0; i < 4; i++) {\n"
-//        "    normalStep = texture2D(normalMap, commonTexCoord.st);\n"
-//        "    biasedHeight = normalStep.a * normalBias.x - normalBias.y;\n"
-//        "    commonTexCoord += (biasedHeight - commonTexCoord.z) * normalStep.z * eyeVec;\n"
-//        "  }\n"
-//        "\n"
-//        "  normalTexel = texture2D(normalMap, commonTexCoord.st);\n"
-//        "\n"
-//        "  isNormalMapped = 1;\n"
-//        "\n",
-//    },
-//    {
-//        1 << PR_BIT_ART_MAP,
-//        // vert_def
-//        "varying vec3 horizDistance;\n"
-//        "\n",
-//        // vert_prog
-//        "  gl_TexCoord[0] = gl_MultiTexCoord0;\n"
-//        "  horizDistance = vec3(gl_ModelViewMatrix * curVertex);\n"
-//        "\n",
-//        // frag_def
-//        "uniform sampler2D artMap;\n"
-//        "uniform sampler2D basePalMap;\n"
-//        "uniform sampler2DRect lookupMap;\n"
-//        "uniform float shadeOffset;\n"
-//        "uniform float visibility;\n"
-//        "varying vec3 horizDistance;\n"
-//        "\n",
-//        // frag_prog
-//        "  float shadeLookup = length(horizDistance) / 1.024 * visibility;\n"
-//        "  shadeLookup = shadeLookup + shadeOffset;\n"
-//        "\n"
-//        "  float colorIndex = texture2D(artMap, commonTexCoord.st).r * 256.0;\n"
-//        "  float colorIndexNear = texture2DRect(lookupMap, vec2(colorIndex, floor(shadeLookup))).r;\n"
-//        "  float colorIndexFar = texture2DRect(lookupMap, vec2(colorIndex, floor(shadeLookup + 1.0))).r;\n"
-//        "  float colorIndexFullbright = texture2DRect(lookupMap, vec2(colorIndex, 0.0)).r;\n"
-//        "\n"
-//        "  vec3 texelNear = texture2D(basePalMap, vec2(colorIndexNear, 0.5)).rgb;\n"
-//        "  vec3 texelFar = texture2D(basePalMap, vec2(colorIndexFar, 0.5)).rgb;\n"
-//        "  diffuseTexel.rgb = texture2D(basePalMap, vec2(colorIndexFullbright, 0.5)).rgb * 4.0;\n"
-//        "\n"
-//        "  if (isLightingPass == 0) {\n"
-//        "    result.rgb = mix(texelNear, texelFar, fract(shadeLookup)) * 4.0;\n"
-//        "    result.a = 1.0;\n"
-//        "    if (colorIndex == 256.0)\n"
-//        "      result.a = 0.0;\n"
-//        "  }\n"
-//        "\n",
-//    },
-//    {
-//        1 << PR_BIT_DIFFUSE_MAP,
-//        // vert_def
-//        "uniform vec2 diffuseScale;\n"
-//        "\n",
-//        // vert_prog
-//        "  gl_TexCoord[0] = vec4(diffuseScale, 1.0, 1.0) * gl_MultiTexCoord0;\n"
-//        "\n",
-//        // frag_def
-//        "uniform sampler2D diffuseMap;\n"
-//        "\n",
-//        // frag_prog
-//        "  diffuseTexel = texture2D(diffuseMap, commonTexCoord.st);\n"
-//        "\n",
-//    },
-//    {
-//        1 << PR_BIT_DIFFUSE_DETAIL_MAP,
-//        // vert_def
-//        "uniform vec2 detailScale;\n"
-//        "varying vec2 fragDetailScale;\n"
-//        "\n",
-//        // vert_prog
-//        "  fragDetailScale = detailScale;\n"
-//        "  if (isNormalMapped == 0)\n"
-//        "    gl_TexCoord[1] = vec4(detailScale, 1.0, 1.0) * gl_MultiTexCoord0;\n"
-//        "\n",
-//        // frag_def
-//        "uniform sampler2D detailMap;\n"
-//        "varying vec2 fragDetailScale;\n"
-//        "\n",
-//        // frag_prog
-//        "  if (isNormalMapped == 0)\n"
-//        "    diffuseTexel *= texture2D(detailMap, gl_TexCoord[1].st);\n"
-//        "  else\n"
-//        "    diffuseTexel *= texture2D(detailMap, commonTexCoord.st * fragDetailScale);\n"
-//        "  diffuseTexel.rgb *= 2.0;\n"
-//        "\n",
-//    },
-//    {
-//        1 << PR_BIT_DIFFUSE_MODULATION,
-//        // vert_def
-//        "",
-//        // vert_prog
-//        "  gl_FrontColor = gl_Color;\n"
-//        "\n",
-//        // frag_def
-//        "",
-//        // frag_prog
-//        "  if (isLightingPass == 0)\n"
-//        "    result *= vec4(gl_Color);\n"
-//        "\n",
-//    },
-//    {
-//        1 << PR_BIT_DIFFUSE_MAP2,
-//        // vert_def
-//        "",
-//        // vert_prog
-//        "",
-//        // frag_def
-//        "",
-//        // frag_prog
-//        "  if (isLightingPass == 0)\n"
-//        "    result *= diffuseTexel;\n"
-//        "\n",
-//    },
-//    {
-//        1 << PR_BIT_HIGHPALOOKUP_MAP,
-//        // vert_def
-//        "",
-//        // vert_prog
-//        "",
-//        // frag_def
-//        "uniform sampler3D highPalookupMap;\n"
-//        "\n",
-//        // frag_prog
-//        "  float highPalScale = 0.9921875; // for 6 bits\n"
-//        "  float highPalBias = 0.00390625;\n"
-//        "\n"
-//        "  if (isLightingPass == 0)\n"
-//        "    result.rgb = texture3D(highPalookupMap, result.rgb * highPalScale + highPalBias).rgb;\n"
-//        "  diffuseTexel.rgb = texture3D(highPalookupMap, diffuseTexel.rgb * highPalScale + highPalBias).rgb;\n"
-//        "\n",
-//    },
-//    {
-//        1 << PR_BIT_SPECULAR_MAP,
-//        // vert_def
-//        "",
-//        // vert_prog
-//        "",
-//        // frag_def
-//        "uniform sampler2D specMap;\n"
-//        "\n",
-//        // frag_prog
-//        "  specTexel = texture2D(specMap, commonTexCoord.st);\n"
-//        "\n"
-//        "  isSpecularMapped = 1;\n"
-//        "\n",
-//    },
-//    {
-//        1 << PR_BIT_SPECULAR_MATERIAL,
-//        // vert_def
-//        "",
-//        // vert_prog
-//        "",
-//        // frag_def
-//        "uniform vec2 specMaterial;\n"
-//        "\n",
-//        // frag_prog
-//        "  specularMaterial = specMaterial;\n"
-//        "\n",
-//    },
-//    {
-//        1 << PR_BIT_MIRROR_MAP,
-//        // vert_def
-//        "",
-//        // vert_prog
-//        "",
-//        // frag_def
-//        "uniform sampler2DRect mirrorMap;\n"
-//        "\n",
-//        // frag_prog
-//        "  vec4 mirrorTexel;\n"
-//        "  vec2 mirrorCoords;\n"
-//        "\n"
-//        "  mirrorCoords = gl_FragCoord.st;\n"
-//        "  if (isNormalMapped == 1) {\n"
-//        "    mirrorCoords += 100.0 * (normalTexel.rg - 0.5);\n"
-//        "  }\n"
-//        "  mirrorTexel = texture2DRect(mirrorMap, mirrorCoords);\n"
-//        "  result = vec4((result.rgb * (1.0 - specTexel.a)) + (mirrorTexel.rgb * specTexel.rgb * specTexel.a), result.a);\n"
-//        "\n",
-//    },
-//    {
-//        1 << PR_BIT_FOG,
-//        // vert_def
-//        "",
-//        // vert_prog
-//        "",
-//        // frag_def
+// MATERIALS
+var  prprogrambits: _prprogrambit[] /*[PR_BIT_COUNT]*/ = [
+    new _prprogrambit(
+        1 << PR_BIT_HEADER,
+        // vert_def
+        "#version 120\n"+
+        "#extension GL_ARB_texture_rectangle : enable\n"+
+        "\n",
+        // vert_prog
+        "",
+        // frag_def
+        "#version 120\n"+
+        "#extension GL_ARB_texture_rectangle : enable\n"+
+        "\n",
+        // frag_prog
+        ""
+    ),
+    new _prprogrambit(
+        1 << PR_BIT_ANIM_INTERPOLATION,
+        // vert_def
+        "attribute vec4 nextFrameData;\n"+
+        "attribute vec4 nextFrameNormal;\n"+
+        "uniform float frameProgress;\n"+
+        "\n",
+        // vert_prog
+        "  vec4 currentFramePosition;\n"+
+        "  vec4 nextFramePosition;\n"+
+        "\n"+
+        "  currentFramePosition = curVertex * (1.0 - frameProgress);\n"+
+        "  nextFramePosition = nextFrameData * frameProgress;\n"+
+        "  curVertex = currentFramePosition + nextFramePosition;\n"+
+        "\n"+
+        "  currentFramePosition = vec4(curNormal, 1.0) * (1.0 - frameProgress);\n"+
+        "  nextFramePosition = nextFrameNormal * frameProgress;\n"+
+        "  curNormal = vec3(currentFramePosition + nextFramePosition);\n"+
+        "\n",
+        // frag_def
+        "",
+        // frag_prog
+        ""
+    ),
+    new _prprogrambit(
+        1 << PR_BIT_LIGHTING_PASS,
+        // vert_def
+        "",
+        // vert_prog
+        "",
+        // frag_def
+        "",
+        // frag_prog
+        "  isLightingPass = 1;\n"+
+        "  result = vec4(0.0, 0.0, 0.0, 1.0);\n"+
+        "\n"
+    ),
+    new _prprogrambit(
+        1 << PR_BIT_NORMAL_MAP,
+        // vert_def
+        "attribute vec3 T;\n"+
+        "attribute vec3 B;\n"+
+        "attribute vec3 N;\n"+
+        "uniform vec3 eyePosition;\n"+
+        "varying vec3 tangentSpaceEyeVec;\n"+
+        "\n",
+        // vert_prog
+        "  TBN = mat3(T, B, N);\n"+
+        "  tangentSpaceEyeVec = eyePosition - vec3(curVertex);\n"+
+        "  tangentSpaceEyeVec = TBN * tangentSpaceEyeVec;\n"+
+        "\n"+
+        "  isNormalMapped = 1;\n"+
+        "\n",
+        // frag_def
+        "uniform sampler2D normalMap;\n"+
+        "uniform vec2 normalBias;\n"+
+        "varying vec3 tangentSpaceEyeVec;\n"+
+        "\n",
+        // frag_prog
+        "  vec4 normalStep;\n"+
+        "  float biasedHeight;\n"+
+        "\n"+
+        "  eyeVec = normalize(tangentSpaceEyeVec);\n"+
+        "\n"+
+        "  for (int i = 0; i < 4; i++) {\n"+
+        "    normalStep = texture2D(normalMap, commonTexCoord.st);\n"+
+        "    biasedHeight = normalStep.a * normalBias.x - normalBias.y;\n"+
+        "    commonTexCoord += (biasedHeight - commonTexCoord.z) * normalStep.z * eyeVec;\n"+
+        "  }\n"+
+        "\n"+
+        "  normalTexel = texture2D(normalMap, commonTexCoord.st);\n"+
+        "\n"+
+        "  isNormalMapped = 1;\n"+
+        "\n"
+    ),
+    new _prprogrambit(
+        1 << PR_BIT_ART_MAP,
+        // vert_def
+        "varying vec3 horizDistance;\n"+
+        "\n",
+        // vert_prog
+        "  gl_TexCoord[0] = gl_MultiTexCoord0;\n"+
+        "  horizDistance = vec3(gl_ModelViewMatrix * curVertex);\n"+
+        "\n",
+        // frag_def
+        "uniform sampler2D artMap;\n"+
+        "uniform sampler2D basePalMap;\n"+
+        "uniform sampler2DRect lookupMap;\n"+
+        "uniform float shadeOffset;\n"+
+        "uniform float visibility;\n"+
+        "varying vec3 horizDistance;\n"+
+        "\n",
+        // frag_prog
+        "  float shadeLookup = length(horizDistance) / 1.024 * visibility;\n"+
+        "  shadeLookup = shadeLookup + shadeOffset;\n"+
+        "\n"+
+        "  float colorIndex = texture2D(artMap, commonTexCoord.st).r * 256.0;\n"+
+        "  float colorIndexNear = texture2DRect(lookupMap, vec2(colorIndex, floor(shadeLookup))).r;\n"+
+        "  float colorIndexFar = texture2DRect(lookupMap, vec2(colorIndex, floor(shadeLookup + 1.0))).r;\n"+
+        "  float colorIndexFullbright = texture2DRect(lookupMap, vec2(colorIndex, 0.0)).r;\n"+
+        "\n"+
+        "  vec3 texelNear = texture2D(basePalMap, vec2(colorIndexNear, 0.5)).rgb;\n"+
+        "  vec3 texelFar = texture2D(basePalMap, vec2(colorIndexFar, 0.5)).rgb;\n"+
+        "  diffuseTexel.rgb = texture2D(basePalMap, vec2(colorIndexFullbright, 0.5)).rgb * 4.0;\n"+
+        "\n"+
+        "  if (isLightingPass == 0) {\n"+
+        "    result.rgb = mix(texelNear, texelFar, fract(shadeLookup)) * 4.0;\n"+
+        "    result.a = 1.0;\n"+
+        "    if (colorIndex == 256.0)\n"+
+        "      result.a = 0.0;\n"+
+        "  }\n"+
+        "\n"
+    ),
+    new _prprogrambit(
+        1 << PR_BIT_DIFFUSE_MAP,
+        // vert_def
+        "uniform vec2 diffuseScale;\n"+
+        "\n",
+        // vert_prog
+        "  gl_TexCoord[0] = vec4(diffuseScale, 1.0, 1.0) * gl_MultiTexCoord0;\n"+
+        "\n",
+        // frag_def
+        "uniform sampler2D diffuseMap;\n"+
+        "\n",
+        // frag_prog
+        "  diffuseTexel = texture2D(diffuseMap, commonTexCoord.st);\n"+
+        "\n"
+    ),
+    new _prprogrambit(
+        1 << PR_BIT_DIFFUSE_DETAIL_MAP,
+        // vert_def
+        "uniform vec2 detailScale;\n"+
+        "varying vec2 fragDetailScale;\n"+
+        "\n",
+        // vert_prog
+        "  fragDetailScale = detailScale;\n"+
+        "  if (isNormalMapped == 0)\n"+
+        "    gl_TexCoord[1] = vec4(detailScale, 1.0, 1.0) * gl_MultiTexCoord0;\n"+
+        "\n",
+        // frag_def
+        "uniform sampler2D detailMap;\n"+
+        "varying vec2 fragDetailScale;\n"+
+        "\n",
+        // frag_prog
+        "  if (isNormalMapped == 0)\n"+
+        "    diffuseTexel *= texture2D(detailMap, gl_TexCoord[1].st);\n"+
+        "  else\n"+
+        "    diffuseTexel *= texture2D(detailMap, commonTexCoord.st * fragDetailScale);\n"+
+        "  diffuseTexel.rgb *= 2.0;\n"+
+        "\n"
+    ),
+    new _prprogrambit(
+        1 << PR_BIT_DIFFUSE_MODULATION,
+        // vert_def
+        "",
+        // vert_prog
+        "  gl_FrontColor = gl_Color;\n"+
+        "\n",
+        // frag_def
+        "",
+        // frag_prog
+        "  if (isLightingPass == 0)\n"+
+        "    result *= vec4(gl_Color);\n"+
+        "\n"
+    ),
+    new _prprogrambit(
+        1 << PR_BIT_DIFFUSE_MAP2,
+        // vert_def
+        "",
+        // vert_prog
+        "",
+        // frag_def
+        "",
+        // frag_prog
+        "  if (isLightingPass == 0)\n"+
+        "    result *= diffuseTexel;\n"+
+        "\n"
+    ),
+    new _prprogrambit(
+        1 << PR_BIT_HIGHPALOOKUP_MAP,
+        // vert_def
+        "",
+        // vert_prog
+        "",
+        // frag_def
+        "uniform sampler3D highPalookupMap;\n"+
+        "\n",
+        // frag_prog
+        "  float highPalScale = 0.9921875; // for 6 bits\n"+
+        "  float highPalBias = 0.00390625;\n"+
+        "\n"+
+        "  if (isLightingPass == 0)\n"+
+        "    result.rgb = texture3D(highPalookupMap, result.rgb * highPalScale + highPalBias).rgb;\n"+
+        "  diffuseTexel.rgb = texture3D(highPalookupMap, diffuseTexel.rgb * highPalScale + highPalBias).rgb;\n"+
+        "\n"
+    ),
+    new _prprogrambit(
+        1 << PR_BIT_SPECULAR_MAP,
+        // vert_def
+        "",
+        // vert_prog
+        "",
+        // frag_def
+        "uniform sampler2D specMap;\n"+
+        "\n",
+        // frag_prog
+        "  specTexel = texture2D(specMap, commonTexCoord.st);\n"+
+        "\n"+
+        "  isSpecularMapped = 1;\n"+
+        "\n"
+    ),
+    new _prprogrambit(
+        1 << PR_BIT_SPECULAR_MATERIAL,
+        // vert_def
+        "",
+        // vert_prog
+        "",
+        // frag_def
+        "uniform vec2 specMaterial;\n"+
+        "\n",
+        // frag_prog
+        "  specularMaterial = specMaterial;\n"+
+        "\n"
+    ),
+    new _prprogrambit(
+        1 << PR_BIT_MIRROR_MAP,
+        // vert_def
+        "",
+        // vert_prog
+        "",
+        // frag_def
+        "uniform sampler2DRect mirrorMap;\n"+
+        "\n",
+        // frag_prog
+        "  vec4 mirrorTexel;\n"+
+        "  vec2 mirrorCoords;\n"+
+        "\n"+
+        "  mirrorCoords = gl_FragCoord.st;\n"+
+        "  if (isNormalMapped == 1) {\n"+
+        "    mirrorCoords += 100.0 * (normalTexel.rg - 0.5);\n"+
+        "  }\n"+
+        "  mirrorTexel = texture2DRect(mirrorMap, mirrorCoords);\n"+
+        "  result = vec4((result.rgb * (1.0 - specTexel.a)) + (mirrorTexel.rgb * specTexel.rgb * specTexel.a), result.a);\n"+
+        "\n"
+    ),
+    new _prprogrambit(
+        1 << PR_BIT_FOG,
+        // vert_def
+        "",
+        // vert_prog
+        "",
+        // frag_def
 //#ifdef PR_LINEAR_FOG
-//        "uniform bool linearFog;\n"
+        "uniform bool linearFog;\n"+
 //#endif
-//        "",
-//        // frag_prog
-//        "  float fragDepth;\n"
-//        "  float fogFactor;\n"
-//        "\n"
-//        "  fragDepth = gl_FragCoord.z / gl_FragCoord.w / 35.0;\n"
+        "",
+        // frag_prog
+        "  float fragDepth;\n"+
+        "  float fogFactor;\n"+
+        "\n"+
+        "  fragDepth = gl_FragCoord.z / gl_FragCoord.w / 35.0;\n"+
 //#ifdef PR_LINEAR_FOG
-//        "  if (!linearFog) {\n"
+        "  if (!linearFog) {\n"+
 //#endif
-//        "    fragDepth *= fragDepth;\n"
-//        "    fogFactor = exp2(-gl_Fog.density * gl_Fog.density * fragDepth * 1.442695);\n"
+        "    fragDepth *= fragDepth;\n"+
+        "    fogFactor = exp2(-gl_Fog.density * gl_Fog.density * fragDepth * 1.442695);\n"+
 //#ifdef PR_LINEAR_FOG
-//        /* 0.65127==150/230, another constant found out by experiment. :/
-//         * (150 is Polymost's old FOGDISTCONST.) */
-//        "  } else {\n"
-//        "    fogFactor = gl_Fog.scale * (gl_Fog.end - fragDepth*0.65217);\n"
-//        "    fogFactor = clamp(fogFactor, 0.0, 1.0);"
-//        "  }\n"
+        /* 0.65127==150/230, another constant found out by experiment. :/
+         * (150 is Polymost's old FOGDISTCONST.) */
+        "  } else {\n"+
+        "    fogFactor = gl_Fog.scale * (gl_Fog.end - fragDepth*0.65217);\n"+
+        "    fogFactor = clamp(fogFactor, 0.0, 1.0);"+
+        "  }\n"+
 //#endif
-//        "  result.rgb = mix(gl_Fog.color.rgb, result.rgb, fogFactor);\n"
-//        "\n",
-//    },
-//    {
-//        1 << PR_BIT_GLOW_MAP,
-//        // vert_def
-//        "",
-//        // vert_prog
-//        "",
-//        // frag_def
-//        "uniform sampler2D glowMap;\n"
-//        "\n",
-//        // frag_prog
-//        "  vec4 glowTexel;\n"
-//        "\n"
-//        "  glowTexel = texture2D(glowMap, commonTexCoord.st);\n"
-//        "  result = vec4((result.rgb * (1.0 - glowTexel.a)) + (glowTexel.rgb * glowTexel.a), result.a);\n"
-//        "\n",
-//    },
-//    {
-//        1 << PR_BIT_PROJECTION_MAP,
-//        // vert_def
-//        "uniform mat4 shadowProjMatrix;\n"
-//        "\n",
-//        // vert_prog
-//        "  gl_TexCoord[2] = shadowProjMatrix * curVertex;\n"
-//        "\n",
-//        // frag_def
-//        "",
-//        // frag_prog
-//        "",
-//    },
-//    {
-//        1 << PR_BIT_SHADOW_MAP,
-//        // vert_def
-//        "",
-//        // vert_prog
-//        "",
-//        // frag_def
-//        "uniform sampler2DShadow shadowMap;\n"
-//        "\n",
-//        // frag_prog
-//        "  shadowResult = shadow2DProj(shadowMap, gl_TexCoord[2]).a;\n"
-//        "\n",
-//    },
-//    {
-//        1 << PR_BIT_LIGHT_MAP,
-//        // vert_def
-//        "",
-//        // vert_prog
-//        "",
-//        // frag_def
-//        "uniform sampler2D lightMap;\n"
-//        "\n",
-//        // frag_prog
-//        "  lightTexel = texture2D(lightMap, vec2(gl_TexCoord[2].s, -gl_TexCoord[2].t) / gl_TexCoord[2].q).rgb;\n"
-//        "\n",
-//    },
-//    {
-//        1 << PR_BIT_SPOT_LIGHT,
-//        // vert_def
-//        "",
-//        // vert_prog
-//        "",
-//        // frag_def
-//        "uniform vec3 spotDir;\n"
-//        "uniform vec2 spotRadius;\n"
-//        "\n",
-//        // frag_prog
-//        "  spotVector = spotDir;\n"
-//        "  spotCosRadius = spotRadius;\n"
-//        "  isSpotLight = 1;\n"
-//        "\n",
-//    },
-//    {
-//        1 << PR_BIT_POINT_LIGHT,
-//        // vert_def
-//        "varying vec3 vertexNormal;\n"
-//        "varying vec3 eyeVector;\n"
-//        "varying vec3 lightVector;\n"
-//        "varying vec3 tangentSpaceLightVector;\n"
-//        "\n",
-//        // vert_prog
-//        "  vec3 vertexPos;\n"
-//        "\n"
-//        "  vertexPos = vec3(gl_ModelViewMatrix * curVertex);\n"
-//        "  eyeVector = -vertexPos;\n"
-//        "  lightVector = gl_LightSource[0].ambient.rgb - vertexPos;\n"
-//        "\n"
-//        "  if (isNormalMapped == 1) {\n"
-//        "    tangentSpaceLightVector = gl_LightSource[0].specular.rgb - vec3(curVertex);\n"
-//        "    tangentSpaceLightVector = TBN * tangentSpaceLightVector;\n"
-//        "  } else\n"
-//        "    vertexNormal = normalize(gl_NormalMatrix * curNormal);\n"
-//        "\n",
-//        // frag_def
-//        "varying vec3 vertexNormal;\n"
-//        "varying vec3 eyeVector;\n"
-//        "varying vec3 lightVector;\n"
-//        "varying vec3 tangentSpaceLightVector;\n"
-//        "\n",
-//        // frag_prog
-//        "  float pointLightDistance;\n"
-//        "  float lightAttenuation;\n"
-//        "  float spotAttenuation;\n"
-//        "  vec3 N, L, E, R, D;\n"
-//        "  vec3 lightDiffuse;\n"
-//        "  float lightSpecular;\n"
-//        "  float NdotL;\n"
-//        "  float spotCosAngle;\n"
-//        "\n"
-//        "  L = normalize(lightVector);\n"
-//        "\n"
-//        "  pointLightDistance = dot(lightVector,lightVector);\n"
-//        "  lightAttenuation = clamp(1.0 - pointLightDistance * gl_LightSource[0].linearAttenuation, 0.0, 1.0);\n"
-//        "  spotAttenuation = 1.0;\n"
-//        "\n"
-//        "  if (isSpotLight == 1) {\n"
-//        "    D = normalize(spotVector);\n"
-//        "    spotCosAngle = dot(-L, D);\n"
-//        "    spotAttenuation = clamp((spotCosAngle - spotCosRadius.x) * spotCosRadius.y, 0.0, 1.0);\n"
-//        "  }\n"
-//        "\n"
-//        "  if (isNormalMapped == 1) {\n"
-//        "    E = eyeVec;\n"
-//        "    N = normalize(2.0 * (normalTexel.rgb - 0.5));\n"
-//        "    L = normalize(tangentSpaceLightVector);\n"
-//        "  } else {\n"
-//        "    E = normalize(eyeVector);\n"
-//        "    N = normalize(vertexNormal);\n"
-//        "  }\n"
-//        "  NdotL = max(dot(N, L), 0.0);\n"
-//        "\n"
-//        "  R = reflect(-L, N);\n"
-//        "\n"
-//        "  lightDiffuse = gl_Color.a * shadowResult * lightTexel *\n"
-//        "                 gl_LightSource[0].diffuse.rgb * lightAttenuation * spotAttenuation;\n"
-//        "  result += vec4(lightDiffuse * diffuseTexel.a * diffuseTexel.rgb * NdotL, 0.0);\n"
-//        "\n"
-//        "  if (isSpecularMapped == 0)\n"
-//        "    specTexel.rgb = diffuseTexel.rgb * diffuseTexel.a;\n"
-//        "\n"
-//        "  lightSpecular = pow( max(dot(R, E), 0.0), specularMaterial.x * specTexel.a) * specularMaterial.y;\n"
-//        "  result += vec4(lightDiffuse * specTexel.rgb * lightSpecular, 0.0);\n"
-//        "\n",
-//    },
-//    {
-//        1 << PR_BIT_FOOTER,
-//        // vert_def
-//        "void main(void)\n"
-//        "{\n"
-//        "  vec4 curVertex = gl_Vertex;\n"
-//        "  vec3 curNormal = gl_Normal;\n"
-//        "  int isNormalMapped = 0;\n"
-//        "  mat3 TBN;\n"
-//        "\n"
-//        "  gl_TexCoord[0] = gl_MultiTexCoord0;\n"
-//        "\n",
-//        // vert_prog
-//        "  gl_Position = gl_ModelViewProjectionMatrix * curVertex;\n"
-//        "}\n",
-//        // frag_def
-//        "void main(void)\n"
-//        "{\n"
-//        "  vec3 commonTexCoord = vec3(gl_TexCoord[0].st, 0.0);\n"
-//        "  vec4 result = vec4(1.0, 1.0, 1.0, 1.0);\n"
-//        "  vec4 diffuseTexel = vec4(1.0, 1.0, 1.0, 1.0);\n"
-//        "  vec4 specTexel = vec4(1.0, 1.0, 1.0, 1.0);\n"
-//        "  vec4 normalTexel;\n"
-//        "  int isLightingPass = 0;\n"
-//        "  int isNormalMapped = 0;\n"
-//        "  int isSpecularMapped = 0;\n"
-//        "  vec3 eyeVec;\n"
-//        "  int isSpotLight = 0;\n"
-//        "  vec3 spotVector;\n"
-//        "  vec2 spotCosRadius;\n"
-//        "  float shadowResult = 1.0;\n"
-//        "  vec2 specularMaterial = vec2(15.0, 1.0);\n"
-//        "  vec3 lightTexel = vec3(1.0, 1.0, 1.0);\n"
-//        "\n",
-//        // frag_prog
-//        "  gl_FragColor = result;\n"
-//        "}\n",
-//    }
-//};
+        "  result.rgb = mix(gl_Fog.color.rgb, result.rgb, fogFactor);\n"+
+        "\n"
+    ),
+    new _prprogrambit(
+        1 << PR_BIT_GLOW_MAP,
+        // vert_def
+        "",
+        // vert_prog
+        "",
+        // frag_def
+        "uniform sampler2D glowMap;\n"+
+        "\n",
+        // frag_prog
+        "  vec4 glowTexel;\n"+
+        "\n"+
+        "  glowTexel = texture2D(glowMap, commonTexCoord.st);\n"+
+        "  result = vec4((result.rgb * (1.0 - glowTexel.a)) + (glowTexel.rgb * glowTexel.a), result.a);\n"+
+        "\n"
+    ),
+    new _prprogrambit(
+        1 << PR_BIT_PROJECTION_MAP,
+        // vert_def
+        "uniform mat4 shadowProjMatrix;\n"+
+        "\n",
+        // vert_prog
+        "  gl_TexCoord[2] = shadowProjMatrix * curVertex;\n"+
+        "\n",
+        // frag_def
+        "",
+        // frag_prog
+        ""
+    ),
+    new _prprogrambit(
+        1 << PR_BIT_SHADOW_MAP,
+        // vert_def
+        "",
+        // vert_prog
+        "",
+        // frag_def
+        "uniform sampler2DShadow shadowMap;\n"+
+        "\n",
+        // frag_prog
+        "  shadowResult = shadow2DProj(shadowMap, gl_TexCoord[2]).a;\n"+
+        "\n"
+    ),
+    new _prprogrambit(
+        1 << PR_BIT_LIGHT_MAP,
+        // vert_def
+        "",
+        // vert_prog
+        "",
+        // frag_def
+        "uniform sampler2D lightMap;\n"+
+        "\n",
+        // frag_prog
+        "  lightTexel = texture2D(lightMap, vec2(gl_TexCoord[2].s, -gl_TexCoord[2].t) / gl_TexCoord[2].q).rgb;\n"+
+        "\n"
+    ),
+    new _prprogrambit(
+        1 << PR_BIT_SPOT_LIGHT,
+        // vert_def
+        "",
+        // vert_prog
+        "",
+        // frag_def
+        "uniform vec3 spotDir;\n"+
+        "uniform vec2 spotRadius;\n"+
+        "\n",
+        // frag_prog
+        "  spotVector = spotDir;\n"+
+        "  spotCosRadius = spotRadius;\n"+
+        "  isSpotLight = 1;\n"+
+        "\n"
+    ),
+    new _prprogrambit(
+        1 << PR_BIT_POINT_LIGHT,
+        // vert_def
+        "varying vec3 vertexNormal;\n"+
+        "varying vec3 eyeVector;\n"+
+        "varying vec3 lightVector;\n"+
+        "varying vec3 tangentSpaceLightVector;\n"+
+        "\n",
+        // vert_prog
+        "  vec3 vertexPos;\n"+
+        "\n"+
+        "  vertexPos = vec3(gl_ModelViewMatrix * curVertex);\n"+
+        "  eyeVector = -vertexPos;\n"+
+        "  lightVector = gl_LightSource[0].ambient.rgb - vertexPos;\n"+
+        "\n"+
+        "  if (isNormalMapped == 1) {\n"+
+        "    tangentSpaceLightVector = gl_LightSource[0].specular.rgb - vec3(curVertex);\n"+
+        "    tangentSpaceLightVector = TBN * tangentSpaceLightVector;\n"+
+        "  } else\n"+
+        "    vertexNormal = normalize(gl_NormalMatrix * curNormal);\n"+
+        "\n",
+        // frag_def
+        "varying vec3 vertexNormal;\n"+
+        "varying vec3 eyeVector;\n"+
+        "varying vec3 lightVector;\n"+
+        "varying vec3 tangentSpaceLightVector;\n"+
+        "\n",
+        // frag_prog
+        "  float pointLightDistance;\n"+
+        "  float lightAttenuation;\n"+
+        "  float spotAttenuation;\n"+
+        "  vec3 N, L, E, R, D;\n"+
+        "  vec3 lightDiffuse;\n"+
+        "  float lightSpecular;\n"+
+        "  float NdotL;\n"+
+        "  float spotCosAngle;\n"+
+        "\n"+
+        "  L = normalize(lightVector);\n"+
+        "\n"+
+        "  pointLightDistance = dot(lightVector,lightVector);\n"+
+        "  lightAttenuation = clamp(1.0 - pointLightDistance * gl_LightSource[0].linearAttenuation, 0.0, 1.0);\n"+
+        "  spotAttenuation = 1.0;\n"+
+        "\n"+
+        "  if (isSpotLight == 1) {\n"+
+        "    D = normalize(spotVector);\n"+
+        "    spotCosAngle = dot(-L, D);\n"+
+        "    spotAttenuation = clamp((spotCosAngle - spotCosRadius.x) * spotCosRadius.y, 0.0, 1.0);\n"+
+        "  }\n"+
+        "\n"+
+        "  if (isNormalMapped == 1) {\n"+
+        "    E = eyeVec;\n"+
+        "    N = normalize(2.0 * (normalTexel.rgb - 0.5));\n"+
+        "    L = normalize(tangentSpaceLightVector);\n"+
+        "  } else {\n"+
+        "    E = normalize(eyeVector);\n"+
+        "    N = normalize(vertexNormal);\n"+
+        "  }\n"+
+        "  NdotL = max(dot(N, L), 0.0);\n"+
+        "\n"+
+        "  R = reflect(-L, N);\n"+
+        "\n"+
+        "  lightDiffuse = gl_Color.a * shadowResult * lightTexel *\n"+
+        "                 gl_LightSource[0].diffuse.rgb * lightAttenuation * spotAttenuation;\n"+
+        "  result += vec4(lightDiffuse * diffuseTexel.a * diffuseTexel.rgb * NdotL, 0.0);\n"+
+        "\n"+
+        "  if (isSpecularMapped == 0)\n"+
+        "    specTexel.rgb = diffuseTexel.rgb * diffuseTexel.a;\n"+
+        "\n"+
+        "  lightSpecular = pow( max(dot(R, E), 0.0), specularMaterial.x * specTexel.a) * specularMaterial.y;\n"+
+        "  result += vec4(lightDiffuse * specTexel.rgb * lightSpecular, 0.0);\n"+
+        "\n"
+    ),
+    new _prprogrambit(
+        1 << PR_BIT_FOOTER,
+        // vert_def
+        "void main(void)\n"+
+        "{\n"+
+        "  vec4 curVertex = gl_Vertex;\n"+
+        "  vec3 curNormal = gl_Normal;\n"+
+        "  int isNormalMapped = 0;\n"+
+        "  mat3 TBN;\n"+
+        "\n"+
+        "  gl_TexCoord[0] = gl_MultiTexCoord0;\n"+
+        "\n",
+        // vert_prog
+        "  gl_Position = gl_ModelViewProjectionMatrix * curVertex;\n"+
+        "}\n",
+        // frag_def
+        "void main(void)\n"+
+        "{\n"+
+        "  vec3 commonTexCoord = vec3(gl_TexCoord[0].st, 0.0);\n"+
+        "  vec4 result = vec4(1.0, 1.0, 1.0, 1.0);\n"+
+        "  vec4 diffuseTexel = vec4(1.0, 1.0, 1.0, 1.0);\n"+
+        "  vec4 specTexel = vec4(1.0, 1.0, 1.0, 1.0);\n"+
+        "  vec4 normalTexel;\n"+
+        "  int isLightingPass = 0;\n"+
+        "  int isNormalMapped = 0;\n"+
+        "  int isSpecularMapped = 0;\n"+
+        "  vec3 eyeVec;\n"+
+        "  int isSpotLight = 0;\n"+
+        "  vec3 spotVector;\n"+
+        "  vec2 spotCosRadius;\n"+
+        "  float shadowResult = 1.0;\n"+
+        "  vec2 specularMaterial = vec2(15.0, 1.0);\n"+
+        "  vec3 lightTexel = vec3(1.0, 1.0, 1.0);\n"+
+        "\n",
+        // frag_prog
+        "  gl_FragColor = result;\n"+
+        "}\n",
+    )
+];
 
 var prprograms: _prprograminfo[] = newStructArray<_prprograminfo>(_prprograminfo, 1 << PR_BIT_COUNT);
 
 var overridematerial = 0;//int32_t
-//int32_t         globaloldoverridematerial;
+var /*int32_t         */globaloldoverridematerial:number;
 
-//int32_t         rotatespritematerialbits;
+var /*int32_t         */rotatespritematerialbits:number;
 
 //// RENDER TARGETS
 //_prrt           *prrts;
@@ -1361,14 +1361,14 @@ function polymer_loadboard():void
 //    searchit = 0;
 //}
 
-//void                polymer_inb4rotatesprite(int16_t tilenum, char pal, int8_t shade)
-//{
-//    _prmaterial     rotatespritematerial;
+function polymer_inb4rotatesprite(/*int16_t */tilenum:number, /*char */pal:number, /*int8_t */shade:number):void
+{
+    var rotatespritematerial:_prmaterial;
 
-//    polymer_getbuildmaterial(&rotatespritematerial, tilenum, pal, shade, 0, 4);
+    polymer_getbuildmaterial(rotatespritematerial, tilenum, pal, shade, 0, 4);
 
-//    rotatespritematerialbits = polymer_bindmaterial(rotatespritematerial, NULL, 0);
-//}
+    rotatespritematerialbits = polymer_bindmaterial(rotatespritematerial, NULL, 0);
+}
 
 //void                polymer_postrotatesprite(void)
 //{
@@ -4799,430 +4799,430 @@ function polymer_getbuildmaterial(material:_prmaterial, /*int16_t */tilenum:numb
     }
 }
 
-//static int32_t      polymer_bindmaterial(_prmaterial material, int16_t* lights, int matlightcount)
-//{
-//    int32_t         programbits;
-//    int32_t         texunit;
+function /* int32_t      */polymer_bindmaterial( material:_prmaterial, lights:Int16Array, /*int */matlightcount:number):number
+{
+    var/*int32_t        */ programbits=0;
+    var/*int32_t        */ texunit=0;
 
-//    programbits = 0;
+    programbits = 0;
 
-//    // --------- bit validation
+    // --------- bit validation
 
-//    // PR_BIT_ANIM_INTERPOLATION
-//    if (material.nextframedata != ((float*)-1))
-//        programbits |= prprogrambits[PR_BIT_ANIM_INTERPOLATION].bit;
+    // PR_BIT_ANIM_INTERPOLATION
+    if (material.nextframedata != null/*((float*)-1)*/)
+        programbits |= prprogrambits[PR_BIT_ANIM_INTERPOLATION].bit;
 
-//    // PR_BIT_LIGHTING_PASS
-//    if (curlight && matlightcount)
-//        programbits |= prprogrambits[PR_BIT_LIGHTING_PASS].bit;
+    // PR_BIT_LIGHTING_PASS
+    if (curlight && matlightcount)
+        programbits |= prprogrambits[PR_BIT_LIGHTING_PASS].bit;
 
-//    // PR_BIT_NORMAL_MAP
-//    if (pr_normalmapping && material.normalmap)
-//        programbits |= prprogrambits[PR_BIT_NORMAL_MAP].bit;
+    // PR_BIT_NORMAL_MAP
+    if (pr_normalmapping && material.normalmap)
+        programbits |= prprogrambits[PR_BIT_NORMAL_MAP].bit;
 
-//    // PR_BIT_ART_MAP
-//    if (pr_artmapping && material.artmap &&
-//        (overridematerial & prprogrambits[PR_BIT_ART_MAP].bit)) {
-//        programbits |= prprogrambits[PR_BIT_ART_MAP].bit;
-//    } else
-//    // PR_BIT_DIFFUSE_MAP
-//    if (material.diffusemap) {
-//        programbits |= prprogrambits[PR_BIT_DIFFUSE_MAP].bit;
-//        programbits |= prprogrambits[PR_BIT_DIFFUSE_MAP2].bit;
-//    }
+    // PR_BIT_ART_MAP
+    if (pr_artmapping && material.artmap &&
+        (overridematerial & prprogrambits[PR_BIT_ART_MAP].bit)) {
+        programbits |= prprogrambits[PR_BIT_ART_MAP].bit;
+    } else
+    // PR_BIT_DIFFUSE_MAP
+    if (material.diffusemap) {
+        programbits |= prprogrambits[PR_BIT_DIFFUSE_MAP].bit;
+        programbits |= prprogrambits[PR_BIT_DIFFUSE_MAP2].bit;
+    }
 
-//    // PR_BIT_HIGHPALOOKUP_MAP
-//    if (material.highpalookupmap)
-//        programbits |= prprogrambits[PR_BIT_HIGHPALOOKUP_MAP].bit;
+    // PR_BIT_HIGHPALOOKUP_MAP
+    if (material.highpalookupmap)
+        programbits |= prprogrambits[PR_BIT_HIGHPALOOKUP_MAP].bit;
 
-//    // PR_BIT_DIFFUSE_DETAIL_MAP
-//    if (r_detailmapping && material.detailmap)
-//        programbits |= prprogrambits[PR_BIT_DIFFUSE_DETAIL_MAP].bit;
+    // PR_BIT_DIFFUSE_DETAIL_MAP
+    if (r_detailmapping && material.detailmap)
+        programbits |= prprogrambits[PR_BIT_DIFFUSE_DETAIL_MAP].bit;
 
-//    // PR_BIT_DIFFUSE_MODULATION
-//    programbits |= prprogrambits[PR_BIT_DIFFUSE_MODULATION].bit;
+    // PR_BIT_DIFFUSE_MODULATION
+    programbits |= prprogrambits[PR_BIT_DIFFUSE_MODULATION].bit;
 
-//    // PR_BIT_SPECULAR_MAP
-//    if (pr_specularmapping && material.specmap)
-//        programbits |= prprogrambits[PR_BIT_SPECULAR_MAP].bit;
+    // PR_BIT_SPECULAR_MAP
+    if (pr_specularmapping && material.specmap)
+        programbits |= prprogrambits[PR_BIT_SPECULAR_MAP].bit;
 
-//    // PR_BIT_SPECULAR_MATERIAL
-//    if ((material.specmaterial[0] != 15.0) || (material.specmaterial[1] != 1.0) || pr_overridespecular)
-//        programbits |= prprogrambits[PR_BIT_SPECULAR_MATERIAL].bit;
+    // PR_BIT_SPECULAR_MATERIAL
+    if ((material.specmaterial[0] != 15.0) || (material.specmaterial[1] != 1.0) || pr_overridespecular)
+        programbits |= prprogrambits[PR_BIT_SPECULAR_MATERIAL].bit;
 
-//    // PR_BIT_MIRROR_MAP
-//    if (!curlight && material.mirrormap)
-//        programbits |= prprogrambits[PR_BIT_MIRROR_MAP].bit;
+    // PR_BIT_MIRROR_MAP
+    if (!curlight && material.mirrormap)
+        programbits |= prprogrambits[PR_BIT_MIRROR_MAP].bit;
 
-//    // PR_BIT_FOG
-//    if (!material.artmap && !curlight && !material.mirrormap)
-//        programbits |= prprogrambits[PR_BIT_FOG].bit;
+    // PR_BIT_FOG
+    if (!material.artmap && !curlight && !material.mirrormap)
+        programbits |= prprogrambits[PR_BIT_FOG].bit;
 
-//    // PR_BIT_GLOW_MAP
-//    if (!curlight && r_glowmapping && material.glowmap)
-//        programbits |= prprogrambits[PR_BIT_GLOW_MAP].bit;
+    // PR_BIT_GLOW_MAP
+    if (!curlight && r_glowmapping && material.glowmap)
+        programbits |= prprogrambits[PR_BIT_GLOW_MAP].bit;
 
-//    // PR_BIT_POINT_LIGHT
-//    if (matlightcount) {
-//        programbits |= prprogrambits[PR_BIT_POINT_LIGHT].bit;
-//        // PR_BIT_SPOT_LIGHT
-//        if (prlights[lights[curlight]].radius) {
-//            programbits |= prprogrambits[PR_BIT_SPOT_LIGHT].bit;
-//            // PR_BIT_SHADOW_MAP
-//            if (prlights[lights[curlight]].rtindex != -1) {
-//                programbits |= prprogrambits[PR_BIT_SHADOW_MAP].bit;
-//                programbits |= prprogrambits[PR_BIT_PROJECTION_MAP].bit;
-//            }
-//            // PR_BIT_LIGHT_MAP
-//            if (prlights[lights[curlight]].lightmap) {
-//                programbits |= prprogrambits[PR_BIT_LIGHT_MAP].bit;
-//                programbits |= prprogrambits[PR_BIT_PROJECTION_MAP].bit;
-//            }
-//        }
-//    }
+    // PR_BIT_POINT_LIGHT
+    if (matlightcount) {
+        programbits |= prprogrambits[PR_BIT_POINT_LIGHT].bit;
+        // PR_BIT_SPOT_LIGHT
+        if (prlights[lights[curlight]].radius) {
+            programbits |= prprogrambits[PR_BIT_SPOT_LIGHT].bit;
+            // PR_BIT_SHADOW_MAP
+            if (prlights[lights[curlight]].rtindex != -1) {
+                programbits |= prprogrambits[PR_BIT_SHADOW_MAP].bit;
+                programbits |= prprogrambits[PR_BIT_PROJECTION_MAP].bit;
+            }
+            // PR_BIT_LIGHT_MAP
+            if (prlights[lights[curlight]].lightmap) {
+                programbits |= prprogrambits[PR_BIT_LIGHT_MAP].bit;
+                programbits |= prprogrambits[PR_BIT_PROJECTION_MAP].bit;
+            }
+        }
+    }
 
-//    // material override
-//    programbits &= overridematerial;
+    // material override
+    programbits &= overridematerial;
 
-//    programbits |= prprogrambits[PR_BIT_HEADER].bit;
-//    programbits |= prprogrambits[PR_BIT_FOOTER].bit;
+    programbits |= prprogrambits[PR_BIT_HEADER].bit;
+    programbits |= prprogrambits[PR_BIT_FOOTER].bit;
 
-//    // --------- program compiling
-//    if (!prprograms[programbits].handle)
-//        polymer_compileprogram(programbits);
+    // --------- program compiling
+    if (!prprograms[programbits].handle)
+        polymer_compileprogram(programbits);
 
-//    bglUseProgramObjectARB(prprograms[programbits].handle);
+    bglUseProgramObjectARB(prprograms[programbits].handle);
 
-//    // --------- bit setup
+    // --------- bit setup
 
-//    texunit = 0;
+    texunit = 0;
 
-//    // PR_BIT_ANIM_INTERPOLATION
-//    if (programbits & prprogrambits[PR_BIT_ANIM_INTERPOLATION].bit)
-//    {
-//        bglEnableVertexAttribArrayARB(prprograms[programbits].attrib_nextFrameData);
-//        if (prprograms[programbits].attrib_nextFrameNormal != -1)
-//            bglEnableVertexAttribArrayARB(prprograms[programbits].attrib_nextFrameNormal);
-//        bglVertexAttribPointerARB(prprograms[programbits].attrib_nextFrameData,
-//                                  3, GL_FLOAT, GL_FALSE,
-//                                  sizeof  /*(float)*/   * 15,
-//                                  material.nextframedata);
-//        if (prprograms[programbits].attrib_nextFrameNormal != -1)
-//            bglVertexAttribPointerARB(prprograms[programbits].attrib_nextFrameNormal,
-//                                      3, GL_FLOAT, GL_FALSE,
-//                                      sizeof  /*(float)*/   * 15,
-//                                      material.nextframedata + 3);
+    // PR_BIT_ANIM_INTERPOLATION
+    if (programbits & prprogrambits[PR_BIT_ANIM_INTERPOLATION].bit)
+    {
+        bglEnableVertexAttribArrayARB(prprograms[programbits].attrib_nextFrameData);
+        if (prprograms[programbits].attrib_nextFrameNormal != -1)
+            bglEnableVertexAttribArrayARB(prprograms[programbits].attrib_nextFrameNormal);
+        bglVertexAttribPointerARB(prprograms[programbits].attrib_nextFrameData,
+                                  3, GL_FLOAT, GL_FALSE,
+                                  sizeof  /*(float)*/   * 15,
+                                  material.nextframedata);
+        if (prprograms[programbits].attrib_nextFrameNormal != -1)
+            bglVertexAttribPointerARB(prprograms[programbits].attrib_nextFrameNormal,
+                                      3, GL_FLOAT, GL_FALSE,
+                                      sizeof  /*(float)*/   * 15,
+                                      material.nextframedata + 3);
 
-//        bglUniform1fARB(prprograms[programbits].uniform_frameProgress, material.frameprogress);
-//    }
+        bglUniform1fARB(prprograms[programbits].uniform_frameProgress, material.frameprogress);
+    }
 
-//    // PR_BIT_LIGHTING_PASS
-//    if (programbits & prprogrambits[PR_BIT_LIGHTING_PASS].bit)
-//    {
-//        bglPushAttrib(GL_COLOR_BUFFER_BIT);
-//        bglEnable(GL_BLEND);
-//        bglBlendFunc(GL_ONE, GL_ONE);
+    // PR_BIT_LIGHTING_PASS
+    if (programbits & prprogrambits[PR_BIT_LIGHTING_PASS].bit)
+    {
+        bglPushAttrib(GL_COLOR_BUFFER_BIT);
+        bglEnable(GL_BLEND);
+        bglBlendFunc(GL_ONE, GL_ONE);
 
-//        if (prlights[lights[curlight]].publicflags.negative) {
-//            bglBlendEquation(GL_FUNC_REVERSE_SUBTRACT);
-//        }
-//    }
+        if (prlights[lights[curlight]].publicflags.negative) {
+            bglBlendEquation(GL_FUNC_REVERSE_SUBTRACT);
+        }
+    }
 
-//    // PR_BIT_NORMAL_MAP
-//    if (programbits & prprogrambits[PR_BIT_NORMAL_MAP].bit)
-//    {
-//        float pos[3], bias[2];
+    // PR_BIT_NORMAL_MAP
+    if (programbits & prprogrambits[PR_BIT_NORMAL_MAP].bit)
+    {
+        var pos = new Float32Array(3), bia = new Float32Array(2);
 
-//        pos[0] =   /*(float)*/  globalposy;
-//        pos[1] = -  /*(float)*/  (globalposz) / 16.0;
-//        pos[2] = -  /*(float)*/  globalposx;
+        pos[0] =   /*(float)*/  globalposy;
+        pos[1] = -  /*(float)*/  (globalposz) / 16.0;
+        pos[2] = -  /*(float)*/  globalposx;
 
-//        bglActiveTextureARB(texunit + GL_TEXTURE0_ARB);
-//        bglBindTexture(GL_TEXTURE_2D, material.normalmap);
+        bglActiveTextureARB(texunit + GL_TEXTURE0_ARB);
+        bglBindTexture(GL_TEXTURE_2D, material.normalmap);
 
-//        if (material.mdspritespace == GL_TRUE) {
-//            float mdspritespacepos[3];
-//            polymer_transformpoint(pos, mdspritespacepos, (float *)mdspritespace);
-//            bglUniform3fvARB(prprograms[programbits].uniform_eyePosition, 1, mdspritespacepos);
-//        } else
-//            bglUniform3fvARB(prprograms[programbits].uniform_eyePosition, 1, pos);
-//        bglUniform1iARB(prprograms[programbits].uniform_normalMap, texunit);
-//        if (pr_overrideparallax) {
-//            bias[0] = pr_parallaxscale;
-//            bias[1] = pr_parallaxbias;
-//            bglUniform2fvARB(prprograms[programbits].uniform_normalBias, 1, bias);
-//        } else
-//            bglUniform2fvARB(prprograms[programbits].uniform_normalBias, 1, material.normalbias);
+        if (material.mdspritespace == GL_TRUE) {
+            var mdspritespacepos = new Float32Array(3);
+            polymer_transformpoint(pos, mdspritespacepos, (float *)mdspritespace);
+            bglUniform3fvARB(prprograms[programbits].uniform_eyePosition, 1, mdspritespacepos);
+        } else
+            bglUniform3fvARB(prprograms[programbits].uniform_eyePosition, 1, pos);
+        bglUniform1iARB(prprograms[programbits].uniform_normalMap, texunit);
+        if (pr_overrideparallax) {
+            bias[0] = pr_parallaxscale;
+            bias[1] = pr_parallaxbias;
+            bglUniform2fvARB(prprograms[programbits].uniform_normalBias, 1, bias);
+        } else
+            bglUniform2fvARB(prprograms[programbits].uniform_normalBias, 1, material.normalbias);
 
-//        if (material.tbn) {
-//            bglEnableVertexAttribArrayARB(prprograms[programbits].attrib_T);
-//            bglEnableVertexAttribArrayARB(prprograms[programbits].attrib_B);
-//            bglEnableVertexAttribArrayARB(prprograms[programbits].attrib_N);
+        if (material.tbn) {
+            bglEnableVertexAttribArrayARB(prprograms[programbits].attrib_T);
+            bglEnableVertexAttribArrayARB(prprograms[programbits].attrib_B);
+            bglEnableVertexAttribArrayARB(prprograms[programbits].attrib_N);
 
-//            bglVertexAttribPointerARB(prprograms[programbits].attrib_T,
-//                                      3, GL_FLOAT, GL_FALSE,
-//                                      sizeof  /*(float)*/   * 15,
-//                                      material.tbn);
-//            bglVertexAttribPointerARB(prprograms[programbits].attrib_B,
-//                                      3, GL_FLOAT, GL_FALSE,
-//                                      sizeof  /*(float)*/   * 15,
-//                                      material.tbn + 3);
-//            bglVertexAttribPointerARB(prprograms[programbits].attrib_N,
-//                                      3, GL_FLOAT, GL_FALSE,
-//                                      sizeof  /*(float)*/   * 15,
-//                                      material.tbn + 6);
-//        }
+            bglVertexAttribPointerARB(prprograms[programbits].attrib_T,
+                                      3, GL_FLOAT, GL_FALSE,
+                                      sizeof  /*(float)*/   * 15,
+                                      material.tbn);
+            bglVertexAttribPointerARB(prprograms[programbits].attrib_B,
+                                      3, GL_FLOAT, GL_FALSE,
+                                      sizeof  /*(float)*/   * 15,
+                                      material.tbn + 3);
+            bglVertexAttribPointerARB(prprograms[programbits].attrib_N,
+                                      3, GL_FLOAT, GL_FALSE,
+                                      sizeof  /*(float)*/   * 15,
+                                      material.tbn + 6);
+        }
 
-//        texunit++;
-//    }
+        texunit++;
+    }
 
-//    // PR_BIT_ART_MAP
-//    if (programbits & prprogrambits[PR_BIT_ART_MAP].bit)
-//    {
-//        bglActiveTextureARB(texunit + GL_TEXTURE0_ARB);
-//        bglBindTexture(GL_TEXTURE_2D, material.artmap);
+    // PR_BIT_ART_MAP
+    if (programbits & prprogrambits[PR_BIT_ART_MAP].bit)
+    {
+        bglActiveTextureARB(texunit + GL_TEXTURE0_ARB);
+        bglBindTexture(GL_TEXTURE_2D, material.artmap);
 
-//        bglUniform1iARB(prprograms[programbits].uniform_artMap, texunit);
+        bglUniform1iARB(prprograms[programbits].uniform_artMap, texunit);
 
-//        texunit++;
+        texunit++;
 
-//        bglActiveTextureARB(texunit + GL_TEXTURE0_ARB);
-//        bglBindTexture(GL_TEXTURE_2D, material.basepalmap);
+        bglActiveTextureARB(texunit + GL_TEXTURE0_ARB);
+        bglBindTexture(GL_TEXTURE_2D, material.basepalmap);
 
-//        bglUniform1iARB(prprograms[programbits].uniform_basePalMap, texunit);
+        bglUniform1iARB(prprograms[programbits].uniform_basePalMap, texunit);
 
-//        texunit++;
+        texunit++;
 
-//        bglActiveTextureARB(texunit + GL_TEXTURE0_ARB);
-//        bglBindTexture(GL_TEXTURE_RECTANGLE, material.lookupmap);
+        bglActiveTextureARB(texunit + GL_TEXTURE0_ARB);
+        bglBindTexture(GL_TEXTURE_RECTANGLE, material.lookupmap);
 
-//        bglUniform1iARB(prprograms[programbits].uniform_lookupMap, texunit);
+        bglUniform1iARB(prprograms[programbits].uniform_lookupMap, texunit);
 
-//        texunit++;
+        texunit++;
 
-//        bglUniform1fARB(prprograms[programbits].uniform_shadeOffset, material.shadeoffset);
-//        bglUniform1fARB(prprograms[programbits].uniform_visibility, (globalvisibility - 2048.0) / 2048.0 + material.visibility);
-//    }
+        bglUniform1fARB(prprograms[programbits].uniform_shadeOffset, material.shadeoffset);
+        bglUniform1fARB(prprograms[programbits].uniform_visibility, (globalvisibility - 2048.0) / 2048.0 + material.visibility);
+    }
 
-//    // PR_BIT_DIFFUSE_MAP
-//    if (programbits & prprogrambits[PR_BIT_DIFFUSE_MAP].bit)
-//    {
-//        bglActiveTextureARB(texunit + GL_TEXTURE0_ARB);
-//        bglBindTexture(GL_TEXTURE_2D, material.diffusemap);
+    // PR_BIT_DIFFUSE_MAP
+    if (programbits & prprogrambits[PR_BIT_DIFFUSE_MAP].bit)
+    {
+        bglActiveTextureARB(texunit + GL_TEXTURE0_ARB);
+        bglBindTexture(GL_TEXTURE_2D, material.diffusemap);
 
-//        bglUniform1iARB(prprograms[programbits].uniform_diffuseMap, texunit);
-//        bglUniform2fvARB(prprograms[programbits].uniform_diffuseScale, 1, material.diffusescale);
+        bglUniform1iARB(prprograms[programbits].uniform_diffuseMap, texunit);
+        bglUniform2fvARB(prprograms[programbits].uniform_diffuseScale, 1, material.diffusescale);
 
-//        texunit++;
-//    }
+        texunit++;
+    }
 
-//    // PR_BIT_HIGHPALOOKUP_MAP
-//    if (programbits & prprogrambits[PR_BIT_HIGHPALOOKUP_MAP].bit)
-//    {
-//        bglActiveTextureARB(texunit + GL_TEXTURE0_ARB);
-//        bglBindTexture(GL_TEXTURE_3D, material.highpalookupmap);
+    // PR_BIT_HIGHPALOOKUP_MAP
+    if (programbits & prprogrambits[PR_BIT_HIGHPALOOKUP_MAP].bit)
+    {
+        bglActiveTextureARB(texunit + GL_TEXTURE0_ARB);
+        bglBindTexture(GL_TEXTURE_3D, material.highpalookupmap);
 
-//        bglUniform1iARB(prprograms[programbits].uniform_highPalookupMap, texunit);
+        bglUniform1iARB(prprograms[programbits].uniform_highPalookupMap, texunit);
 
-//        texunit++;
-//    }
+        texunit++;
+    }
 
-//    // PR_BIT_DIFFUSE_DETAIL_MAP
-//    if (programbits & prprogrambits[PR_BIT_DIFFUSE_DETAIL_MAP].bit)
-//    {
-//        float scale[2];
+    // PR_BIT_DIFFUSE_DETAIL_MAP
+    if (programbits & prprogrambits[PR_BIT_DIFFUSE_DETAIL_MAP].bit)
+    {
+        var scale = new Float32Array(2);
 
-//        // scale by the diffuse map scale if we're not doing normal mapping
-//        if (!(programbits & prprogrambits[PR_BIT_NORMAL_MAP].bit))
-//        {
-//            scale[0] = material.diffusescale[0] * material.detailscale[0];
-//            scale[1] = material.diffusescale[1] * material.detailscale[1];
-//        } else {
-//            scale[0] = material.detailscale[0];
-//            scale[1] = material.detailscale[1];
-//        }
+        // scale by the diffuse map scale if we're not doing normal mapping
+        if (!(programbits & prprogrambits[PR_BIT_NORMAL_MAP].bit))
+        {
+            scale[0] = material.diffusescale[0] * material.detailscale[0];
+            scale[1] = material.diffusescale[1] * material.detailscale[1];
+        } else {
+            scale[0] = material.detailscale[0];
+            scale[1] = material.detailscale[1];
+        }
 
-//        bglActiveTextureARB(texunit + GL_TEXTURE0_ARB);
-//        bglBindTexture(GL_TEXTURE_2D, material.detailmap);
+        bglActiveTextureARB(texunit + GL_TEXTURE0_ARB);
+        bglBindTexture(GL_TEXTURE_2D, material.detailmap);
 
-//        bglUniform1iARB(prprograms[programbits].uniform_detailMap, texunit);
-//        bglUniform2fvARB(prprograms[programbits].uniform_detailScale, 1, scale);
+        bglUniform1iARB(prprograms[programbits].uniform_detailMap, texunit);
+        bglUniform2fvARB(prprograms[programbits].uniform_detailScale, 1, scale);
 
-//        texunit++;
-//    }
+        texunit++;
+    }
 
-//    // PR_BIT_DIFFUSE_MODULATION
-//    if (programbits & prprogrambits[PR_BIT_DIFFUSE_MODULATION].bit)
-//    {
-//            bglColor4ub(material.diffusemodulation[0],
-//                        material.diffusemodulation[1],
-//                        material.diffusemodulation[2],
-//                        material.diffusemodulation[3]);
-//    }
+    // PR_BIT_DIFFUSE_MODULATION
+    if (programbits & prprogrambits[PR_BIT_DIFFUSE_MODULATION].bit)
+    {
+            bglColor4ub(material.diffusemodulation[0],
+                        material.diffusemodulation[1],
+                        material.diffusemodulation[2],
+                        material.diffusemodulation[3]);
+    }
 
-//    // PR_BIT_SPECULAR_MAP
-//    if (programbits & prprogrambits[PR_BIT_SPECULAR_MAP].bit)
-//    {
-//        bglActiveTextureARB(texunit + GL_TEXTURE0_ARB);
-//        bglBindTexture(GL_TEXTURE_2D, material.specmap);
+    // PR_BIT_SPECULAR_MAP
+    if (programbits & prprogrambits[PR_BIT_SPECULAR_MAP].bit)
+    {
+        bglActiveTextureARB(texunit + GL_TEXTURE0_ARB);
+        bglBindTexture(GL_TEXTURE_2D, material.specmap);
 
-//        bglUniform1iARB(prprograms[programbits].uniform_specMap, texunit);
+        bglUniform1iARB(prprograms[programbits].uniform_specMap, texunit);
 
-//        texunit++;
-//    }
+        texunit++;
+    }
 
-//    // PR_BIT_SPECULAR_MATERIAL
-//    if (programbits & prprogrambits[PR_BIT_SPECULAR_MATERIAL].bit)
-//    {
-//        float specmaterial[2];
+    // PR_BIT_SPECULAR_MATERIAL
+    if (programbits & prprogrambits[PR_BIT_SPECULAR_MATERIAL].bit)
+    {
+        var specmaterial = new Float32Array(2);
 
-//        if (pr_overridespecular) {
-//            specmaterial[0] = pr_specularpower;
-//            specmaterial[1] = pr_specularfactor;
-//            bglUniform2fvARB(prprograms[programbits].uniform_specMaterial, 1, specmaterial);
-//        } else
-//            bglUniform2fvARB(prprograms[programbits].uniform_specMaterial, 1, material.specmaterial);
-//    }
+        if (pr_overridespecular) {
+            specmaterial[0] = pr_specularpower;
+            specmaterial[1] = pr_specularfactor;
+            bglUniform2fvARB(prprograms[programbits].uniform_specMaterial, 1, specmaterial);
+        } else
+            bglUniform2fvARB(prprograms[programbits].uniform_specMaterial, 1, material.specmaterial);
+    }
 
-//    // PR_BIT_MIRROR_MAP
-//    if (programbits & prprogrambits[PR_BIT_MIRROR_MAP].bit)
-//    {
-//        bglActiveTextureARB(texunit + GL_TEXTURE0_ARB);
-//        bglBindTexture(GL_TEXTURE_RECTANGLE, material.mirrormap);
+    // PR_BIT_MIRROR_MAP
+    if (programbits & prprogrambits[PR_BIT_MIRROR_MAP].bit)
+    {
+        bglActiveTextureARB(texunit + GL_TEXTURE0_ARB);
+        bglBindTexture(GL_TEXTURE_RECTANGLE, material.mirrormap);
 
-//        bglUniform1iARB(prprograms[programbits].uniform_mirrorMap, texunit);
+        bglUniform1iARB(prprograms[programbits].uniform_mirrorMap, texunit);
 
-//        texunit++;
-//    }
+        texunit++;
+    }
 //#ifdef PR_LINEAR_FOG
-//    if (programbits & prprogrambits[PR_BIT_FOG].bit)
-//    {
-//        bglUniform1iARB(prprograms[programbits].uniform_linearFog, r_usenewshading==2);
-//    }
+    if (programbits & prprogrambits[PR_BIT_FOG].bit)
+    {
+        bglUniform1iARB(prprograms[programbits].uniform_linearFog, r_usenewshading==2);
+    }
 //#endif
-//    // PR_BIT_GLOW_MAP
-//    if (programbits & prprogrambits[PR_BIT_GLOW_MAP].bit)
-//    {
-//        bglActiveTextureARB(texunit + GL_TEXTURE0_ARB);
-//        bglBindTexture(GL_TEXTURE_2D, material.glowmap);
+    // PR_BIT_GLOW_MAP
+    if (programbits & prprogrambits[PR_BIT_GLOW_MAP].bit)
+    {
+        bglActiveTextureARB(texunit + GL_TEXTURE0_ARB);
+        bglBindTexture(GL_TEXTURE_2D, material.glowmap);
 
-//        bglUniform1iARB(prprograms[programbits].uniform_glowMap, texunit);
+        bglUniform1iARB(prprograms[programbits].uniform_glowMap, texunit);
 
-//        texunit++;
-//    }
+        texunit++;
+    }
 
-//    // PR_BIT_POINT_LIGHT
-//    if (programbits & prprogrambits[PR_BIT_POINT_LIGHT].bit)
-//    {
-//        float inpos[4], pos[4];
-//        float range[2];
-//        float color[4];
+    // PR_BIT_POINT_LIGHT
+    if (programbits & prprogrambits[PR_BIT_POINT_LIGHT].bit)
+    {
+        var inpos = new Float32Array(4), pos = new Float32Array(4);
+        var range = new Float32Array(2);
+        var color = new Float32Array(4);
 
-//        inpos[0] =  /*(float)*/ prlights[lights[curlight]].y;
-//        inpos[1] = - /*(float)*/ prlights[lights[curlight]].z / 16.0;
-//        inpos[2] = - /*(float)*/ prlights[lights[curlight]].x;
+        inpos[0] =  /*(float)*/ prlights[lights[curlight]].y;
+        inpos[1] = - /*(float)*/ prlights[lights[curlight]].z / 16.0;
+        inpos[2] = - /*(float)*/ prlights[lights[curlight]].x;
 
-//        polymer_transformpoint(inpos, pos, curmodelviewmatrix);
+        polymer_transformpoint(inpos, pos, curmodelviewmatrix);
 
-//        // PR_BIT_SPOT_LIGHT
-//        if (programbits & prprogrambits[PR_BIT_SPOT_LIGHT].bit)
-//        {
-//            float sinang, cosang, sinhorizang, coshorizangs;
-//            float indir[3], dir[3];
+        // PR_BIT_SPOT_LIGHT
+        if (programbits & prprogrambits[PR_BIT_SPOT_LIGHT].bit)
+        {
+            var/*float */sinang=0.0, cosang=0.0, sinhorizang=0.0, coshorizangs=0.0;
+            var indir = new Float32Array(3), dir = new Float32Array(3);
 
-//            cosang =  /*(float)*/ (sintable[(-prlights[lights[curlight]].angle+1024)&2047]) / 16383.0;
-//            sinang =  /*(float)*/ (sintable[(-prlights[lights[curlight]].angle+512)&2047]) / 16383.0;
-//            coshorizangs =  /*(float)*/ (sintable[(getangle(128, prlights[lights[curlight]].horiz-100)+1024)&2047]) / 16383.0;
-//            sinhorizang =  /*(float)*/ (sintable[(getangle(128, prlights[lights[curlight]].horiz-100)+512)&2047]) / 16383.0;
+            cosang =  /*(float)*/ (sintable[(-prlights[lights[curlight]].angle+1024)&2047]) / 16383.0;
+            sinang =  /*(float)*/ (sintable[(-prlights[lights[curlight]].angle+512)&2047]) / 16383.0;
+            coshorizangs =  /*(float)*/ (sintable[(getangle(128, prlights[lights[curlight]].horiz-100)+1024)&2047]) / 16383.0;
+            sinhorizang =  /*(float)*/ (sintable[(getangle(128, prlights[lights[curlight]].horiz-100)+512)&2047]) / 16383.0;
 
-//            indir[0] = inpos[0] + sinhorizang * cosang;
-//            indir[1] = inpos[1] - coshorizangs;
-//            indir[2] = inpos[2] - sinhorizang * sinang;
+            indir[0] = inpos[0] + sinhorizang * cosang;
+            indir[1] = inpos[1] - coshorizangs;
+            indir[2] = inpos[2] - sinhorizang * sinang;
 
-//            polymer_transformpoint(indir, dir, curmodelviewmatrix);
+            polymer_transformpoint(indir, dir, curmodelviewmatrix);
 
-//            dir[0] -= pos[0];
-//            dir[1] -= pos[1];
-//            dir[2] -= pos[2];
+            dir[0] -= pos[0];
+            dir[1] -= pos[1];
+            dir[2] -= pos[2];
 
-//            indir[0] =  /*(float)*/ (sintable[(prlights[lights[curlight]].radius+512)&2047]) / 16383.0;
-//            indir[1] =  /*(float)*/ (sintable[(prlights[lights[curlight]].faderadius+512)&2047]) / 16383.0;
-//            indir[1] = 1.0 / (indir[1] - indir[0]);
+            indir[0] =  /*(float)*/ (sintable[(prlights[lights[curlight]].radius+512)&2047]) / 16383.0;
+            indir[1] =  /*(float)*/ (sintable[(prlights[lights[curlight]].faderadius+512)&2047]) / 16383.0;
+            indir[1] = 1.0 / (indir[1] - indir[0]);
 
-//            bglUniform3fvARB(prprograms[programbits].uniform_spotDir, 1, dir);
-//            bglUniform2fvARB(prprograms[programbits].uniform_spotRadius, 1, indir);
+            bglUniform3fvARB(prprograms[programbits].uniform_spotDir, 1, dir);
+            bglUniform2fvARB(prprograms[programbits].uniform_spotRadius, 1, indir);
 
-//            // PR_BIT_PROJECTION_MAP
-//            if (programbits & prprogrambits[PR_BIT_PROJECTION_MAP].bit)
-//            {
-//                GLfloat matrix[16];
+            // PR_BIT_PROJECTION_MAP
+            if (programbits & prprogrambits[PR_BIT_PROJECTION_MAP].bit)
+            {
+                var /*GLfloat */matrix = new Float32Array(16);
 
-//                bglMatrixMode(GL_TEXTURE);
-//                bglLoadMatrixf(shadowBias);
-//                bglMultMatrixf(prlights[lights[curlight]].proj);
-//                bglMultMatrixf(prlights[lights[curlight]].transform);
-//                if (material.mdspritespace == GL_TRUE)
-//                    bglMultMatrixf(spritemodelview);
-//                bglGetFloatv(GL_TEXTURE_MATRIX, matrix);
-//                bglLoadIdentity();
-//                bglMatrixMode(GL_MODELVIEW);
+                bglMatrixMode(GL_TEXTURE);
+                bglLoadMatrixf(shadowBias);
+                bglMultMatrixf(prlights[lights[curlight]].proj);
+                bglMultMatrixf(prlights[lights[curlight]].transform);
+                if (material.mdspritespace == GL_TRUE)
+                    bglMultMatrixf(spritemodelview);
+                bglGetFloatv(GL_TEXTURE_MATRIX, matrix);
+                bglLoadIdentity();
+                bglMatrixMode(GL_MODELVIEW);
 
-//                bglUniformMatrix4fvARB(prprograms[programbits].uniform_shadowProjMatrix, 1, GL_FALSE, matrix);
+                bglUniformMatrix4fvARB(prprograms[programbits].uniform_shadowProjMatrix, 1, GL_FALSE, matrix);
 
-//                // PR_BIT_SHADOW_MAP
-//                if (programbits & prprogrambits[PR_BIT_SHADOW_MAP].bit)
-//                {
-//                    bglActiveTextureARB(texunit + GL_TEXTURE0_ARB);
-//                    bglBindTexture(prrts[prlights[lights[curlight]].rtindex].target, prrts[prlights[lights[curlight]].rtindex].z);
+                // PR_BIT_SHADOW_MAP
+                if (programbits & prprogrambits[PR_BIT_SHADOW_MAP].bit)
+                {
+                    bglActiveTextureARB(texunit + GL_TEXTURE0_ARB);
+                    bglBindTexture(prrts[prlights[lights[curlight]].rtindex].target, prrts[prlights[lights[curlight]].rtindex].z);
 
-//                    bglUniform1iARB(prprograms[programbits].uniform_shadowMap, texunit);
+                    bglUniform1iARB(prprograms[programbits].uniform_shadowMap, texunit);
 
-//                    texunit++;
-//                }
+                    texunit++;
+                }
 
-//                // PR_BIT_LIGHT_MAP
-//                if (programbits & prprogrambits[PR_BIT_LIGHT_MAP].bit)
-//                {
-//                    bglActiveTextureARB(texunit + GL_TEXTURE0_ARB);
-//                    bglBindTexture(GL_TEXTURE_2D, prlights[lights[curlight]].lightmap);
+                // PR_BIT_LIGHT_MAP
+                if (programbits & prprogrambits[PR_BIT_LIGHT_MAP].bit)
+                {
+                    bglActiveTextureARB(texunit + GL_TEXTURE0_ARB);
+                    bglBindTexture(GL_TEXTURE_2D, prlights[lights[curlight]].lightmap);
 
-//                    bglUniform1iARB(prprograms[programbits].uniform_lightMap, texunit);
+                    bglUniform1iARB(prprograms[programbits].uniform_lightMap, texunit);
 
-//                    texunit++;
-//                }
-//            }
-//        }
+                    texunit++;
+                }
+            }
+        }
 
-//        range[0] = prlights[lights[curlight]].range  / 1000.0;
-//        range[1] = 1 / (range[0] * range[0]);
+        range[0] = prlights[lights[curlight]].range  / 1000.0;
+        range[1] = 1 / (range[0] * range[0]);
 
-//        color[0] = prlights[lights[curlight]].color[0]   / 255.0;
-//        color[1] = prlights[lights[curlight]].color[1]   / 255.0;
-//        color[2] = prlights[lights[curlight]].color[2]   / 255.0;
+        color[0] = prlights[lights[curlight]].color[0]   / 255.0;
+        color[1] = prlights[lights[curlight]].color[1]   / 255.0;
+        color[2] = prlights[lights[curlight]].color[2]   / 255.0;
 
-//        // If this isn't a lighting-only pass, just negate the components
-//        if (!curlight && prlights[lights[curlight]].publicflags.negative) {
-//            color[0] = -color[0];
-//            color[1] = -color[1];
-//            color[2] = -color[2];
-//        }
+        // If this isn't a lighting-only pass, just negate the components
+        if (!curlight && prlights[lights[curlight]].publicflags.negative) {
+            color[0] = -color[0];
+            color[1] = -color[1];
+            color[2] = -color[2];
+        }
 
-//        bglLightfv(GL_LIGHT0, GL_AMBIENT, pos);
-//        bglLightfv(GL_LIGHT0, GL_DIFFUSE, color);
-//        if (material.mdspritespace == GL_TRUE) {
-//            float mdspritespacepos[3];
-//            polymer_transformpoint(inpos, mdspritespacepos, (float *)mdspritespace);
-//            bglLightfv(GL_LIGHT0, GL_SPECULAR, mdspritespacepos);
-//        } else {
-//            bglLightfv(GL_LIGHT0, GL_SPECULAR, inpos);
-//        }
-//        bglLightfv(GL_LIGHT0, GL_LINEAR_ATTENUATION, &range[1]);
-//    }
+        bglLightfv(GL_LIGHT0, GL_AMBIENT, pos);
+        bglLightfv(GL_LIGHT0, GL_DIFFUSE, color);
+        if (material.mdspritespace == GL_TRUE) {
+            var/*float */mdspritespacepos = new Float32Array(3);
+            polymer_transformpoint(inpos, mdspritespacepos, (float *)mdspritespace);
+            bglLightfv(GL_LIGHT0, GL_SPECULAR, mdspritespacepos);
+        } else {
+            bglLightfv(GL_LIGHT0, GL_SPECULAR, inpos);
+        }
+        bglLightfv(GL_LIGHT0, GL_LINEAR_ATTENUATION, &range[1]);
+    }
 
-//    bglActiveTextureARB(GL_TEXTURE0_ARB);
+    bglActiveTextureARB(GL_TEXTURE0_ARB);
 
-//    return (programbits);
-//}
+    return (programbits);
+}
 
 //static void         polymer_unbindmaterial(int32_t programbits)
 //{

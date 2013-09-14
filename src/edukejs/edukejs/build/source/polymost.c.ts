@@ -4630,7 +4630,7 @@ function polymost_dorotatesprite(sx: number, sy: number, z: number, a: number, p
 //        
 //# ifdef POLYMER
         if (getrendermode() == REND_POLYMER) {
-            todoThrow("polymer_inb4rotatesprite(picnum, dapalnum, dashade);");
+            polymer_inb4rotatesprite(picnum, dapalnum, dashade);
             r_detailmapping = 0;
             r_glowmapping = 0;
         }
