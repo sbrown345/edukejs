@@ -137,7 +137,7 @@ class /*s_prmaterial*/ _prmaterial {
         this.nextframedata=0;             
         // PR_BIT_NORMAL_MAP              
         this.normalmap=0;                 
-        this.normalbias = new Float32Array(2);
+        this.normalbias = set0OrNewArray(this.diffusescale, Float32Array, 2);
         this.tbn=0;                       
         // PR_BIT_ART_MAP                 
         this.artmap=0;                    
@@ -147,18 +147,18 @@ class /*s_prmaterial*/ _prmaterial {
         this.visibility=0;                
         // PR_BIT_DIFFUSE_MAP             
         this.diffusemap=0;                
-        this.diffusescale = emptyOrNewArray(this.diffusescale, Float32Array, 2)
+        this.diffusescale = set0OrNewArray(this.diffusescale, Float32Array, 2);
         // PR_BIT_HIGHPALOOKUP_MAP        
         this.highpalookupmap=0;           
         // PR_BIT_DIFFUSE_DETAIL_MAP      
         this.detailmap=0;                 
-        this.detailscale = new Float32Array(2);
+        this.detailscale = set0OrNewArray(this.detailscale, Float32Array, 2);
         // PR_BIT_DIFFUSE_MODULATION      
-        this.diffusemodulation = new Float32Array(4);
+        this.diffusemodulation = set0OrNewArray(this.diffusemodulation, Float32Array, 4);
         // PR_BIT_SPECULAR_MAP            
         this.specmap=0;                   
         // PR_BIT_SPECULAR_MATERIAL       
-        this.specmaterial = new Float32Array(2);
+        this.specmaterial = set0OrNewArray(this.specmaterial, Float32Array, 2);
         // PR_BIT_MIRROR_MAP              
         this.mirrormap=0;                 
         // PR_BIT_GLOW_MAP                
@@ -424,9 +424,9 @@ class _prwall/*s_prwall */{
     over:_prplane;
     mask:_prplane;
     // stuff
-    bigportal:number;        //GLfloat*        
-    cap:number;              //GLfloat*        
-    stuffvbo:number;         //GLuint          
+    bigportal:Float32Array;        //GLfloat*        
+    cap:Float32Array;              //GLfloat*        
+    stuffvbo:WebGLBuffer;         //GLuint          
     // build wall data
     cstat:number; nwallcstat:number;                            //int16_t         
     picnum:number; overpicnum:number; nwallpicnum:number;              //int16_t         
@@ -444,9 +444,9 @@ class _prwall/*s_prwall */{
         if(this.over) this.over.init(); else this.over= new _prplane();
         if(this.mask) this.mask.init(); else this.mask= new _prplane();
         // stuff       
-        this.bigportal=0;        //GLfloat*        
-        this.cap=0;              //GLfloat*        
-        this.stuffvbo=0;         //GLuint          
+        this.bigportal=null;        //GLfloat*        
+        this.cap=null;              //GLfloat*        
+        this.stuffvbo=null;         //GLuint          
         // build wall data
         this.cstat=0; this.nwallcstat=0;                           //int16_t         
         this.picnum=0; this.overpicnum=0; this.nwallpicnum=0;             //int16_t         

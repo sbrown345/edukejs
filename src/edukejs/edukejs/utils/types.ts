@@ -83,9 +83,14 @@ function multiDimArray <T>(arrayClass: any, num: number, arrLength: number): T[]
 }
 
 // todo: rename
-function set0OrNewArray(array, type:any, length:number):any {
+// arguments are only optional so an error isn't thrown if array is undefined (custom typescript version)
+function set0OrNewArray(array?, type?:any, length?:number):any {
     if(!array) {
         return new type(length);
+    }
+
+    for (var i = 0; i < array.length; i++) {
+        array[i] = 0;
     }
 
     return array;

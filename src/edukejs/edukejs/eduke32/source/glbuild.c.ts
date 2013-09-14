@@ -331,14 +331,14 @@ var bglActiveTextureARB = gl.activeTexture.bind(gl); //bglActiveTextureARBProcPt
 //bglDeleteFramebuffersEXTProcPtr bglDeleteFramebuffersEXT;
 
 // Vertex Buffer Objects
-//bglGenBuffersARBProcPtr bglGenBuffersARB;
+//bglGenBuffersARBProcPtr bglGenBuffersARB; // use gl.createBuffer instead
 var bglBindBufferARB = gl.bindBuffer.bind(gl);
 //bglDeleteBuffersARBProcPtr bglDeleteBuffersARB;
 var bglBufferDataARB = gl.bufferData.bind(gl);
-var bglBufferSubDataARB = function(target:number, offset:number, size: number, data: ArrayBufferView ) {
+var bglBufferSubDataARB = function(target:number, offset:number, size: number, data: any /*ArrayBufferView|number*/ ) {
     if(offset > 0) todoThrow("maybe need todo a subarray");
-    gl.bufferSubData.call(gl, offset, data);
-}
+    gl.bufferSubData.call(gl, target, offset, data);
+};
 //bglMapBufferARBProcPtr bglMapBufferARB;
 //bglUnmapBufferARBProcPtr bglUnmapBufferARB;
 
