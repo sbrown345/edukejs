@@ -267,7 +267,7 @@ class /*s_prrograminfo*/  _prprograminfo{
     }
 }                   
 
-//#define             PR_INFO_LOG_BUFFER_SIZE 8192
+var PR_INFO_LOG_BUFFER_SIZE=8192;
 
 //// Think about changing highPal[Scale|Bias] in the program bit if you change this
 //#define             PR_HIGHPALOOKUP_BIT_DEPTH 6
@@ -325,13 +325,27 @@ class _prplane     /*s_prplane*/ {
         this.buffer = null;
         this.vertcount = 0;
         this.vbo = 0;
-        this.tbn = multiDimArray(Float32Array, 3, 3);
+        if(typeof this.tbn === "undefined") 
+            this.tbn = multiDimArray(Float32Array, 3, 3);
+        else {
+            for (var j = 0; j < 3; j++) {
+                for (var k = 0; k < 3; k++) {
+                    this.tbn[j][k] = 0;
+                }
+            }
+        }
         this.plane = new Float32Array(4);
         this.material = new _prmaterial();
         this.indices = 0;
         this.indicescount = 0;
         this.ivbo = 0;
-        this.lights = new Int16Array(PR_MAXLIGHTS);
+        if(typeof this.lights === "undefined") 
+            this.lights = new Int16Array(PR_MAXLIGHTS);
+        else {
+            for (var i = 0; i < this.lights.length; i++) {
+                this.lights[i] = 0;
+            }
+        }
         this.lightcount = 0;
     }
 
@@ -385,7 +399,7 @@ class/*      s_prsector */_prsector{
         this.floorshade=0;                                             
         this.floorpal=0; this.floorxpanning=0; this.floorypanning=0;       
         this.visibility=0;                                             
-        this.flags = new flags();
+        if(this.flags) this.flags.init(); else this.flags = new flags();
         this.invalidid=0;
     }
 
@@ -415,9 +429,9 @@ class _prwall/*s_prwall */{
     flags: flags;
 
     init() {
-        this.wall= new _prplane();
-        this.over= new _prplane();
-        this.mask= new _prplane();
+        if(this.wall) this.wall.init(); else this.wall= new _prplane();
+        if(this.over) this.over.init(); else this.over= new _prplane();
+        if(this.mask) this.mask.init(); else this.mask= new _prplane();
         // stuff       
         this.bigportal=0;        //GLfloat*        
         this.cap=0;              //GLfloat*        
@@ -431,7 +445,7 @@ class _prwall/*s_prwall */{
         this.nwallshade=0;                                  //int8_t      
         this.underover=0;
         this.invalidid=0;
-        this.flags = new flags();
+        if(this.flags) this.flags.init(); else this.flags = new flags();
     }
 
     constructor() {
@@ -443,10 +457,13 @@ class flags {
     empty     :number;         //    int32_t     
     uptodate  :number;         //    int32_t     
     invalidtex:number;         //    int32_t     
-    constructor() {
+    init() {
         this.empty      = 1;
         this.uptodate   = 1;
         this.invalidtex = 1;
+    }    
+    constructor() {
+        this.init();
     }
 }
 

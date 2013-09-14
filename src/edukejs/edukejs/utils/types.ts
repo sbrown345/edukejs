@@ -82,6 +82,26 @@ function multiDimArray <T>(arrayClass: any, num: number, arrLength: number): T[]
     return multiDimArray;
 }
 
+function to2dMatrix(multiDimMatrix: Float32Array[]):Float32Array {
+    return new Float32Array([ 
+        multiDimMatrix[0][0],
+        multiDimMatrix[1][0],
+        multiDimMatrix[2][0],
+        multiDimMatrix[3][0],
+        multiDimMatrix[0][1],
+        multiDimMatrix[1][1],
+        multiDimMatrix[2][1],
+        multiDimMatrix[3][1],
+        multiDimMatrix[0][2],
+        multiDimMatrix[1][2],
+        multiDimMatrix[2][2],
+        multiDimMatrix[3][2],
+        multiDimMatrix[0][3],
+        multiDimMatrix[1][3],
+        multiDimMatrix[2][3],
+        multiDimMatrix[3][3]]);
+}
+
 class Ptr {
     //buf: ArrayBuffer;
     array: Uint8Array;

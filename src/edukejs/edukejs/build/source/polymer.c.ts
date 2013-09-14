@@ -194,13 +194,13 @@ var/*int32_t         */lightcount=0;
 var /*int32_t         */curlight=0;
 //#pragma pack(pop)
 
-//static const GLfloat  shadowBias[] =
-//{
-//    0.5, 0.0, 0.0, 0.0,
-//    0.0, 0.5, 0.0, 0.0,
-//    0.0, 0.0, 0.5, 0.0,
-//    0.5, 0.5, 0.5, 1.0
-//};
+var shadowBias =  new Float32Array(
+[
+    0.5, 0.0, 0.0, 0.0,
+    0.0, 0.5, 0.0, 0.0,
+    0.0, 0.0, 0.5, 0.0,
+    0.5, 0.5, 0.5, 1.0
+]);
 
 // MATERIALS
 var  prprogrambits: _prprogrambit[] /*[PR_BIT_COUNT]*/ = [
@@ -675,7 +675,7 @@ var  prprogrambits: _prprogrambit[] /*[PR_BIT_COUNT]*/ = [
         "\n",
         // frag_prog
         "  gl_FragColor = result;\n"+
-        "}\n",
+        "}\n"
     )
 ];
 
@@ -691,9 +691,9 @@ var /*int32_t         */rotatespritematerialbits:number;
 
 //// CONTROL
 //GLfloat         spritemodelview[16];
-//GLfloat         mdspritespace[4][4];
+var mdspritespace:Float32Array[] = multiDimArray<Float32Array>(Float32Array, 4, 4);
 //GLfloat         rootmodelviewmatrix[16];
-//GLfloat         *curmodelviewmatrix;
+var curmodelviewmatrix: Float32Array;
 //GLfloat         rootskymodelviewmatrix[16];
 //GLfloat         *curskymodelviewmatrix;
 
@@ -1363,7 +1363,7 @@ function polymer_loadboard():void
 
 function polymer_inb4rotatesprite(/*int16_t */tilenum:number, /*char */pal:number, /*int8_t */shade:number):void
 {
-    var rotatespritematerial:_prmaterial;
+    var rotatespritematerial = new _prmaterial();
 
     polymer_getbuildmaterial(rotatespritematerial, tilenum, pal, shade, 0, 4);
 
@@ -3469,21 +3469,21 @@ function /*void         */polymer_updatewall(/*int16_t */wallnum:number): void
 //    out[2] = in_a[0] * in_b[1] - in_a[1] * in_b[0];
 //}
 
-//static inline void  polymer_transformpoint(const float* inpos, float* pos, float* matrix)
-//{
-//    pos[0] = inpos[0] * matrix[0] +
-//             inpos[1] * matrix[4] +
-//             inpos[2] * matrix[8] +
-//                      + matrix[12];
-//    pos[1] = inpos[0] * matrix[1] +
-//             inpos[1] * matrix[5] +
-//             inpos[2] * matrix[9] +
-//                      + matrix[13];
-//    pos[2] = inpos[0] * matrix[2] +
-//             inpos[1] * matrix[6] +
-//             inpos[2] * matrix[10] +
-//                      + matrix[14];
-//}
+function polymer_transformpoint(/*const float* */inpos:Float32Array, pos:Float32Array, matrix:Float32Array):void
+{
+    pos[0] = inpos[0] * matrix[0] +
+             inpos[1] * matrix[4] +
+             inpos[2] * matrix[8] +
+                      + matrix[12];
+    pos[1] = inpos[0] * matrix[1] +
+             inpos[1] * matrix[5] +
+             inpos[2] * matrix[9] +
+                      + matrix[13];
+    pos[2] = inpos[0] * matrix[2] +
+             inpos[1] * matrix[6] +
+             inpos[2] * matrix[10] +
+                      + matrix[14];
+}
 
 //static inline void  polymer_normalize(float* vec)
 //{
@@ -4918,20 +4918,20 @@ function /* int32_t      */polymer_bindmaterial( material:_prmaterial, lights:In
 
     // PR_BIT_LIGHTING_PASS
     if (programbits & prprogrambits[PR_BIT_LIGHTING_PASS].bit)
-    {
-        bglPushAttrib(GL_COLOR_BUFFER_BIT);
-        bglEnable(GL_BLEND);
-        bglBlendFunc(GL_ONE, GL_ONE);
+    {todoThrow();
+        //bglPushAttrib(GL_COLOR_BUFFER_BIT);
+        //bglEnable(GL_BLEND);
+        //bglBlendFunc(GL_ONE, GL_ONE);
 
-        if (prlights[lights[curlight]].publicflags.negative) {
-            bglBlendEquation(GL_FUNC_REVERSE_SUBTRACT);
-        }
+        //if (prlights[lights[curlight]].publicflags.negative) {
+        //    bglBlendEquation(GL_FUNC_REVERSE_SUBTRACT);
+        //}
     }
 
     // PR_BIT_NORMAL_MAP
     if (programbits & prprogrambits[PR_BIT_NORMAL_MAP].bit)
     {
-        var pos = new Float32Array(3), bia = new Float32Array(2);
+        var pos = new Float32Array(3), bias = new Float32Array(2);
 
         pos[0] =   /*(float)*/  globalposy;
         pos[1] = -  /*(float)*/  (globalposz) / 16.0;
@@ -4942,7 +4942,8 @@ function /* int32_t      */polymer_bindmaterial( material:_prmaterial, lights:In
 
         if (material.mdspritespace == GL_TRUE) {
             var mdspritespacepos = new Float32Array(3);
-            polymer_transformpoint(pos, mdspritespacepos, (float *)mdspritespace);
+            todoThrow();
+            polymer_transformpoint(pos, mdspritespacepos, /*(float *)*/to2dMatrix(mdspritespace));
             bglUniform3fvARB(prprograms[programbits].uniform_eyePosition, 1, mdspritespacepos);
         } else
             bglUniform3fvARB(prprograms[programbits].uniform_eyePosition, 1, pos);
@@ -4961,15 +4962,15 @@ function /* int32_t      */polymer_bindmaterial( material:_prmaterial, lights:In
 
             bglVertexAttribPointerARB(prprograms[programbits].attrib_T,
                                       3, GL_FLOAT, GL_FALSE,
-                                      sizeof  /*(float)*/   * 15,
+                                      /* sizeof(float)*/ 4   * 15,
                                       material.tbn);
             bglVertexAttribPointerARB(prprograms[programbits].attrib_B,
                                       3, GL_FLOAT, GL_FALSE,
-                                      sizeof  /*(float)*/   * 15,
+                                      /* sizeof(float)*/ 4  * 15,
                                       material.tbn + 3);
             bglVertexAttribPointerARB(prprograms[programbits].attrib_N,
                                       3, GL_FLOAT, GL_FALSE,
-                                      sizeof  /*(float)*/   * 15,
+                                      /* sizeof(float)*/ 4   * 15,
                                       material.tbn + 6);
         }
 
@@ -5206,17 +5207,17 @@ function /* int32_t      */polymer_bindmaterial( material:_prmaterial, lights:In
             color[1] = -color[1];
             color[2] = -color[2];
         }
-
-        bglLightfv(GL_LIGHT0, GL_AMBIENT, pos);
-        bglLightfv(GL_LIGHT0, GL_DIFFUSE, color);
-        if (material.mdspritespace == GL_TRUE) {
-            var/*float */mdspritespacepos = new Float32Array(3);
-            polymer_transformpoint(inpos, mdspritespacepos, (float *)mdspritespace);
-            bglLightfv(GL_LIGHT0, GL_SPECULAR, mdspritespacepos);
-        } else {
-            bglLightfv(GL_LIGHT0, GL_SPECULAR, inpos);
-        }
-        bglLightfv(GL_LIGHT0, GL_LINEAR_ATTENUATION, &range[1]);
+        todoThrow();
+        //bglLightfv(GL_LIGHT0, GL_AMBIENT, pos);
+        //bglLightfv(GL_LIGHT0, GL_DIFFUSE, color);
+        //if (material.mdspritespace == GL_TRUE) {
+        //    var/*float */mdspritespacepos = new Float32Array(3);
+        //    polymer_transformpoint(inpos, mdspritespacepos, (float *)mdspritespace);
+        //    bglLightfv(GL_LIGHT0, GL_SPECULAR, mdspritespacepos);
+        //} else {
+        //    bglLightfv(GL_LIGHT0, GL_SPECULAR, inpos);
+        //}
+        //bglLightfv(GL_LIGHT0, GL_LINEAR_ATTENUATION, &range[1]);
     }
 
     bglActiveTextureARB(GL_TEXTURE0_ARB);
@@ -5253,192 +5254,192 @@ function /* int32_t      */polymer_bindmaterial( material:_prmaterial, lights:In
 //    bglUseProgramObjectARB(0);
 //}
 
-//static void         polymer_compileprogram(int32_t programbits)
-//{
-//    int32_t         i, enabledbits;
-//    GLhandleARB     vert, frag, program;
-//    const GLcharARB*      source[PR_BIT_COUNT * 2];
-//    GLcharARB       infobuffer[PR_INFO_LOG_BUFFER_SIZE];
-//    GLint           linkstatus;
+function polymer_compileprogram(/*int32_t */programbits:number):void
+{
+    var/*int32_t         */i:number, enabledbits:number;
+    var/*GLhandleARB     */vert:WebGLShader, frag:WebGLShader, program:WebGLProgram;
+    var /*const GLcharARB*      */source:string;// = new Uint8Array(PR_BIT_COUNT * 2);
+    var/*GLcharARB       */infobuffer = new Uint8Array(PR_INFO_LOG_BUFFER_SIZE);
+    var/*GLint           */linkstatus:number;
+    debugger
+    // --------- VERTEX
+    vert = bglCreateShaderObjectARB(GL_VERTEX_SHADER_ARB);
 
-//    // --------- VERTEX
-//    vert = bglCreateShaderObjectARB(GL_VERTEX_SHADER_ARB);
+    enabledbits = i = 0;
+    while (i < PR_BIT_COUNT)
+    {
+        if (programbits & prprogrambits[i].bit)
+            source[enabledbits++] = prprogrambits[i].vert_def;
+        i++;
+    }
+    i = 0;
+    while (i < PR_BIT_COUNT)
+    {
+        if (programbits & prprogrambits[i].bit)
+            source[enabledbits++] = prprogrambits[i].vert_prog;
+        i++;
+    }
 
-//    enabledbits = i = 0;
-//    while (i < PR_BIT_COUNT)
-//    {
-//        if (programbits & prprogrambits[i].bit)
-//            source[enabledbits++] = prprogrambits[i].vert_def;
-//        i++;
-//    }
-//    i = 0;
-//    while (i < PR_BIT_COUNT)
-//    {
-//        if (programbits & prprogrambits[i].bit)
-//            source[enabledbits++] = prprogrambits[i].vert_prog;
-//        i++;
-//    }
+    bglShaderSourceARB(vert, enabledbits, source, NULL);
 
-//    bglShaderSourceARB(vert, enabledbits, source, NULL);
+    bglCompileShaderARB(vert);
 
-//    bglCompileShaderARB(vert);
+    // --------- FRAGMENT
+    frag = bglCreateShaderObjectARB(GL_FRAGMENT_SHADER_ARB);
 
-//    // --------- FRAGMENT
-//    frag = bglCreateShaderObjectARB(GL_FRAGMENT_SHADER_ARB);
+    enabledbits = i = 0;
+    while (i < PR_BIT_COUNT)
+    {
+        if (programbits & prprogrambits[i].bit)
+            source[enabledbits++] = prprogrambits[i].frag_def;
+        i++;
+    }
+    i = 0;
+    while (i < PR_BIT_COUNT)
+    {
+        if (programbits & prprogrambits[i].bit)
+            source[enabledbits++] = prprogrambits[i].frag_prog;
+        i++;
+    }
 
-//    enabledbits = i = 0;
-//    while (i < PR_BIT_COUNT)
-//    {
-//        if (programbits & prprogrambits[i].bit)
-//            source[enabledbits++] = prprogrambits[i].frag_def;
-//        i++;
-//    }
-//    i = 0;
-//    while (i < PR_BIT_COUNT)
-//    {
-//        if (programbits & prprogrambits[i].bit)
-//            source[enabledbits++] = prprogrambits[i].frag_prog;
-//        i++;
-//    }
+    bglShaderSourceARB(frag, enabledbits, /*(const GLcharARB**)*/source, NULL);
 
-//    bglShaderSourceARB(frag, enabledbits, (const GLcharARB**)source, NULL);
+    bglCompileShaderARB(frag);
 
-//    bglCompileShaderARB(frag);
+    // --------- PROGRAM
+    program = bglCreateProgramObjectARB();
 
-//    // --------- PROGRAM
-//    program = bglCreateProgramObjectARB();
+    bglAttachObjectARB(program, vert);
+    bglAttachObjectARB(program, frag);
 
-//    bglAttachObjectARB(program, vert);
-//    bglAttachObjectARB(program, frag);
+    bglLinkProgramARB(program);
 
-//    bglLinkProgramARB(program);
+    linkstatus = bglGetObjectParameterivARB(program, GL_OBJECT_LINK_STATUS_ARB)//bglGetObjectParameterivARB(program, GL_OBJECT_LINK_STATUS_ARB, &linkstatus);
 
-//    bglGetObjectParameterivARB(program, GL_OBJECT_LINK_STATUS_ARB, &linkstatus);
+    bglGetInfoLogARB(program, PR_INFO_LOG_BUFFER_SIZE, NULL, infobuffer);
 
-//    bglGetInfoLogARB(program, PR_INFO_LOG_BUFFER_SIZE, NULL, infobuffer);
-
-//    prprograms[programbits].handle = program;
+    prprograms[programbits].handle = program;
 
 //#ifdef DEBUGGINGAIDS
 //    if (pr_verbosity >= 1)
 //#else
-//    if (pr_verbosity >= 2)
+    if (pr_verbosity >= 2)
 //#endif
-//        OSD_Printf("PR : Compiling GPU program with bits (octal) %o...\n", (unsigned)programbits);
-//    if (!linkstatus) {
-//        OSD_Printf("PR : Failed to compile GPU program with bits (octal) %o!\n", (unsigned)programbits);
-//        if (pr_verbosity >= 1) OSD_Printf("PR : Compilation log:\n%s\n", infobuffer);
-//        bglGetShaderSourceARB(vert, PR_INFO_LOG_BUFFER_SIZE, NULL, infobuffer);
-//        if (pr_verbosity >= 1) OSD_Printf("PR : Vertex source dump:\n%s\n", infobuffer);
-//        bglGetShaderSourceARB(frag, PR_INFO_LOG_BUFFER_SIZE, NULL, infobuffer);
-//        if (pr_verbosity >= 1) OSD_Printf("PR : Fragment source dump:\n%s\n", infobuffer);
-//    }
+        OSD_Printf("PR : Compiling GPU program with bits (octal) %o...\n", unsigned(programbits));
+    if (!linkstatus) {
+        OSD_Printf("PR : Failed to compile GPU program with bits (octal) %o!\n", unsigned(programbits));
+        if (pr_verbosity >= 1) OSD_Printf("PR : Compilation log:\n%s\n", infobuffer);
+        bglGetShaderSourceARB(vert, PR_INFO_LOG_BUFFER_SIZE, NULL, infobuffer);
+        if (pr_verbosity >= 1) OSD_Printf("PR : Vertex source dump:\n%s\n", infobuffer);
+        bglGetShaderSourceARB(frag, PR_INFO_LOG_BUFFER_SIZE, NULL, infobuffer);
+        if (pr_verbosity >= 1) OSD_Printf("PR : Fragment source dump:\n%s\n", infobuffer);
+    }
 
-//    // --------- ATTRIBUTE/UNIFORM LOCATIONS
+    // --------- ATTRIBUTE/UNIFORM LOCATIONS
 
-//    // PR_BIT_ANIM_INTERPOLATION
-//    if (programbits & prprogrambits[PR_BIT_ANIM_INTERPOLATION].bit)
-//    {
-//        prprograms[programbits].attrib_nextFrameData = bglGetAttribLocationARB(program, "nextFrameData");
-//        prprograms[programbits].attrib_nextFrameNormal = bglGetAttribLocationARB(program, "nextFrameNormal");
-//        prprograms[programbits].uniform_frameProgress = bglGetUniformLocationARB(program, "frameProgress");
-//    }
+    // PR_BIT_ANIM_INTERPOLATION
+    if (programbits & prprogrambits[PR_BIT_ANIM_INTERPOLATION].bit)
+    {
+        prprograms[programbits].attrib_nextFrameData = bglGetAttribLocationARB(program, "nextFrameData");
+        prprograms[programbits].attrib_nextFrameNormal = bglGetAttribLocationARB(program, "nextFrameNormal");
+        prprograms[programbits].uniform_frameProgress = bglGetUniformLocationARB(program, "frameProgress");
+    }
 
-//    // PR_BIT_NORMAL_MAP
-//    if (programbits & prprogrambits[PR_BIT_NORMAL_MAP].bit)
-//    {
-//        prprograms[programbits].attrib_T = bglGetAttribLocationARB(program, "T");
-//        prprograms[programbits].attrib_B = bglGetAttribLocationARB(program, "B");
-//        prprograms[programbits].attrib_N = bglGetAttribLocationARB(program, "N");
-//        prprograms[programbits].uniform_eyePosition = bglGetUniformLocationARB(program, "eyePosition");
-//        prprograms[programbits].uniform_normalMap = bglGetUniformLocationARB(program, "normalMap");
-//        prprograms[programbits].uniform_normalBias = bglGetUniformLocationARB(program, "normalBias");
-//    }
+    // PR_BIT_NORMAL_MAP
+    if (programbits & prprogrambits[PR_BIT_NORMAL_MAP].bit)
+    {
+        prprograms[programbits].attrib_T = bglGetAttribLocationARB(program, "T");
+        prprograms[programbits].attrib_B = bglGetAttribLocationARB(program, "B");
+        prprograms[programbits].attrib_N = bglGetAttribLocationARB(program, "N");
+        prprograms[programbits].uniform_eyePosition = bglGetUniformLocationARB(program, "eyePosition");
+        prprograms[programbits].uniform_normalMap = bglGetUniformLocationARB(program, "normalMap");
+        prprograms[programbits].uniform_normalBias = bglGetUniformLocationARB(program, "normalBias");
+    }
 
-//    // PR_BIT_ART_MAP
-//    if (programbits & prprogrambits[PR_BIT_ART_MAP].bit)
-//    {
-//        prprograms[programbits].uniform_artMap = bglGetUniformLocationARB(program, "artMap");
-//        prprograms[programbits].uniform_basePalMap = bglGetUniformLocationARB(program, "basePalMap");
-//        prprograms[programbits].uniform_lookupMap = bglGetUniformLocationARB(program, "lookupMap");
-//        prprograms[programbits].uniform_shadeOffset = bglGetUniformLocationARB(program, "shadeOffset");
-//        prprograms[programbits].uniform_visibility = bglGetUniformLocationARB(program, "visibility");
-//    }
+    // PR_BIT_ART_MAP
+    if (programbits & prprogrambits[PR_BIT_ART_MAP].bit)
+    {
+        prprograms[programbits].uniform_artMap = bglGetUniformLocationARB(program, "artMap");
+        prprograms[programbits].uniform_basePalMap = bglGetUniformLocationARB(program, "basePalMap");
+        prprograms[programbits].uniform_lookupMap = bglGetUniformLocationARB(program, "lookupMap");
+        prprograms[programbits].uniform_shadeOffset = bglGetUniformLocationARB(program, "shadeOffset");
+        prprograms[programbits].uniform_visibility = bglGetUniformLocationARB(program, "visibility");
+    }
 
-//    // PR_BIT_DIFFUSE_MAP
-//    if (programbits & prprogrambits[PR_BIT_DIFFUSE_MAP].bit)
-//    {
-//        prprograms[programbits].uniform_diffuseMap = bglGetUniformLocationARB(program, "diffuseMap");
-//        prprograms[programbits].uniform_diffuseScale = bglGetUniformLocationARB(program, "diffuseScale");
-//    }
+    // PR_BIT_DIFFUSE_MAP
+    if (programbits & prprogrambits[PR_BIT_DIFFUSE_MAP].bit)
+    {
+        prprograms[programbits].uniform_diffuseMap = bglGetUniformLocationARB(program, "diffuseMap");
+        prprograms[programbits].uniform_diffuseScale = bglGetUniformLocationARB(program, "diffuseScale");
+    }
 
-//    // PR_BIT_HIGHPALOOKUP_MAP
-//    if (programbits & prprogrambits[PR_BIT_HIGHPALOOKUP_MAP].bit)
-//    {
-//        prprograms[programbits].uniform_highPalookupMap = bglGetUniformLocationARB(program, "highPalookupMap");
-//    }
+    // PR_BIT_HIGHPALOOKUP_MAP
+    if (programbits & prprogrambits[PR_BIT_HIGHPALOOKUP_MAP].bit)
+    {
+        prprograms[programbits].uniform_highPalookupMap = bglGetUniformLocationARB(program, "highPalookupMap");
+    }
 
-//    // PR_BIT_DIFFUSE_DETAIL_MAP
-//    if (programbits & prprogrambits[PR_BIT_DIFFUSE_DETAIL_MAP].bit)
-//    {
-//        prprograms[programbits].uniform_detailMap = bglGetUniformLocationARB(program, "detailMap");
-//        prprograms[programbits].uniform_detailScale = bglGetUniformLocationARB(program, "detailScale");
-//    }
+    // PR_BIT_DIFFUSE_DETAIL_MAP
+    if (programbits & prprogrambits[PR_BIT_DIFFUSE_DETAIL_MAP].bit)
+    {
+        prprograms[programbits].uniform_detailMap = bglGetUniformLocationARB(program, "detailMap");
+        prprograms[programbits].uniform_detailScale = bglGetUniformLocationARB(program, "detailScale");
+    }
 
-//    // PR_BIT_SPECULAR_MAP
-//    if (programbits & prprogrambits[PR_BIT_SPECULAR_MAP].bit)
-//    {
-//        prprograms[programbits].uniform_specMap = bglGetUniformLocationARB(program, "specMap");
-//    }
+    // PR_BIT_SPECULAR_MAP
+    if (programbits & prprogrambits[PR_BIT_SPECULAR_MAP].bit)
+    {
+        prprograms[programbits].uniform_specMap = bglGetUniformLocationARB(program, "specMap");
+    }
 
-//    // PR_BIT_SPECULAR_MATERIAL
-//    if (programbits & prprogrambits[PR_BIT_SPECULAR_MATERIAL].bit)
-//    {
-//        prprograms[programbits].uniform_specMaterial = bglGetUniformLocationARB(program, "specMaterial");
-//    }
+    // PR_BIT_SPECULAR_MATERIAL
+    if (programbits & prprogrambits[PR_BIT_SPECULAR_MATERIAL].bit)
+    {
+        prprograms[programbits].uniform_specMaterial = bglGetUniformLocationARB(program, "specMaterial");
+    }
 
-//    // PR_BIT_MIRROR_MAP
-//    if (programbits & prprogrambits[PR_BIT_MIRROR_MAP].bit)
-//    {
-//        prprograms[programbits].uniform_mirrorMap = bglGetUniformLocationARB(program, "mirrorMap");
-//    }
+    // PR_BIT_MIRROR_MAP
+    if (programbits & prprogrambits[PR_BIT_MIRROR_MAP].bit)
+    {
+        prprograms[programbits].uniform_mirrorMap = bglGetUniformLocationARB(program, "mirrorMap");
+    }
 //#ifdef PR_LINEAR_FOG
-//    if (programbits & prprogrambits[PR_BIT_FOG].bit)
-//    {
-//        prprograms[programbits].uniform_linearFog = bglGetUniformLocationARB(program, "linearFog");        
-//    }
+    if (programbits & prprogrambits[PR_BIT_FOG].bit)
+    {
+        prprograms[programbits].uniform_linearFog = bglGetUniformLocationARB(program, "linearFog");        
+    }
 //#endif
-//    // PR_BIT_GLOW_MAP
-//    if (programbits & prprogrambits[PR_BIT_GLOW_MAP].bit)
-//    {
-//        prprograms[programbits].uniform_glowMap = bglGetUniformLocationARB(program, "glowMap");
-//    }
+    // PR_BIT_GLOW_MAP
+    if (programbits & prprogrambits[PR_BIT_GLOW_MAP].bit)
+    {
+        prprograms[programbits].uniform_glowMap = bglGetUniformLocationARB(program, "glowMap");
+    }
 
-//    // PR_BIT_PROJECTION_MAP
-//    if (programbits & prprogrambits[PR_BIT_PROJECTION_MAP].bit)
-//    {
-//        prprograms[programbits].uniform_shadowProjMatrix = bglGetUniformLocationARB(program, "shadowProjMatrix");
-//    }
+    // PR_BIT_PROJECTION_MAP
+    if (programbits & prprogrambits[PR_BIT_PROJECTION_MAP].bit)
+    {
+        prprograms[programbits].uniform_shadowProjMatrix = bglGetUniformLocationARB(program, "shadowProjMatrix");
+    }
 
-//    // PR_BIT_SHADOW_MAP
-//    if (programbits & prprogrambits[PR_BIT_SHADOW_MAP].bit)
-//    {
-//        prprograms[programbits].uniform_shadowMap = bglGetUniformLocationARB(program, "shadowMap");
-//    }
+    // PR_BIT_SHADOW_MAP
+    if (programbits & prprogrambits[PR_BIT_SHADOW_MAP].bit)
+    {
+        prprograms[programbits].uniform_shadowMap = bglGetUniformLocationARB(program, "shadowMap");
+    }
 
-//    // PR_BIT_LIGHT_MAP
-//    if (programbits & prprogrambits[PR_BIT_LIGHT_MAP].bit)
-//    {
-//        prprograms[programbits].uniform_lightMap = bglGetUniformLocationARB(program, "lightMap");
-//    }
+    // PR_BIT_LIGHT_MAP
+    if (programbits & prprogrambits[PR_BIT_LIGHT_MAP].bit)
+    {
+        prprograms[programbits].uniform_lightMap = bglGetUniformLocationARB(program, "lightMap");
+    }
 
-//    // PR_BIT_SPOT_LIGHT
-//    if (programbits & prprogrambits[PR_BIT_SPOT_LIGHT].bit)
-//    {
-//        prprograms[programbits].uniform_spotDir = bglGetUniformLocationARB(program, "spotDir");
-//        prprograms[programbits].uniform_spotRadius = bglGetUniformLocationARB(program, "spotRadius");
-//    }
-//}
+    // PR_BIT_SPOT_LIGHT
+    if (programbits & prprogrambits[PR_BIT_SPOT_LIGHT].bit)
+    {
+        prprograms[programbits].uniform_spotDir = bglGetUniformLocationARB(program, "spotDir");
+        prprograms[programbits].uniform_spotRadius = bglGetUniformLocationARB(program, "spotRadius");
+    }
+}
 
 //// LIGHTS
 //static void         polymer_removelight(int16_t lighti)

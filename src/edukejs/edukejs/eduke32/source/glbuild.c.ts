@@ -75,9 +75,17 @@ var GL_FRONT_AND_BACK = gl.FRONT_AND_BACK;
 var GL_LEQUAL = gl.LEQUAL;
 var GL_POLYGON_OFFSET_FILL = gl.POLYGON_OFFSET_FILL;
 var GL_ARRAY_BUFFER_ARB = gl.ARRAY_BUFFER;
+var GL_VERTEX_SHADER_ARB = gl.VERTEX_SHADER;
+var GL_FRAGMENT_SHADER_ARB = gl.FRAGMENT_SHADER;
+var GL_OBJECT_LINK_STATUS_ARB = gl.LINK_STATUS;
+var GL_FLOAT = gl.FLOAT;
 //var GL_FILL = gl.FILL;
 //var GL_LINE = gl.LINE;
 //var GL_POINT = gl.POINT;
+
+var GL_TEXTURE_3D = 0x806F;//todo
+var GL_TEXTURE_RECTANGLE = 0x84F5;//todo
+
 var GL_TRUE = 0;
 var GL_FALSE = 0;
 //#include "compat.h"
@@ -113,9 +121,9 @@ var bglDisable = function(v) {
     gl.disable.call(gl, v);
 }; 
 //bglGetDoublevProcPtr bglGetDoublev;
-//bglGetFloatvProcPtr bglGetFloatv;
+var bglGetFloatv = function() {todoThrow();}//bglGetFloatvProcPtr 
 var bglGetIntegerv = gl.getParameter.bind(gl); //bglGetIntegervProcPtr 
-//bglPushAttribProcPtr bglPushAttrib;
+var bglPushAttrib = function() {todoThrow();/*gone!*/};//bglPushAttribProcPtr 
 //bglPopAttribProcPtr bglPopAttrib;
 //bglGetErrorProcPtr bglGetError;
 //bglGetStringProcPtr bglGetString;
@@ -164,7 +172,10 @@ var bglLoadMatrixf = function(multiDimMatrix: Float32Array[]) {
     gl.loadMatrix.call(gl, mat);//bglLoadMatrixfProcPtr ;
 };
 //bglLoadMatrixdProcPtr bglLoadMatrixd;
-//bglMultMatrixfProcPtr bglMultMatrixf;
+var bglMultMatrixf = function() {
+    todoThrow();
+    //http://stackoverflow.com/questions/11228187/trying-and-failing-to-implement-glulookat-in-webgl
+};//bglMultMatrixfProcPtr 
 //bglMultMatrixdProcPtr bglMultMatrixd;
 //bglRotatefProcPtr bglRotatef;
 //bglScalefProcPtr bglScalef;
@@ -184,7 +195,7 @@ var bglVertex3d = bglVertex3f;//bglVertex3dProcPtr;
 //bglVertex3dvProcPtr bglVertex3dv;
 //bglRectdProcPtr bglRectd;
 var bglColor4f = gl.color.bind(gl);/*4f*/; //bglColor4fProcPtr 
-//bglColor4ubProcPtr bglColor4ub;
+var bglColor4ub = gl.color.bind(gl)//bglColor4ubProcPtr ;
 var bglTexCoord2d = gl.texCoord.bind(gl); //bglTexCoord2dProcPtr 
 //bglTexCoord2fProcPtr bglTexCoord2f;
 //bglTexCoord2iProcPtr bglTexCoord2i;
@@ -192,7 +203,7 @@ var bglTexCoord2d = gl.texCoord.bind(gl); //bglTexCoord2dProcPtr
 
 // Lighting
 //bglShadeModelProcPtr bglShadeModel;
-//bglLightfvProcPtr bglLightfv;
+var bglLightfv = function() {todoThrow();};//bglLightfvProcPtr 
 
 // Raster funcs
 //bglReadPixelsProcPtr bglReadPixels;
@@ -210,6 +221,14 @@ var bglGenTextures = function(/*GLsizei (int)*/ n: number, /*GLuint **/textures:
 //bglDeleteTexturesProcPtr bglDeleteTextures;
 var bglBindTexture =  gl.bindTexture.bind(gl);//bglBindTextureProcPtr 
 var bglTexImage2D = function(target: number, level: number, internalformat: number, width: number, height: number, border: number, format: number, type: number, pixels: ArrayBufferView) {
+    if(target === GL_TEXTURE_3D) {
+        todoThrow(); //http://stackoverflow.com/questions/14150941/webgl-glsl-emulate-texture3d
+    }
+
+    if(target === GL_TEXTURE_RECTANGLE) {
+        todoThrow(); //http://stackoverflow.com/questions/6883160/opengl-es-gl-texture-rectangle
+    }
+
     if(DEBUG_APPEND_TEXTURES_TO_BODY) {
         if(level < 2) {
             var can = <HTMLCanvasElement>document.createElement("canvas"),
@@ -284,7 +303,7 @@ var bglTexParameteri = gl. texParameteri.bind(gl);//bglTexParameteriProcPtr
 //bglDeleteProgramsARBProcPtr bglDeleteProgramsARB;
 
 //// Multitexturing
-//bglActiveTextureARBProcPtr bglActiveTextureARB;
+var bglActiveTextureARB = gl.activeTexture.bind(gl); //bglActiveTextureARBProcPtr 
 //bglClientActiveTextureARBProcPtr bglClientActiveTextureARB;
 //var bglMultiTexCoord2dARB = gl.multiTexCoord2dARB; //bglMultiTexCoord2dARBProcPtr   //https://groups.google.com/forum/#!topic/webgl-dev-list/jHejip4u-Vo
 //bglMultiTexCoord2fARBProcPtr bglMultiTexCoord2fARB;
@@ -319,38 +338,38 @@ var bglTexParameteri = gl. texParameteri.bind(gl);//bglTexParameteriProcPtr
 //bglDeleteObjectARBProcPtr bglDeleteObjectARB;
 //bglGetHandleARBProcPtr bglGetHandleARB;
 //bglDetachObjectARBProcPtr bglDetachObjectARB;
-//bglCreateShaderObjectARBProcPtr bglCreateShaderObjectARB;
-//bglShaderSourceARBProcPtr bglShaderSourceARB;
-//bglCompileShaderARBProcPtr bglCompileShaderARB;
-//bglCreateProgramObjectARBProcPtr bglCreateProgramObjectARB;
-//bglAttachObjectARBProcPtr bglAttachObjectARB;
-//bglLinkProgramARBProcPtr bglLinkProgramARB;
-//bglUseProgramObjectARBProcPtr bglUseProgramObjectARB;
+var bglCreateShaderObjectARB = gl.createShader.bind(gl); ////bglCreateShaderObjectARBProcPtr 
+var bglShaderSourceARB = gl.shaderSource.bind(gl);////bglShaderSourceARBProcPtr 
+var bglCompileShaderARB = gl.compileShader.bind(gl); //bglCompileShaderARBProcPtr 
+var bglCreateProgramObjectARB = gl.createProgram.bind(gl);//bglCreateProgramObjectARBProcPtr 
+var bglAttachObjectARB = gl.attachShader.bind(gl);//bglAttachObjectARBProcPtr 
+var bglLinkProgramARB = gl.linkProgram.bind(gl);//bglLinkProgramARBProcPtr 
+var bglUseProgramObjectARB = gl.useProgram.bind(gl);//bglUseProgramObjectARBProcPtr 
 //bglValidateProgramARBProcPtr bglValidateProgramARB;
-//bglUniform1fARBProcPtr bglUniform1fARB;
-//bglUniform2fARBProcPtr bglUniform2fARB;
-//bglUniform3fARBProcPtr bglUniform3fARB;
-//bglUniform4fARBProcPtr bglUniform4fARB;
-//bglUniform1iARBProcPtr bglUniform1iARB;
-//bglUniform2iARBProcPtr bglUniform2iARB;
-//bglUniform3iARBProcPtr bglUniform3iARB;
-//bglUniform4iARBProcPtr bglUniform4iARB;
-//bglUniform1fvARBProcPtr bglUniform1fvARB;
-//bglUniform2fvARBProcPtr bglUniform2fvARB;
-//bglUniform3fvARBProcPtr bglUniform3fvARB;
-//bglUniform4fvARBProcPtr bglUniform4fvARB;
-//bglUniform1ivARBProcPtr bglUniform1ivARB;
-//bglUniform2ivARBProcPtr bglUniform2ivARB;
-//bglUniform3ivARBProcPtr bglUniform3ivARB;
-//bglUniform4ivARBProcPtr bglUniform4ivARB;
+var bglUniform1fARB = gl.uniform1f.bind(gl);//bglUniform1fARBProcPtr 
+var bglUniform2fARB  = gl.uniform2f.bind(gl);         //bglUniform2fARBProcPtr 
+var bglUniform3fARB  = gl.uniform3f.bind(gl);         //bglUniform3fARBProcPtr 
+var bglUniform4fARB  = gl.uniform4f.bind(gl);         //bglUniform4fARBProcPtr 
+var bglUniform1iARB  = gl.uniform1i.bind(gl);         //bglUniform1iARBProcPtr 
+var bglUniform2iARB  = gl.uniform2i.bind(gl);         //bglUniform2iARBProcPtr 
+var bglUniform3iARB  = gl.uniform3i.bind(gl);         //bglUniform3iARBProcPtr 
+var bglUniform4iARB  = gl.uniform4i.bind(gl);         //bglUniform4iARBProcPtr 
+var bglUniform1fvARB = gl.uniform1fv.bind(gl);       //bglUniform1fvARBProcPtr
+var bglUniform2fvARB = gl.uniform2fv.bind(gl);       //bglUniform2fvARBProcPtr
+var bglUniform3fvARB = gl.uniform3fv.bind(gl);       //bglUniform3fvARBProcPtr
+var bglUniform4fvARB = gl.uniform4fv.bind(gl);       //bglUniform4fvARBProcPtr
+var bglUniform1ivARB = gl.uniform2iv.bind(gl);       //bglUniform1ivARBProcPtr
+var bglUniform2ivARB = gl.uniform3iv.bind(gl);       //bglUniform2ivARBProcPtr
+var bglUniform3ivARB = gl.uniform4iv.bind(gl);       //bglUniform3ivARBProcPtr
+var bglUniform4ivARB = gl.uniform4iv.bind(gl);       //bglUniform4ivARBProcPtr
 //bglUniformMatrix2fvARBProcPtr bglUniformMatrix2fvARB;
 //bglUniformMatrix3fvARBProcPtr bglUniformMatrix3fvARB;
 //bglUniformMatrix4fvARBProcPtr bglUniformMatrix4fvARB;
 //bglGetObjectParameterfvARBProcPtr bglGetObjectParameterfvARB;
-//bglGetObjectParameterivARBProcPtr bglGetObjectParameterivARB;
+var bglGetObjectParameterivARB = gl.getProgramParameter.bind(gl);//bglGetObjectParameterivARBProcPtr 
 //bglGetInfoLogARBProcPtr bglGetInfoLogARB;
 //bglGetAttachedObjectsARBProcPtr bglGetAttachedObjectsARB;
-//bglGetUniformLocationARBProcPtr bglGetUniformLocationARB;
+var bglGetUniformLocationARB = gl.getUniformLocation.bind(gl);//bglGetUniformLocationARBProcPtr 
 //bglGetActiveUniformARBProcPtr bglGetActiveUniformARB;
 //bglGetUniformfvARBProcPtr bglGetUniformfvARB;
 //bglGetUniformivARBProcPtr bglGetUniformivARB;
@@ -393,8 +412,8 @@ var bglTexParameteri = gl. texParameteri.bind(gl);//bglTexParameteriProcPtr
 //bglVertexAttrib4ubvARBProcPtr bglVertexAttrib4ubvARB;
 //bglVertexAttrib4uivARBProcPtr bglVertexAttrib4uivARB;
 //bglVertexAttrib4usvARBProcPtr bglVertexAttrib4usvARB;
-//bglVertexAttribPointerARBProcPtr bglVertexAttribPointerARB;
-//bglEnableVertexAttribArrayARBProcPtr bglEnableVertexAttribArrayARB;
+var bglVertexAttribPointerARB = gl.vertexAttribPointer.bind(gl);//bglVertexAttribPointerARBProcPtr 
+var bglEnableVertexAttribArrayARB = gl.enableVertexAttribArray.bind(gl);//bglEnableVertexAttribArrayARBProcPtr 
 //bglDisableVertexAttribArrayARBProcPtr bglDisableVertexAttribArrayARB;
 //bglGetVertexAttribdvARBProcPtr bglGetVertexAttribdvARB;
 //bglGetVertexAttribfvARBProcPtr bglGetVertexAttribfvARB;
@@ -402,7 +421,7 @@ var bglTexParameteri = gl. texParameteri.bind(gl);//bglTexParameteriProcPtr
 //bglGetVertexAttribPointervARBProcPtr bglGetVertexAttribPointervARB;
 //bglBindAttribLocationARBProcPtr bglBindAttribLocationARB;
 //bglGetActiveAttribARBProcPtr bglGetActiveAttribARB;
-//bglGetAttribLocationARBProcPtr bglGetAttribLocationARB;
+var bglGetAttribLocationARB = gl.getAttribLocation.bind(gl);//bglGetAttribLocationARBProcPtr 
 
 //// Debug Output
 //#ifndef __APPLE__
