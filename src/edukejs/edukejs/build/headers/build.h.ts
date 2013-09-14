@@ -427,12 +427,12 @@ class walltypev7 implements ITypeInfo
 
 
 //enum {
-//    SPR_XFLIP = 4,
-//    SPR_YFLIP = 8,
+var SPR_XFLIP = 4,
+    SPR_YFLIP = 8,
 
-//    SPR_WALL = 16,
-//    SPR_FLOOR = 32,
-//    SPR_ALIGN_MASK = 32+16,
+    SPR_WALL = 16,
+    SPR_FLOOR = 32,
+    SPR_ALIGN_MASK = 32+16;
 //};
 
 ////cstat:

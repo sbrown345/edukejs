@@ -4775,7 +4775,7 @@ function polymost_dorotatesprite(sx: number, sy: number, z: number, a: number, p
         if (getrendermode() == REND_POLYMER) {
             r_detailmapping = olddetailmapping;
             r_glowmapping = oldglowmapping;
-            todoThrow("polymer_postrotatesprite();");
+            polymer_postrotatesprite();
         }
 //# endif
         bglMatrixMode(GL_PROJECTION); bglPopMatrix();

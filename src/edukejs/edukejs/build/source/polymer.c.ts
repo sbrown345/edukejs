@@ -76,15 +76,15 @@ var /*int32_t */      pr_ati_nodepthoffset = 0;
 
 //int32_t         r_pr_maxlightpasses = 5; // value of the cvar (not live value), used to detect changes
 
-//GLenum          mapvbousage = GL_STREAM_DRAW_ARB;
-//GLenum          modelvbousage = GL_STATIC_DRAW_ARB;
+var mapvbousage = GL_STREAM_DRAW_ARB; //GLenum          
+var modelvbousage = GL_STATIC_DRAW_ARB; //GLenum          
 
 // BUILD DATA
 var prsectors = newStructArray<_prsector>(_prsector,MAXSECTORS);
 var prwalls = newStructArray<_prwall>(_prwall, MAXWALLS);
 var prsprites = newStructArray<_prsprite>(_prsprite, MAXSPRITES);
 var mdspritematerial:_prmaterial;
-var prhighpalookups = [];
+var prhighpalookups:_prhighpalookup[][] = [];
 for (var i = 0; i < MAXBASEPALS ; i++) {
     prhighpalookups[i] = newStructArray<_prhighpalookup>(_prhighpalookup, MAXPALOOKUPS);
 }
@@ -679,7 +679,7 @@ var  prprogrambits: _prprogrambit[] /*[PR_BIT_COUNT]*/ = [
     )
 ];
 
-var prprograms: _prprograminfo[] = newStructArray<_prprograminfo>(_prprograminfo, 1 << PR_BIT_COUNT);
+var prprograms: _prprograminfo[] = [];//newStructArray<_prprograminfo>(_prprograminfo, 1 << PR_BIT_COUNT);
 
 var overridematerial = 0;//int32_t
 var /*int32_t         */globaloldoverridematerial:number;
@@ -721,7 +721,7 @@ var curskyshade:number;    //int8_t
 
 var polymersearching=0;//int32_t         
 
-//int32_t         culledface;
+var /*int32_t         */culledface=0;
 
 // EXTERNAL FUNCTIONS
 function /*int32_t             */polymer_init(): number
@@ -780,7 +780,8 @@ function /*int32_t             */polymer_init(): number
     i = 0;
     while (i < (1 << PR_BIT_COUNT))
     {
-        prprograms[i].handle = 0;
+        if(prprograms[i])
+            prprograms[i].handle = 0;
         i++;
     }
 
@@ -1370,10 +1371,10 @@ function polymer_inb4rotatesprite(/*int16_t */tilenum:number, /*char */pal:numbe
     rotatespritematerialbits = polymer_bindmaterial(rotatespritematerial, NULL, 0);
 }
 
-//void                polymer_postrotatesprite(void)
-//{
-//    polymer_unbindmaterial(rotatespritematerialbits);
-//}
+function polymer_postrotatesprite():void
+{
+    polymer_unbindmaterial(rotatespritematerialbits);
+}
 
 //void                polymer_drawmaskwall(int32_t damaskwallcnt)
 //{
@@ -1409,12 +1410,12 @@ function polymer_inb4rotatesprite(/*int16_t */tilenum:number, /*char */pal:numbe
 //    bglDisable(GL_CULL_FACE);
 //}
 
-//void                polymer_drawsprite(int32_t snum)
+//function polymer_drawsprite(/*int32_t */snum:number):void
 //{
-//    int32_t         i, j, cs;
-//    _prsprite       *s;
+//    var /*int32_t         */i:number, j:number, cs:number;
+//    var _s: prsprite;
 
-//    spritetype      *const tspr = tspriteptr[snum];
+//    var tspr = tspriteptr[snum];
 
 //    if (pr_verbosity >= 3) OSD_Printf("PR : Sprite %i...\n", snum);
 
@@ -1427,7 +1428,7 @@ function polymer_inb4rotatesprite(/*int16_t */tilenum:number, /*char */pal:numbe
 //    if ((tspr.cstat & 16384) && (!depth || mirrors[depth-1].plane))
 //        return;
 
-//    DO_TILE_ANIM(tspr.picnum, tspr.owner+32768);
+//    if (picanm[tspr.picnum].sf & PICANM_ANIMTYPE_MASK) tspr.picnum += animateoffs(tspr.picnum, tspr.owner+32768);
 
 //    calc_and_apply_fog(tspr.picnum, tspr.shade, sector[tspr.sectnum].visibility,
 //            sector[tspr.sectnum].floorpal);
@@ -1437,9 +1438,9 @@ function polymer_inb4rotatesprite(/*int16_t */tilenum:number, /*char */pal:numbe
 //        !(spriteext[tspr.owner].flags & SPREXT_NOTMD))
 //    {
 //        bglEnable(GL_CULL_FACE);
-//        SWITCH_CULL_DIRECTION;
-//        polymer_drawmdsprite(tspr);
-//        SWITCH_CULL_DIRECTION;
+//        { culledface = (culledface == GL_FRONT) ? GL_BACK : GL_FRONT; bglCullFace(culledface); } /*SWITCH_CULL_DIRECTION*/;
+//        todoThrow("polymer_drawmdsprite(tspr)");
+//        { culledface = (culledface == GL_FRONT) ? GL_BACK : GL_FRONT; bglCullFace(culledface); } /*SWITCH_CULL_DIRECTION*/;
 //        bglDisable(GL_CULL_FACE);
 //        return;
 //    }
@@ -1472,12 +1473,12 @@ function polymer_inb4rotatesprite(/*int16_t */tilenum:number, /*char */pal:numbe
 //    switch ((tspr.cstat>>4) & 3)
 //    {
 //    case 1:
-//        prsectors[tspr.sectnum].wallsproffset += 0.5f;
+//        prsectors[tspr.sectnum].wallsproffset += 0.5;
 //        if (!depth || mirrors[depth-1].plane)
 //            bglPolygonOffset(-1.0, -1.0);
 //        break;
 //    case 2:
-//        prsectors[tspr.sectnum].floorsproffset += 0.5f;
+//        prsectors[tspr.sectnum].floorsproffset += 0.5;
 //        if (!depth || mirrors[depth-1].plane)
 //            bglPolygonOffset(-1.0, -1.0);
 //        break;
@@ -1485,7 +1486,7 @@ function polymer_inb4rotatesprite(/*int16_t */tilenum:number, /*char */pal:numbe
 
 //    if ((cs & 48) == 0)
 //    {
-//        int32_t curpriority = 0;
+//        var/*int32_t */curpriority = 0;
 
 //        s.plane.lightcount = 0;
 
@@ -1517,7 +1518,7 @@ function polymer_inb4rotatesprite(/*int16_t */tilenum:number, /*char */pal:numbe
 //    if ((tspr.cstat & 64) && (tspr.cstat & SPR_ALIGN_MASK))
 //    {
 //        if ((tspr.cstat & SPR_ALIGN_MASK)==SPR_FLOOR && (tspr.cstat & SPR_YFLIP))
-//            SWITCH_CULL_DIRECTION;
+//            { culledface = (culledface == GL_FRONT) ? GL_BACK : GL_FRONT; bglCullFace(culledface); } /*SWITCH_CULL_DIRECTION*/;
 //        bglEnable(GL_CULL_FACE);
 //    }
 
@@ -1532,7 +1533,7 @@ function polymer_inb4rotatesprite(/*int16_t */tilenum:number, /*char */pal:numbe
 //    if ((tspr.cstat & 64) && (tspr.cstat & SPR_ALIGN_MASK))
 //    {
 //        if ((tspr.cstat & SPR_ALIGN_MASK)==SPR_FLOOR && (tspr.cstat & SPR_YFLIP))
-//            SWITCH_CULL_DIRECTION;
+//            { culledface = (culledface == GL_FRONT) ? GL_BACK : GL_FRONT; bglCullFace(culledface); } /*SWITCH_CULL_DIRECTION*/;
 //        bglDisable(GL_CULL_FACE);
 //    }
 //}
@@ -1611,12 +1612,12 @@ function polymer_inb4rotatesprite(/*int16_t */tilenum:number, /*char */pal:numbe
 //{
 //    if (!prlights[lighti].flags.active)
 //    {
-//#ifdef DEBUGGINGAIDS
+////#ifdef DEBUGGINGAIDS
 //        if (pr_verbosity >= 2)
 //            OSD_Printf("PR : Called polymer_deletelight on inactive light\n");
 //        // currently known cases: when reloading maphack lights (didn't set maphacklightcnt=0
 //        // but did loadmaphack().delete_maphack_lights() after polymer_resetlights())
-//#endif
+////#endif
 //        return;
 //    }
 
@@ -1953,7 +1954,7 @@ function  polymer_texinvalidate():void
 
 //        bglClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-//        Bmemcpy(localskymodelviewmatrix, curskymodelviewmatrix, sizeof(GLfloat) * 16);
+//        Bmemcpy(localskymodelviewmatrix, curskymodelviewmatrix,  /*sizeof(GLfloat)*/ 4 * 16);
 //        curskymodelviewmatrix = localskymodelviewmatrix;
 
 //        bglMatrixMode(GL_MODELVIEW);
@@ -1966,7 +1967,7 @@ function  polymer_texinvalidate():void
 
 //        bglClipPlane(GL_CLIP_PLANE0, plane);
 //        polymer_inb4mirror(mirrorlist[i].plane.buffer, mirrorlist[i].plane.plane);
-//        SWITCH_CULL_DIRECTION;
+//        { culledface = (culledface == GL_FRONT) ? GL_BACK : GL_FRONT; bglCullFace(culledface); } /*SWITCH_CULL_DIRECTION*/;
 //        //bglEnable(GL_CLIP_PLANE0);
 
 //        if (mirrorlist[i].wallnum >= 0)
@@ -2014,7 +2015,7 @@ function  polymer_texinvalidate():void
 //        globalposz = gz;
 
 //        bglDisable(GL_CLIP_PLANE0);
-//        SWITCH_CULL_DIRECTION;
+//        { culledface = (culledface == GL_FRONT) ? GL_BACK : GL_FRONT; bglCullFace(culledface); } /*SWITCH_CULL_DIRECTION*/;
 //        bglMatrixMode(GL_MODELVIEW);
 //        bglPopMatrix();
 
@@ -2099,13 +2100,13 @@ function  polymer_texinvalidate():void
 //    if (plane.vbo && (pr_vbos > 0))
 //    {
 //        bglBindBufferARB(GL_ARRAY_BUFFER_ARB, plane.vbo);
-//        bglVertexPointer(3, GL_FLOAT, 5 * sizeof(GLfloat), NULL);
-//        bglTexCoordPointer(2, GL_FLOAT, 5 * sizeof(GLfloat), (GLfloat*)(3 * sizeof(GLfloat)));
+//        bglVertexPointer(3, GL_FLOAT, 5 *  /*sizeof(GLfloat)*/ 4, NULL);
+//        bglTexCoordPointer(2, GL_FLOAT, 5 *  /*sizeof(GLfloat)*/ 4, (GLfloat*)(3 *  /*sizeof(GLfloat)*/ 4));
 //        if (plane.indices)
 //            bglBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, plane.ivbo);
 //    } else {
-//        bglVertexPointer(3, GL_FLOAT, 5 * sizeof(GLfloat), plane.buffer);
-//        bglTexCoordPointer(2, GL_FLOAT, 5 * sizeof(GLfloat), &plane.buffer[3]);
+//        bglVertexPointer(3, GL_FLOAT, 5 *  /*sizeof(GLfloat)*/ 4, plane.buffer);
+//        bglTexCoordPointer(2, GL_FLOAT, 5 *  /*sizeof(GLfloat)*/ 4, &plane.buffer[3]);
 //    }
 
 //    curlight = 0;
@@ -2304,9 +2305,9 @@ function /*static int32_t*/      polymer_initsector(/*int16_t */sectnum):number
     //}
 
     s.verts = new Float64Array(3);//(GLdouble *)Bcalloc(sec.wallnum, sizeof(GLdouble) * 3);
-    s.floor.buffer = new Float32Array(5);//(GLfloat *)Bcalloc(sec.wallnum, sizeof(GLfloat) * 5);
+    s.floor.buffer = new Float32Array(5);//(GLfloat *)Bcalloc(sec.wallnum,  /*sizeof(GLfloat)*/ 4 * 5);
     s.floor.vertcount = sec.wallnum;
-    s.ceil.buffer = new Float64Array(5);//(GLfloat *)Bcalloc(sec.wallnum, sizeof(GLfloat) * 5);
+    s.ceil.buffer = new Float64Array(5);//(GLfloat *)Bcalloc(sec.wallnum,  /*sizeof(GLfloat)*/ 4 * 5);
     s.ceil.vertcount = sec.wallnum;
     //if ((s.verts == NULL) || (s.floor.buffer == NULL) || (s.ceil.buffer == NULL))
     //{
@@ -2319,10 +2320,10 @@ function /*static int32_t*/      polymer_initsector(/*int16_t */sectnum):number
     //bglGenBuffersARB(1, &s.ceil.ivbo);
 
     //bglBindBufferARB(GL_ARRAY_BUFFER_ARB, s.floor.vbo);
-    //bglBufferDataARB(GL_ARRAY_BUFFER_ARB, sec.wallnum * sizeof(GLfloat) * 5, NULL, mapvbousage);
+    //bglBufferDataARB(GL_ARRAY_BUFFER_ARB, sec.wallnum *  /*sizeof(GLfloat)*/ 4 * 5, NULL, mapvbousage);
 
     //bglBindBufferARB(GL_ARRAY_BUFFER_ARB, s.ceil.vbo);
-    //bglBufferDataARB(GL_ARRAY_BUFFER_ARB, sec.wallnum * sizeof(GLfloat) * 5, NULL, mapvbousage);
+    //bglBufferDataARB(GL_ARRAY_BUFFER_ARB, sec.wallnum *  /*sizeof(GLfloat)*/ 4 * 5, NULL, mapvbousage);
 
     //bglBindBufferARB(GL_ARRAY_BUFFER_ARB, 0);
 
@@ -2410,9 +2411,9 @@ function /*int32_t      */polymer_updatesector(/*int16_t */sectnum:number):numbe
     }
 
     floorpicnum = sec.floorpicnum;
-    DO_TILE_ANIM(floorpicnum, sectnum);
+    if (picanm[floorpicnum].sf & PICANM_ANIMTYPE_MASK) floorpicnum += animateoffs(floorpicnum, sectnum);//DO_TILE_ANIM(floorpicnum, sectnum);
     ceilingpicnum = sec.ceilingpicnum;
-    DO_TILE_ANIM(ceilingpicnum, sectnum);
+    if (picanm[ceilingpicnum].sf & PICANM_ANIMTYPE_MASK) ceilingpicnum += animateoffs(ceilingpicnum, sectnum);//DO_TILE_ANIM(ceilingpicnum, sectnum);
 
     if ((!s.flags.empty) && (!needfloor) &&
             (sec.floorstat == s.floorstat) &&
@@ -2525,12 +2526,14 @@ function /*int32_t      */polymer_updatesector(/*int16_t */sectnum:number):numbe
     i = -1;
     function attributes():number {
         if ((pr_vbos > 0) && ((i == -1) || (wallinvalidate)))
-        {todoThrow();
-            //bglBindBufferARB(GL_ARRAY_BUFFER_ARB, s.floor.vbo);
-            //bglBufferSubDataARB(GL_ARRAY_BUFFER_ARB, 0, sec.wallnum * sizeof(GLfloat) * 5, s.floor.buffer);
-            //bglBindBufferARB(GL_ARRAY_BUFFER_ARB, s.ceil.vbo);
-            //bglBufferSubDataARB(GL_ARRAY_BUFFER_ARB, 0, sec.wallnum * sizeof(GLfloat) * 5, s.ceil.buffer);
-            //bglBindBufferARB(GL_ARRAY_BUFFER_ARB, 0);
+        {debugger
+            s.floor.vbo = s.floor.vbo || gl.createBuffer();
+            bglBindBufferARB(GL_ARRAY_BUFFER_ARB, s.floor.vbo);
+            if(!s.floor.buffer ) todoThrow();
+            bglBufferSubDataARB(GL_ARRAY_BUFFER_ARB, 0, sec.wallnum *  /*sizeof(GLfloat)*/ 4 * 5, s.floor.buffer);
+            bglBindBufferARB(GL_ARRAY_BUFFER_ARB, s.ceil.vbo);
+            bglBufferSubDataARB(GL_ARRAY_BUFFER_ARB, 0, sec.wallnum *  /*sizeof(GLfloat)*/ 4 * 5, s.ceil.buffer);
+            bglBindBufferARB(GL_ARRAY_BUFFER_ARB, 0);
         }
 
         if ((!s.flags.empty) && (!s.flags.invalidtex) &&
@@ -2581,24 +2584,24 @@ function /*int32_t      */polymer_updatesector(/*int16_t */sectnum:number):numbe
     function finish():number {
 
         if (needfloor)
-        {todoThrow();
-            //polymer_buildfloor(sectnum);
-            //if ((pr_vbos > 0))
-            //{
-            //    if (s.oldindicescount < s.indicescount)
-            //    {
-            //        bglBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, s.floor.ivbo);
-            //        bglBufferDataARB(GL_ELEMENT_ARRAY_BUFFER_ARB, s.indicescount * sizeof(GLushort), NULL, mapvbousage);
-            //        bglBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, s.ceil.ivbo);
-            //        bglBufferDataARB(GL_ELEMENT_ARRAY_BUFFER_ARB, s.indicescount * sizeof(GLushort), NULL, mapvbousage);
-            //        s.oldindicescount = s.indicescount;
-            //    }
-            //    bglBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, s.floor.ivbo);
-            //    bglBufferSubDataARB(GL_ELEMENT_ARRAY_BUFFER_ARB, 0, s.indicescount * sizeof(GLushort), s.floor.indices);
-            //    bglBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, s.ceil.ivbo);
-            //    bglBufferSubDataARB(GL_ELEMENT_ARRAY_BUFFER_ARB, 0, s.indicescount * sizeof(GLushort), s.ceil.indices);
-            //    bglBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, 0);
-            //}
+        {
+            polymer_buildfloor(sectnum);
+            if ((pr_vbos > 0))
+            {
+                if (s.oldindicescount < s.indicescount)
+                {
+                    bglBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, s.floor.ivbo);
+                    bglBufferDataARB(GL_ELEMENT_ARRAY_BUFFER_ARB, s.indicescount *  /*sizeof(GLushort)*/ 2, NULL, mapvbousage);
+                    bglBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, s.ceil.ivbo);
+                    bglBufferDataARB(GL_ELEMENT_ARRAY_BUFFER_ARB, s.indicescount *  /*sizeof(GLushort)*/ 2, NULL, mapvbousage);
+                    s.oldindicescount = s.indicescount;
+                }
+                bglBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, s.floor.ivbo);
+                bglBufferSubDataARB(GL_ELEMENT_ARRAY_BUFFER_ARB, 0, s.indicescount *  /*sizeof(GLushort)*/ 2, s.floor.indices);
+                bglBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, s.ceil.ivbo);
+                bglBufferSubDataARB(GL_ELEMENT_ARRAY_BUFFER_ARB, 0, s.indicescount *  /*sizeof(GLushort)*/ 2, s.ceil.indices);
+                bglBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, 0);
+            }
         }
 
         if (wallinvalidate)
@@ -2643,8 +2646,8 @@ function /*int32_t      */polymer_updatesector(/*int16_t */sectnum:number):numbe
 //    {
 //        if (pr_verbosity >= 2) OSD_Printf("PR : Indice overflow, extending the indices list... !\n");
 //        s.indicescount++;
-//        s.floor.indices = (GLushort *)Brealloc(s.floor.indices, s.indicescount * sizeof(GLushort));
-//        s.ceil.indices = (GLushort *)Brealloc(s.ceil.indices, s.indicescount * sizeof(GLushort));
+//        s.floor.indices = (GLushort *)Brealloc(s.floor.indices, s.indicescount *  /*sizeof(GLushort)*/ 2);
+//        s.ceil.indices = (GLushort *)Brealloc(s.ceil.indices, s.indicescount *  /*sizeof(GLushort)*/ 2);
 //    }
 //    s.ceil.indices[s.curindice] = (intptr_t)vertex;
 //    s.curindice++;
@@ -2668,8 +2671,8 @@ function /*int32_t      */polymer_updatesector(/*int16_t */sectnum:number):numbe
 //    if (s.floor.indices == NULL)
 //    {
 //        s.indicescount = (max(3, sec.wallnum) - 2) * 3;
-//        s.floor.indices = (GLushort *)Bcalloc(s.indicescount, sizeof(GLushort));
-//        s.ceil.indices = (GLushort *)Bcalloc(s.indicescount, sizeof(GLushort));
+//        s.floor.indices = (GLushort *)Bcalloc(s.indicescount,  /*sizeof(GLushort)*/ 2);
+//        s.ceil.indices = (GLushort *)Bcalloc(s.indicescount,  /*sizeof(GLushort)*/ 2);
 //    }
 
 //    s.curindice = 0;
@@ -2817,13 +2820,13 @@ function/*int32_t      */polymer_initwall(/*int16_t*/ wallnum:number):number
 //    }
 
 //    if (w.mask.buffer == NULL) {
-//        w.mask.buffer = (GLfloat *)Bmalloc(4 * sizeof(GLfloat) * 5);
+//        w.mask.buffer = (GLfloat *)Bmalloc(4 *  /*sizeof(GLfloat)*/ 4 * 5);
 //        w.mask.vertcount = 4;
 //    }
 //    if (w.bigportal == NULL)
-//        w.bigportal = (GLfloat *)Bmalloc(4 * sizeof(GLfloat) * 5);
+//        w.bigportal = (GLfloat *)Bmalloc(4 *  /*sizeof(GLfloat)*/ 4 * 5);
 //    if (w.cap == NULL)
-//        w.cap = (GLfloat *)Bmalloc(4 * sizeof(GLfloat) * 3);
+//        w.cap = (GLfloat *)Bmalloc(4 *  /*sizeof(GLfloat)*/ 4 * 3);
 
 //    bglGenBuffersARB(1, &w.wall.vbo);
 //    bglGenBuffersARB(1, &w.over.vbo);
@@ -2831,16 +2834,16 @@ function/*int32_t      */polymer_initwall(/*int16_t*/ wallnum:number):number
 //    bglGenBuffersARB(1, &w.stuffvbo);
 
 //    bglBindBufferARB(GL_ARRAY_BUFFER_ARB, w.wall.vbo);
-//    bglBufferDataARB(GL_ARRAY_BUFFER_ARB, 4 * sizeof(GLfloat) * 5, NULL, mapvbousage);
+//    bglBufferDataARB(GL_ARRAY_BUFFER_ARB, 4 *  /*sizeof(GLfloat)*/ 4 * 5, NULL, mapvbousage);
 
 //    bglBindBufferARB(GL_ARRAY_BUFFER_ARB, w.over.vbo);
-//    bglBufferDataARB(GL_ARRAY_BUFFER_ARB, 4 * sizeof(GLfloat) * 5, NULL, mapvbousage);
+//    bglBufferDataARB(GL_ARRAY_BUFFER_ARB, 4 *  /*sizeof(GLfloat)*/ 4 * 5, NULL, mapvbousage);
 
 //    bglBindBufferARB(GL_ARRAY_BUFFER_ARB, w.mask.vbo);
-//    bglBufferDataARB(GL_ARRAY_BUFFER_ARB, 4 * sizeof(GLfloat) * 5, NULL, mapvbousage);
+//    bglBufferDataARB(GL_ARRAY_BUFFER_ARB, 4 *  /*sizeof(GLfloat)*/ 4 * 5, NULL, mapvbousage);
 
 //    bglBindBufferARB(GL_ARRAY_BUFFER_ARB, w.stuffvbo);
-//    bglBufferDataARB(GL_ARRAY_BUFFER_ARB, 8 * sizeof(GLfloat) * 5, NULL, mapvbousage);
+//    bglBufferDataARB(GL_ARRAY_BUFFER_ARB, 8 *  /*sizeof(GLfloat)*/ 4 * 5, NULL, mapvbousage);
 
 //    bglBindBufferARB(GL_ARRAY_BUFFER_ARB, 0);
 
@@ -2923,21 +2926,21 @@ function /*void         */polymer_updatewall(/*int16_t */wallnum:number): void
     }
 
     if (w.wall.buffer == NULL) {
-        w.wall.buffer = new Float32Array(5);//(GLfloat *)Bcalloc(4, sizeof(GLfloat) * 5);  // XXX
+        w.wall.buffer = new Float32Array(5);//(GLfloat *)Bcalloc(4,  /*sizeof(GLfloat)*/ 4 * 5);  // XXX
         w.wall.vertcount = 4;
     }
 
     wallpicnum = wal.picnum;
-    DO_TILE_ANIM(wallpicnum, wallnum+16384);
+    if (picanm[wallpicnum].sf & PICANM_ANIMTYPE_MASK) wallpicnum += animateoffs(wallpicnum, wallnum+16384);//DO_TILE_ANIM(wallpicnum, wallnum+16384);
     todoThrow();
     //walloverpicnum = wal.overpicnum;
-    //if (walloverpicnum>=0)
-    //    DO_TILE_ANIM(walloverpicnum, wallnum+16384);
+    //if (walloverpicnu m>=0)
+    //    if (picanm[walloverpicnum].sf&PICANM_ANIMTYPE_MASK) walloverpicnum += animateoffs(walloverpicnum,  wallnum+16384);
 
     //if (nwallnum >= 0 && nwallnum < numwalls)
     //{
     //    nwallpicnum = wall[nwallnum].picnum;
-    //    DO_TILE_ANIM(nwallpicnum, wallnum+16384);
+    //    if (picanm[nwallpicnum].sf&PICANM_ANIMTYPE_MASK) nwallpicnum += animateoffs(nwallpicnum, wallnum+16384);//DO_TILE_ANIM(nwallpicnum, wallnum+16384);
     //}
     //else
     //    nwallpicnum = 0;
@@ -2997,10 +3000,10 @@ function /*void         */polymer_updatewall(/*int16_t */wallnum:number): void
 
     //if (wal.nextsector < 0 || wal.nextsector >= numsectors)
     //{
-    //    Bmemcpy(w.wall.buffer, &s.floor.buffer[(wallnum - sec.wallptr) * 5], sizeof(GLfloat) * 3);
-    //    Bmemcpy(&w.wall.buffer[5], &s.floor.buffer[(wal.point2 - sec.wallptr) * 5], sizeof(GLfloat) * 3);
-    //    Bmemcpy(&w.wall.buffer[10], &s.ceil.buffer[(wal.point2 - sec.wallptr) * 5], sizeof(GLfloat) * 3);
-    //    Bmemcpy(&w.wall.buffer[15], &s.ceil.buffer[(wallnum - sec.wallptr) * 5], sizeof(GLfloat) * 3);
+    //    Bmemcpy(w.wall.buffer, &s.floor.buffer[(wallnum - sec.wallptr) * 5],  /*sizeof(GLfloat)*/ 4 * 3);
+    //    Bmemcpy(&w.wall.buffer[5], &s.floor.buffer[(wal.point2 - sec.wallptr) * 5],  /*sizeof(GLfloat)*/ 4 * 3);
+    //    Bmemcpy(&w.wall.buffer[10], &s.ceil.buffer[(wal.point2 - sec.wallptr) * 5],  /*sizeof(GLfloat)*/ 4 * 3);
+    //    Bmemcpy(&w.wall.buffer[15], &s.ceil.buffer[(wallnum - sec.wallptr) * 5],  /*sizeof(GLfloat)*/ 4 * 3);
 
     //    if (wal.nextsector < 0)
     //        curpicnum = wallpicnum;
@@ -3059,12 +3062,12 @@ function /*void         */polymer_updatewall(/*int16_t */wallnum:number): void
     //        var/*int32_t */refwall:number;
 
     //        if (s.floor.buffer[((wallnum - sec.wallptr) * 5) + 1] < ns.floor.buffer[((nnwallnum - nsec.wallptr) * 5) + 1])
-    //            Bmemcpy(w.wall.buffer, &s.floor.buffer[(wallnum - sec.wallptr) * 5], sizeof(GLfloat) * 3);
+    //            Bmemcpy(w.wall.buffer, &s.floor.buffer[(wallnum - sec.wallptr) * 5],  /*sizeof(GLfloat)*/ 4 * 3);
     //        else
-    //            Bmemcpy(w.wall.buffer, &ns.floor.buffer[(nnwallnum - nsec.wallptr) * 5], sizeof(GLfloat) * 3);
-    //        Bmemcpy(&w.wall.buffer[5], &s.floor.buffer[(wal.point2 - sec.wallptr) * 5], sizeof(GLfloat) * 3);
-    //        Bmemcpy(&w.wall.buffer[10], &ns.floor.buffer[(nwallnum - nsec.wallptr) * 5], sizeof(GLfloat) * 3);
-    //        Bmemcpy(&w.wall.buffer[15], &ns.floor.buffer[(nnwallnum - nsec.wallptr) * 5], sizeof(GLfloat) * 3);
+    //            Bmemcpy(w.wall.buffer, &ns.floor.buffer[(nnwallnum - nsec.wallptr) * 5],  /*sizeof(GLfloat)*/ 4 * 3);
+    //        Bmemcpy(&w.wall.buffer[5], &s.floor.buffer[(wal.point2 - sec.wallptr) * 5],  /*sizeof(GLfloat)*/ 4 * 3);
+    //        Bmemcpy(&w.wall.buffer[10], &ns.floor.buffer[(nwallnum - nsec.wallptr) * 5],  /*sizeof(GLfloat)*/ 4 * 3);
+    //        Bmemcpy(&w.wall.buffer[15], &ns.floor.buffer[(nnwallnum - nsec.wallptr) * 5],  /*sizeof(GLfloat)*/ 4 * 3);
 
     //        if (wal.cstat & 2)
     //            refwall = nwallnum;
@@ -3111,13 +3114,13 @@ function /*void         */polymer_updatewall(/*int16_t */wallnum:number): void
     //        if (underwall)
     //            w.underover |= 1;
 
-    //        Bmemcpy(w.mask.buffer, &w.wall.buffer[15], sizeof(GLfloat) * 5);
-    //        Bmemcpy(&w.mask.buffer[5], &w.wall.buffer[10], sizeof(GLfloat) * 5);
+    //        Bmemcpy(w.mask.buffer, &w.wall.buffer[15],  /*sizeof(GLfloat)*/ 4 * 5);
+    //        Bmemcpy(&w.mask.buffer[5], &w.wall.buffer[10],  /*sizeof(GLfloat)*/ 4 * 5);
     //    }
     //    else
     //    {
-    //        Bmemcpy(w.mask.buffer, &s.floor.buffer[(wallnum - sec.wallptr) * 5], sizeof(GLfloat) * 5);
-    //        Bmemcpy(&w.mask.buffer[5], &s.floor.buffer[(wal.point2 - sec.wallptr) * 5], sizeof(GLfloat) * 5);
+    //        Bmemcpy(w.mask.buffer, &s.floor.buffer[(wallnum - sec.wallptr) * 5],  /*sizeof(GLfloat)*/ 4 * 5);
+    //        Bmemcpy(&w.mask.buffer[5], &s.floor.buffer[(wal.point2 - sec.wallptr) * 5],  /*sizeof(GLfloat)*/ 4 * 5);
     //    }
 
     //    if ((s.ceil.buffer[((wallnum - sec.wallptr) * 5) + 1] > ns.ceil.buffer[((nnwallnum - nsec.wallptr) * 5) + 1]) ||
@@ -3127,17 +3130,17 @@ function /*void         */polymer_updatewall(/*int16_t */wallnum:number): void
     //    if ((overwall) || (wal.cstat & 16) || (wal.cstat & 32))
     //    {
     //        if (w.over.buffer == NULL) {
-    //            w.over.buffer = new Float32Array(5);//(GLfloat *)Bmalloc(4 * sizeof(GLfloat) * 5);
+    //            w.over.buffer = new Float32Array(5);//(GLfloat *)Bmalloc(4 *  /*sizeof(GLfloat)*/ 4 * 5);
     //            w.over.vertcount = 4;
     //        }
 
-    //        Bmemcpy(w.over.buffer, &ns.ceil.buffer[(nnwallnum - nsec.wallptr) * 5], sizeof(GLfloat) * 3);
-    //        Bmemcpy(&w.over.buffer[5], &ns.ceil.buffer[(nwallnum - nsec.wallptr) * 5], sizeof(GLfloat) * 3);
+    //        Bmemcpy(w.over.buffer, &ns.ceil.buffer[(nnwallnum - nsec.wallptr) * 5],  /*sizeof(GLfloat)*/ 4 * 3);
+    //        Bmemcpy(&w.over.buffer[5], &ns.ceil.buffer[(nwallnum - nsec.wallptr) * 5],  /*sizeof(GLfloat)*/ 4 * 3);
     //        if (s.ceil.buffer[((wal.point2 - sec.wallptr) * 5) + 1] > ns.ceil.buffer[((nwallnum - nsec.wallptr) * 5) + 1])
-    //            Bmemcpy(&w.over.buffer[10], &s.ceil.buffer[(wal.point2 - sec.wallptr) * 5], sizeof(GLfloat) * 3);
+    //            Bmemcpy(&w.over.buffer[10], &s.ceil.buffer[(wal.point2 - sec.wallptr) * 5],  /*sizeof(GLfloat)*/ 4 * 3);
     //        else
-    //            Bmemcpy(&w.over.buffer[10], &ns.ceil.buffer[(nwallnum - nsec.wallptr) * 5], sizeof(GLfloat) * 3);
-    //        Bmemcpy(&w.over.buffer[15], &s.ceil.buffer[(wallnum - sec.wallptr) * 5], sizeof(GLfloat) * 3);
+    //            Bmemcpy(&w.over.buffer[10], &ns.ceil.buffer[(nwallnum - nsec.wallptr) * 5],  /*sizeof(GLfloat)*/ 4 * 3);
+    //        Bmemcpy(&w.over.buffer[15], &s.ceil.buffer[(wallnum - sec.wallptr) * 5],  /*sizeof(GLfloat)*/ 4 * 3);
 
     //        if ((wal.cstat & 16) || (wal.overpicnum == 0))
     //            curpicnum = wallpicnum;
@@ -3190,8 +3193,8 @@ function /*void         */polymer_updatewall(/*int16_t */wallnum:number): void
     //        if (overwall)
     //            w.underover |= 2;
 
-    //        Bmemcpy(&w.mask.buffer[10], &w.over.buffer[5], sizeof(GLfloat) * 5);
-    //        Bmemcpy(&w.mask.buffer[15], &w.over.buffer[0], sizeof(GLfloat) * 5);
+    //        Bmemcpy(&w.mask.buffer[10], &w.over.buffer[5],  /*sizeof(GLfloat)*/ 4 * 5);
+    //        Bmemcpy(&w.mask.buffer[15], &w.over.buffer[0],  /*sizeof(GLfloat)*/ 4 * 5);
 
     //        if ((wal.cstat & 16) || (wal.cstat & 32))
     //        {
@@ -3236,23 +3239,23 @@ function /*void         */polymer_updatewall(/*int16_t */wallnum:number): void
     //    }
     //    else
     //    {
-    //        Bmemcpy(&w.mask.buffer[10], &s.ceil.buffer[(wal.point2 - sec.wallptr) * 5], sizeof(GLfloat) * 5);
-    //        Bmemcpy(&w.mask.buffer[15], &s.ceil.buffer[(wallnum - sec.wallptr) * 5], sizeof(GLfloat) * 5);
+    //        Bmemcpy(&w.mask.buffer[10], &s.ceil.buffer[(wal.point2 - sec.wallptr) * 5],  /*sizeof(GLfloat)*/ 4 * 5);
+    //        Bmemcpy(&w.mask.buffer[15], &s.ceil.buffer[(wallnum - sec.wallptr) * 5],  /*sizeof(GLfloat)*/ 4 * 5);
     //    }
     //}
 
     //if (wal.nextsector < 0)
-    //    Bmemcpy(w.mask.buffer, w.wall.buffer, sizeof(GLfloat) * 4 * 5);
+    //    Bmemcpy(w.mask.buffer, w.wall.buffer,  /*sizeof(GLfloat)*/ 4 * 4 * 5);
 
-    //Bmemcpy(w.bigportal, &s.floor.buffer[(wallnum - sec.wallptr) * 5], sizeof(GLfloat) * 3);
-    //Bmemcpy(&w.bigportal[5], &s.floor.buffer[(wal.point2 - sec.wallptr) * 5], sizeof(GLfloat) * 3);
-    //Bmemcpy(&w.bigportal[10], &s.ceil.buffer[(wal.point2 - sec.wallptr) * 5], sizeof(GLfloat) * 3);
-    //Bmemcpy(&w.bigportal[15], &s.ceil.buffer[(wallnum - sec.wallptr) * 5], sizeof(GLfloat) * 3);
+    //Bmemcpy(w.bigportal, &s.floor.buffer[(wallnum - sec.wallptr) * 5],  /*sizeof(GLfloat)*/ 4 * 3);
+    //Bmemcpy(&w.bigportal[5], &s.floor.buffer[(wal.point2 - sec.wallptr) * 5],  /*sizeof(GLfloat)*/ 4 * 3);
+    //Bmemcpy(&w.bigportal[10], &s.ceil.buffer[(wal.point2 - sec.wallptr) * 5],  /*sizeof(GLfloat)*/ 4 * 3);
+    //Bmemcpy(&w.bigportal[15], &s.ceil.buffer[(wallnum - sec.wallptr) * 5],  /*sizeof(GLfloat)*/ 4 * 3);
 
-    //Bmemcpy(&w.cap[0], &s.ceil.buffer[(wallnum - sec.wallptr) * 5], sizeof(GLfloat) * 3);
-    //Bmemcpy(&w.cap[3], &s.ceil.buffer[(wal.point2 - sec.wallptr) * 5], sizeof(GLfloat) * 3);
-    //Bmemcpy(&w.cap[6], &s.ceil.buffer[(wal.point2 - sec.wallptr) * 5], sizeof(GLfloat) * 3);
-    //Bmemcpy(&w.cap[9], &s.ceil.buffer[(wallnum - sec.wallptr) * 5], sizeof(GLfloat) * 3);
+    //Bmemcpy(&w.cap[0], &s.ceil.buffer[(wallnum - sec.wallptr) * 5],  /*sizeof(GLfloat)*/ 4 * 3);
+    //Bmemcpy(&w.cap[3], &s.ceil.buffer[(wal.point2 - sec.wallptr) * 5],  /*sizeof(GLfloat)*/ 4 * 3);
+    //Bmemcpy(&w.cap[6], &s.ceil.buffer[(wal.point2 - sec.wallptr) * 5],  /*sizeof(GLfloat)*/ 4 * 3);
+    //Bmemcpy(&w.cap[9], &s.ceil.buffer[(wallnum - sec.wallptr) * 5],  /*sizeof(GLfloat)*/ 4 * 3);
     //w.cap[7] += 1048576; // this number is the result of 1048574 + 2
     //w.cap[10] += 1048576; // this one is arbitrary
 
@@ -3265,15 +3268,15 @@ function /*void         */polymer_updatewall(/*int16_t */wallnum:number): void
     //if ((pr_vbos > 0))
     //{
     //    bglBindBufferARB(GL_ARRAY_BUFFER_ARB, w.wall.vbo);
-    //    bglBufferSubDataARB(GL_ARRAY_BUFFER_ARB, 0, 4 * sizeof(GLfloat) * 5, w.wall.buffer);
+    //    bglBufferSubDataARB(GL_ARRAY_BUFFER_ARB, 0, 4 *  /*sizeof(GLfloat)*/ 4 * 5, w.wall.buffer);
     //    bglBindBufferARB(GL_ARRAY_BUFFER_ARB, w.over.vbo);
     //    if (w.over.buffer)
-    //        bglBufferSubDataARB(GL_ARRAY_BUFFER_ARB, 0, 4 * sizeof(GLfloat) * 5, w.over.buffer);
+    //        bglBufferSubDataARB(GL_ARRAY_BUFFER_ARB, 0, 4 *  /*sizeof(GLfloat)*/ 4 * 5, w.over.buffer);
     //    bglBindBufferARB(GL_ARRAY_BUFFER_ARB, w.mask.vbo);
-    //    bglBufferSubDataARB(GL_ARRAY_BUFFER_ARB, 0, 4 * sizeof(GLfloat) * 5, w.mask.buffer);
+    //    bglBufferSubDataARB(GL_ARRAY_BUFFER_ARB, 0, 4 *  /*sizeof(GLfloat)*/ 4 * 5, w.mask.buffer);
     //    bglBindBufferARB(GL_ARRAY_BUFFER_ARB, w.stuffvbo);
-    //    bglBufferSubDataARB(GL_ARRAY_BUFFER_ARB, 0, 4 * sizeof(GLfloat) * 5, w.bigportal);
-    //    bglBufferSubDataARB(GL_ARRAY_BUFFER_ARB, 4 * sizeof(GLfloat) * 5, 4 * sizeof(GLfloat) * 3, w.cap);
+    //    bglBufferSubDataARB(GL_ARRAY_BUFFER_ARB, 0, 4 *  /*sizeof(GLfloat)*/ 4 * 5, w.bigportal);
+    //    bglBufferSubDataARB(GL_ARRAY_BUFFER_ARB, 4 *  /*sizeof(GLfloat)*/ 4 * 5, 4 *  /*sizeof(GLfloat)*/ 4 * 3, w.cap);
     //    bglBindBufferARB(GL_ARRAY_BUFFER_ARB, 0);
     //}
 
@@ -3367,7 +3370,7 @@ function /*void         */polymer_updatewall(/*int16_t */wallnum:number): void
 //        if (pr_vbos)
 //        {
 //            bglBindBufferARB(GL_ARRAY_BUFFER_ARB, w.stuffvbo);
-//            bglVertexPointer(3, GL_FLOAT, 0, (const GLvoid*)(4 * sizeof(GLfloat) * 5));
+//            bglVertexPointer(3, GL_FLOAT, 0, (const GLvoid*)(4 *  /*sizeof(GLfloat)*/ 4 * 5));
 //        }
 //        else
 //            bglVertexPointer(3, GL_FLOAT, 0, w.cap);
@@ -3593,252 +3596,252 @@ function polymer_transformpoint(/*const float* */inpos:Float32Array, pos:Float32
 //    }
 //}
 
-//void                polymer_updatesprite(int32_t snum)
-//{
-//    int32_t         curpicnum, xsize, ysize, i, j;
-//    int32_t         tilexoff, tileyoff, xoff, yoff, centeryoff=0;
-//    spritetype      *tspr = tspriteptr[snum];
-//    float           xratio, yratio, ang, f;
-//    float           spos[3];
-//    const GLfloat   *inbuffer;
-//    uint8_t         flipu, flipv;
-//    _prsprite       *s;
+function polymer_updatesprite(/*int32_t*/ snum:number):void
+{todoThrow();
+    //var curpicnum=0, xsize=0, ysize=0, i=0, j=0;                  //int32_t         
+    //var tilexoff=0, tileyoff=0, xoff=0, yoff=0, centeryoff=0;   //int32_t         
+    //var tspr = tspriteptr[snum];                       //spritetype      
+    //var xratio=0.0, yratio=0.0, ang=0.0, f=0.0;                         //float           
+    //var spos = new Float32Array(3);                                        //float           
+    //var inbuffer:Float32Array;                                      //const GLfloat   
+    //var flipu=0.0, flipv=0.0;                                   //uint8_t         
+    //var s:_prsprite;
 
-//    const uint32_t cs = tspr.cstat;
-//    const uint32_t alignmask = (cs & SPR_ALIGN_MASK);
-//    const uint8_t flooraligned = (alignmask==SPR_FLOOR);
+    //var cs = tspr.cstat;                       //const uint32_t
+    //var alignmask = (cs & SPR_ALIGN_MASK);     //const uint32_t
+    //var flooraligned = (alignmask==SPR_FLOOR)?1:0;  //const uint8_t 
 
-//    if (pr_verbosity >= 3) OSD_Printf("PR : Updating sprite %i...\n", snum);
+    //if (pr_verbosity >= 3) OSD_Printf("PR : Updating sprite %i...\n", snum);
 
-//    if (tspr.owner < 0 || tspr.picnum < 0) return;
+    //if (tspr.owner < 0 || tspr.picnum < 0) return;
 
-//    if (prsprites[tspr.owner] == NULL)
-//    {
-//        prsprites[tspr.owner] = (_prsprite *) Bcalloc(sizeof(_prsprite), 1);
+    //if (prsprites[tspr.owner] == NULL)
+    //{
+    //    prsprites[tspr.owner].init();// = (_prsprite *) Bcalloc(sizeof(_prsprite), 1);
 
-//        if (prsprites[tspr.owner] == NULL)
-//        {
-//            if (pr_verbosity >= 1) OSD_Printf_nowarn("PR : Cannot initialize sprite %i : Bmalloc failed.\n", TrackerCast(tspr.owner));
-//            return;
-//        }
+    //    if (prsprites[tspr.owner] == NULL)
+    //    {
+    //        if (pr_verbosity >= 1) OSD_Printf_nowarn("PR : Cannot initialize sprite %i : Bmalloc failed.\n", TrackerCast(tspr.owner));
+    //        return;
+    //    }
 
-//        prsprites[tspr.owner].plane.buffer = (GLfloat *) Bcalloc(4, sizeof(GLfloat) * 5);  // XXX
-//        prsprites[tspr.owner].plane.vertcount = 4;
-//    }
+    //    prsprites[tspr.owner].plane.buffer = (GLfloat *) Bcalloc(4,  /*sizeof(GLfloat)*/ 4 * 5);  // XXX
+    //    prsprites[tspr.owner].plane.vertcount = 4;
+    //}
 
-//    if ((tspr.cstat & 48) && (pr_vbos > 0) && !prsprites[tspr.owner].plane.vbo)
-//    {
-//        bglGenBuffersARB(1, &prsprites[tspr.owner].plane.vbo);
-//        bglBindBufferARB(GL_ARRAY_BUFFER_ARB, prsprites[tspr.owner].plane.vbo);
-//        bglBufferDataARB(GL_ARRAY_BUFFER_ARB, 4 * sizeof(GLfloat) * 5, NULL, mapvbousage);
-//    }
+    //if ((tspr.cstat & 48) && (pr_vbos > 0) && !prsprites[tspr.owner].plane.vbo)
+    //{
+    //    bglGenBuffersARB(1, &prsprites[tspr.owner].plane.vbo);
+    //    bglBindBufferARB(GL_ARRAY_BUFFER_ARB, prsprites[tspr.owner].plane.vbo);
+    //    bglBufferDataARB(GL_ARRAY_BUFFER_ARB, 4 *  /*sizeof(GLfloat)*/ 4 * 5, NULL, mapvbousage);
+    //}
 
-//    s = prsprites[tspr.owner];
+    //s = prsprites[tspr.owner];
 
-//    curpicnum = tspr.picnum;
-//    DO_TILE_ANIM(curpicnum, tspr.owner+32768);
+    //curpicnum = tspr.picnum;
+    //if (picanm[curpicnum].sf&PICANM_ANIMTYPE_MASK) curpicnum += animateoffs(curpicnum, tspr.owner+32768);
 
-//    if (tspr.cstat & 48 && searchit != 2)
-//    {
-//        uint32_t crc = crc32once((uint8_t *)tspr, offsetof(spritetype, owner));
+    //if (tspr.cstat & 48 && searchit != 2)
+    //{
+    //    uint32_t crc = crc32once((uint8_t *)tspr, offsetof(spritetype, owner));
 
-//        if (crc == s.crc && tspr.picnum == curpicnum) return;
-//        s.crc = crc;
-//    }
+    //    if (crc == s.crc && tspr.picnum == curpicnum) return;
+    //    s.crc = crc;
+    //}
 
-//    polymer_getbuildmaterial(&s.plane.material, curpicnum, tspr.pal, tspr.shade,
-//                             sector[tspr.sectnum].visibility, 4);
+    //polymer_getbuildmaterial(&s.plane.material, curpicnum, tspr.pal, tspr.shade,
+    //                         sector[tspr.sectnum].visibility, 4);
 
-//    if (tspr.cstat & 2)
-//    {
-//        if (tspr.cstat & 512)
-//            s.plane.material.diffusemodulation[3] = 0x55;
-//        else
-//            s.plane.material.diffusemodulation[3] = 0xAA;
-//    }
+    //if (tspr.cstat & 2)
+    //{
+    //    if (tspr.cstat & 512)
+    //        s.plane.material.diffusemodulation[3] = 0x55;
+    //    else
+    //        s.plane.material.diffusemodulation[3] = 0xAA;
+    //}
 
-//    f = s.plane.material.diffusemodulation[3] * (1.0 - spriteext[tspr.owner].alpha);
-//    s.plane.material.diffusemodulation[3] = (GLubyte)f;
+    //f = s.plane.material.diffusemodulation[3] * (1.0 - spriteext[tspr.owner].alpha);
+    //s.plane.material.diffusemodulation[3] = (GLubyte)f;
 
-//    if (searchit == 2)
-//    {
-//        s.plane.material.diffusemodulation[0] = 0x03;
-//        s.plane.material.diffusemodulation[1] = ((GLubyte *)(&tspr.owner))[0];
-//        s.plane.material.diffusemodulation[2] = ((GLubyte *)(&tspr.owner))[1];
-//        s.plane.material.diffusemodulation[3] = 0xFF;
-//        s.crc = 0xdeadbeef;
-//    }
+    //if (searchit == 2)
+    //{
+    //    s.plane.material.diffusemodulation[0] = 0x03;
+    //    s.plane.material.diffusemodulation[1] = ((GLubyte *)(&tspr.owner))[0];
+    //    s.plane.material.diffusemodulation[2] = ((GLubyte *)(&tspr.owner))[1];
+    //    s.plane.material.diffusemodulation[3] = 0xFF;
+    //    s.crc = 0xdeadbeef;
+    //}
 
-//    curpicnum = tspr.picnum;
-//    DO_TILE_ANIM(curpicnum, tspr.owner+32768);
+    //curpicnum = tspr.picnum;
+    //DO_TILE_ANIM(curpicnum, tspr.owner+32768);
 
-//    if (((tspr.cstat>>4) & 3) == 0)
-//        xratio =   /*(float)*/  (tspr.xrepeat) * 0.20f; // 32 / 160
-//    else
-//        xratio =   /*(float)*/  (tspr.xrepeat) * 0.25f;
+    //if (((tspr.cstat>>4) & 3) == 0)
+    //    xratio =   /*(float)*/  (tspr.xrepeat) * 0.20f; // 32 / 160
+    //else
+    //    xratio =   /*(float)*/  (tspr.xrepeat) * 0.25f;
 
-//    yratio =   /*(float)*/  (tspr.yrepeat) * 0.25f;
+    //yratio =   /*(float)*/  (tspr.yrepeat) * 0.25f;
 
-//    xsize = tilesizx[curpicnum];
-//    ysize = tilesizy[curpicnum];
+    //xsize = tilesizx[curpicnum];
+    //ysize = tilesizy[curpicnum];
 
-//    if (usehightile && h_xsize[curpicnum])
-//    {
-//        xsize = h_xsize[curpicnum];
-//        ysize = h_ysize[curpicnum];
-//    }
+    //if (usehightile && h_xsize[curpicnum])
+    //{
+    //    xsize = h_xsize[curpicnum];
+    //    ysize = h_ysize[curpicnum];
+    //}
 
-//    xsize = (int32_t)(xsize * xratio);
-//    ysize = (int32_t)(ysize * yratio);
+    //xsize = (int32_t)(xsize * xratio);
+    //ysize = (int32_t)(ysize * yratio);
 
-//    tilexoff = (int32_t)tspr.xoffset;
-//    tileyoff = (int32_t)tspr.yoffset;
-//    tilexoff += (usehightile && h_xsize[curpicnum]) ? h_xoffs[curpicnum] : picanm[curpicnum].xofs;
-//    tileyoff += (usehightile && h_xsize[curpicnum]) ? h_yoffs[curpicnum] : picanm[curpicnum].yofs;
+    //tilexoff = (int32_t)tspr.xoffset;
+    //tileyoff = (int32_t)tspr.yoffset;
+    //tilexoff += (usehightile && h_xsize[curpicnum]) ? h_xoffs[curpicnum] : picanm[curpicnum].xofs;
+    //tileyoff += (usehightile && h_xsize[curpicnum]) ? h_yoffs[curpicnum] : picanm[curpicnum].yofs;
 
-//    xoff = (int32_t)(tilexoff * xratio);
-//    yoff = (int32_t)(tileyoff * yratio);
+    //xoff = (int32_t)(tilexoff * xratio);
+    //yoff = (int32_t)(tileyoff * yratio);
 
-//    if ((tspr.cstat & 128) && !flooraligned)
-//    {
-//        if (alignmask == 0)
-//            yoff -= ysize / 2;
-//        else
-//            centeryoff = ysize / 2;
-//    }
+    //if ((tspr.cstat & 128) && !flooraligned)
+    //{
+    //    if (alignmask == 0)
+    //        yoff -= ysize / 2;
+    //    else
+    //        centeryoff = ysize / 2;
+    //}
 
-//    spos[0] =   /*(float)*/  tspr.y;
-//    spos[1] = -  /*(float)*/  (tspr.z) / 16.0;
-//    spos[2] = -  /*(float)*/  tspr.x;
+    //spos[0] =   /*(float)*/  tspr.y;
+    //spos[1] = -  /*(float)*/  (tspr.z) / 16.0;
+    //spos[2] = -  /*(float)*/  tspr.x;
 
-//    bglMatrixMode(GL_MODELVIEW);
-//    bglPushMatrix();
-//    bglLoadIdentity();
+    //bglMatrixMode(GL_MODELVIEW);
+    //bglPushMatrix();
+    //bglLoadIdentity();
 
-//    inbuffer = vertsprite;
+    //inbuffer = vertsprite;
 
-//    {
-//        const uint8_t xflip = !!(cs & SPR_XFLIP);
-//        const uint8_t yflip = !!(cs & SPR_YFLIP);
+    //{
+    //    const uint8_t xflip = !!(cs & SPR_XFLIP);
+    //    const uint8_t yflip = !!(cs & SPR_YFLIP);
 
-//        // Initially set flipu and flipv.
-//        flipu = (xflip ^ flooraligned);
-//        flipv = (yflip && !flooraligned);
+    //    // Initially set flipu and flipv.
+    //    flipu = (xflip ^ flooraligned);
+    //    flipv = (yflip && !flooraligned);
 
-//        if (pr_billboardingmode && alignmask==0)
-//        {
-//            // do surgery on the face tspr to make it look like a wall sprite
-//            tspr.cstat |= 16;
-//            tspr.ang = (viewangle + 1024) & 2047;
-//        }
+    //    if (pr_billboardingmode && alignmask==0)
+    //    {
+    //        // do surgery on the face tspr to make it look like a wall sprite
+    //        tspr.cstat |= 16;
+    //        tspr.ang = (viewangle + 1024) & 2047;
+    //    }
 
-//        if (flipu)
-//            xoff = -xoff;
+    //    if (flipu)
+    //        xoff = -xoff;
 
-//        if (yflip && alignmask!=0)
-//            yoff = -yoff;
-//    }
+    //    if (yflip && alignmask!=0)
+    //        yoff = -yoff;
+    //}
 
-//    switch (tspr.cstat & SPR_ALIGN_MASK)
-//    {
-//    case 0:
-//        ang =   /*(float)*/  ((viewangle) & 2047) / (2048.0 / 360.0);
+    //switch (tspr.cstat & SPR_ALIGN_MASK)
+    //{
+    //case 0:
+    //    ang =   /*(float)*/  ((viewangle) & 2047) / (2048.0 / 360.0);
 
-//        bglTranslatef(spos[0], spos[1], spos[2]);
-//        bglRotatef(-ang, 0.0, 1.0, 0.0);
-//        bglRotatef(-horizang, 1.0, 0.0, 0.0);
-//        bglTranslatef(  /*(float)*/  (-xoff),   /*(float)*/  (yoff), 0.0);
-//        bglScalef(  /*(float)*/  (xsize),   /*(float)*/  (ysize), 1.0);
-//        break;
-//    case SPR_WALL:
-//        ang =   /*(float)*/  ((tspr.ang + 1024) & 2047) / (2048.0 / 360.0);
+    //    bglTranslatef(spos[0], spos[1], spos[2]);
+    //    bglRotatef(-ang, 0.0, 1.0, 0.0);
+    //    bglRotatef(-horizang, 1.0, 0.0, 0.0);
+    //    bglTranslatef(  /*(float)*/  (-xoff),   /*(float)*/  (yoff), 0.0);
+    //    bglScalef(  /*(float)*/  (xsize),   /*(float)*/  (ysize), 1.0);
+    //    break;
+    //case SPR_WALL:
+    //    ang =   /*(float)*/  ((tspr.ang + 1024) & 2047) / (2048.0 / 360.0);
 
-//        bglTranslatef(spos[0], spos[1], spos[2]);
-//        bglRotatef(-ang, 0.0, 1.0, 0.0);
-//        bglTranslatef(  /*(float)*/  (-xoff),   /*(float)*/  (yoff-centeryoff), 0.0);
-//        bglScalef(  /*(float)*/  (xsize),   /*(float)*/  (ysize), 1.0);
-//        break;
-//    case SPR_FLOOR:
-//        ang =   /*(float)*/  ((tspr.ang + 1024) & 2047) / (2048.0 / 360.0);
+    //    bglTranslatef(spos[0], spos[1], spos[2]);
+    //    bglRotatef(-ang, 0.0, 1.0, 0.0);
+    //    bglTranslatef(  /*(float)*/  (-xoff),   /*(float)*/  (yoff-centeryoff), 0.0);
+    //    bglScalef(  /*(float)*/  (xsize),   /*(float)*/  (ysize), 1.0);
+    //    break;
+    //case SPR_FLOOR:
+    //    ang =   /*(float)*/  ((tspr.ang + 1024) & 2047) / (2048.0 / 360.0);
 
-//        bglTranslatef(spos[0], spos[1], spos[2]);
-//        bglRotatef(-ang, 0.0, 1.0, 0.0);
-//        bglTranslatef(  /*(float)*/  (-xoff), 1.0,   /*(float)*/  (yoff));
-//        bglScalef(  /*(float)*/  (xsize), 1.0,   /*(float)*/  (ysize));
+    //    bglTranslatef(spos[0], spos[1], spos[2]);
+    //    bglRotatef(-ang, 0.0, 1.0, 0.0);
+    //    bglTranslatef(  /*(float)*/  (-xoff), 1.0,   /*(float)*/  (yoff));
+    //    bglScalef(  /*(float)*/  (xsize), 1.0,   /*(float)*/  (ysize));
 
-//        inbuffer = horizsprite;
-//        break;
-//    }
+    //    inbuffer = horizsprite;
+    //    break;
+    //}
 
-//    bglGetFloatv(GL_MODELVIEW_MATRIX, spritemodelview);
-//    bglPopMatrix();
+    //bglGetFloatv(GL_MODELVIEW_MATRIX, spritemodelview);
+    //bglPopMatrix();
 
-//    Bmemcpy(s.plane.buffer, inbuffer, sizeof(GLfloat) * 4 * 5);
+    //Bmemcpy(s.plane.buffer, inbuffer,  /*sizeof(GLfloat)*/ 4 * 4 * 5);
 
-//    if (flipu || flipv)
-//    {
-//        i = 0;
-//        do
-//        {
-//            if (flipu)
-//                s.plane.buffer[(i * 5) + 3] =
-//                (s.plane.buffer[(i * 5) + 3] - 1.0) * -1.0;
-//            if (flipv)
-//                s.plane.buffer[(i * 5) + 4] =
-//                (s.plane.buffer[(i * 5) + 4] - 1.0) * -1.0;
-//        }
-//        while (++i < 4);
-//    }
+    //if (flipu || flipv)
+    //{
+    //    i = 0;
+    //    do
+    //    {
+    //        if (flipu)
+    //            s.plane.buffer[(i * 5) + 3] =
+    //            (s.plane.buffer[(i * 5) + 3] - 1.0) * -1.0;
+    //        if (flipv)
+    //            s.plane.buffer[(i * 5) + 4] =
+    //            (s.plane.buffer[(i * 5) + 4] - 1.0) * -1.0;
+    //    }
+    //    while (++i < 4);
+    //}
 
-//    i = 0;
-//    do
-//        polymer_transformpoint(&inbuffer[i * 5], &s.plane.buffer[i * 5], spritemodelview);
-//    while (++i < 4);
+    //i = 0;
+    //do
+    //    polymer_transformpoint(&inbuffer[i * 5], &s.plane.buffer[i * 5], spritemodelview);
+    //while (++i < 4);
 
-//    polymer_computeplane(&s.plane);
+    //polymer_computeplane(&s.plane);
 
-//    if (alignmask && (pr_vbos > 0))
-//    {
-//        bglBindBufferARB(GL_ARRAY_BUFFER_ARB, s.plane.vbo);
-//        bglBufferSubDataARB(GL_ARRAY_BUFFER_ARB, 0, 4 * sizeof(GLfloat) * 5, s.plane.buffer);
-//        bglBindBufferARB(GL_ARRAY_BUFFER_ARB, 0);
-//    }
-//    else if (s.plane.vbo) // clean up the vbo if a wall/floor sprite becomes a face sprite
-//    {
-//        bglDeleteBuffersARB(1, &s.plane.vbo);
-//        s.plane.vbo = 0;
-//    }
+    //if (alignmask && (pr_vbos > 0))
+    //{
+    //    bglBindBufferARB(GL_ARRAY_BUFFER_ARB, s.plane.vbo);
+    //    bglBufferSubDataARB(GL_ARRAY_BUFFER_ARB, 0, 4 *  /*sizeof(GLfloat)*/ 4 * 5, s.plane.buffer);
+    //    bglBindBufferARB(GL_ARRAY_BUFFER_ARB, 0);
+    //}
+    //else if (s.plane.vbo) // clean up the vbo if a wall/floor sprite becomes a face sprite
+    //{
+    //    bglDeleteBuffersARB(1, &s.plane.vbo);
+    //    s.plane.vbo = 0;
+    //}
 
-//    if (alignmask)
-//    {
-//        int32_t curpriority = 0;
+    //if (alignmask)
+    //{
+    //    int32_t curpriority = 0;
 
-//        polymer_resetplanelights(&s.plane);
+    //    polymer_resetplanelights(&s.plane);
 
-//        while (curpriority < pr_maxlightpriority)
-//        {
-//            i = j = 0;
-//            while (j < lightcount)
-//            {
-//                while (!prlights[i].flags.active)
-//                    i++;
+    //    while (curpriority < pr_maxlightpriority)
+    //    {
+    //        i = j = 0;
+    //        while (j < lightcount)
+    //        {
+    //            while (!prlights[i].flags.active)
+    //                i++;
 
-//                if (prlights[i].priority != curpriority)
-//                {
-//                    i++;
-//                    j++;
-//                    continue;
-//                }
+    //            if (prlights[i].priority != curpriority)
+    //            {
+    //                i++;
+    //                j++;
+    //                continue;
+    //            }
 
-//                if (polymer_planeinlight(&s.plane, &prlights[i]))
-//                    polymer_addplanelight(&s.plane, i);
-//                i++;
-//                j++;
-//            }
-//            curpriority++;
-//        }
-//    }
-//}
+    //            if (polymer_planeinlight(&s.plane, &prlights[i]))
+    //                polymer_addplanelight(&s.plane, i);
+    //            i++;
+    //            j++;
+    //        }
+    //        curpriority++;
+    //    }
+    //}
+}
 
 // SKIES
 function polymer_getsky(): void
@@ -3993,7 +3996,7 @@ function polymer_initartsky():void
 //        bglGenBuffersARB(1, &skyboxdatavbo);
 
 //        bglBindBufferARB(GL_ARRAY_BUFFER_ARB, skyboxdatavbo);
-//        bglBufferDataARB(GL_ARRAY_BUFFER_ARB, 4 * sizeof(GLfloat) * 5 * 6, skyboxdata, modelvbousage);
+//        bglBufferDataARB(GL_ARRAY_BUFFER_ARB, 4 *  /*sizeof(GLfloat)*/ 4 * 5 * 6, skyboxdata, modelvbousage);
 
 //        bglBindBufferARB(GL_ARRAY_BUFFER_ARB, 0);
 //    }
@@ -4034,11 +4037,11 @@ function polymer_initartsky():void
 //        bglBindTexture(GL_TEXTURE_2D, pth ? pth.glpic : 0);
 //        if (pr_vbos > 0)
 //        {
-//            bglVertexPointer(3, GL_FLOAT, 5 * sizeof(GLfloat), (GLfloat*)(4 * 5 * i * sizeof(GLfloat)));
-//            bglTexCoordPointer(2, GL_FLOAT, 5 * sizeof(GLfloat), (GLfloat*)(((4 * 5 * i) + 3) * sizeof(GLfloat)));
+//            bglVertexPointer(3, GL_FLOAT, 5 *  /*sizeof(GLfloat)*/ 4, (GLfloat*)(4 * 5 * i *  /*sizeof(GLfloat)*/ 4));
+//            bglTexCoordPointer(2, GL_FLOAT, 5 *  /*sizeof(GLfloat)*/ 4, (GLfloat*)(((4 * 5 * i) + 3) *  /*sizeof(GLfloat)*/ 4));
 //        } else {
-//            bglVertexPointer(3, GL_FLOAT, 5 * sizeof(GLfloat), &skyboxdata[4 * 5 * i]);
-//            bglTexCoordPointer(2, GL_FLOAT, 5 * sizeof(GLfloat), &skyboxdata[3 + (4 * 5 * i)]);
+//            bglVertexPointer(3, GL_FLOAT, 5 *  /*sizeof(GLfloat)*/ 4, &skyboxdata[4 * 5 * i]);
+//            bglTexCoordPointer(2, GL_FLOAT, 5 *  /*sizeof(GLfloat)*/ 4, &skyboxdata[3 + (4 * 5 * i)]);
 //        }
 //        bglDrawArrays(GL_QUADS, 0, 4);
 
@@ -4167,7 +4170,7 @@ function polymer_initartsky():void
 //    if (!(tspr.cstat & 4) != !(tspr.cstat & 8)) {
 //        // Only inverting one coordinate will reverse the winding order of
 //        // faces, so we need to account for that when culling.
-//        SWITCH_CULL_DIRECTION;
+//        { culledface = (culledface == GL_FRONT) ? GL_BACK : GL_FRONT; bglCullFace(culledface); } /*SWITCH_CULL_DIRECTION*/;
 //    }
 
 //    bglScalef(scale * tspr.xrepeat, scale * tspr.xrepeat, scale * tspr.yrepeat);
@@ -4513,7 +4516,7 @@ function polymer_initartsky():void
 //    bglPopMatrix();
 
 //    if (!(tspr.cstat & 4) != !(tspr.cstat & 8)) {
-//        SWITCH_CULL_DIRECTION;
+//        { culledface = (culledface == GL_FRONT) ? GL_BACK : GL_FRONT; bglCullFace(culledface); } /*SWITCH_CULL_DIRECTION*/;
 //    }
 
 //    globalnoeffect = 0;
@@ -4596,6 +4599,7 @@ function  polymer_getscratchmaterial(material:_prmaterial):void
     material.mdspritespace = GL_FALSE;
 }
 
+var polymer_getbuildmaterial_temp_buffer = new Uint8Array(640000);
 function polymer_getbuildmaterial(material:_prmaterial, /*int16_t */tilenum:number, /*char */pal:number, /*int8_t */shade:number, /*int8_t */vis:number, /*int32_t */cmeth:number): void
 {
     var pth:pthtyp;
@@ -4622,40 +4626,44 @@ function polymer_getbuildmaterial(material:_prmaterial, /*int16_t */tilenum:numb
 
     // Lazily fill in all the textures we need, move this to precaching later
     if (pr_artmapping && (!pth || !pth.hicr) && tilenum != (MAXTILES - 4)) {
-        if (!prartmaps[tilenum]) {
-            var tilebuffer = waloff[tilenum];//char *tilebuffer = (char *)waloff[tilenum];
-            var tempbuffer = new Uint8Array(tilesizx[tilenum] * tilesizy[tilenum]);//char *tempbuffer = (char *)Bmalloc(tilesizx[tilenum] * tilesizy[tilenum]);
-            var/*int */i:number, j:number, k:number;
+        console.log(" todo !");
+        todo();
 
-            i = k = 0;
-            while (i < tilesizy[tilenum]) {
-                j = 0;
-                while (j < tilesizx[tilenum]) {
-                    tempbuffer[k] = tilebuffer[(j * tilesizy[tilenum]) + i];
-                    k++;
-                    j++;
-                }
-                i++;
-            }
-            todoThrow();
-            //    bglGenTextures(1, &prartmaps[tilenum]);
-            //    bglBindTexture(GL_TEXTURE_2D, prartmaps[tilenum]);
-            //    bglTexImage2D(GL_TEXTURE_2D,
-            //                  0,
-            //                  GL_R8,
-            //                  tilesizx[tilenum],
-            //                  tilesizy[tilenum],
-            //                  0,
-            //                  GL_RED,
-            //                  GL_UNSIGNED_BYTE,
-            //                  tempbuffer);
-            //    bglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-            //    bglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-            //    bglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-            //    bglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-            //    bglBindTexture(GL_TEXTURE_2D, 0);
-            //    Bfree(tempbuffer);
-            //}
+
+        if (!prartmaps[tilenum]) {
+        //    var tilebuffer = waloff[tilenum];//char *tilebuffer = (char *)waloff[tilenum];
+        //    var tempbuffer = polymer_getbuildmaterial_temp_buffer;//new Uint8Array(tilesizx[tilenum] * tilesizy[tilenum]);//char *tempbuffer = (char *)Bmalloc(tilesizx[tilenum] * tilesizy[tilenum]);
+        //    if(tempbuffer.length < tilesizx[tilenum] * tilesizy[tilenum]) {todoThrow("temp buffer not large enough");}
+        //    var/*int */i:number, j:number, k:number;
+
+        //    i = k = 0;
+        //    while (i < tilesizy[tilenum]) {
+        //        j = 0;
+        //        while (j < tilesizx[tilenum]) {
+        //            tempbuffer[k] = tilebuffer[(j * tilesizy[tilenum]) + i];
+        //            k++;
+        //            j++;
+        //        }
+        //        i++;
+        //    }
+        //        bglGenTextures(1, prartmaps[tilenum]);
+        //        bglBindTexture(GL_TEXTURE_2D, prartmaps[tilenum]);
+        //        bglTexImage2D(GL_TEXTURE_2D,
+        //                      0,
+        //                      GL_R8,
+        //                      tilesizx[tilenum],
+        //                      tilesizy[tilenum],
+        //                      0,
+        //                      GL_RED,
+        //                      GL_UNSIGNED_BYTE,
+        //                      tempbuffer);
+        //        bglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        //        bglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        //        bglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        //        bglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        //        bglBindTexture(GL_TEXTURE_2D, 0);
+        //        //Bfree(tempbuffer);
+        //    }
 
             //if (!prbasepalmaps[curbasepal]) {
             //    bglGenTextures(1, &prbasepalmaps[curbasepal]);
@@ -4888,7 +4896,7 @@ function /* int32_t      */polymer_bindmaterial( material:_prmaterial, lights:In
     programbits |= prprogrambits[PR_BIT_FOOTER].bit;
 
     // --------- program compiling
-    if (!prprograms[programbits].handle)
+    if (!prprograms[programbits] || !prprograms[programbits].handle)
         polymer_compileprogram(programbits);
 
     bglUseProgramObjectARB(prprograms[programbits].handle);
@@ -5225,40 +5233,40 @@ function /* int32_t      */polymer_bindmaterial( material:_prmaterial, lights:In
     return (programbits);
 }
 
-//static void         polymer_unbindmaterial(int32_t programbits)
-//{
-//    // repair any dirty GL state here
+function polymer_unbindmaterial(/*int32_t */programbits:number):void
+{
+    // repair any dirty GL state here
 
-//    // PR_BIT_ANIM_INTERPOLATION
-//    if (programbits & prprogrambits[PR_BIT_ANIM_INTERPOLATION].bit)
-//    {
-//        if (prprograms[programbits].attrib_nextFrameNormal != -1)
-//            bglDisableVertexAttribArrayARB(prprograms[programbits].attrib_nextFrameNormal);
-//        bglDisableVertexAttribArrayARB(prprograms[programbits].attrib_nextFrameData);
-//    }
+    // PR_BIT_ANIM_INTERPOLATION
+    if (programbits & prprogrambits[PR_BIT_ANIM_INTERPOLATION].bit)
+    {
+        if (prprograms[programbits].attrib_nextFrameNormal != -1)
+            bglDisableVertexAttribArrayARB(prprograms[programbits].attrib_nextFrameNormal);
+        bglDisableVertexAttribArrayARB(prprograms[programbits].attrib_nextFrameData);
+    }
 
-//    // PR_BIT_LIGHTING_PASS
-//    if (programbits & prprogrambits[PR_BIT_LIGHTING_PASS].bit)
-//    {
-//        bglPopAttrib();
-//    }
+    // PR_BIT_LIGHTING_PASS
+    if (programbits & prprogrambits[PR_BIT_LIGHTING_PASS].bit)
+    {
+        bglPopAttrib();
+    }
 
-//    // PR_BIT_NORMAL_MAP
-//    if (programbits & prprogrambits[PR_BIT_NORMAL_MAP].bit)
-//    {
-//        bglDisableVertexAttribArrayARB(prprograms[programbits].attrib_T);
-//        bglDisableVertexAttribArrayARB(prprograms[programbits].attrib_B);
-//        bglDisableVertexAttribArrayARB(prprograms[programbits].attrib_N);
-//    }
+    // PR_BIT_NORMAL_MAP
+    if (programbits & prprogrambits[PR_BIT_NORMAL_MAP].bit)
+    {
+        bglDisableVertexAttribArrayARB(prprograms[programbits].attrib_T);
+        bglDisableVertexAttribArrayARB(prprograms[programbits].attrib_B);
+        bglDisableVertexAttribArrayARB(prprograms[programbits].attrib_N);
+    }
 
-//    bglUseProgramObjectARB(0);
-//}
+    //bglUseProgramObjectARB(0);
+}
 
 function polymer_compileprogram(/*int32_t */programbits:number):void
 {
     var/*int32_t         */i:number, enabledbits:number;
     var/*GLhandleARB     */vert:WebGLShader, frag:WebGLShader, program:WebGLProgram;
-    var /*const GLcharARB*      */source:string;// = new Uint8Array(PR_BIT_COUNT * 2);
+    var /*const GLcharARB*      */source:string[] = new Array<string>(PR_BIT_COUNT * 2);
     var/*GLcharARB       */infobuffer = new Uint8Array(PR_INFO_LOG_BUFFER_SIZE);
     var/*GLint           */linkstatus:number;
     debugger
@@ -5301,8 +5309,8 @@ function polymer_compileprogram(/*int32_t */programbits:number):void
             source[enabledbits++] = prprogrambits[i].frag_prog;
         i++;
     }
-
-    bglShaderSourceARB(frag, enabledbits, /*(const GLcharARB**)*/source, NULL);
+    debugger
+    bglShaderSourceARB(frag, enabledbits, /*(const GLcharARB**)*/source[0], /*NULL*/0);
 
     bglCompileShaderARB(frag);
 
@@ -5314,10 +5322,12 @@ function polymer_compileprogram(/*int32_t */programbits:number):void
 
     bglLinkProgramARB(program);
 
-    linkstatus = bglGetObjectParameterivARB(program, GL_OBJECT_LINK_STATUS_ARB)//bglGetObjectParameterivARB(program, GL_OBJECT_LINK_STATUS_ARB, &linkstatus);
+    linkstatus = bglGetObjectParameterivARB(program, GL_OBJECT_LINK_STATUS_ARB)?1:0;//bglGetObjectParameterivARB(program, GL_OBJECT_LINK_STATUS_ARB, &linkstatus);
 
-    bglGetInfoLogARB(program, PR_INFO_LOG_BUFFER_SIZE, NULL, infobuffer);
+    bglGetInfoLogARB(program, PR_INFO_LOG_BUFFER_SIZE, NULL, infobuffer); //todo?
 
+    if(!prprograms[programbits])  
+        prprograms[programbits] = new _prprograminfo();
     prprograms[programbits].handle = program;
 
 //#ifdef DEBUGGINGAIDS

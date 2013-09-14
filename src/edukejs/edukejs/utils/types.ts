@@ -82,6 +82,15 @@ function multiDimArray <T>(arrayClass: any, num: number, arrLength: number): T[]
     return multiDimArray;
 }
 
+// todo: rename
+function set0OrNewArray(array, type:any, length:number):any {
+    if(!array) {
+        return new type(length);
+    }
+
+    return array;
+}
+
 function to2dMatrix(multiDimMatrix: Float32Array[]):Float32Array {
     return new Float32Array([ 
         multiDimMatrix[0][0],

@@ -111,7 +111,7 @@ class /*s_prmaterial*/ _prmaterial {
     shadeoffset:number;               //GLint           shadeoffset;
     visibility:number;                //GLfloat         visibility;
     // PR_BIT_DIFFUSE_MAP                      //// PR_BIT_DIFFUSE_MAP
-    diffusemap:number;                //GLuint          diffusemap;
+    diffusemap:WebGLTexture;                //GLuint          diffusemap;
     diffusescale:Float32Array/*[2]*/;           //GLfloat         diffusescale[2];
     // PR_BIT_HIGHPALOOKUP_MAP                 //// PR_BIT_HIGHPALOOKUP_MAP
     highpalookupmap:number;           //GLuint          highpalookupmap;
@@ -131,7 +131,7 @@ class /*s_prmaterial*/ _prmaterial {
     // PR_BIT_SHADOW_MAP                       //// PR_BIT_SHADOW_MAP
     mdspritespace:number;             //GLboolean       mdspritespace;
 
-    constructor() {
+    init() {
         // PR_BIT_ANIM_INTERPOLATION      
         this.frameprogress=0;             
         this.nextframedata=0;             
@@ -147,7 +147,7 @@ class /*s_prmaterial*/ _prmaterial {
         this.visibility=0;                
         // PR_BIT_DIFFUSE_MAP             
         this.diffusemap=0;                
-        this.diffusescale = new Float32Array(2);
+        this.diffusescale = emptyOrNewArray(this.diffusescale, Float32Array, 2)
         // PR_BIT_HIGHPALOOKUP_MAP        
         this.highpalookupmap=0;           
         // PR_BIT_DIFFUSE_DETAIL_MAP      
@@ -164,12 +164,16 @@ class /*s_prmaterial*/ _prmaterial {
         // PR_BIT_GLOW_MAP                
         this.glowmap=0;                   
         // PR_BIT_SHADOW_MAP              
-        this.mdspritespace=0;             
+        this.mdspritespace=0;   
+    }
+
+    constructor() {    
+        this.init();      
     }        
 }
 
 class /*s_prrograminfo*/  _prprograminfo{
-    handle:number; //GLhandleARB uint
+    handle:WebGLProgram; //GLhandleARB uint
     // PR_BIT_ANIM_INTERPOLATION
     attrib_nextFrameData:number;            //GLint           
     attrib_nextFrameNormal:number;          //GLint           
@@ -308,7 +312,7 @@ class _prplane     /*s_prplane*/ {
     // geometry
     buffer;       //GLfloat*        
     vertcount;    //int32_t         
-    vbo;          //GLuint          
+    vbo:WebGLBuffer;          //GLuint          
     // attributes
     tbn: Float32Array[];//[3][3];                   //GLfloat         
     plane: Float32Array;//[4];                    //GLfloat         
@@ -334,8 +338,15 @@ class _prplane     /*s_prplane*/ {
                 }
             }
         }
-        this.plane = new Float32Array(4);
-        this.material = new _prmaterial();
+
+        if(typeof this.plane === "undefined") 
+            this.plane = new Float32Array(4);
+        else {
+            for (var i = 0; i < this.plane.length; i++) {
+                this.plane[i] = 0;
+            }
+        }
+        if(!this.material) this.material = new _prmaterial(); else this.material.init();
         this.indices = 0;
         this.indicescount = 0;
         this.ivbo = 0;
@@ -381,8 +392,8 @@ class/*      s_prsector */_prsector{
     init() {
     // polymer data
         this.verts=null;                                                 
-        this.floor=null;                                          
-        this.ceil=null;                                           
+        if(!this.floor) this.floor = new _prplane(); else this.floor.init();                                          
+        if(!this.ceil) this.ceil = new _prplane(); else this.ceil.init();                                          
         this.curindice=0;                                         
         this.indicescount=0;                                      
         this.oldindicescount=0;                                   

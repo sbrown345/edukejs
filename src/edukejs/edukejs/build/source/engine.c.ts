@@ -10011,7 +10011,7 @@ function finish_loadboard(/*const vec3_t **/dapos: vec3_t, /*int16_t **/dacursec
         if (getrendermode() == REND_POLYMER)
         {
             if ((myflags&4)==0)
-                todoThrow("polymer_loadboard();");
+                polymer_loadboard();
         }
 //# endif
 //#endif

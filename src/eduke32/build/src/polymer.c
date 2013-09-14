@@ -4597,6 +4597,7 @@ static void         polymer_getbuildmaterial(_prmaterial* material, int16_t tile
 
     // Lazily fill in all the textures we need, move this to precaching later
     if (pr_artmapping && (!pth || !pth->hicr) && tilenum != (MAXTILES - 4)) {
+#ifdef DEBUG_GL_SIMPLE_OFF
         if (!prartmaps[tilenum]) {
             char *tilebuffer = (char *)waloff[tilenum];
             char *tempbuffer = (char *)Bmalloc(tilesizx[tilenum] * tilesizy[tilenum]);
@@ -4669,7 +4670,7 @@ static void         polymer_getbuildmaterial(_prmaterial* material, int16_t tile
             bglTexParameteri(GL_TEXTURE_RECTANGLE, GL_TEXTURE_WRAP_T, glinfo.clamptoedge?GL_CLAMP_TO_EDGE:GL_CLAMP);
             bglBindTexture(GL_TEXTURE_RECTANGLE, 0);
         }
-
+#endif
         material->artmap = prartmaps[tilenum];
         material->basepalmap = prbasepalmaps[curbasepal];
         material->lookupmap = prlookups[pal];
@@ -5224,7 +5225,9 @@ static void         polymer_unbindmaterial(int32_t programbits)
         bglDisableVertexAttribArrayARB(prprograms[programbits].attrib_N);
     }
 
+	#ifdef DEBUG_GL_SIMPLE_OFF
     bglUseProgramObjectARB(0);
+	#endif
 }
 
 static void         polymer_compileprogram(int32_t programbits)
