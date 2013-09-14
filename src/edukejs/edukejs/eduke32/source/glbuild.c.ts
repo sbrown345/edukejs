@@ -74,9 +74,12 @@ var GL_ALWAYS = gl.ALWAYS;
 var GL_FRONT_AND_BACK = gl.FRONT_AND_BACK;
 var GL_LEQUAL = gl.LEQUAL;
 var GL_POLYGON_OFFSET_FILL = gl.POLYGON_OFFSET_FILL;
+var GL_ARRAY_BUFFER_ARB = gl.ARRAY_BUFFER;
 //var GL_FILL = gl.FILL;
 //var GL_LINE = gl.LINE;
 //var GL_POINT = gl.POINT;
+var GL_TRUE = 0;
+var GL_FALSE = 0;
 //#include "compat.h"
 //#include "glbuild.h"
 //#include "baselayer.h"

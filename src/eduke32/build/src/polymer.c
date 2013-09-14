@@ -769,6 +769,7 @@ int32_t             polymer_init(void)
         {
             if (prhighpalookups[i][j].data)
             {
+				#ifdef DEBUG_GL_SIMPLE_OFF
                 bglGenTextures(1, &prhighpalookups[i][j].map);
                 bglBindTexture(GL_TEXTURE_3D, prhighpalookups[i][j].map);
                 bglTexImage3D(GL_TEXTURE_3D,                // target
@@ -787,6 +788,7 @@ int32_t             polymer_init(void)
                 bglTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, glinfo.clamptoedge?GL_CLAMP_TO_EDGE:GL_CLAMP);
                 bglTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, glinfo.clamptoedge?GL_CLAMP_TO_EDGE:GL_CLAMP);
                 bglBindTexture(GL_TEXTURE_3D, 0);
+				#endif
             }
             j++;
         }
@@ -2289,6 +2291,8 @@ static int32_t      polymer_initsector(int16_t sectnum)
         if (pr_verbosity >= 1) OSD_Printf("PR : Cannot initialize geometry of sector %i : Bmalloc failed.\n", sectnum);
         return (0);
     }
+
+#ifdef DEBUG_GL_SIMPLE_OFF
     bglGenBuffersARB(1, &s->floor.vbo);
     bglGenBuffersARB(1, &s->ceil.vbo);
     bglGenBuffersARB(1, &s->floor.ivbo);
@@ -2301,7 +2305,7 @@ static int32_t      polymer_initsector(int16_t sectnum)
     bglBufferDataARB(GL_ARRAY_BUFFER_ARB, sec->wallnum * sizeof(GLfloat) * 5, NULL, mapvbousage);
 
     bglBindBufferARB(GL_ARRAY_BUFFER_ARB, 0);
-
+#endif
     s->flags.empty = 1; // let updatesector know that everything needs to go
 
     prsectors[sectnum] = s;
@@ -5892,6 +5896,7 @@ static void         polymer_prepareshadows(void)
 // RENDER TARGETS
 static void         polymer_initrendertargets(int32_t count)
 {
+#ifdef DEBUG_GL_SIMPLE_OFF
     int32_t         i;
 
     static int32_t ocount;
@@ -5994,6 +5999,7 @@ static void         polymer_initrendertargets(int32_t count)
 
         i++;
     }
+#endif
 }
 
 // DEBUG OUTPUT

@@ -23,6 +23,7 @@
 /// <reference path="../../build/source/crc32.c.ts" />
 /// <reference path="../../build/source/mdsprite.c.ts" />
 /// <reference path="../../build/source/polymost.c.ts" />
+/// <reference path="../../build/source/polymer.c.ts" />
 
 /// <reference path="../../eduke32/source/net.c.ts" />
 
@@ -11081,8 +11082,8 @@ function setgamemode(/*char*/ davidoption: number,  daxdim: number,daydim: numbe
 //# ifdef POLYMER
     if (getrendermode() == REND_POLYMER)
     {
-        todoThrow("if (!polymer_init())");
-            //rendmode = REND_POLYMOST;
+        if (!polymer_init())
+            rendmode = REND_POLYMOST;
     }
 //#endif
 //#endif
@@ -14987,7 +14988,7 @@ function setbrightness(/*char*/ dabrightness: number, /*uint8_t*/ dapalid: numbe
             todo("gltexinvalidatetype(INVALIDATE_ART);");
 //#ifdef POLYMER
         if ((getrendermode() == REND_POLYMER) && doinvalidate)
-            todoThrow("polymer_texinvalidate();");
+            polymer_texinvalidate();
 //#endif
     }
 //#endif
@@ -15389,37 +15390,37 @@ function completemirror():void
 }
 
 
-////
-//// sectorofwall
-////
-//static int32_t sectorofwall_internal(int16_t theline)
-//{
-//    int32_t gap = numsectors>>1, i = gap;
+//
+// sectorofwall
+//
+function/* int32_t */sectorofwall_internal(/*int16_t */theline:number):number
+{
+    var/*int32_t */gap = numsectors>>1, i = gap;
 
-//    while (gap > 1)
-//    {
-//        gap >>= 1;
-//        if (sector[i].wallptr < theline) i += gap; else i -= gap;
-//    }
-//    while (sector[i].wallptr > theline) i--;
-//    while (sector[i].wallptr+sector[i].wallnum <= theline) i++;
+    while (gap > 1)
+    {
+        gap >>= 1;
+        if (sector[i].wallptr < theline) i += gap; else i -= gap;
+    }
+    while (sector[i].wallptr > theline) i--;
+    while (sector[i].wallptr+sector[i].wallnum <= theline) i++;
 
-//    return i;
-//}
+    return i;
+}
 
-//int32_t sectorofwall(int16_t theline)
-//{
-//    int32_t i;
+function /*int32_t */sectorofwall(/*int16_t*/ theline:number):number
+{
+    var/*int32_t */i:number;
 
-//    if (theline < 0 || theline >= numwalls)
-//        return -1;
+    if (theline < 0 || theline >= numwalls)
+        return -1;
 
-//    i = wall[theline].nextwall;
-//    if (i >= 0 && i < MAXWALLS)
-//        return wall[i].nextsector;
+    i = wall[theline].nextwall;
+    if (i >= 0 && i < MAXWALLS)
+        return wall[i].nextsector;
 
-//    return sectorofwall_internal(theline);
-//}
+    return sectorofwall_internal(theline);
+}
 
 //int32_t sectorofwall_noquick(int16_t theline)
 //{

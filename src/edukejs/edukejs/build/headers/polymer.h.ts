@@ -72,28 +72,28 @@
 
 //// MATERIAL
 //typedef enum {
-//                    PR_BIT_HEADER,              // must be first
-//                    PR_BIT_ANIM_INTERPOLATION,
-//                    PR_BIT_LIGHTING_PASS,
-//                    PR_BIT_NORMAL_MAP,
-//                    PR_BIT_ART_MAP,
-//                    PR_BIT_DIFFUSE_MAP,
-//                    PR_BIT_DIFFUSE_DETAIL_MAP,
-//                    PR_BIT_DIFFUSE_MODULATION,
-//                    PR_BIT_DIFFUSE_MAP2,
-//                    PR_BIT_HIGHPALOOKUP_MAP,
-//                    PR_BIT_SPECULAR_MAP,
-//                    PR_BIT_SPECULAR_MATERIAL,
-//                    PR_BIT_MIRROR_MAP,
-//                    PR_BIT_FOG,
-//                    PR_BIT_GLOW_MAP,
-//                    PR_BIT_PROJECTION_MAP,
-//                    PR_BIT_SHADOW_MAP,
-//                    PR_BIT_LIGHT_MAP,
-//                    PR_BIT_SPOT_LIGHT,
-//                    PR_BIT_POINT_LIGHT,
-//                    PR_BIT_FOOTER,              // must be just before last
-//                    PR_BIT_COUNT                // must be last
+var                   PR_BIT_HEADER=0,                    // must be first
+                      PR_BIT_ANIM_INTERPOLATION=1,
+                      PR_BIT_LIGHTING_PASS=2,
+                      PR_BIT_NORMAL_MAP=3,
+                      PR_BIT_ART_MAP=4,
+                      PR_BIT_DIFFUSE_MAP=5,
+                      PR_BIT_DIFFUSE_DETAIL_MAP=6,
+                      PR_BIT_DIFFUSE_MODULATION=7,
+                      PR_BIT_DIFFUSE_MAP2=8,
+                      PR_BIT_HIGHPALOOKUP_MAP=9,
+                      PR_BIT_SPECULAR_MAP=10,
+                      PR_BIT_SPECULAR_MATERIAL=11,
+                      PR_BIT_MIRROR_MAP=12,
+                      PR_BIT_FOG=13,
+                      PR_BIT_GLOW_MAP=14,
+                      PR_BIT_PROJECTION_MAP=15,
+                      PR_BIT_SHADOW_MAP=16,
+                      PR_BIT_LIGHT_MAP=17,
+                      PR_BIT_SPOT_LIGHT=18,
+                      PR_BIT_POINT_LIGHT=19,
+                      PR_BIT_FOOTER=20,                    // must be just before last
+                      PR_BIT_COUNT=21;                     // must be last
 //}                   prbittype;
 
 class /*s_prmaterial*/ _prmaterial {
@@ -168,55 +168,104 @@ class /*s_prmaterial*/ _prmaterial {
     }        
 }
 
-//typedef struct      s_prrograminfo {
-//    GLhandleARB     handle;
-//    // PR_BIT_ANIM_INTERPOLATION
-//    GLint           attrib_nextFrameData;
-//    GLint           attrib_nextFrameNormal;
-//    GLint           uniform_frameProgress;
-//    // PR_BIT_NORMAL_MAP
-//    GLint           attrib_T;
-//    GLint           attrib_B;
-//    GLint           attrib_N;
-//    GLint           uniform_eyePosition;
-//    GLint           uniform_normalMap;
-//    GLint           uniform_normalBias;
-//    // PR_BIT_ART_MAP
-//    GLuint          uniform_artMap;
-//    GLuint          uniform_basePalMap;
-//    GLuint          uniform_lookupMap;
-//    GLuint          uniform_shadeOffset;
-//    GLuint          uniform_visibility;
-//    // PR_BIT_DIFFUSE_MAP
-//    GLint           uniform_diffuseMap;
-//    GLint           uniform_diffuseScale;
-//    // PR_BIT_HIGHPALOOKUP_MAP
-//    GLuint          uniform_highPalookupMap;
-//    // PR_BIT_DIFFUSE_DETAIL_MAP
-//    GLint           uniform_detailMap;
-//    GLint           uniform_detailScale;
-//    // PR_BIT_SPECULAR_MAP
-//    GLint           uniform_specMap;
-//    // PR_BIT_SPECULAR_MATERIAL
-//    GLint           uniform_specMaterial;
-//    // PR_BIT_MIRROR_MAP
-//    GLint           uniform_mirrorMap;
-//#ifdef PR_LINEAR_FOG
-//    // PR_BIT_FOG
-//    GLint           uniform_linearFog;
+class /*s_prrograminfo*/  _prprograminfo{
+    handle:number; //GLhandleARB uint
+    // PR_BIT_ANIM_INTERPOLATION
+    attrib_nextFrameData:number;            //GLint           
+    attrib_nextFrameNormal:number;          //GLint           
+    uniform_frameProgress:number;           //GLint           
+    // PR_BIT_NORMAL_MAP
+    attrib_T:number;                      //GLint           
+    attrib_B:number;                      //GLint           
+    attrib_N:number;                      //GLint           
+    uniform_eyePosition:number;           //GLint           
+    uniform_normalMap:number;             //GLint           
+    uniform_normalBias:number;            //GLint           
+    // PR_BIT_ART_MAP
+    uniform_artMap:number;          //GLuint          
+    uniform_basePalMap:number;      //GLuint          
+    uniform_lookupMap:number;       //GLuint          
+    uniform_shadeOffset:number;     //GLuint          
+    uniform_visibility:number;      //GLuint          
+    // PR_BIT_DIFFUSE_MAP
+    uniform_diffuseMap:number;       //GLint           
+    uniform_diffuseScale:number;     //GLint           
+    // PR_BIT_HIGHPALOOKUP_MAP
+    uniform_highPalookupMap:number; //GLuint          
+    // PR_BIT_DIFFUSE_DETAIL_MAP
+    uniform_detailMap:number;        //GLint           
+    uniform_detailScale:number;      //GLint           
+    // PR_BIT_SPECULAR_MAP
+    uniform_specMap:number;          //GLint           
+    // PR_BIT_SPECULAR_MATERIAL
+    uniform_specMaterial:number;    //GLint           
+    // PR_BIT_MIRROR_MAP
+    uniform_mirrorMap:number;
+//#ifdef PR_LINEAR_FOG         //GLint           
+    // PR_BIT_FOG
+    uniform_linearFog:number;       //GLint           
 //#endif
-//    // PR_BIT_GLOW_MAP
-//    GLint           uniform_glowMap;
-//    // PR_BIT_PROJECTION_MAP
-//    GLint           uniform_shadowProjMatrix;
-//    // PR_BIT_SHADOW_MAP
-//    GLint           uniform_shadowMap;
-//    // PR_BIT_LIGHT_MAP
-//    GLint           uniform_lightMap;
-//    // PR_BIT_SPOT_LIGHT
-//    GLint           uniform_spotDir;
-//    GLint           uniform_spotRadius;
-//}                   _prprograminfo;
+    // PR_BIT_GLOW_MAP
+    uniform_glowMap:number;          //GLint           
+    // PR_BIT_PROJECTION_MAP
+    uniform_shadowProjMatrix:number;//GLint           
+    // PR_BIT_SHADOW_MAP
+    uniform_shadowMap:number;       //GLint           
+    // PR_BIT_LIGHT_MAP
+    uniform_lightMap:number;//GLint           
+    // PR_BIT_SPOT_LIGHT
+    uniform_spotDir:number;         //GLint           
+    uniform_spotRadius:number;      //GLint       
+    constructor() {
+        this.handle=0; //GLhandleARB uint
+        // PR_BIT_ANIM_INTERPOLATION
+        this.attrib_nextFrameData=0;            //GLint           
+        this.attrib_nextFrameNormal=0;          //GLint           
+        this.uniform_frameProgress=0;           //GLint           
+        // PR_BIT_NORMAL_MAP
+        this.attrib_T=0;                      //GLint           
+        this.attrib_B=0;                      //GLint           
+        this.attrib_N=0;                      //GLint           
+        this.uniform_eyePosition=0;           //GLint           
+        this.uniform_normalMap=0;             //GLint           
+        this.uniform_normalBias=0;            //GLint           
+        // PR_BIT_ART_MAP
+        this.uniform_artMap=0;          //GLuint          
+        this.uniform_basePalMap=0;      //GLuint          
+        this.uniform_lookupMap=0;       //GLuint          
+        this.uniform_shadeOffset=0;     //GLuint          
+        this.uniform_visibility=0;      //GLuint          
+        // PR_BIT_DIFFUSE_MAP
+        this.uniform_diffuseMap=0;       //GLint           
+        this.uniform_diffuseScale=0;     //GLint           
+        // PR_BIT_HIGHPALOOKUP_MAP
+        this.uniform_highPalookupMap=0; //GLuint          
+        // PR_BIT_DIFFUSE_DETAIL_MAP
+        this.uniform_detailMap=0;        //GLint           
+        this.uniform_detailScale=0;      //GLint           
+        // PR_BIT_SPECULAR_MAP
+        this.uniform_specMap=0;          //GLint           
+        // PR_BIT_SPECULAR_MATERIAL
+        this.uniform_specMaterial=0;    //GLint           
+        // PR_BIT_MIRROR_MAP
+        this.uniform_mirrorMap=0;
+        //#ifdef PR_LINEAR_FOG         //GLint           
+        // PR_BIT_FOG
+        this.uniform_linearFog=0;       //GLint           
+        //#endif
+        // PR_BIT_GLOW_MAP
+        this.uniform_glowMap=0;          //GLint           
+        // PR_BIT_PROJECTION_MAP
+        this.uniform_shadowProjMatrix=0;//GLint           
+        // PR_BIT_SHADOW_MAP
+        this.uniform_shadowMap=0;       //GLint           
+        // PR_BIT_LIGHT_MAP
+        this.uniform_lightMap=0;//GLint           
+        // PR_BIT_SPOT_LIGHT
+        this.uniform_spotDir=0;         //GLint           
+        this.uniform_spotRadius=0;      //GLint  
+    }
+}                   
 
 //#define             PR_INFO_LOG_BUFFER_SIZE 8192
 
@@ -393,21 +442,29 @@ class flags {
     }
 }
 
-//typedef struct      s_prsprite {
-//    _prplane        plane;
-//    uint32_t        crc;
-//}                   _prsprite;
-
+class /*s_prsprite */_prsprite{
+    plane:_prplane; //      _prplane        
+    crc:number;     //    uint32_t   
+    
+    constructor() {
+        this.plane = null;   
+        this.crc = 0;
+    }     
+}               
 //typedef struct      s_prmirror {
 //    _prplane        *plane;
 //    int16_t         sectnum;
 //    int16_t         wallnum;
 //}                   _prmirror;
 
-//typedef struct      s_prhighpalookup {
-//    char            *data;
-//    GLuint          map;
-//}                   _prhighpalookup;
+class /*s_prhighpalookup */_prhighpalookup{
+    data:Uint8Array;       //char            
+    map:number;         //GLuint        
+    constructor() {
+        this.data = null;
+        this.map = 0;    
+    }  
+}
 
 //typedef void    (*animatespritesptr)(int32_t, int32_t, int32_t, int32_t);
 

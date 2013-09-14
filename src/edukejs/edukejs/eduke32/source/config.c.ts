@@ -622,6 +622,9 @@ function CONFIG_SetDefaults()
 
 function /*int32_t */ CONFIG_ReadSetup() : number
 {
+    tempHC(function() {
+        glrendmode = REND_POLYMER; // this gets configured below normally
+    });
     todo("CONFIG_ReadSetup");
 //    int32_t dummy, i = 0;
 //    char commmacro[] = "CommbatMacro# ";
