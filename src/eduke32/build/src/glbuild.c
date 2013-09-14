@@ -498,8 +498,6 @@ int32_t loadglextensions(void)
     if (!hGLDLL) return 0;
 #endif
 
-#ifdef DEBUG_GL_SIMPLE_OFF
-
     bglBlendEquation = (bglBlendEquationProcPtr) GETPROCEXTSOFT("glBlendEquation");
 
     bglTexImage3D = (bglTexImage3DProcPtr) GETPROCEXTSOFT("glTexImage3D");
@@ -644,7 +642,6 @@ int32_t loadglextensions(void)
     bwglCreateContextAttribsARB = (bwglCreateContextAttribsARBProcPtr) GETPROCEXTSOFT("wglCreateContextAttribsARB");
 #endif
 
-#endif
 
     return err;
 }
