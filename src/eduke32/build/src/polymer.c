@@ -875,12 +875,12 @@ void                polymer_glinit(void)
 
     bglDisable(GL_BLEND);
     bglDisable(GL_ALPHA_TEST);
-
+#ifdef DEBUG_GL_SIMPLE_OFF
     if (pr_wireframe)
         bglPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     else
         bglPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
+#endif
     polymer_setaspect(pr_fov);
 
     bglMatrixMode(GL_MODELVIEW);

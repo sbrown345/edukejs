@@ -154,6 +154,9 @@
     <Content Include="libs\polyfills.js" />
     <Content Include="libs\sprintf.ts" />
     <Content Include="libs\sprintf.d.ts" />
+    <Content Include="libs\tsm\tsm-0.6.d.ts" />
+    <Content Include="libs\tsm\tsm-0.6.js" />
+    <Content Include="libs\tsm\tsm-0.6.min.js" />
     <Content Include="libs\webgl-debug.js" />
     <Content Include="libs\WebGL.d.ts" />
     <Content Include="log.aspx" />
@@ -174,6 +177,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="DUKE3D.GRP" />
+    <Content Include="libs\tsm\tsm-0.6.js.map" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

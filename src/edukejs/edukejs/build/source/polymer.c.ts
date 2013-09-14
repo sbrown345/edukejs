@@ -717,7 +717,7 @@ var cursky:number;         //int16_t
 var curskypal:number;      //char           
 var curskyshade:number;    //int8_t         
 
-//_pranimatespritesinfo asi;
+var asi = new _pranimatespritesinfo ();
 
 var polymersearching=0;//int32_t         
 
@@ -871,58 +871,58 @@ function /*int32_t             */polymer_init(): number
 //    }
 //}
 
-//void                polymer_setaspect(int32_t ang)
-//{
-//    float           aspect;
-//    float fang =  /*(float)*/ ang * atanf( /*(float)*/ viewingrange/65536.0)/(PI/4);
+function polymer_setaspect(/*int32_t */ang:number):void
+{
+    var/*float           */aspect=0.0;
+    var/*float */fang =  /*(float)*/ ang * atanf( /*(float)*/ viewingrange/65536.0)/(PI/4);
 
-//    if (pr_customaspect != 0.0)
-//        aspect = pr_customaspect;
-//    else
-//        aspect =  /*(float)*/ (windowx2-windowx1+1) /
-//                  /*(float)*/ (windowy2-windowy1+1);
+    if (pr_customaspect != 0.0)
+        aspect = pr_customaspect;
+    else
+        aspect =  /*(float)*/ (windowx2-windowx1+1) /
+                  /*(float)*/ (windowy2-windowy1+1);
 
-//    bglMatrixMode(GL_PROJECTION);
-//    bglLoadIdentity();
-//    bgluPerspective(fang / (2048.0 / 360.0), aspect, 0.01f, 100.0);
-//}
+    bglMatrixMode(GL_PROJECTION);
+    bglLoadIdentity();
+    bgluPerspective(fang / (2048.0 / 360.0), aspect, 0.01, 100.0);
+}
 
-//void                polymer_glinit(void)
-//{
-//    bglClearColor(0.0, 0.0, 0.0, 1.0);
-//    bglClearStencil(0);
-//    bglClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-//    bglViewport(windowx1, yres-(windowy2+1),windowx2-windowx1+1, windowy2-windowy1+1);
+function polymer_glinit():void
+{
+    bglClearColor(0.0, 0.0, 0.0, 1.0);
+    bglClearStencil(0);
+    bglClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+    bglViewport(windowx1, yres-(windowy2+1),windowx2-windowx1+1, windowy2-windowy1+1);
 
-//    // texturing
-//    bglEnable(GL_TEXTURE_2D);
+    // texturing
+    bglEnable(GL_TEXTURE_2D);
 
-//    bglEnable(GL_DEPTH_TEST);
-//    bglDepthFunc(GL_LEQUAL);
+    bglEnable(GL_DEPTH_TEST);
+    bglDepthFunc(GL_LEQUAL);
 
-//    bglDisable(GL_BLEND);
-//    bglDisable(GL_ALPHA_TEST);
+    bglDisable(GL_BLEND);
+    bglDisable(GL_ALPHA_TEST);
 
-//    if (pr_wireframe)
-//        bglPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-//    else
-//        bglPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    //if (pr_wireframe)
+    //    bglPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    //else
+    //    bglPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-//    polymer_setaspect(pr_fov);
+    polymer_setaspect(pr_fov);
 
-//    bglMatrixMode(GL_MODELVIEW);
-//    bglLoadIdentity();
+    bglMatrixMode(GL_MODELVIEW);
+    bglLoadIdentity();
 
-//    bglEnableClientState(GL_VERTEX_ARRAY);
-//    bglEnableClientState(GL_TEXTURE_COORD_ARRAY);
+    bglEnable/*ClientState*/(GL_VERTEX_ARRAY);
+    bglEnable/*ClientState*/(GL_TEXTURE_COORD_ARRAY);
 
-//    bglDisable(GL_FOG);
+    bglDisable(GL_FOG);
 
-//    culledface = GL_BACK;
-//    bglCullFace(GL_BACK);
+    culledface = GL_BACK;
+    bglCullFace(GL_BACK);
 
-//    bglEnable(GL_CULL_FACE);
-//}
+    bglEnable(GL_CULL_FACE);
+}
 
 function polymer_resetlights(): void
 {todo();
@@ -1538,14 +1538,14 @@ function polymer_postrotatesprite():void
 //    }
 //}
 
-//void                polymer_setanimatesprites(animatespritesptr animatesprites, int32_t x, int32_t y, int32_t a, int32_t smoothratio)
-//{
-//    asi.animatesprites = animatesprites;
-//    asi.x = x;
-//    asi.y = y;
-//    asi.a = a;
-//    asi.smoothratio = smoothratio;
-//}
+function polymer_setanimatesprites(animatesprites:(_:number,__:number,___:number,____:number)=>void, /*int32_t */x:number, /*int32_t */y:number, /*int32_t */a:number, /*int32_t */smoothratio:number):void
+{
+    asi.animatesprites = animatesprites;
+    asi.x = x;
+    asi.y = y;
+    asi.a = a;
+    asi.smoothratio = smoothratio;
+}
 
 //int16_t             polymer_addlight(_prlight* light)
 //{
@@ -3486,7 +3486,7 @@ function polymer_transformpoint(/*const float* */inpos:Float32Array, pos:Float32
                       + matrix[14];
 }
 
-function polymer_normalize(vec:Float32Array)
+function polymer_normalize(vec:number[])
 {
     var /*double */norm:number;
 

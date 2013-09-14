@@ -504,10 +504,15 @@ class /*s_prhighpalookup */_prhighpalookup{
 
 //typedef void    (*animatespritesptr)(int32_t, int32_t, int32_t, int32_t);
 
-//typedef struct      s_pranimatespritesinfo {
-//    animatespritesptr animatesprites;
-//    int32_t         x, y, a, smoothratio;
-//}                   _pranimatespritesinfo;
+class  /*s_pranimatespritesinfo*/ _pranimatespritesinfo{
+    animatesprites:(_:number,__:number,___:number,____:number)=>void;
+    x:number; y:number; a:number; smoothratio:number;//int32_t         
+    
+    constructor() {
+        this.animatesprites = null;
+        this.x = this.y = this.a = this.smoothratio = 0;
+    }
+}
 
 //// this one has to be provided by the application
 //extern void G_Polymer_UnInit(void);

@@ -4734,7 +4734,7 @@ function G_DrawRooms(/*int32_t*/ snum: number, /*int32_t */smoothratio: number):
 
 //#ifdef POLYMER
             if (getrendermode() == REND_POLYMER)
-                todoThrow("polymer_setanimatesprites(G_DoSpriteAnimations, ud.camerapos.x,ud.camerapos.y,ud.cameraang,smoothratio);");
+                polymer_setanimatesprites(G_DoSpriteAnimations, ud.camerapos.x,ud.camerapos.y,ud.cameraang,smoothratio);
 //#endif
             // for G_PrintCoords
             dr_viewingrange = viewingrange;

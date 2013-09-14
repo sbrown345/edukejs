@@ -4,6 +4,7 @@
 
 /// <reference path="../../utils/types.ts" />
 /// <reference path="../../libs/WebGL.d.ts" />
+/// <reference path="../../libs/tsm/tsm-0.6.d.ts" />
 
 /// <reference path="../../build/headers/glbuild.h.ts" />
 
@@ -54,6 +55,7 @@ var GL_TEXTURE_MAG_FILTER = gl.TEXTURE_MAG_FILTER;
 var GL_NEAREST = gl.NEAREST;
 var GL_COLOR_BUFFER_BIT = gl.COLOR_BUFFER_BIT;
 var GL_DEPTH_BUFFER_BIT = gl.DEPTH_BUFFER_BIT;
+var GL_STENCIL_BUFFER_BIT = gl.STENCIL_BUFFER_BIT;
 var GL_TRIANGLE_FAN = gl.TRIANGLE_FAN;
 var GL_TEXTURE_2D = gl.TEXTURE_2D;
 var GL_TEXTURE = gl.TEXTURE;
@@ -88,6 +90,8 @@ var GL_BACK = gl.BACK;
 var GL_ELEMENT_ARRAY_BUFFER_ARB = gl.ELEMENT_ARRAY_BUFFER;
 var GL_STREAM_DRAW_ARB = gl.STREAM_DRAW;
 var GL_STATIC_DRAW_ARB = gl.STATIC_DRAW;
+var GL_VERTEX_ARRAY = gl.VERTEX_ARRAY;
+var GL_TEXTURE_COORD_ARRAY = gl.TEXTURE_COORD_ARRAY;
 //var GL_FILL = gl.FILL;
 //var GL_LINE = gl.LINE;
 //var GL_POINT = gl.POINT;
@@ -116,7 +120,7 @@ var bglColorMask = gl.colorMask.bind(gl); //bglColorMaskProcPtr
 var bglAlphaFunc = function (arg1:any,arg2:any) {todoUnimportant("alphaFunc");}//gl.alphaFunc.bind(gl); //bglAlphaFuncProcPtr  //http://stackoverflow.com/questions/7277047/alphafunctions-in-webgl
 //bglBlendFuncProcPtr bglBlendFunc;
 //bglBlendEquationProcPtr bglBlendEquation;
-//bglCullFaceProcPtr bglCullFace;
+var bglCullFace = gl.cullFace.bind(gl);
 //bglFrontFaceProcPtr bglFrontFace;
 var bglPolygonOffset = gl.polygonOffset.bind(gl); //bglPolygonOffsetProcPtr 
 //bglPolygonModeProcPtr bglPolygonMode;
@@ -297,17 +301,17 @@ var bglTexParameteri = gl. texParameteri.bind(gl);//bglTexParameteriProcPtr
 //bglCallListProcPtr bglCallList;
 //bglDeleteListsProcPtr bglDeleteLists;
 
-//// Vertex Arrays
-//bglEnableClientStateProcPtr bglEnableClientState;
-//bglDisableClientStateProcPtr bglDisableClientState;
+// Vertex Arrays
+var bglEnableClientState = gl.enable.bind(gl);
+var bglDisableClientState = gl.disable.bind(gl);
 //bglVertexPointerProcPtr bglVertexPointer;
 //bglNormalPointerProcPtr bglNormalPointer;
 //bglTexCoordPointerProcPtr bglTexCoordPointer;
 //bglDrawArraysProcPtr bglDrawArrays;
 //bglDrawElementsProcPtr bglDrawElements;
 
-//// Stencil Buffer
-//bglClearStencilProcPtr bglClearStencil;
+// Stencil Buffer
+var bglClearStencil = gl.clearStencil.bind(gl);
 //bglStencilOpProcPtr bglStencilOp;
 //bglStencilFuncProcPtr bglStencilFunc;
 
@@ -461,7 +465,18 @@ var bglGetAttribLocationARB = gl.getAttribLocation.bind(gl);//bglGetAttribLocati
 //bgluNewTessProcPtr bgluNewTess;
 //bgluDeleteTessProcPtr bgluDeleteTess;
 
-//bgluPerspectiveProcPtr bgluPerspective;
+var bgluPerspective = function(fov:number, aspect:number, near:number, far:number) {
+    //http://forums.inside3d.com/viewtopic.php?t=3369
+    //http://learningwebgl.com/blog/?p=507
+
+    //https://github.com/OneGeek/WebGLU/blob/73e7c4f341e5d1464b29c10db2168779907764d5/src/GLU.js
+    var m = TSM.mat4.perspective(fov, aspect, near, far);
+
+
+
+    //http://stackoverflow.com/questions/2417697/gluperspective-was-removed-in-opengl-3-1-any-replacements ------------
+}
+
 
 //bgluErrorStringProcPtr bgluErrorString;
 

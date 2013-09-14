@@ -77,6 +77,7 @@ var pow = Math.pow;
 var sin = Math.sin;
 var cos = Math.cos;
 var atan = Math.atan;
+var atanf = Math.atan;
 var floor = Math.floor;
 var abs = Math.abs;
 var labs = Math.abs;

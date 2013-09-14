@@ -9053,23 +9053,23 @@ function /*int32_t */drawrooms(/*int32_t*/ daposx: number, /*int32_t*/ daposy: n
 //#ifdef USE_OPENGL
 //# ifdef POLYMER
     if (getrendermode() == REND_POLYMER)
-    {todoThrow();
+    {
 //#  ifdef YAX_ENABLE
-//        // BEGIN_TWEAK ceiling/floor fake 'TROR' pics, see END_TWEAK in build.c
-//        if (editstatus && showinvisibility)
-//        {
-//            for (i=0; i<numyaxbunches; i++)
-//            {
-//                yax_tweakpicnums(i, YAX_CEILING, 0);
-//                yax_tweakpicnums(i, YAX_FLOOR, 0);
-//            }
-//        }
+        // BEGIN_TWEAK ceiling/floor fake 'TROR' pics, see END_TWEAK in build.c
+        if (editstatus && showinvisibility)
+        {
+            for (i=0; i<numyaxbunches; i++)
+            {
+                yax_tweakpicnums(i, YAX_CEILING, 0);
+                yax_tweakpicnums(i, YAX_FLOOR, 0);
+            }
+        }
 //#  endif
-//        polymer_glinit();
-//        polymer_drawrooms(daposx, daposy, daposz, daang, dahoriz, dacursectnum);
-//        bglDisable(GL_CULL_FACE);
-//        gloy1 = 0;
-//        return 0;
+        polymer_glinit();
+        polymer_drawrooms(daposx, daposy, daposz, daang, dahoriz, dacursectnum);
+        bglDisable(GL_CULL_FACE);
+        gloy1 = 0;
+        return 0;
     }
 //# endif
 
