@@ -90,8 +90,7 @@ var GL_BACK = gl.BACK;
 var GL_ELEMENT_ARRAY_BUFFER_ARB = gl.ELEMENT_ARRAY_BUFFER;
 var GL_STREAM_DRAW_ARB = gl.STREAM_DRAW;
 var GL_STATIC_DRAW_ARB = gl.STATIC_DRAW;
-var GL_VERTEX_ARRAY = gl.VERTEX_ARRAY;
-var GL_TEXTURE_COORD_ARRAY = gl.TEXTURE_COORD_ARRAY;
+
 //var GL_FILL = gl.FILL;
 //var GL_LINE = gl.LINE;
 //var GL_POINT = gl.POINT;
@@ -196,7 +195,7 @@ var bglMultMatrixf = function() {
     //http://stackoverflow.com/questions/11228187/trying-and-failing-to-implement-glulookat-in-webgl
 };//bglMultMatrixfProcPtr 
 //bglMultMatrixdProcPtr bglMultMatrixd;
-//bglRotatefProcPtr bglRotatef;
+//var bglRotatef = gl.rotate;
 //bglScalefProcPtr bglScalef;
 //bglTranslatefProcPtr bglTranslatef;
 
@@ -214,7 +213,7 @@ var bglVertex3d = bglVertex3f;//bglVertex3dProcPtr;
 //bglVertex3dvProcPtr bglVertex3dv;
 //bglRectdProcPtr bglRectd;
 var bglColor4f = gl.color.bind(gl);/*4f*/; //bglColor4fProcPtr 
-var bglColor4ub = gl.color.bind(gl)//bglColor4ubProcPtr ;
+var bglColor4ub = gl.color.bind(gl);//bglColor4ubProcPtr ;
 var bglTexCoord2d = gl.texCoord.bind(gl); //bglTexCoord2dProcPtr 
 //bglTexCoord2fProcPtr bglTexCoord2f;
 //bglTexCoord2iProcPtr bglTexCoord2i;
@@ -466,16 +465,31 @@ var bglGetAttribLocationARB = gl.getAttribLocation.bind(gl);//bglGetAttribLocati
 //bgluDeleteTessProcPtr bgluDeleteTess;
 
 var bgluPerspective = function(fov:number, aspect:number, near:number, far:number) {
+    console.log("todo perspective!");
+
     //http://forums.inside3d.com/viewtopic.php?t=3369
     //http://learningwebgl.com/blog/?p=507
 
     //https://github.com/OneGeek/WebGLU/blob/73e7c4f341e5d1464b29c10db2168779907764d5/src/GLU.js
-    var m = TSM.mat4.perspective(fov, aspect, near, far);
+    //var m = TSM.mat4.perspective(fov, aspect, near, far);
 
 
+    //gl_ModelViewProjectionMatrix??
 
     //http://stackoverflow.com/questions/2417697/gluperspective-was-removed-in-opengl-3-1-any-replacements ------------
-}
+    //http://granular.cs.umu.se/browserphysics/?p=237
+
+    //https://github.com/toji/webgl-source/search?q=perspective&ref=cmdform
+    //https://github.com/toji/webgl-source/search?q=projectionMat&ref=cmdform
+
+
+
+    /////////
+
+    // replace gl_ModelViewProjectionMatrix
+    //http://granular.cs.umu.se/browserphysics/?p=237
+
+};
 
 
 //bgluErrorStringProcPtr bgluErrorString;
