@@ -692,7 +692,7 @@ var /*int32_t         */rotatespritematerialbits:number;
 //// CONTROL
 //GLfloat         spritemodelview[16];
 var mdspritespace:Float32Array[] = multiDimArray<Float32Array>(Float32Array, 4, 4);
-//GLfloat         rootmodelviewmatrix[16];
+var rootmodelviewmatrix = new Float32Array(16);
 var curmodelviewmatrix: Float32Array;
 //GLfloat         rootskymodelviewmatrix[16];
 //GLfloat         *curskymodelviewmatrix;
@@ -705,10 +705,10 @@ var curmodelviewmatrix: Float32Array;
 //int16_t         *cursectormasks;
 //int16_t         *cursectormaskcount;
 
-//float           horizang;
-//int16_t         viewangle;
+var /*float   */       horizang=0.0;
+var /*int16_t */       viewangle=0;
 
-//int32_t         depth;
+var /*int32_t         */depth=0;
 //_prmirror       mirrors[10];
 
 //GLUtesselator*  prtess;
@@ -913,8 +913,9 @@ function polymer_glinit():void
     bglMatrixMode(GL_MODELVIEW);
     bglLoadIdentity();
 
-    bglEnable/*ClientState*/(GL_VERTEX_ARRAY);
-    bglEnable/*ClientState*/(GL_TEXTURE_COORD_ARRAY);
+    todo("GL_VERTEX_ARRAY, GL_TEXTURE_COORD_ARRAY");
+    //gl.enableVertexAttribArray(??     //   bglEnable/*ClientState*/(GL_VERTEX_ARRAY);
+    //gl.texCoord(                    //   bglEnable/*ClientState*/(GL_TEXTURE_COORD_ARRAY);
 
     bglDisable(GL_FOG);
 
@@ -1005,177 +1006,187 @@ function polymer_loadboard():void
     if (pr_verbosity >= 1 && numsectors) OSD_Printf("PR : Board loaded.\n");
 }
 
-//void                polymer_drawrooms(int32_t daposx, int32_t daposy, int32_t daposz, int16_t daang, int32_t dahoriz, int16_t dacursectnum)
-//{
-//    int16_t         cursectnum;
-//    int32_t         i, cursectflorz, cursectceilz;
-//    float           skyhoriz, ang, tiltang;
-//    float           pos[3];
-//    pthtyp*         pth;
+function polymer_drawrooms(/*int32_t */daposx:number, /*int32_t */daposy:number, /*int32_t */daposz:number, /*int16_t */daang:number, /*int32_t */dahoriz:number, /*int16_t */dacursectnum:number):void
+{
+    var /*int16_t */       cursectnum=0;
+    var /*int32_t */       i=0, cursectflorz=0, cursectceilz=0;
+    var /*float   */       skyhoriz=0, ang=0, tiltang=0;
+    var /*float   */       pos = new Float32Array(3);
+    var /*pthtyp* */       pth:pthtyp;
 
-//    if (getrendermode() == REND_CLASSIC) return;
+    if (getrendermode() == REND_CLASSIC) return;
 
-//    begindrawing();
+    begindrawing();
 
-//    // TODO: support for screen resizing
-//    // frameoffset = frameplace + windowy1*bytesperline + windowx1;
+    // TODO: support for screen resizing
+    // frameoffset = frameplace + windowy1*bytesperline + windowx1;
 
-//    if (pr_verbosity >= 3) OSD_Printf("PR : Drawing rooms...\n");
+    if (pr_verbosity >= 3) OSD_Printf("PR : Drawing rooms...\n");
 
-//    // fogcalc needs this
-//    gvisibility = ( /*(float)*/ globalvisibility)*FOGSCALE;
+    // fogcalc needs this
+    gvisibility = ( /*(float)*/ globalvisibility)*FOGSCALE;
 
-//    ang =  /*(float)*/ (daang) / (2048.0 / 360.0);
-//    horizang =  /*(float)*/ (-getangle(128, dahoriz-100)) / (2048.0 / 360.0);
-//    tiltang = (gtang * 90.0);
+    ang =  /*(float)*/ (daang) / (2048.0 / 360.0);
+    horizang =  /*(float)*/ (-getangle(128, dahoriz-100)) / (2048.0 / 360.0);
+    tiltang = (gtang * 90.0);
 
-//    pos[0] =  /*(float)*/ daposy;
-//    pos[1] = - /*(float)*/ (daposz) / 16.0;
-//    pos[2] = - /*(float)*/ daposx;
+    pos[0] =  /*(float)*/ daposy;
+    pos[1] = - /*(float)*/ (daposz) / 16.0;
+    pos[2] = - /*(float)*/ daposx;
 
-//    polymer_updatelights();
+    polymer_updatelights();
 
-////     polymer_resetlights();
-////     if (pr_lighting)
-////         polymer_applylights();
+//     polymer_resetlights();
+//     if (pr_lighting)
+//         polymer_applylights();
 
-//    depth = 0;
+    depth = 0;
 
-//    if (pr_shadows && lightcount && (pr_shadowcount > 0))
-//        polymer_prepareshadows();
+    if (pr_shadows && lightcount && (pr_shadowcount > 0))
+        todo("polymer_prepareshadows();");
 
-//    // hack for parallax skies
-//    skyhoriz = horizang;
-//    if (skyhoriz < -180.0)
-//        skyhoriz += 360.0;
+    // hack for parallax skies
+    skyhoriz = horizang;
+    if (skyhoriz < -180.0)
+        skyhoriz += 360.0;
 
-//    drawingskybox = 1;
-//    pth = texcache_fetch(cursky,0,0,0);
-//    drawingskybox = 0;
+    drawingskybox = 1;
+    pth = texcache_fetch(cursky,0,0,0);
+    drawingskybox = 0;
 
-//    // if it's not a skybox, make the sky parallax
-//    // the angle factor is computed from eyeballed values
-//    // need to recompute it if we ever change the max horiz amplitude
-//    if (!pth || !(pth.flags & 4))
-//        skyhoriz /= 4.3027f;
+    // if it's not a skybox, make the sky parallax
+    // the angle factor is computed from eyeballed values
+    // need to recompute it if we ever change the max horiz amplitude
+    if (!pth || !(pth.flags & 4))
+        skyhoriz /= 4.3027;
 
-//    bglMatrixMode(GL_MODELVIEW);
-//    bglLoadIdentity();
+    bglMatrixMode(GL_MODELVIEW);
+    bglLoadIdentity();
 
-//    bglRotatef(tiltang, 0.0, 0.0, -1.0);
-//    bglRotatef(skyhoriz, 1.0, 0.0, 0.0);
-//    bglRotatef(ang, 0.0, 1.0, 0.0);
+    bglRotatef(tiltang, 0.0, 0.0, -1.0);
+    bglRotatef(skyhoriz, 1.0, 0.0, 0.0);
+    bglRotatef(ang, 0.0, 1.0, 0.0);
 
-//    bglScalef(1.0 / 1000.0, 1.0 / 1000.0, 1.0 / 1000.0);
-//    bglTranslatef(-pos[0], -pos[1], -pos[2]);
+    bglScalef(1.0 / 1000.0, 1.0 / 1000.0, 1.0 / 1000.0);
+    bglTranslatef(-pos[0], -pos[1], -pos[2]);
 
-//    bglGetFloatv(GL_MODELVIEW_MATRIX, rootskymodelviewmatrix);
-//    curskymodelviewmatrix = rootskymodelviewmatrix;
+    bglGetFloatv(GL_MODELVIEW_MATRIX, rootskymodelviewmatrix);
+    curskymodelviewmatrix = rootskymodelviewmatrix;
 
-//    bglMatrixMode(GL_MODELVIEW);
-//    bglLoadIdentity();
+    bglMatrixMode(GL_MODELVIEW);
+    bglLoadIdentity();
 
-//    bglRotatef(tiltang, 0.0, 0.0, -1.0);
-//    bglRotatef(horizang, 1.0, 0.0, 0.0);
-//    bglRotatef(ang, 0.0, 1.0, 0.0);
+    bglRotatef(tiltang, 0.0, 0.0, -1.0);
+    bglRotatef(horizang, 1.0, 0.0, 0.0);
+    bglRotatef(ang, 0.0, 1.0, 0.0);
 
-//    bglScalef(1.0 / 1000.0, 1.0 / 1000.0, 1.0 / 1000.0);
-//    bglTranslatef(-pos[0], -pos[1], -pos[2]);
+    bglScalef(1.0 / 1000.0, 1.0 / 1000.0, 1.0 / 1000.0);
+    bglTranslatef(-pos[0], -pos[1], -pos[2]);
 
-//    bglGetFloatv(GL_MODELVIEW_MATRIX, rootmodelviewmatrix);
+    bglGetFloatv(GL_MODELVIEW_MATRIX, rootmodelviewmatrix);
 
-//    cursectnum = dacursectnum;
-//    updatesectorbreadth(daposx, daposy, &cursectnum);
+    cursectnum = dacursectnum;
+    var $cursectnum = new R(cursectnum);
+    updatesectorbreadth(daposx, daposy, $cursectnum);
+    cursectnum = $cursectnum.$;
 
-//    if (cursectnum >= 0 && cursectnum < numsectors)
-//        dacursectnum = cursectnum;
-//    else if (pr_verbosity>=2)
-//        OSD_Printf("PR : got sector %d after update!\n", cursectnum);
+    if (cursectnum >= 0 && cursectnum < numsectors)
+        dacursectnum = cursectnum;
+    else if (pr_verbosity>=2)
+        OSD_Printf("PR : got sector %d after update!\n", cursectnum);
 
-//    // unflag all sectors
-//    i = numsectors-1;
-//    while (i >= 0)
-//    {
-//        prsectors[i].flags.uptodate = 0;
-//        prsectors[i].wallsproffset = 0.0;
-//        prsectors[i].floorsproffset = 0.0;
-//        i--;
-//    }
-//    i = numwalls-1;
-//    while (i >= 0)
-//    {
-//        prwalls[i].flags.uptodate = 0;
-//        i--;
-//    }
+    // unflag all sectors
+    i = numsectors-1;
+    while (i >= 0)
+    {
+        prsectors[i].flags.uptodate = 0;
+        prsectors[i].wallsproffset = 0.0;
+        prsectors[i].floorsproffset = 0.0;
+        i--;
+    }
+    i = numwalls-1;
+    while (i >= 0)
+    {
+        prwalls[i].flags.uptodate = 0;
+        i--;
+    }
 
-//    if (searchit == 2 && !polymersearching)
-//    {
-//        globaloldoverridematerial = overridematerial;
-//        overridematerial = prprogrambits[PR_BIT_DIFFUSE_MODULATION].bit;
-//        overridematerial |= prprogrambits[PR_BIT_DIFFUSE_MAP2].bit;
-//        polymersearching = TRUE;
-//    }
-//    if (!searchit && polymersearching) {
-//        overridematerial = globaloldoverridematerial;
-//        polymersearching = FALSE;
-//    }
+    if (searchit == 2 && !polymersearching)
+    {
+        globaloldoverridematerial = overridematerial;
+        overridematerial = prprogrambits[PR_BIT_DIFFUSE_MODULATION].bit;
+        overridematerial |= prprogrambits[PR_BIT_DIFFUSE_MAP2].bit;
+        polymersearching = TRUE;
+    }
+    if (!searchit && polymersearching) {
+        overridematerial = globaloldoverridematerial;
+        polymersearching = FALSE;
+    }
 
-//    if (dacursectnum > -1 && dacursectnum < numsectors)
-//        getzsofslope(dacursectnum, daposx, daposy, &cursectceilz, &cursectflorz);
+    if (dacursectnum > -1 && dacursectnum < numsectors) 
+    {
+        var $cursectceilz = new R(cursectceilz);
+        var $cursectflorz = new R(cursectflorz);
+        getzsofslope(dacursectnum, daposx, daposy, $cursectceilz, $cursectflorz);
+        cursectceilz = $cursectceilz.$;
+        cursectflorz = $cursectflorz.$;
+    }
 
-//    // external view (editor)
-//    if ((dacursectnum < 0) || (dacursectnum >= numsectors) ||
-//            (daposz > cursectflorz) ||
-//            (daposz < cursectceilz))
-//    {
-//        if (!editstatus && pr_verbosity>=1)
-//        {
-//            if ((unsigned)dacursectnum < (unsigned)numsectors)
-//                OSD_Printf("PR : EXT sec=%d  z=%d (%d, %d)\n", dacursectnum, daposz, cursectflorz, cursectceilz);
-//            else
-//                OSD_Printf("PR : EXT sec=%d  z=%d\n", dacursectnum, daposz);
-//        }
+    // external view (editor)
+    if ((dacursectnum < 0) || (dacursectnum >= numsectors) ||
+            (daposz > cursectflorz) ||
+            (daposz < cursectceilz))
+    {
+        if (!editstatus && pr_verbosity>=1)
+        {
+            if (unsigned(dacursectnum) < unsigned(numsectors))
+                OSD_Printf("PR : EXT sec=%d  z=%d (%d, %d)\n", dacursectnum, daposz, cursectflorz, cursectceilz);
+            else
+                OSD_Printf("PR : EXT sec=%d  z=%d\n", dacursectnum, daposz);
+        }
 
-//        curmodelviewmatrix = rootmodelviewmatrix;
-//        i = numsectors-1;
-//        while (i >= 0)
-//        {
-//            polymer_updatesector(i);
-//            polymer_drawsector(i, FALSE);
-//            polymer_scansprites(i, tsprite, &spritesortcnt);
-//            i--;
-//        }
+        curmodelviewmatrix = rootmodelviewmatrix;
+        i = numsectors-1;
+        while (i >= 0)
+        {
+            polymer_updatesector(i);
+            polymer_drawsector(i, FALSE);
+            var $spritesortcnt = new R(spritesortcnt);
+            polymer_scansprites(i, tsprite, $spritesortcnt);
+            spritesortcnt = $spritesortcnt.$;
+            i--;
+        }
 
-//        i = numwalls-1;
-//        while (i >= 0)
-//        {
-//            polymer_updatewall(i);
-//            polymer_drawwall(sectorofwall(i), i);
-//            i--;
-//        }
-//        viewangle = daang;
-//        enddrawing();
-//        return;
-//    }
+        i = numwalls-1;
+        while (i >= 0)
+        {
+            polymer_updatewall(i);
+            polymer_drawwall(sectorofwall(i), i);
+            i--;
+        }
+        viewangle = daang;
+        enddrawing();
+        return;
+    }
 
-//    // GO!
-//    polymer_displayrooms(dacursectnum);
+    // GO!
+    polymer_displayrooms(dacursectnum);
 
-//    curmodelviewmatrix = rootmodelviewmatrix;
+    curmodelviewmatrix = rootmodelviewmatrix;
 
-//    // build globals used by rotatesprite
-//    viewangle = daang;
-//    set_globalang(daang);
+    // build globals used by rotatesprite
+    viewangle = daang;
+    set_globalang(daang);
 
-//    // polymost globals used by polymost_dorotatesprite
-//    gcosang = ( /*(double)*/ cosglobalang)/262144.0;
-//    gsinang = ( /*(double)*/ singlobalang)/262144.0;
-//    gcosang2 = gcosang*( /*(double)*/ viewingrange)/65536.0;
-//    gsinang2 = gsinang*( /*(double)*/ viewingrange)/65536.0;
+    // polymost globals used by polymost_dorotatesprite
+    gcosang = ( /*(double)*/ cosglobalang)/262144.0;
+    gsinang = ( /*(double)*/ singlobalang)/262144.0;
+    gcosang2 = gcosang*( /*(double)*/ viewingrange)/65536.0;
+    gsinang2 = gsinang*( /*(double)*/ viewingrange)/65536.0;
 
-//    if (pr_verbosity >= 3) OSD_Printf("PR : Rooms drawn.\n");
-//    enddrawing();
-//}
+    if (pr_verbosity >= 3) OSD_Printf("PR : Rooms drawn.\n");
+    enddrawing();
+}
 
 //void                polymer_drawmasks(void)
 //{
@@ -5449,66 +5460,66 @@ function polymer_compileprogram(/*int32_t */programbits:number):void
     }
 }
 
-//// LIGHTS
-//static void         polymer_removelight(int16_t lighti)
-//{
-//    _prplanelist*   oldhead;
+// LIGHTS
+function polymer_removelight(/*int16_t*/ lighti:number)
+{todo("polymer_removelight");
+    //_prplanelist*   oldhead;
 
-//    while (prlights[lighti].planelist)
-//    {
-//        polymer_deleteplanelight(prlights[lighti].planelist.plane, lighti);
-//        oldhead = prlights[lighti].planelist;
-//        prlights[lighti].planelist = prlights[lighti].planelist.n;
-//        Bfree(oldhead);
-//    }
-//    prlights[lighti].planecount = 0;
-//    prlights[lighti].planelist = NULL;
-//}
+    //while (prlights[lighti].planelist)
+    //{
+    //    polymer_deleteplanelight(prlights[lighti].planelist.plane, lighti);
+    //    oldhead = prlights[lighti].planelist;
+    //    prlights[lighti].planelist = prlights[lighti].planelist.n;
+    //    Bfree(oldhead);
+    //}
+    //prlights[lighti].planecount = 0;
+    //prlights[lighti].planelist = NULL;
+}
 
-//static void         polymer_updatelights(void)
-//{
-//    int32_t         i = 0;
+function polymer_updatelights():void
+{todo("polymer_updatelights");
+    //var/*int32_t         */i = 0;
 
-//    do
-//    {
-//        _prlight* light = &prlights[i];
+    //do
+    //{
+    //    var light = prlights[i];
 
-//        if (light.flags.active && light.flags.invalidate) {
-//            // highly suboptimal
-//            polymer_removelight(i);
+    //    if (light.flags.active && light.flags.invalidate) {
+    //        // highly suboptimal
+    //        polymer_removelight(i);
 
-//            if (light.radius)
-//                polymer_processspotlight(light);
+    //        if (light.radius)
+    //            polymer_processspotlight(light);
 
-//            polymer_culllight(i);
+    //        polymer_culllight(i);
 
-//            light.flags.invalidate = 0;
-//        }
+    //        light.flags.invalidate = 0;
+    //    }
 
-//        if (light.flags.active) {
-//            // get the texture handle for the lightmap
-//            if (light.radius && light.tilenum > 0)
-//            {
-//                int16_t     picnum = light.tilenum;
-//                pthtyp*     pth;
+    //    if (light.flags.active) {
+    //        // get the texture handle for the lightmap
+    //        if (light.radius && light.tilenum > 0)
+    //        {
+    //            var /*int16_t     */picnum = light.tilenum;
+    //            var pth:pthtyp;
 
-//                DO_TILE_ANIM(picnum, 0);
+    //            if (picanm[picnum].sf & PICANM_ANIMTYPE_MASK) picnum += animateoffs(picnum, 0);
 
-//                if (!waloff[picnum])
-//                    loadtile(picnum);
+    //            if (!waloff[picnum])
+    //                loadtile(picnum);
 
-//                pth = NULL;
-//                pth = texcache_fetch(picnum, 0, 0, 0);
+    //            pth = NULL;
+    //            pth = texcache_fetch(picnum, 0, 0, 0);
 
-//                if (pth)
-//                    light.lightmap = pth.glpic;
-//            }
+    //            if (pth)
+    //                light.lightmap = pth.glpic;
+    //        }
 
-//            light.rtindex = -1;
-//        }
-//    }
-//    while (++i < PR_MAXLIGHTS);
-//}
+    //        light.rtindex = -1;
+    //    }
+    //}
+    //while (++i < PR_MAXLIGHTS);
+}
 
 function polymer_resetplanelights(plane:_prplane):void
 {
@@ -5649,8 +5660,8 @@ function polymer_invalidatesectorlights(/*int16_t*/ sectnum:number):void
     }
 }
 
-//static void         polymer_processspotlight(_prlight* light)
-//{
+function polymer_processspotlight(light:_prlight):void
+{todo("polymer_processspotlight");
 //    float           radius, ang, horizang, lightpos[3];
 
 //    // hack to avoid lights beams perpendicular to walls
@@ -5689,7 +5700,7 @@ function polymer_invalidatesectorlights(/*int16_t*/ sectnum:number):void
 
 //    light.rtindex = -1;
 //    light.lightmap = 0;
-//}
+}
 
 //static inline void  polymer_culllight(int16_t lighti)
 //{
