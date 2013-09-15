@@ -5619,6 +5619,7 @@ static void         polymer_invalidatesectorlights(int16_t sectnum)
 
 static void         polymer_processspotlight(_prlight* light)
 {
+#ifdef DEBUG_GL_SIMPLE_OFF
     float           radius, ang, horizang, lightpos[3];
 
     // hack to avoid lights beams perpendicular to walls
@@ -5657,6 +5658,7 @@ static void         polymer_processspotlight(_prlight* light)
 
     light->rtindex = -1;
     light->lightmap = 0;
+#endif
 }
 
 static inline void  polymer_culllight(int16_t lighti)
