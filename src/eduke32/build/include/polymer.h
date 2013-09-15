@@ -180,6 +180,9 @@ typedef struct      s_prrograminfo {
     // PR_BIT_SPOT_LIGHT
     GLint           uniform_spotDir;
     GLint           uniform_spotRadius;
+
+	// PERSPECTIVE
+    GLint           uniform_projMat;
 }                   _prprograminfo;
 
 #define             PR_INFO_LOG_BUFFER_SIZE 8192
