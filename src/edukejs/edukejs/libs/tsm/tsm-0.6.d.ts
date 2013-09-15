@@ -1,4 +1,4 @@
-module TSM {
+declare module TSM {
     class vec3 {
         private values;
         public x : number;
@@ -38,8 +38,8 @@ module TSM {
         static right: vec3;
         static forward: vec3;
     }
-}
-module TSM {
+
+
     class vec4 {
         private values;
         public x : number;
@@ -78,8 +78,8 @@ module TSM {
         static quotient(vector: vec4, vector2: vec4, dest?: vec4): vec4;
         static zero: vec4;
     }
-}
-module TSM {
+
+
     class mat2 {
         private values;
         constructor (values?: number[]);
@@ -102,8 +102,8 @@ module TSM {
         static product(m1: mat2, m2: mat2, dest?: mat2): mat2;
         static identity: mat2;
     }
-}
-module TSM {
+
+
     class mat3 {
         private values;
         constructor (values?: number[]);
@@ -128,8 +128,8 @@ module TSM {
         static product(m1: mat3, m2: mat3, dest?: mat3): mat3;
         static identity: mat3;
     }
-}
-module TSM {
+
+
     class mat4 {
         private values;
         constructor (values?: number[]);
@@ -160,8 +160,7 @@ module TSM {
         static product(m1: mat4, m2: mat4, dest?: mat4): mat4;
         static identity: mat4;
     }
-}
-module TSM {
+    
     class quat {
         private values;
         public x : number;
@@ -196,9 +195,9 @@ module TSM {
         static interpolate(q1: quat, q2: quat, time: number, dest?: quat): quat;
         static identity: quat;
     }
-}
-var EPSILON: number;
-module TSM {
+
+    var EPSILON: number;
+
     class vec2 {
         private values;
         public x : number;
