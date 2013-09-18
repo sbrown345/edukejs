@@ -1,5 +1,6 @@
 /// <reference path="../../utils/assert.ts" />
 /// <reference path="../../utils/c.ts" />
+/// <reference path="../../utils/logging.ts" />
 /// <reference path="../../utils/todo.ts" />
 /// <reference path="../../utils/types.ts" />
 
@@ -738,7 +739,8 @@ function /*int32_t             */polymer_init(): number
         !glinfo.multitex ||
         !glinfo.vbos ||
         !glinfo.occlusionqueries ||
-        !glinfo.glsl)
+        !glinfo.glsl
+        || DEBUG_USE_POLYMOST)
     {
         OSD_Printf("PR : Your video card driver/combo doesn't support the necessary features!\n");
         OSD_Printf("PR : Disabling Polymer...\n");

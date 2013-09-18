@@ -11,7 +11,7 @@
 #include "texcache.h"
 
 // http://www.flashbang.se/archives/148
-#define DEBUG_GL_NEW_PERSPECTIVE 0
+#define DEBUG_GL_NEW_PERSPECTIVE 1
 
 // CVARS
 int32_t         pr_lighting = 1;
@@ -73,11 +73,12 @@ GLuint          prlookups[MAXPALOOKUPS];
 
 
 
+#if DEBUG_GL_NEW_PERSPECTIVE
 static float _pos[3] = {0};
 static float _tiltang=0;
 static float _horizang=0;
 static float _skyhoriz=0;
-
+#endif
 
 
 static const GLfloat  vertsprite[4 * 5] =
@@ -1085,15 +1086,15 @@ void polymer_setaspect_2(int32_t ang, unsigned int handle)
     bglGetFloatv(GL_MODELVIEW_MATRIX, rootskymodelviewmatrix);//////?????????
     curskymodelviewmatrix = rootskymodelviewmatrix;
 
-    bglMatrixMode(GL_MODELVIEW);
-    bglLoadIdentity();
+    //bglMatrixMode(GL_MODELVIEW);
+    //bglLoadIdentity();
 
-    gldRotatef(projMatrix, _tiltang, 0.0f, 0.0f, -1.0f);
-    gldRotatef(projMatrix, _horizang, 1.0f, 0.0f, 0.0f);
-    gldRotatef(projMatrix, ang, 0.0f, 1.0f, 0.0f);
+    //gldRotatef(projMatrix, _tiltang, 0.0f, 0.0f, -1.0f);
+    //gldRotatef(projMatrix, _horizang, 1.0f, 0.0f, 0.0f);
+    //gldRotatef(projMatrix, ang, 0.0f, 1.0f, 0.0f);
 
-    gldScalef(projMatrix, 1.0f / 1000.0f, 1.0f / 1000.0f, 1.0f / 1000.0f);
-    gldTranslatef(projMatrix, -_pos[0], -_pos[1], -_pos[2]);
+    //gldScalef(projMatrix, 1.0f / 1000.0f, 1.0f / 1000.0f, 1.0f / 1000.0f);
+    //gldTranslatef(projMatrix, -_pos[0], -_pos[1], -_pos[2]);
 
     bglGetFloatv(GL_MODELVIEW_MATRIX, rootmodelviewmatrix);
 	//EO TEST
@@ -1282,12 +1283,12 @@ void                polymer_drawrooms(int32_t daposx, int32_t daposy, int32_t da
     if (!pth || !(pth->flags & 4))
         skyhoriz /= 4.3027f;
 
+#if DEBUG_GL_NEW_PERSPECTIVE
 	_pos[0] = pos[0];
 	_pos[1] = pos[1];
 	_pos[2] = pos[2];
 	_horizang = horizang;
 	_tiltang = tiltang;
-#if DEBUG_GL_NEW_PERSPECTIVE
 
     //bglMatrixMode(GL_MODELVIEW);
 
@@ -1298,8 +1299,8 @@ void                polymer_drawrooms(int32_t daposx, int32_t daposy, int32_t da
     //bglScalef(1.0f / 1000.0f, 1.0f / 1000.0f, 1.0f / 1000.0f);
     //bglTranslatef(-pos[0], -pos[1], -pos[2]);
 
-    //bglGetFloatv(GL_MODELVIEW_MATRIX, rootskymodelviewmatrix);
-    //curskymodelviewmatrix = rootskymodelviewmatrix;
+    bglGetFloatv(GL_MODELVIEW_MATRIX, rootskymodelviewmatrix);
+    curskymodelviewmatrix = rootskymodelviewmatrix;
 
     //bglMatrixMode(GL_MODELVIEW);
     //bglLoadIdentity();
@@ -1311,7 +1312,7 @@ void                polymer_drawrooms(int32_t daposx, int32_t daposy, int32_t da
     //bglScalef(1.0f / 1000.0f, 1.0f / 1000.0f, 1.0f / 1000.0f);
     //bglTranslatef(-pos[0], -pos[1], -pos[2]);
 
-    //bglGetFloatv(GL_MODELVIEW_MATRIX, rootmodelviewmatrix);
+    bglGetFloatv(GL_MODELVIEW_MATRIX, rootmodelviewmatrix);
 #else
 	bglMatrixMode(GL_MODELVIEW);
     bglLoadIdentity();
