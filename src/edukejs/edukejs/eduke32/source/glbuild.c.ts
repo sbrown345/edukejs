@@ -361,14 +361,14 @@ var bglBufferSubDataARB = function(target:number, offset:number, size: number, d
 //bglDetachObjectARBProcPtr bglDetachObjectARB;
 var bglCreateShaderObjectARB = gl.createShader.bind(gl); ////bglCreateShaderObjectARBProcPtr 
 var bglShaderSourceARB = function(shader: WebGLShader, count:number, source:string[], length: number) {
-    var sourceJoined = source.join("");
-    console.log("shader source: \n" + sourceJoined);
-    gl.shaderSource.call(gl, shader, sourceJoined);
+    console.log("shader source: \n" + source);
+    gl.shaderSource.call(gl, shader, source);
 } ////bglShaderSourceARBProcPtr 
 var bglCompileShaderARB = function(shader: WebGLShader):void {
     gl.compileShader.call(gl, shader); 
     if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
         console.log(gl.getShaderInfoLog(shader));
+        throw "shader error";
     }
 }
 var bglCreateProgramObjectARB = gl.createProgram.bind(gl);//bglCreateProgramObjectARBProcPtr 
