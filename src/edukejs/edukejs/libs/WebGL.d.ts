@@ -97,6 +97,11 @@ interface WebGLRenderingContext
     vertex(args: any[]):void;
     texCoord(s: number, t: number):void;
 
+    perspective (fov: number, aspect: number, near: number, far: number):void;
+    rotate (a: number, x: number, y: number, z: number):void;
+    scale (x: number, y: number, z: number):void;
+    translate (x: number, y: number, z: number):void;
+
 
     //ALPHA_TEST: number;  - would like this, but commenting out all mentions of it didn't have any effect on the first level roof bit (maybe it would on windows?)
 

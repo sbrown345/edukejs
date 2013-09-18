@@ -208,14 +208,14 @@ var  prprogrambits: _prprogrambit[] /*[PR_BIT_COUNT]*/ = [
     new _prprogrambit(
         1 << PR_BIT_HEADER,
         // vert_def
-        "#version 120\n"+
-        "#extension GL_ARB_texture_rectangle : enable\n"+
+        //"#version 120\n"+
+        //"#extension GL_ARB_texture_rectangle : enable\n"+
         "\n",
         // vert_prog
         "",
         // frag_def
-        "#version 120\n"+
-        "#extension GL_ARB_texture_rectangle : enable\n"+
+        //"#version 120\n"+
+        //"#extension GL_ARB_texture_rectangle : enable\n"+
         "\n",
         // frag_prog
         ""
@@ -915,7 +915,7 @@ function polymer_glinit():void
     bglMatrixMode(GL_MODELVIEW);
     bglLoadIdentity();
 
-    todo("GL_VERTEX_ARRAY, GL_TEXTURE_COORD_ARRAY");
+    console.log("todo GL_VERTEX_ARRAY, GL_TEXTURE_COORD_ARRAY");
     //gl.enableVertexAttribArray(??     //   bglEnable/*ClientState*/(GL_VERTEX_ARRAY);
     //gl.texCoord(                    //   bglEnable/*ClientState*/(GL_TEXTURE_COORD_ARRAY);
 
@@ -5278,7 +5278,7 @@ function polymer_compileprogram(/*int32_t */programbits:number):void
     var/*int32_t         */i:number, enabledbits:number;
     var/*GLhandleARB     */vert:WebGLShader, frag:WebGLShader, program:WebGLProgram;
     var /*const GLcharARB*      */source:string[] = new Array<string>(PR_BIT_COUNT * 2);
-    var/*GLcharARB       */infobuffer = new Uint8Array(PR_INFO_LOG_BUFFER_SIZE);
+    var/*GLcharARB       */infobuffer = "";
     var/*GLint           */linkstatus:number;
     
     // --------- VERTEX
@@ -5299,7 +5299,7 @@ function polymer_compileprogram(/*int32_t */programbits:number):void
         i++;
     }
 
-    bglShaderSourceARB(vert, enabledbits, source, NULL);
+    bglShaderSourceARB(vert, enabledbits, source, /*NULL*/0);
 
     bglCompileShaderARB(vert);
 
@@ -5321,7 +5321,7 @@ function polymer_compileprogram(/*int32_t */programbits:number):void
         i++;
     }
     
-    bglShaderSourceARB(frag, enabledbits, /*(const GLcharARB**)*/source[0], /*NULL*/0);
+    bglShaderSourceARB(frag, enabledbits, /*(const GLcharARB**)*/source, /*NULL*/0);
 
     bglCompileShaderARB(frag);
 
@@ -5335,7 +5335,7 @@ function polymer_compileprogram(/*int32_t */programbits:number):void
 
     linkstatus = bglGetObjectParameterivARB(program, GL_OBJECT_LINK_STATUS_ARB)?1:0;//bglGetObjectParameterivARB(program, GL_OBJECT_LINK_STATUS_ARB, &linkstatus);
 
-    bglGetInfoLogARB(program, PR_INFO_LOG_BUFFER_SIZE, NULL, infobuffer); //todo?
+    infobuffer = bglGetInfoLogARB(program, PR_INFO_LOG_BUFFER_SIZE, NULL, infobuffer);
 
     if(!prprograms[programbits])  
         prprograms[programbits] = new _prprograminfo();

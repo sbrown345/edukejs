@@ -11,7 +11,7 @@
 #include "texcache.h"
 
 // http://www.flashbang.se/archives/148
-#define DEBUG_GL_NEW_PERSPECTIVE 1
+#define DEBUG_GL_NEW_PERSPECTIVE 0
 
 // CVARS
 int32_t         pr_lighting = 1;
@@ -192,14 +192,18 @@ _prprogrambit   prprogrambits[PR_BIT_COUNT] = {
     {
         1 << PR_BIT_HEADER,
         // vert_def
+#ifdef DEBUG_GL_SIMPLE_OFF
         "#version 120\n"
         "#extension GL_ARB_texture_rectangle : enable\n"
+#endif
         "\n",
         // vert_prog
         "",
         // frag_def
+#ifdef DEBUG_GL_SIMPLE_OFF
         "#version 120\n"
         "#extension GL_ARB_texture_rectangle : enable\n"
+#endif
         "\n",
         // frag_prog
         "",

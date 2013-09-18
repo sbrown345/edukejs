@@ -133,7 +133,7 @@ var bglDisable = function(v) {
     gl.disable.call(gl, v);
 }; 
 //bglGetDoublevProcPtr bglGetDoublev;
-var bglGetFloatv = function() {todoThrow();}//bglGetFloatvProcPtr  //http://msdn.microsoft.com/en-us/library/windows/desktop/ee872026(v=vs.85).aspx
+var bglGetFloatv =  gl.getParameter.bind(gl);//bglGetFloatvProcPtr  //http://msdn.microsoft.com/en-us/library/windows/desktop/ee872026(v=vs.85).aspx
 var bglGetIntegerv = gl.getParameter.bind(gl); //bglGetIntegervProcPtr 
 var bglPushAttrib = function() {todoThrow();/*gone!*/};//bglPushAttribProcPtr 
 var bglPopAttrib = function() {todoThrow();/*gone!*/};
@@ -195,9 +195,9 @@ var bglMultMatrixf = function() {
     //http://stackoverflow.com/questions/11228187/trying-and-failing-to-implement-glulookat-in-webgl
 };//bglMultMatrixfProcPtr 
 //bglMultMatrixdProcPtr bglMultMatrixd;
-//var bglRotatef = gl.rotate;
-//bglScalefProcPtr bglScalef;
-//bglTranslatefProcPtr bglTranslatef;
+var bglRotatef = gl.rotate.bind(gl);
+var bglScalef = gl.scale.bind(gl);
+var bglTranslatef = gl.translate.bind(gl);
 
 // Drawing // http://www.irit.fr/~Rodolphe.Vaillant/?e=8 - c++ class to emulate direct drawing mode
 // http://stackoverflow.com/questions/14765017/opengl-point-funtionality-in-webgl
@@ -360,10 +360,17 @@ var bglBufferSubDataARB = function(target:number, offset:number, size: number, d
 //bglGetHandleARBProcPtr bglGetHandleARB;
 //bglDetachObjectARBProcPtr bglDetachObjectARB;
 var bglCreateShaderObjectARB = gl.createShader.bind(gl); ////bglCreateShaderObjectARBProcPtr 
-var bglShaderSourceARB = function(shader: WebGLShader, count:number, source:string, length: number) {
-    gl.shaderSource.call(gl, shader, source);
+var bglShaderSourceARB = function(shader: WebGLShader, count:number, source:string[], length: number) {
+    var sourceJoined = source.join("");
+    console.log("shader source: \n" + sourceJoined);
+    gl.shaderSource.call(gl, shader, sourceJoined);
 } ////bglShaderSourceARBProcPtr 
-var bglCompileShaderARB = gl.compileShader.bind(gl); //bglCompileShaderARBProcPtr 
+var bglCompileShaderARB = function(shader: WebGLShader):void {
+    gl.compileShader.call(gl, shader); 
+    if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+        console.log(gl.getShaderInfoLog(shader));
+    }
+}
 var bglCreateProgramObjectARB = gl.createProgram.bind(gl);//bglCreateProgramObjectARBProcPtr 
 var bglAttachObjectARB = gl.attachShader.bind(gl);//bglAttachObjectARBProcPtr 
 var bglLinkProgramARB = gl.linkProgram.bind(gl);//bglLinkProgramARBProcPtr 
@@ -390,7 +397,7 @@ var bglUniformMatrix3fvARB = gl.uniformMatrix3fv.bind(gl);
 var bglUniformMatrix4fvARB = gl.uniformMatrix4fv.bind(gl);
 //bglGetObjectParameterfvARBProcPtr bglGetObjectParameterfvARB;
 var bglGetObjectParameterivARB = gl.getProgramParameter.bind(gl);//bglGetObjectParameterivARBProcPtr 
-var bglGetInfoLogARB = function() {/*todo*/};
+var bglGetInfoLogARB = gl.getProgramInfoLog.bind(gl);
 //bglGetAttachedObjectsARBProcPtr bglGetAttachedObjectsARB;
 var bglGetUniformLocationARB = gl.getUniformLocation.bind(gl);//bglGetUniformLocationARBProcPtr 
 //bglGetActiveUniformARBProcPtr bglGetActiveUniformARB;
@@ -464,32 +471,33 @@ var bglGetAttribLocationARB = gl.getAttribLocation.bind(gl);//bglGetAttribLocati
 //bgluNewTessProcPtr bgluNewTess;
 //bgluDeleteTessProcPtr bgluDeleteTess;
 
-var bgluPerspective = function(fov:number, aspect:number, near:number, far:number) {
-    console.log("todo perspective!");
+var bgluPerspective = gl.perspective.bind(gl);
+//var bgluPerspective = function(fov:number, aspect:number, near:number, far:number) {
+//    console.log("todo perspective!");
 
-    //http://forums.inside3d.com/viewtopic.php?t=3369
-    //http://learningwebgl.com/blog/?p=507
+//    //http://forums.inside3d.com/viewtopic.php?t=3369
+//    //http://learningwebgl.com/blog/?p=507
 
-    //https://github.com/OneGeek/WebGLU/blob/73e7c4f341e5d1464b29c10db2168779907764d5/src/GLU.js
-    //var m = TSM.mat4.perspective(fov, aspect, near, far);
-
-
-    //gl_ModelViewProjectionMatrix??
-
-    //http://stackoverflow.com/questions/2417697/gluperspective-was-removed-in-opengl-3-1-any-replacements ------------
-    //http://granular.cs.umu.se/browserphysics/?p=237
-
-    //https://github.com/toji/webgl-source/search?q=perspective&ref=cmdform
-    //https://github.com/toji/webgl-source/search?q=projectionMat&ref=cmdform
+//    //https://github.com/OneGeek/WebGLU/blob/73e7c4f341e5d1464b29c10db2168779907764d5/src/GLU.js
+//    //var m = TSM.mat4.perspective(fov, aspect, near, far);
 
 
+//    //gl_ModelViewProjectionMatrix??
 
-    /////////
+//    //http://stackoverflow.com/questions/2417697/gluperspective-was-removed-in-opengl-3-1-any-replacements ------------
+//    //http://granular.cs.umu.se/browserphysics/?p=237
 
-    // replace gl_ModelViewProjectionMatrix
-    //http://granular.cs.umu.se/browserphysics/?p=237
+//    //https://github.com/toji/webgl-source/search?q=perspective&ref=cmdform
+//    //https://github.com/toji/webgl-source/search?q=projectionMat&ref=cmdform
 
-};
+
+
+//    /////////
+
+//    // replace gl_ModelViewProjectionMatrix
+//    //http://granular.cs.umu.se/browserphysics/?p=237
+
+//};
 
 
 //bgluErrorStringProcPtr bgluErrorString;

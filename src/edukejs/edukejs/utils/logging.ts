@@ -1,4 +1,4 @@
-﻿var DEBUG_MODE = false;
+﻿var DEBUG_MODE = true;
 
 function isDebugMode(v: bool):bool {
     return DEBUG_MODE && v;
@@ -6,7 +6,7 @@ function isDebugMode(v: bool):bool {
 
 var LOG_TO_CONSOLE = false;
 var SKIP_ALL_LOGGING = true;
-var DEBUG_USE_POLYMOST = true;
+var DEBUG_USE_POLYMOST = false;
 
 var DEBUG_APPEND_TEXTURES_TO_BODY = isDebugMode(true);
 var DEBUG_WEBGL_UTIL = isDebugMode(true);
