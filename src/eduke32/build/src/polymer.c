@@ -11,7 +11,6 @@
 #include "texcache.h"
 
 // http://www.flashbang.se/archives/148
-#define DEBUG_GL_NEW_PERSPECTIVE 0
 #define UPDATE_GL_FRONT_COLOR 1
 
 // CVARS
@@ -70,17 +69,6 @@ GLuint          prartmaps[MAXTILES];
 GLuint          prbasepalmaps[MAXBASEPALS];
 // numshades full indirections (32*256) per lookup
 GLuint          prlookups[MAXPALOOKUPS];
-
-
-
-
-#if DEBUG_GL_NEW_PERSPECTIVE
-static float _pos[3] = {0};
-static float _tiltang=0;
-static float _horizang=0;
-static float _skyhoriz=0;
-#endif
-
 
 static const GLfloat  vertsprite[4 * 5] =
 {
@@ -646,9 +634,6 @@ _prprogrambit   prprogrambits[PR_BIT_COUNT] = {
     {
         1 << PR_BIT_FOOTER,
         // vert_def
-#if DEBUG_GL_NEW_PERSPECTIVE
-        "uniform mat4 projMat;\n"
-#endif
         "void main(void)\n"
         "{\n"
         "  vec4 curVertex = gl_Vertex;\n"
@@ -659,11 +644,7 @@ _prprogrambit   prprogrambits[PR_BIT_COUNT] = {
         "  gl_TexCoord[0] = gl_MultiTexCoord0;\n"
         "\n",
         // vert_prog
-#if DEBUG_GL_NEW_PERSPECTIVE
-        "  gl_Position = projMat * curVertex;\n"
-#else
 		"  gl_Position = gl_ModelViewProjectionMatrix * curVertex;\n"
-#endif
         "}\n",
         // frag_def
         "void main(void)\n"
@@ -707,10 +688,6 @@ GLfloat         rootmodelviewmatrix[16];
 GLfloat         *curmodelviewmatrix;
 GLfloat         rootskymodelviewmatrix[16];
 GLfloat         *curskymodelviewmatrix;
-#if DEBUG_GL_NEW_PERSPECTIVE
-GLfloat			projMatrix[16] = {0}; //
-GLfloat			*curprojMatrix;
-#endif
 
 static int16_t  sectorqueue[MAXSECTORS];
 static int16_t  querydelay[MAXSECTORS];
@@ -1056,77 +1033,10 @@ void                polymer_setaspect(int32_t ang)
         aspect = (float)(windowx2-windowx1+1) /
                  (float)(windowy2-windowy1+1);
 
-#if DEBUG_GL_NEW_PERSPECTIVE
-		//gldLoadIdentity(projMatrix);
-		//gldPerspective(projMatrix, fang / (2048.0f / 360.0f), aspect, 0.01f, 100.0f);
-		//bglUniformMatrix4fvARB(projMatLocation, 1, GL_FALSE, projMatrix);
-
-	//projMatLocation = bglGetUniformLocationARB(prprograms[programbits].handle,"projMat");
-	//gldLoadIdentity(projMatrix);
-	//gldPerspective(projMatrix, 426/*fang*/ / (2048.0f / 360.0f), 1.33159947/*aspect*/, 0.01f, 100.0f);
-	//bglUniformMatrix4fvARB(projMatLocation, 1, GL_FALSE, projMatrix);
-#else  
 	bglMatrixMode(GL_PROJECTION);
 	bglLoadIdentity();
 	bgluPerspective(fang / (2048.0f / 360.0f), aspect, 0.01f, 100.0f);
-#endif
 }
-
-#if DEBUG_GL_NEW_PERSPECTIVE
-void polymer_setaspect_2(int32_t ang, unsigned int handle)
-{
-    float           aspect;
-    float fang = (float)ang * atanf((float)viewingrange/65536.0f)/(PI/4);
-
-    if (pr_customaspect != 0.0f)
-        aspect = pr_customaspect;
-    else
-        aspect = (float)(windowx2-windowx1+1) /
-                 (float)(windowy2-windowy1+1);
-
-	gldLoadIdentity(projMatrix);
-	gldPerspective(projMatrix, fang/ (2048.0f / 360.0f), aspect, 0.01f, 100.0f);
-
-
-
-	//TEST
-
-
-	bglMatrixMode(GL_MODELVIEW);
-    gldLoadIdentity(projMatrix); //bglLoadIdentity();
-
-    gldRotatef(projMatrix, _tiltang, 0.0f, 0.0f, -1.0f);
-    gldRotatef(projMatrix, _skyhoriz, 1.0f, 0.0f, 0.0f);
-    gldRotatef(projMatrix, ang, 0.0f, 1.0f, 0.0f);
-
-    gldScalef(projMatrix, 1.0f / 1000.0f, 1.0f / 1000.0f, 1.0f / 1000.0f);
-    gldTranslatef(projMatrix, -_pos[0], -_pos[1], -_pos[2]);
-
-    bglGetFloatv(GL_MODELVIEW_MATRIX, rootskymodelviewmatrix);//////?????????
-    curskymodelviewmatrix = rootskymodelviewmatrix;
-
-    //bglMatrixMode(GL_MODELVIEW);
-    //bglLoadIdentity();
-
-    //gldRotatef(projMatrix, _tiltang, 0.0f, 0.0f, -1.0f);
-    //gldRotatef(projMatrix, _horizang, 1.0f, 0.0f, 0.0f);
-    //gldRotatef(projMatrix, ang, 0.0f, 1.0f, 0.0f);
-
-    //gldScalef(projMatrix, 1.0f / 1000.0f, 1.0f / 1000.0f, 1.0f / 1000.0f);
-    //gldTranslatef(projMatrix, -_pos[0], -_pos[1], -_pos[2]);
-
-    bglGetFloatv(GL_MODELVIEW_MATRIX, rootmodelviewmatrix);
-	//EO TEST
-
-
-
-
-
-
-
-	bglUniformMatrix4fvARB(prprograms[handle].uniform_projMat, 1, GL_FALSE, projMatrix);
-}
-#endif
 
 void                polymer_glinit(void)
 {
@@ -1300,39 +1210,7 @@ void                polymer_drawrooms(int32_t daposx, int32_t daposy, int32_t da
     // the angle factor is computed from eyeballed values
     // need to recompute it if we ever change the max horiz amplitude
     if (!pth || !(pth->flags & 4))
-        skyhoriz /= 4.3027f;
-
-#if DEBUG_GL_NEW_PERSPECTIVE
-	_pos[0] = pos[0];
-	_pos[1] = pos[1];
-	_pos[2] = pos[2];
-	_horizang = horizang;
-	_tiltang = tiltang;
-
-    //bglMatrixMode(GL_MODELVIEW);
-
-    //bglRotatef(tiltang, 0.0f, 0.0f, -1.0f);
-    //bglRotatef(skyhoriz, 1.0f, 0.0f, 0.0f);
-    //bglRotatef(ang, 0.0f, 1.0f, 0.0f);
-
-    //bglScalef(1.0f / 1000.0f, 1.0f / 1000.0f, 1.0f / 1000.0f);
-    //bglTranslatef(-pos[0], -pos[1], -pos[2]);
-
-    bglGetFloatv(GL_MODELVIEW_MATRIX, rootskymodelviewmatrix);
-    curskymodelviewmatrix = rootskymodelviewmatrix;
-
-    //bglMatrixMode(GL_MODELVIEW);
-    //bglLoadIdentity();
-
-    //bglRotatef(tiltang, 0.0f, 0.0f, -1.0f);
-    //bglRotatef(horizang, 1.0f, 0.0f, 0.0f);
-    //bglRotatef(ang, 0.0f, 1.0f, 0.0f);
-
-    //bglScalef(1.0f / 1000.0f, 1.0f / 1000.0f, 1.0f / 1000.0f);
-    //bglTranslatef(-pos[0], -pos[1], -pos[2]);
-
-    bglGetFloatv(GL_MODELVIEW_MATRIX, rootmodelviewmatrix);
-#else
+     
 	bglMatrixMode(GL_MODELVIEW);
     bglLoadIdentity();
 
@@ -1357,7 +1235,6 @@ void                polymer_drawrooms(int32_t daposx, int32_t daposy, int32_t da
     bglTranslatef(-pos[0], -pos[1], -pos[2]);
 
     bglGetFloatv(GL_MODELVIEW_MATRIX, rootmodelviewmatrix);
-#endif
 
     cursectnum = dacursectnum;
     updatesectorbreadth(daposx, daposy, &cursectnum);
@@ -5169,10 +5046,6 @@ static int32_t      polymer_bindmaterial(_prmaterial material, int16_t* lights, 
     if (!prprograms[programbits].handle)
         polymer_compileprogram(programbits);
 	
-#if DEBUG_GL_NEW_PERSPECTIVE
-	polymer_setaspect_2(pr_fov, programbits);
-#endif
-	
     bglUseProgramObjectARB(prprograms[programbits].handle);
     // --------- bit setup
 	
@@ -5726,11 +5599,6 @@ static void         polymer_compileprogram(int32_t programbits)
         prprograms[programbits].uniform_spotDir = bglGetUniformLocationARB(program, "spotDir");
         prprograms[programbits].uniform_spotRadius = bglGetUniformLocationARB(program, "spotRadius");
     }
-
-#if DEBUG_GL_NEW_PERSPECTIVE
-        prprograms[programbits].uniform_projMat = bglGetUniformLocationARB(program, "projMat");
-#endif
-
 }
 
 // LIGHTS
