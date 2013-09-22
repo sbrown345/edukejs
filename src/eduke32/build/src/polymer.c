@@ -12,6 +12,7 @@
 
 // http://www.flashbang.se/archives/148
 #define DEBUG_GL_NEW_PERSPECTIVE 0
+#define UPDATE_GL_FRONT_COLOR 1
 
 // CVARS
 int32_t         pr_lighting = 1;
@@ -196,6 +197,9 @@ _prprogrambit   prprogrambits[PR_BIT_COUNT] = {
         "#version 120\n"
         "#extension GL_ARB_texture_rectangle : enable\n"
 #endif
+#if UPDATE_GL_FRONT_COLOR
+        "varying vec4 frontColor;\n"
+#endif
         "\n",
         // vert_prog
         "",
@@ -203,6 +207,9 @@ _prprogrambit   prprogrambits[PR_BIT_COUNT] = {
 #ifdef DEBUG_GL_SIMPLE_OFF
         "#version 120\n"
         "#extension GL_ARB_texture_rectangle : enable\n"
+#endif
+#if UPDATE_GL_FRONT_COLOR
+        "varying vec4 frontColor;\n"
 #endif
         "\n",
         // frag_prog
@@ -364,13 +371,21 @@ _prprogrambit   prprogrambits[PR_BIT_COUNT] = {
         // vert_def
         "",
         // vert_prog
+#if UPDATE_GL_FRONT_COLOR
+        "  frontColor = gl_Color;\n"
+#else
         "  gl_FrontColor = gl_Color;\n"
+#endif
         "\n",
         // frag_def
         "",
         // frag_prog
         "  if (isLightingPass == 0)\n"
+#if UPDATE_GL_FRONT_COLOR
+        "    result *= vec4(frontColor);\n"
+#else
         "    result *= vec4(gl_Color);\n"
+#endif
         "\n",
     },
     {
