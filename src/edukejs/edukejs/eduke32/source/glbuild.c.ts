@@ -324,7 +324,7 @@ var bglClearStencil = gl.clearStencil.bind(gl);
 var bglActiveTextureARB = gl.activeTexture.bind(gl); //bglActiveTextureARBProcPtr 
 //bglClientActiveTextureARBProcPtr bglClientActiveTextureARB;
 //var bglMultiTexCoord2dARB = gl.multiTexCoord2dARB; //bglMultiTexCoord2dARBProcPtr   //https://groups.google.com/forum/#!topic/webgl-dev-list/jHejip4u-Vo
-//bglMultiTexCoord2fARBProcPtr bglMultiTexCoord2fARB;
+//bglMultiTexCoord2fARBProcPtr bglMultiTexCoord2fARB; //http://stackoverflow.com/questions/1524736/glmultitexcoord-in-opengl-es
 
 //// Frame Buffer Objects
 //bglGenFramebuffersEXTProcPtr bglGenFramebuffersEXT;
@@ -360,7 +360,7 @@ var bglBufferSubDataARB = function(target:number, offset:number, size: number, d
 //bglGetHandleARBProcPtr bglGetHandleARB;
 //bglDetachObjectARBProcPtr bglDetachObjectARB;
 var bglCreateShaderObjectARB = gl.createShader.bind(gl); ////bglCreateShaderObjectARBProcPtr 
-var bglShaderSourceARB = function(shader: WebGLShader, count:number, source:string[], length: number) {
+var bglShaderSourceARB = function(shader: WebGLShader, count:number, source:string, length: number) {
     console.log("shader source: \n" + source);
     gl.shaderSource.call(gl, shader, source);
 } ////bglShaderSourceARBProcPtr 

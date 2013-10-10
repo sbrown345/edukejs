@@ -210,7 +210,7 @@ var  prprogrambits: _prprogrambit[] /*[PR_BIT_COUNT]*/ = [
         // vert_def
         //"#version 120\n"+
         //"#extension GL_ARB_texture_rectangle : enable\n"+
-        "attribute vec4 multiTexCoord0;\n"+
+        "attribute vec4 AttrMultiTexCoord0;\n"+
         "varying vec4 frontColor;\n"+
         "\n",
         // vert_prog
@@ -218,7 +218,6 @@ var  prprogrambits: _prprogrambit[] /*[PR_BIT_COUNT]*/ = [
         // frag_def
         //"#version 120\n"+
         //"#extension GL_ARB_texture_rectangle : enable\n"+
-        "attribute vec4 multiTexCoord0;\n"+
         "varying vec4 frontColor;\n"+
         "\n",
         // frag_prog
@@ -305,7 +304,7 @@ var  prprogrambits: _prprogrambit[] /*[PR_BIT_COUNT]*/ = [
         "varying vec3 horizDistance;\n"+
         "\n",
         // vert_prog
-        "  gl_TexCoord[0] = multiTexCoord0;\n"+
+        "  gl_TexCoord[0] = AttrMultiTexCoord0;\n"+
         "  horizDistance = vec3(gl_ModelViewMatrix * curVertex);\n"+
         "\n",
         // frag_def
@@ -343,7 +342,7 @@ var  prprogrambits: _prprogrambit[] /*[PR_BIT_COUNT]*/ = [
         "uniform vec2 diffuseScale;\n"+
         "\n",
         // vert_prog
-        "  gl_TexCoord[0] = vec4(diffuseScale, 1.0, 1.0) * multiTexCoord0;\n"+
+        "  gl_TexCoord[0] = vec4(diffuseScale, 1.0, 1.0) * AttrMultiTexCoord0;\n"+
         "\n",
         // frag_def
         "uniform sampler2D diffuseMap;\n"+
@@ -361,7 +360,7 @@ var  prprogrambits: _prprogrambit[] /*[PR_BIT_COUNT]*/ = [
         // vert_prog
         "  fragDetailScale = detailScale;\n"+
         "  if (isNormalMapped == 0)\n"+
-        "    gl_TexCoord[1] = vec4(detailScale, 1.0, 1.0) * multiTexCoord0;\n"+
+        "    gl_TexCoord[1] = vec4(detailScale, 1.0, 1.0) * AttrMultiTexCoord0;\n"+
         "\n",
         // frag_def
         "uniform sampler2D detailMap;\n"+
@@ -654,7 +653,7 @@ var  prprogrambits: _prprogrambit[] /*[PR_BIT_COUNT]*/ = [
         "  int isNormalMapped = 0;\n"+
         "  mat3 TBN;\n"+
         "\n"+
-        "  gl_TexCoord[0] = multiTexCoord0;\n"+
+        "  gl_TexCoord[0] = AttrMultiTexCoord0;\n"+
         "\n",
         // vert_prog
         "  gl_Position = gl_ModelViewProjectionMatrix * curVertex;\n"+

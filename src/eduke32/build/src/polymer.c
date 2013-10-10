@@ -12,7 +12,53 @@
 
 // http://www.flashbang.se/archives/148
 #define UPDATE_GL_FRONT_COLOR 1
+#define UPDATE_GL_MULTI_TEX_COORD 1
 
+
+/*
+
+todo:
+replace gl_MultiTexCoord0 with AttrMultiTexCoord0
+gl_MultiTexCoord0 is set with bglVertexPointer and bglTexCoordPointer (?)
+ so replace them with bglEnableVertexAttribArrayARB, bglVertexAttribPointerARB
+
+
+
+
+
+// http://www.gamedev.net/topic/600257-how-to-from-opengl-21-to-33-core/ * Quads deprecated! (Can just use TRIANGLE_FAN with same vertices / vertex order to render an individual quad).
+
+http://lwjgl.org/wiki/index.php?title=GLSL_Tutorial:_Texturing
+
+//gl_MultiTexCoord0 is an openGl defined attribute vec4 containing the texture coordinates for unit 0 (I'll explain units soon) that
+09.
+//you give with calls to glTexCoord2f, glTexCoordPointer etc. gl_MultiTexCoord1 contains unit 1, gl_MultiTexCoord2  unit 2 etc.
+
+
+
+
+gl_MultiTexCoordN is a built in vertex shader attribute, i.e the input to the vertex shader with 
+the texture coordinates. gl_TexCoord[] on the other hand is a built in varying variable that
+is used to carry data over from the vertex shader to the fragment shader, the value in gl_TexCoord[], 
+as you have discovered, needs to be set manually. (From GLSL 1.3 and forward both of theese built-ins 
+are deprecated.) 
+
+
+
+random url list:
+//http://stackoverflow.com/questions/7987750/gl-multitexcoord0-not-allowed-in-vert-shader-in-cocos2d-v2-alpha
+//bglGetVertexAttribPointervARB.... pass in ptr array
+//http://stackoverflow.com/questions/1161659/gltexcoordpointer-problems-using-opengl-es
+//http://stackoverflow.com/questions/7617668/glvertexattribpointer-needed-everytime-glbindbuffer-is-called
+	
+//http://stackoverflow.com/questions/18796941/cant-find-gl-multitexcoord0-replacement
+//http://stackoverflow.com/questions/5419983/what-should-i-use-in-place-of-gltexcoordpointer-in-opengl-es-2-0
+//http://www.khronos.org/message_boards/showthread.php/5691-Trouble-porting-OpenGL-code-to-iPhone-s-OpenGL-ES
+//http://stackoverflow.com/questions/8317242/glsl-4-10-texture-mapping
+				
+			
+
+*/
 // CVARS
 int32_t         pr_lighting = 1;
 int32_t         pr_normalmapping = 1;
@@ -185,6 +231,9 @@ _prprogrambit   prprogrambits[PR_BIT_COUNT] = {
         "#version 120\n"
         "#extension GL_ARB_texture_rectangle : enable\n"
 #endif
+#if UPDATE_GL_MULTI_TEX_COORD
+        "attribute vec4 AttrMultiTexCoord0;\n"
+#endif
 #if UPDATE_GL_FRONT_COLOR
         "varying vec4 frontColor;\n"
 #endif
@@ -284,7 +333,11 @@ _prprogrambit   prprogrambits[PR_BIT_COUNT] = {
         "varying vec3 horizDistance;\n"
         "\n",
         // vert_prog
+#if UPDATE_GL_MULTI_TEX_COORD
+        "  gl_TexCoord[0] = AttrMultiTexCoord0;\n"
+#else
         "  gl_TexCoord[0] = gl_MultiTexCoord0;\n"
+#endif
         "  horizDistance = vec3(gl_ModelViewMatrix * curVertex);\n"
         "\n",
         // frag_def
@@ -322,7 +375,11 @@ _prprogrambit   prprogrambits[PR_BIT_COUNT] = {
         "uniform vec2 diffuseScale;\n"
         "\n",
         // vert_prog
+#if UPDATE_GL_MULTI_TEX_COORD
+        "  gl_TexCoord[0] = vec4(diffuseScale, 1.0, 1.0) * AttrMultiTexCoord0;\n"
+#else
         "  gl_TexCoord[0] = vec4(diffuseScale, 1.0, 1.0) * gl_MultiTexCoord0;\n"
+#endif
         "\n",
         // frag_def
         "uniform sampler2D diffuseMap;\n"
@@ -340,7 +397,11 @@ _prprogrambit   prprogrambits[PR_BIT_COUNT] = {
         // vert_prog
         "  fragDetailScale = detailScale;\n"
         "  if (isNormalMapped == 0)\n"
+#if UPDATE_GL_MULTI_TEX_COORD
+        "    gl_TexCoord[1] = vec4(detailScale, 1.0, 1.0) * AttrMultiTexCoord0;\n"
+#else
         "    gl_TexCoord[1] = vec4(detailScale, 1.0, 1.0) * gl_MultiTexCoord0;\n"
+#endif
         "\n",
         // frag_def
         "uniform sampler2D detailMap;\n"
@@ -641,7 +702,11 @@ _prprogrambit   prprogrambits[PR_BIT_COUNT] = {
         "  int isNormalMapped = 0;\n"
         "  mat3 TBN;\n"
         "\n"
+#if UPDATE_GL_MULTI_TEX_COORD
+        "  gl_TexCoord[0] = AttrMultiTexCoord0;\n"
+#else
         "  gl_TexCoord[0] = gl_MultiTexCoord0;\n"
+#endif
         "\n",
         // vert_prog
 		"  gl_Position = gl_ModelViewProjectionMatrix * curVertex;\n"
@@ -2251,9 +2316,23 @@ static void         polymer_drawplane(_prplane* plane)
 
     if (plane->vbo && (pr_vbos > 0))
     {
+#if UPDATE_GL_MULTI_TEX_COORD
+
+		bglEnableVertexAttribArrayARB(prprograms[materialbits].attrib_multiTexCoord0);
+        bglBindBufferARB(GL_ARRAY_BUFFER_ARB, plane->vbo);
+		bglVertexAttribPointerARB(
+							prprograms[materialbits].attrib_multiTexCoord0,
+                            2, 
+							GL_FLOAT, 
+							GL_FALSE,
+                            0,
+                            0);
+		//http://stackoverflow.com/questions/8704801/glvertexattribpointer-clarification
+#else
         bglBindBufferARB(GL_ARRAY_BUFFER_ARB, plane->vbo);
         bglVertexPointer(3, GL_FLOAT, 5 * sizeof(GLfloat), NULL);
-        bglTexCoordPointer(2, GL_FLOAT, 5 * sizeof(GLfloat), (GLfloat*)(3 * sizeof(GLfloat)));
+        bglTexCoordPointer(2, GL_FLOAT, 5 * sizeof(GLfloat), (GLfloat*)(3 * sizeof(GLfloat))); 
+#endif
         if (plane->indices)
             bglBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, plane->ivbo);
     } else {
@@ -2267,6 +2346,7 @@ static void         polymer_drawplane(_prplane* plane)
 
         if (materialbits & prprogrambits[PR_BIT_NORMAL_MAP].bit)
         {
+			// MAYBE THIS IS OK:::
             bglVertexAttrib3fvARB(prprograms[materialbits].attrib_T, &plane->tbn[0][0]);
             bglVertexAttrib3fvARB(prprograms[materialbits].attrib_B, &plane->tbn[1][0]);
             bglVertexAttrib3fvARB(prprograms[materialbits].attrib_N, &plane->tbn[2][0]);
@@ -5599,6 +5679,10 @@ static void         polymer_compileprogram(int32_t programbits)
         prprograms[programbits].uniform_spotDir = bglGetUniformLocationARB(program, "spotDir");
         prprograms[programbits].uniform_spotRadius = bglGetUniformLocationARB(program, "spotRadius");
     }
+	    
+#if UPDATE_GL_MULTI_TEX_COORD
+	prprograms[programbits].attrib_multiTexCoord0 = bglGetAttribLocationARB(program, "AttrMultiTexCoord0");
+#endif
 }
 
 // LIGHTS

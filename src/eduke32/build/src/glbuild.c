@@ -491,6 +491,16 @@ fail:
     return -1;
 }
 
+int MultiTexCoord2dARB_ES[];
+
+void bglMultiTexCoord2dARB_ES(GLenum target, GLdouble s, GLdouble t ) {
+
+}
+
+void bglMultiTexCoord2fARB_ES(GLenum target, GLdouble s, GLfloat t ) {
+
+}
+
 int32_t loadglextensions(void)
 {
     int32_t err = 0;
@@ -513,8 +523,8 @@ int32_t loadglextensions(void)
     // Multitexturing
     bglActiveTextureARB = (bglActiveTextureARBProcPtr) GETPROCEXTSOFT("glActiveTextureARB");
     bglClientActiveTextureARB = (bglClientActiveTextureARBProcPtr) GETPROCEXTSOFT("glClientActiveTextureARB");
-    bglMultiTexCoord2dARB = (bglMultiTexCoord2dARBProcPtr) GETPROCEXTSOFT("glMultiTexCoord2dARB");
-    bglMultiTexCoord2fARB = (bglMultiTexCoord2fARBProcPtr) GETPROCEXTSOFT("glMultiTexCoord2fARB");
+    bglMultiTexCoord2dARB = (bglMultiTexCoord2dARBProcPtr)bglMultiTexCoord2dARB_ES;//(bglMultiTexCoord2dARBProcPtr) GETPROCEXTSOFT("glMultiTexCoord2dARB");
+    bglMultiTexCoord2fARB = (bglMultiTexCoord2fARBProcPtr)bglMultiTexCoord2fARB_ES;//(bglMultiTexCoord2fARBProcPtr) GETPROCEXTSOFT("glMultiTexCoord2fARB");
 
     // Frame Buffer Objects
     bglGenFramebuffersEXT = (bglGenFramebuffersEXTProcPtr) GETPROCEXTSOFT("glGenFramebuffersEXT");
