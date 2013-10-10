@@ -1,4 +1,4 @@
-﻿var shareware = false;
+﻿var shareware = true;
 var hardcoded = {
     grpSize: shareware ? 11035779 : 44356548,
     grpCRC: shareware ? -1740973789 : -46280719,

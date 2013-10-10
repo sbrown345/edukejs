@@ -284,7 +284,7 @@ function C_GetLabelType(type: number): string
 {
     var i: number;
     var x: string; //[64];
-    debugger;
+    
     var LabelTypeText =
     [
         "define",

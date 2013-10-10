@@ -5,7 +5,10 @@
     <head>
         <meta charset="utf-8" />
         <title>EDukeJS</title>
-        <style>body{margin:0;}</style>
+        <style>
+            body{margin:0;}
+            canvas{max-height: 95%;max-width: 100%;}
+        </style>
     </head>
     <body>
         <script src="libs/long.js"></script>
@@ -20,7 +23,7 @@
             <a href="?E1L4">E1L4</a>
             <a href="?E1L5">E1L5</a>
             <a href="?E1L6">E1L6</a>
-            <a href="?E1L7">E1L7</a>
+<!--            <a href="?E1L7">E1L7</a>
             <br>
             <a href="?E2L1">E2L1</a>
             <a href="?E2L2">E2L2</a>
@@ -56,9 +59,16 @@
             <a href="?E4L8">E4L8</a>
             <a href="?E4L9">E4L9</a>
             <a href="?E4L10">E4L10</a>
-            <a href="?E4L11">E4L11</a>
+            <a href="?E4L11">E4L11</a>-->
+            | <a href="https://www.google.com/intl/en_uk/chrome/browser/"><strong>USE CHROME</strong></a>
+            | <a href="https://github.com/sbrown345/edukejs">GitHub</a> 
+            | <a href="https://twitter.com/nworbnomis">@nworbnomis</a> 
+            | <span title="it's currently a mess, i.e. you need to reload if you die, no weapon switching, bad timing, very slow in some places etc etc"> Very, very early version of <a href="http://www.eduke32.com/">eduke32</a> ported line by line into</span> <a href="http://www.typescriptlang.org/">TypeScript</a>
+            
         </div>
         <script>
+            if (!window.chrome) alert("Only works in chrome");
+
         // async: https://github.com/AndrewGaspar/Async-Await-Proposal-for-TypeScript/tree/master/Code-Generation
 
             path("index.htm");

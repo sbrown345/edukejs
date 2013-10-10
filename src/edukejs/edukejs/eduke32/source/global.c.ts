@@ -99,8 +99,8 @@ var ud = new user_defs();
 
 //const char *s_buildDate = "20120522";
 
-//// JBF: g_spriteGravity modified to default to Atomic ed. default when using 1.3d CONs
-//int32_t g_spriteGravity=176;
+// JBF: g_spriteGravity modified to default to Atomic ed. default when using 1.3d CONs
+g_spriteGravity=176;
 
 //int16_t g_spriteDeleteQueueSize = 64;
 

@@ -61,7 +61,7 @@ var HEAD2 = APPNAME + " " + VERSION;
 
 Object.defineProperty(window, 'VOLUMEALL', { get: function () { return g_Shareware == 0; } });
 Object.defineProperty(window, 'PLUTOPAK', { get: function () { return g_scriptVersion == 14; } });
-Object.defineProperty(window, 'VOLUMEONE', { get: function () { return g_Shareware == 1; } });
+Object.defineProperty(window, 'VOLUMEONE', { get: function () { return false; } });
 interface Window {
     VOLUMEALL: number;
     PLUTOPAK: number;

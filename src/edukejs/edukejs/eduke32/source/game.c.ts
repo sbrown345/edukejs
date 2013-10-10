@@ -11916,7 +11916,7 @@ var tempWhile = 0;
     //do //main loop
     //{
     function main_loop() {
-        console.time("main_loop");
+        //console.time("main_loop");
         var /*static uint32_t */nextrender = 0, framewaiting = 0;
         var /*uint32_t */j: number;
 
@@ -12073,7 +12073,7 @@ var tempWhile = 0;
         else 
             dlogFlush();
 
-        console.timeEnd("main_loop");
+        //console.timeEnd("main_loop");
     }
     requestAnimationFrame(main_loop);
     //}
